@@ -1,7 +1,6 @@
 import React, {
   ReactNode,
   forwardRef,
-  ButtonHTMLAttributes,
   useCallback,
   useRef,
   useState,
@@ -62,7 +61,7 @@ export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) 
   )
 }
 
-interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseToolbarButtonProps extends React.ComponentPropsWithRef<'button'> {
   readonly active?: boolean
 }
 

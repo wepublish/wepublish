@@ -161,7 +161,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -314,7 +313,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -464,7 +462,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -689,7 +686,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1006,7 +1002,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                                       "classPrefix": "rs-checkbox",
                                                       "tabIndex": 0,
                                                     },
-                                                    "displayName": "defaultProps(Checkbox)",
                                                     "propTypes": Object {
                                                       "checkable": [Function],
                                                       "checked": [Function],
@@ -1030,7 +1025,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                                   "classPrefix": "rs-check-item",
                                                   "componentClass": "div",
                                                 },
-                                                "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                 "propTypes": Object {
                                                   "active": [Function],
                                                   "checkable": [Function],
@@ -1132,7 +1126,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                                         "classPrefix": "rs-checkbox",
                                                         "tabIndex": 0,
                                                       },
-                                                      "displayName": "defaultProps(Checkbox)",
                                                       "propTypes": Object {
                                                         "checkable": [Function],
                                                         "checked": [Function],
@@ -1156,7 +1149,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                                     "classPrefix": "rs-check-item",
                                                     "componentClass": "div",
                                                   },
-                                                  "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                   "propTypes": Object {
                                                     "active": [Function],
                                                     "checkable": [Function],
@@ -1202,7 +1194,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                             componentClass={
                                               Object {
                                                 "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "DefaultToggleButton",
                                                 "render": [Function],
                                               }
                                             }
@@ -1219,7 +1210,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                               componentClass={
                                                 Object {
                                                   "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "DefaultToggleButton",
                                                   "render": [Function],
                                                 }
                                               }
@@ -1503,7 +1493,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                                 transition={
                                                   Object {
                                                     "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
                                                     "render": [Function],
                                                   }
                                                 }
@@ -1618,7 +1607,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                             "color": undefined,
                             "display": undefined,
                             "fill": undefined,
-                            "fontSize": 16,
+                            "fontSize": "16px",
                             "fontWeight": undefined,
                             "marginBottom": 0,
                             "marginTop": 0,
@@ -1777,7 +1766,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
     animation={
       Object {
         "$$typeof": Symbol(react.forward_ref),
-        "displayName": "Bounce",
         "render": [Function],
       }
     }
@@ -1791,7 +1779,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
         "defaultProps": Object {
           "classPrefix": "rs-modal",
         },
-        "displayName": "withStyleProps(defaultProps(ModalDialog))",
         "propTypes": Object {
           "innerRef": [Function],
           "size": [Function],
@@ -1810,7 +1797,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
       animation={
         Object {
           "$$typeof": Symbol(react.forward_ref),
-          "displayName": "Bounce",
           "render": [Function],
         }
       }
@@ -1824,7 +1810,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
           "defaultProps": Object {
             "classPrefix": "rs-modal",
           },
-          "displayName": "withStyleProps(defaultProps(ModalDialog))",
           "propTypes": Object {
             "innerRef": [Function],
             "size": [Function],
@@ -1858,7 +1843,6 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
         transition={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Bounce",
             "render": [Function],
           }
         }
@@ -2029,7 +2013,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -2182,7 +2165,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -2332,7 +2314,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -2557,7 +2538,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -2874,7 +2854,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                       "classPrefix": "rs-checkbox",
                                                       "tabIndex": 0,
                                                     },
-                                                    "displayName": "defaultProps(Checkbox)",
                                                     "propTypes": Object {
                                                       "checkable": [Function],
                                                       "checked": [Function],
@@ -2898,7 +2877,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                   "classPrefix": "rs-check-item",
                                                   "componentClass": "div",
                                                 },
-                                                "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                 "propTypes": Object {
                                                   "active": [Function],
                                                   "checkable": [Function],
@@ -3000,7 +2978,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                         "classPrefix": "rs-checkbox",
                                                         "tabIndex": 0,
                                                       },
-                                                      "displayName": "defaultProps(Checkbox)",
                                                       "propTypes": Object {
                                                         "checkable": [Function],
                                                         "checked": [Function],
@@ -3024,7 +3001,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                     "classPrefix": "rs-check-item",
                                                     "componentClass": "div",
                                                   },
-                                                  "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                   "propTypes": Object {
                                                     "active": [Function],
                                                     "checkable": [Function],
@@ -3070,7 +3046,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                             componentClass={
                                               Object {
                                                 "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "DefaultToggleButton",
                                                 "render": [Function],
                                               }
                                             }
@@ -3087,7 +3062,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                               componentClass={
                                                 Object {
                                                   "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "DefaultToggleButton",
                                                   "render": [Function],
                                                 }
                                               }
@@ -3291,7 +3265,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                 transition={
                                                   Object {
                                                     "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
                                                     "render": [Function],
                                                   }
                                                 }
@@ -3708,7 +3681,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                               "classPrefix": "rs-checkbox",
                                                                               "tabIndex": 0,
                                                                             },
-                                                                            "displayName": "defaultProps(Checkbox)",
                                                                             "propTypes": Object {
                                                                               "checkable": [Function],
                                                                               "checked": [Function],
@@ -3732,7 +3704,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                           "classPrefix": "rs-check-item",
                                                                           "componentClass": "div",
                                                                         },
-                                                                        "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                                         "propTypes": Object {
                                                                           "active": [Function],
                                                                           "checkable": [Function],
@@ -3808,7 +3779,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -3832,7 +3802,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                             "classPrefix": "rs-check-item",
                                                                             "componentClass": "div",
                                                                           },
-                                                                          "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                                           "propTypes": Object {
                                                                             "active": [Function],
                                                                             "checkable": [Function],
@@ -3900,7 +3869,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -3960,7 +3928,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                                   "classPrefix": "rs-checkbox",
                                                                                   "tabIndex": 0,
                                                                                 },
-                                                                                "displayName": "defaultProps(Checkbox)",
                                                                                 "propTypes": Object {
                                                                                   "checkable": [Function],
                                                                                   "checked": [Function],
@@ -4085,7 +4052,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -4145,7 +4111,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                                                   "classPrefix": "rs-checkbox",
                                                                                   "tabIndex": 0,
                                                                                 },
-                                                                                "displayName": "defaultProps(Checkbox)",
                                                                                 "propTypes": Object {
                                                                                   "checkable": [Function],
                                                                                   "checked": [Function],
@@ -4364,7 +4329,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             "color": undefined,
                             "display": undefined,
                             "fill": undefined,
-                            "fontSize": 16,
+                            "fontSize": "16px",
                             "fontWeight": undefined,
                             "marginBottom": 0,
                             "marginTop": 0,
@@ -4523,7 +4488,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
     animation={
       Object {
         "$$typeof": Symbol(react.forward_ref),
-        "displayName": "Bounce",
         "render": [Function],
       }
     }
@@ -4537,7 +4501,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
         "defaultProps": Object {
           "classPrefix": "rs-modal",
         },
-        "displayName": "withStyleProps(defaultProps(ModalDialog))",
         "propTypes": Object {
           "innerRef": [Function],
           "size": [Function],
@@ -4556,7 +4519,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
       animation={
         Object {
           "$$typeof": Symbol(react.forward_ref),
-          "displayName": "Bounce",
           "render": [Function],
         }
       }
@@ -4570,7 +4532,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
           "defaultProps": Object {
             "classPrefix": "rs-modal",
           },
-          "displayName": "withStyleProps(defaultProps(ModalDialog))",
           "propTypes": Object {
             "innerRef": [Function],
             "size": [Function],
@@ -4604,7 +4565,6 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
         transition={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Bounce",
             "render": [Function],
           }
         }
@@ -4777,7 +4737,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -4930,7 +4889,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -5080,7 +5038,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -5553,7 +5510,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                       "classPrefix": "rs-checkbox",
                                                       "tabIndex": 0,
                                                     },
-                                                    "displayName": "defaultProps(Checkbox)",
                                                     "propTypes": Object {
                                                       "checkable": [Function],
                                                       "checked": [Function],
@@ -5577,7 +5533,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                   "classPrefix": "rs-check-item",
                                                   "componentClass": "div",
                                                 },
-                                                "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                 "propTypes": Object {
                                                   "active": [Function],
                                                   "checkable": [Function],
@@ -5683,7 +5638,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                         "classPrefix": "rs-checkbox",
                                                         "tabIndex": 0,
                                                       },
-                                                      "displayName": "defaultProps(Checkbox)",
                                                       "propTypes": Object {
                                                         "checkable": [Function],
                                                         "checked": [Function],
@@ -5707,7 +5661,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                     "classPrefix": "rs-check-item",
                                                     "componentClass": "div",
                                                   },
-                                                  "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                   "propTypes": Object {
                                                     "active": [Function],
                                                     "checkable": [Function],
@@ -5753,7 +5706,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                             componentClass={
                                               Object {
                                                 "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "DefaultToggleButton",
                                                 "render": [Function],
                                               }
                                             }
@@ -5770,7 +5722,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                               componentClass={
                                                 Object {
                                                   "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "DefaultToggleButton",
                                                   "render": [Function],
                                                 }
                                               }
@@ -6088,7 +6039,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                 transition={
                                                   Object {
                                                     "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
                                                     "render": [Function],
                                                   }
                                                 }
@@ -6591,7 +6541,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                               "classPrefix": "rs-checkbox",
                                                                               "tabIndex": 0,
                                                                             },
-                                                                            "displayName": "defaultProps(Checkbox)",
                                                                             "propTypes": Object {
                                                                               "checkable": [Function],
                                                                               "checked": [Function],
@@ -6615,7 +6564,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                           "classPrefix": "rs-check-item",
                                                                           "componentClass": "div",
                                                                         },
-                                                                        "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                                         "propTypes": Object {
                                                                           "active": [Function],
                                                                           "checkable": [Function],
@@ -6695,7 +6643,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -6719,7 +6666,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                             "classPrefix": "rs-check-item",
                                                                             "componentClass": "div",
                                                                           },
-                                                                          "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                                           "propTypes": Object {
                                                                             "active": [Function],
                                                                             "checkable": [Function],
@@ -6787,7 +6733,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -6847,7 +6792,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                                   "classPrefix": "rs-checkbox",
                                                                                   "tabIndex": 0,
                                                                                 },
-                                                                                "displayName": "defaultProps(Checkbox)",
                                                                                 "propTypes": Object {
                                                                                   "checkable": [Function],
                                                                                   "checked": [Function],
@@ -6972,7 +6916,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                                 "classPrefix": "rs-checkbox",
                                                                                 "tabIndex": 0,
                                                                               },
-                                                                              "displayName": "defaultProps(Checkbox)",
                                                                               "propTypes": Object {
                                                                                 "checkable": [Function],
                                                                                 "checked": [Function],
@@ -7032,7 +6975,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                                                   "classPrefix": "rs-checkbox",
                                                                                   "tabIndex": 0,
                                                                                 },
-                                                                                "displayName": "defaultProps(Checkbox)",
                                                                                 "propTypes": Object {
                                                                                   "checkable": [Function],
                                                                                   "checked": [Function],
@@ -7385,7 +7327,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
     animation={
       Object {
         "$$typeof": Symbol(react.forward_ref),
-        "displayName": "Bounce",
         "render": [Function],
       }
     }
@@ -7399,7 +7340,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
         "defaultProps": Object {
           "classPrefix": "rs-modal",
         },
-        "displayName": "withStyleProps(defaultProps(ModalDialog))",
         "propTypes": Object {
           "innerRef": [Function],
           "size": [Function],
@@ -7418,7 +7358,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
       animation={
         Object {
           "$$typeof": Symbol(react.forward_ref),
-          "displayName": "Bounce",
           "render": [Function],
         }
       }
@@ -7432,7 +7371,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
           "defaultProps": Object {
             "classPrefix": "rs-modal",
           },
-          "displayName": "withStyleProps(defaultProps(ModalDialog))",
           "propTypes": Object {
             "innerRef": [Function],
             "size": [Function],
@@ -7466,7 +7404,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
         transition={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Bounce",
             "render": [Function],
           }
         }
@@ -7491,7 +7428,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -7511,7 +7447,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -7531,7 +7466,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -7551,7 +7485,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -7592,7 +7525,6 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -7765,7 +7697,6 @@ exports[`User Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -7918,7 +7849,6 @@ exports[`User Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -8068,7 +7998,6 @@ exports[`User Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -8293,7 +8222,6 @@ exports[`User Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -8610,7 +8538,6 @@ exports[`User Edit Panel should render 1`] = `
                                                       "classPrefix": "rs-checkbox",
                                                       "tabIndex": 0,
                                                     },
-                                                    "displayName": "defaultProps(Checkbox)",
                                                     "propTypes": Object {
                                                       "checkable": [Function],
                                                       "checked": [Function],
@@ -8634,7 +8561,6 @@ exports[`User Edit Panel should render 1`] = `
                                                   "classPrefix": "rs-check-item",
                                                   "componentClass": "div",
                                                 },
-                                                "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                 "propTypes": Object {
                                                   "active": [Function],
                                                   "checkable": [Function],
@@ -8736,7 +8662,6 @@ exports[`User Edit Panel should render 1`] = `
                                                         "classPrefix": "rs-checkbox",
                                                         "tabIndex": 0,
                                                       },
-                                                      "displayName": "defaultProps(Checkbox)",
                                                       "propTypes": Object {
                                                         "checkable": [Function],
                                                         "checked": [Function],
@@ -8760,7 +8685,6 @@ exports[`User Edit Panel should render 1`] = `
                                                     "classPrefix": "rs-check-item",
                                                     "componentClass": "div",
                                                   },
-                                                  "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                   "propTypes": Object {
                                                     "active": [Function],
                                                     "checkable": [Function],
@@ -8806,7 +8730,6 @@ exports[`User Edit Panel should render 1`] = `
                                             componentClass={
                                               Object {
                                                 "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "DefaultToggleButton",
                                                 "render": [Function],
                                               }
                                             }
@@ -8823,7 +8746,6 @@ exports[`User Edit Panel should render 1`] = `
                                               componentClass={
                                                 Object {
                                                   "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "DefaultToggleButton",
                                                   "render": [Function],
                                                 }
                                               }
@@ -8940,7 +8862,6 @@ exports[`User Edit Panel should render 1`] = `
                                                 transition={
                                                   Object {
                                                     "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
                                                     "render": [Function],
                                                   }
                                                 }
@@ -9055,7 +8976,7 @@ exports[`User Edit Panel should render 1`] = `
                             "color": undefined,
                             "display": undefined,
                             "fill": undefined,
-                            "fontSize": 16,
+                            "fontSize": "16px",
                             "fontWeight": undefined,
                             "marginBottom": 0,
                             "marginTop": 0,
@@ -9214,7 +9135,6 @@ exports[`User Edit Panel should render 1`] = `
     animation={
       Object {
         "$$typeof": Symbol(react.forward_ref),
-        "displayName": "Bounce",
         "render": [Function],
       }
     }
@@ -9228,7 +9148,6 @@ exports[`User Edit Panel should render 1`] = `
         "defaultProps": Object {
           "classPrefix": "rs-modal",
         },
-        "displayName": "withStyleProps(defaultProps(ModalDialog))",
         "propTypes": Object {
           "innerRef": [Function],
           "size": [Function],
@@ -9247,7 +9166,6 @@ exports[`User Edit Panel should render 1`] = `
       animation={
         Object {
           "$$typeof": Symbol(react.forward_ref),
-          "displayName": "Bounce",
           "render": [Function],
         }
       }
@@ -9261,7 +9179,6 @@ exports[`User Edit Panel should render 1`] = `
           "defaultProps": Object {
             "classPrefix": "rs-modal",
           },
-          "displayName": "withStyleProps(defaultProps(ModalDialog))",
           "propTypes": Object {
             "innerRef": [Function],
             "size": [Function],
@@ -9295,7 +9212,6 @@ exports[`User Edit Panel should render 1`] = `
         transition={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Bounce",
             "render": [Function],
           }
         }
@@ -9468,7 +9384,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -9621,7 +9536,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -9771,7 +9685,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -10244,7 +10157,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                       "classPrefix": "rs-checkbox",
                                                       "tabIndex": 0,
                                                     },
-                                                    "displayName": "defaultProps(Checkbox)",
                                                     "propTypes": Object {
                                                       "checkable": [Function],
                                                       "checked": [Function],
@@ -10268,7 +10180,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                   "classPrefix": "rs-check-item",
                                                   "componentClass": "div",
                                                 },
-                                                "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                 "propTypes": Object {
                                                   "active": [Function],
                                                   "checkable": [Function],
@@ -10374,7 +10285,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                         "classPrefix": "rs-checkbox",
                                                         "tabIndex": 0,
                                                       },
-                                                      "displayName": "defaultProps(Checkbox)",
                                                       "propTypes": Object {
                                                         "checkable": [Function],
                                                         "checked": [Function],
@@ -10398,7 +10308,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                     "classPrefix": "rs-check-item",
                                                     "componentClass": "div",
                                                   },
-                                                  "displayName": "defaultProps(DropdownMenuCheckItem)",
                                                   "propTypes": Object {
                                                     "active": [Function],
                                                     "checkable": [Function],
@@ -10444,7 +10353,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                             componentClass={
                                               Object {
                                                 "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "DefaultToggleButton",
                                                 "render": [Function],
                                               }
                                             }
@@ -10461,7 +10369,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                               componentClass={
                                                 Object {
                                                   "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "DefaultToggleButton",
                                                   "render": [Function],
                                                 }
                                               }
@@ -10610,7 +10517,6 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                 transition={
                                                   Object {
                                                     "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
                                                     "render": [Function],
                                                   }
                                                 }
@@ -10859,7 +10765,6 @@ exports[`User Edit Panel should render with ID 1`] = `
     animation={
       Object {
         "$$typeof": Symbol(react.forward_ref),
-        "displayName": "Bounce",
         "render": [Function],
       }
     }
@@ -10873,7 +10778,6 @@ exports[`User Edit Panel should render with ID 1`] = `
         "defaultProps": Object {
           "classPrefix": "rs-modal",
         },
-        "displayName": "withStyleProps(defaultProps(ModalDialog))",
         "propTypes": Object {
           "innerRef": [Function],
           "size": [Function],
@@ -10892,7 +10796,6 @@ exports[`User Edit Panel should render with ID 1`] = `
       animation={
         Object {
           "$$typeof": Symbol(react.forward_ref),
-          "displayName": "Bounce",
           "render": [Function],
         }
       }
@@ -10906,7 +10809,6 @@ exports[`User Edit Panel should render with ID 1`] = `
           "defaultProps": Object {
             "classPrefix": "rs-modal",
           },
-          "displayName": "withStyleProps(defaultProps(ModalDialog))",
           "propTypes": Object {
             "innerRef": [Function],
             "size": [Function],
@@ -10940,7 +10842,6 @@ exports[`User Edit Panel should render with ID 1`] = `
         transition={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Bounce",
             "render": [Function],
           }
         }
@@ -10965,7 +10866,6 @@ exports[`User Edit Panel should render with ID 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -10985,7 +10885,6 @@ exports[`User Edit Panel should render with ID 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -11005,7 +10904,6 @@ exports[`User Edit Panel should render with ID 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -11025,7 +10923,6 @@ exports[`User Edit Panel should render with ID 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -11066,7 +10963,6 @@ exports[`User Edit Panel should render with ID 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }

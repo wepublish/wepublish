@@ -16,6 +16,9 @@ import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
 
+import {DreifussWysiwygEditor} from '@dreifuss-wysiwyg-editor/core'
+import {EditorValue} from '@dreifuss-wysiwyg-editor/core/dist/types'
+
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
@@ -83,6 +86,18 @@ export const RichTextBlock = memo(function RichTextBlock({
       }
     }
   }
+
+  return (
+    <DreifussWysiwygEditor
+      value={(value as unknown) as EditorValue}
+      onChange={(newValue: SlateNode[]) => {
+        setFocus(ReactEditor.isFocused(editor))
+        if (value !== newValue) {
+          onChange(newValue)
+        }
+      }}
+    />
+  )
 
   return (
     <Slate
@@ -169,6 +184,8 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
         onKeyDown={e => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore FIXME: fix this asap
           if (e.ctrlKey || e.metaKey) activateHotkey(e)
         }}
       />

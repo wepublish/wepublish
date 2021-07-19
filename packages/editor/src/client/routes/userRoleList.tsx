@@ -10,7 +10,7 @@ import {
   Link
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 

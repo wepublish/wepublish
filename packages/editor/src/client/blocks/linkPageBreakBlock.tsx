@@ -6,7 +6,7 @@ import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
-import {isFunctionalUpdate} from '@karma.run/react'
+import {isFunctionalUpdate} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'

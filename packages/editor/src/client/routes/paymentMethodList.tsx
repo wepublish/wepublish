@@ -13,7 +13,7 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {
   FullPaymentMethodFragment,
   useDeletePaymentMethodMutation,

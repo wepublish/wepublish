@@ -13,7 +13,7 @@ import {
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 import {

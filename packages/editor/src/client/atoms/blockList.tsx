@@ -1,7 +1,7 @@
 import React, {Fragment, useState, ReactNode, useCallback, useMemo, memo} from 'react'
 import nanoid from 'nanoid'
 
-import {isFunctionalUpdate} from '@karma.run/react'
+import {isFunctionalUpdate} from '@wepublish/karma.run-react'
 import {isValueConstructor, ValueConstructor, UnionToIntersection} from '@karma.run/utility'
 
 import {AddBlockInput} from './addBlockInput'
