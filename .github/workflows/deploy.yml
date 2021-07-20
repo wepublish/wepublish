@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "Hello ${{ github.event}}!"
+          echo "Hello ${{ github.event_name}}!"
   deployment:
     if: ${{ github.event_name == 'wepublish/wepublish' }}
     runs-on: ubuntu-latest
