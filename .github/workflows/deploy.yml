@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "Hello ${{ github.event.pull_request.repository}}!"
+          echo "Hello ${{ github.event.pull_request.head.repo.url}}!"
+          echo "Hello ${{ github.event.pull_request.base.repo.url}}!"
   deployment:
     if: ${{ github.event_name == 'wepublish/wepublish' }}
     runs-on: ubuntu-latest
