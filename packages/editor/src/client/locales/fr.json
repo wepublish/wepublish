@@ -1,50 +1,51 @@
 {
-  "translation": {
-    "articleEditor": {
-      "overview": {
-        "create": "Créer",
-        "metadata": "Métadonnées",
-        "notFound": "Article non trouvé"
-      },
-      "panels": {
-        "addTag": "Appuyez Entrée pour ajouter une tag",
-        "articlePreviewLinkDesc": "Les liens de prévisualisation montrent toujours les dernières modifications apportées à la version préliminaire de l'article. Les liens de prévisualisation cessent de fonctionner après la publication de l'article.",
-        "articlePreviewLinkField": "Liens de prévisualisation ",
-        "chooseTeaser": "Choisir le teaser",
-        "emptyImage": "Laissez vide pour utiliser l'image originale.",
-        "hideAuthors": "Cacher les auteurs",
-        "metadataInfo": "Les informations de ces champs sont utilisées pour les aperçus dans les publications de médias sociaux. S'ils sont laissés vides, les informations de l'onglet général seront utilisées à la place.",
-        "noImagesFound": "Aucune image trouvée",
-        "peerArticle": "Peer l'article",
-        "peering": "Peering",
-        "peerShare": "Partager avec peers",
-        "published": "Publié",
-        "removeTeaser": "Retirer le Teaser",
-        "Untitled": "Sans titre"
-      }
-    },
-    "articles": {
-      "overview": {
-        "authors": "Auteurs",
-        "noArticlesFound": "Aucun article trouvé",
-        "publicationDate": "Date de publication",
-        "published": "Publié"
-      },
-      "panels": {
-        "close": "Fermer",
-        "createAuthorProfile": "Créer un profil d'auteur pour {{name}}",
-        "duplicateArticle": "Article en double?",
-        "updatedAt": "Mis à jour à"
-      }
-    },
-    "comments": {
-      "overview": {
-        "untitled": "Sans titre",
-        "updated": "Modifié"
-      },
-      "panels": {
-        "userName": "Nom d'utilisateur"
-      }
+    "translation": {
+        "articleEditor": {
+            "overview": {
+                "create": "Créer",
+                "metadata": "Métadonnées",
+                "notFound": "Article non trouvé",
+                "articlePublished": "Article publié"
+            },
+            "panels": {
+                "addTag": "Appuyez Entrée pour ajouter une tag",
+                "articlePreviewLinkDesc": "Les liens de prévisualisation montrent toujours les dernières modifications apportées à la version préliminaire de l'article. Les liens de prévisualisation cessent de fonctionner après la publication de l'article.",
+                "articlePreviewLinkField": "Liens de prévisualisation ",
+                "chooseTeaser": "Choisir le teaser",
+                "emptyImage": "Laissez vide pour utiliser l'image originale.",
+                "hideAuthors": "Cacher les auteurs",
+                "metadataInfo": "Les informations de ces champs sont utilisées pour les aperçus dans les publications de médias sociaux. S'ils sont laissés vides, les informations de l'onglet général seront utilisées à la place.",
+                "noImagesFound": "Aucune image trouvée",
+                "peerArticle": "Peer l'article",
+                "peering": "Peering",
+                "peerShare": "Partager avec peers",
+                "published": "Publié",
+                "removeTeaser": "Retirer le Teaser",
+                "Untitled": "Sans titre"
+            }
+        },
+        "articles": {
+            "overview": {
+                "authors": "Auteurs",
+                "noArticlesFound": "Aucun article trouvé",
+                "publicationDate": "Date de publication",
+                "published": "Publié"
+            },
+            "panels": {
+                "close": "Fermer",
+                "createAuthorProfile": "Créer un profil d'auteur pour {{name}}",
+                "duplicateArticle": "Article en double?",
+                "updatedAt": "Mis à jour à"
+            }
+        },
+        "comments": {
+            "overview": {
+                "untitled": "Sans titre",
+                "updated": "Modifié"
+            },
+            "panels": {
+                "userName": "Nom d'utilisateur"
+            }
+        }
     }
-  }
 }
