@@ -109,7 +109,10 @@
                 "uploadImage": "Bild hochladen",
                 "value": "Wert ",
                 "yes": "Ja",
-                "articlePreviewLinkHours": "Gültigkeitsdauer des Links"
+                "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
+                "articlePending": "",
+                "propertiesInfo": "",
+                "slugifySeoTitle": ""
             }
         },
         "articles": {
@@ -163,7 +166,8 @@
                 "newAuthor": "Neue*r Autor*in",
                 "noAuthorsFound": "Kein*e Autor*in gefunden",
                 "search": "Suchen",
-                "unknown": "Unbekannt "
+                "unknown": "Unbekannt ",
+                "action": ""
             },
             "panels": {
                 "bioInformation": "Biographie",
@@ -196,7 +200,11 @@
                     "fbPosts": "https://www.facebook.com/id/posts/id/",
                     "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
                     "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
-                    "invalidURL": "Ungültige URL oder iFrame-Code "
+                    "invalidURL": "Ungültige URL oder iFrame-Code ",
+                    "socialMediaList": "",
+                    "GDPRInfo": "",
+                    "embedCodeAttributes": "",
+                    "alternativeStyling": ""
                 }
             },
             "image": {
@@ -214,7 +222,8 @@
                     "editImage": "Bild bearbeiten ",
                     "next": "Nächstes",
                     "previous": "Vorheriges",
-                    "removeImage": "Bild entfernen "
+                    "removeImage": "Bild entfernen ",
+                    "editGalleryList": ""
                 },
                 "panels": {
                     "caption": "Bildunterschrift",
@@ -251,7 +260,8 @@
                 "optionalDescription": "Optionale Beschreibung für Link ",
                 "remove": "Entfernen ",
                 "startWriting": "Beginne zu schreiben ...",
-                "text": "Text"
+                "text": "Text",
+                "invalidLink": ""
             },
             "richTextTable": {
                 "addBorders": "Rahmen hinzufügen ",
@@ -260,10 +270,12 @@
                 "delete": "Löschen ",
                 "deleteTable": "Tabelle löschen ",
                 "insertTable": "Tabelle einfügen ",
-                "rows": "Zeilen "
+                "rows": "Zeilen ",
+                "border": ""
             },
             "title": {
-                "leadText": "Lead-Text"
+                "leadText": "Lead-Text",
+                "title": ""
             }
         },
         "cancel": "Abbrechen ",
@@ -308,7 +320,8 @@
                 "revisions": "Revisionen",
                 "untitled": "Kein Titel",
                 "updatedAt": "Aktualisiert am",
-                "userName": "User Name"
+                "userName": "User Name",
+                "parent": ""
             },
             "state": {
                 "approved": "Angenommen",
@@ -363,7 +376,8 @@
                 "Untitled": "Ohne Titel",
                 "updated": "Updated",
                 "upload": "Hochladen",
-                "uploadImage": "Bild hochladen "
+                "uploadImage": "Bild hochladen ",
+                "attribution": ""
             }
         },
         "linkPageBreakEditPanel": {
@@ -394,16 +408,22 @@
             "template": {
                 "donation": "Spende ",
                 "label": "Vorlagen ",
-                "subscription": "Abonnement "
+                "subscription": "Abonnement ",
+                "membership": "",
+                "none": ""
             },
-            "title": "Einstellungen "
+            "title": "Einstellungen ",
+            "close": ""
         },
         "login": {
             "alternativeLogin": "Oder einloggen mit: ",
             "currentPassword": "Aktuelles Passwort",
             "login": "Login",
             "password": "Passwort ",
-            "username": "Username"
+            "username": "Username",
+            "O2Auth": "",
+            "unauthorized": "",
+            "email": ""
         },
         "memberPlanList": {
             "action": "Aktionen ",
@@ -423,10 +443,14 @@
             "paymentPeriodicities": "Mögliche Zahlungsperiodizitäten ",
             "paymentPeriodicity": {
                 "BIANNUAL": "Halbjährlich",
-                "QUARTERLY": "Vierteljährlich"
+                "QUARTERLY": "Vierteljährlich",
+                "YEARLY": "",
+                "MONTHLY": ""
             },
             "priceRange": "Preis-(spanne) in CHF ",
-            "title": "Memberpläne"
+            "title": "Memberpläne",
+            "minimumMonthlyAmount": "",
+            "fixPriceDescription": ""
         },
         "navbar": {
             "articles": "Artikel",
@@ -446,7 +470,8 @@
             "peering": "Peering ",
             "userRoles": "Userrollen",
             "users": "User",
-            "usersAndMembers": "User & Member"
+            "usersAndMembers": "User & Member",
+            "tokens": ""
         },
         "navigation": {
             "overview": {
@@ -492,7 +517,9 @@
                 "pending": "Publikation der Seite geplant am {{date}} um {{time}}",
                 "publish": "Publizieren",
                 "save": "Speichern",
-                "unpublished": "Nicht publiziert"
+                "unpublished": "Nicht publiziert",
+                "published": "",
+                "pagePublished": ""
             },
             "panels": {
                 "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -523,7 +550,10 @@
                 "title": "SEO-Titel",
                 "titleHelpBlock": "Verwende einen SEO-optimierten Titel ",
                 "updateDate": "Update-Datum",
-                "value": "Wert "
+                "value": "Wert ",
+                "publishPage": "",
+                "propertiesInfo": "",
+                "pagePending": ""
             }
         },
         "pages": {
@@ -572,7 +602,8 @@
             "description": "Beschreibung ",
             "editTitle": "Zahlungsmethode bearbeiten ",
             "name": "Name",
-            "title": "Zahlungsmethoden"
+            "title": "Zahlungsmethoden",
+            "active": ""
         },
         "peerList": {
             "overview": {
@@ -678,7 +709,8 @@
                 "subEdit": "Bearbeiten ",
                 "subTitle": "Abonnement ",
                 "Unknown": "Unbekannt ",
-                "userRoles": "Userrollen"
+                "userRoles": "Userrollen",
+                "subDisableDescription": ""
             }
         },
         "userRoles": {
@@ -706,7 +738,8 @@
                 "name": "Name",
                 "permissions": "Berechtigungen ",
                 "save": "Speichern",
-                "Unknown": "Unbekannt "
+                "Unknown": "Unbekannt ",
+                "systemRole": ""
             }
         },
         "userSubscriptionEdit": {
@@ -723,7 +756,9 @@
             "payedUntil": "Bezahlt bis",
             "paymentMethod": "Zahlungsmethode ",
             "selectMemberPlan": "Memberplan wählen",
-            "startsAt": "Abonnements-Beginn"
+            "startsAt": "Abonnements-Beginn",
+            "createTitle": "",
+            "adapter": ""
         }
     }
 }
