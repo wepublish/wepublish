@@ -3,14 +3,8 @@ name: Deployment
 on: [pull_request]
 
 jobs:
-  say_hello:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Hello ${{ github.event.pull_request.head.repo.url}}!"
-          echo "Hello ${{ github.event.pull_request.base.repo.url}}!"
   deployment:
-    if: ${{ github.event_name == 'wepublish/wepublish' }}
+    if: ${{ github.event.pull_request.base.repo.url == github.event.pull_request.head.repo.url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
