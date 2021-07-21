@@ -27,6 +27,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   displayOnly = false
 }: RichTextBlockProps) {
   const editor = useMemo(
+    // @ts-ignore
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
     []
   )
