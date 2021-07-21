@@ -2222,24 +2222,24 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dreifuss-wysiwyg-editor/common@^1.0.2-alpha.0":
-  version "1.0.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/common/-/common-1.0.2-alpha.0.tgz#6c8effb6112cb74bacc494d2490bd3f5d2b6d45a"
-  integrity sha512-eenUC76Rrx9iU9dCSSpVCr9/OjSwdu6WAf8WIabPpDDDykzoDaZsTrIso05k4KufPceSCyTAjStj6JzUDs4c6w==
+"@dreifuss-wysiwyg-editor/common@^1.0.2-alpha.1":
+  version "1.0.2-alpha.1"
+  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/common/-/common-1.0.2-alpha.1.tgz#bef1f17ad8c0a9bd03bfec68730518529de30ce6"
+  integrity sha512-BjzslSd+NuUwiRftBuqhehH3F9Fs3FvEOT60hiIDsK5/OaQkhRFYfpAfcWQ+5AICT0dnELdjyvNOPy+71Ff8VA==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@udecode/slate-plugins-core" "^1.0.0-next.36"
     "@udecode/slate-plugins-toolbar" "^1.0.0-next.36"
 
-"@dreifuss-wysiwyg-editor/core@^1.0.2-alpha.0":
-  version "1.0.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/core/-/core-1.0.2-alpha.0.tgz#90e567801689516e3a13f7b9941f0f7b26e43b24"
-  integrity sha512-ZUJEACZ1jkH+WiAu8UGlhimBT5Y/Mk/mfhT1tWqTlTfs5XzOOvTD9MIBbpBO4Zlvw1al7wROtTceqROLxacBwA==
+"@dreifuss-wysiwyg-editor/core@^1.0.2-alpha.1":
+  version "1.0.2-alpha.1"
+  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/core/-/core-1.0.2-alpha.1.tgz#fb01e6571bbb6c27bdf2bab663fcc9bf4e6e5a11"
+  integrity sha512-nnh3cOHosAPtinqGS6UJibcVGI8udjveUI5oO3ZtcGu72ySeapSF/dcDpMak2T3L7ZQKVsZgUDWSfVH1qkIB+w==
   dependencies:
     "@babel/runtime" "^7.13.10"
-    "@dreifuss-wysiwyg-editor/common" "^1.0.2-alpha.0"
-    "@dreifuss-wysiwyg-editor/link" "^1.0.2-alpha.0"
-    "@dreifuss-wysiwyg-editor/link-ui" "^1.0.2-alpha.0"
+    "@dreifuss-wysiwyg-editor/common" "^1.0.2-alpha.1"
+    "@dreifuss-wysiwyg-editor/link" "^1.0.2-alpha.1"
+    "@dreifuss-wysiwyg-editor/link-ui" "^1.0.2-alpha.1"
     "@udecode/slate-plugins-alignment" "^1.0.0-next.36"
     "@udecode/slate-plugins-alignment-ui" "^1.0.0-next.36"
     "@udecode/slate-plugins-autoformat" "^1.0.0-next.36"
@@ -2280,21 +2280,21 @@
     slate-hyperscript "^0.62.0"
     slate-react "^0.62.0"
 
-"@dreifuss-wysiwyg-editor/link-ui@^1.0.2-alpha.0":
-  version "1.0.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/link-ui/-/link-ui-1.0.2-alpha.0.tgz#eaa326b38151b0aefb62d26946f1fb08bb3e7157"
-  integrity sha512-BHqGgZ5HX1W/YACLGlaDfsqfQhL+ixFz0LUZb4IZkNvymA1jWIPm6RhfxLJxN/mlmXpHU5xIe0vL7QTRxYGKnA==
+"@dreifuss-wysiwyg-editor/link-ui@^1.0.2-alpha.1":
+  version "1.0.2-alpha.1"
+  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/link-ui/-/link-ui-1.0.2-alpha.1.tgz#80ade7a53a66fce3ac9c3858db6f7700ca755ae0"
+  integrity sha512-9823mIGagx0T+VrySoUBCsvb9OuMewVuR6PjlPpEoBHHs/sIWEA+z6jhMNwgzE4wZzFpweLSx4QbmR3x/tt4Fg==
   dependencies:
     "@babel/polyfill" "^7.12.1"
-    "@dreifuss-wysiwyg-editor/common" "^1.0.2-alpha.0"
-    "@dreifuss-wysiwyg-editor/link" "^1.0.2-alpha.0"
+    "@dreifuss-wysiwyg-editor/common" "^1.0.2-alpha.1"
+    "@dreifuss-wysiwyg-editor/link" "^1.0.2-alpha.1"
     "@udecode/slate-plugins-core" "^1.0.0-next.36"
     "@udecode/slate-plugins-toolbar" "^1.0.0-next.36"
 
-"@dreifuss-wysiwyg-editor/link@^1.0.2-alpha.0":
-  version "1.0.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/link/-/link-1.0.2-alpha.0.tgz#8cdcaefec6b7773845699f8e48657a8b7886c143"
-  integrity sha512-oIANpq8ok47oAHY1rgu6FgNf85eC4u6x0uh09RU31WDBBZGA93o4jJE12ylLXhP8/gefqBSnZw2FjNNX6TG7TQ==
+"@dreifuss-wysiwyg-editor/link@^1.0.2-alpha.1":
+  version "1.0.2-alpha.1"
+  resolved "https://registry.yarnpkg.com/@dreifuss-wysiwyg-editor/link/-/link-1.0.2-alpha.1.tgz#ab422503d4f88719e363cde08ac9ad0db6c60fd2"
+  integrity sha512-+gSVx1nGPQmNyMGbL7FXC3Hq7q2PkoxuJLK1V3M6ifhRthGxIUraD1Ax2Tx5nxusbV7tsNCvW1yQTjjxaQqf9g==
   dependencies:
     "@udecode/slate-plugins-core" "^1.0.0-next.36"
     "@udecode/slate-plugins-toolbar" "^1.0.0-next.36"
@@ -17598,27 +17598,12 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-slate-history@^0.58.1:
-  version "0.58.1"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.58.1.tgz#ffcfa99608bd725340ff57ece3016660c3144e47"
-  integrity sha512-a+6fk8B36virDLQeR33azOzJhXFuh7uEGBMXA7JMaX9yYT1I4bUuNu/hHQkzPiBPRUlFKKm2fIftsCBTE1lIig==
-  dependencies:
-    immer "^5.0.0"
-    is-plain-object "^3.0.0"
-
 slate-history@^0.62.0:
   version "0.62.0"
   resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.62.0.tgz#facd2e1ef249f979ecc0d0811d280515877d9352"
   integrity sha512-nE3fihtHV7kUrDO3zNb+DWzQVUg59uKCZVt0r9GafZLiHB98n0X+qqtcjFHerDPDRPkHgqM8UL4wh1jhL4WzmA==
   dependencies:
     immer "^7.0.0"
-    is-plain-object "^3.0.0"
-
-slate-hyperscript@^0.58.1:
-  version "0.58.1"
-  resolved "https://registry.yarnpkg.com/slate-hyperscript/-/slate-hyperscript-0.58.1.tgz#c8bb1d05205336bdc571d7c74032de0fe24e1203"
-  integrity sha512-QAbARbJjZAzCAkK5SSpy38kIsbEXEP5N8vygGZgH5E7nisDOGCkLFCCihY/rxGxRbhelrYmEVewl6ZLuve9Xng==
-  dependencies:
     is-plain-object "^3.0.0"
 
 slate-hyperscript@^0.62.0:
