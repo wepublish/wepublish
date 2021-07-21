@@ -5,6 +5,8 @@ on:
     branches:
       - master
   pull_request:
+    branches:
+      - '!f/WPC-332-dreifuss-in-wepublish'
 
 jobs:
   Test:
