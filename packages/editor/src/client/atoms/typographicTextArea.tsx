@@ -33,9 +33,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         })
         if (!ref.current) return
         observer.observe(ref.current)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return () => observer.unobserve(ref.current)
+        return () => (ref?.current ? observer.unobserve(ref.current) : undefined)
       } else {
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
@@ -48,9 +46,11 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
     }
 
     function handleResize() {
-      ref.current!.style.overflow = 'hidden'
-      ref.current!.style.height = 'auto'
-      ref.current!.style.height = `${ref.current!.scrollHeight + AutoSizeBuffer}px`
+      if (ref?.current) {
+        ref.current.style.overflow = 'hidden'
+        ref.current.style.height = 'auto'
+        ref.current.style.height = `${ref.current.scrollHeight + AutoSizeBuffer}px`
+      }
     }
 
     return (

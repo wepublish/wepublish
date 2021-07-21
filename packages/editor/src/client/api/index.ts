@@ -60,6 +60,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -98,6 +99,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -1866,7 +1868,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
@@ -2044,7 +2046,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3643,6 +3645,7 @@ export const ArticleRefFragmentDoc = gql`
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
     ${ImageRefFragmentDoc}`;
@@ -4434,6 +4437,7 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value
