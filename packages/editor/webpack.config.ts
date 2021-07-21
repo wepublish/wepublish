@@ -17,7 +17,7 @@ export default (env: any, {mode}: any) =>
       publicPath: mode === 'production' ? '/assets' : 'http://localhost:3001/'
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
+      extensions: ['.mjs', '.ts', '.tsx', '.js'],
       alias:
         mode === 'production'
           ? {}
@@ -27,6 +27,11 @@ export default (env: any, {mode}: any) =>
     },
     module: {
       rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
