@@ -5,7 +5,14 @@
                 "create": "Créer",
                 "metadata": "Métadonnées",
                 "notFound": "Article non trouvé",
-                "articlePublished": "Article publié"
+                "articlePublished": "Article publié",
+                "publish": "Publier",
+                "pending": "Article en attente de publication sur {{date}} à {{time}}",
+                "noSlug": "Article non publié. Veuillez ajouter un slug.",
+                "draftSaved": "Projet d'article sauvegardé",
+                "draftCreated": "Projet d'article créé",
+                "draft": "Draft",
+                "back": "Retour"
             },
             "panels": {
                 "addTag": "Appuyez Entrée pour ajouter une tag",
