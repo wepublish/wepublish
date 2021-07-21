@@ -9,6 +9,8 @@ export interface ArticleData {
   readonly slug: string
   readonly tags: string[]
 
+  readonly canonicalUrl?: string
+
   readonly properties: MetadataProperty[]
 
   readonly imageID?: string
