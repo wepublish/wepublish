@@ -214,11 +214,7 @@ export function ComposeComment(props: ComposeCommentProps) {
     },
     onError: error => {
       console.error('Error creating a post', error)
-      if(error.message === "Comment length should be maximum of 1000 characters"){
-        setcommentStateInfo(error.message)
-      }else {
-        setcommentStateInfo("Something went wrong, your comment couldn't be saved")
-      }
+      setcommentStateInfo(error.message)
     }
   })
 
