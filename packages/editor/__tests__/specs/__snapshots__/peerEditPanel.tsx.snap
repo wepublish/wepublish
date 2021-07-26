@@ -161,7 +161,6 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -311,7 +310,6 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -460,7 +458,6 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -860,7 +857,6 @@ exports[`Peer Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1010,7 +1006,6 @@ exports[`Peer Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1159,7 +1154,6 @@ exports[`Peer Edit Panel should render 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1558,7 +1552,6 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1708,7 +1701,6 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
@@ -1859,7 +1851,6 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                           "componentClass": "input",
                                           "type": "text",
                                         },
-                                        "displayName": "withStyleProps(defaultProps(Input))",
                                         "propTypes": Object {
                                           "innerRef": [Function],
                                           "size": [Function],
