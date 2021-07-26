@@ -171,7 +171,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -324,7 +323,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -1262,7 +1260,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                       transition={
                                                         Object {
                                                           "$$typeof": Symbol(react.forward_ref),
-                                                          "displayName": "Fade",
                                                           "render": [Function],
                                                         }
                                                       }
@@ -1716,7 +1713,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -1878,7 +1874,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -2284,7 +2279,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -2304,7 +2298,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -2324,7 +2317,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -2344,7 +2336,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -2385,7 +2376,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -2410,7 +2400,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -2430,7 +2419,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -2449,7 +2437,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -2469,7 +2456,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -2508,7 +2494,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -2691,7 +2676,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -2844,7 +2828,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -4255,7 +4238,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                       transition={
                                                         Object {
                                                           "$$typeof": Symbol(react.forward_ref),
-                                                          "displayName": "Fade",
                                                           "render": [Function],
                                                         }
                                                       }
@@ -4709,7 +4691,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -4871,7 +4852,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -5277,7 +5257,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -5297,7 +5276,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -5317,7 +5295,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -5337,7 +5314,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -5378,7 +5354,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -5403,7 +5378,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -5423,7 +5397,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -5442,7 +5415,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -5462,7 +5434,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -5501,7 +5472,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -5684,7 +5654,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -5837,7 +5806,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -6775,7 +6743,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                       transition={
                                                         Object {
                                                           "$$typeof": Symbol(react.forward_ref),
-                                                          "displayName": "Fade",
                                                           "render": [Function],
                                                         }
                                                       }
@@ -7229,7 +7196,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -7391,7 +7357,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -7787,7 +7752,6 @@ exports[`Author Edit Panel should render 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -7807,7 +7771,6 @@ exports[`Author Edit Panel should render 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -7827,7 +7790,6 @@ exports[`Author Edit Panel should render 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -7847,7 +7809,6 @@ exports[`Author Edit Panel should render 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -7888,7 +7849,6 @@ exports[`Author Edit Panel should render 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -7913,7 +7873,6 @@ exports[`Author Edit Panel should render 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -7933,7 +7892,6 @@ exports[`Author Edit Panel should render 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -7952,7 +7910,6 @@ exports[`Author Edit Panel should render 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -7972,7 +7929,6 @@ exports[`Author Edit Panel should render 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -8011,7 +7967,6 @@ exports[`Author Edit Panel should render 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -8196,7 +8151,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -8349,7 +8303,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 "componentClass": "input",
                                                 "type": "text",
                                               },
-                                              "displayName": "withStyleProps(defaultProps(Input))",
                                               "propTypes": Object {
                                                 "innerRef": [Function],
                                                 "size": [Function],
@@ -9287,7 +9240,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                       transition={
                                                         Object {
                                                           "$$typeof": Symbol(react.forward_ref),
-                                                          "displayName": "Fade",
                                                           "render": [Function],
                                                         }
                                                       }
@@ -9741,7 +9693,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -9903,7 +9854,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                     transition={
                                                       Object {
                                                         "$$typeof": Symbol(react.forward_ref),
-                                                        "displayName": "Fade",
                                                         "render": [Function],
                                                       }
                                                     }
@@ -10309,7 +10259,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -10329,7 +10278,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -10349,7 +10297,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -10369,7 +10316,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -10410,7 +10356,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }
@@ -10435,7 +10380,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
         animation={
           Object {
             "$$typeof": Symbol(react.forward_ref),
-            "displayName": "Slide",
             "render": [Function],
           }
         }
@@ -10455,7 +10399,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
             "defaultProps": Object {
               "classPrefix": "rs-modal",
             },
-            "displayName": "withStyleProps(defaultProps(ModalDialog))",
             "propTypes": Object {
               "innerRef": [Function],
               "size": [Function],
@@ -10474,7 +10417,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
           animation={
             Object {
               "$$typeof": Symbol(react.forward_ref),
-              "displayName": "Slide",
               "render": [Function],
             }
           }
@@ -10494,7 +10436,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
               "defaultProps": Object {
                 "classPrefix": "rs-modal",
               },
-              "displayName": "withStyleProps(defaultProps(ModalDialog))",
               "propTypes": Object {
                 "innerRef": [Function],
                 "size": [Function],
@@ -10533,7 +10474,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
             transition={
               Object {
                 "$$typeof": Symbol(react.forward_ref),
-                "displayName": "Slide",
                 "render": [Function],
               }
             }

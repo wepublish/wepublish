@@ -6,7 +6,7 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
@@ -89,6 +89,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     authors: [],
     tags: [],
     properties: [],
+    canonicalUrl: '',
     shared: peerByDefault,
     breaking: false,
     image: undefined,
@@ -144,6 +145,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         blocks,
         properties,
         hideAuthor,
+        canonicalUrl,
         socialMediaTitle,
         socialMediaDescription,
         socialMediaAuthors,
@@ -165,6 +167,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           value: property.value,
           public: property.public
         })),
+        canonicalUrl: canonicalUrl ?? '',
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -288,6 +291,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
       hideAuthor: metadata.hideAuthor,
