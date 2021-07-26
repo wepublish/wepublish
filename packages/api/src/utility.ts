@@ -165,7 +165,7 @@ function countRichtextChars(blocksCharLength: number, nodes: any) {
 export function validateCommentLength(text: RichTextNode[]) {
   const charCount = countRichtextChars(0, text)
   if (charCount > 1000) {
-    throw new Error(`Comment Length should be maximum of 1000 characters`)
+    throw new Error(`Comment length should be maximum of 1000 characters`)
   }
 }
 
