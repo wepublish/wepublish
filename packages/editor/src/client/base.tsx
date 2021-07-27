@@ -170,7 +170,7 @@ export function Base({children}: BaseProps) {
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="money" />}
+                    icon={<Icon icon="credit-card" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
