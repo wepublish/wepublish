@@ -188,7 +188,7 @@ export function UserList() {
               {(rowData: FullUserFragment) => (
                 <>
                   <IconButton
-                    icon={<Icon icon="key" />}
+                    icon={<Icon icon="lock" />}
                     circle
                     size="sm"
                     style={{marginLeft: '5px'}}
