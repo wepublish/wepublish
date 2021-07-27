@@ -130,7 +130,7 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="camera-retro" />}
+                  icon={<Icon icon="image" />}
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
