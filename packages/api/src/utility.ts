@@ -4,7 +4,6 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-// import {RichTextNode} from './graphql/richText'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
