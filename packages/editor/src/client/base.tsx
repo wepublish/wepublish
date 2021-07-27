@@ -109,7 +109,7 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="file" />}
+                  icon={<Icon icon="frame" />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
