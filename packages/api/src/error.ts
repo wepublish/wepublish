@@ -14,7 +14,8 @@ export enum ErrorCode {
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
   UserInputError = 'USER_INPUT_ERROR',
-  DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG'
+  DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
+  CommentLengthError = 'COMMENT_LENGTH_ERROR'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -104,5 +105,11 @@ export class DuplicatePageSlugError extends ApolloError {
       `Page with ID ${publishedPageID} already uses the slug "${slug}"`,
       ErrorCode.DuplicatePageSlug
     )
+  }
+}
+
+export class CommentLengthError extends ApolloError {
+  constructor() {
+    super(`Comment length should not exceed 1000 characters.`, ErrorCode.CommentLengthError)
   }
 }

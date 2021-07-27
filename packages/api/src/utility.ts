@@ -4,7 +4,7 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {RichTextNode} from './graphql/richText'
+// import {RichTextNode} from './graphql/richText'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -152,7 +152,7 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-function countRichtextChars(blocksCharLength: number, nodes: any) {
+export function countRichtextChars(blocksCharLength: number, nodes: any) {
   return nodes.reduce((charLength: number, node: any) => {
     if (!node.text && !node.children) return charLength
     if (node.text) {
@@ -162,12 +162,7 @@ function countRichtextChars(blocksCharLength: number, nodes: any) {
   }, blocksCharLength)
 }
 
-export function validateCommentLength(text: RichTextNode[]) {
-  const charCount = countRichtextChars(0, text)
-  if (charCount > 1000) {
-    throw new Error(`Comment length should be maximum of 1000 characters`)
-  }
-}
+export const MAX_COMMENT_LENGTH = 1000
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
