@@ -128,7 +128,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (commentLength > MAX_COMMENT_LENGTH) {
           throw new CommentLengthError()
-          return
         }
 
         return await dbAdapter.comment.addPublicComment({
