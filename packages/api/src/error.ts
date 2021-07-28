@@ -111,6 +111,6 @@ export class DuplicatePageSlugError extends ApolloError {
 
 export class CommentLengthError extends ApolloError {
   constructor() {
-    super(`Comment length should not exceed ` + MAX_COMMENT_LENGTH + ` characters.`, ErrorCode.CommentLengthError)
+    super(`Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`, ErrorCode.CommentLengthError)
   }
 }
