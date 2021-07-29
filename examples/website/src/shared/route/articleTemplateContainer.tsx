@@ -21,7 +21,8 @@ import {
   titleBlockDataFragment,
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
-  peerMetaDataFragment
+  peerMetaDataFragment,
+  peerArticleMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -128,20 +129,23 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaDescription,
     socialMediaImage,
     socialMediaAuthors,
-    comments
+    comments,
+    canonicalUrl
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
-  const canonicalURL = canonicalHost + path
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = canonicalUrl || canonicalHost + path
+
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -159,9 +163,9 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -192,7 +196,7 @@ const PeerQuery = gql`
 const PeerArticleQuery = gql`
   query PeerArticle($peerID: ID!, $id: ID!) {
     peerArticle(peerID: $peerID, id: $id) {
-      ...ArticleMetaData
+      ...PeerArticleMetaData
 
       blocks {
         __typename
@@ -216,7 +220,7 @@ const PeerArticleQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${peerArticleMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -273,7 +277,9 @@ export function PeerArticleTemplateContainer({
   } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const canonicalURL = canonicalHost + path
+
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = articleData.canonicalUrl || articleData.url
 
   return (
     <>
@@ -281,11 +287,11 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -303,10 +309,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}

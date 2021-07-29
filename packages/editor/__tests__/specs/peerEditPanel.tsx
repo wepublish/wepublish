@@ -13,7 +13,7 @@ describe('Peer Edit Panel', () => {
   test('should render', async () => {
     const wrapper = mount(
       <MockedProvider addTypename={false}>
-        <PeerEditPanel />
+        <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
@@ -48,7 +48,7 @@ describe('Peer Edit Panel', () => {
     ]
     const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <PeerEditPanel id={'peerId1'} />
+        <PeerEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
       </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
@@ -98,7 +98,7 @@ describe('Peer Edit Panel', () => {
 
     const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <PeerEditPanel />
+        <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
     )
     await updateWrapper(wrapper, 100)

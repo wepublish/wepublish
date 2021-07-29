@@ -37,3 +37,38 @@
     text-decoration: line-through;
   }
 }
+
+.icon-selector {
+  span & {
+    color: #7a7a7a;
+    &:hover {
+      color: #1675e0;
+    }
+  }
+}
+
+.rs-sidebar {
+  .collapse-nav-btn {
+    display: block;
+    visibility: hidden;
+    transition: visibility 500ms;
+  }
+
+  &:hover {
+    .collapse-nav-btn {
+      visibility: visible;
+    }
+  }
+}
+
+.unsaved {
+  .rs-badge-content{
+    background: darkorange;
+  }
+}
+
+.saved {
+  .rs-badge-content {
+    visibility: hidden;
+  }
+}

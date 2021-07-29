@@ -26,7 +26,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
   FullMemberPlanFragment,

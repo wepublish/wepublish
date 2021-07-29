@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
   Button,
@@ -17,18 +17,20 @@ import {
   InputGroup,
   IconButton,
   Tooltip,
-  Whisper
+  Whisper,
+  Input
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify} from '../utility'
+import {generateID, slugify} from '../utility'
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -45,6 +47,7 @@ export interface ArticleMetadata {
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
   readonly properties: ArticleMetadataProperty[]
+  readonly canonicalUrl: string
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
@@ -74,6 +77,7 @@ export function ArticleMetadataPanel({
   onChange
 }: ArticleMetadataPanelProps) {
   const {
+    canonicalUrl,
     preTitle,
     title,
     lead,
@@ -88,7 +92,8 @@ export function ArticleMetadataPanel({
     socialMediaTitle,
     socialMediaDescription,
     socialMediaAuthors,
-    socialMediaImage
+    socialMediaImage,
+    properties
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
@@ -96,7 +101,24 @@ export function ArticleMetadataPanel({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  const [metaDataProperties, setMetadataProperties] = useState<
+    ListValue<ArticleMetadataProperty>[]
+  >(
+    properties
+      ? properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
+  )
+
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if (metaDataProperties) {
+      onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+    }
+  }, [metaDataProperties])
 
   function handleImageChange(currentImage: ImageRefFragment) {
     switch (activeKey) {
@@ -361,6 +383,24 @@ export function ArticleMetadataPanel({
                   onChange={breaking => onChange?.({...value, breaking})}
                 />
               </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
+                <FormControl
+                  value={canonicalUrl}
+                  onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
+                />
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
+              </FormGroup>
             </Form>
             <Form fluid={true} style={{marginTop: '20px'}}>
               <FormGroup>
@@ -382,6 +422,59 @@ export function ArticleMetadataPanel({
               }}
               removeImage={() => onChange?.({...value, image: undefined})}
             />
+          </Panel>
+        )
+      case MetaDataType.Properties:
+        return (
+          <Panel>
+            <Form fluid={true}>
+              <FormGroup>
+                <Message
+                  showIcon
+                  type="info"
+                  description={t('articleEditor.panels.propertiesInfo')}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
+                <ListInput
+                  value={metaDataProperties}
+                  onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                  defaultValue={{key: '', value: '', public: true}}>
+                  {({value, onChange}) => (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <Input
+                        placeholder={t('articleEditor.panels.key')}
+                        style={{
+                          width: '40%',
+                          marginRight: '10px'
+                        }}
+                        value={value.key}
+                        onChange={propertyKey => onChange({...value, key: propertyKey})}
+                      />
+                      <Input
+                        placeholder={t('articleEditor.panels.value')}
+                        style={{
+                          width: '60%'
+                        }}
+                        value={value.value}
+                        onChange={propertyValue => onChange({...value, value: propertyValue})}
+                      />
+                      <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                        <Toggle
+                          style={{maxWidth: '70px', minWidth: '70px'}}
+                          checkedChildren={t('articleEditor.panels.public')}
+                          unCheckedChildren={t('articleEditor.panels.private')}
+                          checked={value.public}
+                          value={value.public}
+                          onChange={isPublic => onChange({...value, public: isPublic})}
+                        />
+                      </FormGroup>
+                    </div>
+                  )}
+                </ListInput>
+              </FormGroup>
+            </Form>
           </Panel>
         )
       default:
@@ -407,13 +500,16 @@ export function ArticleMetadataPanel({
           <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
+          <Nav.Item eventKey={MetaDataType.Properties} icon={<Icon icon="list" />}>
+            {t('articleEditor.panels.properties')}
+          </Nav.Item>
         </Nav>
         {currentContent()}
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
+        <Button appearance={'primary'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.saveAndClose')}
         </Button>
       </Drawer.Footer>
 

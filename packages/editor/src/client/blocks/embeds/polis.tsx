@@ -1,17 +1,14 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {useScript} from '../../utility'
 
 export interface PolisEmbedProps {
   conversationID: string
 }
 
 export function PolisEmbed({conversationID}: PolisEmbedProps) {
-  return (
-    <iframe
-      src={`https://pol.is/${conversationID}`}
-      width="100%"
-      height="600"
-      scrolling="yes"
-      frameBorder="0"
-    />
-  )
+  const {load} = useScript(`https://pol.is/embed.js`, () => false, false)
+
+  useEffect(() => load(), [])
+
+  return <div className="polis" data-conversation_id={conversationID}></div>
 }

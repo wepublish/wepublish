@@ -36,6 +36,7 @@ fragment ArticleRef on Article {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -58,6 +59,7 @@ fragment ArticleRef on Article {
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
 
@@ -84,6 +86,8 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
       peer {
         ...PeerWithProfile
       }
+
+      peeredArticleURL
 
       article {
         ...ArticleRef
@@ -147,6 +151,10 @@ query Article($id: ID!) {
     id
     shared
 
+    draft {
+      publishAt
+    }
+
     pending {
       publishAt
     }
@@ -169,6 +177,7 @@ query Article($id: ID!) {
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value

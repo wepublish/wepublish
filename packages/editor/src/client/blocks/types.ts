@@ -160,7 +160,8 @@ export enum TeaserType {
 
 export enum MetaDataType {
   General = 'general',
-  SocialMedia = 'socialMedia'
+  SocialMedia = 'socialMedia',
+  Properties = 'properties'
 }
 
 export interface ArticleTeaserLink {

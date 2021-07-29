@@ -12,7 +12,8 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  JobType
+  JobType,
+  Peer
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -43,6 +44,10 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+    return `${this.websiteURL}/p/${peer.id}/${article.id}`
+  }
+
   getPublicPageURL(page: PublicPage): string {
     return `${this.websiteURL}/page/${page.id}/${page.slug}`
   }
@@ -60,6 +65,10 @@ class ExampleURLAdapter implements URLAdapter {
 
   getArticlePreviewURL(token: string) {
     return `${this.websiteURL}/a/preview/${token}`
+  }
+
+  getPagePreviewURL(token: string): string {
+    return `${this.websiteURL}/${token}`
   }
 }
 

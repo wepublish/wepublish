@@ -96,8 +96,12 @@ const onDOMContentLoaded = async () => {
     return forward(operation)
   })
 
+  const mainLink = createUploadLink({uri: adminAPIURL})
+
   const client = new ApolloClient({
-    link: authLink.concat(authErrorLink).concat(createUploadLink({uri: adminAPIURL})),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    link: authLink.concat(authErrorLink).concat(mainLink),
     cache: new InMemoryCache({
       possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
     })

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
   PeerInfoEditRoute,
@@ -210,30 +210,33 @@ export function PeerList() {
       </Drawer>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-        <PeerEditPanel
-          id={editID}
-          onClose={() => {
-            setEditModalOpen(false)
+        {peerInfoData?.peerProfile.hostURL && (
+          <PeerEditPanel
+            id={editID}
+            hostURL={peerInfoData.peerProfile.hostURL}
+            onClose={() => {
+              setEditModalOpen(false)
 
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: PeerListRoute.create({})
+              })
+            }}
+            onSave={() => {
+              setEditModalOpen(false)
 
-            Alert.success(
-              editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
-              2000
-            )
+              Alert.success(
+                editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
+                2000
+              )
 
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
-            })
-          }}
-        />
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: PeerListRoute.create({})
+              })
+            }}
+          />
+        )}
       </Drawer>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>

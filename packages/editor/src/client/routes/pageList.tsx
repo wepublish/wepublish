@@ -18,6 +18,7 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -46,6 +47,7 @@ export function PageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
@@ -133,13 +135,23 @@ export function PageList() {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(pageRef: PageRefFragment) =>
+                pageRef.published?.publishedAt
+                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
+                      pageRef.published.publishedAt
+                    ).toLocaleTimeString()}`
+                  : pageRef.pending?.publishAt
+                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
+                      pageRef.pending.publishAt
+                    ).toLocaleTimeString()}`
+                  : t('pages.overview.notPublished')
+              }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>
@@ -173,7 +185,7 @@ export function PageList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
@@ -212,6 +224,18 @@ export function PageList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setPagePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -228,6 +252,15 @@ export function PageList() {
           onChangeLength={limit => setLimit(limit)}
         />
       </div>
+
+      <Modal show={isPagePreviewLinkOpen} width={'sm'} onHide={() => setPagePreviewLinkOpen(false)}>
+        {currentPage && (
+          <PagePreviewLinkPanel
+            props={{id: currentPage.id}}
+            onClose={() => setPagePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
 
       <Modal
         show={isConfirmationDialogOpen}

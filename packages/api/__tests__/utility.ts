@@ -10,7 +10,8 @@ import {
   PublicPage,
   URLAdapter,
   PublicComment,
-  CommentItemType
+  CommentItemType,
+  Peer
 } from '../src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
@@ -32,12 +33,20 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+    return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
+  }
+
   getAuthorURL(author: Author): string {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
 
   getArticlePreviewURL(token: string): string {
     return `https://demo.wepulish.ch/article/preview/${token}`
+  }
+
+  getPagePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/page/preview/${token}`
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {

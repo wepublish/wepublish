@@ -88,7 +88,8 @@ import {
   CanGetPayment,
   CanGetPayments,
   CanGetPaymentProviders,
-  CanGetArticlePreviewLink
+  CanGetArticlePreviewLink,
+  CanGetPagePreviewLink
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -431,6 +432,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Comments
     // =======
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {
@@ -588,6 +590,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
                       kind: Kind.SELECTION_SET,
                       selections: [
                         ...subtree.selections,
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'id'}
+                        },
                         {
                           kind: Kind.FIELD,
                           name: {kind: Kind.NAME, value: 'latest'},
@@ -792,6 +798,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
+      }
+    },
+
+    pagePreviewLink: {
+      type: GraphQLString,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
+        const {roles} = authenticate()
+        authorise(CanGetPagePreviewLink, roles)
+
+        const page = await loaders.pages.load(id)
+
+        if (!page) throw new NotFound('page', id)
+
+        if (!page.draft) throw new UserInputError('Page needs to have a draft')
+
+        const token = generateJWT({
+          id: page.id,
+          expiresInMinutes: hours * 60
+        })
+
+        return urlAdapter.getPagePreviewURL(token)
       }
     },
 
