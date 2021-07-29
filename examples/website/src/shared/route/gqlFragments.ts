@@ -107,6 +107,7 @@ export const articleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    canonicalUrl
 
     socialMediaTitle
     socialMediaDescription
@@ -148,6 +149,7 @@ export const peerArticleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    canonicalUrl
 
     socialMediaTitle
     socialMediaDescription

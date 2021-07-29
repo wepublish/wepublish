@@ -1,33 +1,31 @@
-name: CI/CD
+name: Deployment
 
-on:
-  push:
-    branches:
-      - master
-      
+on: [pull_request]
+
 jobs:
-  release:
+  deployment:
+    if: ${{ github.event.pull_request.base.repo.url == github.event.pull_request.head.repo.url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Build docker
         env:
-          PROJECT_ID: wepublish-dev
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
           GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
           printenv GCLOUD_AUTH | docker login -u _json_key --password-stdin https://eu.gcr.io
-          docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
           docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
           #docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: '10.x'
+          node-version: '16'
       - name: Create manifest
         env:
-          PROJECT_ID: wepublish-dev
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
@@ -41,12 +39,13 @@ jobs:
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
-        uses: rtCamp/action-slack-notify@master
+        if: success()
         env:
-          SLACK_CHANNEL: dev
-          SLACK_COLOR: '#3278BD'
-          SLACK_ICON: https://github.com/wepublish.png?size=48
-          SLACK_MESSAGE: 'We.Publish Deploy to Kubernetes done!'
-          SLACK_TITLE: 'CI/CD'
-          SLACK_USERNAME: 'Github (wepublish)'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
+        run: |
+          cd ./config
+          yarn install
+          node ./notify.js

@@ -60,6 +60,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -98,6 +99,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -1321,6 +1323,7 @@ export type Query = {
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   pages: PageConnection;
+  pagePreviewLink?: Maybe<Scalars['String']>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
   paymentMethod?: Maybe<PaymentMethod>;
@@ -1480,6 +1483,12 @@ export type QueryPagesArgs = {
   skip?: Maybe<Scalars['Int']>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
 };
 
 
@@ -1859,7 +1868,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
@@ -2037,7 +2046,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -2960,6 +2969,17 @@ export type DuplicatePageMutation = (
   ) }
 );
 
+export type PagePreviewLinkQueryVariables = Exact<{
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
+}>;
+
+
+export type PagePreviewLinkQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'pagePreviewLink'>
+);
+
 export type PageQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -3625,6 +3645,7 @@ export const ArticleRefFragmentDoc = gql`
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
     ${ImageRefFragmentDoc}`;
@@ -4416,6 +4437,7 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value
@@ -5743,6 +5765,40 @@ export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOption
 export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
 export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
 export type DuplicatePageMutationOptions = Apollo.BaseMutationOptions<DuplicatePageMutation, DuplicatePageMutationVariables>;
+export const PagePreviewLinkDocument = gql`
+    query PagePreviewLink($id: ID!, $hours: Int!) {
+  pagePreviewLink(id: $id, hours: $hours)
+}
+    `;
+
+/**
+ * __usePagePreviewLinkQuery__
+ *
+ * To run a query within a React component, call `usePagePreviewLinkQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePagePreviewLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePagePreviewLinkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      hours: // value for 'hours'
+ *   },
+ * });
+ */
+export function usePagePreviewLinkQuery(baseOptions: Apollo.QueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
+      }
+export function usePagePreviewLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
+        }
+export type PagePreviewLinkQueryHookResult = ReturnType<typeof usePagePreviewLinkQuery>;
+export type PagePreviewLinkLazyQueryHookResult = ReturnType<typeof usePagePreviewLinkLazyQuery>;
+export type PagePreviewLinkQueryResult = Apollo.QueryResult<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>;
 export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {

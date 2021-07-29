@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {NavigationBar} from '../atoms/navigationBar'

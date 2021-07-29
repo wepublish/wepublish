@@ -68,6 +68,10 @@ class ExampleURLAdapter implements URLAdapter {
   getArticlePreviewURL(token: string) {
     return `${this.websiteURL}/a/preview/${token}`
   }
+
+  getPagePreviewURL(token: string): string {
+    return `${this.websiteURL}/${token}`
+  }
 }
 
 async function asyncMain() {
