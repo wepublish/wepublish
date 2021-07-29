@@ -35,5 +35,5 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-* [Setup Commenting](/wepublish/#/commenting)
-* [Email Templates](/wepublish/#/emailtemplates)
+* [Setup Commenting](commenting.md)
+* [Email Templates](emailtemplates.md)
