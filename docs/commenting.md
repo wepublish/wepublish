@@ -1,41 +1,4 @@
-<!--
-*** Thanks for checking out this README Template. If you have a suggestion that would
-*** make this better, please fork the repo and create a pull request or simply open
-*** an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** github_username, repo_name, twitter_handle, email
--->
-
-
-
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://github.com/wepublish/wepublish">
-    <img src="./assets/logo.png" alt="Logo" height="43">
-  </a>
-
-  <h3 align="center">We.Publish</h3>
-
-  <p align="center">
-    Open Source Headless CMS for Publishers and News Rooms
-    <br />
-    <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>-->
-    <br />
-    <br />
-    <a href="#demo">View Demo</a>
-    ·
-    <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/wepublish/wepublish/issues">Request Feature</a>
-  </p>
-</p>
-
-
+# Setup Commenting
 
 ## Getting Started
 
