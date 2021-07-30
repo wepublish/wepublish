@@ -782,7 +782,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                         className="rs-panel-body"
                       >
                         <div
-                          className="frame"
+                          className="richTextFrame"
                         >
                           <Memo(RichTextBlock)
                             onChange={[Function]}
@@ -3764,7 +3764,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                         className="rs-panel-body"
                       >
                         <div
-                          className="frame"
+                          className="richTextFrame"
                         >
                           <Memo(RichTextBlock)
                             onChange={[Function]}
@@ -6273,7 +6273,7 @@ exports[`Author Edit Panel should render 1`] = `
                         className="rs-panel-body"
                       >
                         <div
-                          className="frame"
+                          className="richTextFrame"
                         >
                           <Memo(RichTextBlock)
                             onChange={[Function]}
@@ -8774,7 +8774,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                         className="rs-panel-body"
                       >
                         <div
-                          className="frame"
+                          className="richTextFrame"
                         >
                           <Memo(RichTextBlock)
                             onChange={[Function]}
