@@ -1,7 +1,5 @@
-// @ts-ignore
-const React = require('react')
-// @ts-ignore
-const reactI18next = require('react-i18next')
+import React from 'react'
+import * as reactI18next from 'react-i18next'
 
 const hasChildren = (node: any) => node && (node.children || (node.props && node.props.children))
 
@@ -32,13 +30,10 @@ const renderNodes = (reactNodes: any): any => {
   })
 }
 
-const useMock = [(k: any) => k, {}]
-// @ts-ignore
+const useMock: any = [(k: any) => k, {}]
 useMock.t = (k: any) => k
-// @ts-ignore
 useMock.i18n = {}
 
-// @ts-ignore
 module.exports = {
   // this mock makes sure any components using the translate HoC receive the t function as a prop
   // withTranslation: () => (Component: any) => (props: any) => <Component t={k => k} {...props} />,
