@@ -220,7 +220,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </ListInput>
           </Panel>
           <Panel header={t('authors.panels.bioInformation')}>
-            <div className="frame">
+            <div className="richTextFrame">
               <RichTextBlock value={bio} onChange={value => setBio(value)} />
             </div>
           </Panel>
