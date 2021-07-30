@@ -121,6 +121,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []
@@ -138,6 +143,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []
