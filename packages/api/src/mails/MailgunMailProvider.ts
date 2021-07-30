@@ -96,6 +96,9 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('to', props.recipient)
       form.append('subject', props.subject)
       form.append('text', props.message ?? '')
+      if (props.messageHtml) {
+        form.append('html', props.messageHtml)
+      }
       form.append('v:mail_log_id', props.mailLogID)
       form.submit(
         {
