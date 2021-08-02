@@ -320,6 +320,7 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
+      <PeerProfileBlock peer={peer} article={articleData} />
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
@@ -423,6 +424,34 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
                 /* do nothing */
               }}
             />
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
+  const css = useStyle()
+
+  return (
+    <div className={css(PeerProfileBreakStyle)}>
+      <div className={css(PeerProfileInnerStyle)}>
+        <div className={css(PeerProfileFiller)}>
+          <Link href={article.url}>Zum Originalartikel</Link>
+        </div>
+        <div className={css(PeerProfileNameContainer)}>
+          <div className={css(PeerProfileImageStyle)}>
+            <Image src={peer.logoURL} height={50} width={50} />
+          </div>
+          <p className={css(PeerProfileTextStyle)}>{peer.name}</p>
+        </div>
+        <div className={css(PeerProfileFiller)} />
+      </div>
+      <div className={css(PeerProfileCallToActionURL)}>
+        {peer?.callToActionImage && (
+          <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+            <Image src={peer?.callToActionImage} height={50} width={50} />
           </a>
         )}
       </div>
