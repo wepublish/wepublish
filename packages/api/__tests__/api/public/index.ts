@@ -32,6 +32,7 @@ export type Article = {
   lead?: Maybe<Scalars['String']>
   seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
+  canonicalUrl?: Maybe<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
@@ -639,7 +640,7 @@ export type Query = {
   articles: ArticleConnection
   /** This query takes either the peer ID or the peer slug and returns the article. */
   peerArticle?: Maybe<Article>
-  /** This query takes either the ID or the slug and returns the page. */
+  /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>
   /** This query returns the pages. */
   pages: PageConnection
@@ -703,6 +704,7 @@ export type QueryPeerArticleArgs = {
 export type QueryPageArgs = {
   id?: Maybe<Scalars['ID']>
   slug?: Maybe<Scalars['Slug']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type QueryPagesArgs = {

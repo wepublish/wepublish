@@ -58,6 +58,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
+  canonicalUrl?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
   authorIDs: Array<Scalars['ID']>
   shared: Scalars['Boolean']
@@ -96,6 +97,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug']
   tags: Array<Scalars['String']>
   properties: Array<Properties>
+  canonicalUrl?: Maybe<Scalars['String']>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
@@ -1283,6 +1285,7 @@ export type Query = {
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
+  pagePreviewLink?: Maybe<Scalars['String']>
   memberPlan?: Maybe<MemberPlan>
   memberPlans: MemberPlanConnection
   paymentMethod?: Maybe<PaymentMethod>
@@ -1423,6 +1426,11 @@ export type QueryPagesArgs = {
   skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID']
+  hours: Scalars['Int']
 }
 
 export type QueryMemberPlanArgs = {

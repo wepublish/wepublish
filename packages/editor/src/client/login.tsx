@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType, RouteInstance} from '@karma.run/react'
+import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
 
