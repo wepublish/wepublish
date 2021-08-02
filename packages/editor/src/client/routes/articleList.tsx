@@ -133,7 +133,7 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+          rowClassName={(rowData: ArticleRefFragment) => (rowData?.pending ? 'pending-approval' : '' || rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
