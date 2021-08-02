@@ -340,7 +340,10 @@ async function asyncMain() {
           local: true
         }
       ],
-      mailTemplatesPath: path.resolve('templates', 'emails')
+      mailTemplatesPath:
+        process.env.NODE_ENV === 'production'
+          ? path.resolve('examples', 'api', 'templates', 'emails')
+          : path.resolve('templates', 'emails')
     },
     paymentProviders,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
