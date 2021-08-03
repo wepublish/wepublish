@@ -6,6 +6,8 @@ export interface PeerProfile {
   themeColor: string
   callToActionText: RichTextNode[]
   callToActionURL: string
+  callToActionImageID?: string
+  callToActionImageURL?: string
 }
 
 export type ResolvedPeerProfile = unknown
@@ -16,6 +18,8 @@ export interface PeerProfileInput {
   themeColor: string
   callToActionText: RichTextNode[]
   callToActionURL: string
+  callToActionImageID?: string
+  callToActionImageURL?: string
 }
 
 export interface BasePeer {

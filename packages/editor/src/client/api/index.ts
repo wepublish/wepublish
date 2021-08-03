@@ -1250,6 +1250,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImage?: Maybe<Image>;
 };
 
 export type PeerProfileInput = {
@@ -1258,6 +1260,8 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImageID?: Maybe<Scalars['ID']>;
 };
 
 export type Permission = {
@@ -3155,8 +3159,11 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, callToActionImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )> }
@@ -3667,6 +3674,10 @@ export const FullPeerProfileFragmentDoc = gql`
   }
   callToActionText
   callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`

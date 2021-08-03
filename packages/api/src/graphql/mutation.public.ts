@@ -18,7 +18,8 @@ import {
   EmailAlreadyInUseError,
   NotAuthorisedError as NotAuthorizedError,
   NotAuthenticatedError,
-  UserInputError
+  UserInputError,
+  CommentLengthError
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -34,6 +35,7 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
 import {SendMailType} from '../mails/mailContext'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -123,6 +125,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
+        const commentLength = countRichtextChars(0, input.text)
+
+        if (commentLength > MAX_COMMENT_LENGTH) {
+          throw new CommentLengthError()
+        }
+
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
