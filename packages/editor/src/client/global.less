@@ -62,7 +62,7 @@
 }
 
 .unsaved {
-  .rs-badge-content{
+  .rs-badge-content {
     background: darkorange;
   }
 }
@@ -74,8 +74,10 @@
 }
 
 .displayThreeLinesOnly {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   line-height: 16px; 
-   max-height: 48px; 
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
