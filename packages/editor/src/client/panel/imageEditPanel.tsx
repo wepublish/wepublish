@@ -218,9 +218,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
             </Panel>
             <Panel header={t('images.panels.description')}>
               <DescriptionList>
-                <div
-               className="displayThreeLinesOnly"
-                  >
+                <div className="displayThreeLinesOnly">
                   <DescriptionListItem label={t('images.panels.description')}>
                     {description}
                   </DescriptionListItem>
