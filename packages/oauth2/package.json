@@ -25,6 +25,7 @@
     "directory": "packages/oauth2"
   },
   "typings": "./lib/index.d.ts",
+  "main": "./lib/",
   "license": "MIT",
   "scripts": {
     "build": "run-p build:*",

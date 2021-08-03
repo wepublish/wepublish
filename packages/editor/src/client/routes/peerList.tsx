@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
   PeerInfoEditRoute,

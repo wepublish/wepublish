@@ -6,7 +6,7 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
@@ -39,6 +39,8 @@ import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
+import {ClientSettings} from '../../shared/types'
+import {ElementID} from '../../shared/elementID'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -51,6 +53,10 @@ const InitialArticleBlocks: BlockValue[] = [
 
 export function ArticleEditor({id}: ArticleEditorProps) {
   const {t} = useTranslation()
+
+  const {peerByDefault}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
 
   const dispatch = useRouteDispatch()
 
@@ -83,7 +89,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     authors: [],
     tags: [],
     properties: [],
-    shared: false,
+    canonicalUrl: '',
+    shared: peerByDefault,
     breaking: false,
     image: undefined,
     hideAuthor: false,
@@ -138,6 +145,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         blocks,
         properties,
         hideAuthor,
+        canonicalUrl,
         socialMediaTitle,
         socialMediaDescription,
         socialMediaAuthors,
@@ -159,6 +167,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           value: property.value,
           public: property.public
         })),
+        canonicalUrl: canonicalUrl ?? '',
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -282,6 +291,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
       hideAuthor: metadata.hideAuthor,

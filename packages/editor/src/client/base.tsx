@@ -28,9 +28,9 @@ export interface BaseProps {
 }
 
 const AVAILABLE_LANG = [
-  {id: 'en', lang: 'en_US', name: 'English'}
-  /* {id: 'fr', lang: 'fr_FR', name: 'Français'},
-  {id: 'de', lang: 'de_CH', name: 'Deutsch'} */
+  {id: 'en', lang: 'en_US', name: 'English'},
+  {id: 'fr', lang: 'fr_FR', name: 'Français'},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
 ]
 
 const iconStyles = {
@@ -104,12 +104,12 @@ export function Base({children}: BaseProps) {
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList}>
+                  active={current?.type === RouteType.ArticleList || current?.type === RouteType.Index}>
                   {t('navbar.articles')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="file" />}
+                  icon={<Icon icon="frame" />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
@@ -130,7 +130,7 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="camera-retro" />}
+                  icon={<Icon icon="image" />}
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
@@ -170,7 +170,7 @@ export function Base({children}: BaseProps) {
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="money" />}
+                    icon={<Icon icon="credit-card" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
