@@ -128,7 +128,7 @@ async function applyWebsite() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -136,7 +136,7 @@ async function applyWebsite() {
       tls: [
         {
           hosts: hosts,
-          secretName: `${appName}-tls`
+          secretName: `wildcard-wepublish-dev-tls`
         }
       ]
     }
@@ -436,7 +436,7 @@ async function applyMediaServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -459,7 +459,7 @@ async function applyMediaServer() {
       tls: [
         {
           hosts: [domainMedia],
-          secretName: `${appName}-tls`
+          secretName: `wildcard-wepublish-dev-tls`
         }
       ]
     }
@@ -808,7 +808,7 @@ async function applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -831,7 +831,7 @@ async function applyApiServer() {
       tls: [
         {
           hosts: [domainAPI],
-          secretName: `${appName}-tls`
+          secretName: `wildcard-wepublish-dev-tls`
         }
       ]
     }
@@ -970,7 +970,7 @@ async function applyEditor() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -993,7 +993,7 @@ async function applyEditor() {
       tls: [
         {
           hosts: [domainEditor],
-          secretName: `${appName}-tls`
+          secretName: `wildcard-wepublish-dev-tls`
         }
       ]
     }
@@ -1185,7 +1185,7 @@ async function applyOAuth2() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -1208,7 +1208,7 @@ async function applyOAuth2() {
       tls: [
         {
           hosts: [domainOauth],
-          secretName: `${appName}-tls`
+          secretName: `wildcard-wepublish-dev-tls`
         }
       ]
     }
