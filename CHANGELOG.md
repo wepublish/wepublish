@@ -1,5 +1,30 @@
 # Change Log
 
+## v2.7.0 (2021-08-03)
+
+#### :bug: Bug Fix
+* [#295](https://github.com/wepublish/wepublish/pull/295) Handle URLs inside a peer article ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :nail_care: Polish
+* `editor`
+  * [#296](https://github.com/wepublish/wepublish/pull/296) Use JS SDK instead of iframe  ([@roosnic1](https://github.com/roosnic1))
+  * [#294](https://github.com/wepublish/wepublish/pull/294) Add properties tab to metadata ([@penk85](https://github.com/penk85))
+  * [#291](https://github.com/wepublish/wepublish/pull/291) b/wpc-423-ui-fixes ([@HanaAyman](https://github.com/HanaAyman))
+  * [#283](https://github.com/wepublish/wepublish/pull/283) F/wpc 165 article status indicator ([@penk85](https://github.com/penk85))
+
+#### :house: Internal
+* `editor`
+  * [#296](https://github.com/wepublish/wepublish/pull/296) Use JS SDK instead of iframe  ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`, `oauth2`
+  * [#293](https://github.com/wepublish/wepublish/pull/293) remove unused deps ([@HanaAyman](https://github.com/HanaAyman))
+
+#### Committers: 4
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.6.0 (2021-06-23)
 
 #### :boom: Breaking Change
