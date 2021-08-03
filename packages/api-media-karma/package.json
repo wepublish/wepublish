@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "2.7.0-alpha.0",
+  "version": "2.7.0",
   "description": "We.publish media service",
   "keywords": [
     "images",

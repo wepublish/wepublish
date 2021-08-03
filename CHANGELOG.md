@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.7.0-alpha.0 (2021-07-07)
+## v2.7.0 (2021-08-03)
 
 #### :bug: Bug Fix
 * [#295](https://github.com/wepublish/wepublish/pull/295) Handle URLs inside a peer article ([@bishoymelek](https://github.com/bishoymelek))
