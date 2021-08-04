@@ -431,26 +431,28 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
   )
 }
 
-export function PeerProfileImageBlock({peer}: PeerProfileBlockProps) {
+export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
   const css = useStyle()
 
   return (
     <div className={css(PeerProfileBreakStyle)}>
-      <div className={css(PeerProfileInnerStyle)}>
-        {peer?.callToActionImage && (
-          <div style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
-            <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
-              <div
-                style={{
-                  height: pxToRem(100),
-                  objectFit: 'contain'
-                }}>
-                <Image src={peer?.callToActionImage} fit={ImageFit.Contain} height={100} />
-              </div>
-            </a>
+      {peer?.callToActionImage && (
+        <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+          <div
+            style={{
+              backgroundColor: 'darkGray',
+              border: '1px solid gray',
+              display: 'flex',
+              width: '100%',
+              height: 'auto',
+              maxHeight: '250px',
+              marginRight: 'auto',
+              marginLeft: 'auto'
+            }}>
+            <Image src={peer?.callToActionImage} fit={ImageFit.Cover} />
           </div>
-        )}
-      </div>
+        </a>
+      )}
     </div>
   )
 }
