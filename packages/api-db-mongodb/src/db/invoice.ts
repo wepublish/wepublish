@@ -221,8 +221,7 @@ function invoiceSortFieldForSort(sort: InvoiceSort) {
   }
 }
 
-// @ts-ignore TODO: fix me
-function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date {
+function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date | undefined {
   switch (sort) {
     case InvoiceSort.CreatedAt:
       return invoice.createdAt
@@ -233,4 +232,6 @@ function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date {
     case InvoiceSort.PaidAt:
       if (invoice.paidAt) return invoice.paidAt
   }
+
+  return undefined
 }
