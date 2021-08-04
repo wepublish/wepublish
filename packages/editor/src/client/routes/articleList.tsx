@@ -133,7 +133,9 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={(rowData: ArticleRefFragment) => (rowData?.pending ? 'pending-approval' : '' || rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+          rowClassName={(rowData: ArticleRefFragment) =>
+            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
+          }
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -194,7 +196,20 @@ export function ArticleList() {
                 if (rowData.pending) states.push(t('articles.overview.pending'))
                 if (rowData.published) states.push(t('articles.overview.published'))
 
-                return <div>{states.join(' / ')}</div>
+                return (
+                  <div
+                    style={
+                      rowData.pending
+                        ? {background: 'rgb(248, 222, 242)'}
+                        : rowData.published
+                        ? {background: 'rgb(225, 248, 222)'}
+                        : rowData.draft
+                        ? {background: 'rgb(248, 239, 222)'}
+                        : {}
+                    }>
+                    {states.join(' / ')}
+                  </div>
+                )
               }}
             </Cell>
           </Column>
