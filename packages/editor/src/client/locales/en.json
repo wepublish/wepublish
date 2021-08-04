@@ -645,7 +645,8 @@
         "token": "Token",
         "Unknown": "Unknown",
         "URL": "URL",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "leaveEmpty": "Leave empty if you don't want to change it"
       }
     },
     "save": "Save",

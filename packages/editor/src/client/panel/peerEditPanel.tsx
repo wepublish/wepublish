@@ -203,7 +203,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <FormControl
                 value={token}
                 name={t('peerList.panels.token')}
-                placeholder={id ? "Leave empty if you don't want to change it" : undefined}
+                placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
                 onChange={value => {
                   setToken(value)
                 }}

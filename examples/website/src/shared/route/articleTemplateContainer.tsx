@@ -4,25 +4,25 @@ import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
 
 import {
-  imageBlockDataFragment,
-  richTextBlockDataFragment,
-  imageGalleryBlockDataFragment,
-  facebookPostBlockDataFragment,
-  instagramPostBlockDataFragment,
-  twitterTweetBlockDataFragment,
-  vimeoVideoBlockDataFragment,
-  youtubeVideoBlockDataFragment,
-  soundCloudTrackBlockDataFragment,
-  polisConversationBlockDataFragment,
+  articleMetaDataFragment,
   embedBlockDataFragment,
+  facebookPostBlockDataFragment,
+  gridBlockFrontDataGQLfragment,
+  imageBlockDataFragment,
+  imageGalleryBlockDataFragment,
+  instagramPostBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
-  quoteBlockDataFragment,
-  titleBlockDataFragment,
-  articleMetaDataFragment,
-  gridBlockFrontDataGQLfragment,
+  peerArticleMetaDataFragment,
   peerMetaDataFragment,
-  peerArticleMetaDataFragment
+  polisConversationBlockDataFragment,
+  quoteBlockDataFragment,
+  richTextBlockDataFragment,
+  soundCloudTrackBlockDataFragment,
+  titleBlockDataFragment,
+  twitterTweetBlockDataFragment,
+  vimeoVideoBlockDataFragment,
+  youtubeVideoBlockDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -31,12 +31,12 @@ import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
 import {Loader} from '../atoms/loader'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
 import {Helmet} from 'react-helmet-async'
-import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
+import {ArticleRoute, Link, PeerArticleRoute} from './routeContext'
 import {useAppContext} from '../appContext'
-import {Peer, ArticleMeta} from '../types'
-import {useStyle, cssRule} from '@karma.run/react'
-import {Image} from '../atoms/image'
-import {whenMobile, pxToRem} from '../style/helpers'
+import {ArticleMeta, Peer} from '../types'
+import {cssRule, useStyle} from '@karma.run/react'
+import {Image, ImageFit} from '../atoms/image'
+import {pxToRem, whenMobile} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
@@ -320,7 +320,7 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
-      <PeerProfileBlock peer={peer} article={articleData} />
+      <PeerProfileImageBlock peer={peer} article={articleData} />
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
@@ -431,28 +431,24 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
   )
 }
 
-export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
+export function PeerProfileImageBlock({peer}: PeerProfileBlockProps) {
   const css = useStyle()
 
   return (
     <div className={css(PeerProfileBreakStyle)}>
       <div className={css(PeerProfileInnerStyle)}>
-        <div className={css(PeerProfileFiller)}>
-          <Link href={article.url}>Zum Originalartikel</Link>
-        </div>
-        <div className={css(PeerProfileNameContainer)}>
-          <div className={css(PeerProfileImageStyle)}>
-            <Image src={peer.logoURL} height={50} width={50} />
-          </div>
-          <p className={css(PeerProfileTextStyle)}>{peer.name}</p>
-        </div>
-        <div className={css(PeerProfileFiller)} />
-      </div>
-      <div className={css(PeerProfileCallToActionURL)}>
         {peer?.callToActionImage && (
-          <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
-            <Image src={peer?.callToActionImage} height={50} width={50} />
-          </a>
+          <div style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
+            <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+              <div
+                style={{
+                  height: pxToRem(100),
+                  objectFit: 'contain'
+                }}>
+                <Image src={peer?.callToActionImage} fit={ImageFit.Contain} height={100} />
+              </div>
+            </a>
+          </div>
         )}
       </div>
     </div>
