@@ -214,7 +214,7 @@ export function ComposeComment(props: ComposeCommentProps) {
     },
     onError: error => {
       console.error('Error creating a post', error)
-      setcommentStateInfo("Something went wrong, your comment couldn't be saved")
+      setcommentStateInfo(error.message)
     }
   })
 
