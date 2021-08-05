@@ -320,7 +320,9 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
-      <PeerProfileImageBlock peer={peer} article={articleData} />
+      {peer.callToActionImage && peer.callToActionImageURL && (
+        <PeerProfileImageBlock peer={peer} article={articleData} />
+      )}
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
