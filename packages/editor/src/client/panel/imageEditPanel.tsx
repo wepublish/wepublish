@@ -218,9 +218,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
             </Panel>
             <Panel header={t('images.panels.description')}>
               <DescriptionList>
-                <DescriptionListItem label={t('images.panels.description')}>
-                  <div className="displayThreeLinesOnly">{description}</div>
-                </DescriptionListItem>
                 <DescriptionListItem label={t('images.panels.filename')}>
                   {filename || t('images.panels.untitled')}
                   {extension}
