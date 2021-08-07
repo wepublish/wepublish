@@ -151,5 +151,17 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+export function countRichtextChars(blocksCharLength: number, nodes: any) {
+  return nodes.reduce((charLength: number, node: any) => {
+    if (!node.text && !node.children) return charLength
+    if (node.text) {
+      return charLength + (node.text as string).length
+    }
+    return countRichtextChars(charLength, node.children)
+  }, blocksCharLength)
+}
+
+export const MAX_COMMENT_LENGTH = 1000
+
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS

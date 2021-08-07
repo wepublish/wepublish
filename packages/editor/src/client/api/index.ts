@@ -3159,8 +3159,11 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, callToActionImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )> }
@@ -3671,6 +3674,10 @@ export const FullPeerProfileFragmentDoc = gql`
   }
   callToActionText
   callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
