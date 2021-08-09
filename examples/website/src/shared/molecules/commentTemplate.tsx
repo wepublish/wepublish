@@ -202,6 +202,7 @@ export interface LoginToComment {
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
+  const maxCommentLength = 1000
 
   const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
   const [commentStateInfo, setcommentStateInfo] = useState('')
@@ -244,7 +245,10 @@ export function ComposeComment(props: ComposeCommentProps) {
             }}
           />
         </div>
-
+        <div style={{float: 'right', fontSize: '0.9em'}}>
+            {' '}
+            {commentInput ? commentInput[0].children[0].text.length : 0}/{maxCommentLength}
+        </div>
         <BaseButton css={props.parentID ? SmallButton : CommentButton} disabled={loading}>
           {props.parentID ? 'Submit' : 'Post comment'}
         </BaseButton>
