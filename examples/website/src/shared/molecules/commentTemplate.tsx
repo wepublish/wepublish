@@ -219,6 +219,21 @@ export function ComposeComment(props: ComposeCommentProps) {
     }
   })
 
+  function countRichtextChars(blocksCharLength: number, nodes: any) {
+    return nodes.reduce((charLength: number, node: any) => {
+      if (!node.text && !node.children) return charLength
+      // node either has text (leaf node) or children (element node)
+      if (node.text) {
+        return charLength + (node.text as string).length
+      }
+      return countRichtextChars(charLength, node.children)
+    }, blocksCharLength)
+  }
+
+  function countRichTextBlocksChars(block: RichTextBlockValue) {
+    return countRichtextChars(0, block)
+  }
+
   return (
     <div className={role === 'reply' ? css(ReplyBox) : css(Container)}>
       {commentComposerHeader ? <h3>{commentComposerHeader}</h3> : ''}
@@ -247,7 +262,7 @@ export function ComposeComment(props: ComposeCommentProps) {
         </div>
         <div style={{float: 'right', fontSize: '0.9em'}}>
             {' '}
-            {commentInput ? commentInput[0].children[0].text.length : 0}/{maxCommentLength}
+            {commentInput ? countRichTextBlocksChars(commentInput) : 0}/{maxCommentLength}
         </div>
         <BaseButton css={props.parentID ? SmallButton : CommentButton} disabled={loading}>
           {props.parentID ? 'Submit' : 'Post comment'}
