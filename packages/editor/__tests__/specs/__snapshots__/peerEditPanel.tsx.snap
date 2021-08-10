@@ -1814,14 +1814,14 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                 classPrefix="rs-form-control"
                                 name="peerList.panels.token"
                                 onChange={[Function]}
-                                placeholder="Leave empty if you don't want to change it"
+                                placeholder="peerList.panels.leaveEmpty"
                                 value=""
                               >
                                 <FormControlWrapper
                                   classPrefix="rs-form-control"
                                   name="peerList.panels.token"
                                   onChange={[Function]}
-                                  placeholder="Leave empty if you don't want to change it"
+                                  placeholder="peerList.panels.leaveEmpty"
                                   value=""
                                 >
                                   <FormControl
@@ -1863,7 +1863,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                     formValue={Object {}}
                                     name="peerList.panels.token"
                                     onChange={[Function]}
-                                    placeholder="Leave empty if you don't want to change it"
+                                    placeholder="peerList.panels.leaveEmpty"
                                     plaintextDefaultValue="--"
                                     value=""
                                   >
@@ -1876,7 +1876,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                         name="peerList.panels.token"
                                         onBlur={[Function]}
                                         onChange={[Function]}
-                                        placeholder="Leave empty if you don't want to change it"
+                                        placeholder="peerList.panels.leaveEmpty"
                                         type="text"
                                         value=""
                                       >
@@ -1887,7 +1887,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                           name="peerList.panels.token"
                                           onBlur={[Function]}
                                           onChange={[Function]}
-                                          placeholder="Leave empty if you don't want to change it"
+                                          placeholder="peerList.panels.leaveEmpty"
                                           type="text"
                                           value=""
                                         >
@@ -1898,7 +1898,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                             name="peerList.panels.token"
                                             onBlur={[Function]}
                                             onChange={[Function]}
-                                            placeholder="Leave empty if you don't want to change it"
+                                            placeholder="peerList.panels.leaveEmpty"
                                             type="text"
                                             value=""
                                           >
@@ -1908,7 +1908,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                               onBlur={[Function]}
                                               onChange={[Function]}
                                               onKeyDown={[Function]}
-                                              placeholder="Leave empty if you don't want to change it"
+                                              placeholder="peerList.panels.leaveEmpty"
                                               type="text"
                                               value=""
                                             />
