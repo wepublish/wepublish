@@ -1,0 +1,83 @@
+.rs-table {
+  .highlighted-row,
+  .highlighted-row &-cell-group &-cell {
+    background-color: #f2faff;
+  }
+
+  &-row.approved:not(&-row-header),
+  &-row.approved &-cell-group,
+  &-row.approved &-cell {
+    background: rgb(225, 248, 222);
+  }
+
+  &-row.pending-user:not(&-row-header),
+  &-row.pending-user &-cell-group,
+  &-row.pending-user &-cell {
+    background: rgb(248, 239, 222);
+  }
+
+  &-row.pending-approval:not(&-row-header),
+  &-row.pending-approval &-cell-group,
+  &-row.pending-approval &-cell {
+    background: rgb(248, 222, 242);
+  }
+
+  &-row.rejected:not(&-row-header),
+  &-row.rejected &-cell-group,
+  &-row.rejected &-cell {
+    background: rgb(83, 85, 83);
+    color: white;
+    text-decoration: line-through;
+  }
+
+  &-hover &-row.rejected:not(&-row-header):hover,
+  &-hover &-row.rejected:hover &-cell-group,
+  &-hover &-row.rejected:hover &-cell {
+    color: rgb(83, 85, 83);
+    text-decoration: line-through;
+  }
+}
+
+.icon-selector {
+  span & {
+    color: #7a7a7a;
+    &:hover {
+      color: #1675e0;
+    }
+  }
+}
+
+.rs-sidebar {
+  .collapse-nav-btn {
+    display: block;
+    visibility: hidden;
+    transition: visibility 500ms;
+  }
+
+  &:hover {
+    .collapse-nav-btn {
+      visibility: visible;
+    }
+  }
+}
+
+.unsaved {
+  .rs-badge-content{
+    background: darkorange;
+  }
+}
+
+.saved {
+  .rs-badge-content {
+    visibility: hidden;
+  }
+}
+
+.richTextFrame {
+  padding: 0px 20px 20px;
+  border: 1px solid #e5e5ea;
+  border-radius: 7px;
+  &:hover {
+    border-color: #1675e0;
+  }
+}
