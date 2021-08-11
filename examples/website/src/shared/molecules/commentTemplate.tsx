@@ -9,6 +9,7 @@ import {AuthContext} from '../authContext'
 import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {useRoute} from '../route/routeContext'
+import {countRichTextBlocksChars, maxCommentLength} from '../utility'
 
 // CSS-Rules
 // =========
@@ -202,7 +203,6 @@ export interface LoginToComment {
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
-  const maxCommentLength = 1000
 
   const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
   const [commentStateInfo, setcommentStateInfo] = useState('')
@@ -218,21 +218,6 @@ export function ComposeComment(props: ComposeCommentProps) {
       setcommentStateInfo(error.message)
     }
   })
-
-  function countRichtextChars(blocksCharLength: number, nodes: any) {
-    return nodes.reduce((charLength: number, node: any) => {
-      if (!node.text && !node.children) return charLength
-      // node either has text (leaf node) or children (element node)
-      if (node.text) {
-        return charLength + (node.text as string).length
-      }
-      return countRichtextChars(charLength, node.children)
-    }, blocksCharLength)
-  }
-
-  function countRichTextBlocksChars(block: RichTextBlockValue) {
-    return countRichtextChars(0, block)
-  }
 
   return (
     <div className={role === 'reply' ? css(ReplyBox) : css(Container)}>
@@ -261,8 +246,7 @@ export function ComposeComment(props: ComposeCommentProps) {
           />
         </div>
         <div style={{float: 'right', fontSize: '0.9em'}}>
-            {' '}
-            {commentInput ? countRichTextBlocksChars(commentInput) : 0}/{maxCommentLength}
+          {`${countRichTextBlocksChars(commentInput)}/${maxCommentLength}`}
         </div>
         <BaseButton css={props.parentID ? SmallButton : CommentButton} disabled={loading}>
           {props.parentID ? 'Submit' : 'Post comment'}
