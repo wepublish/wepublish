@@ -62,7 +62,7 @@
 }
 
 .unsaved {
-  .rs-badge-content{
+  .rs-badge-content {
     background: darkorange;
   }
 }
@@ -71,6 +71,15 @@
   .rs-badge-content {
     visibility: hidden;
   }
+}
+
+.displayThreeLinesOnly {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
 
 .richTextFrame {
