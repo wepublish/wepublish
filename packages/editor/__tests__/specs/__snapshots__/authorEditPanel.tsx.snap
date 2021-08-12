@@ -2982,7 +2982,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
 </AuthorEditPanel>
 `;
 
-exports[`Author Edit Panel should expand links fields when Add Block button is clicked 1`] = `
+exports[`Author Edit Panel should fill the link field 1`] = `
 <AuthorEditPanel>
   <defaultProps(defaultProps(ModalHeader))
     classPrefix="rs-drawer-header"
@@ -5347,16 +5347,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   </div>
                                 </div>
                               </Toolbar>
-                              <div
-                                onClick={[Function]}
-                                style={
-                                  Object {
-                                    "color": "#cad5e4",
-                                  }
-                                }
-                              >
-                                blocks.richText.startWriting
-                              </div>
                               <Editable
                                 onBlur={[Function]}
                                 onKeyDown={[Function]}
