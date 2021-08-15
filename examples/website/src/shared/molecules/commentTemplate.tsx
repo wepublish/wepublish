@@ -258,6 +258,7 @@ export function ComposeComment(props: ComposeCommentProps) {
 
 export function CommentList(commentListProps: CommentListProps) {
   const css = useStyle()
+  const {session} = useContext(AuthContext)
 
   const [activeCommentID, setActiveCommentID] = useState('')
   const {comments} = commentListProps
@@ -336,7 +337,7 @@ export function CommentList(commentListProps: CommentListProps) {
               />
             )}
             <div className={css(Actions)}>
-              {state === 'approved' ? (
+              {state === 'approved' && session ? (
                 <button className={css(SmallButton)} onClick={() => toggleReplyForm(id)}>
                   Reply
                 </button>
