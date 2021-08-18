@@ -87,11 +87,11 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
   }
 
-  const ItemTopBarStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '2px',
-    cursor: 'pointer'
-  }
+  // const ItemTopBarStyle: React.CSSProperties = {
+  //   position: 'absolute',
+  //   top: '2px',
+  //   cursor: 'pointer'
+  // }
 
   return (
     <>
