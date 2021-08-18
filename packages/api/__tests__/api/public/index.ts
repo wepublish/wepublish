@@ -149,6 +149,7 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+  | TeaserFlexGridBlock
 
 export type Comment = {
   __typename?: 'Comment'
@@ -207,6 +208,14 @@ export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock'
   userID: Scalars['String']
   postID: Scalars['String']
+}
+
+export type FlexItemLayout = {
+  __typename?: 'FlexItemLayout'
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
 }
 
 export type GalleryImageEdge = {
@@ -762,6 +771,14 @@ export type SoundCloudTrackBlock = {
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
+export type TeaserFlexGridBlock = {
+  __typename?: 'TeaserFlexGridBlock'
+  teasers: Array<Maybe<Teaser>>
+  layout: Array<FlexItemLayout>
+  numColumns: Scalars['Int']
+  numRows: Scalars['Int']
+}
+
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
   teasers: Array<Maybe<Teaser>>
@@ -914,6 +931,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
         >
       }
   >
@@ -962,6 +980,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
         >
       }
   >
@@ -1118,6 +1137,8 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
     >
   }
 
+type FullBlock_TeaserFlexGridBlock_Fragment = {__typename: 'TeaserFlexGridBlock'}
+
 export type FullBlockFragment =
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_ImageBlock_Fragment
@@ -1135,6 +1156,7 @@ export type FullBlockFragment =
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserFlexGridBlock_Fragment
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
@@ -1234,6 +1256,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
         >
       }
   >

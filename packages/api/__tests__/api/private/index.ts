@@ -227,6 +227,7 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+  | TeaserFlexGridBlock
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>
@@ -246,6 +247,7 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
+  teaserFlexGrid?: Maybe<TeaserFlexGridBlockInput>
 }
 
 export type Comment = {
@@ -385,6 +387,21 @@ export type FacebookVideoBlock = {
 export type FacebookVideoBlockInput = {
   userID: Scalars['String']
   videoID: Scalars['String']
+}
+
+export type FlexGridItemLayoutInput = {
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
+}
+
+export type FlexItemLayout = {
+  __typename?: 'FlexItemLayout'
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
 }
 
 export type GalleryImageEdge = {
@@ -1532,6 +1549,21 @@ export type SoundCloudTrackBlockInput = {
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
+export type TeaserFlexGridBlock = {
+  __typename?: 'TeaserFlexGridBlock'
+  teasers: Array<Maybe<Teaser>>
+  layout: Array<FlexItemLayout>
+  numColumns: Scalars['Int']
+  numRows: Scalars['Int']
+}
+
+export type TeaserFlexGridBlockInput = {
+  layout: Array<FlexGridItemLayoutInput>
+  teasers: Array<Maybe<TeaserInput>>
+  numColumns: Scalars['Int']
+  numRows: Scalars['Int']
+}
+
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
   teasers: Array<Maybe<Teaser>>
@@ -1955,6 +1987,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
               | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+              | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
             >
           }
       }
@@ -2140,6 +2173,8 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
     >
   }
 
+type FullBlock_TeaserFlexGridBlock_Fragment = {__typename: 'TeaserFlexGridBlock'}
+
 export type FullBlockFragment =
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_ImageBlock_Fragment
@@ -2158,6 +2193,7 @@ export type FullBlockFragment =
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserFlexGridBlock_Fragment
 
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
@@ -2330,6 +2366,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
         >
       }
   }
@@ -2446,6 +2483,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
               | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+              | ({__typename?: 'TeaserFlexGridBlock'} & FullBlock_TeaserFlexGridBlock_Fragment)
             >
           }
       }

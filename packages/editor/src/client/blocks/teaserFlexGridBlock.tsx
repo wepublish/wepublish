@@ -154,12 +154,15 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           <div key={String(i)}>
             <Icon
               icon="close"
-              style={{...ItemTopBarStyle, right: '2px'}}
+              // style={{...ItemTopBarStyle, right: '2px'}}
               onClick={() => {
                 handleRemoveItem(i)
               }}
             />
-            <Icon icon="thumb-tack" style={{...ItemTopBarStyle, left: '2px'}} />
+            <Icon
+              icon="thumb-tack"
+              // style={{...ItemTopBarStyle, left: '2px'}}
+            />
             <TeaserBlock
               teaser={teaser}
               numColumns={numColumns}
@@ -403,8 +406,12 @@ export function TeaserContent({
           <PlaceholderImage />
         )}
       </div>
-
-      <Overlay bottom={0} width="100%" padding={10}>
+      <Overlay
+        style={{
+          bottom: '0px',
+          width: '100%',
+          padding: '10'
+        }}>
         <div
           style={{
             marginBottom: 10
