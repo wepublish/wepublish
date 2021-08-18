@@ -159,6 +159,24 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanGetArticlePreviewLink: Permission = {
+  id: 'CAN_GET_ARTICLE_PREVIEW_LINK',
+  description: 'Allows to get preview links for articles',
+  deprecated: false
+}
+
+export const CanTakeActionOnComment: Permission = {
+  id: 'CAN_TAKE_COMMENT_ACTION',
+  description: 'Allows to take an action on comment',
+  deprecated: false
+}
+
+export const CanGetComments: Permission = {
+  id: 'CAN_GET_COMMENTS',
+  description: 'Allows to get all comments',
+  deprecated: false
+}
+
 export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
@@ -186,6 +204,12 @@ export const CanPublishPage: Permission = {
 export const CanDeletePage: Permission = {
   id: 'CAN_DELETE_PAGE',
   description: 'Allows to delete Pages',
+  deprecated: false
+}
+
+export const CanGetPagePreviewLink: Permission = {
+  id: 'CAN_GET_PAGE_PREVIEW_LINK',
+  description: 'Allows to get preview links for pages',
   deprecated: false
 }
 
@@ -418,6 +442,7 @@ export const CanLoginEditor: Permission = {
 }
 
 export const AllPermissions: Permission[] = [
+  CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
   CanGetNavigations,
@@ -434,6 +459,7 @@ export const AllPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanDeleteArticle,
+  CanGetArticlePreviewLink,
   CanPublishArticle,
   CanGetPeerArticle,
   CanGetPeerArticles,
@@ -442,6 +468,7 @@ export const AllPermissions: Permission[] = [
   CanGetPages,
   CanDeletePage,
   CanPublishPage,
+  CanGetPagePreviewLink,
   CanUpdatePeerProfile,
   CanGetPeerProfile,
   CanCreatePeer,
@@ -463,6 +490,7 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
+  CanGetComments,
   CanCreateMemberPlan,
   CanGetMemberPlan,
   CanGetMemberPlans,
@@ -484,6 +512,8 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetComments,
+  CanTakeActionOnComment,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -494,6 +524,7 @@ export const EditorPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanPublishArticle,
+  CanGetArticlePreviewLink,
   CanCreatePage,
   CanGetPage,
   CanGetPages,

@@ -21,7 +21,9 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)}
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLID}
   }
 })
 
@@ -41,7 +43,14 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)}
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+        return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
+      })
+    }
   }
 })
 
@@ -79,7 +88,12 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     profile: {
       type: GraphQLPeerProfile,
       resolve: createProxyingResolver(async (source, args, context, info) => {
-        return delegateToPeerSchema(source.id, true, context, {fieldName: 'peerProfile', info})
+        const peerProfile = await delegateToPeerSchema(source.id, true, context, {
+          fieldName: 'peerProfile',
+          info
+        })
+        // TODO: Improve error handling for invalid tokens WPC-298
+        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }

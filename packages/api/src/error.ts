@@ -1,4 +1,5 @@
 import {ApolloError} from 'apollo-server-express'
+import {MAX_COMMENT_LENGTH} from './utility'
 
 export enum ErrorCode {
   TokenExpired = 'TOKEN_EXPIRED',
@@ -13,7 +14,9 @@ export enum ErrorCode {
   EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
-  UserInputError = 'USER_INPUT_ERROR'
+  UserInputError = 'USER_INPUT_ERROR',
+  DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
+  CommentLengthError = 'COMMENT_LENGTH_ERROR'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -94,5 +97,23 @@ export class PaymentConfigurationNotAllowed extends ApolloError {
 export class UserInputError extends ApolloError {
   constructor(actualError: string) {
     super(`User Input Error: \n${actualError}`, ErrorCode.UserInputError)
+  }
+}
+
+export class DuplicatePageSlugError extends ApolloError {
+  constructor(publishedPageID: string, slug: string) {
+    super(
+      `Page with ID ${publishedPageID} already uses the slug "${slug}"`,
+      ErrorCode.DuplicatePageSlug
+    )
+  }
+}
+
+export class CommentLengthError extends ApolloError {
+  constructor() {
+    super(
+      `Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`,
+      ErrorCode.CommentLengthError
+    )
   }
 }

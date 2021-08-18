@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -28,7 +30,9 @@ export type Article = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
+  canonicalUrl?: Maybe<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
@@ -38,6 +42,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<Comment>
 }
 
 export type ArticleConnection = {
@@ -83,6 +88,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -105,7 +111,14 @@ export type AuthorLink = {
 
 export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
+}
+
+export type AuthProvider = {
+  __typename?: 'AuthProvider'
+  name: Scalars['String']
+  url: Scalars['String']
 }
 
 export type AvailablePaymentMethod = {
@@ -130,11 +143,50 @@ export type Block =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | PolisConversationBlock
   | EmbedBlock
   | LinkPageBreakBlock
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  parentID?: Maybe<Scalars['ID']>
+  user: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  children?: Maybe<Array<Maybe<Comment>>>
+  text: Scalars['RichText']
+  state: Scalars['String']
+  rejectionReason?: Maybe<Scalars['String']>
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  parentID?: Maybe<Scalars['ID']>
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  text: Scalars['RichText']
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export type CommentUpdateInput = {
+  id: Scalars['ID']
+  text: Scalars['RichText']
+}
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
@@ -228,6 +280,29 @@ export type InstagramPostBlock = {
   postID: Scalars['String']
 }
 
+export type Invoice = {
+  __typename?: 'Invoice'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  mail: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['DateTime']>
+  items: Array<InvoiceItem>
+  total: Scalars['Int']
+}
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem'
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  amount: Scalars['Int']
+  total: Scalars['Int']
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
@@ -284,11 +359,49 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  /**
+   * This mutation allows to create a user session by taking the user's credentials
+   * email and password as an input and returns a session with token.
+   */
   createSession: SessionWithToken
+  /**
+   * This mutation allows to create a user session with JSON Web Token by taking
+   * the JSON Web Token as an input and returns a session with token
+   */
   createSessionWithJWT: SessionWithToken
+  /**
+   * This mutation allows to create user session with OAuth2 code by taking the
+   * name, code and redirect Uri as an input and returns a session with token.
+   */
   createSessionWithOAuth2Code: SessionWithToken
+  /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']
+  /** This mutation allows to add a comment. The input is of type CommentInput. */
+  addComment: Comment
+  /**
+   * This mutation allows to update a comment. The input is of type
+   * CommentUpdateInput which contains the ID of the comment you want to update and the new text.
+   */
+  updateComment: Comment
+  /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
   registerMemberAndReceivePayment: Payment
+  /** This mutation allows to reset the password by accepting the user's email and sending a login link to that email. */
+  resetPassword: Scalars['String']
+  /** This mutation allows to update the user's data by taking an input of type UserInput. */
+  updateUser?: Maybe<User>
+  /**
+   * This mutation allows to update the user's password by entering the new
+   * password. The repeated new password gives an error if the passwords don't
+   * match or if the user is not authenticated.
+   */
+  updatePassword?: Maybe<User>
+  /**
+   * This mutation allows to update the user's subscription by taking an input of
+   * type UserSubscription and throws an error if the user doesn't already have a subscription.
+   */
+  updateUserSubscription?: Maybe<UserSubscription>
+  /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
+  createPaymentFromInvoice?: Maybe<Payment>
 }
 
 export type MutationCreateSessionArgs = {
@@ -306,6 +419,14 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   redirectUri: Scalars['String']
 }
 
+export type MutationAddCommentArgs = {
+  input: CommentInput
+}
+
+export type MutationUpdateCommentArgs = {
+  input: CommentUpdateInput
+}
+
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
@@ -317,6 +438,27 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentMethodID: Scalars['String']
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
+}
+
+export type MutationResetPasswordArgs = {
+  email: Scalars['String']
+}
+
+export type MutationUpdateUserArgs = {
+  input: UserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  password: Scalars['String']
+  passwordRepeated: Scalars['String']
+}
+
+export type MutationUpdateUserSubscriptionArgs = {
+  input: UserSubscriptionInput
+}
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput
 }
 
 export type Navigation = {
@@ -386,6 +528,13 @@ export type Payment = {
   paymentMethod: PaymentMethod
 }
 
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String']
+  paymentMethodID: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
+}
+
 export type PaymentMethod = {
   __typename?: 'PaymentMethod'
   id: Scalars['ID']
@@ -443,12 +592,19 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
   y: Scalars['Float']
+}
+
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock'
+  conversationID: Scalars['String']
 }
 
 export type PublicProperties = {
@@ -468,16 +624,33 @@ export enum PublishedPageSort {
 
 export type Query = {
   __typename?: 'Query'
+  /** This query returns the peer profile. */
   peerProfile: PeerProfile
+  /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>
+  /** This query takes either the ID or the key and returns the navigation. */
   navigation?: Maybe<Navigation>
+  /** This query takes either the ID or the slug and returns the author. */
   author?: Maybe<Author>
+  /** This query is to get the authors. */
   authors: AuthorConnection
+  /** This query takes either the ID, slug or token and returns the article. */
   article?: Maybe<Article>
+  /** This query returns the articles. */
   articles: ArticleConnection
+  /** This query takes either the peer ID or the peer slug and returns the article. */
   peerArticle?: Maybe<Article>
+  /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>
+  /** This query returns the pages. */
   pages: PageConnection
+  /** This query returns the redirect Uri. */
+  authProviders: Array<AuthProvider>
+  /** This query returns the user. */
+  me?: Maybe<User>
+  /** This query returns the invoices. */
+  invoices: Array<Invoice>
+  /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
 }
 
@@ -508,6 +681,8 @@ export type QueryAuthorsArgs = {
 
 export type QueryArticleArgs = {
   id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type QueryArticlesArgs = {
@@ -529,6 +704,7 @@ export type QueryPeerArticleArgs = {
 export type QueryPageArgs = {
   id?: Maybe<Scalars['ID']>
   slug?: Maybe<Scalars['Slug']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type QueryPagesArgs = {
@@ -539,6 +715,10 @@ export type QueryPagesArgs = {
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryAuthProvidersArgs = {
+  redirectUri?: Maybe<Scalars['String']>
 }
 
 export type QueryMemberPlansArgs = {
@@ -613,14 +793,53 @@ export type User = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
+  subscription?: Maybe<UserSubscription>
 }
 
 export type UserAddress = {
   __typename?: 'UserAddress'
-  street: Scalars['String']
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
+}
+
+export type UserAddressInput = {
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
+}
+
+export type UserInput = {
+  name: Scalars['String']
+  email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddressInput>
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription'
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  deactivatedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type UserSubscriptionInput = {
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  paymentMethodID: Scalars['String']
 }
 
 export type VimeoVideoBlock = {
@@ -639,7 +858,7 @@ export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
 > & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Array<Scalars['String']>>
+  filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
   after?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
 }>
@@ -689,6 +908,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -736,6 +956,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -865,6 +1086,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
   'trackID'
 >
 
+type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
+
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
@@ -906,11 +1129,25 @@ export type FullBlockFragment =
   | FullBlock_VimeoVideoBlock_Fragment
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_PolisConversationBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
+
+export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
+  Comment,
+  'itemID' | 'itemType' | 'text' | 'parentID'
+> & {user: {__typename?: 'User'} & Pick<User, 'id'>}
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type AddCommentMutation = {__typename?: 'Mutation'} & {
+  addComment: {__typename?: 'Comment'} & MutationCommentFragment
+}
 
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
@@ -951,7 +1188,7 @@ export type PageRefFragment = {__typename?: 'Page'} & Pick<
 > & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Array<Scalars['String']>>
+  filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
   after?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
 }>
@@ -991,6 +1228,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -1280,6 +1518,17 @@ export const FullBlock = gql`
   ${ImageRef}
   ${FullTeaser}
 `
+export const MutationComment = gql`
+  fragment MutationComment on Comment {
+    itemID
+    itemType
+    user {
+      id
+    }
+    text
+    parentID
+  }
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -1414,6 +1663,14 @@ export const Author = gql`
     }
   }
   ${FullAuthor}
+`
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      ...MutationComment
+    }
+  }
+  ${MutationComment}
 `
 export const PageList = gql`
   query PageList($filter: [String!], $after: ID, $first: Int) {

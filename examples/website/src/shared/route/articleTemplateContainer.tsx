@@ -13,6 +13,7 @@ import {
   vimeoVideoBlockDataFragment,
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -20,7 +21,8 @@ import {
   titleBlockDataFragment,
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
-  peerMetaDataFragment
+  peerMetaDataFragment,
+  peerArticleMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -36,11 +38,11 @@ import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
-import {RichText} from '../atoms/richText'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
-  query Article($id: ID!) {
-    article(id: $id) {
+  query Article($id: ID, $slug: Slug, $token: String) {
+    article(id: $id, slug: $slug, token: $token) {
       ...ArticleMetaData
 
       blocks {
@@ -54,6 +56,7 @@ const ArticleQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -74,6 +77,7 @@ const ArticleQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -95,7 +99,16 @@ const mapAuthors = (metaData: any[] | undefined) => {
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading} = useQuery(ArticleQuery, {variables: {id}})
+  const variables =
+    id === 'preview'
+      ? {
+          token: slug
+        }
+      : {id}
+
+  const {data, loading, error} = useQuery(ArticleQuery, {variables})
+
+  if (error) return <NotFoundTemplate statusCode={500} />
 
   if (loading) return <Loader text="Loading" />
 
@@ -115,21 +128,24 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage,
-    socialMediaAuthors
+    socialMediaAuthors,
+    comments,
+    canonicalUrl
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
-  const canonicalURL = canonicalHost + path
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = canonicalUrl || canonicalHost + path
 
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -147,16 +163,22 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
         isArticle={true}
         blocks={blocks}
       />
-      <ArticleFooterContainer tags={tags} authors={authors} publishDate={publishedAt} id={id} />
+      <ArticleFooterContainer
+        tags={tags}
+        authors={authors}
+        publishDate={publishedAt}
+        id={id}
+        comments={comments}
+      />
     </>
   )
 }
@@ -174,7 +196,7 @@ const PeerQuery = gql`
 const PeerArticleQuery = gql`
   query PeerArticle($peerID: ID!, $id: ID!) {
     peerArticle(peerID: $peerID, id: $id) {
-      ...ArticleMetaData
+      ...PeerArticleMetaData
 
       blocks {
         __typename
@@ -187,6 +209,7 @@ const PeerArticleQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -197,7 +220,7 @@ const PeerArticleQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${peerArticleMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -207,6 +230,7 @@ const PeerArticleQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -253,7 +277,9 @@ export function PeerArticleTemplateContainer({
   } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const canonicalURL = canonicalHost + path
+
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = articleData.canonicalUrl || articleData.url
 
   return (
     <>
@@ -261,11 +287,11 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -283,10 +309,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -389,7 +415,14 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
       <div className={css(PeerProfileCallToActionURL)}>
         {peer?.callToActionText?.length && (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
-            <RichText value={peer?.callToActionText} />
+            <RichTextBlock
+              value={peer?.callToActionText}
+              displayOnly
+              disabled
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
           </a>
         )}
       </div>

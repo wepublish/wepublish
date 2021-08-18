@@ -5,6 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
+import {onError} from '@apollo/client/link/error'
 
 import './i18n'
 
@@ -76,8 +77,31 @@ const onDOMContentLoaded = async () => {
     return forward(operation)
   })
 
+  const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
+        if (
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          !(
+            window.location.pathname.includes('/logout') ||
+            window.location.pathname.includes('/login')
+          )
+        ) {
+          localStorage.removeItem(LocalStorageKey.SessionToken)
+          window.location.pathname = '/logout'
+        }
+      })
+      // if (networkError) console.log(`[Network error]: ${networkError}`)
+    }
+    return forward(operation)
+  })
+
+  const mainLink = createUploadLink({uri: adminAPIURL})
+
   const client = new ApolloClient({
-    link: authLink.concat(createUploadLink({uri: adminAPIURL})),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    link: authLink.concat(authErrorLink).concat(mainLink),
     cache: new InMemoryCache({
       possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
     })

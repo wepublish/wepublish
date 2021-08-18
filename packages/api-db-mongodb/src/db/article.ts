@@ -23,6 +23,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBArticle} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBArticleAdapter implements DBArticleAdapter {
   private articles: Collection<DBArticle>
@@ -90,6 +91,7 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
             'draft.title': data.title,
             'draft.preTitle': data.preTitle,
             'draft.lead': data.lead,
+            'draft.seoTitle': data.seoTitle,
 
             'draft.slug': data.slug,
             'draft.imageID': data.imageID,
@@ -102,6 +104,8 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
             'draft.blocks': data.blocks,
 
             'draft.hideAuthor': data.hideAuthor,
+
+            'draft.canonicalUrl': data.canonicalUrl,
 
             'draft.socialMediaTitle': data.socialMediaTitle,
             'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
@@ -293,9 +297,9 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     if (filter?.title != undefined) {
       // TODO: Only match based on state filter
       textFilter['$or'] = [
-        {'draft.title': {$regex: filter.title, $options: 'i'}},
-        {'pending.title': {$regex: filter.title, $options: 'i'}},
-        {'published.title': {$regex: filter.title, $options: 'i'}}
+        {'draft.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'pending.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'published.title': {$regex: escapeRegExp(filter.title), $options: 'i'}}
       ]
     }
 
@@ -410,6 +414,19 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     )
 
     return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
+  }
+
+  async getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle> {
+    await this.updatePendingArticles()
+    const article = await this.articles.findOne({'published.slug': {$eq: slug}})
+
+    return article?.published
+      ? ({
+          id: article._id,
+          shared: article.shared,
+          ...article.published
+        } as PublicArticle)
+      : null
   }
 
   async getPublishedArticles({

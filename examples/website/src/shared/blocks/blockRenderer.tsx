@@ -5,7 +5,7 @@ import {GalleryBlock} from './galleryBlock'
 import {GridBlock} from './gridBlock'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
-import {RichTextBlock} from './richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
@@ -30,9 +30,9 @@ export interface BlockRendererProps {
 export function BlockRenderer({blocks, children, ...props}: BlockRendererProps) {
   return (
     <>
-      {blocks.map(block =>
+      {blocks.map((block, index) =>
         block ? (
-          <React.Fragment key={block.key}>
+          <React.Fragment key={index}>
             {children ? children(renderBlock(block, props)) : renderBlock(block, props)}
           </React.Fragment>
         ) : null
@@ -57,7 +57,15 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
   switch (block.type) {
     case BlockType.RichText:
-      return <RichTextBlock value={block.value} />
+      return (
+        <RichTextBlock
+          displayOnly
+          value={block.value}
+          onChange={() => {
+            /* do nothing */
+          }}
+        />
+      )
 
     case BlockType.Gallery:
       return <GalleryBlock media={block.value.media} />
@@ -91,7 +99,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return <TitleImageBlock image={block.value} width={1280} height={680} />
 
     case BlockType.Teaser:
-      return renderTeaser(block.key, block.value)
+      return renderTeaser(block.key, block.value, isPeerArticle)
 
     case BlockType.PeerPageBreak:
       return (
@@ -134,7 +142,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   }
 }
 
-function renderTeaser(key: string, article: PublishedArticle) {
+function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
   function getTeaserTags(tags: string[], max: number): string[] {
     const result = []
     for (let i = 0; i < tags.length && i < max; i++) {
@@ -167,25 +175,6 @@ function renderTeaser(key: string, article: PublishedArticle) {
   }
 
   switch (article.teaserStyle) {
-    case TeaserStyle.Default:
-    default:
-      return (
-        <DefaultTeaser
-          key={key}
-          preTitle={article.preTitle}
-          title={article.title}
-          lead={article.lead}
-          isUpdated={article.updatedAt.getTime() !== article.publishedAt.getTime()}
-          date={article.updatedAt}
-          image={article.image}
-          peer={article.peer}
-          tags={getTeaserTags(article.tags, 3)}
-          route={route}
-          authors={article.authors}
-          isSingle={true}
-        />
-      )
-
     case TeaserStyle.Light:
       return (
         <ImageTeaser
@@ -197,7 +186,9 @@ function renderTeaser(key: string, article: PublishedArticle) {
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -212,7 +203,9 @@ function renderTeaser(key: string, article: PublishedArticle) {
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -223,7 +216,30 @@ function renderTeaser(key: string, article: PublishedArticle) {
           title={article.title}
           preTitle={article.preTitle}
           date={article.publishedAt}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
+          url={article.url}
+          isPeerArticle={isPeerArticle}
+        />
+      )
+
+    case TeaserStyle.Default:
+    default:
+      return (
+        <DefaultTeaser
+          key={key}
+          preTitle={article.preTitle}
+          title={article.title}
+          lead={article.lead}
+          isUpdated={article.updatedAt.getTime() !== article.publishedAt.getTime()}
+          date={article.updatedAt}
+          image={article.image}
+          peer={article.peer}
+          tags={getTeaserTags(article.tags, 3)}
+          route={route}
+          url={article.url}
+          authors={article.authors}
+          isSingle={true}
+          isPeerArticle={isPeerArticle}
         />
       )
   }

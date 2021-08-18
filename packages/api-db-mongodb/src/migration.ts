@@ -85,8 +85,6 @@ export const Migrations: Migration[] = [
       await pages.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
       await pages.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
-      // TODO: Add unique index for slug on published page
-
       await db.createCollection(CollectionName.PagesHistory, {
         strict: true
       })
@@ -553,6 +551,47 @@ export const Migrations: Migration[] = [
       })
 
       await payments.createIndex({intentID: 1})
+    }
+  },
+  {
+    // Add Commenting Table.
+    version: 11,
+    async migrate(db) {
+      const comments = await db.createCollection(CollectionName.Comments, {
+        strict: true
+      })
+      await comments.createIndex({createdAt: -1})
+      await comments.createIndex({'revisions.createdAt': -1})
+    }
+  },
+  {
+    //  Make slug for published pages unique
+    version: 12,
+    async migrate(db, locale) {
+      const pages = await db.collection(CollectionName.Pages)
+      await pages.createIndex(
+        {'published.slug': 1},
+        {
+          collation: {locale, strength: 2},
+          unique: true,
+          partialFilterExpression: {'published.slug': {$exists: true}}
+        }
+      )
+    }
+  },
+  {
+    //  Rename street field in address to address
+    version: 13,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          'address.street': {$exists: true}
+        },
+        {
+          $rename: {'address.street': 'address.streetAddress'}
+        }
+      )
     }
   }
 ]

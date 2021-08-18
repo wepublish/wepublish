@@ -1,5 +1,5 @@
-import React from 'react'
 import {hot} from 'react-hot-loader/root'
+import React from 'react'
 
 import 'rsuite/lib/styles/index.less'
 
@@ -17,10 +17,13 @@ import {AuthorList} from './routes/authorList'
 import {PeerList} from './routes/peerList'
 import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
+import {CommentList} from './routes/commentList'
 import {UserRoleList} from './routes/userRoleList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
+
+import './global.less'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -40,6 +43,9 @@ export function contentForRoute(route: Route) {
     case RouteType.Index:
     case RouteType.ArticleList:
       return <ArticleList />
+
+    case RouteType.CommentList:
+      return <CommentList />
 
     case RouteType.PageList:
       return <PageList />

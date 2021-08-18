@@ -10,7 +10,9 @@ import {
   Alert,
   PanelGroup,
   InputGroup,
-  Icon
+  Icon,
+  ControlLabel,
+  FormGroup
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -46,6 +48,7 @@ export interface AuthorEditPanelProps {
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
+  const [jobTitle, setJobTitle] = useState<Maybe<string>>()
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
@@ -73,6 +76,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     if (data?.author) {
       setName(data.author.name)
       setSlug(data.author.slug)
+      setJobTitle(data.author.jobTitle)
       setImage(data.author.image)
       setBio(data.author.bio ? data.author.bio : createDefaultValue())
       setLinks(
@@ -106,6 +110,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
+            jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
             bio: bio
@@ -120,6 +125,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
+            jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
             bio: bio
@@ -140,13 +146,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <PanelGroup accordion>
-          <Panel header={t('authors.panels.name')} defaultExpanded>
+        <PanelGroup>
+          <Panel>
             <Form fluid={true}>
-              <InputGroup inside>
-                <InputGroup.Addon>
-                  <Icon icon="avatar" />
-                </InputGroup.Addon>
+              <FormGroup>
+                <ControlLabel>{t('authors.panels.name')}</ControlLabel>
                 <FormControl
                   name={t('authors.panels.name')}
                   value={name}
@@ -156,7 +160,18 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     setSlug(slugify(value))
                   }}
                 />
-              </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+                <FormControl
+                  name={t('authors.panels.jobTitle')}
+                  value={jobTitle}
+                  disabled={isDisabled}
+                  onChange={value => {
+                    setJobTitle(value)
+                  }}
+                />
+              </FormGroup>
             </Form>
           </Panel>
           <Panel header={t('authors.panels.image')}>
@@ -205,7 +220,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </ListInput>
           </Panel>
           <Panel header={t('authors.panels.bioInformation')}>
-            <RichTextBlock value={bio} onChange={value => setBio(value)} />
+            <div className="richTextFrame">
+              <RichTextBlock value={bio} onChange={value => setBio(value)} />
+            </div>
           </Panel>
         </PanelGroup>
       </Drawer.Body>

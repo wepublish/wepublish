@@ -166,3 +166,10 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Biannual,
   PaymentPeriodicity.Yearly
 ]
+
+export enum StateColor {
+  pending = 'blue',
+  published = 'green',
+  unpublished = 'red',
+  none = 'white'
+}

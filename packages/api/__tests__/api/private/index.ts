@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -53,8 +55,10 @@ export type ArticleInput = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
+  canonicalUrl?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
   authorIDs: Array<Scalars['ID']>
   shared: Scalars['Boolean']
@@ -89,9 +93,11 @@ export type ArticleRevision = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   slug: Scalars['Slug']
   tags: Array<Scalars['String']>
   properties: Array<Properties>
+  canonicalUrl?: Maybe<Scalars['String']>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
@@ -139,6 +145,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -158,6 +165,7 @@ export type AuthorInput = {
   slug: Scalars['Slug']
   links?: Maybe<Array<AuthorLinkInput>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
 }
 
@@ -174,7 +182,8 @@ export type AuthorLinkInput = {
 
 export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type AuthProvider = {
@@ -212,6 +221,7 @@ export type Block =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | PolisConversationBlock
   | EmbedBlock
   | LinkPageBreakBlock
   | TitleBlock
@@ -232,9 +242,70 @@ export type BlockInput = {
   vimeoVideo?: Maybe<VimeoVideoBlockInput>
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>
+  polisConversation?: Maybe<PolisConversationBlockInput>
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
+}
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  user: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  parentComment?: Maybe<Comment>
+  revisions: Array<CommentRevision>
+  state: CommentState
+  rejectionReason?: Maybe<CommentRejectionReason>
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentFilter = {
+  state?: Maybe<CommentState>
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  text: Scalars['RichText']
+  createdAt: Scalars['DateTime']
+}
+
+export enum CommentSort {
+  ModifiedAt = 'ModifiedAt',
+  CreatedAt = 'CreatedAt'
+}
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export type CreatedToken = {
@@ -611,11 +682,13 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']>
   publishArticle?: Maybe<Article>
   unpublishArticle?: Maybe<Article>
+  duplicateArticle: Article
   createPage: Page
   updatePage?: Maybe<Page>
   deletePage?: Maybe<Scalars['Boolean']>
   publishPage?: Maybe<Page>
   unpublishPage?: Maybe<Page>
+  duplicatePage: Page
   createMemberPlan?: Maybe<MemberPlan>
   updateMemberPlan?: Maybe<MemberPlan>
   deleteMemberPlan?: Maybe<Scalars['ID']>
@@ -626,6 +699,9 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>
   updateInvoice?: Maybe<Invoice>
   deleteInvoice?: Maybe<Scalars['ID']>
+  approveComment: Comment
+  rejectComment: Comment
+  requestChangesOnComment: Comment
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -782,6 +858,10 @@ export type MutationUnpublishArticleArgs = {
   id: Scalars['ID']
 }
 
+export type MutationDuplicateArticleArgs = {
+  id: Scalars['ID']
+}
+
 export type MutationCreatePageArgs = {
   input: PageInput
 }
@@ -803,6 +883,10 @@ export type MutationPublishPageArgs = {
 }
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationDuplicatePageArgs = {
   id: Scalars['ID']
 }
 
@@ -847,6 +931,20 @@ export type MutationUpdateInvoiceArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID']
+}
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
+}
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
 }
 
 export type Navigation = {
@@ -1068,6 +1166,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle'
   peer: Peer
+  peeredArticleURL: Scalars['String']
   article: Article
 }
 
@@ -1109,6 +1208,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type PeerProfileInput = {
@@ -1117,6 +1218,8 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImageID?: Maybe<Scalars['ID']>
 }
 
 export type Permission = {
@@ -1130,6 +1233,15 @@ export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
   y: Scalars['Float']
+}
+
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock'
+  conversationID: Scalars['String']
+}
+
+export type PolisConversationBlockInput = {
+  conversationID: Scalars['String']
 }
 
 export type Properties = {
@@ -1165,12 +1277,15 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
   peerArticles: PeerArticleConnection
+  articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
+  pagePreviewLink?: Maybe<Scalars['String']>
   memberPlan?: Maybe<MemberPlan>
   memberPlans: MemberPlanConnection
   paymentMethod?: Maybe<PaymentMethod>
@@ -1199,6 +1314,7 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
   order?: Maybe<SortOrder>
@@ -1233,6 +1349,7 @@ export type QueryAuthorsArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<AuthorFilter>
   sort?: Maybe<AuthorSort>
   order?: Maybe<SortOrder>
@@ -1252,6 +1369,17 @@ export type QueryImagesArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<CommentFilter>
+  sort?: Maybe<CommentSort>
+  order?: Maybe<SortOrder>
+}
+
 export type QueryArticleArgs = {
   id: Scalars['ID']
 }
@@ -1261,6 +1389,7 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
@@ -1279,6 +1408,11 @@ export type QueryPeerArticlesArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QueryArticlePreviewLinkArgs = {
+  id: Scalars['ID']
+  hours: Scalars['Int']
+}
+
 export type QueryPageArgs = {
   id?: Maybe<Scalars['ID']>
 }
@@ -1289,8 +1423,14 @@ export type QueryPagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<PageFilter>
+  skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID']
+  hours: Scalars['Int']
 }
 
 export type QueryMemberPlanArgs = {
@@ -1503,14 +1643,18 @@ export type User = {
 
 export type UserAddress = {
   __typename?: 'UserAddress'
-  street: Scalars['String']
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
 }
 
 export type UserAddressInput = {
-  street: Scalars['String']
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
@@ -1525,6 +1669,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
   subscription?: Maybe<UserSubscriptionFilter>
 }
 
@@ -1571,7 +1716,8 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type UserSubscription = {
@@ -1801,6 +1947,9 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
               | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
               | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+              | ({
+                  __typename?: 'PolisConversationBlock'
+                } & FullBlock_PolisConversationBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -1959,6 +2108,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
   'trackID'
 >
 
+type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
+
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
@@ -2001,6 +2152,7 @@ export type FullBlockFragment =
   | FullBlock_VimeoVideoBlock_Fragment
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_PolisConversationBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
@@ -2172,6 +2324,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2285,6 +2438,9 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
               | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
               | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+              | ({
+                  __typename?: 'PolisConversationBlock'
+                } & FullBlock_PolisConversationBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2298,8 +2454,16 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+  | 'name'
+  | 'hostURL'
+  | 'themeColor'
+  | 'callToActionText'
+  | 'callToActionURL'
+  | 'callToActionImageURL'
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
@@ -2724,6 +2888,10 @@ export const FullPeerProfile = gql`
     }
     callToActionText
     callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
   }
   ${ImageRef}
 `

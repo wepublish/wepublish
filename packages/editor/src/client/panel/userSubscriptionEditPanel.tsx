@@ -237,6 +237,7 @@ export function UserSubscriptionEditPanel({
               <ControlLabel>{t('userSubscriptionEdit.deactivatedAt')}</ControlLabel>
               <DatePicker
                 block
+                placement="auto"
                 value={deactivatedAt ?? undefined}
                 disabled={isDisabled || hasNoMemberPlanSelected}
                 onChange={value => setDeactivatedAt(value)}

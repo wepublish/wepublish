@@ -20,7 +20,7 @@ fragment FullUser on User {
     name
     preferredName
     address {
-        street
+        streetAddress
         zipCode
         city
         country

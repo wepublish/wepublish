@@ -1,4 +1,11 @@
-import {GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType} from 'graphql'
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
+} from 'graphql'
 import {Context} from '../context'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLSlug} from './slug'
@@ -20,7 +27,7 @@ import {
   GraphQLPublicArticleSort
 } from './article'
 import {SessionType} from '../db/session'
-import {ArticleSort} from '../db/article'
+import {ArticleSort, PublicArticle} from '../db/article'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicPage,
@@ -28,7 +35,7 @@ import {
   GraphQLPublishedPageFilter,
   GraphQLPublishedPageSort
 } from './page'
-import {PageSort} from '../db/page'
+import {PageSort, PublicPage} from '../db/page'
 import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
@@ -37,6 +44,8 @@ import {
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
+import {GraphQLAuthProvider} from './auth'
+import {logger} from '../server'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -46,6 +55,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
+      description: 'This query returns the peer profile.',
       async resolve(root, args, {hostURL, websiteURL, dbAdapter}) {
         return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
       }
@@ -54,6 +64,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query takes either the ID or the slug and returns the peer profile.',
       resolve(root, {id, slug}, {loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -69,6 +80,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLPublicNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
+      description: 'This query takes either the ID or the key and returns the navigation.',
       resolve(root, {id, key}, {authenticateUser, loaders}) {
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
@@ -84,6 +96,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query takes either the ID or the slug and returns the author.',
       resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -104,6 +117,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query is to get the authors.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.author.getAuthors({
           filter,
@@ -120,9 +134,37 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLPublicArticle,
-      args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
-        const article = await loaders.publicArticles.load(id)
+      args: {
+        id: {type: GraphQLID},
+        slug: {type: GraphQLSlug},
+        token: {type: GraphQLString}
+      },
+      description: 'This query takes either the ID, slug or token and returns the article.',
+      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
+        let article = id ? await loaders.publicArticles.load(id) : null
+
+        if (!article && slug) {
+          article = await dbAdapter.article.getPublishedArticleBySlug(slug)
+        }
+
+        if (!article && token) {
+          try {
+            const articleId = verifyJWT(token)
+            const privateArticle = await loaders.articles.load(articleId)
+
+            article = privateArticle?.draft
+              ? ({
+                  id: privateArticle.id,
+                  shared: privateArticle.shared,
+                  ...privateArticle.draft,
+                  updatedAt: new Date(),
+                  publishedAt: new Date()
+                } as PublicArticle)
+              : null
+          } catch (error) {
+            logger('graphql-query').warn(error, 'Error while verifying token with article id.')
+          }
+        }
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
@@ -143,6 +185,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the articles.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.article.getPublishedArticles({
           filter,
@@ -164,6 +207,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         peerSlug: {type: GraphQLSlug},
         id: {type: GraphQLNonNull(GraphQLID)}
       },
+      description: 'This query takes either the peer ID or the peer slug and returns the article.',
       async resolve(root, {peerID, peerSlug, id}, context, info) {
         const {loaders} = context
 
@@ -195,13 +239,39 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     page: {
       type: GraphQLPublicPage,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticateUser, loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
+      args: {
+        id: {type: GraphQLID},
+        slug: {type: GraphQLSlug},
+        token: {type: GraphQLString}
+      },
+      description: 'This query takes either the ID, slug or token and returns the page.',
+      async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
+        let page = id ? await loaders.publicPagesByID.load(id) : null
+
+        if (!page) {
+          // slug can be empty string
+          page = await loaders.publicPagesBySlug.load(slug)
         }
 
-        return id ? loaders.publicPagesByID.load(id) : loaders.publicPagesBySlug.load(slug)
+        if (!page && token) {
+          try {
+            const pageId = verifyJWT(token)
+            const privatePage = await loaders.pages.load(pageId)
+
+            page = privatePage?.draft
+              ? ({
+                  id: privatePage.id,
+                  ...privatePage.draft,
+                  updatedAt: new Date(),
+                  publishedAt: new Date()
+                } as PublicPage)
+              : null
+          } catch (error) {
+            logger('graphql-query').warn(error, 'Error while verifying token with page id.')
+          }
+        }
+
+        return page
       }
     },
 
@@ -216,6 +286,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the pages.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.page.getPublishedPages({
           filter,
@@ -227,11 +298,36 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    // Auth
+    // =======
+
+    authProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      args: {redirectUri: {type: GraphQLString}},
+      description: 'This query returns the redirect Uri.',
+      async resolve(root, {redirectUri}, {getOauth2Clients}) {
+        const clients = await getOauth2Clients()
+        return clients.map(client => {
+          const url = client.client.authorizationUrl({
+            scope: client.provider.scopes.join(),
+            response_mode: 'query',
+            redirect_uri: `${redirectUri}/${client.name}`,
+            state: 'fakeRandomString'
+          })
+          return {
+            name: client.name,
+            url
+          }
+        })
+      }
+    },
+
     // User
     // ====
 
     me: {
       type: GraphQLPublicUser,
+      description: 'This query returns the user.',
       resolve(root, args, {session}) {
         return session?.type === SessionType.User ? session.user : null
       }
@@ -239,6 +335,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
+      description: 'This query returns the invoices.',
       resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
@@ -257,6 +354,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.CreatedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the member plans.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.memberPlan.getActiveMemberPlans({
           filter,

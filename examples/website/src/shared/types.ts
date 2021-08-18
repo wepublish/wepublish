@@ -31,6 +31,32 @@ export interface Author {
   image: ImageData
 }
 
+export interface Comment {
+  id: string
+  state: string
+  rejectionReason: string
+  itemID: string
+  itemType: CommentItemType
+  text: RichTextBlockValue
+  modifiedAt: Date
+  parentID?: string
+  authorType: CommentAuthorType
+  user: User
+  userName: string
+  children: Comment[]
+}
+
+export enum CommentAuthorType {
+  Team = 'team',
+  Author = 'author',
+  VerifiedUser = 'verifiedUser'
+}
+
+export enum CommentItemType {
+  Article = 'article',
+  Page = 'page'
+}
+
 export interface NavigationItem {
   title: string
   route?: Route
@@ -56,16 +82,49 @@ export interface ArticleMeta {
   slug?: string
   isBreaking: boolean
 
+  canonicalUrl: string
+
   socialMediaTitle?: string
   socialMediaDescription?: string
   socialMediaAuthors: Author[]
   socialMediaImage?: any
+
+  comments?: Comment[]
 
   teaserType?: TeaserType
   teaserStyle?: TeaserStyle
 }
 
 export type PublishedArticle = ArticleMeta & {
+  blocks: Block[]
+}
+
+// PageMeta
+export interface PageMeta {
+  id: string
+  url: string
+
+  tags: string[]
+
+  publishedAt: Date
+  updatedAt: Date
+
+  title: string
+  description: string
+  image: any
+  slug?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImage?: any
+
+  comments?: Comment[]
+
+  teaserType?: TeaserType
+  teaserStyle?: TeaserStyle
+}
+
+export type PublishedPage = PageMeta & {
   blocks: Block[]
 }
 
@@ -102,9 +161,6 @@ export interface Peer {
 }
 
 export enum BlockType {
-  Foo = 'foo',
-  Bar = 'bar',
-
   // Content
   TitleImage = 'titleImage',
   Title = 'title',
@@ -120,6 +176,8 @@ export enum BlockType {
   // Layout
   Grid = 'grid'
 }
+
+export type RichTextBlockValue = Node[]
 
 export interface BaseBlock<T extends BlockType, V> {
   type: T
@@ -193,6 +251,7 @@ export enum EmbedType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   IFrame = 'iframe'
 }
 
@@ -228,6 +287,11 @@ export interface SoundCloudTrackEmbedData {
   trackID: string
 }
 
+export interface PolisConversationEmbedData {
+  type: EmbedType.PolisConversation
+  conversationID: string
+}
+
 export interface IFrameEmbed {
   type: EmbedType.IFrame
   title?: string
@@ -244,6 +308,7 @@ export type EmbedData =
   | VimeoVideoEmbedData
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
+  | PolisConversationEmbedData
   | IFrameEmbed
 
 export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
@@ -326,4 +391,26 @@ export interface PageInfo {
   readonly endCursor?: string
   readonly hasNextPage: boolean
   readonly hasPreviousPage: boolean
+}
+
+export interface User {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+  readonly name: string
+  readonly preferredName?: string
+  readonly email: string
+
+  readonly active: boolean
+  readonly lastLogin: Date | null
+
+  readonly properties: MetadataProperty[]
+
+  readonly roleIDs: string[]
+}
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
 }

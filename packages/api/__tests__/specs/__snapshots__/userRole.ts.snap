@@ -10,6 +10,11 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
+          "description": "Allows to take an action on comment",
+          "id": "CAN_TAKE_COMMENT_ACTION",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
@@ -90,6 +95,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to get preview links for articles",
+          "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to publish articles",
           "id": "CAN_PUBLISH_ARTICLE",
         },
@@ -127,6 +137,11 @@ Object {
           "deprecated": false,
           "description": "Allows to publish Pages",
           "id": "CAN_PUBLISH_PAGE",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get preview links for pages",
+          "id": "CAN_GET_PAGE_PREVIEW_LINK",
         },
         Object {
           "deprecated": false,
@@ -232,6 +247,11 @@ Object {
           "deprecated": false,
           "description": "Allows to get all permissions",
           "id": "CAN_GET_PERMISSIONS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all comments",
+          "id": "CAN_GET_COMMENTS",
         },
         Object {
           "deprecated": false,
@@ -392,6 +412,11 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
@@ -472,6 +497,11 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to get preview links for articles",
+              "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to publish articles",
               "id": "CAN_PUBLISH_ARTICLE",
             },
@@ -509,6 +539,11 @@ Object {
               "deprecated": false,
               "description": "Allows to publish Pages",
               "id": "CAN_PUBLISH_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get preview links for pages",
+              "id": "CAN_GET_PAGE_PREVIEW_LINK",
             },
             Object {
               "deprecated": false,
@@ -614,6 +649,11 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
             },
             Object {
               "deprecated": false,
@@ -752,6 +792,16 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to create authors",
               "id": "CAN_CREATE_AUTHOR",
             },
@@ -802,6 +852,11 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to get preview links for articles",
+              "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to create Pages",
               "id": "CAN_CREATE_PAGE",
             },
@@ -843,6 +898,11 @@ Object {
           "id": Any<String>,
           "name": "Admin",
           "permissions": Array [
+            Object {
+              "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
             Object {
               "deprecated": false,
               "description": "Allows to create navigation",
@@ -925,6 +985,11 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to get preview links for articles",
+              "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to publish articles",
               "id": "CAN_PUBLISH_ARTICLE",
             },
@@ -962,6 +1027,11 @@ Object {
               "deprecated": false,
               "description": "Allows to publish Pages",
               "id": "CAN_PUBLISH_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get preview links for pages",
+              "id": "CAN_GET_PAGE_PREVIEW_LINK",
             },
             Object {
               "deprecated": false,
@@ -1067,6 +1137,11 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
             },
             Object {
               "deprecated": false,
@@ -1191,13 +1266,13 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to create navigation",
-          "id": "CAN_CREATE_NAVIGATION",
+          "description": "Allows to take an action on comment",
+          "id": "CAN_TAKE_COMMENT_ACTION",
         },
         Object {
           "deprecated": false,
-          "description": "Allows to delete navigations",
-          "id": "CAN_DELETE_NAVIGATION",
+          "description": "Allows to get all navigations",
+          "id": "CAN_GET_NAVIGATIONS",
         },
       ],
       "systemRole": false,
@@ -1217,6 +1292,11 @@ exports[`User Roles can be created/edited/deleted: can read permission list 1`] 
 Object {
   "data": Object {
     "permissions": Array [
+      Object {
+        "deprecated": false,
+        "description": "Allows to take an action on comment",
+        "id": "CAN_TAKE_COMMENT_ACTION",
+      },
       Object {
         "deprecated": false,
         "description": "Allows to create navigation",
@@ -1299,6 +1379,11 @@ Object {
       },
       Object {
         "deprecated": false,
+        "description": "Allows to get preview links for articles",
+        "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+      },
+      Object {
+        "deprecated": false,
         "description": "Allows to publish articles",
         "id": "CAN_PUBLISH_ARTICLE",
       },
@@ -1336,6 +1421,11 @@ Object {
         "deprecated": false,
         "description": "Allows to publish Pages",
         "id": "CAN_PUBLISH_PAGE",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get preview links for pages",
+        "id": "CAN_GET_PAGE_PREVIEW_LINK",
       },
       Object {
         "deprecated": false,
@@ -1441,6 +1531,11 @@ Object {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all comments",
+        "id": "CAN_GET_COMMENTS",
       },
       Object {
         "deprecated": false,

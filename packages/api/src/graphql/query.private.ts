@@ -10,10 +10,9 @@ import {
 
 import {WrapQuery, ExtractField} from 'graphql-tools'
 
-import {Client, Issuer} from 'openid-client'
 import {UserInputError} from 'apollo-server-express'
 
-import {Context, Oauth2Provider} from '../context'
+import {Context} from '../context'
 
 import {GraphQLSession} from './session'
 import {GraphQLAuthProvider} from './auth'
@@ -79,6 +78,7 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
+  CanGetComments,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetPaymentMethods,
@@ -87,7 +87,9 @@ import {
   CanGetInvoices,
   CanGetPayment,
   CanGetPayments,
-  CanGetPaymentProviders
+  CanGetPaymentProviders,
+  CanGetArticlePreviewLink,
+  CanGetPagePreviewLink
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -99,7 +101,8 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {NotAuthorisedError} from '../error'
+import {NotAuthorisedError, NotFound} from '../error'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
   GraphQLMemberPlanConnection,
@@ -122,6 +125,7 @@ import {
   GraphQLPaymentSort
 } from './payment'
 import {PaymentSort} from '../db/payment'
+import {CommentSort} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -162,7 +166,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     me: {
       type: GraphQLUser,
-      resolve(root, args, {session}) {
+      resolve(root, args, {authenticate}) {
+        const session = authenticate()
         return session?.type === SessionType.User ? session.user : null
       }
     },
@@ -181,26 +186,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     authProviders: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
       args: {redirectUri: {type: GraphQLString}},
-      async resolve(root, {redirectUri}, {oauth2Providers}) {
-        const clients: {
-          name: string
-          provider: Oauth2Provider
-          client: Client
-        }[] = await Promise.all(
-          oauth2Providers.map(async provider => {
-            const issuer = await Issuer.discover(provider.discoverUrl)
-            return {
-              name: provider.name,
-              provider,
-              client: new issuer.Client({
-                client_id: provider.clientId,
-                client_secret: provider.clientKey,
-                redirect_uris: provider.redirectUri,
-                response_types: ['code']
-              })
-            }
-          })
-        )
+      async resolve(root, {redirectUri}, {getOauth2Clients}) {
+        const clients = await getOauth2Clients()
         return clients.map(client => {
           const url = client.client.authorizationUrl({
             scope: client.provider.scopes.join(),
@@ -382,11 +369,16 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
         filter: {type: GraphQLAuthorFilter},
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, skip, last},
+        {authenticate, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanGetAuthors, roles)
 
@@ -395,7 +387,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           sort,
           order,
           cursor: InputCursor(after, before),
-          limit: Limit(first, last)
+          limit: Limit(first, last, skip)
         })
       }
     },
@@ -435,6 +427,44 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
+        filter: {type: GraphQLCommentFilter},
+        sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last, skip},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return await dbAdapter.comment.getComments({
+            filter,
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last, skip)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
@@ -560,6 +590,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
                       kind: Kind.SELECTION_SET,
                       selections: [
                         ...subtree.selections,
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'id'}
+                        },
                         {
                           kind: Kind.FIELD,
                           name: {kind: Kind.NAME, value: 'latest'},
@@ -702,6 +736,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    articlePreviewLink: {
+      type: GraphQLString,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
+        const {roles} = authenticate()
+        authorise(CanGetArticlePreviewLink, roles)
+
+        const article = await loaders.articles.load(id)
+
+        if (!article) throw new NotFound('article', id)
+
+        if (!article.draft) throw new UserInputError('Article needs to have a draft')
+
+        const token = generateJWT({
+          id: article.id,
+          expiresInMinutes: hours * 60
+        })
+
+        return urlAdapter.getArticlePreviewURL(token)
+      }
+    },
+
     // Page
     // ====
 
@@ -742,6 +798,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
+      }
+    },
+
+    pagePreviewLink: {
+      type: GraphQLString,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
+        const {roles} = authenticate()
+        authorise(CanGetPagePreviewLink, roles)
+
+        const page = await loaders.pages.load(id)
+
+        if (!page) throw new NotFound('page', id)
+
+        if (!page.draft) throw new UserInputError('Page needs to have a draft')
+
+        const token = generateJWT({
+          id: page.id,
+          expiresInMinutes: hours * 60
+        })
+
+        return urlAdapter.getPagePreviewURL(token)
       }
     },
 

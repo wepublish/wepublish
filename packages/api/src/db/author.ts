@@ -12,6 +12,7 @@ export interface Author {
   modifiedAt: Date
   name: string
   slug: string
+  jobTitle?: string
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]
@@ -20,6 +21,7 @@ export interface Author {
 export interface AuthorInput {
   name: string
   slug: string
+  jobTitle?: string
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]
@@ -41,8 +43,9 @@ export interface DeleteAuthorArgs {
 }
 
 export enum AuthorSort {
-  CreatedAt = 'modifiedAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export interface AuthorFilter {

@@ -7,6 +7,7 @@ import {
   ArticleRefFragment,
   useUnpublishArticleMutation,
   useDeleteArticleMutation,
+  useDuplicateArticleMutation,
   ArticleListDocument,
   ArticleListQuery,
   PageRefFragment,
@@ -18,11 +19,13 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
-  Unpublish = 'unpublish'
+  Unpublish = 'unpublish',
+  Duplicate = 'duplicate'
 }
 
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
@@ -42,17 +45,19 @@ export function ArticleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
+  const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -70,6 +75,17 @@ export function ArticleList() {
   useEffect(() => {
     refetch(articleListVariables)
   }, [filter, page, limit, sortOrder, sortField])
+
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setHighlightedRowId(null)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [highlightedRowId])
 
   const {t} = useTranslation()
 
@@ -117,20 +133,35 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('articles.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: ArticleRefFragment) => new Date(createdAt).toDateString()}
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(articleRef: ArticleRefFragment) =>
+                articleRef.published?.publishedAt
+                  ? `${new Date(articleRef.published.publishedAt).toDateString()} ${new Date(
+                      articleRef.published.publishedAt
+                    ).toLocaleTimeString()}`
+                  : articleRef.pending?.publishAt
+                  ? `${new Date(articleRef.pending.publishAt).toDateString()} ${new Date(
+                      articleRef.pending.publishAt
+                    ).toLocaleTimeString()}`
+                  : t('articles.overview.notPublished')
+              }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: ArticleRefFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: ArticleRefFragment) =>
+                `${new Date(modifiedAt).toDateString()} ${new Date(
+                  modifiedAt
+                ).toLocaleTimeString()}`
+              }
             </Cell>
           </Column>
           <Column width={400} align="left" resizable>
@@ -153,7 +184,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -167,14 +198,14 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
                   {rowData.published && (
                     <IconButton
-                      icon={<Icon icon="arrow-circle-o-down" />}
+                      icon={<Icon icon="btn-off" />}
                       circle
                       size="sm"
                       onClick={e => {
@@ -195,6 +226,29 @@ export function ArticleList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setArticlePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -213,6 +267,18 @@ export function ArticleList() {
       </div>
 
       <Modal
+        show={isArticlePreviewLinkOpen}
+        width={'sm'}
+        onHide={() => setArticlePreviewLinkOpen(false)}>
+        {currentArticle && (
+          <ArticlePreviewLinkPanel
+            props={{id: currentArticle.id}}
+            onClose={() => setArticlePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
+
+      <Modal
         show={isConfirmationDialogOpen}
         width={'sm'}
         onHide={() => setConfirmationDialogOpen(false)}>
@@ -220,7 +286,9 @@ export function ArticleList() {
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
               ? t('articles.panels.unpublishArticle')
-              : t('articles.panels.deleteArticle')}
+              : confirmAction === ConfirmAction.Delete
+              ? t('articles.panels.deleteArticle')
+              : t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
 
@@ -256,7 +324,7 @@ export function ArticleList() {
         <Modal.Footer>
           <Button
             color={'red'}
-            disabled={isUnpublishing || isDeleting}
+            disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return
 
@@ -291,6 +359,36 @@ export function ArticleList() {
                 case ConfirmAction.Unpublish:
                   await unpublishArticle({
                     variables: {id: currentArticle.id}
+                  })
+                  setHighlightedRowId(currentArticle.id)
+                  break
+
+                case ConfirmAction.Duplicate:
+                  duplicateArticle({
+                    variables: {id: currentArticle.id},
+                    update: cache => {
+                      const query = cache.readQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        variables: articleListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        data: {
+                          articles: {
+                            ...query.articles,
+                            nodes: query.articles.nodes.filter(
+                              article => article.id !== currentArticle.id
+                            )
+                          }
+                        },
+                        variables: articleListVariables
+                      })
+                    }
+                  }).then(output => {
+                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
                   break
               }

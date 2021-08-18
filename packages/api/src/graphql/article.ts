@@ -28,6 +28,8 @@ import {
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
+import {GraphQLPublicComment} from './comment'
+import {SessionType} from '../db/session'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -76,9 +78,12 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
@@ -115,10 +120,13 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     image: {
       type: GraphQLImage,
@@ -200,6 +208,16 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
     },
+    peeredArticleURL: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(
+        async ({peerID, article}, {}, {loaders, dbAdapter, urlAdapter}) => {
+          const peer = await loaders.peer.load(peerID)
+          if (!peer || !article) return ''
+          return urlAdapter.getPeeredArticleURL(peer, article)
+        }
+      )
+    },
     article: {type: GraphQLNonNull(GraphQLArticle)}
   }
 })
@@ -236,7 +254,10 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     properties: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
@@ -284,7 +305,20 @@ export const GraphQLPublicArticle: GraphQLObjectType<
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
+        // if session exists, should get user's un-approved comments as well
+        // if not we should get approved ones
+        const userSession = session?.type === SessionType.User ? authenticateUser() : null
+        return await dbAdapter.comment.getPublicCommentsForItemByID({
+          id,
+          userID: userSession?.user?.id
+        })
+      })
+    }
   }
 })
 

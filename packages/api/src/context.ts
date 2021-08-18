@@ -40,9 +40,10 @@ import {Invoice, OptionalInvoice} from './db/invoice'
 import {OptionalPayment, Payment, PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
-import {logger} from './server'
+import {OptionalMailLog} from './db/mailLog'
 import {MemberContext} from './memberContext'
+import {Client, Issuer} from 'openid-client'
+import {MailContext, MailContextOptions} from './mails/mailContext'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -78,6 +79,12 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
 
+export interface OAuth2Clients {
+  name: string
+  provider: Oauth2Provider
+  client: Client
+}
+
 export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
@@ -85,6 +92,7 @@ export interface Context {
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
+  readonly mailContext: MailContext
   readonly memberContext: MemberContext
 
   readonly dbAdapter: DBAdapter
@@ -94,7 +102,7 @@ export interface Context {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
 
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+  getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): Session
   authenticateToken(): TokenSession
@@ -123,6 +131,7 @@ export interface ContextOptions {
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly mailProvider?: BaseMailProvider
+  readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
@@ -146,7 +155,7 @@ export interface CreatePaymentWithProvider {
 }
 
 export interface GenerateJWTProps {
-  userID: string
+  id: string
   audience?: string
   expiresInMinutes?: number
 }
@@ -162,6 +171,7 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
     mailProvider,
+    mailContextOptions,
     paymentProviders
   }: ContextOptions
 ): Promise<Context> {
@@ -176,28 +186,6 @@ export async function contextFromRequest(
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
     dbAdapter.peer.getPeersByID(ids)
   )
-
-  const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
-    const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
-    const mailLog = await dbAdapter.mailLog.createMailLog({
-      input: {
-        state: MailLogState.Submitted,
-        subject: props.subject,
-        recipient: props.recipient,
-        mailProviderID: mailProviderID
-      }
-    })
-
-    if (mailProvider) {
-      try {
-        await mailProvider.sendMail({...props, mailLogID: mailLog.id})
-      } catch (error) {
-        logger('context').error(error, 'Error during sendMail mailLogID: %s', mailLog.id)
-      }
-    }
-
-    return mailLog
-  }
 
   const loaders: DataLoaderContext = {
     navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
@@ -290,11 +278,20 @@ export async function contextFromRequest(
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
   }
 
+  const mailContext = new MailContext({
+    dbAdapter,
+    mailProvider,
+    defaultFromAddress: mailContextOptions.defaultFromAddress,
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
+    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
+    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+  })
+
   const memberContext = new MemberContext({
     loaders,
     dbAdapter,
     paymentProviders,
-    sendMailFromProvider
+    mailContext
   })
 
   return {
@@ -304,7 +301,7 @@ export async function contextFromRequest(
     loaders,
 
     memberContext,
-
+    mailContext,
     dbAdapter,
     mediaAdapter,
     urlAdapter,
@@ -312,7 +309,23 @@ export async function contextFromRequest(
     paymentProviders,
     hooks,
 
-    sendMailFromProvider,
+    async getOauth2Clients() {
+      return await Promise.all(
+        oauth2Providers.map(async provider => {
+          const issuer = await Issuer.discover(provider.discoverUrl)
+          return {
+            name: provider.name,
+            provider,
+            client: new issuer.Client({
+              client_id: provider.clientId,
+              client_secret: provider.clientKey,
+              redirect_uris: provider.redirectUri,
+              response_types: ['code']
+            })
+          }
+        })
+      )
+    },
 
     authenticateUser() {
       if (!session || session.type !== SessionType.User) {
@@ -354,7 +367,7 @@ export async function contextFromRequest(
         algorithm: 'HS256',
         expiresIn: `${props.expiresInMinutes ?? 5}m`
       }
-      return jwt.sign({sub: props.userID}, process.env.JWT_SECRET_KEY, jwtOptions)
+      return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
     },
 
     verifyJWT(token: string): string {

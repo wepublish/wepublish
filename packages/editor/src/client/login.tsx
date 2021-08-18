@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType, RouteInstance} from '@karma.run/react'
+import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
 
@@ -194,7 +194,7 @@ export function Login() {
                 onChange={password => setPassword(password)}
               />
             </FormGroup>
-            <Button appearance="primary" disabled={loading} onClick={login}>
+            <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
               {t('login.login')}
             </Button>
           </Form>

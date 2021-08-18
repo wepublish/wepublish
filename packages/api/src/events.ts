@@ -14,6 +14,7 @@ import {MailLog} from './db/mailLog'
 import {MemberPlan} from './db/memberPlan'
 import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
+import {SendMailType} from './mails/mailContext'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -187,22 +188,24 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
         // Send FirstTime Hello
         const token = context.generateJWT({
-          userID: user.id,
+          id: user.id,
           expiresInMinutes: 60 * 24
         })
-        const link = `${context.websiteURL}/login/jwt=${token}` // TODO: make this a setting
-        await context.sendMailFromProvider({
-          message: `Welcome Member. Click the link below to login: \n\n${link}`,
+        await context.mailContext.sendMail({
+          type: SendMailType.NewMemberSubscription,
           recipient: user.email,
-          subject: 'Welcome Member',
-          replyToAddress: 'dev@wepublish.ch'
+          data: {
+            url: `${context.websiteURL}/login/jwt=${token}`,
+            user
+          }
         })
       } else {
-        await context.sendMailFromProvider({
-          message: `Subscription has been renewed`,
+        await context.mailContext.sendMail({
+          type: SendMailType.RenewedMemberSubscription,
           recipient: user.email,
-          subject: 'Subscription is renewed',
-          replyToAddress: 'dev@wepublish.ch'
+          data: {
+            user
+          }
         })
       }
     }

@@ -89,6 +89,7 @@ export enum EmbedType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   Other = 'other'
 }
 
@@ -130,6 +131,11 @@ export interface SoundCloudTrackEmbed {
   trackID: string
 }
 
+export interface PolisConversationEmbed {
+  type: EmbedType.PolisConversation
+  conversationID: string
+}
+
 export interface OtherEmbed {
   type: EmbedType.Other
   url?: string
@@ -147,6 +153,7 @@ export type EmbedBlockValue =
   | VimeoVideoEmbed
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
+  | PolisConversationEmbed
   | OtherEmbed
 
 export enum TeaserType {
@@ -157,7 +164,8 @@ export enum TeaserType {
 
 export enum MetaDataType {
   General = 'general',
-  SocialMedia = 'socialMedia'
+  SocialMedia = 'socialMedia',
+  Properties = 'properties'
 }
 
 export interface ArticleTeaserLink {
@@ -433,6 +441,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
 
+        case EmbedType.PolisConversation:
+          return {
+            polisConversation: {
+              conversationID: value.conversationID
+            }
+          }
+
         case EmbedType.Other:
           return {
             embed: {
@@ -684,6 +699,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {type: EmbedType.SoundCloudTrack, trackID: block.trackID}
+      }
+
+    case 'PolisConversationBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
       }
 
     case 'EmbedBlock':

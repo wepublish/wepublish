@@ -8,6 +8,7 @@ import {TwitterTweetEmbed} from '../atoms/twitterEmbed'
 import {YouTubeVideoEmbed} from '../atoms/youTubeEmbed'
 import {VimeoEmbed} from '../atoms/vimeoEmbed'
 import {SoundCloudEmbed} from '../atoms/soundCloudEmbed'
+import {PolisEmbed} from '../atoms/polisEmbed'
 import {cssRule, useStyle} from '@karma.run/react'
 import {pxToRem, whenTablet, whenDesktop} from '../style/helpers'
 import {usePermanentVisibility} from '../utils/hooks'
@@ -60,6 +61,9 @@ function embedForData(data: EmbedData) {
 
     case EmbedType.SoundCloudTrack:
       return <SoundCloudEmbed {...data} />
+
+    case EmbedType.PolisConversation:
+      return <PolisEmbed {...data} />
 
     case EmbedType.IFrame:
       // TODO: Move into component

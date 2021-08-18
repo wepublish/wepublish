@@ -36,6 +36,7 @@ fragment ArticleRef on Article {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -58,6 +59,7 @@ fragment ArticleRef on Article {
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
 
@@ -84,6 +86,8 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
       peer {
         ...PeerWithProfile
       }
+
+      peeredArticleURL
 
       article {
         ...ArticleRef
@@ -132,10 +136,24 @@ mutation DeleteArticle($id: ID!) {
   deleteArticle(id: $id)
 }
 
+mutation DuplicateArticle($id: ID!) {
+  duplicateArticle(id: $id) {
+   ...MutationArticle
+  }
+}
+
+query ArticlePreviewLink($id: ID!, $hours: Int!) {
+  articlePreviewLink(id: $id, hours: $hours)
+}
+
 query Article($id: ID!) {
   article(id: $id) {
     id
     shared
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt
@@ -154,10 +172,12 @@ query Article($id: ID!) {
       preTitle
       title
       lead
+      seoTitle
       image {
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value

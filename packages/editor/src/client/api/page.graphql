@@ -36,6 +36,7 @@ fragment PageRef on Page {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -102,9 +103,23 @@ mutation DeletePage($id: ID!) {
   deletePage(id: $id)
 }
 
+mutation DuplicatePage($id: ID!) {
+  duplicatePage(id: $id) {
+   ...MutationPage
+  }
+}
+
+query PagePreviewLink($id: ID!, $hours: Int!) {
+  pagePreviewLink(id: $id, hours: $hours)
+}
+
 query Page($id: ID!) {
   page(id: $id) {
     id
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt

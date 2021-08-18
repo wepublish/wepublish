@@ -8,7 +8,10 @@ import {
   OptionalUserSession,
   PublicArticle,
   PublicPage,
-  URLAdapter
+  URLAdapter,
+  PublicComment,
+  CommentItemType,
+  Peer
 } from '../src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
@@ -30,8 +33,27 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+    return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
+  }
+
   getAuthorURL(author: Author): string {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
+  }
+
+  getArticlePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/article/preview/${token}`
+  }
+
+  getPagePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/page/preview/${token}`
+  }
+
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
+    if (comment.itemType === CommentItemType.Article) {
+      return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
+    }
+    return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
 }
 
@@ -99,6 +121,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []
@@ -116,6 +143,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []

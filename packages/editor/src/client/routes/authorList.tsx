@@ -11,9 +11,9 @@ import {
   Link
 } from '../route'
 
-import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment} from '../api'
+import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -29,7 +29,22 @@ import {
   Button
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
+
+function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return AuthorSort.CreatedAt
+    case 'modifiedAt':
+      return AuthorSort.ModifiedAt
+    case 'name':
+      return AuthorSort.Name
+    default:
+      return null
+  }
+}
 
 export function AuthorList() {
   const {t} = useTranslation()
@@ -44,6 +59,10 @@ export function AuthorList() {
     current?.type === RouteType.AuthorEdit ? current.params.id : undefined
   )
 
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -52,7 +71,10 @@ export function AuthorList() {
 
   const authorListQueryVariables = {
     filter: filter || undefined,
-    first: 50
+    skip: page - 1,
+    sort: mapColumFieldToGraphQLField(sortField),
+    first: limit,
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
   const {
@@ -63,6 +85,10 @@ export function AuthorList() {
     variables: authorListQueryVariables,
     fetchPolicy: 'network-only'
   })
+
+  useEffect(() => {
+    authorListRefetch(authorListQueryVariables)
+  }, [filter, page, limit, sortOrder, sortField])
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
@@ -85,22 +111,6 @@ export function AuthorList() {
       setAuthors(data.authors.nodes)
     }
   }, [data?.authors])
-
-  /* function loadMore() {
-    fetchMore({
-      variables: {first: 50, after: data?.authors.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          authors: {
-            ...fetchMoreResult.authors,
-            nodes: [...prev.authors.nodes, ...fetchMoreResult?.authors.nodes]
-          }
-        }
-      }
-    })
-  } */
 
   return (
     <>
@@ -125,46 +135,79 @@ export function AuthorList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={authors}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={100} align="left" resizable>
+            <HeaderCell></HeaderCell>
+            <Cell style={{padding: 2}}>
+              {(rowData: FullAuthorFragment) => (
+                <Avatar circle src={rowData.image?.squareURL || undefined} />
+              )}
+            </Cell>
+          </Column>
+          <Column width={300} align="left" resizable sortable>
+            <HeaderCell>{t('authors.overview.name')}</HeaderCell>
+            <Cell dataKey="name">
+              {(rowData: FullAuthorFragment) => (
+                <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('authors.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('authors.overview.created')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('authors.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullAuthorFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentAuthor(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={authors}>
-        <Column width={100} align="left" resizable>
-          <HeaderCell></HeaderCell>
-          <Cell style={{padding: 2}}>
-            {(rowData: FullAuthorFragment) => (
-              <Avatar circle src={rowData.image?.squareURL || undefined} />
-            )}
-          </Cell>
-        </Column>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('authors.overview.name')}</HeaderCell>
-          <Cell>
-            {(rowData: FullAuthorFragment) => (
-              <Link route={AuthorEditRoute.create({id: rowData.id})}>
-                {rowData.name || t('authors.overview.untitled')}
-              </Link>
-            )}
-          </Cell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullAuthorFragment) => (
-              <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentAuthor(rowData)
-                  }}
-                />
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          activePage={page}
+          displayLength={limit}
+          total={data?.authors.totalCount}
+          onChangePage={(newPage: number) => setPage(newPage)}
+          onChangeLength={(limit: number) => setLimit(limit)}
+        />
+      </div>
 
       <Drawer
         show={isEditModalOpen}

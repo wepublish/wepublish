@@ -289,6 +289,37 @@ describe('Pages', () => {
       })
     })
 
+    test('can not be published with the same slug', async () => {
+      const {mutate} = testClientPrivate
+
+      const input: PageInput = {
+        title: 'Testing Page with the same slug',
+        slug: 'testing-page',
+        tags: [],
+        properties: [],
+        blocks: []
+      }
+      const newPage = await mutate({
+        mutation: CreatePage,
+        variables: {
+          input: input
+        }
+      })
+
+      const res = await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: newPage.data?.createPage?.id,
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      expect(res).toMatchSnapshot({
+        errors: expect.any(Array)
+      })
+    })
+
     test('can be unpublished', async () => {
       const {mutate} = testClientPrivate
       const res = await mutate({

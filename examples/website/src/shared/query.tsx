@@ -1,11 +1,32 @@
 import gql from 'graphql-tag'
-import {articleMetaDataFragment, simpleImageDataFragment} from './route/gqlFragments'
 import {QueryHookOptions, useQuery} from '@apollo/client'
 import {ArticleReference, PageInfo, ImageRefData} from './types'
+import {
+  imageBlockDataFragment,
+  richTextBlockDataFragment,
+  imageGalleryBlockDataFragment,
+  facebookPostBlockDataFragment,
+  instagramPostBlockDataFragment,
+  twitterTweetBlockDataFragment,
+  vimeoVideoBlockDataFragment,
+  youtubeVideoBlockDataFragment,
+  soundCloudTrackBlockDataFragment,
+  embedBlockDataFragment,
+  linkPageBreakBlockDataFragment,
+  listicleBlockDataFragment,
+  quoteBlockDataFragment,
+  titleBlockDataFragment,
+  articleMetaDataFragment,
+  simpleImageDataFragment,
+  gridBlockFrontDataGQLfragment
+} from './route/gqlFragments'
 
 // TODO: Don't use slate Node type, export client side friendly types from @wepublish/api/types package.
 // TODO: Remove slate from dependencies.
 import {Node} from 'slate'
+
+// Article-Queries
+// ===============
 
 export interface ListArticlesData {
   articles: {
@@ -41,11 +62,82 @@ const ArticleTagQuery = gql`
   ${articleMetaDataFragment}
 `
 
+export const ArticleQuery = gql`
+  query Article($id: ID!) {
+    article(id: $id) {
+      ...ArticleMetaData
+
+      blocks {
+        __typename
+        ...RichtTextBlockData
+        ...ImageBlockData
+        ...ImageGalleryBlockData
+        ...FacebookPostBlockData
+        ...InstagramPostBlockData
+        ...TwitterTweetBlockData
+        ...VimeoVideoBlockData
+        ...YoutubeVideoBlockData
+        ...SoundCloudTrackBlockData
+        ...EmbedBlockData
+        ...LinkPageBreakBlockData
+        ...ListicleBlockData
+        ...QuoteBlockData
+        ...TitleBlockData
+        ...ArticleGridBlockData
+      }
+    }
+  }
+
+  ${articleMetaDataFragment}
+  ${richTextBlockDataFragment}
+  ${imageBlockDataFragment}
+  ${imageGalleryBlockDataFragment}
+  ${instagramPostBlockDataFragment}
+  ${facebookPostBlockDataFragment}
+  ${twitterTweetBlockDataFragment}
+  ${vimeoVideoBlockDataFragment}
+  ${youtubeVideoBlockDataFragment}
+  ${soundCloudTrackBlockDataFragment}
+  ${embedBlockDataFragment}
+  ${linkPageBreakBlockDataFragment}
+  ${listicleBlockDataFragment}
+  ${quoteBlockDataFragment}
+  ${titleBlockDataFragment}
+  ${gridBlockFrontDataGQLfragment}
+`
+
+// Article-Mutations
+// =================
+
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      user {
+        id
+      }
+      text
+      parentID
+    }
+  }
+`
+
+export const UpdateComment = gql`
+  mutation UpdateComment($input: CommentUpdateInput!) {
+    updateComment(input: $input) {
+      id
+      text
+    }
+  }
+`
+
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
 ) {
   return useQuery(ArticleTagQuery, opts)
 }
+
+// Author-Queries
+// ==============
 
 export interface AuthorLink {
   title: string

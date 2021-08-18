@@ -142,6 +142,10 @@ fragment FullBlock on Block {
     trackID
   }
 
+    ... on PolisConversationBlock {
+    conversationID
+  }
+
   ... on EmbedBlock {
     url
     title

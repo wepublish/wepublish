@@ -7,6 +7,7 @@ import {
   usePageListQuery,
   useDeletePageMutation,
   useUnpublishPageMutation,
+  useDuplicatePageMutation,
   PageListDocument,
   PageListQuery,
   PageSort
@@ -17,11 +18,14 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
+
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
-  Unpublish = 'unpublish'
+  Unpublish = 'unpublish',
+  Duplicate = 'duplicate'
 }
 
 function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
@@ -43,17 +47,19 @@ export function PageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pages, setPages] = useState<PageRefFragment[]>([])
 
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
+  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -67,6 +73,17 @@ export function PageList() {
     variables: pageListVariables,
     fetchPolicy: 'network-only'
   })
+
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setHighlightedRowId(null)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [highlightedRowId])
 
   useEffect(() => {
     refetch(pageListVariables)
@@ -113,20 +130,35 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(pageRef: PageRefFragment) =>
+                pageRef.published?.publishedAt
+                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
+                      pageRef.published.publishedAt
+                    ).toLocaleTimeString()}`
+                  : pageRef.pending?.publishAt
+                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
+                      pageRef.pending.publishAt
+                    ).toLocaleTimeString()}`
+                  : t('pages.overview.notPublished')
+              }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: PageRefFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: PageRefFragment) =>
+                `${new Date(modifiedAt).toDateString()} ${new Date(
+                  modifiedAt
+                ).toLocaleTimeString()}`
+              }
             </Cell>
           </Column>
           <Column width={400} align="left" resizable>
@@ -153,14 +185,14 @@ export function PageList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
                   {rowData.published && (
                     <IconButton
-                      icon={<Icon icon="arrow-circle-o-down" />}
+                      icon={<Icon icon="btn-off" />}
                       circle
                       size="sm"
                       onClick={e => {
@@ -181,6 +213,29 @@ export function PageList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setPagePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -198,6 +253,15 @@ export function PageList() {
         />
       </div>
 
+      <Modal show={isPagePreviewLinkOpen} width={'sm'} onHide={() => setPagePreviewLinkOpen(false)}>
+        {currentPage && (
+          <PagePreviewLinkPanel
+            props={{id: currentPage.id}}
+            onClose={() => setPagePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
+
       <Modal
         show={isConfirmationDialogOpen}
         width={'sm'}
@@ -206,7 +270,9 @@ export function PageList() {
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
               ? t('pages.panels.unpublishPage')
-              : t('pages.panels.deletePage')}
+              : confirmAction === ConfirmAction.Delete
+              ? t('pages.panels.deletePage')
+              : t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 
@@ -242,7 +308,7 @@ export function PageList() {
 
         <Modal.Footer>
           <Button
-            disabled={isUnpublishing || isDeleting}
+            disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentPage) return
 
@@ -275,6 +341,34 @@ export function PageList() {
                 case ConfirmAction.Unpublish:
                   await unpublishPage({
                     variables: {id: currentPage.id}
+                  })
+                  setHighlightedRowId(currentPage.id)
+                  break
+
+                case ConfirmAction.Duplicate:
+                  duplicatePage({
+                    variables: {id: currentPage.id},
+                    update: cache => {
+                      const query = cache.readQuery<PageListQuery>({
+                        query: PageListDocument,
+                        variables: pageListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<PageListQuery>({
+                        query: PageListDocument,
+                        data: {
+                          pages: {
+                            ...query.pages,
+                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
+                          }
+                        },
+                        variables: pageListVariables
+                      })
+                    }
+                  }).then(output => {
+                    if (output.data) setHighlightedRowId(output.data?.duplicatePage.id)
                   })
                   break
               }

@@ -12,12 +12,13 @@ import {
   vimeoVideoBlockDataFragment,
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
-  articleMetaDataFragment,
+  pageMetaDataFragment,
   gridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
@@ -32,8 +33,8 @@ import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
 
 const PageQuery = gql`
-  query Page($id: ID, $slug: Slug) {
-    page(id: $id, slug: $slug) {
+  query Page($id: ID, $slug: Slug, $token: String) {
+    page(id: $id, slug: $slug, token: $token) {
       updatedAt
       publishedAt
       slug
@@ -59,6 +60,7 @@ const PageQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -69,7 +71,7 @@ const PageQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${pageMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -79,6 +81,7 @@ const PageQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -90,11 +93,13 @@ const PageQuery = gql`
 export interface PageTemplateContainerProps {
   slug?: string
   id?: string
+  token?: string
 }
 
-export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
+export function PageTemplateContainer({slug, id, token}: PageTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id}})
+  if (!token) token = slug
+  const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id, token}})
 
   if (loading) return <Loader text="Loading" />
 

@@ -13,7 +13,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {
   useImageListQuery,
@@ -134,7 +134,13 @@ export function ImageList() {
                     src={image.mediumURL || ''}
                     style={{height: '200', display: 'block', margin: '0 auto'}}
                   />
-                  <Overlay bottom={0} width="100%" maxHeight="50%" padding={10}>
+                  <Overlay
+                    style={{
+                      bottom: '0px',
+                      width: '100%',
+                      maxHeight: '50%',
+                      padding: '10px'
+                    }}>
                     <Typography variant="subtitle1" color="gray" ellipsize>
                       {`${image.filename || t('images.panels.untitled')}${image.extension}`}
                     </Typography>
@@ -250,6 +256,7 @@ export function ImageList() {
                   })
                 }
               })
+              setConfirmationDialogOpen(false)
             }}
             color="red">
             {t('images.panels.confirm')}

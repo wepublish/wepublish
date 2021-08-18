@@ -1,4 +1,5 @@
-import {PublishedArticle, Author, ArticleMeta, Peer} from '../types'
+// import { User } from '../../../../../packages/api/lib/db/user'
+import {PublishedArticle, Author, ArticleMeta, Comment, Peer} from '../types'
 import {imageAdapter, getArticleBlocks} from './blockAdapters'
 
 export function peerAdapter(peer: any): Peer {
@@ -26,6 +27,24 @@ export function authorsAdapter(authors: any): Author[] {
   })
 }
 
+export function commentsAdapter(comments: any): Comment[] {
+  return comments?.map((comment: Comment) => {
+    return {
+      id: comment.id,
+      state: comment.state,
+      rejectionReason: comment.rejectionReason,
+      text: comment.text,
+      itemType: comment.itemType,
+      itemID: comment.itemID,
+      modifiedAt: comment.modifiedAt,
+      parentID: comment.parentID,
+      authorType: comment.authorType,
+      userName: comment.user.name,
+      children: comment.children
+    }
+  })
+}
+
 function articleMetaAdapter(article: any): ArticleMeta {
   const {publishedAt, updatedAt} = article
 
@@ -42,10 +61,12 @@ function articleMetaAdapter(article: any): ArticleMeta {
     authors: authorsAdapter(article.authors),
     isBreaking: article.breaking,
     tags: article.tags,
+    canonicalUrl: article.canonicalUrl,
     socialMediaTitle: article.socialMediaTitle,
     socialMediaDescription: article.socialMediaDescription,
     socialMediaAuthors: authorsAdapter(article.socialMediaAuthors),
-    socialMediaImage: imageAdapter(article.socialMediaImage)
+    socialMediaImage: imageAdapter(article.socialMediaImage),
+    comments: commentsAdapter(article.comments)
   }
 }
 

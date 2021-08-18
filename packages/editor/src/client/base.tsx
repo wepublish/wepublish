@@ -1,9 +1,10 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton} from 'rsuite'
 
 import {
   ArticleListRoute,
+  CommentListRoute,
   useRoute,
   RouteType,
   PageListRoute,
@@ -74,24 +75,43 @@ export function Base({children}: BaseProps) {
       <Container>
         <Sidebar
           style={{display: 'flex', flexDirection: 'column'}}
+          appearance="default"
           width={isExpanded ? 260 : 56}
           collapsible>
           <Sidenav
             expanded={isExpanded}
             defaultOpenKeys={['1']}
-            appearance="subtle"
+            appearance="default"
             style={{flex: '1 1 auto'}}>
             <Sidenav.Body>
+              <IconButton
+                style={{
+                  position: 'absolute',
+                  top: '5vh',
+                  left: isExpanded ? 260 : 56,
+                  transform: 'translate(-50%)',
+                  zIndex: 100
+                }}
+                className="collapse-nav-btn"
+                appearance="primary"
+                circle
+                size="xs"
+                onClick={() => setIsExpanded(!isExpanded)}
+                icon={<Icon size="lg" icon={isExpanded ? 'angle-left' : 'angle-right'} />}
+              />
+
               <Nav>
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList}>
+                  active={
+                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                  }>
                   {t('navbar.articles')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="file" />}
+                  icon={<Icon icon="frame" />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
@@ -105,7 +125,14 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="camera-retro" />}
+                  icon={<Icon icon="comment" />}
+                  route={CommentListRoute.create({})}
+                  active={current?.type === RouteType.CommentList}>
+                  {t('navbar.comments')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="image" />}
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
@@ -145,7 +172,7 @@ export function Base({children}: BaseProps) {
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="money" />}
+                    icon={<Icon icon="credit-card" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
@@ -167,7 +194,7 @@ export function Base({children}: BaseProps) {
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-          <Navbar appearance="subtle" className="nav-toggle">
+          <Navbar appearance="default" className="nav-toggle">
             <Navbar.Body>
               <Nav>
                 <Dropdown
@@ -176,7 +203,7 @@ export function Base({children}: BaseProps) {
                   renderTitle={children => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
-                    return <Icon style={iconStyles} icon="cog" />
+                    return <Icon style={iconStyles} icon="cog" className="icon-selector" />
                   }}>
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
@@ -189,6 +216,7 @@ export function Base({children}: BaseProps) {
                   trigger="click"
                   renderTitle={() => (
                     <Icon
+                      className="icon-selector"
                       icon="globe"
                       style={{
                         width: 56,
@@ -207,14 +235,6 @@ export function Base({children}: BaseProps) {
                     </Dropdown.Item>
                   ))}
                 </Dropdown>
-              </Nav>
-
-              <Nav pullRight>
-                <Nav.Item
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  style={{width: 56, textAlign: 'center'}}>
-                  <Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />
-                </Nav.Item>
               </Nav>
             </Navbar.Body>
           </Navbar>

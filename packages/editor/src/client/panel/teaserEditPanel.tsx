@@ -79,10 +79,6 @@ export function TeaserEditPanel({
               <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
               <FormControl value={lead} onChange={lead => setLead(lead)} />
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-              <FormControl value={lead} onChange={lead => setLead(lead)} />
-            </FormGroup>
           </Form>
         </Panel>
 

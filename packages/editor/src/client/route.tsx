@@ -8,7 +8,7 @@ import {
   fullPathForRoute,
   zeroOrMore,
   required
-} from '@karma.run/react'
+} from '@wepublish/karma.run-react'
 
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation, gql} from '@apollo/client'
@@ -58,6 +58,8 @@ export enum RouteType {
   UserRoleEdit = 'userRoleEdit',
   UserRoleCreate = 'userRoleCreate',
 
+  CommentList = 'commentList',
+
   MemberPlanList = 'memberPlanList',
   MemberPlanEdit = 'memberPlanEdit',
   MemberPlanCreate = 'memberPlanCreate',
@@ -84,6 +86,8 @@ export const ArticleEditRoute = route(
 )
 
 export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`)
+
+export const CommentListRoute = route(RouteType.CommentList, routePath`/comments`)
 
 export const PageListRoute = route(RouteType.PageList, routePath`/pages`)
 export const PageCreateRoute = route(RouteType.PageCreate, routePath`/page/create`)
@@ -167,6 +171,7 @@ export const routes = [
   ArticleListRoute,
   ArticleCreateRoute,
   ArticleEditRoute,
+  CommentListRoute,
   ImageListRoute,
   ImageUploadRoute,
   ImageEditRoute,
@@ -216,8 +221,8 @@ export interface RouteProviderProps {
 }
 
 const LogoutMutation = gql`
-  mutation Logout($token: String!) {
-    revokeSession(token: $token)
+  mutation Logout {
+    revokeActiveSession
   }
 `
 
@@ -233,7 +238,7 @@ export function RouteProvider({children}: RouteProviderProps) {
         // TODO: Add a way to discard next route
         if (next.type === RouteType.Logout) {
           if (session) {
-            logout({variables: {token: session.sessionToken}})
+            logout().catch(error => console.warn('Error logging out ', error))
             localStorage.removeItem(LocalStorageKey.SessionToken)
             authDispatch({type: AuthDispatchActionType.Logout})
           }
