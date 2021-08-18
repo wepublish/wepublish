@@ -54,6 +54,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
   }
 
+  const handlePinItem = (i: number) => {
+    // TODO handle pin item
+  }
+
   const handleAddItems = () => {
     for (let i = 0; i < addItems; i++) {
       const itemLayout: FlexItemLayout = {
@@ -161,7 +165,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
             />
             <Icon
               icon="thumb-tack"
-              // style={{...ItemTopBarStyle, left: '2px'}}
+              // style={{...ItemTopBarStyle, color: layout[i]?.static ? 'blue' : '', left: '2px'}}
+              onClick={() => {
+                handlePinItem(i)
+              }}
             />
             <TeaserBlock
               teaser={teaser}

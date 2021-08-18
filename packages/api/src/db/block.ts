@@ -189,11 +189,25 @@ export interface TeaserGridBlock {
 
 export type FlexItemLayout = Omit<Layout, 'i'> // don't save component key
 
+export interface GridItem {
+  teaser?: Teaser
+  layout: FlexItemLayout
+}
+
+// export interface Breakpoints {
+//   lg: number
+//   md?: number
+//   sm?: number
+//   xs?: number
+//   xxs?: number
+// }
+
 export interface TeaserFlexGridBlock {
   type: BlockType.TeaserFlexGrid
-  layout: FlexItemLayout[]
-  teasers: Teaser[]
-  numColumns: number // TODO: interface to extend gridlayout ?
+  gridItems: GridItem[]
+  // layout: FlexItemLayout[]
+  // teasers: Teaser[]
+  numColumns: number
   numRows: number
 }
 
