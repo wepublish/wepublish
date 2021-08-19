@@ -401,6 +401,11 @@ export type GalleryImageEdgeInput = {
   imageID?: Maybe<Scalars['ID']>;
 };
 
+export type GridItemInput = {
+  teaser?: Maybe<TeaserInput>;
+  layout: FlexGridItemLayoutInput;
+};
+
 export type Image = {
   __typename?: 'Image';
   id: Scalars['ID'];
@@ -1628,8 +1633,7 @@ export type TeaserFlexGridBlock = {
 };
 
 export type TeaserFlexGridBlockInput = {
-  layout: Array<FlexGridItemLayoutInput>;
-  teasers: Array<Maybe<TeaserInput>>;
+  gridItems: Array<GridItemInput>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
 };

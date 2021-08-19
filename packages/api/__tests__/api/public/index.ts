@@ -224,6 +224,12 @@ export type GalleryImageEdge = {
   image?: Maybe<Image>
 }
 
+export type GridItem = {
+  __typename?: 'GridItem'
+  teaser?: Maybe<Teaser>
+  layout?: Maybe<FlexItemLayout>
+}
+
 export type Image = {
   __typename?: 'Image'
   id: Scalars['ID']
@@ -773,8 +779,7 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock'
-  teasers: Array<Maybe<Teaser>>
-  layout: Array<FlexItemLayout>
+  gridItems: Array<Maybe<GridItem>>
   numColumns: Scalars['Int']
   numRows: Scalars['Int']
 }
