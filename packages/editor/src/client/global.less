@@ -72,3 +72,46 @@
     visibility: hidden;
   }
 }
+
+//.cal {
+//  color: blue;
+//}
+.react-datepicker {
+  color: darkgray;
+  padding: 10px;
+  font-family: arial;
+  border: none;
+  box-shadow: 0 0 5px 0 gray;
+  right: -10px;
+
+  &__header {
+    background-color: transparent;
+    border-bottom: none;
+  }
+  &__time-container {
+    right: -90px;
+    border: none;
+    box-shadow: 0 0 5px 0 gray;
+  }
+  &__month-container {
+    color: blue;
+  }
+
+  &__day-names {
+    border: none;
+  }
+
+&__day:hover, &__time-list-item:hover {
+  background-color: #bad2de;
+
+}
+
+  &__day-name {
+    color: #8e8e99;
+  }
+
+  &__current-month, .react-datepicker-time__header, .react-datepicker-year-header {
+    color: #8e8e99;
+    font-weight: unset;
+  }
+}

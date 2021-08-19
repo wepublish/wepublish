@@ -40,6 +40,7 @@ export function KeyboardDateTimePicker({dateTime, label, changeDate}: any) {
         dateFormat="dd/MM/yyyy h:mm"
         isClearable
         showTimeSelect
+        // popperClassName="cal"
         todayButton={t('dateTimePicker.today')}
       />
     </>
