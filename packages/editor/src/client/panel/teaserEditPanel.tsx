@@ -9,8 +9,7 @@ import {
   FormGroup,
   Panel,
   Radio,
-  RadioGroup,
-  Alert
+  RadioGroup
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
