@@ -95,18 +95,14 @@ export function TeaserEditPanel({
         <Button
           appearance={'primary'}
           onClick={() => {
-            if (!image && style === TeaserStyle.Light) {
-              Alert.error(t('articleEditor.panels.lightStyledWithNoImageError'), 0)
-            } else {
-              onConfirm({
-                ...initialTeaser,
-                style,
-                preTitle: preTitle || undefined,
-                title: title || undefined,
-                lead: lead || undefined,
-                image
-              })
-            }
+            onConfirm({
+              ...initialTeaser,
+              style,
+              preTitle: preTitle || undefined,
+              title: title || undefined,
+              lead: lead || undefined,
+              image
+            })
           }}>
           {t('articleEditor.panels.confirm')}
         </Button>
