@@ -208,11 +208,15 @@ export interface TeaserGridBlockValue {
 
 export type FlexItemLayout = Omit<Layout, 'i'>
 
+export interface FlexGridItem {
+  teaser: Teaser | null
+  layout: FlexItemLayout
+}
+
 export interface TeaserFlexGridBlockValue {
   // REMARK: intentionally not extending TeaserGridBLockValue, don't know what
   // the string is good for where lateron nanoid() is inserted ...
-  teasers: (Teaser | null)[]
-  layout: FlexItemLayout[]
+  gridItems: FlexGridItem[]
   numColumns: number
   numRows: number
 }
@@ -253,6 +257,56 @@ export type BlockValue =
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
   | TeaserFlexGridBlockListValue
+
+function mapTeaser(teaser: any): any {
+  if (!teaser) return null
+
+  switch (teaser?.__typename) {
+    case 'ArticleTeaser':
+      return teaser.article
+        ? {
+            type: TeaserType.Article,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            article: teaser.article
+          }
+        : null
+
+    case 'PeerArticleTeaser':
+      return teaser.peer
+        ? {
+            type: TeaserType.PeerArticle,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            peer: teaser.peer,
+            articleID: teaser.articleID,
+            article: teaser.article ?? undefined
+          }
+        : null
+
+    case 'PageTeaser':
+      return teaser.page
+        ? {
+            type: TeaserType.Page,
+            style: teaser.style,
+            image: teaser.image ?? undefined,
+            preTitle: teaser.preTitle ?? undefined,
+            title: teaser.title ?? undefined,
+            lead: teaser.lead ?? undefined,
+            page: teaser.page
+          }
+        : null
+
+    default:
+      return null
+  }
+}
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   const getTeaserForType = (value: Teaser | null): TeaserInput | null => {
@@ -312,8 +366,10 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.TeaserFlexGrid:
       return {
         teaserFlexGrid: {
-          teasers: block.value.teasers.map(value => getTeaserForType(value)),
-          layout: block.value.layout,
+          gridItems: block.value.gridItems.map(({teaser, layout}: any) => ({
+            layout,
+            teaser: getTeaserForType(teaser)
+          })),
           numColumns: block.value.numColumns,
           numRows: block.value.numRows
         }
@@ -539,52 +595,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           numColumns: block.numColumns,
           numRows: block.numRows,
-          layout: block.layout,
-          teasers: block.teasers.map(teaser => {
-            switch (teaser?.__typename) {
-              case 'ArticleTeaser':
-                return teaser.article
-                  ? {
-                      type: TeaserType.Article,
-                      style: teaser.style,
-                      image: teaser.image ?? undefined,
-                      preTitle: teaser.preTitle ?? undefined,
-                      title: teaser.title ?? undefined,
-                      lead: teaser.lead ?? undefined,
-                      article: teaser.article
-                    }
-                  : null
+          gridItems: block.gridItems.map(item => {
+            const {teaser, layout} = item
 
-              case 'PeerArticleTeaser':
-                return teaser.peer
-                  ? {
-                      type: TeaserType.PeerArticle,
-                      style: teaser.style,
-                      image: teaser.image ?? undefined,
-                      preTitle: teaser.preTitle ?? undefined,
-                      title: teaser.title ?? undefined,
-                      lead: teaser.lead ?? undefined,
-                      peer: teaser.peer,
-                      articleID: teaser.articleID,
-                      article: teaser.article ?? undefined
-                    }
-                  : null
-
-              case 'PageTeaser':
-                return teaser.page
-                  ? {
-                      type: TeaserType.Page,
-                      style: teaser.style,
-                      image: teaser.image ?? undefined,
-                      preTitle: teaser.preTitle ?? undefined,
-                      title: teaser.title ?? undefined,
-                      lead: teaser.lead ?? undefined,
-                      page: teaser.page
-                    }
-                  : null
-
-              default:
-                return null
+            return {
+              layout,
+              teaser: mapTeaser(teaser)
             }
           })
         }

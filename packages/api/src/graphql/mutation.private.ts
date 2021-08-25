@@ -137,6 +137,16 @@ function mapBlockUnionMap(value: any) {
     case BlockType.TeaserGrid:
       return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
 
+    case BlockType.TeaserFlexGrid:
+      return {
+        type,
+        ...blockValue,
+        gridItems: blockValue.gridItems.map(({layout, teaser}: any) => ({
+          layout,
+          teaser: mapTeaserUnionMap(teaser)
+        }))
+      }
+
     default:
       return {type, ...blockValue} as Block
   }

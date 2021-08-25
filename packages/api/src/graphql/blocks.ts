@@ -188,11 +188,18 @@ export const GraphQLFlexItemLayout = new GraphQLObjectType<FlexItemLayout>({
   }
 })
 
+export const GraphQLFlexGridItem = new GraphQLObjectType<FlexItemLayout>({
+  name: 'FlexGridItem',
+  fields: {
+    teaser: {type: GraphQLTeaser},
+    layout: {type: GraphQLNonNull(GraphQLFlexItemLayout)}
+  }
+})
+
 export const GraphQLTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>({
   name: 'TeaserFlexGridBlock',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaser))},
-    layout: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexItemLayout)))},
+    gridItems: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexGridItem)))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)},
     numRows: {type: GraphQLNonNull(GraphQLInt)}
   },

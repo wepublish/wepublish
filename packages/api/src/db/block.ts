@@ -190,7 +190,7 @@ export interface TeaserGridBlock {
 export type FlexItemLayout = Omit<Layout, 'i'> // don't save component key
 
 export interface GridItem {
-  teaser?: Teaser
+  teaser: Teaser | null
   layout: FlexItemLayout
 }
 
@@ -205,8 +205,6 @@ export interface GridItem {
 export interface TeaserFlexGridBlock {
   type: BlockType.TeaserFlexGrid
   gridItems: GridItem[]
-  // layout: FlexItemLayout[]
-  // teasers: Teaser[]
   numColumns: number
   numRows: number
 }

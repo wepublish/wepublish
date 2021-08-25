@@ -24,15 +24,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const [addItems, setAddItems] = useState(1)
 
-  const {teasers, layout, numColumns, numRows} = value
+  const {gridItems, numColumns, numRows} = value
 
   // const {t} = useTranslation()
 
   function handleTeaserLinkChange(i: number, teaserLink: Teaser | null) {
     onChange({
       ...value,
-      teasers: Object.assign([], teasers, {
-        [i]: teaserLink || null
+      gridItems: gridItems.map(({layout, teaser}, index) => {
+        if (index === i) return {layout, teaser: teaserLink || null}
+
+        return {layout, teaser}
       })
     })
   }
@@ -40,17 +42,15 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const handleLayoutChange = (layout: Layout[]) => {
     onChange({
       ...value,
-      layout: layout.map(({x, y, w, h}) => ({x, y, w, h}))
+      gridItems: gridItems.map(({teaser}, i) => ({teaser, layout: layout[i]}))
     })
   }
 
   const handleRemoveItem = (i: number) => {
-    teasers.splice(i, 1)
-    layout.splice(i, 1)
+    gridItems.splice(i, 1)
     onChange({
       ...value,
-      teasers: [...teasers],
-      layout: [...layout]
+      gridItems: [...gridItems]
     })
   }
 
@@ -61,19 +61,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const handleAddItems = () => {
     for (let i = 0; i < addItems; i++) {
       const itemLayout: FlexItemLayout = {
-        x: (layout.length * 2) % numColumns,
-        y: Infinity, // puts it at the bottom
+        x: (gridItems.length * 2) % numColumns,
+        y: 0, // puts it at the bottom
         w: 2,
         h: 2
       }
-      layout.push(itemLayout)
-      teasers.push(null)
+      gridItems.push({layout: itemLayout, teaser: null})
     }
 
     onChange({
       ...value,
-      teasers: [...teasers],
-      layout: [...layout]
+      gridItems: [...gridItems]
     })
   }
 
@@ -110,7 +108,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           <InputNumber
             value={numColumns}
             onChange={val => setNumColumns(Number(val))}
-            min={Math.max(...layout.map(({x, w}) => x + w))}
+            min={Math.max(...gridItems.map(({layout: {x, w}}) => x + w))}
             max={30}
           />
         </InputGroup>
@@ -146,26 +144,32 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         </InputGroup>
       </Toolbar>
 
-      <p>{JSON.stringify(layout)}</p>
+      <p>{JSON.stringify(gridItems)}</p>
       <GridLayout
         className="layout"
         cols={numColumns}
         rowHeight={numRows}
         width={700}
-        layout={layout.map((layout, i) => ({i: String(i), ...layout}))}
+        layout={gridItems.map(({layout}, i) => ({i: String(i), ...layout}))}
         onLayoutChange={handleLayoutChange}>
-        {teasers.map((teaser, i) => (
+        {gridItems.map(({teaser, layout}, i) => (
           <div key={String(i)}>
             <Icon
               icon="close"
-              // style={{...ItemTopBarStyle, right: '2px'}}
+              style={{position: 'absolute', top: '2px', cursor: 'pointer', right: '2px'}}
               onClick={() => {
                 handleRemoveItem(i)
               }}
             />
             <Icon
               icon="thumb-tack"
-              // style={{...ItemTopBarStyle, color: layout[i]?.static ? 'blue' : '', left: '2px'}}
+              style={{
+                position: 'absolute',
+                top: '2px',
+                cursor: 'pointer',
+                color: layout.static ? 'blue' : '',
+                left: '2px'
+              }}
               onClick={() => {
                 handlePinItem(i)
               }}
@@ -191,7 +195,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
-          initialTeaser={teasers[editIndex]!}
+          initialTeaser={gridItems[editIndex].teaser!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)

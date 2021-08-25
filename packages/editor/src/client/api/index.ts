@@ -375,6 +375,12 @@ export type FacebookVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
+export type FlexGridItem = {
+  __typename?: 'FlexGridItem';
+  teaser?: Maybe<Teaser>;
+  layout: FlexItemLayout;
+};
+
 export type FlexGridItemLayoutInput = {
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -1626,8 +1632,7 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock';
-  teasers: Array<Maybe<Teaser>>;
-  layout: Array<FlexItemLayout>;
+  gridItems: Array<FlexGridItem>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
 };
@@ -2496,18 +2501,21 @@ type FullBlock_TeaserGridBlock_Fragment = (
 type FullBlock_TeaserFlexGridBlock_Fragment = (
   { __typename: 'TeaserFlexGridBlock' }
   & Pick<TeaserFlexGridBlock, 'numColumns' | 'numRows'>
-  & { teasers: Array<Maybe<(
-    { __typename?: 'ArticleTeaser' }
-    & FullTeaser_ArticleTeaser_Fragment
-  ) | (
-    { __typename?: 'PeerArticleTeaser' }
-    & FullTeaser_PeerArticleTeaser_Fragment
-  ) | (
-    { __typename?: 'PageTeaser' }
-    & FullTeaser_PageTeaser_Fragment
-  )>>, layout: Array<(
-    { __typename?: 'FlexItemLayout' }
-    & Pick<FlexItemLayout, 'x' | 'y' | 'w' | 'h'>
+  & { gridItems: Array<(
+    { __typename?: 'FlexGridItem' }
+    & { teaser?: Maybe<(
+      { __typename?: 'ArticleTeaser' }
+      & FullTeaser_ArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PeerArticleTeaser' }
+      & FullTeaser_PeerArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PageTeaser' }
+      & FullTeaser_PageTeaser_Fragment
+    )>, layout: (
+      { __typename?: 'FlexItemLayout' }
+      & Pick<FlexItemLayout, 'x' | 'y' | 'w' | 'h'>
+    ) }
   )> }
 );
 
@@ -3916,14 +3924,16 @@ export const FullBlockFragmentDoc = gql`
     numColumns
   }
   ... on TeaserFlexGridBlock {
-    teasers {
-      ...FullTeaser
-    }
-    layout {
-      x
-      y
-      w
-      h
+    gridItems {
+      teaser {
+        ...FullTeaser
+      }
+      layout {
+        x
+        y
+        w
+        h
+      }
     }
     numColumns
     numRows

@@ -389,6 +389,12 @@ export type FacebookVideoBlockInput = {
   videoID: Scalars['String']
 }
 
+export type FlexGridItem = {
+  __typename?: 'FlexGridItem'
+  teaser?: Maybe<Teaser>
+  layout: FlexItemLayout
+}
+
 export type FlexGridItemLayoutInput = {
   x: Scalars['Int']
   y: Scalars['Int']
@@ -1556,8 +1562,7 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock'
-  teasers: Array<Maybe<Teaser>>
-  layout: Array<FlexItemLayout>
+  gridItems: Array<FlexGridItem>
   numColumns: Scalars['Int']
   numRows: Scalars['Int']
 }
