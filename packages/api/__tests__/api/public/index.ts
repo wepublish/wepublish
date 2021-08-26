@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -30,6 +32,7 @@ export type Article = {
   lead?: Maybe<Scalars['String']>
   seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
+  canonicalUrl?: Maybe<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
@@ -356,17 +359,48 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  /**
+   * This mutation allows to create a user session by taking the user's credentials
+   * email and password as an input and returns a session with token.
+   */
   createSession: SessionWithToken
+  /**
+   * This mutation allows to create a user session with JSON Web Token by taking
+   * the JSON Web Token as an input and returns a session with token
+   */
   createSessionWithJWT: SessionWithToken
+  /**
+   * This mutation allows to create user session with OAuth2 code by taking the
+   * name, code and redirect Uri as an input and returns a session with token.
+   */
   createSessionWithOAuth2Code: SessionWithToken
+  /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']
+  /** This mutation allows to add a comment. The input is of type CommentInput. */
   addComment: Comment
+  /**
+   * This mutation allows to update a comment. The input is of type
+   * CommentUpdateInput which contains the ID of the comment you want to update and the new text.
+   */
   updateComment: Comment
+  /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
   registerMemberAndReceivePayment: Payment
+  /** This mutation allows to reset the password by accepting the user's email and sending a login link to that email. */
   resetPassword: Scalars['String']
+  /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>
+  /**
+   * This mutation allows to update the user's password by entering the new
+   * password. The repeated new password gives an error if the passwords don't
+   * match or if the user is not authenticated.
+   */
   updatePassword?: Maybe<User>
+  /**
+   * This mutation allows to update the user's subscription by taking an input of
+   * type UserSubscription and throws an error if the user doesn't already have a subscription.
+   */
   updateUserSubscription?: Maybe<UserSubscription>
+  /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>
 }
 
@@ -558,6 +592,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type Point = {
@@ -588,19 +624,33 @@ export enum PublishedPageSort {
 
 export type Query = {
   __typename?: 'Query'
+  /** This query returns the peer profile. */
   peerProfile: PeerProfile
+  /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>
+  /** This query takes either the ID or the key and returns the navigation. */
   navigation?: Maybe<Navigation>
+  /** This query takes either the ID or the slug and returns the author. */
   author?: Maybe<Author>
+  /** This query is to get the authors. */
   authors: AuthorConnection
+  /** This query takes either the ID, slug or token and returns the article. */
   article?: Maybe<Article>
+  /** This query returns the articles. */
   articles: ArticleConnection
+  /** This query takes either the peer ID or the peer slug and returns the article. */
   peerArticle?: Maybe<Article>
+  /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>
+  /** This query returns the pages. */
   pages: PageConnection
+  /** This query returns the redirect Uri. */
   authProviders: Array<AuthProvider>
+  /** This query returns the user. */
   me?: Maybe<User>
+  /** This query returns the invoices. */
   invoices: Array<Invoice>
+  /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
 }
 
@@ -654,6 +704,7 @@ export type QueryPeerArticleArgs = {
 export type QueryPageArgs = {
   id?: Maybe<Scalars['ID']>
   slug?: Maybe<Scalars['Slug']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type QueryPagesArgs = {
@@ -807,7 +858,7 @@ export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
 > & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Array<Scalars['String']>>
+  filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
   after?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
 }>
@@ -1137,7 +1188,7 @@ export type PageRefFragment = {__typename?: 'Page'} & Pick<
 > & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Array<Scalars['String']>>
+  filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
   after?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
 }>

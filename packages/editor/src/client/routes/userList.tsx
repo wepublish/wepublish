@@ -11,7 +11,7 @@ import {
   useRouteDispatch
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {UserEditPanel} from '../panel/userEditPanel'
@@ -188,7 +188,7 @@ export function UserList() {
               {(rowData: FullUserFragment) => (
                 <>
                   <IconButton
-                    icon={<Icon icon="key" />}
+                    icon={<Icon icon="lock" />}
                     circle
                     size="sm"
                     style={{marginLeft: '5px'}}

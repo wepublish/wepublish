@@ -62,7 +62,7 @@
 }
 
 .unsaved {
-  .rs-badge-content{
+  .rs-badge-content {
     background: darkorange;
   }
 }
@@ -70,5 +70,23 @@
 .saved {
   .rs-badge-content {
     visibility: hidden;
+  }
+}
+
+.displayThreeLinesOnly {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.richTextFrame {
+  padding: 0px 20px 20px;
+  border: 1px solid #e5e5ea;
+  border-radius: 7px;
+  &:hover {
+    border-color: #1675e0;
   }
 }
