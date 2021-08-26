@@ -3,147 +3,104 @@ import React, {useState} from 'react'
 import './dateTimePicker.less'
 
 import DatePicker from 'react-datepicker'
-import {DatePicker as DT, FormGroup, ControlLabel, Form} from 'rsuite'
+import {ControlLabel, Button, ButtonGroup, ButtonToolbar} from 'rsuite'
+
 import {useTranslation} from 'react-i18next'
 
-export interface DateTimeRange {
+export interface DateTimePreset {
   label: string
-  value: Date
+  offset: number
 }
 
-export interface DateTimePickerProps {
+export interface KeyboardDateTimePickerProps {
   dateTime: Date | undefined
   label: string
+  changeDate(publishDate: any): void
 
-  dateRanges?: DateTimeRange[]
-  timeRanges?: DateTimeRange[]
-
-  changeDate(publishDate: Date): void
+  dateRanges?: DateTimePreset[]
+  timeRanges?: DateTimePreset[]
 }
-// New date picker component
-export function KeyboardDateTimePicker({dateTime, label, changeDate}: any) {
-  const {t} = useTranslation()
-  const date = new Date(dateTime ?? new Date())
 
-  const [startDate, setStartDate] = useState<any>(date)
+export function KeyboardDateTimePicker({
+  dateTime,
+  label,
+  changeDate,
+  dateRanges,
+  timeRanges
+}: KeyboardDateTimePickerProps) {
+  const {t} = useTranslation()
+
+  const initialDate = new Date(dateTime ?? new Date())
+
+  const [startDate, setStartDate] = useState<any>(initialDate)
+
+  const dateButtonPresets = dateRanges ?? [
+    {label: t('dateTimePicker.today'), offset: 0},
+    {label: t('dateTimePicker.tomorrow'), offset: 1},
+    {label: t('dateTimePicker.nextSaturday'), offset: 6 - new Date().getDay()}
+  ]
+
+  const timeButtonPresets = timeRanges ?? [
+    {label: t('dateTimePicker.now'), offset: 0},
+    {label: t('dateTimePicker.hour', {hour: '5'}), offset: 5},
+    {label: t('dateTimePicker.hour', {hour: '14'}), offset: 14}
+  ]
+
+  const handleDatePresetButton = (offset: number) => {
+    const day = new Date()
+    day.setHours(startDate.getHours())
+    day.setMinutes(startDate.getMinutes())
+    day.setDate(day.getDate() + offset)
+    setStartDate(day)
+  }
+
+  const handleTimePresetButton = (hour: number) => {
+    const day = new Date(startDate)
+    if (hour === 0) {
+      const now = new Date()
+      day.setHours(now.getHours())
+      day.setMinutes(now.getMinutes())
+      setStartDate(day)
+    } else {
+      day.setHours(hour, 0, 0)
+      setStartDate(day)
+    }
+  }
 
   return (
     <>
-      <p>{label}</p>
+      <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
       <DatePicker
+        showPopperArrow
+        shouldCloseOnSelect={false}
         selected={startDate}
         onChange={value => {
           setStartDate(value)
-          console.log('change value ', value)
           changeDate(value)
         }}
-        dateFormat="dd/MM/yyyy h:mm"
+        dateFormat="dd MMM yyyy, h:mm"
         isClearable
-        showTimeSelect
-        // popperClassName="cal"
-        todayButton={t('dateTimePicker.today')}
-      />
+        showTimeSelect>
+        <ButtonToolbar>
+          <ButtonGroup justified>
+            {dateButtonPresets.map((datePreset, i) => (
+              <Button key={i} size="xs" onClick={() => handleDatePresetButton(datePreset.offset)}>
+                {datePreset.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </ButtonToolbar>
+        <ButtonToolbar>
+          <ButtonGroup justified>
+            {timeButtonPresets.map((timePreset, i) => (
+              <Button key={i} size="xs" onClick={() => handleTimePresetButton(timePreset.offset)}>
+                {timePreset.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </ButtonToolbar>
+      </DatePicker>
+      <br />
     </>
-  )
-}
-// Old date picker component - to remove
-export function DateTimePicker({
-  dateTime,
-  label,
-  dateRanges,
-  timeRanges,
-  changeDate
-}: DateTimePickerProps) {
-  const {t} = useTranslation()
-
-  const date = new Date(dateTime?.getTime() ?? new Date())
-
-  return (
-    <Form fluid={true}>
-      <FormGroup>
-        <ControlLabel>{label}</ControlLabel>
-        <DT
-          style={{marginRight: 8}}
-          placement="auto"
-          value={date}
-          cleanable={false}
-          format="DD MMM YYYY"
-          ranges={
-            dateRanges ?? [
-              {
-                label: t('dateTimePicker.today'),
-                value: new Date()
-              },
-              {
-                label: t('dateTimePicker.tomorrow'),
-                value: () => {
-                  const tomorrow = new Date()
-                  tomorrow.setDate(new Date().getDate() + 1)
-                  return tomorrow
-                }
-              },
-              {
-                label: t('dateTimePicker.nextSaturday'),
-                value: () => {
-                  const nextSaturday = new Date()
-                  const remainingDaysInWeek = 6 - new Date().getDay()
-                  nextSaturday.setDate(
-                    remainingDaysInWeek
-                      ? nextSaturday.getDate() + remainingDaysInWeek
-                      : nextSaturday.getDate() + 7
-                  )
-                  return nextSaturday
-                }
-              }
-            ]
-          }
-          onChange={value => {
-            if (date && value) {
-              date.setFullYear(value?.getFullYear())
-              date.setMonth(value?.getMonth())
-              date.setDate(value?.getDate())
-              changeDate(new Date(date))
-            }
-          }}
-        />
-        <DT
-          placement="auto"
-          format="HH:mm"
-          value={date}
-          cleanable={false}
-          ranges={
-            timeRanges ?? [
-              {
-                label: t('dateTimePicker.now'),
-                value: new Date()
-              },
-              {
-                label: t('dateTimePicker.hour', {hour: '5'}),
-                value: () => {
-                  const time = new Date()
-                  time.setHours(5, 0, 0)
-                  return time
-                }
-              },
-              {
-                label: t('dateTimePicker.hour', {hour: '14'}),
-                value: () => {
-                  const two = new Date()
-                  two.setHours(14, 0, 0)
-                  return two
-                }
-              }
-            ]
-          }
-          onChange={value => {
-            if (date && value) {
-              date.setHours(value?.getHours())
-              date.setMinutes(value?.getMinutes())
-              changeDate(new Date(date))
-            }
-          }}
-        />
-      </FormGroup>
-    </Form>
   )
 }
