@@ -78,6 +78,7 @@ export function KeyboardDateTimePicker({
           setStartDate(value)
           changeDate(value)
         }}
+        // eslint-disable-next-line i18next/no-literal-string
         dateFormat="dd MMM yyyy, h:mm"
         isClearable
         showTimeSelect>
