@@ -26,7 +26,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table

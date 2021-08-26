@@ -47,6 +47,7 @@ export interface ArticleMetadata {
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
   readonly properties: ArticleMetadataProperty[]
+  readonly canonicalUrl: string
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
@@ -76,6 +77,7 @@ export function ArticleMetadataPanel({
   onChange
 }: ArticleMetadataPanelProps) {
   const {
+    canonicalUrl,
     preTitle,
     title,
     lead,
@@ -380,6 +382,24 @@ export function ArticleMetadataPanel({
                   checked={breaking}
                   onChange={breaking => onChange?.({...value, breaking})}
                 />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
+                <FormControl
+                  value={canonicalUrl}
+                  onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
+                />
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
               </FormGroup>
             </Form>
             <Form fluid={true} style={{marginTop: '20px'}}>

@@ -60,6 +60,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -98,6 +99,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -1248,6 +1250,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImage?: Maybe<Image>;
 };
 
 export type PeerProfileInput = {
@@ -1256,6 +1260,8 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImageID?: Maybe<Scalars['ID']>;
 };
 
 export type Permission = {
@@ -1866,7 +1872,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
@@ -2044,7 +2050,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3153,8 +3159,11 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, callToActionImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )> }
@@ -3643,6 +3652,7 @@ export const ArticleRefFragmentDoc = gql`
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
     ${ImageRefFragmentDoc}`;
@@ -3664,6 +3674,10 @@ export const FullPeerProfileFragmentDoc = gql`
   }
   callToActionText
   callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
@@ -4434,6 +4448,7 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value
