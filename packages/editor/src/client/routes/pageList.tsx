@@ -183,15 +183,17 @@ export function PageList() {
 
                 return (
                   <div
-                    style={
-                      rowData.pending
-                        ? {background: 'rgb(248, 222, 242)'}
+                    style={{
+                      textAlign: 'center',
+                      borderRadius: '15px',
+                      backgroundColor: rowData.pending
+                        ? 'rgb(248, 222, 242)'
                         : rowData.published
-                        ? {background: 'rgb(225, 248, 222)'}
+                        ? 'rgb(225, 248, 222)'
                         : rowData.draft
-                        ? {background: 'rgb(248, 239, 222)'}
-                        : {}
-                    }>
+                        ? 'rgb(248, 239, 222)'
+                        : 'inheret'
+                    }}>
                     {states.join(' / ')}
                   </div>
                 )
