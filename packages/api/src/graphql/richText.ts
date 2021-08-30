@@ -16,7 +16,11 @@ export enum ElementNodeType {
   TableCell = 'table-cell',
   BlockQuote = 'block-quote',
   CodeBlock = 'code-block',
-  CodeLine = 'code-line'
+  CodeLine = 'code-line',
+  AlignLeft = 'align-left',
+  AlignCenter = 'align-center',
+  AlignRight = 'align-right',
+  AlignJustified = 'align-justified'
 }
 
 export enum TextNodeFields {
@@ -58,6 +62,10 @@ export interface RichTextBlockNode {
     | ElementNodeType.CodeBlock
     | ElementNodeType.CodeLine
     | ElementNodeType.BlockQuote
+    | ElementNodeType.AlignCenter
+    | ElementNodeType.AlignLeft
+    | ElementNodeType.AlignRight
+    | ElementNodeType.AlignJustified
 
   readonly children: RichTextNode[]
 }
