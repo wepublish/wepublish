@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react'
 import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
-  PeerInfoEditRoute,
   RouteType,
   useRoute,
   useRouteDispatch,
@@ -42,7 +41,6 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const ListItemLink = routeLink(List.Item)
-const IconButtonLink = routeLink(IconButton)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
@@ -161,13 +159,6 @@ export function PeerList() {
         <FlexboxGrid.Item colspan={21}>
           <h5>{peerInfoData?.peerProfile.name || 'Unnamed'}</h5>
           <p>{peerInfoData?.peerProfile.hostURL}</p>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={1}>
-          <IconButtonLink
-            icon={<Icon icon="cog" />}
-            circle={true}
-            route={PeerInfoEditRoute.create({})}
-          />
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24}>
           <Divider />
