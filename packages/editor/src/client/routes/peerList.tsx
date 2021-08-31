@@ -20,7 +20,6 @@ import {
   PeerListQuery
 } from '../api'
 
-import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
 import {useTranslation} from 'react-i18next'
@@ -48,10 +47,6 @@ type Peer = NonNullable<PeerListQuery['peers']>[number]
 export function PeerList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
-
-  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
-    current?.type === RouteType.PeerProfileEdit
-  )
 
   const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
 
@@ -84,10 +79,6 @@ export function PeerList() {
 
   useEffect(() => {
     switch (current?.type) {
-      case RouteType.PeerProfileEdit:
-        setPeerProfileEditModalOpen(true)
-        break
-
       case RouteType.PeerCreate:
         setEditID(undefined)
         setEditModalOpen(true)
@@ -183,22 +174,6 @@ export function PeerList() {
           <p>{t('peerList.overview.noPeersFound')}</p>
         ) : null}
       </div>
-
-      <Drawer
-        show={isPeerProfileEditModalOpen}
-        size={'sm'}
-        onHide={() => setPeerProfileEditModalOpen(false)}>
-        <PeerInfoEditPanel
-          onClose={() => {
-            setPeerProfileEditModalOpen(false)
-
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
-            })
-          }}
-        />
-      </Drawer>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         {peerInfoData?.peerProfile.hostURL && (
