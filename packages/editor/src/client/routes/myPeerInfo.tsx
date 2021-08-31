@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Button, Drawer, Panel, Form, FormGroup, ControlLabel, FormControl, Alert, FlexboxGrid} from 'rsuite'
+import {Button, Drawer, Form, FormGroup, ControlLabel, FormControl, Alert, FlexboxGrid} from 'rsuite'
 
 import {
   usePeerProfileQuery,
