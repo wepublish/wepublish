@@ -15,6 +15,7 @@ import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
 import {PeerList} from './routes/peerList'
+import {MyPeerInfo} from './routes/myPeerInfo'
 import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {CommentList} from './routes/commentList'
@@ -35,6 +36,9 @@ export function contentForRoute(route: Route) {
     case RouteType.PeerCreate:
     case RouteType.PeerEdit:
       return <PeerList />
+
+    case RouteType.MyPeerInfo:
+      return <MyPeerInfo />  
 
     case RouteType.TokenList:
     case RouteType.TokenGenerate:

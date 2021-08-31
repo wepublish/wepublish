@@ -18,7 +18,8 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
-  LogoutRoute
+  LogoutRoute,
+  MyPeerInfo
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -175,6 +176,13 @@ export function Base({children}: BaseProps) {
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
                 </Dropdown>
+
+                <NavItemLink
+                  icon={<Icon icon="share" />}
+                  route={MyPeerInfo.create({})}
+                  active={current?.type === RouteType.MyPeerInfo}>
+                  {t('navbar.myPeerInfo')}
+                </NavItemLink>
 
                 <NavItemLink
                   icon={<Icon icon="share" />}

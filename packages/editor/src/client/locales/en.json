@@ -470,6 +470,8 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
+      "peers": "Peers",
+      "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
       "users": "Users",
