@@ -238,6 +238,9 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
                 {profile?.callToActionURL}
               </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
+                {profile?.callToActionImage}
+              </DescriptionListItem>
             </DescriptionList>
           </Panel>
         )}

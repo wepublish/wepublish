@@ -618,6 +618,7 @@
         "callToActionText": "Call To Action Text",
         "callToActionImage": "Call To Action Image",
         "callToActionURL": "Call To Action URL",
+        "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",
         "cancel": "Cancel",

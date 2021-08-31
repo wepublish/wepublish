@@ -447,7 +447,7 @@ export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
               display: 'flex',
               width: '100%',
               height: 'auto',
-              maxHeight: '250px',
+              maxHeight: '90px',
               marginRight: 'auto',
               marginLeft: 'auto'
             }}>
