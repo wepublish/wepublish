@@ -77,11 +77,16 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const handleAddItems = () => {
     for (let i = 0; i < addItems; i++) {
+      const lastItemLayout = gridItems[gridItems.length - 1].layout
+
       const itemLayout: FlexItemLayout = {
-        x: (gridItems.length * 2) % numColumns,
-        y: 0, // puts it at the bottom
-        w: 2,
-        h: 2
+        x:
+          lastItemLayout.x + lastItemLayout.w <= numColumns - 4
+            ? lastItemLayout.x + lastItemLayout.w
+            : 0,
+        y: Infinity,
+        w: 4,
+        h: 4
       }
       gridItems.push({layout: itemLayout, teaser: null})
     }
