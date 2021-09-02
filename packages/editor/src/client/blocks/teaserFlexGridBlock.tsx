@@ -14,6 +14,20 @@ import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
 import {Toolbar} from '../atoms/toolbar'
 
+interface ApiLayoutProps {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+const mapLayoutToApi = ({x, y, w, h}: ApiLayoutProps) => ({
+  x,
+  y,
+  w,
+  h
+})
+
 // const ResponsiveGridLayout = WidthProvider(Responsive); TODO
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
@@ -42,7 +56,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const handleLayoutChange = (layout: Layout[]) => {
     onChange({
       ...value,
-      gridItems: gridItems.map(({teaser}, i) => ({teaser, layout: layout[i]}))
+      gridItems: gridItems.map(({teaser}, i) => ({
+        teaser,
+        layout: mapLayoutToApi(layout[i])
+      }))
     })
   }
 
@@ -71,7 +88,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
     onChange({
       ...value,
-      gridItems: [...gridItems]
+      gridItems: [...gridItems].map(({teaser, layout}) => ({
+        teaser,
+        layout: mapLayoutToApi(layout)
+      }))
     })
   }
 
