@@ -53,16 +53,13 @@ describe('Author Edit Panel', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('should expand links fields when Add Block button is clicked', async () => {
+  test('should fill the link field', async () => {
     const wrapper = mount(
       <MockedProvider addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
-
-    const button = wrapper.find('ListInput IconButton[classPrefix="rs-btn-icon"]')
-    button.simulate('click')
 
     const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
     inputField.props().value = 'abcd'
