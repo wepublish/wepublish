@@ -113,6 +113,8 @@ exports[`Peers can be created/edited/deleted: can read peer profile 1`] = `
 Object {
   "data": Object {
     "peerProfile": Object {
+      "callToActionImage": null,
+      "callToActionImageURL": "",
       "callToActionText": Array [],
       "callToActionURL": "",
       "hostURL": "https://fakeURL",
@@ -135,6 +137,8 @@ exports[`Peers can be created/edited/deleted: can update peer profile 1`] = `
 Object {
   "data": Object {
     "updatePeerProfile": Object {
+      "callToActionImage": null,
+      "callToActionImageURL": null,
       "callToActionText": Array [
         Object {
           "text": "rich text call to action",

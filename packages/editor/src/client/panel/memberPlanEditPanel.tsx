@@ -231,7 +231,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
-              <RichTextBlock value={description} onChange={value => setDescription(value)} />
+              <div className="richTextFrame">
+                <RichTextBlock value={description} onChange={value => setDescription(value)} />
+              </div>
             </FormGroup>
           </Form>
         </Panel>

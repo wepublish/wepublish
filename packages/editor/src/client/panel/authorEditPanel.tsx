@@ -51,7 +51,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [jobTitle, setJobTitle] = useState<Maybe<string>>()
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
-  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
+  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
+    {id: generateID(), value: {title: '', url: ''}}
+  ])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -220,7 +222,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </ListInput>
           </Panel>
           <Panel header={t('authors.panels.bioInformation')}>
-            <RichTextBlock value={bio} onChange={value => setBio(value)} />
+            <div className="richTextFrame">
+              <RichTextBlock value={bio} onChange={value => setBio(value)} />
+            </div>
           </Panel>
         </PanelGroup>
       </Drawer.Body>
