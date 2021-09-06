@@ -30,13 +30,15 @@ export function KeyboardDateTimePicker({
 }: KeyboardDateTimePickerProps) {
   const {t} = useTranslation()
 
-  const initialDate = new Date(dateTime ?? new Date())
-
-  const [startDate, setStartDate] = useState<any>(initialDate)
+  const [dateSelection, setDateSelection] = useState<any>(dateTime ?? new Date())
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},
     {label: t('dateTimePicker.tomorrow'), offset: 1},
+    {
+      label: t('dateTimePicker.nextMonday'),
+      offset: new Date().getDay() === 1 ? 7 : (1 - new Date().getDay() + 7) % 7
+    },
     {label: t('dateTimePicker.nextSaturday'), offset: 6 - new Date().getDay()}
   ]
 
@@ -48,22 +50,22 @@ export function KeyboardDateTimePicker({
 
   const handleDatePresetButton = (offset: number) => {
     const day = new Date()
-    day.setHours(startDate.getHours())
-    day.setMinutes(startDate.getMinutes())
+    day.setHours(dateSelection.getHours())
+    day.setMinutes(dateSelection.getMinutes())
     day.setDate(day.getDate() + offset)
-    setStartDate(day)
+    setDateSelection(day)
   }
 
   const handleTimePresetButton = (hour: number) => {
-    const day = new Date(startDate)
+    const day = new Date(dateSelection)
     if (hour === 0) {
       const now = new Date()
       day.setHours(now.getHours())
       day.setMinutes(now.getMinutes())
-      setStartDate(day)
+      setDateSelection(day)
     } else {
       day.setHours(hour, 0, 0)
-      setStartDate(day)
+      setDateSelection(day)
     }
   }
 
@@ -73,9 +75,9 @@ export function KeyboardDateTimePicker({
       <DatePicker
         showPopperArrow
         shouldCloseOnSelect={false}
-        selected={startDate}
+        selected={dateSelection}
         onChange={value => {
-          setStartDate(value)
+          setDateSelection(value)
           changeDate(value)
         }}
         // eslint-disable-next-line i18next/no-literal-string
@@ -85,7 +87,11 @@ export function KeyboardDateTimePicker({
         <ButtonToolbar>
           <ButtonGroup justified>
             {dateButtonPresets.map((datePreset, i) => (
-              <Button key={i} size="xs" onClick={() => handleDatePresetButton(datePreset.offset)}>
+              <Button
+                style={{overflow: 'visible'}}
+                key={i}
+                size="xs"
+                onClick={() => handleDatePresetButton(datePreset.offset)}>
                 {datePreset.label}
               </Button>
             ))}
