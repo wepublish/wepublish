@@ -12,7 +12,7 @@ export interface DateTimePreset {
   offset: number
 }
 
-export interface KeyboardDateTimePickerProps {
+export interface DateTimePickerProps {
   dateTime: Date | undefined
   label: string
   changeDate(publishDate: any): void
@@ -21,13 +21,13 @@ export interface KeyboardDateTimePickerProps {
   timeRanges?: DateTimePreset[]
 }
 
-export function KeyboardDateTimePicker({
+export function DateTimePicker({
   dateTime,
   label,
   changeDate,
   dateRanges,
   timeRanges
-}: KeyboardDateTimePickerProps) {
+}: DateTimePickerProps) {
   const {t} = useTranslation()
 
   const [dateSelection, setDateSelection] = useState<any>(dateTime ?? new Date())

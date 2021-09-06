@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {KeyboardDateTimePicker} from '../atoms/dateTimePicker'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -44,12 +44,12 @@ export function PublishArticlePanel({
             description={t('articleEditor.panels.articlePending', {pendingPublishDate})}
           />
         )}
-        <KeyboardDateTimePicker
+        <DateTimePicker
           dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
           changeDate={(date: Date) => setPublishDate(date)}
         />
-        <KeyboardDateTimePicker
+        <DateTimePicker
           dateTime={updateDate}
           label={t('articleEditor.panels.updateDate')}
           changeDate={(date: Date) => setUpdateDate(date)}

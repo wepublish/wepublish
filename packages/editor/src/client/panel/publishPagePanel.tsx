@@ -7,7 +7,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {PageMetadata} from './pageMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {KeyboardDateTimePicker} from '../atoms/dateTimePicker'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
@@ -45,12 +45,12 @@ export function PublishPagePanel({
             description={t('pageEditor.panels.pagePending', {pendingPublishDate})}
           />
         )}
-        <KeyboardDateTimePicker
+        <DateTimePicker
           dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
           changeDate={date => setPublishDate(date)}
         />
-        <KeyboardDateTimePicker
+        <DateTimePicker
           dateTime={updateDate}
           label={t('articleEditor.panels.updateDate')}
           changeDate={date => setUpdateDate(date)}
