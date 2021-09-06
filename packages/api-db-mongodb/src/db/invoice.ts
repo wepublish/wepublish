@@ -231,7 +231,9 @@ function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date | undef
 
     case InvoiceSort.PaidAt:
       if (invoice.paidAt) return invoice.paidAt
-  }
+      return undefined
 
-  return undefined
+    default:
+      return undefined
+  }
 }
