@@ -2997,21 +2997,10 @@
     pino-pretty "^3.2.0"
     pump "^3.0.0"
 
-"@karma.run/react@^0.1.2":
+"@karma.run/react@^0.1.2", "@karma.run/react@^0.1.3":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.1.3.tgz#d7e7503d4a5608cfff7e24c237ea21fbcb5f50e9"
   integrity sha512-x78Nj1stA5re22zqhcw1ooNVObFnp05b4IK9eZ0XkaFIfqLZzSpUNrz6eRazt8CGwdabD51QkjJPjmjmdnksyw==
-  dependencies:
-    "@karma.run/utility" "^0.0.1"
-    csstype "^2.6.6"
-    fela "^10.6.1"
-    fela-dom "^10.6.1"
-    path-to-regexp "^3.0.0"
-
-"@karma.run/react@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.2.0.tgz#975a95ec7a7c9108993c964f9c3325485d906365"
-  integrity sha512-VI7PnxXpXAs9P/jbDOIdzY83VNtDBhjiQ1jfN4RDpHjwBQYfSJW/gYJC8R/6YpRBU1+vn+s+CVFgtSOwTib/Yw==
   dependencies:
     "@karma.run/utility" "^0.0.1"
     csstype "^2.6.6"
