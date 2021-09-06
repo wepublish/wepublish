@@ -17,7 +17,12 @@ import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  dateTimeWithoutSecondsLocalString,
+  dateTimeWithSecondsLocalString,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -95,6 +100,7 @@ export function PageList() {
     }
   }, [data?.pages])
 
+  console.log('new format- ' + dateTimeWithoutSecondsLocalString(new Date()))
   return (
     <>
       <FlexboxGrid>
@@ -140,13 +146,9 @@ export function PageList() {
             <Cell dataKey="published">
               {(pageRef: PageRefFragment) =>
                 pageRef.published?.publishedAt
-                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
-                      pageRef.published.publishedAt
-                    ).toLocaleTimeString()}`
+                  ? `${dateTimeWithoutSecondsLocalString(new Date(pageRef.published.publishedAt))}`
                   : pageRef.pending?.publishAt
-                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
-                      pageRef.pending.publishAt
-                    ).toLocaleTimeString()}`
+                  ? `${dateTimeWithoutSecondsLocalString(new Date(pageRef.pending?.publishAt))}`
                   : t('pages.overview.notPublished')
               }
             </Cell>
@@ -155,9 +157,7 @@ export function PageList() {
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
+                `${dateTimeWithSecondsLocalString(new Date(modifiedAt))}`
               }
             </Cell>
           </Column>

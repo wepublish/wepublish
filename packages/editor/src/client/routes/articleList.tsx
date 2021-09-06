@@ -18,7 +18,12 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  dateTimeWithoutSecondsLocalString,
+  dateTimeWithSecondsLocalString,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -143,13 +148,11 @@ export function ArticleList() {
             <Cell dataKey="published">
               {(articleRef: ArticleRefFragment) =>
                 articleRef.published?.publishedAt
-                  ? `${new Date(articleRef.published.publishedAt).toDateString()} ${new Date(
-                      articleRef.published.publishedAt
-                    ).toLocaleTimeString()}`
+                  ? `${dateTimeWithoutSecondsLocalString(
+                      new Date(articleRef.published.publishedAt)
+                    )}`
                   : articleRef.pending?.publishAt
-                  ? `${new Date(articleRef.pending.publishAt).toDateString()} ${new Date(
-                      articleRef.pending.publishAt
-                    ).toLocaleTimeString()}`
+                  ? `${dateTimeWithoutSecondsLocalString(new Date(articleRef.pending?.publishAt))}`
                   : t('articles.overview.notPublished')
               }
             </Cell>
@@ -158,9 +161,7 @@ export function ArticleList() {
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: ArticleRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
+                `${dateTimeWithSecondsLocalString(new Date(modifiedAt))}`
               }
             </Cell>
           </Column>
@@ -305,17 +306,18 @@ export function ArticleList() {
             )}
 
             <DescriptionListItem label={t('articles.panels.createdAt')}>
-              {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
+              {currentArticle?.createdAt &&
+                dateTimeWithoutSecondsLocalString(new Date(currentArticle.createdAt))}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('articles.panels.updatedAt')}>
               {currentArticle?.latest.updatedAt &&
-                new Date(currentArticle.latest.updatedAt).toLocaleString()}
+                dateTimeWithSecondsLocalString(new Date(currentArticle.latest.updatedAt))}
             </DescriptionListItem>
 
             {currentArticle?.latest.publishedAt && (
               <DescriptionListItem label={t('articles.panels.publishedAt')}>
-                {new Date(currentArticle.createdAt).toLocaleString()}
+                {dateTimeWithoutSecondsLocalString(new Date(currentArticle.createdAt))}
               </DescriptionListItem>
             )}
           </DescriptionList>

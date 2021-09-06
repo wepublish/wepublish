@@ -21,7 +21,7 @@
         "addTag": "Press enter to add tag",
         "allowPeerPublishing": "Allow peers to publish this article.",
         "article": "Article",
-        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "articlePending": "There is already a pending publication scheduled at {{date}} {{time}}. Publishing again will override that publication. ",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",

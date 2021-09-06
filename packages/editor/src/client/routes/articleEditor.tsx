@@ -194,7 +194,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setTagTitle(
         t('articleEditor.overview.pending', {
           date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+          time: new Date(articleData?.article?.pending?.publishAt ?? '')
+            .toLocaleTimeString()
+            .slice(0, -3)
         })
       )
     } else if (articleData?.article?.published) {
@@ -202,7 +204,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setTagTitle(
         t('articleEditor.overview.published', {
           date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+          time: new Date(articleData?.article?.published?.publishedAt ?? '')
+            .toLocaleTimeString()
+            .slice(0, -3)
         })
       )
     } else {

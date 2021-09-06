@@ -64,6 +64,31 @@ export function dateTimeLocalString(date: Date) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
+export function dateTimeWithSecondsLocalString(date: Date) {
+  function prefix(i: number) {
+    return (i < 10 ? '0' : '') + i
+  }
+
+  const day = date.toDateString()
+  const hours = prefix(date.getHours())
+  const minutes = prefix(date.getMinutes())
+  const seconds = prefix(date.getSeconds())
+
+  return `${day} ${hours}:${minutes}:${seconds}`
+}
+
+export function dateTimeWithoutSecondsLocalString(date: Date) {
+  function prefix(i: number) {
+    return (i < 10 ? '0' : '') + i
+  }
+
+  const day = date.toDateString()
+  const hours = prefix(date.getHours())
+  const minutes = prefix(date.getMinutes())
+
+  return `${day} ${hours}:${minutes}`
+}
+
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
   if (typeof window !== 'object')
     return {

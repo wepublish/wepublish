@@ -31,6 +31,9 @@ export function PublishArticlePanel({
 
   const {t} = useTranslation()
 
+  const testDate = new Date()
+  console.log(testDate)
+
   return (
     <>
       <Modal.Header>
@@ -41,7 +44,10 @@ export function PublishArticlePanel({
         {pendingPublishDate && (
           <Message
             type="warning"
-            description={t('articleEditor.panels.articlePending', {pendingPublishDate})}
+            description={t('articleEditor.panels.articlePending', {
+              date: new Date(pendingPublishDate).toDateString(),
+              time: new Date(pendingPublishDate).toLocaleTimeString().slice(0, -3)
+            })}
           />
         )}
         <DateTimePicker
