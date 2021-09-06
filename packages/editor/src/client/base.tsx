@@ -105,7 +105,9 @@ export function Base({children}: BaseProps) {
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList || current?.type === RouteType.Index}>
+                  active={
+                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                  }>
                   {t('navbar.articles')}
                 </NavItemLink>
 
@@ -177,12 +179,10 @@ export function Base({children}: BaseProps) {
                   </DropdownItemLink>
                 </Dropdown>
 
-                <Dropdown
-                  title={t('navbar.peering')}
-                  icon={<Icon icon="share" />}>
+                <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
                   <DropdownItemLink
                     active={current?.type === RouteType.MyPeerInfo}
-                    icon={<Icon icon="share" />}
+                    icon={<Icon icon="info-circle" />}
                     route={MyPeerInfo.create({})}>
                     {t('navbar.myPeerInfo')}
                   </DropdownItemLink>
