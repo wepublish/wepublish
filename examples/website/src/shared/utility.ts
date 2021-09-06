@@ -5,6 +5,7 @@ import felaPrefixer from 'fela-plugin-prefixer'
 import felaFallbackValue from 'fela-plugin-fallback-value'
 import {fetch} from 'cross-fetch'
 import {onlyMobileMediaQuery, desktopMediaQuery, tabletMediaQuery} from './style/helpers'
+import {RichTextBlockValue} from './types'
 
 export const PODCAST_SLUG = 'piepston'
 
@@ -130,6 +131,21 @@ export function transformCssStringToObject(styleCustom: string): object {
   }, {})
 }
 
+export function countRichtextChars(blocksCharLength: number, nodes: RichTextBlockValue): number {
+  return nodes.reduce((charLength: number, node: any) => {
+    if (!node.text && !node.children) return charLength
+    // node either has text (leaf node) or children (element node)
+    if (node.text) {
+      return charLength + (node.text as string).length
+    }
+    return countRichtextChars(charLength, node.children)
+  }, blocksCharLength)
+}
+
+export function countRichTextBlocksChars(block: RichTextBlockValue) {
+  return countRichtextChars(0, block)
+}
+
 export async function fetchIntrospectionQueryResultData(url: string) {
   const response = await fetch(url, {
     method: 'POST',
@@ -164,3 +180,5 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 
   return possibleTypes
 }
+
+export const maxCommentLength = 1000
