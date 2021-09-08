@@ -191,6 +191,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Embed",
         "overview": {
           "editEmbed": "Edit Embed"
         },
@@ -210,6 +211,7 @@
         }
       },
       "image": {
+        "label": "Image",
         "overview": {
           "caption": "Caption",
           "chooseImage": "Choose Image",
@@ -217,6 +219,7 @@
         }
       },
       "imageGallery": {
+        "label": "Gallery",
         "overview": {
           "add": "Add",
           "caption": "Caption",
@@ -238,22 +241,26 @@
         }
       },
       "linkPageBreak": {
+        "label": "Break",
         "linkText": "Link Text",
         "linkURL": "Link URL",
         "text": "Text",
         "title": "Title"
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
         "removeImage": "Remove Image",
         "title": "Title"
       },
       "quote": {
+        "label": "Quote",
         "author": "Author",
         "quote": "Quote"
       },
       "richText": {
+        "label": "Rich text",
         "apply": "Apply",
         "cancel": "Cancel",
         "charCount": "Characters count {{charCount}}",
@@ -266,6 +273,7 @@
         "text": "Text"
       },
       "richTextTable": {
+        "label": "Rich text table",
         "addBorders": "Add Borders",
         "border": "Border",
         "cancel": "Cancel",
@@ -276,8 +284,15 @@
         "rows": "Rows"
       },
       "title": {
+        "label": "Title",
         "leadText": "Lead Text ",
         "title": "Title"
+      },
+      "teaserGrid1": {
+        "label": "1 Col"
+      },
+      "teaserGrid6": {
+        "label": "6 Col"
       }
     },
     "cancel": "Cancel",
