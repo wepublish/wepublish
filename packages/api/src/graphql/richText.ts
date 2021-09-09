@@ -20,7 +20,8 @@ export enum ElementNodeType {
   AlignLeft = 'align-left',
   AlignCenter = 'align-center',
   AlignRight = 'align-right',
-  AlignJustified = 'align-justified'
+  AlignJustified = 'align-justified',
+  Image = 'image'
 }
 
 export enum TextNodeFields {
@@ -66,6 +67,7 @@ export interface RichTextBlockNode {
     | ElementNodeType.AlignLeft
     | ElementNodeType.AlignRight
     | ElementNodeType.AlignJustified
+    | ElementNodeType.Image
 
   readonly children: RichTextNode[]
 }
