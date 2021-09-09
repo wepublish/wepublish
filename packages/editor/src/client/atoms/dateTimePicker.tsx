@@ -2,10 +2,11 @@ import React, {useState} from 'react'
 
 import './dateTimePicker.less'
 
-import DatePicker from 'react-datepicker'
+import DatePicker, {registerLocale} from 'react-datepicker'
 import {ControlLabel, Button, ButtonGroup, ButtonToolbar} from 'rsuite'
 
 import {useTranslation} from 'react-i18next'
+import de from 'date-fns/locale/de'
 
 export interface DateTimePreset {
   label: string
@@ -30,7 +31,9 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
-  const [dateSelection, setDateSelection] = useState<any>(dateTime ?? new Date())
+  const [dateSelection, setDateSelection] = useState<Date | null | undefined>(
+    dateTime ?? new Date()
+  )
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},
@@ -50,35 +53,45 @@ export function DateTimePicker({
 
   const handleDatePresetButton = (offset: number) => {
     const day = new Date()
-    day.setHours(dateSelection.getHours())
-    day.setMinutes(dateSelection.getMinutes())
-    day.setDate(day.getDate() + offset)
-    setDateSelection(day)
-  }
-
-  const handleTimePresetButton = (hour: number) => {
-    const day = new Date(dateSelection)
-    if (hour === 0) {
-      const now = new Date()
-      day.setHours(now.getHours())
-      day.setMinutes(now.getMinutes())
-      setDateSelection(day)
-    } else {
-      day.setHours(hour, 0, 0)
+    if (dateSelection) {
+      day.setHours(dateSelection.getHours())
+      day.setMinutes(dateSelection.getMinutes())
+      day.setDate(day.getDate() + offset)
       setDateSelection(day)
     }
   }
+
+  const handleTimePresetButton = (hour: number) => {
+    if (dateSelection) {
+      const day = new Date(dateSelection)
+      if (hour === 0) {
+        const now = new Date()
+        day.setHours(now.getHours())
+        day.setMinutes(now.getMinutes())
+        setDateSelection(day)
+      } else {
+        day.setHours(hour, 0, 0)
+        setDateSelection(day)
+      }
+    }
+  }
+  registerLocale('de', de)
 
   return (
     <>
       <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
       <DatePicker
+        locale="de"
         showPopperArrow
         shouldCloseOnSelect={false}
         selected={dateSelection}
         onChange={value => {
-          setDateSelection(value)
-          changeDate(value)
+          if (value) {
+            console.log('parsed:', new Date(value.toString()))
+            const dateValue = new Date(value.toString())
+            setDateSelection(dateValue)
+            changeDate(value)
+          }
         }}
         // eslint-disable-next-line i18next/no-literal-string
         dateFormat="dd MMM yyyy, h:mm"
