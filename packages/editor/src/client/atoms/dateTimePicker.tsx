@@ -16,7 +16,7 @@ export interface DateTimePreset {
 export interface DateTimePickerProps {
   dateTime: Date | undefined
   label: string
-  changeDate(publishDate: any): void
+  changeDate(publishDate: Date): void
 
   dateRanges?: DateTimePreset[]
   timeRanges?: DateTimePreset[]
@@ -31,9 +31,7 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
-  const [dateSelection, setDateSelection] = useState<Date | null | undefined>(
-    dateTime ?? new Date()
-  )
+  const [dateSelection, setDateSelection] = useState<Date>(dateTime ?? new Date())
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},
@@ -87,10 +85,10 @@ export function DateTimePicker({
         selected={dateSelection}
         onChange={value => {
           if (value) {
-            console.log('parsed:', new Date(value.toString()))
+            // console.log('parsed:', new Date(value.toString()))
             const dateValue = new Date(value.toString())
             setDateSelection(dateValue)
-            changeDate(value)
+            changeDate(dateValue)
           }
         }}
         // eslint-disable-next-line i18next/no-literal-string
