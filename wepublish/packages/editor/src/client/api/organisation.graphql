@@ -1,0 +1,54 @@
+type Organisation {
+  id: ID
+  name: String
+  location: String
+  createdAt: Date
+  modifiedAt: Date
+}
+
+fragment FullOrganisation on Organisation {
+  id
+  name
+  location
+  createdAt
+  modifiedAt
+}
+
+query OrganisationList(
+  $filter: String
+  $after: ID
+  $before: ID
+  $first: Int
+  $last: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: OrganisationSort
+) {
+  organisations(
+    filter: {name: $filter}
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullOrganisation
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+
+mutation CreateOrganisation($input: OrganisationInput) {
+  createOrganisation(id: $id, input: $input) {
+    ...FullOrganisation
+  }
+}
