@@ -4,25 +4,25 @@ import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
 
 import {
-  articleMetaDataFragment,
-  embedBlockDataFragment,
-  facebookPostBlockDataFragment,
-  gridBlockFrontDataGQLfragment,
   imageBlockDataFragment,
-  imageGalleryBlockDataFragment,
-  instagramPostBlockDataFragment,
-  linkPageBreakBlockDataFragment,
-  listicleBlockDataFragment,
-  peerArticleMetaDataFragment,
-  peerMetaDataFragment,
-  polisConversationBlockDataFragment,
-  quoteBlockDataFragment,
   richTextBlockDataFragment,
-  soundCloudTrackBlockDataFragment,
-  titleBlockDataFragment,
+  imageGalleryBlockDataFragment,
+  facebookPostBlockDataFragment,
+  instagramPostBlockDataFragment,
   twitterTweetBlockDataFragment,
   vimeoVideoBlockDataFragment,
-  youtubeVideoBlockDataFragment
+  youtubeVideoBlockDataFragment,
+  soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
+  embedBlockDataFragment,
+  linkPageBreakBlockDataFragment,
+  listicleBlockDataFragment,
+  quoteBlockDataFragment,
+  titleBlockDataFragment,
+  articleMetaDataFragment,
+  gridBlockFrontDataGQLfragment,
+  peerMetaDataFragment,
+  peerArticleMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -31,12 +31,12 @@ import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
 import {Loader} from '../atoms/loader'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
 import {Helmet} from 'react-helmet-async'
-import {ArticleRoute, Link, PeerArticleRoute} from './routeContext'
+import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
 import {useAppContext} from '../appContext'
-import {ArticleMeta, Peer} from '../types'
-import {cssRule, useStyle} from '@karma.run/react'
+import {Peer, ArticleMeta} from '../types'
+import {useStyle, cssRule} from '@karma.run/react'
 import {Image, ImageFit} from '../atoms/image'
-import {pxToRem, whenMobile} from '../style/helpers'
+import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 

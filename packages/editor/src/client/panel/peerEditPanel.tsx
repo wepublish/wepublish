@@ -109,9 +109,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
             setValidPeer(false)
             setErrorMessage(t('peerList.panels.invalidURL'))
           } else if (response?.data?.peerProfile.hostURL === hostURL) {
-            // TODO for testing! To be removed!
-            // setValidPeer(false)
-            setValidPeer(true)
+            setValidPeer(false)
             setErrorMessage(t('peerList.panels.peeredToHost'))
           } else {
             setValidPeer(true)
