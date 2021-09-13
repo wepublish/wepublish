@@ -22,7 +22,7 @@
     "@karma.run/media": "^0.2.1",
     "@karma.run/media-image-sharp": "^0.2.0",
     "@karma.run/media-storage-local": "^0.1.4",
-    "@wepublish/api": "^2.8.0-alpha.0",
+    "@wepublish/api": "*",
     "@wepublish/api-db-mongodb": "*",
     "@wepublish/api-media-karma": "*",
     "body-parser": "^1.19.0",
