@@ -93,7 +93,7 @@ export function DateTimePicker({
           <ButtonGroup justified>
             {dateButtonPresets.map((datePreset, i) => (
               <Button
-                style={{overflow: 'visible'}}
+                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
                 key={i}
                 size="xs"
                 onClick={() => handleDatePresetButton(datePreset.offset)}>
@@ -105,14 +105,17 @@ export function DateTimePicker({
         <ButtonToolbar>
           <ButtonGroup justified>
             {timeButtonPresets.map((timePreset, i) => (
-              <Button key={i} size="xs" onClick={() => handleTimePresetButton(timePreset.offset)}>
+              <Button
+                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
+                key={i}
+                size="xs"
+                onClick={() => handleTimePresetButton(timePreset.offset)}>
                 {timePreset.label}
               </Button>
             ))}
           </ButtonGroup>
         </ButtonToolbar>
       </DatePicker>
-      <br />
     </>
   )
 }

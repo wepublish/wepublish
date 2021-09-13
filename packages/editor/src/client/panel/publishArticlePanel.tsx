@@ -47,12 +47,12 @@ export function PublishArticlePanel({
         <DateTimePicker
           dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
-          changeDate={(date: Date) => setPublishDate(date)}
+          changeDate={date => setPublishDate(date)}
         />
         <DateTimePicker
           dateTime={updateDate}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={(date: Date) => setUpdateDate(date)}
+          changeDate={date => setUpdateDate(date)}
         />
 
         <DescriptionList>
