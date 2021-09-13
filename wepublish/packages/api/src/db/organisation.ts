@@ -41,3 +41,5 @@ export interface DBOrganisationAdapter {
   createOrganisation(args: CreateOrganisationArgs): Promise<Organisation>
   getOrganisations(args: GetOrganisationArgs): Promise<ConnectionResult<Organisation>>
 }
+
+// organisation
