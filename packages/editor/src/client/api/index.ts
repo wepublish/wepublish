@@ -690,6 +690,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  createOrganisation?: Maybe<Organisation>;
 };
 
 
@@ -989,6 +990,11 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason;
 };
 
+
+export type MutationCreateOrganisationArgs = {
+  input: OrganisationInput;
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -1010,6 +1016,45 @@ export type NavigationLinkInput = {
   article?: Maybe<ArticleNavigationLinkInput>;
   external?: Maybe<ExternalNavigationLinkInput>;
 };
+
+/** Organistion types definition */
+export type Organisation = {
+  __typename?: 'Organisation';
+  /** Organisation ID, auto generated */
+  id: Scalars['ID'];
+  /** Organisation name */
+  name: Scalars['String'];
+  /** Organisation Location */
+  location: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+};
+
+export type OrganisationConnection = {
+  __typename?: 'OrganisationConnection';
+  nodes: Array<Organisation>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type OrganisationFilter = {
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+};
+
+export type OrganisationInput = {
+  /** Organisation name is required */
+  name: Scalars['String'];
+  /** Organisation Location is required */
+  location: Scalars['String'];
+};
+
+export enum OrganisationSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME',
+  Location = 'LOCATION'
+}
 
 export type Page = {
   __typename?: 'Page';
@@ -1337,6 +1382,7 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  organisations: OrganisationConnection;
 };
 
 
@@ -1545,6 +1591,18 @@ export type QueryPaymentsArgs = {
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<PaymentFilter>;
   sort?: Maybe<PaymentSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryOrganisationsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<OrganisationFilter>;
+  sort?: Maybe<OrganisationSort>;
   order?: Maybe<SortOrder>;
 };
 
@@ -2827,6 +2885,51 @@ export type DeleteNavigationMutation = (
   & Pick<Mutation, 'deleteNavigation'>
 );
 
+export type FullOrganisationFragment = (
+  { __typename?: 'Organisation' }
+  & Pick<Organisation, 'id' | 'name' | 'location' | 'createdAt' | 'modifiedAt'>
+);
+
+export type OrganisationListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<OrganisationSort>;
+}>;
+
+
+export type OrganisationListQuery = (
+  { __typename?: 'Query' }
+  & { organisations: (
+    { __typename?: 'OrganisationConnection' }
+    & Pick<OrganisationConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Organisation' }
+      & FullOrganisationFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
+
+export type CreateOrganisationMutationVariables = Exact<{
+  input: OrganisationInput;
+}>;
+
+
+export type CreateOrganisationMutation = (
+  { __typename?: 'Mutation' }
+  & { createOrganisation?: Maybe<(
+    { __typename?: 'Organisation' }
+    & FullOrganisationFragment
+  )> }
+);
+
 export type MutationPageFragment = (
   { __typename?: 'Page' }
   & Pick<Page, 'id'>
@@ -4054,6 +4157,15 @@ export const FullNavigationFragmentDoc = gql`
 }
     ${PageRefFragmentDoc}
 ${ArticleRefFragmentDoc}`;
+export const FullOrganisationFragmentDoc = gql`
+    fragment FullOrganisation on Organisation {
+  id
+  name
+  location
+  createdAt
+  modifiedAt
+}
+    `;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -4695,7 +4807,7 @@ export const AuthorListDocument = gql`
  *      first: // value for 'first'
  *      last: // value for 'last'
  *      skip: // value for 'skip'
- *      order: // value for 'order'us
+ *      order: // value for 'order'
  *      sort: // value for 'sort'
  *   },
  * });
@@ -5525,6 +5637,90 @@ export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+export const OrganisationListDocument = gql`
+    query OrganisationList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: OrganisationSort) {
+  organisations(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullOrganisation
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullOrganisationFragmentDoc}`;
+
+/**
+ * __useOrganisationListQuery__
+ *
+ * To run a query within a React component, call `useOrganisationListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganisationListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrganisationListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useOrganisationListQuery(baseOptions?: Apollo.QueryHookOptions<OrganisationListQuery, OrganisationListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrganisationListQuery, OrganisationListQueryVariables>(OrganisationListDocument, options);
+      }
+export function useOrganisationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganisationListQuery, OrganisationListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrganisationListQuery, OrganisationListQueryVariables>(OrganisationListDocument, options);
+        }
+export type OrganisationListQueryHookResult = ReturnType<typeof useOrganisationListQuery>;
+export type OrganisationListLazyQueryHookResult = ReturnType<typeof useOrganisationListLazyQuery>;
+export type OrganisationListQueryResult = Apollo.QueryResult<OrganisationListQuery, OrganisationListQueryVariables>;
+export const CreateOrganisationDocument = gql`
+    mutation CreateOrganisation($input: OrganisationInput!) {
+  createOrganisation(input: $input) {
+    ...FullOrganisation
+  }
+}
+    ${FullOrganisationFragmentDoc}`;
+export type CreateOrganisationMutationFn = Apollo.MutationFunction<CreateOrganisationMutation, CreateOrganisationMutationVariables>;
+
+/**
+ * __useCreateOrganisationMutation__
+ *
+ * To run a mutation, you first call `useCreateOrganisationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrganisationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrganisationMutation, { data, loading, error }] = useCreateOrganisationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrganisationMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrganisationMutation, CreateOrganisationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrganisationMutation, CreateOrganisationMutationVariables>(CreateOrganisationDocument, options);
+      }
+export type CreateOrganisationMutationHookResult = ReturnType<typeof useCreateOrganisationMutation>;
+export type CreateOrganisationMutationResult = Apollo.MutationResult<CreateOrganisationMutation>;
+export type CreateOrganisationMutationOptions = Apollo.BaseMutationOptions<CreateOrganisationMutation, CreateOrganisationMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
   pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {

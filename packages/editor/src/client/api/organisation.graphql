@@ -1,11 +1,3 @@
-type Organisation {
-  id: ID
-  name: String
-  location: String
-  createdAt: Date
-  modifiedAt: Date
-}
-
 fragment FullOrganisation on Organisation {
   id
   name
@@ -47,8 +39,8 @@ query OrganisationList(
   }
 }
 
-mutation CreateOrganisation($input: OrganisationInput) {
-  createOrganisation(id: $id, input: $input) {
+mutation CreateOrganisation($input: OrganisationInput!) {
+  createOrganisation(input: $input) {
     ...FullOrganisation
   }
 }
