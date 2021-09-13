@@ -17,12 +17,7 @@ import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  dateTimeWithoutSecondsLocalString,
-  dateTimeWithSecondsLocalString,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -100,7 +95,6 @@ export function PageList() {
     }
   }, [data?.pages])
 
-  console.log('new format- ' + dateTimeWithoutSecondsLocalString(new Date()))
   return (
     <>
       <FlexboxGrid>
@@ -146,9 +140,13 @@ export function PageList() {
             <Cell dataKey="published">
               {(pageRef: PageRefFragment) =>
                 pageRef.published?.publishedAt
-                  ? `${dateTimeWithoutSecondsLocalString(new Date(pageRef.published.publishedAt))}`
+                  ? t('pageEditor.overview.publishedAt', {
+                      publicationDate: new Date(pageRef.published.publishedAt)
+                    })
                   : pageRef.pending?.publishAt
-                  ? `${dateTimeWithoutSecondsLocalString(new Date(pageRef.pending?.publishAt))}`
+                  ? t('pageEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                    })
                   : t('pages.overview.notPublished')
               }
             </Cell>
@@ -157,7 +155,9 @@ export function PageList() {
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>
-                `${dateTimeWithSecondsLocalString(new Date(modifiedAt))}`
+                t('pageEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
               }
             </Cell>
           </Column>
@@ -289,18 +289,23 @@ export function PageList() {
             )}
 
             <DescriptionListItem label={t('pages.panels.createdAt')}>
-              {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
+              {currentPage?.createdAt &&
+                t('pages.panels.createdAtDate', {createdAtDate: new Date(currentPage.createdAt)})}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
               {currentPage?.latest.updatedAt &&
-                new Date(currentPage.latest.updatedAt).toLocaleString()}
+                t('pages.panels.updatedAtDate', {
+                  updatedAtDate: new Date(currentPage.latest.updatedAt)
+                })}
             </DescriptionListItem>
 
             {currentPage?.latest.publishedAt && (
               <DescriptionListItem label={t('pages.panels.publishedAt')}>
                 {currentPage?.latest.publishedAt &&
-                  new Date(currentPage.createdAt).toLocaleString()}
+                  t('pages.panels.publishedAtDate', {
+                    publishedAtDate: new Date(currentPage.latest.publishedAt)
+                  })}
               </DescriptionListItem>
             )}
           </DescriptionList>

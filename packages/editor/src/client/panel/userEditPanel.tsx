@@ -219,9 +219,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           {subscription && (
             <DescriptionList>
               <DescriptionListItem label={t('userList.panels.startedAt')}>
+                {/* how can I test this ? */}
                 {new Date(subscription.startsAt).toLocaleString()}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.payedUntil')}>
+                {/* how can I test this ? */}
                 {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.memberPlan')}>

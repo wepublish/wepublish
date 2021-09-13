@@ -11,11 +11,13 @@
         "metadata": "Metadaten",
         "noSlug": "Artikel nicht publiziert. Bitte Slug erfassen.",
         "notFound": "Artikel nicht gefunden",
-        "pending": "Publikation des Artikels geplant am {{date}} um {{time}}",
-        "publish": "Publier",
-        "published": "Artikel publiziert am {{date}} um {{time}}",
+        "pending": "Publikation des Artikels geplant am {{date, lll}}",
+        "publish": "Publizieren",
+        "published": "Artikel publiziert am {{date, lll}}.",
         "save": "Speichern",
-        "unpublished": "Nicht publiziert"
+        "unpublished": "Nicht publiziert",
+        "publishedAt": "{{publicationDate, lll}}",
+        "modifiedAt": "{{modificationDate, ll}} {{modificationDate, LTS}}"
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
@@ -33,6 +35,7 @@
         "chooseTeaser": "Teaser wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
+        "createdAt": "{{createdAt, lll}}",
         "default": "Default",
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
@@ -59,6 +62,7 @@
         "loadMore": "Mehr laden",
         "metadata": "Metadaten",
         "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
+        "modifiedAt": "{{modifiedAt, ll}} {{modifiedAt, LTS}}",
         "no": "Nein",
         "noAuthorsFound": "Kein*e Autor*in gefunden",
         "noImagesFound": "Keine Bilder gefunden",
@@ -110,7 +114,7 @@
         "value": "Wert",
         "yes": "Ja",
         "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, MM/DD/YYYY HH:mm}} geplant. Eine erneute Publikation überschreibt diese. ",
+        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, lll}} geplant. Eine erneute Publikation überschreibt diese. ",
         "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links"
       }
@@ -141,16 +145,19 @@
         "confirm": "Bestätigen",
         "createAuthorProfile": "Autor*innenprofil erstellen für {{name}}",
         "createdAt": "Erstellt am",
+        "createdAtDate": "{{createdAtDate, lll}}",
         "delete": "Löschen",
         "deleteArticle": "Artikel löschen?",
         "duplicateArticle": "Artikel duplizieren?",
         "lead": "Lead",
         "publishedAt": "Publiziert am",
+        "publishedAtDate": "{{publishedAtDate, lll}}",
         "title": "Titel",
         "unpublish": "Publikation rückgängig machen",
         "unpublishArticle": "Artikelpublikation rückgängig machen?",
         "untitled": "Ohne Titel",
-        "updatedAt": "Aktualisiert am"
+        "updatedAt": "Aktualisiert am",
+        "updatedAtDate": "{{updatedAtDate, ll}} {{updatedAtDate, LTS}}"
       }
     },
     "authors": {
@@ -298,6 +305,7 @@
         "title": "Titel",
         "untitled": "Ohne Titel",
         "updated": "Bearbeitet",
+        "modifiedAtDate": "{{modifiedAtDate, lll}}",
         "userName": "User Name"
       },
       "panels": {
@@ -514,12 +522,15 @@
         "pageDraftCreated": "Seiten Entwurf erstellt",
         "pageDraftSaved": "Seiten Entwurf gespeichert",
         "pageNotFound": "Seite nicht gefunden",
-        "pending": "Publikation der Seite geplant am {{date}} um {{time}}",
+        "pending": "Publikation der Seite geplant am {{date, lll}}",
         "publish": "Publizieren",
         "save": "Speichern",
         "unpublished": "Nicht publiziert",
-        "published": "Seite publiziert am {{date}} um {{time}}",
-        "pagePublished": "Seite publiziert"
+        "published": "Seite publiziert am {{date, lll}}",
+        "pagePublished": "Seite publiziert",
+        "publishedAt": "{{publicationDate, lll}}",
+        "modifiedAt": "{{modificationDate, ll}} {{modificationDate, LTS}}",
+        "publishedAtIfPending": "{{publishedAtIfPending, lll}}"
       },
       "panels": {
         "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -553,7 +564,7 @@
         "value": "Wert",
         "publishPage": "Seite publizieren",
         "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, MM/DD/YYYY HH:mm}} geplant. Ein erneutes publizieren überschreibt diese. "
+        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, lll}} geplant. Ein erneutes publizieren überschreibt diese. "
       }
     },
     "pages": {
@@ -580,16 +591,19 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
+        "createdAtDate": "{{createdAtDate, lll}}",
         "delete": "Löschen",
         "deletePage": "Seite löschen?",
         "duplicatePage": "Seite duplizieren?",
         "lead": "Lead",
         "publishedAt": "Publiziert am",
+        "publishedAtDate": "{{publishedAtDate, lll}}",
         "title": "Titel",
         "unpublish": "Publikation rückgängig machen",
         "unpublishPage": "Seitenpublikation rückgängig machen?",
         "untitled": "Kein Titel",
-        "updatedAt": "Aktualisiert am"
+        "updatedAt": "Aktualisiert am",
+        "updatedAtDate": "{{updatedAtDate, ll}} {{updatedAtDate, LTS}}"
       }
     },
     "paymentMethodList": {
@@ -670,9 +684,11 @@
       "overview": {
         "action": "Aktion",
         "createdAt": "Erstellt",
+        "createdAtDate": "{{createdAtDate, lll}}",
         "delete": "Löschen",
         "description": "Beschreibung",
         "modifiedAt": "Zuletzt bearbeitet",
+        "modifiedAtDate": "{{modifiedAtDate, lll}}",
         "name": "Name",
         "newUser": "Neuer User",
         "noDescription": "Keine Beschreibung",

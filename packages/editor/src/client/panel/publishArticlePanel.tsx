@@ -45,8 +45,7 @@ export function PublishArticlePanel({
           <Message
             type="warning"
             description={t('articleEditor.panels.articlePending', {
-              date: new Date(pendingPublishDate).toDateString(),
-              time: new Date(pendingPublishDate).toLocaleTimeString().slice(0, -3)
+              pendingPublishDate
             })}
           />
         )}

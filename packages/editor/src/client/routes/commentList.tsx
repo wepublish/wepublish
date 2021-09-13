@@ -276,7 +276,9 @@ export function CommentList() {
           <Column width={150} align="left" resizable sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: Comment) => new Date(modifiedAt).toLocaleString()}
+              {({modifiedAt}: Comment) =>
+                t('comments.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              }
             </Cell>
           </Column>
           <Column width={150} align="center" fixed="right">
@@ -359,10 +361,12 @@ export function CommentList() {
                 {currentComment?.user.name || t('comments.panels.untitled')}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.createdAt')}>
-                {currentComment?.createdAt && new Date(currentComment.createdAt).toDateString()}
+                {t('comments.panels.createdAtDate', {
+                  createdAtDate: new Date(currentComment.createdAt)
+                })}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.updatedAt')}>
-                {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
+                {t('comments.panels.modifiedAt', {modifiedAt: new Date(currentComment.modifiedAt)})}
               </DescriptionListItem>
 
               {currentComment?.parentComment && (
@@ -404,6 +408,7 @@ export function CommentList() {
                       ? currentComment?.revisions?.map(({text, createdAt}, i) => (
                           <Timeline.Item key={i}>
                             <div>{new Date(createdAt).toLocaleString()}</div>
+                            {/* <div>{t('comments.panels.revisionCreatedAtDate', {revisionCreatedAtDate: new Date(createdAt)})}</div> */}
                             <RichTextBlock
                               disabled
                               displayOnly
