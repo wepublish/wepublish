@@ -142,6 +142,7 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "dateFormat",
             "componentClass",
             "autoComplete",
             "controlId",

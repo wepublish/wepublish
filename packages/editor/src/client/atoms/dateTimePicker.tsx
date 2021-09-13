@@ -2,11 +2,10 @@ import React, {useState} from 'react'
 
 import './dateTimePicker.less'
 
-import DatePicker, {registerLocale} from 'react-datepicker'
+import DatePicker from 'react-datepicker'
 import {ControlLabel, Button, ButtonGroup, ButtonToolbar} from 'rsuite'
 
 import {useTranslation} from 'react-i18next'
-import de from 'date-fns/locale/de'
 
 export interface DateTimePreset {
   label: string
@@ -73,26 +72,21 @@ export function DateTimePicker({
       }
     }
   }
-  registerLocale('de', de)
-
   return (
     <>
       <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
       <DatePicker
-        locale="de"
         showPopperArrow
         shouldCloseOnSelect={false}
         selected={dateSelection}
         onChange={value => {
           if (value) {
-            // console.log('parsed:', new Date(value.toString()))
             const dateValue = new Date(value.toString())
             setDateSelection(dateValue)
             changeDate(dateValue)
           }
         }}
-        // eslint-disable-next-line i18next/no-literal-string
-        dateFormat="dd MMM yyyy, h:mm"
+        dateFormat="Pp"
         isClearable
         showTimeSelect>
         <ButtonToolbar>
