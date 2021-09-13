@@ -1,0 +1,4 @@
+lib/
+dist/
+static/
+packages/editor/src/client/api/index.ts

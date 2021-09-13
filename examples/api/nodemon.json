@@ -1,0 +1,12 @@
+{
+  "watch": [
+    "../../node_modules/@wepublish/api/lib/**/*.js",
+    "../../node_modules/@wepublish/api-db-mongodb/lib/**/*.js",
+    "../../node_modules/@wepublish/api-db-memory/lib/**/*.js",
+    "../../node_modules/@wepublish/api-db-karma/lib/**/*.js",
+    "../../node_modules/@wepublish/api-media-karma/lib/**/*.js",
+    "./dist/**/*.js"
+  ],
+  "delay": 250,
+  "ignoreRoot": [".git"]
+}

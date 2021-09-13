@@ -1,0 +1,49 @@
+{
+  "name": "@wepublish/api-example",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "wepublish-api-example": "./dist/index.js"
+  },
+  "main": "./dist/",
+  "license": "MIT",
+  "scripts": {
+    "setup": "shx cp .env.example .env",
+    "start": "node ./dist/index.js",
+    "build": "run-s build:*",
+    "build:typescript": "tsc -b ./src/tsconfig.json",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9240 ./dist/index.js",
+    "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
+    "clean": "shx rm -rf ./LICENSE ./dist",
+    "prepare": "run-s clean build"
+  },
+  "dependencies": {
+    "@karma.run/media": "^0.2.1",
+    "@karma.run/media-image-sharp": "^0.2.0",
+    "@karma.run/media-storage-local": "^0.1.4",
+    "@wepublish/api": "^2.8.0-alpha.0",
+    "@wepublish/api-db-mongodb": "*",
+    "@wepublish/api-media-karma": "*",
+    "body-parser": "^1.19.0",
+    "cross-fetch": "^3.0.6",
+    "graphql": "^14.6.0",
+    "pino": "^6.11.0",
+    "pino-multi-stream": "^5.2.0",
+    "pino-sentry": "^0.6.0",
+    "pino-stackdriver": "^2.1.1",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "@types/pino": "^6.3.5",
+    "@types/pino-multi-stream": "^5.1.0",
+    "@types/yargs": "^15.0.12",
+    "dotenv": "^8.2.0",
+    "nodemon": "^1.19.1",
+    "npm-run-all": "^4.1.5",
+    "pino-pretty": "^4.3.0",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3"
+  }
+}

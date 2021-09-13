@@ -1,0 +1,56 @@
+fragment AuthorRef on Author {
+  id
+  name
+  image {
+    ...ImageRef
+  }
+}
+
+fragment FullAuthor on Author {
+  slug
+  links {
+    title
+    url
+  }
+  bio
+  ...AuthorRef
+}
+
+query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+  authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    nodes {
+      ...FullAuthor
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Author($id: ID!) {
+  author(id: $id) {
+    ...FullAuthor
+  }
+}
+
+mutation CreateAuthor($input: AuthorInput!) {
+  createAuthor(input: $input) {
+    ...FullAuthor
+  }
+}
+
+mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
+  updateAuthor(id: $id, input: $input) {
+    ...FullAuthor
+  }
+}
+
+mutation DeleteAuthor($id: ID!) {
+  deleteAuthor(id: $id)
+}

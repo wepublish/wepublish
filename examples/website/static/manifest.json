@@ -1,0 +1,21 @@
+{
+  "name": "Wepublish",
+  "short_name": "Wepublish",
+  "icons": [
+    {
+      "src": "/static/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#770a6a",
+  "background_color": "#770a6a",
+  "display": "standalone"
+}

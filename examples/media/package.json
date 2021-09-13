@@ -1,0 +1,29 @@
+{
+  "name": "@wepublish/media-example",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./lib/",
+  "license": "UNLICENSED",
+  "scripts": {
+    "setup": "shx cp .env.example .env",
+    "start": "node ./dist/index.js",
+    "build": "run-s build:*",
+    "build:typescript": "tsc -b ./src/tsconfig.json",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9241 ./dist/index.js",
+    "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
+    "clean": "shx rm -rf ./dist ./.media"
+  },
+  "dependencies": {
+    "@karma.run/media": "^0.2.1",
+    "@karma.run/media-storage-local": "^0.1.4",
+    "@karma.run/media-image-sharp": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.10",
+    "dotenv": "^8.2.0",
+    "nodemon": "^1.19.1",
+    "typescript": "^3.8.3",
+    "npm-run-all": "^4.1.5"
+  }
+}
