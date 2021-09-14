@@ -104,7 +104,9 @@ export function Base({children}: BaseProps) {
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList || current?.type === RouteType.Index}>
+                  active={
+                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                  }>
                   {t('navbar.articles')}
                 </NavItemLink>
 
@@ -113,13 +115,6 @@ export function Base({children}: BaseProps) {
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
-                </NavItemLink>
-
-                <NavItemLink
-                  icon={<Icon icon="people-group" />}
-                  route={AuthorListRoute.create({})}
-                  active={current?.type === RouteType.AuthorList}>
-                  {t('navbar.authors')}
                 </NavItemLink>
 
                 <NavItemLink
@@ -141,6 +136,13 @@ export function Base({children}: BaseProps) {
                   route={NavigationListRoute.create({})}
                   active={current?.type === RouteType.NavigationList}>
                   {t('navbar.navigations')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="people-group" />}
+                  route={AuthorListRoute.create({})}
+                  active={current?.type === RouteType.AuthorList}>
+                  {t('navbar.authors')}
                 </NavItemLink>
 
                 <Dropdown
