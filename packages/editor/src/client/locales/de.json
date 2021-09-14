@@ -325,11 +325,13 @@
         "requestChangesOnComment": "Änderungen am Kommentar beantragen",
         "requestChangesReason": "Grund",
         "revisionCreatedAt": "Revision erstellt am",
+        "revisionCreatedAtDate": "{{revisionCreatedAtDate,lll}}",
         "revisions": "Revisionen",
         "untitled": "Kein Titel",
         "updatedAt": "Aktualisiert am",
         "userName": "User Name",
-        "parent": "Elter"
+        "parent": "Elter",
+        "parentDate": "{{parentDate,lll}}"
       },
       "state": {
         "approved": "Angenommen",
@@ -714,6 +716,7 @@
         "password": "Passwort",
         "passwordChangeSuccess": "Passwort erfolgreich geändert!",
         "payedUntil": "Bezahlt bis",
+        "paidUntilDate": "{{paidUntilDate, lll}}",
         "preferredName": "Bevorzugter Name",
         "remove": "Entfernen",
         "resetPassword": "Passwort zurücksetzen",
@@ -721,6 +724,7 @@
         "save": "Speichern",
         "selectUserRole": "Userrolle wählen",
         "startedAt": "Gestartet",
+        "startedAdDate": "{{startedAtDate, lll}}",
         "subCreate": "Erstellen",
         "subEdit": "Bearbeiten",
         "subTitle": "Abonnement",

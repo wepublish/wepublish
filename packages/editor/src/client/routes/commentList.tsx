@@ -361,12 +361,16 @@ export function CommentList() {
                 {currentComment?.user.name || t('comments.panels.untitled')}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.createdAt')}>
-                {t('comments.panels.createdAtDate', {
-                  createdAtDate: new Date(currentComment.createdAt)
-                })}
+                {currentComment?.createdAt &&
+                  t('comments.panels.createdAtDate', {
+                    createdAtDate: new Date(currentComment?.createdAt)
+                  })}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.updatedAt')}>
-                {t('comments.panels.modifiedAt', {modifiedAt: new Date(currentComment.modifiedAt)})}
+                {currentComment?.modifiedAt &&
+                  t('comments.panels.modifiedAt', {
+                    modifiedAt: new Date(currentComment.modifiedAt)
+                  })}
               </DescriptionListItem>
 
               {currentComment?.parentComment && (
@@ -377,7 +381,9 @@ export function CommentList() {
                       style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
                       <>
                         <div>
-                          {new Date(currentComment.parentComment?.createdAt).toLocaleString()}
+                          {t('comments.panels.parentDate', {
+                            parentDate: new Date(currentComment.parentComment.createdAt)
+                          })}
                         </div>
                         <p>{currentComment.parentComment.user?.name}:</p>
                         <RichTextBlock
@@ -407,8 +413,11 @@ export function CommentList() {
                     {currentComment?.revisions?.length
                       ? currentComment?.revisions?.map(({text, createdAt}, i) => (
                           <Timeline.Item key={i}>
-                            <div>{new Date(createdAt).toLocaleString()}</div>
-                            {/* <div>{t('comments.panels.revisionCreatedAtDate', {revisionCreatedAtDate: new Date(createdAt)})}</div> */}
+                            <div>
+                              {t('comments.panels.revisionCreatedAtDate', {
+                                revisionCreatedAtDate: new Date(createdAt)
+                              })}
+                            </div>
                             <RichTextBlock
                               disabled
                               displayOnly
