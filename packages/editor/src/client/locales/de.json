@@ -54,7 +54,6 @@
         "lead": "Lead",
         "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
         "light": "Light",
-        "lightStyledWithNoImageError": "\"Light\" Teaser müssen ein Bild haben",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "metadata": "Metadaten",
@@ -112,7 +111,9 @@
         "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
         "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, MM/DD/YYYY HH:mm}} geplant. Eine erneute Publikation überschreibt diese. ",
         "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
-        "articlePreviewLinkHours": "Gültigkeitsdauer des Links"
+        "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
+        "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die \"kanonische\" oder \"bevorzugte\" Version einer Webseite angibt. <2>Canonical Url Guide</2>",
+        "canonicalUrl": "Kanonische URL"
       }
     },
     "articles": {
@@ -532,7 +533,6 @@
         "image": "Bild",
         "invalidDate": "Ungültiges Datum",
         "key": "Key",
-        "lightStyledWithNoImageError": "\"Light\" Teaser müssen ein Bild haben",
         "metadata": "Metadaten",
         "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
         "postImage": "Bild für Post",
@@ -640,7 +640,9 @@
         "token": "Token",
         "Unknown": "Unbekannt",
         "URL": "URL",
-        "validateToken": "Bitte vor dem Speichern bestätigen, dass das Token korrekt ist"
+        "validateToken": "Bitte vor dem Speichern bestätigen, dass das Token korrekt ist",
+        "text": "Text",
+        "callToActionImage": "Call To Action Bild"
       }
     },
     "save": "Speichern",
