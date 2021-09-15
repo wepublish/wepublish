@@ -5,11 +5,10 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import en from './locales/en.json'
 import de from './locales/de.json'
 import fr from './locales/fr.json'
-// import moment from 'moment'
 
 import {format as formatDate, isDate} from 'date-fns'
 
-import {de as deLocale, enGB as enLocale, fr as frLocale} from 'date-fns/locale' // import all locales we need
+import {de as deLocale, enGB as enLocale, fr as frLocale} from 'date-fns/locale'
 
 export interface MyLocale {
   lng: string
@@ -33,15 +32,6 @@ i18n.init({
   }
 })
 
-// i18n.init({
-//   interpolation: {
-//     format: function (value, format, lng) {
-//       if (value instanceof Date) return moment(value).format(format)
-//       return value
-//     }
-//   }
-// })
-
 i18n.use(LanguageDetector).use(initReactI18next).init({
   fallbackLng: 'en',
   debug: false,
@@ -51,9 +41,5 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     fr
   }
 })
-
-/* i18n.on('languageChanged', function (lng) {
-  moment.locale(lng)
-}) */
 
 export default i18n
