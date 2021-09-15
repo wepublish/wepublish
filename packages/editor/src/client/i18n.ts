@@ -7,14 +7,30 @@ import de from './locales/de.json'
 import fr from './locales/fr.json'
 import moment from 'moment'
 
-i18n.init({
-  interpolation: {
-    format: function (value, format, lng) {
-      if (value instanceof Date) return moment(value).format(format)
-      return value
+import {format as formatDate, isDate} from 'date-fns'
+
+import {nl} from 'date-fns/locale' // import all locales we need
+
+const locales = {en, nl} // used to look up the required locale
+
+// i18n.init({
+interpolation: {
+  format: (value, format, lng) => {
+    if (isDate(value)) {
+      const locale = locales[lng]
+      return formatDate(value, format, {locale})
     }
   }
-})
+}
+// })
+// i18n.init({
+//   interpolation: {
+//     format: function (value, format, lng) {
+//       if (value instanceof Date) return moment(value).format(format)
+//       return value
+//     }
+//   }
+// })
 
 i18n.use(LanguageDetector).use(initReactI18next).init({
   fallbackLng: 'en',
