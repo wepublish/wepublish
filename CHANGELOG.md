@@ -1,5 +1,54 @@
 # Change Log
 
+## v2.8.0 (2021-09-14)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#290](https://github.com/wepublish/wepublish/pull/290) Use email-templates and pug to render mail templates ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#310](https://github.com/wepublish/wepublish/pull/310) Add image cta in peer profile ([@penk85](https://github.com/penk85))
+  * [#307](https://github.com/wepublish/wepublish/pull/307) added canonicalUrl field for article ([@bishoymelek](https://github.com/bishoymelek))
+* `api`, `editor`
+  * [#290](https://github.com/wepublish/wepublish/pull/290) Use email-templates and pug to render mail templates ([@roosnic1](https://github.com/roosnic1))
+  * [#305](https://github.com/wepublish/wepublish/pull/305) Preview links for pages ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#301](https://github.com/wepublish/wepublish/pull/301) add default peering ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#302](https://github.com/wepublish/wepublish/pull/302) wpc-435-fix image dropdown menu ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `editor`
+  * [#326](https://github.com/wepublish/wepublish/pull/326) wpc-461-add-frame-around-author-bio-info ([@HanaAyman](https://github.com/HanaAyman))
+  * [#329](https://github.com/wepublish/wepublish/pull/329) wpc-460 add frame around description in member plan panel  ([@HanaAyman](https://github.com/HanaAyman))
+  * [#330](https://github.com/wepublish/wepublish/pull/330) wpc-453-make-articles-highlighted ([@HanaAyman](https://github.com/HanaAyman))
+  * [#327](https://github.com/wepublish/wepublish/pull/327) Translations update from Weblate ([@wepublishweblate](https://github.com/wepublishweblate))
+  * [#325](https://github.com/wepublish/wepublish/pull/325) wpc-457-reset-password-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#323](https://github.com/wepublish/wepublish/pull/323) wpc-455-image-library-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#324](https://github.com/wepublish/wepublish/pull/324) wpc-456-payment-methods-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#322](https://github.com/wepublish/wepublish/pull/322) WPC-454 Change pages icon  ([@HanaAyman](https://github.com/HanaAyman))
+  * [#312](https://github.com/wepublish/wepublish/pull/312) Updated translations from Phrase ([@roosnic1](https://github.com/roosnic1))
+
+#### :memo: Documentation
+* [#268](https://github.com/wepublish/wepublish/pull/268) F/wpc 331 docs ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :house: Internal
+* `api`
+  * [#309](https://github.com/wepublish/wepublish/pull/309) wpc-211-comment-length-validation ([@HanaAyman](https://github.com/HanaAyman))
+* `editor`
+  * [#313](https://github.com/wepublish/wepublish/pull/313) Update react to v17 ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.7.0 (2021-08-03)
 
 #### :bug: Bug Fix
