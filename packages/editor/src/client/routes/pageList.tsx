@@ -122,125 +122,129 @@ export function PageList() {
           flexFlow: 'column',
           marginTop: '20px'
         }}>
-        <Table
-          minHeight={600}
-          autoHeight={true}
-          style={{flex: 1}}
-          loading={isLoading}
-          data={pages}
-          sortColumn={sortField}
-          sortType={sortOrder}
-          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
-          onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
-            setSortField(sortColumn)
-          }}>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="published">
-              {(pageRef: PageRefFragment) =>
-                pageRef.published?.publishedAt
-                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
-                      pageRef.published.publishedAt
-                    ).toLocaleTimeString()}`
-                  : pageRef.pending?.publishAt
-                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
-                      pageRef.pending.publishAt
-                    ).toLocaleTimeString()}`
-                  : t('pages.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({modifiedAt}: PageRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
-              }
-            </Cell>
-          </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: PageRefFragment) => (
-                <Link route={PageEditRoute.create({id: rowData.id})}>
-                  {rowData.latest.title || t('pages.overview.untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={100} align="left" resizable>
-            <HeaderCell>{t('pages.overview.states')}</HeaderCell>
-            <Cell>
-              {(rowData: PageRefFragment) => {
-                const states = []
+        {pages.length > 0 ? (
+          <Table
+            minHeight={600}
+            autoHeight={true}
+            style={{flex: 1}}
+            loading={isLoading}
+            data={pages}
+            sortColumn={sortField}
+            sortType={sortOrder}
+            rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+            onSortColumn={(sortColumn, sortType) => {
+              setSortOrder(sortType)
+              setSortField(sortColumn)
+            }}>
+            <Column width={210} align="left" resizable sortable>
+              <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
+              <Cell dataKey="published">
+                {(pageRef: PageRefFragment) =>
+                  pageRef.published?.publishedAt
+                    ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
+                        pageRef.published.publishedAt
+                      ).toLocaleTimeString()}`
+                    : pageRef.pending?.publishAt
+                    ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
+                        pageRef.pending.publishAt
+                      ).toLocaleTimeString()}`
+                    : t('pages.overview.notPublished')
+                }
+              </Cell>
+            </Column>
+            <Column width={210} align="left" resizable sortable>
+              <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
+              <Cell dataKey="modifiedAt">
+                {({modifiedAt}: PageRefFragment) =>
+                  `${new Date(modifiedAt).toDateString()} ${new Date(
+                    modifiedAt
+                  ).toLocaleTimeString()}`
+                }
+              </Cell>
+            </Column>
+            <Column width={400} align="left" resizable>
+              <HeaderCell>{t('pages.overview.title')}</HeaderCell>
+              <Cell>
+                {(rowData: PageRefFragment) => (
+                  <Link route={PageEditRoute.create({id: rowData.id})}>
+                    {rowData.latest.title || t('pages.overview.untitled')}
+                  </Link>
+                )}
+              </Cell>
+            </Column>
+            <Column width={100} align="left" resizable>
+              <HeaderCell>{t('pages.overview.states')}</HeaderCell>
+              <Cell>
+                {(rowData: PageRefFragment) => {
+                  const states = []
 
-                if (rowData.draft) states.push(t('pages.overview.draft'))
-                if (rowData.pending) states.push(t('pages.overview.pending'))
-                if (rowData.published) states.push(t('pages.overview.published'))
+                  if (rowData.draft) states.push(t('pages.overview.draft'))
+                  if (rowData.pending) states.push(t('pages.overview.pending'))
+                  if (rowData.published) states.push(t('pages.overview.published'))
 
-                return <div>{states.join(' / ')}</div>
-              }}
-            </Cell>
-          </Column>
-          <Column width={200} align="center" fixed="right">
-            <HeaderCell>{t('pages.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
-              {(rowData: PageRefFragment) => (
-                <>
-                  {rowData.published && (
+                  return <div>{states.join(' / ')}</div>
+                }}
+              </Cell>
+            </Column>
+            <Column width={200} align="center" fixed="right">
+              <HeaderCell>{t('pages.overview.action')}</HeaderCell>
+              <Cell style={{padding: '6px 0'}}>
+                {(rowData: PageRefFragment) => (
+                  <>
+                    {rowData.published && (
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        onClick={e => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    )}
                     <IconButton
-                      icon={<Icon icon="btn-off" />}
-                      circle
-                      size="sm"
-                      onClick={e => {
-                        setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  {rowData.draft && (
-                    <IconButton
-                      icon={<Icon icon="eye" />}
+                      icon={<Icon icon="trash" />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentPage(rowData)
-                        setPagePreviewLinkOpen(true)
+                        setConfirmAction(ConfirmAction.Delete)
+                        setConfirmationDialogOpen(true)
                       }}
                     />
-                  )}
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+                    <IconButton
+                      icon={<Icon icon="copy" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Duplicate)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                    {rowData.draft && (
+                      <IconButton
+                        icon={<Icon icon="eye" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setPagePreviewLinkOpen(true)
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+              </Cell>
+            </Column>
+          </Table>
+        ) : (
+          <p>{t('pageEditor.overview.notFound')}</p>
+        )}
 
         <Pagination
           style={{height: '50px'}}

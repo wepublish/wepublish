@@ -124,52 +124,64 @@ export function ImageList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      {images.length > 0 ? (
-        <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
-          {images.map((image, key) => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
-              <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
-                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
-                  <img
-                    src={image.mediumURL || ''}
-                    style={{height: '200', display: 'block', margin: '0 auto'}}
-                  />
-                  <Overlay
-                    style={{
-                      bottom: '0px',
-                      width: '100%',
-                      maxHeight: '60%',
-                      padding: '10px'
-                    }}>
-                    <Typography variant="subtitle1" color="gray" ellipsize>
-                      {`${image.filename || t('images.panels.untitled')}${image.extension}`}
-                    </Typography>
-                    <Typography variant="body2" color="white" ellipsize>
-                      {image.title || t('images.panels.Untitled')}
-                    </Typography>
-                    <Typography className="displayThreeLinesOnly">
-                      {image.description}
-                    </Typography>
-                  </Overlay>
-                  <IconButton
-                    style={{position: 'absolute', top: '5px', right: '5px'}}
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    onClick={event => {
-                      event.preventDefault()
-                      setCurrentImage(image)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </Panel>
-              </Link>
-            </FlexboxGrid.Item>
-          ))}
-        </FlexboxGrid>
-      ) : (
-        <p>{t('images.overview.noImagesFound')}</p>
-      )}
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        {images.length > 0 ? (
+          <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
+            {images.map((image, key) => (
+              <FlexboxGrid.Item
+                colspan={7}
+                style={{marginBottom: '20px', maxWidth: '300'}}
+                key={key}>
+                <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
+                  <Panel
+                    shaded
+                    bordered
+                    bodyFill
+                    style={{height: '200', width: 'calc(100% + 2px)'}}>
+                    <img
+                      src={image.mediumURL || ''}
+                      style={{height: '200', display: 'block', margin: '0 auto'}}
+                    />
+                    <Overlay
+                      style={{
+                        bottom: '0px',
+                        width: '100%',
+                        maxHeight: '60%',
+                        padding: '10px'
+                      }}>
+                      <Typography variant="subtitle1" color="gray" ellipsize>
+                        {`${image.filename || t('images.panels.untitled')}${image.extension}`}
+                      </Typography>
+                      <Typography variant="body2" color="white" ellipsize>
+                        {image.title || t('images.panels.Untitled')}
+                      </Typography>
+                      <Typography className="displayThreeLinesOnly">{image.description}</Typography>
+                    </Overlay>
+                    <IconButton
+                      style={{position: 'absolute', top: '5px', right: '5px'}}
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      onClick={event => {
+                        event.preventDefault()
+                        setCurrentImage(image)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </Panel>
+                </Link>
+              </FlexboxGrid.Item>
+            ))}
+          </FlexboxGrid>
+        ) : (
+          <p>{t('images.overview.noImagesFound')}</p>
+        )}
+      </div>
 
       <Drawer
         show={isUploadModalOpen}

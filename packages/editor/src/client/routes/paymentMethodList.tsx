@@ -85,42 +85,46 @@ export function PaymentMethodList() {
           </ButtonLink>
         </FlexboxGrid.Item>
       </FlexboxGrid>
+      {paymentMethods.length > 0 ? (
+        <Table
+          autoHeight={true}
+          style={{marginTop: '20px'}}
+          loading={isLoading}
+          data={paymentMethods}>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
+            <Cell>
+              {(rowData: FullPaymentMethodFragment) => (
+                <Link route={PaymentMethodEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
 
-      <Table
-        autoHeight={true}
-        style={{marginTop: '20px'}}
-        loading={isLoading}
-        data={paymentMethods}>
-        <Column width={200} align="left" resizable>
-          <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
-          <Cell>
-            {(rowData: FullPaymentMethodFragment) => (
-              <Link route={PaymentMethodEditRoute.create({id: rowData.id})}>
-                {rowData.name || t('untitled')}
-              </Link>
-            )}
-          </Cell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullPaymentMethodFragment) => (
-              <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentPaymentMethod(rowData)
-                  }}
-                />
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullPaymentMethodFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentPaymentMethod(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+      ) : (
+        <p>{t('paymentMethodList.noPaymentMethodFound')}</p>
+      )}
 
       <Drawer
         show={isEditModalOpen}

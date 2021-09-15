@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Button, CheckPicker} from 'rsuite'
+import {Button, CheckPicker, Placeholder} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
 import {slugify, getOperationNameFromDocument} from '../utility'
@@ -66,6 +66,7 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
         setAuthorsFilter('')
       }}
       block
+      placeholder={t('articleEditor.panels.select')}
       renderExtraFooter={() =>
         authorsFilter &&
         !data?.authors.nodes.length && (

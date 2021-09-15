@@ -85,6 +85,7 @@
         "removeTeaser": "Remove Teaser",
         "saveAndClose": "Save and close",
         "search": "Search",
+        "select": "Select",
         "seoTitle": "SEO Title",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
         "sharedWithPeers": "Shared With Peers",
@@ -309,6 +310,7 @@
         "comments": "Comments",
         "created": "Created",
         "loadMore": "Load More",
+        "notFound": "No comments found",
         "search": "Search",
         "state": "State",
         "text": "Text",
@@ -458,6 +460,7 @@
       "fixPriceDescription": "If false the price can be a price range",
       "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
       "name": "Name",
+      "notFound": "No member plan found",
       "paymentMethods": "Possible Payment Methods",
       "paymentPeriodicities": "Possible Payment Periodicities",
       "paymentPeriodicity": {
@@ -530,6 +533,7 @@
         "create": "Create",
         "draft": "Draft",
         "metadata": "Metadata",
+        "notFound": "Page not found",
         "pageDraftCreated": "Page Draft Created",
         "pageDraftSaved": "Page Draft Saved",
         "pageNotFound": "Page Not Found",
@@ -622,6 +626,7 @@
       "description": "Description",
       "editTitle": "Edit Payment Method",
       "name": "Name",
+      "noPaymentMethodFound": "No payment method found",
       "title": "Payment Methods"
     },
     "peerList": {
