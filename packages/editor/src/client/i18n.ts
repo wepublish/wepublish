@@ -9,20 +9,30 @@ import moment from 'moment'
 
 import {format as formatDate, isDate} from 'date-fns'
 
-import {nl} from 'date-fns/locale' // import all locales we need
+import {de as deLocale, en as enLocale, fr as frLocale} from 'date-fns/locale' // import all locales we need
 
-const locales = {en, nl} // used to look up the required locale
+export interface MyLocale {
+  lng: string
+  locale: Locale
+}
+const myLocales: MyLocale[] = [
+  {lng: 'de', locale: deLocale},
+  {lng: 'en', locale: enLocale},
+  {lng: 'fr', locale: frLocale}
+]
 
-// i18n.init({
-interpolation: {
-  format: (value, format, lng) => {
-    if (isDate(value)) {
-      const locale = locales[lng]
-      return formatDate(value, format, {locale})
+i18n.init({
+  interpolation: {
+    format: (value, format, lng) => {
+      if (isDate(value) && format !== undefined) {
+        const myLocale = myLocales.find(locale => locale.lng === lng)
+        return formatDate(value, format, {locale: myLocale?.locale})
+      }
+      return value
     }
   }
-}
-// })
+})
+
 // i18n.init({
 //   interpolation: {
 //     format: function (value, format, lng) {
