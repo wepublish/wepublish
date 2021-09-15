@@ -33,9 +33,13 @@ import {
   Button,
   Divider,
   Modal,
-  Alert
+  Alert,
+  Popover,
+  Whisper
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {NavigationBar} from '../atoms/navigationBar'
+import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -91,6 +95,8 @@ export function PeerList() {
     }
   }, [current])
 
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
+
   const peers = peerListData?.peers?.map((peer, index) => {
     const {id, name, profile, hostURL} = peer
 
@@ -139,18 +145,44 @@ export function PeerList() {
 
   return (
     <>
+      <div style={{border: 'solid 4px #f7f7fa', padding: '10px', borderRadius: '5px'}}>
+        <NavigationBar
+          centerChildren={
+            <div style={{textAlign: 'center'}}>
+              {' '}
+              <Avatar
+                size="lg"
+                circle
+                src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
+                alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
+              />
+              <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
+              <p>{peerInfoData?.peerProfile.hostURL}</p>
+            </div>
+          }
+          rightChildren={
+            <Whisper
+              enterable
+              open={menuIsOpen}
+              onBlur={() => setMenuIsOpen(true)}
+              onClick={() => setMenuIsOpen(!menuIsOpen)}
+              placement="autoHorizontalStart"
+              // width set at 500px to allow for richtext toolbar
+              speaker={
+                <Popover style={{width: '500px'}}>
+                  <PeerInfoEditPanel
+                    onClose={() => setMenuIsOpen(false)}
+                    onSave={() => setMenuIsOpen(false)}
+                  />
+                </Popover>
+              }>
+              <IconButton icon={<Icon icon={'ellipsis-v'} />} />
+            </Whisper>
+          }
+        />
+      </div>
+
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={2} style={{textAlign: 'center'}}>
-          <Avatar
-            circle={true}
-            src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
-            alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
-          />
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={21}>
-          <h5>{peerInfoData?.peerProfile.name || 'Unnamed'}</h5>
-          <p>{peerInfoData?.peerProfile.hostURL}</p>
-        </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24}>
           <Divider />
         </FlexboxGrid.Item>
@@ -166,7 +198,6 @@ export function PeerList() {
           </ButtonLink>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-
       <div style={{marginTop: '20px'}}>
         {peerListData?.peers?.length ? (
           <List>{peers}</List>
@@ -212,7 +243,7 @@ export function PeerList() {
         <Modal.Body>
           <DescriptionList>
             <DescriptionListItem label={t('peerList.panels.name')}>
-              {currentPeer?.name || t('peerList.panels.Unknown')}
+              {currentPeer?.name || t('peerList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>

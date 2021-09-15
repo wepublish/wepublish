@@ -18,8 +18,7 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
-  LogoutRoute,
-  MyPeerInfo
+  LogoutRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -180,12 +179,6 @@ export function Base({children}: BaseProps) {
                 </Dropdown>
 
                 <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.MyPeerInfo}
-                    icon={<Icon icon="info-circle" />}
-                    route={MyPeerInfo.create({})}>
-                    {t('navbar.myPeerInfo')}
-                  </DropdownItemLink>
                   <DropdownItemLink
                     active={current?.type === RouteType.PeerList}
                     icon={<Icon icon="share" />}

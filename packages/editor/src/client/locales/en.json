@@ -632,7 +632,7 @@
         "editImage": "Edit Image",
         "editPeer": "Edit Peer",
         "editPeerInfo": "Edit Peer Info",
-        "image": "Image",
+        "logo": "Logo",
         "infoEditError": "Edit Token Error",
         "information": "Information",
         "invalidURL": "Invalid URL",
@@ -645,7 +645,8 @@
         "save": "Save",
         "themeColor": "Theme Color",
         "token": "Token",
-        "Unknown": "Unknown",
+        "unknown": "Unknown",
+        "unnamed": "Unnamed",
         "URL": "URL",
         "validateToken": "Please confirm token is correct before saving"
       }
