@@ -411,14 +411,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <div
-            className="rs-tag"
-            style={{
-              color: 'white',
-              backgroundColor: stateColor
-            }}>
-            <span className="rs-tag-text">{tagTitle}</span>
-          </div>
+          {stateColor !== 'white' && <Tag color={stateColor}>{tagTitle}</Tag>}
         </legend>
         <EditorTemplate
           navigationChildren={
