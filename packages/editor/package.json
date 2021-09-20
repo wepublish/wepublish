@@ -56,7 +56,7 @@
     "apollo-upload-client": "^16.0.0",
     "array-move": "^2.2.1",
     "core-js": "^3.4.8",
-    "date-fns": "2.0.0-alpha.23",
+    "date-fns": "^2.24.0",
     "emoji-mart": "^3.0.0",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
