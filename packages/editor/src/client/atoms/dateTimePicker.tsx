@@ -15,7 +15,7 @@ export interface DateTimePreset {
 export interface DateTimePickerProps {
   dateTime: Date | undefined
   label: string
-  changeDate(publishDate: Date): void
+  changeDate(publishDate: Date | string): void
 
   dateRanges?: DateTimePreset[]
   timeRanges?: DateTimePreset[]
@@ -50,44 +50,39 @@ export function DateTimePicker({
 
   const handleDatePresetButton = (offset: number) => {
     const day = new Date()
-    if (dateSelection) {
-      day.setHours(dateSelection.getHours())
-      day.setMinutes(dateSelection.getMinutes())
-      day.setDate(day.getDate() + offset)
-      setDateSelection(day)
-    }
+    day.setHours(dateSelection.getHours())
+    day.setMinutes(dateSelection.getMinutes())
+    day.setDate(day.getDate() + offset)
+    setDateSelection(day)
   }
 
   const handleTimePresetButton = (hour: number) => {
-    if (dateSelection) {
-      const day = new Date(dateSelection)
-      if (hour === 0) {
-        const now = new Date()
-        day.setHours(now.getHours())
-        day.setMinutes(now.getMinutes())
-        setDateSelection(day)
-      } else {
-        day.setHours(hour, 0, 0)
-        setDateSelection(day)
-      }
+    const day = new Date(dateSelection)
+    if (hour === 0) {
+      const now = new Date()
+      day.setHours(now.getHours())
+      day.setMinutes(now.getMinutes())
+      setDateSelection(day)
+    } else {
+      day.setHours(hour, 0, 0)
+      setDateSelection(day)
     }
   }
   return (
     <>
       <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
       <DatePicker
+        isClearable
         showPopperArrow
         shouldCloseOnSelect={false}
         selected={dateSelection}
         onChange={value => {
+          setDateSelection(value)
           if (value) {
-            const dateValue = new Date(value.toString())
-            setDateSelection(dateValue)
-            changeDate(dateValue)
+            changeDate(value.toString())
           }
         }}
         dateFormat="Pp"
-        isClearable
         showTimeSelect>
         <ButtonToolbar>
           <ButtonGroup justified>

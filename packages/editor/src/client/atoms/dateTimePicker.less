@@ -12,7 +12,6 @@
     padding-top: 0;
     z-index: 5;
   }
-
   &__header {
     background-color: transparent;
     border-bottom: none;
@@ -31,7 +30,6 @@
   &__month-container {
     padding: 5px;
   }
-
   &__day {
     &-name {
       color: #8e8e99;
@@ -43,10 +41,6 @@
       background-color: #f2faff;
     }
   }
-
-&__close-icon {
-  //TODO style here
-}
   &__today-button {
     background-color: transparent;
     color: #216ba5;
@@ -54,7 +48,6 @@
       text-decoration: underline;
     }
   }
-
   &__current-month, &-time__header, &-year-header {
     color: #8e8e99;
     font-weight: unset;
@@ -62,6 +55,7 @@
 
   &__input-container {
     margin-bottom: 10px;
+    width: unset;
     input {
       outline: none;
       padding: 7px;
@@ -74,6 +68,7 @@
     }
   }
 }
+
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item {
   &:not(&--selected) {
     color: #000;
