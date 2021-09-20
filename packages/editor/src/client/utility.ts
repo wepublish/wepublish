@@ -168,9 +168,9 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
 ]
 
 export enum StateColor {
-  pending = 'blue',
-  published = 'green',
-  unpublished = 'red',
+  pending = '#2196f3',
+  published = '#4caf50',
+  unpublished = '#f44336',
   none = 'white'
 }
 

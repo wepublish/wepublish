@@ -243,7 +243,14 @@ export function PageEditor({id}: PageEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <div
+            className="rs-tag"
+            style={{
+              color: 'white',
+              backgroundColor: stateColor
+            }}>
+            <span className="rs-tag-text">{tagTitle}</span>
+          </div>
         </legend>
         <EditorTemplate
           navigationChildren={
