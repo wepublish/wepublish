@@ -173,3 +173,10 @@ export enum StateColor {
   unpublished = 'red',
   none = 'white'
 }
+
+export enum ListingStateBgColor {
+  pending = '#f8def2',
+  published = '#e1f8de',
+  draft = '#f8efde',
+  none = 'white'
+}
