@@ -1,5 +1,6 @@
 FROM roosnic1/wepublish-node-docker-base:latest
 
+
 RUN apk update
 
 USER node

@@ -207,6 +207,12 @@ export const CanDeletePage: Permission = {
   deprecated: false
 }
 
+export const CanGetPagePreviewLink: Permission = {
+  id: 'CAN_GET_PAGE_PREVIEW_LINK',
+  description: 'Allows to get preview links for pages',
+  deprecated: false
+}
+
 export const CanUpdatePeerProfile: Permission = {
   id: 'CAN_UPDATE_PEER_PROFILE',
   description: 'Allows to update peer profile',
@@ -462,6 +468,7 @@ export const AllPermissions: Permission[] = [
   CanGetPages,
   CanDeletePage,
   CanPublishPage,
+  CanGetPagePreviewLink,
   CanUpdatePeerProfile,
   CanGetPeerProfile,
   CanCreatePeer,

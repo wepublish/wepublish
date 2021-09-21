@@ -26,7 +26,8 @@ async function asyncMain() {
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
   const clientSettings = {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    peerByDefault: process.env.PEER_BY_DEFAULT?.toLowerCase() === 'true'
   }
 
   const app = express()

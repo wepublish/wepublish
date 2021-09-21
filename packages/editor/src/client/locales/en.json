@@ -23,7 +23,7 @@
         "article": "Article",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
         "articlePreviewLink": "Article Preview Link",
-        "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
+        "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",
         "articlePreviewLinkHours": "Validity period of link",
         "authors": "Authors",
@@ -56,7 +56,6 @@
         "lead": "Lead",
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "light": "Light",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "loading": "Loading ...",
         "loadMore": "Load More",
         "metadata": "Metadata",
@@ -66,6 +65,7 @@
         "noImagesFound": "No Images found",
         "outlined": "Outlined",
         "page": "Page",
+        "pagePreviewLink": "Page Preview Link",
         "peerArticle": "Peer Article",
         "peeredArticlePreview": "Preview",
         "peering": "Peering",
@@ -111,7 +111,9 @@
         "updateDate": "Update Date",
         "uploadImage": "Upload Image",
         "value": "Value",
-        "yes": "Yes"
+        "yes": "Yes",
+        "canonicalUrl": "Canonical Url",
+        "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>"
       }
     },
     "articles": {
@@ -392,7 +394,7 @@
       "link": {
         "buttonLabel": "CTA Button label",
         "hideToggleLabel": "Hide CTA Button",
-        "hideToogleDescription": "Hide button an make whole element clickable.",
+        "hideToogleDescription": "Hide button and make whole element clickable.",
         "targetLabel": "Open Link in",
         "targetLabelBlank": "new browser tab",
         "targetLabelSelf": "this browser tab",
@@ -531,7 +533,6 @@
         "image": "Image",
         "invalidDate": "Invalid Date",
         "key": "Key",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "metadata": "Metadata",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
         "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
@@ -613,7 +614,10 @@
       "panels": {
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
+        "callToActionImage": "Call To Action Image",
         "callToActionURL": "Call To Action URL",
+        "text": "Text",
+        "image": "Image",
         "cancel": "Cancel",
         "chooseImage": "Choose Image",
         "close": "Close",

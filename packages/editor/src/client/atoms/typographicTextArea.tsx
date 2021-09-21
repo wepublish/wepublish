@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useRef,
-  TextareaHTMLAttributes,
   useLayoutEffect,
   forwardRef,
   useImperativeHandle,
@@ -12,7 +11,7 @@ import {TypographyVariant, stylesForTypographyVariant, TypographyTextAlign} from
 
 const AutoSizeBuffer = 2
 
-export interface TypographicTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TypographicTextAreaProps extends React.ComponentPropsWithRef<'textarea'> {
   readonly variant?: TypographyVariant
   readonly align?: TypographyTextAlign
 }
@@ -34,9 +33,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         })
         if (!ref.current) return
         observer.observe(ref.current)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return () => observer.unobserve(ref.current)
+        return () => (ref?.current ? observer.unobserve(ref.current) : undefined)
       } else {
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
@@ -49,15 +46,16 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
     }
 
     function handleResize() {
-      ref.current!.style.overflow = 'hidden'
-      ref.current!.style.height = 'auto'
-      ref.current!.style.height = `${ref.current!.scrollHeight + AutoSizeBuffer}px`
+      if (ref?.current) {
+        ref.current.style.overflow = 'hidden'
+        ref.current.style.height = 'auto'
+        ref.current.style.height = `${ref.current.scrollHeight + AutoSizeBuffer}px`
+      }
     }
 
     return (
       <textarea
         ref={ref}
-        {...props}
         style={{
           display: 'block',
 
@@ -79,6 +77,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         }}
         onChange={handleChange}
         rows={1}
+        {...props}
       />
     )
   }

@@ -140,6 +140,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to get preview links for pages",
+          "id": "CAN_GET_PAGE_PREVIEW_LINK",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to update peer profile",
           "id": "CAN_UPDATE_PEER_PROFILE",
         },
@@ -534,6 +539,11 @@ Object {
               "deprecated": false,
               "description": "Allows to publish Pages",
               "id": "CAN_PUBLISH_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get preview links for pages",
+              "id": "CAN_GET_PAGE_PREVIEW_LINK",
             },
             Object {
               "deprecated": false,
@@ -1020,6 +1030,11 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to get preview links for pages",
+              "id": "CAN_GET_PAGE_PREVIEW_LINK",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to update peer profile",
               "id": "CAN_UPDATE_PEER_PROFILE",
             },
@@ -1406,6 +1421,11 @@ Object {
         "deprecated": false,
         "description": "Allows to publish Pages",
         "id": "CAN_PUBLISH_PAGE",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get preview links for pages",
+        "id": "CAN_GET_PAGE_PREVIEW_LINK",
       },
       Object {
         "deprecated": false,

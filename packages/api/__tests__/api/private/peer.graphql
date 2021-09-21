@@ -7,6 +7,10 @@ fragment FullPeerProfile on PeerProfile {
   }
   callToActionText
   callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
 
 fragment PeerRef on Peer {
