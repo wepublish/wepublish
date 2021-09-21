@@ -144,79 +144,74 @@ export function UserList() {
           flexFlow: 'column',
           marginTop: '20px'
         }}>
-        {users.length > 0 ? (
-          <Table
-            minHeight={600}
-            autoHeight={true}
-            style={{flex: 1}}
-            loading={isLoading}
-            data={users}
-            sortColumn={sortField}
-            sortType={sortOrder}
-            onSortColumn={(sortColumn, sortType) => {
-              setSortOrder(sortType)
-              setSortField(sortColumn)
-            }}>
-            <Column width={200} align="left" resizable sortable>
-              <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
-              <Cell dataKey="createdAt">
-                {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
-              </Cell>
-            </Column>
-            <Column width={200} align="left" resizable sortable>
-              <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-              <Cell dataKey="modifiedAt">
-                {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
-              </Cell>
-            </Column>
-            <Column width={200} align="left" resizable sortable>
-              <HeaderCell>{t('userList.overview.name')}</HeaderCell>
-              <Cell dataKey={'name'}>
-                {(rowData: FullUserFragment) => (
-                  <Link route={UserEditRoute.create({id: rowData.id})}>
-                    {rowData.name || t('userList.overview.unknown')}
-                  </Link>
-                )}
-              </Cell>
-            </Column>
-            <Column width={400} align="left" resizable>
-              <HeaderCell>{t('email')}</HeaderCell>
-              <Cell dataKey="email" />
-            </Column>
-            <Column width={100} align="center" fixed="right">
-              <HeaderCell>{t('action')}</HeaderCell>
-              <Cell style={{padding: '6px 0'}}>
-                {(rowData: FullUserFragment) => (
-                  <>
-                    <IconButton
-                      icon={<Icon icon="lock" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={e => {
-                        setCurrentUser(rowData)
-                        setIsResetUserPasswordOpen(true)
-                      }}
-                    />
-                    <IconButton
-                      icon={<Icon icon="trash" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentUser(rowData)
-                      }}
-                    />
-                  </>
-                )}
-              </Cell>
-            </Column>
-          </Table>
-        ) : (
-          <p>{t('userList.overview.noUsersFound')}</p>
-        )}
-
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={users}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
+            <Cell dataKey={'name'}>
+              {(rowData: FullUserFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('userList.overview.unknown')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('email')}</HeaderCell>
+            <Cell dataKey="email" />
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullUserFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="lock" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={e => {
+                      setCurrentUser(rowData)
+                      setIsResetUserPasswordOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentUser(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
         <Pagination
           style={{height: '50px'}}
           lengthMenu={DEFAULT_TABLE_PAGE_SIZES}

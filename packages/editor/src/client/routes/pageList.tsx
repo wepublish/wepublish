@@ -210,31 +210,39 @@ export function PageList() {
               {(rowData: PageRefFragment) => (
                 <>
                   {rowData.published && (
-                    <>
-                      <IconButton
-                        icon={<Icon icon="trash" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                      <IconButton
-                        icon={<Icon icon="copy" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Duplicate)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </>
+                    <IconButton
+                      icon={<Icon icon="btn-off" />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
                   )}
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                   {rowData.draft && (
                     <IconButton
                       icon={<Icon icon="eye" />}

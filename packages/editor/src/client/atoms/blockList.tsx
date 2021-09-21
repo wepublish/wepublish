@@ -172,7 +172,6 @@ export function BlockList<V extends BlockListValue>({
   )
 
   function addButtonForIndex(index: number) {
-    // const {t} = useTranslation()
     return (
       <div
         style={{

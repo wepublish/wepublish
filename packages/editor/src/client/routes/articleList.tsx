@@ -122,6 +122,7 @@ export function ArticleList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
+
       <div
         style={{
           display: 'flex',
@@ -222,31 +223,39 @@ export function ArticleList() {
               {(rowData: ArticleRefFragment) => (
                 <>
                   {rowData.published && (
-                    <>
-                      <IconButton
-                        icon={<Icon icon="trash" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentArticle(rowData)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                      <IconButton
-                        icon={<Icon icon="copy" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentArticle(rowData)
-                          setConfirmAction(ConfirmAction.Duplicate)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </>
+                    <IconButton
+                      icon={<Icon icon="btn-off" />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        setCurrentArticle(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
                   )}
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                   {rowData.draft && (
                     <IconButton
                       icon={<Icon icon="eye" />}
@@ -261,7 +270,6 @@ export function ArticleList() {
                   )}
                 </>
               )}
-              )
             </Cell>
           </Column>
         </Table>

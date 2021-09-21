@@ -5,9 +5,6 @@ import {Node} from 'slate'
 
 import nanoid from 'nanoid'
 
-// import {useTranslation} from 'react-i18next'
-// export const {t} = useTranslation()
-
 import {
   FullBlockFragment,
   ImageRefFragment,
