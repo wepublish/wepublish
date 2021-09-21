@@ -219,10 +219,16 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           {subscription && (
             <DescriptionList>
               <DescriptionListItem label={t('userList.panels.startedAt')}>
-                {new Date(subscription.startsAt).toLocaleString()}
+                {t('userList.panels.startedAtDate', {
+                  startedAtDate: new Date(subscription.startsAt)
+                })}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.payedUntil')}>
-                {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
+                {subscription.paidUntil
+                  ? t('userList.panels.paidUntilDate', {
+                      paidUntilDate: new Date(subscription.paidUntil)
+                    })
+                  : ''}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.memberPlan')}>
                 {subscription.memberPlan.name}
