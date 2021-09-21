@@ -141,66 +141,62 @@ export function AuthorList() {
           flexFlow: 'column',
           marginTop: '20px'
         }}>
-        {authors.length > 0 ? (
-          <Table
-            minHeight={600}
-            autoHeight={true}
-            style={{flex: 1}}
-            loading={isLoading}
-            data={authors}
-            sortColumn={sortField}
-            sortType={sortOrder}
-            onSortColumn={(sortColumn, sortType) => {
-              setSortOrder(sortType)
-              setSortField(sortColumn)
-            }}>
-            <Column width={100} align="left" resizable>
-              <HeaderCell></HeaderCell>
-              <Cell style={{padding: 2}}>
-                {(rowData: FullAuthorFragment) => (
-                  <Avatar circle src={rowData.image?.squareURL || undefined} />
-                )}
-              </Cell>
-            </Column>
-            <Column width={300} align="left" resizable sortable>
-              <HeaderCell>{t('authors.overview.name')}</HeaderCell>
-              <Cell dataKey="name">
-                {(rowData: FullAuthorFragment) => (
-                  <Link route={AuthorEditRoute.create({id: rowData.id})}>
-                    {rowData.name || t('authors.overview.untitled')}
-                  </Link>
-                )}
-              </Cell>
-            </Column>
-            <Column width={200} align="left" resizable sortable>
-              <HeaderCell>{t('authors.overview.created')}</HeaderCell>
-              <Cell dataKey="createdAt">
-                {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
-              </Cell>
-            </Column>
-            <Column width={100} align="center" fixed="right">
-              <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-              <Cell style={{padding: '6px 0'}}>
-                {(rowData: FullAuthorFragment) => (
-                  <>
-                    <IconButton
-                      icon={<Icon icon="trash" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentAuthor(rowData)
-                      }}
-                    />
-                  </>
-                )}
-              </Cell>
-            </Column>
-          </Table>
-        ) : (
-          <p>{t('authors.overview.noAuthorsFound')}</p>
-        )}
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={authors}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={100} align="left" resizable>
+            <HeaderCell></HeaderCell>
+            <Cell style={{padding: 2}}>
+              {(rowData: FullAuthorFragment) => (
+                <Avatar circle src={rowData.image?.squareURL || undefined} />
+              )}
+            </Cell>
+          </Column>
+          <Column width={300} align="left" resizable sortable>
+            <HeaderCell>{t('authors.overview.name')}</HeaderCell>
+            <Cell dataKey="name">
+              {(rowData: FullAuthorFragment) => (
+                <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('authors.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('authors.overview.created')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('authors.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullAuthorFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentAuthor(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
         <Pagination
           style={{height: '50px'}}

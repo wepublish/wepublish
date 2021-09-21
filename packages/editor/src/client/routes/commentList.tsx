@@ -202,134 +202,129 @@ export function CommentList() {
           flexFlow: 'column',
           marginTop: '20px'
         }}>
-        {comments.length > 0 ? (
-          <Table
-            autoHeight={true}
-            rowClassName={rowData => {
-              switch (rowData?.state) {
-                case CommentState.Approved:
-                  return 'approved'
-                case CommentState.PendingApproval:
-                  return 'pending-approval'
-                case CommentState.PendingUserChanges:
-                  return 'pending-user'
-                case CommentState.Rejected:
-                  return 'rejected'
-                default:
-                  return ''
-              }
-            }}
-            style={{marginTop: '20px'}}
-            loading={isLoading}
-            data={comments}
-            sortColumn={sortField}
-            sortType={sortOrder}
-            onSortColumn={(sortColumn, sortType) => {
-              setSortOrder(sortType)
-              setSortField(sortColumn)
-            }}>
-            <Column width={350} align="left" resizable>
-              <HeaderCell>{t('comments.overview.text')}</HeaderCell>
-              <Cell dataKey="revisions">
-                {(rowData: FullCommentFragment) => (
-                  <>
-                    {rowData?.revisions?.length ? (
-                      <RichTextBlock
-                        displayOnly
-                        displayOneLine
-                        disabled
-                        // TODO: remove this
-                        onChange={console.log}
-                        value={rowData?.revisions[rowData?.revisions?.length - 1].text}
-                      />
-                    ) : null}
-                  </>
-                )}
-              </Cell>
-            </Column>
-            <Column width={150} align="left" resizable>
-              <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
-              <Cell>{(rowData: FullCommentFragment) => <>{rowData.user?.name}</>}</Cell>
-            </Column>
-            <Column width={150} align="left" resizable>
-              <HeaderCell>{t('comments.overview.state')}</HeaderCell>
-              <Cell dataKey="state">
-                {(rowData: FullCommentFragment) => {
-                  let state: string
-                  switch (rowData?.state) {
-                    case CommentState.Approved:
-                      state = 'comments.state.approved'
-                      break
-                    case CommentState.PendingApproval:
-                      state = 'comments.state.pendingApproval'
-                      break
-                    case CommentState.PendingUserChanges:
-                      state = 'comments.state.pendingUserChanges'
-                      break
-                    case CommentState.Rejected:
-                      state = 'comments.state.rejected'
-                      break
-                  }
-                  return <div>{t(state)}</div>
-                }}
-              </Cell>
-            </Column>
-            <Column width={150} align="left" resizable sortable>
-              <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
-              <Cell dataKey="modifiedAt">
-                {({modifiedAt}: Comment) => new Date(modifiedAt).toLocaleString()}
-              </Cell>
-            </Column>
-            <Column width={150} align="center" fixed="right">
-              <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-              <Cell style={{padding: '6px 0'}}>
-                {(rowData: Comment) => (
-                  <>
-                    <IconButton
-                      icon={<Icon icon="check" />}
-                      color="green"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.Approve)
-                        setConfirmationDialogOpen(true)
-                      }}
+        <Table
+          autoHeight={true}
+          rowClassName={rowData => {
+            switch (rowData?.state) {
+              case CommentState.Approved:
+                return 'approved'
+              case CommentState.PendingApproval:
+                return 'pending-approval'
+              case CommentState.PendingUserChanges:
+                return 'pending-user'
+              case CommentState.Rejected:
+                return 'rejected'
+              default:
+                return ''
+            }
+          }}
+          style={{marginTop: '20px'}}
+          loading={isLoading}
+          data={comments}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={350} align="left" resizable>
+            <HeaderCell>{t('comments.overview.text')}</HeaderCell>
+            <Cell dataKey="revisions">
+              {(rowData: FullCommentFragment) => (
+                <>
+                  {rowData?.revisions?.length ? (
+                    <RichTextBlock
+                      displayOnly
+                      displayOneLine
+                      disabled
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={rowData?.revisions[rowData?.revisions?.length - 1].text}
                     />
-                    <IconButton
-                      icon={<Icon icon="edit" />}
-                      color="yellow"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.RequestChanges)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                    <IconButton
-                      icon={<Icon icon="close" />}
-                      color="red"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.Reject)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </>
-                )}
-              </Cell>
-            </Column>
-          </Table>
-        ) : (
-          <p>{t('comments.overview.notFound')}</p>
-        )}
-
+                  ) : null}
+                </>
+              )}
+            </Cell>
+          </Column>
+          <Column width={150} align="left" resizable>
+            <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
+            <Cell>{(rowData: FullCommentFragment) => <>{rowData.user?.name}</>}</Cell>
+          </Column>
+          <Column width={150} align="left" resizable>
+            <HeaderCell>{t('comments.overview.state')}</HeaderCell>
+            <Cell dataKey="state">
+              {(rowData: FullCommentFragment) => {
+                let state: string
+                switch (rowData?.state) {
+                  case CommentState.Approved:
+                    state = 'comments.state.approved'
+                    break
+                  case CommentState.PendingApproval:
+                    state = 'comments.state.pendingApproval'
+                    break
+                  case CommentState.PendingUserChanges:
+                    state = 'comments.state.pendingUserChanges'
+                    break
+                  case CommentState.Rejected:
+                    state = 'comments.state.rejected'
+                    break
+                }
+                return <div>{t(state)}</div>
+              }}
+            </Cell>
+          </Column>
+          <Column width={150} align="left" resizable sortable>
+            <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: Comment) => new Date(modifiedAt).toLocaleString()}
+            </Cell>
+          </Column>
+          <Column width={150} align="center" fixed="right">
+            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: Comment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="check" />}
+                    color="green"
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentComment(rowData)
+                      setConfirmAction(ConfirmAction.Approve)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="edit" />}
+                    color="yellow"
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentComment(rowData)
+                      setConfirmAction(ConfirmAction.RequestChanges)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="close" />}
+                    color="red"
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentComment(rowData)
+                      setConfirmAction(ConfirmAction.Reject)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
         <Pagination
           style={{height: '50px'}}
           lengthMenu={DEFAULT_TABLE_PAGE_SIZES}

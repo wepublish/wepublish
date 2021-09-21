@@ -100,43 +100,37 @@ export function NavigationList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-      {navigations.length > 0 ? (
-        <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
-            <Cell>
-              {(rowData: FullNavigationFragment) => (
-                <Link route={NavigationEditRoute.create({id: rowData.id})}>
-                  {rowData.name || t('navigation.overview.unknown')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullNavigationFragment) => (
-                <>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentNavigation(rowData)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
-      ) : (
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <p>{t('navigation.overview.noNavigationsFound')}</p>
-        </FlexboxGrid.Item>
-      )}
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
+        <Column width={400} align="left" resizable>
+          <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullNavigationFragment) => (
+              <Link route={NavigationEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('navigation.overview.unknown')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullNavigationFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setCurrentNavigation(rowData)
+                    setConfirmationDialogOpen(true)
+                  }}
+                />
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
 
       <Drawer
         show={isEditModalOpen}

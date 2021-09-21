@@ -128,44 +128,37 @@ export function MemberPlanList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-      {memberPlans.length > 0 ? (
-        <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
-          <Column width={200} align="left" resizable>
-            <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
-            <Cell>
-              {(rowData: FullMemberPlanFragment) => (
-                <Link route={MemberPlanEditRoute.create({id: rowData.id})}>
-                  {rowData.name || t('untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullMemberPlanFragment) => (
-                <>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentMemberPlan(rowData)
-                    }}
-                  />
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
-      ) : (
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <p>{t('memberPlanList.notFound')}</p>
-        </FlexboxGrid.Item>
-      )}
-
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
+        <Column width={200} align="left" resizable>
+          <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullMemberPlanFragment) => (
+              <Link route={MemberPlanEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullMemberPlanFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setCurrentMemberPlan(rowData)
+                  }}
+                />
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
       <Drawer
         show={isEditModalOpen}
         size={'sm'}

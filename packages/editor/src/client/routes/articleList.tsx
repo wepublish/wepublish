@@ -18,7 +18,11 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  ListingStateBgColor,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -124,139 +128,143 @@ export function ArticleList() {
           flexFlow: 'column',
           marginTop: '20px'
         }}>
-        {articles.length > 0 ? (
-          <Table
-            minHeight={600}
-            autoHeight={true}
-            style={{flex: 1}}
-            loading={isLoading}
-            data={articles}
-            sortColumn={sortField}
-            sortType={sortOrder}
-            rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
-            onSortColumn={(sortColumn, sortType) => {
-              setSortOrder(sortType)
-              setSortField(sortColumn)
-            }}>
-            <Column width={210} align="left" resizable sortable>
-              <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
-              <Cell dataKey="published">
-                {(articleRef: ArticleRefFragment) =>
-                  articleRef.published?.publishedAt
-                    ? `${new Date(articleRef.published.publishedAt).toDateString()} ${new Date(
-                        articleRef.published.publishedAt
-                      ).toLocaleTimeString()}`
-                    : articleRef.pending?.publishAt
-                    ? `${new Date(articleRef.pending.publishAt).toDateString()} ${new Date(
-                        articleRef.pending.publishAt
-                      ).toLocaleTimeString()}`
-                    : t('articles.overview.notPublished')
-                }
-              </Cell>
-            </Column>
-            <Column width={210} align="left" resizable sortable>
-              <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
-              <Cell dataKey="modifiedAt">
-                {({modifiedAt}: ArticleRefFragment) =>
-                  `${new Date(modifiedAt).toDateString()} ${new Date(
-                    modifiedAt
-                  ).toLocaleTimeString()}`
-                }
-              </Cell>
-            </Column>
-            <Column width={400} align="left" resizable>
-              <HeaderCell>{t('articles.overview.title')}</HeaderCell>
-              <Cell>
-                {(rowData: ArticleRefFragment) => (
-                  <Link route={ArticleEditRoute.create({id: rowData.id})}>
-                    {rowData.latest.title || t('articles.overview.untitled')}
-                  </Link>
-                )}
-              </Cell>
-            </Column>
-            <Column width={200} align="left" resizable>
-              <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
-              <Cell>
-                {(rowData: ArticleRefFragment) => {
-                  return rowData.latest.authors.reduce((allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
-                  }, '')
-                }}
-              </Cell>
-            </Column>
-            <Column width={150} align="left" resizable>
-              <HeaderCell>{t('articles.overview.states')}</HeaderCell>
-              <Cell>
-                {(rowData: PageRefFragment) => {
-                  const states = []
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={articles}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(articleRef: ArticleRefFragment) =>
+                articleRef.published?.publishedAt
+                  ? `${new Date(articleRef.published.publishedAt).toDateString()} ${new Date(
+                      articleRef.published.publishedAt
+                    ).toLocaleTimeString()}`
+                  : articleRef.pending?.publishAt
+                  ? `${new Date(articleRef.pending.publishAt).toDateString()} ${new Date(
+                      articleRef.pending.publishAt
+                    ).toLocaleTimeString()}`
+                  : t('articles.overview.notPublished')
+              }
+            </Cell>
+          </Column>
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: ArticleRefFragment) =>
+                `${new Date(modifiedAt).toDateString()} ${new Date(
+                  modifiedAt
+                ).toLocaleTimeString()}`
+              }
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('articles.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: ArticleRefFragment) => (
+                <Link route={ArticleEditRoute.create({id: rowData.id})}>
+                  {rowData.latest.title || t('articles.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
+            <Cell>
+              {(rowData: ArticleRefFragment) => {
+                return rowData.latest.authors.reduce((allAuthors, author, index) => {
+                  return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                }, '')
+              }}
+            </Cell>
+          </Column>
+          <Column width={150} align="left" resizable>
+            <HeaderCell>{t('articles.overview.states')}</HeaderCell>
+            <Cell>
+              {(rowData: PageRefFragment) => {
+                const states = []
 
-                  if (rowData.draft) states.push(t('articles.overview.draft'))
-                  if (rowData.pending) states.push(t('articles.overview.pending'))
-                  if (rowData.published) states.push(t('articles.overview.published'))
+                if (rowData.draft) states.push(t('articles.overview.draft'))
+                if (rowData.pending) states.push(t('articles.overview.pending'))
+                if (rowData.published) states.push(t('articles.overview.published'))
 
-                  return <div>{states.join(' / ')}</div>
-                }}
-              </Cell>
-            </Column>
-            <Column width={200} align="center" fixed="right">
-              <HeaderCell>{t('articles.overview.action')}</HeaderCell>
-              <Cell style={{padding: '6px 0'}}>
-                {(rowData: ArticleRefFragment) => (
-                  <>
-                    {rowData.published && (
+                return (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      borderRadius: '15px',
+                      backgroundColor: rowData.pending
+                        ? ListingStateBgColor.pending
+                        : rowData.published
+                        ? ListingStateBgColor.published
+                        : rowData.draft
+                        ? ListingStateBgColor.draft
+                        : ListingStateBgColor.none
+                    }}>
+                    {states.join(' / ')}
+                  </div>
+                )
+              }}
+            </Cell>
+          </Column>
+          <Column width={200} align="center" fixed="right">
+            <HeaderCell>{t('articles.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: ArticleRefFragment) => (
+                <>
+                  {rowData.published && (
+                    <>
                       <IconButton
-                        icon={<Icon icon="btn-off" />}
-                        circle
-                        size="sm"
-                        onClick={e => {
-                          setCurrentArticle(rowData)
-                          setConfirmAction(ConfirmAction.Unpublish)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    )}
-                    <IconButton
-                      icon={<Icon icon="trash" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Delete)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                    <IconButton
-                      icon={<Icon icon="copy" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Duplicate)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                    {rowData.draft && (
-                      <IconButton
-                        icon={<Icon icon="eye" />}
+                        icon={<Icon icon="trash" />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentArticle(rowData)
-                          setArticlePreviewLinkOpen(true)
+                          setConfirmAction(ConfirmAction.Delete)
+                          setConfirmationDialogOpen(true)
                         }}
                       />
-                    )}
-                  </>
-                )}
-              </Cell>
-            </Column>
-          </Table>
-        ) : (
-          <p>{t('articleEditor.overview.notFound')}</p>
-        )}
+                      <IconButton
+                        icon={<Icon icon="copy" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Duplicate)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </>
+                  )}
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setArticlePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
+                </>
+              )}
+              )
+            </Cell>
+          </Column>
+        </Table>
 
         <Pagination
           style={{height: '50px'}}
