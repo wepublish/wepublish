@@ -147,13 +147,13 @@ export function ArticleList() {
             <Cell dataKey="published">
               {(articleRef: ArticleRefFragment) =>
                 articleRef.published?.publishedAt
-                  ? `${new Date(articleRef.published.publishedAt).toDateString()} ${new Date(
-                      articleRef.published.publishedAt
-                    ).toLocaleTimeString()}`
+                  ? t('articleEditor.overview.publishedAt', {
+                      publicationDate: new Date(articleRef.published.publishedAt)
+                    })
                   : articleRef.pending?.publishAt
-                  ? `${new Date(articleRef.pending.publishAt).toDateString()} ${new Date(
-                      articleRef.pending.publishAt
-                    ).toLocaleTimeString()}`
+                  ? t('articleEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(articleRef.pending?.publishAt)
+                    })
                   : t('articles.overview.notPublished')
               }
             </Cell>
@@ -162,9 +162,9 @@ export function ArticleList() {
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: ArticleRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
+                t('articleEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
               }
             </Cell>
           </Column>
@@ -324,17 +324,24 @@ export function ArticleList() {
             )}
 
             <DescriptionListItem label={t('articles.panels.createdAt')}>
-              {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
+              {currentArticle?.createdAt &&
+                t('articles.panels.createdAtDate', {
+                  createdAtDate: new Date(currentArticle.createdAt)
+                })}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('articles.panels.updatedAt')}>
               {currentArticle?.latest.updatedAt &&
-                new Date(currentArticle.latest.updatedAt).toLocaleString()}
+                t('articles.panels.updatedAtDate', {
+                  updatedAtDate: new Date(currentArticle.latest.updatedAt)
+                })}
             </DescriptionListItem>
 
             {currentArticle?.latest.publishedAt && (
               <DescriptionListItem label={t('articles.panels.publishedAt')}>
-                {new Date(currentArticle.createdAt).toLocaleString()}
+                {t('articles.panels.publishedAtDate', {
+                  publishedAtDate: new Date(currentArticle.latest.publishedAt)
+                })}
               </DescriptionListItem>
             )}
           </DescriptionList>

@@ -193,16 +193,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('articleEditor.overview.pending', {
-          date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.pending?.publishAt ?? '')
         })
       )
     } else if (articleData?.article?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.published?.publishedAt ?? '')
         })
       )
     } else {

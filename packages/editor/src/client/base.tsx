@@ -104,7 +104,9 @@ export function Base({children}: BaseProps) {
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList || current?.type === RouteType.Index}>
+                  active={
+                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                  }>
                   {t('navbar.articles')}
                 </NavItemLink>
 

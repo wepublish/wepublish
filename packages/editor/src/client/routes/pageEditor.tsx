@@ -144,16 +144,14 @@ export function PageEditor({id}: PageEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.pending?.publishAt ?? '')
         })
       )
     } else if (pageData?.page?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.published?.publishedAt ?? '')
         })
       )
     } else {
