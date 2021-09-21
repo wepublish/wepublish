@@ -17,7 +17,12 @@ import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  ListingStateBgColor,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
+import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -46,6 +51,7 @@ export function PageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
@@ -179,11 +185,26 @@ export function PageList() {
                 if (rowData.pending) states.push(t('pages.overview.pending'))
                 if (rowData.published) states.push(t('pages.overview.published'))
 
-                return <div>{states.join(' / ')}</div>
+                return (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      borderRadius: '15px',
+                      backgroundColor: rowData.pending
+                        ? ListingStateBgColor.pending
+                        : rowData.published
+                        ? ListingStateBgColor.published
+                        : rowData.draft
+                        ? ListingStateBgColor.draft
+                        : ListingStateBgColor.none
+                    }}>
+                    {states.join(' / ')}
+                  </div>
+                )
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
@@ -222,6 +243,18 @@ export function PageList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setPagePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -238,6 +271,15 @@ export function PageList() {
           onChangeLength={limit => setLimit(limit)}
         />
       </div>
+
+      <Modal show={isPagePreviewLinkOpen} width={'sm'} onHide={() => setPagePreviewLinkOpen(false)}>
+        {currentPage && (
+          <PagePreviewLinkPanel
+            props={{id: currentPage.id}}
+            onClose={() => setPagePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
 
       <Modal
         show={isConfirmationDialogOpen}

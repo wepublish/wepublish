@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "OAuth2 Provider for we.publish",
   "publishConfig": {
     "access": "public"
@@ -25,6 +25,7 @@
     "directory": "packages/oauth2"
   },
   "typings": "./lib/index.d.ts",
+  "main": "./lib/",
   "license": "MIT",
   "scripts": {
     "build": "run-p build:*",

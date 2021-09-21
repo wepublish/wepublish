@@ -9,6 +9,7 @@ import {AuthContext} from '../authContext'
 import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {useRoute} from '../route/routeContext'
+import {countRichTextBlocksChars, maxCommentLength} from '../utility'
 
 // CSS-Rules
 // =========
@@ -214,7 +215,7 @@ export function ComposeComment(props: ComposeCommentProps) {
     },
     onError: error => {
       console.error('Error creating a post', error)
-      setcommentStateInfo("Something went wrong, your comment couldn't be saved")
+      setcommentStateInfo(error.message)
     }
   })
 
@@ -244,7 +245,9 @@ export function ComposeComment(props: ComposeCommentProps) {
             }}
           />
         </div>
-
+        <div style={{float: 'right', fontSize: '0.9em'}}>
+          {`${countRichTextBlocksChars(commentInput)}/${maxCommentLength}`}
+        </div>
         <BaseButton css={props.parentID ? SmallButton : CommentButton} disabled={loading}>
           {props.parentID ? 'Submit' : 'Post comment'}
         </BaseButton>
@@ -255,6 +258,7 @@ export function ComposeComment(props: ComposeCommentProps) {
 
 export function CommentList(commentListProps: CommentListProps) {
   const css = useStyle()
+  const {session} = useContext(AuthContext)
 
   const [activeCommentID, setActiveCommentID] = useState('')
   const {comments} = commentListProps
@@ -333,7 +337,7 @@ export function CommentList(commentListProps: CommentListProps) {
               />
             )}
             <div className={css(Actions)}>
-              {state === 'approved' ? (
+              {state === 'approved' && session ? (
                 <button className={css(SmallButton)} onClick={() => toggleReplyForm(id)}>
                   Reply
                 </button>
