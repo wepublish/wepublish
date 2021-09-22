@@ -15,7 +15,7 @@ export interface DateTimePreset {
 export interface DateTimePickerProps {
   dateTime: Date | undefined
   label: string
-  changeDate(publishDate: Date | string): void
+  changeDate(publishDate: Date | undefined): void
 
   dateRanges?: DateTimePreset[]
   timeRanges?: DateTimePreset[]
@@ -78,9 +78,7 @@ export function DateTimePicker({
         selected={dateSelection}
         onChange={value => {
           setDateSelection(value)
-          if (value) {
-            changeDate(value.toString())
-          }
+          changeDate(value instanceof Date ? value : undefined)
         }}
         dateFormat="Pp"
         showTimeSelect>
