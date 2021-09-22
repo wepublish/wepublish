@@ -128,10 +128,10 @@ export function App() {
   const {current} = useRoute()
 
   const {i18n} = useTranslation()
-  const [lng, setLang] = useState<object>(enGB)
+  const [lng, setLang] = useState<Record<string, any>>(enGB)
 
   i18n.on('languageChanged', lng => {
-    const currentLanguageMap: any = new Map([
+    const currentLanguageMap = new Map<string, any>([
       ['fr', fr],
       ['en', enGB],
       ['de', de]
