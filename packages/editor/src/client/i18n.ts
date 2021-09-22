@@ -6,14 +6,10 @@ import en from './locales/en.json'
 import de from './locales/de.json'
 import fr from './locales/fr.json'
 
-import {format as formatDate, isDate} from 'date-fns'
+import {format as formatDate, isDate, Locale} from 'date-fns'
 import {de as deLocale, enGB as enLocale, fr as frLocale} from 'date-fns/locale'
 
-export interface DateFormatLocale {
-  lng: string
-  locale: Locale
-}
-const DateFormatLocales = new Map<string, Locale>([
+const dateFormatMap = new Map<string, Locale>([
   ['de', deLocale],
   ['en', enLocale],
   ['fr', frLocale]
@@ -23,7 +19,7 @@ i18n.init({
   interpolation: {
     format: (value, format, lng = 'en') => {
       if (isDate(value) && format !== undefined) {
-        const myLocale = DateFormatLocales.get(lng)
+        const myLocale = dateFormatMap.get(lng)
         return formatDate(value, format, {locale: myLocale})
       }
       return value
