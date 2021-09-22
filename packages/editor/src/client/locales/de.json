@@ -197,6 +197,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Embed",
         "overview": {
           "editEmbed": "Embed bearbeiten"
         },
@@ -216,6 +217,7 @@
         }
       },
       "image": {
+        "label": "Bild",
         "overview": {
           "caption": "Bildunterschrift",
           "chooseImage": "Bild wählen",
@@ -223,6 +225,7 @@
         }
       },
       "imageGallery": {
+        "label": "Bildgalerie",
         "overview": {
           "add": "Hinzufügen",
           "caption": "Bildunterschrift",
@@ -244,22 +247,26 @@
         }
       },
       "linkPageBreak": {
+        "label": "Umbruch",
         "linkText": "Link-Text",
         "linkURL": "Link-URL",
         "text": "Text",
         "title": "Titel"
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Bild wählen",
         "editImage": "Bild bearbeiten",
         "removeImage": "Bild entfernen",
         "title": "Titel"
       },
       "quote": {
+        "label": "Zitat",
         "author": "Autor*in",
         "quote": "Zitat"
       },
       "richText": {
+        "label": "Rich text",
         "apply": "Anwenden",
         "cancel": "Abbrechen",
         "charCount": "Anzahl Zeichen {{charCount}}",
@@ -272,6 +279,7 @@
         "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen."
       },
       "richTextTable": {
+        "label": "Rich text Tabelle",
         "addBorders": "Rahmen hinzufügen",
         "cancel": "Abbrechen",
         "columns": "Spalten",
@@ -282,8 +290,15 @@
         "border": "Rand"
       },
       "title": {
+        "label": "Titel",
         "leadText": "Lead-Text ",
         "title": "Titel"
+      },
+      "teaserGrid1": {
+        "label": "1 Kol"
+      },
+      "teaserGrid6": {
+        "label": "6 Kol"
       }
     },
     "cancel": "Abbrechen",
