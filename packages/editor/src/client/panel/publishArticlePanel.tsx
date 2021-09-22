@@ -31,9 +31,6 @@ export function PublishArticlePanel({
 
   const {t} = useTranslation()
 
-  const testDate = new Date()
-  console.log(testDate)
-
   return (
     <>
       <Modal.Header>
