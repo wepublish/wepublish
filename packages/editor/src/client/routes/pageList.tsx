@@ -144,13 +144,13 @@ export function PageList() {
             <Cell dataKey="published">
               {(pageRef: PageRefFragment) =>
                 pageRef.published?.publishedAt
-                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
-                      pageRef.published.publishedAt
-                    ).toLocaleTimeString()}`
+                  ? t('pageEditor.overview.publishedAt', {
+                      publicationDate: new Date(pageRef.published.publishedAt)
+                    })
                   : pageRef.pending?.publishAt
-                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
-                      pageRef.pending.publishAt
-                    ).toLocaleTimeString()}`
+                  ? t('pageEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                    })
                   : t('pages.overview.notPublished')
               }
             </Cell>
@@ -159,9 +159,9 @@ export function PageList() {
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
+                t('pageEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
               }
             </Cell>
           </Column>
@@ -308,18 +308,23 @@ export function PageList() {
             )}
 
             <DescriptionListItem label={t('pages.panels.createdAt')}>
-              {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
+              {currentPage?.createdAt &&
+                t('pages.panels.createdAtDate', {createdAtDate: new Date(currentPage.createdAt)})}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
               {currentPage?.latest.updatedAt &&
-                new Date(currentPage.latest.updatedAt).toLocaleString()}
+                t('pages.panels.updatedAtDate', {
+                  updatedAtDate: new Date(currentPage.latest.updatedAt)
+                })}
             </DescriptionListItem>
 
             {currentPage?.latest.publishedAt && (
               <DescriptionListItem label={t('pages.panels.publishedAt')}>
                 {currentPage?.latest.publishedAt &&
-                  new Date(currentPage.createdAt).toLocaleString()}
+                  t('pages.panels.publishedAtDate', {
+                    publishedAtDate: new Date(currentPage.latest.publishedAt)
+                  })}
               </DescriptionListItem>
             )}
           </DescriptionList>
