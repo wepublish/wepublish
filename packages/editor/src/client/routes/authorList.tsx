@@ -174,7 +174,11 @@ export function AuthorList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
+              {({createdAt}: FullAuthorFragment) =>
+                t('authors.overview.createdAt', {
+                  createdAt: new Date(createdAt)
+                })
+              }
             </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">
