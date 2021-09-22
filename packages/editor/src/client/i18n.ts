@@ -13,18 +13,18 @@ export interface DateFormatLocale {
   lng: string
   locale: Locale
 }
-const DateFormatLocales: DateFormatLocale[] = [
-  {lng: 'de', locale: deLocale},
-  {lng: 'en', locale: enLocale},
-  {lng: 'fr', locale: frLocale}
-]
+const DateFormatLocales = new Map<string, Locale>([
+  ['de', deLocale],
+  ['en', enLocale],
+  ['fr', frLocale]
+])
 
 i18n.init({
   interpolation: {
-    format: (value, format, lng) => {
+    format: (value, format, lng = 'en') => {
       if (isDate(value) && format !== undefined) {
-        const myLocale = DateFormatLocales.find(locale => locale.lng === lng)
-        return formatDate(value, format, {locale: myLocale?.locale})
+        const myLocale = DateFormatLocales.get(lng)
+        return formatDate(value, format, {locale: myLocale})
       }
       return value
     }
@@ -40,9 +40,5 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     fr
   }
 })
-
-// i18n.on('languageChanged', function (lng) {
-//   moment.locale(lng)
-// })
 
 export default i18n
