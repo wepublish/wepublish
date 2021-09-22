@@ -227,12 +227,12 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 </DescriptionListItem>
                 {createdAt && (
                   <DescriptionListItem label={t('images.panels.created')}>
-                    {new Date(createdAt).toLocaleString()}
+                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
                   </DescriptionListItem>
                 )}
                 {updatedAt && (
                   <DescriptionListItem label={t('images.panels.updated')}>
-                    {new Date(updatedAt).toLocaleString()}
+                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
                   </DescriptionListItem>
                 )}
                 <DescriptionListItem label={t('images.panels.fileSize')}>
