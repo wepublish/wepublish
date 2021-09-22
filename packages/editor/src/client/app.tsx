@@ -27,7 +27,6 @@ import './global.less'
 import {IntlProvider} from 'rsuite'
 import enGB from 'rsuite/lib/IntlProvider/locales/en_GB'
 import fr from './locales/rsuiteFr'
-import en from './locales/rsuiteEn'
 import de from './locales/rsuiteDe'
 import {useTranslation} from 'react-i18next'
 
@@ -129,20 +128,15 @@ export function App() {
   const {current} = useRoute()
 
   const {i18n} = useTranslation()
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const [lng, setLang] = useState<object>(enGB)
 
   i18n.on('languageChanged', lng => {
-    const currentLanguage: any = new Map()
-
-    if (lng === 'fr') {
-      currentLanguage.set(lng, fr)
-    } else if (lng === 'de') {
-      currentLanguage.set(lng, de)
-    } else if (lng === 'en') {
-      currentLanguage.set(lng, en)
-    }
-    setLang(currentLanguage.get(lng))
+    const currentLanguageMap: any = new Map([
+      ['fr', fr],
+      ['en', enGB],
+      ['de', de]
+    ])
+    setLang(currentLanguageMap.get(lng))
   })
 
   return <IntlProvider locale={lng}>{GetComponents(current)}</IntlProvider>
