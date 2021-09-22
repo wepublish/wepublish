@@ -640,7 +640,9 @@
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
         "callToActionImage": "Call To Action Image",
+        "callToActionImageURL": "Call To Action Image URL",
         "callToActionURL": "Call To Action URL",
+        "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",
         "cancel": "Cancel",
@@ -668,7 +670,8 @@
         "token": "Token",
         "Unknown": "Unknown",
         "URL": "URL",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "leaveEmpty": "Leave empty if you don't want to change it"
       }
     },
     "save": "Save",
