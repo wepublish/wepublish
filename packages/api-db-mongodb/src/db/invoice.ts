@@ -221,7 +221,7 @@ function invoiceSortFieldForSort(sort: InvoiceSort) {
   }
 }
 
-function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date | undefined {
+function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date {
   switch (sort) {
     case InvoiceSort.CreatedAt:
       return invoice.createdAt
@@ -230,10 +230,9 @@ function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date | undef
       return invoice.modifiedAt
 
     case InvoiceSort.PaidAt:
-      if (invoice.paidAt) return invoice.paidAt
-      return undefined
+      return invoice.paidAt ? invoice.paidAt : invoice.createdAt
 
     default:
-      return undefined
+      return invoice.createdAt
   }
 }
