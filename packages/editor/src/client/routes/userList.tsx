@@ -159,13 +159,17 @@ export function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+              {({createdAt}: FullUserFragment) =>
+                t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: FullUserFragment) =>
+                t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
