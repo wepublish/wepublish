@@ -35,7 +35,7 @@ import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
 import {useAppContext} from '../appContext'
 import {Peer, ArticleMeta} from '../types'
 import {useStyle, cssRule} from '@karma.run/react'
-import {Image} from '../atoms/image'
+import {Image, ImageFit} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -320,6 +320,9 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
+      {peer.callToActionImage && peer.callToActionImageURL && (
+        <PeerProfileImageBlock peer={peer} article={articleData} />
+      )}
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
@@ -426,6 +429,32 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
           </a>
         )}
       </div>
+    </div>
+  )
+}
+
+export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
+  const css = useStyle()
+
+  return (
+    <div className={css(PeerProfileBreakStyle)}>
+      {peer?.callToActionImage && (
+        <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+          <div
+            style={{
+              backgroundColor: 'darkGray',
+              border: '1px solid gray',
+              display: 'flex',
+              width: '100%',
+              height: 'auto',
+              maxHeight: '90px',
+              marginRight: 'auto',
+              marginLeft: 'auto'
+            }}>
+            <Image src={peer?.callToActionImage} fit={ImageFit.Cover} />
+          </div>
+        </a>
+      )}
     </div>
   )
 }
