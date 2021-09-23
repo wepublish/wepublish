@@ -129,13 +129,13 @@ export function App() {
 
   const {i18n} = useTranslation()
   const [lng, setLang] = useState<Record<string, any>>(enGB)
+  const currentLanguageMap = new Map<string, any>([
+    ['fr', fr],
+    ['en', enGB],
+    ['de', de]
+  ])
 
   i18n.on('languageChanged', lng => {
-    const currentLanguageMap = new Map<string, any>([
-      ['fr', fr],
-      ['en', enGB],
-      ['de', de]
-    ])
     setLang(currentLanguageMap.get(lng))
   })
 
