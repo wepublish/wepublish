@@ -203,7 +203,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <FormControl
                 value={token}
                 name={t('peerList.panels.token')}
-                placeholder={id ? "Leave empty if you don't want to change it" : undefined}
+                placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
                 onChange={value => {
                   setToken(value)
                 }}
@@ -235,6 +235,12 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
                 {profile?.callToActionURL}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
+                <img src={profile?.callToActionImage?.thumbURL || undefined} />
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
+                {profile?.callToActionImageURL}
               </DescriptionListItem>
             </DescriptionList>
           </Panel>

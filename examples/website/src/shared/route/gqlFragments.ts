@@ -205,6 +205,10 @@ export const peerMetaDataFragment = gql`
       }
       callToActionText
       callToActionURL
+      callToActionImageURL
+      callToActionImage {
+        ...SimpleImageData
+      }
     }
   }
   ${simpleImageDataFragment}
