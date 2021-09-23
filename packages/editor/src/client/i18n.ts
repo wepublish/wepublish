@@ -11,6 +11,7 @@ import fr from './locales/fr.json'
 
 import {format as formatDate, isDate, Locale} from 'date-fns'
 import {de as deLocale, enGB as enLocale, fr as frLocale} from 'date-fns/locale'
+import moment from 'moment'
 
 const dateFormatMap = new Map<string, Locale>([
   ['de', deLocale],
@@ -38,6 +39,14 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     de,
     fr
   }
+})
+
+// TODO: how to handle other date amd time formats
+registerLocale('de', dateFnsDe)
+setDefaultLocale('de')
+
+i18n.on('languageChanged', function (lng) {
+  moment.locale(lng)
 })
 
 export default i18n
