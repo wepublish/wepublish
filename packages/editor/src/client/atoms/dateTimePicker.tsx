@@ -50,14 +50,16 @@ export function DateTimePicker({
 
   const handleDatePresetButton = (offset: number) => {
     const day = new Date()
-    day.setHours(dateSelection.getHours())
-    day.setMinutes(dateSelection.getMinutes())
+    if (dateSelection) {
+      day.setHours(dateSelection.getHours())
+      day.setMinutes(dateSelection.getMinutes())
+    }
     day.setDate(day.getDate() + offset)
     setDateSelection(day)
   }
 
   const handleTimePresetButton = (hour: number) => {
-    const day = new Date(dateSelection)
+    const day = dateSelection ? new Date(dateSelection) : new Date()
     if (hour === 0) {
       const now = new Date()
       day.setHours(now.getHours())
