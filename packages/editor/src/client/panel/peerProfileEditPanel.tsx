@@ -199,6 +199,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   value={callToActionImageURL}
                   onChange={url => setCallToActionImageURL(url)}
                 />
+                <Message
+                  style={{marginTop: '5px'}}
+                  showIcon
+                  type="info"
+                  description={t('peerList.panels.ctaImageInfo')}
+                />
               </FormGroup>
             </div>
           </Form>
