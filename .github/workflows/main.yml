@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - c/deployment-test
+      - master
       
 jobs:
   release:

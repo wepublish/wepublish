@@ -18,7 +18,7 @@ function slugify(text, separator = "-") {
 const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
 
 let ENVIRONMENT_NAME = 'development'
-if ((GITHUB_REF === 'refs/heads/c/deployment-test' || GITHUB_REF === 'c/deployment-test') && !BRANCH_NAME) {
+if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_NAME) {
   ENVIRONMENT_NAME = 'production'
 }
 
