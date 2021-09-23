@@ -8,11 +8,17 @@ import {
   Kind
 } from 'graphql'
 
-import {WrapQuery, ExtractField} from 'graphql-tools'
+import {
+  WrapQuery,
+  ExtractField,
+  introspectSchema,
+  delegateToSchema,
+  makeRemoteExecutableSchema
+} from 'graphql-tools'
 
 import {UserInputError} from 'apollo-server-express'
 
-import {Context} from '../context'
+import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
 import {GraphQLAuthProvider} from './auth'
@@ -126,12 +132,45 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
+import urlModule from 'url'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
     // Peering
     // =======
+
+    remotePeerProfile: {
+      type: GraphQLPeerProfile,
+      args: {
+        hostURL: {type: GraphQLNonNull(GraphQLString)},
+        token: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {hostURL, token}, {authenticate}, info) {
+        const {roles} = authenticate()
+        authorise(CanGetPeerProfile, roles) // TODO: create new permission for CanGetRemotePeerProfile
+        const link = urlModule.resolve(hostURL, 'admin')
+
+        const fetcher = await createFetcher(link, token)
+        const schema = await introspectSchema(fetcher)
+
+        const remoteExecutableSchema = await makeRemoteExecutableSchema({
+          schema,
+          fetcher
+        })
+
+        const remoteAnswer = await delegateToSchema({
+          info,
+          // operation: 'query',
+          fieldName: 'peerProfile',
+          args: {},
+          schema: remoteExecutableSchema,
+          transforms: []
+        })
+
+        return remoteAnswer
+      }
+    },
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),

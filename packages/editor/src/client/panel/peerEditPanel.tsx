@@ -90,10 +90,12 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
       const abortController =
         typeof AbortController !== 'undefined' ? new AbortController() : undefined
 
+      const body = JSON.stringify({query: PeerProfileDocument.loc!.source.body})
+      debugger
       fetch(url.toString(), {
         method: 'POST',
         headers: {'Content-Type': 'application/json; charset=utf-8'},
-        body: JSON.stringify({query: PeerProfileDocument.loc!.source.body}),
+        body,
         signal: abortController?.signal
       })
         .then(response => {
