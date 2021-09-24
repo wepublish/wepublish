@@ -39,12 +39,12 @@ export class WepublishServer {
 
     methodsToProxy.forEach(mtp => {
       if (mtp.key in dbAdapter) {
+        const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
-          // @ts-ignore
-          if (methodName in dbAdapter[mtp.key]) {
+          if (methodName in dbAdapter[dbAdapterKeyTyped]) {
             // @ts-ignore
-            dbAdapter[mtp.key][methodName] = new Proxy(dbAdapter[mtp.key][methodName], {
+            dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(dbAdapter[dbAdapterKeyTyped][methodName], {
               // create proxy for method
               async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
                 const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."

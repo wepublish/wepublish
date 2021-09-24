@@ -70,9 +70,7 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      setImages(data.images.nodes)
+      setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>)
     }
   }, [data?.images])
 
