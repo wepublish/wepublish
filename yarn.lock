@@ -4662,6 +4662,13 @@
   dependencies:
     react-helmet-async "*"
 
+"@types/react-page-visibility@^6.4.1":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@types/react-page-visibility/-/react-page-visibility-6.4.1.tgz#21c3bc4a3f310d38d188916cadc55f2bde65f27d"
+  integrity sha512-vNlYAqKhB2SU1HmF9ARFTFZN0NSPzWn8HSjBpFqYuQlJhsb/aSYeIZdygeqfSjAg0PZ70id2IFWHGULJwe59Aw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-test-renderer@^17.0.1":
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.1.tgz#3120f7d1c157fba9df0118dae20cb0297ee0e06b"
