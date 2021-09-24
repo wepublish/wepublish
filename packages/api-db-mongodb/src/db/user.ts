@@ -224,9 +224,12 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async getUserByOAuth2Account({
+    provider,
     providerAccountId
   }: GetUserByOAuth2AccountArgs): Promise<OptionalUser> {
-    const user = await this.users.findOne({oauth2Accounts: {$elemMatch: {providerAccountId}}})
+    const user = await this.users.findOne({
+      oauth2Accounts: {$elemMatch: {provider, providerAccountId}}
+    })
     if (user) {
       return {
         id: user._id,
