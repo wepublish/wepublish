@@ -37,7 +37,7 @@ const iconStyles = {
   width: 56,
   height: 56,
   lineHeight: '56px',
-  textAlign: 'center'
+  textAlign: 'center' as const
 }
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -202,8 +202,6 @@ export function Base({children}: BaseProps) {
                   placement="topStart"
                   trigger="click"
                   renderTitle={children => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
                     return <Icon style={iconStyles} icon="cog" className="icon-selector" />
                   }}>
                   <DropdownItemLink route={LogoutRoute.create({})}>
