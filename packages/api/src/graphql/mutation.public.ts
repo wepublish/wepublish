@@ -232,6 +232,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             name,
             preferredName,
             email,
+            emailVerified: null,
             active: false,
             properties: [],
             roleIDs: []

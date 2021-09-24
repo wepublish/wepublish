@@ -91,6 +91,7 @@ export const GraphQLUser = new GraphQLObjectType({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+    emailVerified: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
@@ -179,6 +180,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+    emailVerified: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},

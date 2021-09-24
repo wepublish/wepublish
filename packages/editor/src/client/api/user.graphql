@@ -33,6 +33,7 @@ fragment FullUser on User {
         public
     }
     email
+    emailVerified
     roles {
         ...FullUserRole
     }

@@ -6,8 +6,10 @@ import {
   CreateUserSubscriptionPeriodArgs,
   DBUserAdapter,
   DeleteUserArgs,
+  DeleteUserOAuth2AccountArgs,
   DeleteUserSubscriptionArgs,
   DeleteUserSubscriptionPeriodArgs,
+  GetUserByOAuth2AccountArgs,
   GetUserForCredentialsArgs,
   GetUsersArgs,
   InputCursorType,
@@ -20,6 +22,8 @@ import {
   UpdateUserArgs,
   UpdateUserSubscriptionArgs,
   User,
+  UserOAuth2Account,
+  UserOAuth2AccountArgs,
   UserSort
 } from '@wepublish/api'
 
@@ -50,6 +54,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         createdAt: new Date(),
         modifiedAt: new Date(),
         email: input.email,
+        emailVerified: null,
+        oauth2Accounts: [],
         name: input.name,
         preferredName: input.preferredName,
         address: input.address,
@@ -79,6 +85,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         createdAt: user.createdAt,
         modifiedAt: user.modifiedAt,
         email: user.email,
+        emailVerified: user.emailVerified,
+        oauth2Accounts: user.oauth2Accounts,
         name: user.name,
         preferredName: user.preferredName,
         address: user.address,
@@ -105,6 +113,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           active: input.active,
           properties: input.properties,
           email: input.email,
+          emailVerified: input.emailVerified,
           roleIDs: input.roleIDs
         }
       },
@@ -148,6 +157,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         createdAt: user.createdAt,
         modifiedAt: user.modifiedAt,
         email: user.email,
+        emailVerified: user.emailVerified,
+        oauth2Accounts: user.oauth2Accounts,
         name: user.name,
         preferredName: user.preferredName,
         address: user.address,
@@ -170,6 +181,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         createdAt: user.createdAt,
         modifiedAt: user.modifiedAt,
         email: user.email,
+        emailVerified: user.emailVerified,
+        oauth2Accounts: user.oauth2Accounts,
         name: user.name,
         preferredName: user.preferredName,
         address: user.address,
@@ -193,6 +206,35 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         createdAt: user.createdAt,
         modifiedAt: user.modifiedAt,
         email: user.email,
+        emailVerified: user.emailVerified,
+        oauth2Accounts: user.oauth2Accounts,
+        name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
+      }
+    } else {
+      return null
+    }
+  }
+
+  async getUserByOAuth2Account({
+    providerAccountId
+  }: GetUserByOAuth2AccountArgs): Promise<OptionalUser> {
+    const user = await this.users.findOne({oauth2Accounts: {$elemMatch: {providerAccountId}}})
+    if (user) {
+      return {
+        id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        oauth2Accounts: user.oauth2Accounts,
         name: user.name,
         preferredName: user.preferredName,
         address: user.address,
@@ -465,6 +507,57 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         $set: {
           modifiedAt: new Date(),
           paymentProviderCustomers: paymentProviderCustomers
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
+  }
+
+  async addOAuth2Account({userID, oauth2Account}: UserOAuth2AccountArgs): Promise<OptionalUser> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user) return null
+
+    const accounts: UserOAuth2Account[] = [...user.oauth2Accounts, oauth2Account]
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          oauth2Accounts: accounts
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
+  }
+
+  async deleteOAuth2Account({
+    userID,
+    providerAccountId,
+    provider
+  }: DeleteUserOAuth2AccountArgs): Promise<OptionalUser> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user) return null
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          oauth2Accounts: user.oauth2Accounts.filter(
+            account =>
+              account.provider !== provider && account.providerAccountId !== providerAccountId
+          )
         }
       },
       {returnOriginal: false}

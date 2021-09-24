@@ -16,7 +16,8 @@ import {
   UserSubscription,
   MailLogState,
   PaymentState,
-  UserAddress
+  UserAddress,
+  UserOAuth2Account
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -100,10 +101,13 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
+  emailVerified: Date | null
   name: string
   preferredName?: string
   address?: UserAddress
   password: string
+
+  oauth2Accounts: UserOAuth2Account[]
 
   active: boolean
   lastLogin: Date | null

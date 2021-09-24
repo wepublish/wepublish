@@ -36,6 +36,8 @@ export interface DBSessionAdapter {
   getSessionByID(user: User, id: string): Promise<OptionalSession>
   getSessionByToken(token: string): Promise<OptionalSession>
 
+  extendSessionByToken(token: string): Promise<OptionalSession>
+
   deleteUserSessionByID(user: User, id: string): Promise<boolean>
   deleteUserSessionByToken(token: string): Promise<boolean>
 }

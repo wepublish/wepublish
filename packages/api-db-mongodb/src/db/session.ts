@@ -99,6 +99,60 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
     return null
   }
 
+  async extendSessionByToken(token: string): Promise<OptionalSession> {
+    const [tokenMatch, session] = await Promise.all([
+      this.tokens.findOne({token}),
+      this.sessions.findOne({token})
+    ])
+
+    if (tokenMatch) {
+      const {value} = await this.tokens.findOneAndUpdate(
+        {_id: tokenMatch._id},
+        {
+          $set: {
+            expiresAt: new Date(Date.now() + this.sessionTTL)
+          }
+        },
+        {returnOriginal: false}
+      )
+      return value
+        ? {
+            type: SessionType.Token,
+            id: value._id,
+            name: value.name,
+            token: value.token,
+            roles: await this.userRole.getNonOptionalUserRolesByID(value.roleIDs)
+          }
+        : null
+    } else if (session) {
+      const {value} = await this.sessions.findOneAndUpdate(
+        {_id: session._id},
+        {
+          $set: {
+            expiresAt: new Date(Date.now() + this.sessionTTL)
+          }
+        },
+        {returnOriginal: false}
+      )
+      if (!value) return null
+
+      const user = await this.user.getUserByID(value.userID)
+      if (!user) return null
+
+      return {
+        type: SessionType.User,
+        id: value._id,
+        token: value.token,
+        createdAt: value.createdAt,
+        expiresAt: value.expiresAt,
+        user,
+        roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
+      }
+    }
+
+    return null
+  }
+
   async deleteUserSessionByID(user: User, id: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
     return deletedCount === 1
