@@ -636,7 +636,8 @@
       "overview": {
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
-        "peers": "Peers"
+        "peers": "Peers",
+        "profile": "Profile"
       },
       "panels": {
         "callToAction": "Call To Action",

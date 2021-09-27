@@ -46,7 +46,6 @@ export enum RouteType {
   PeerProfileEdit = 'peerProfileEdit',
   PeerCreate = 'peerCreate',
   PeerEdit = 'peerEdit',
-  MyPeerInfo = 'myPeerInfo',
 
   TokenList = 'tokenList',
   TokenGenerate = 'tokenGenerate',
@@ -123,7 +122,6 @@ export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
 export const PeerInfoEditRoute = route(RouteType.PeerProfileEdit, routePath`/peering/profile/edit`)
 export const PeerCreateRoute = route(RouteType.PeerCreate, routePath`/peering/create`)
 export const PeerEditRoute = route(RouteType.PeerEdit, routePath`/peering/edit/${required('id')}`)
-export const MyPeerInfo = route(RouteType.MyPeerInfo, routePath`/peering/peerinfo`)
 
 export const TokenListRoute = route(RouteType.TokenList, routePath`/tokens`)
 export const TokenGenerateRoute = route(RouteType.TokenGenerate, routePath`/tokens/generate`)
@@ -187,7 +185,6 @@ export const routes = [
   PeerInfoEditRoute,
   PeerCreateRoute,
   PeerEditRoute,
-  MyPeerInfo,
   TokenListRoute,
   TokenGenerateRoute,
   UserListRoute,

@@ -9,8 +9,6 @@ import {
   ControlLabel,
   FormControl,
   Alert,
-  PanelGroup,
-  Modal,
   Message
 } from 'rsuite'
 
@@ -104,9 +102,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   return (
     <>
-      <PanelGroup accordion defaultActiveKey={1}>
-        <p>{t('peerList.panels.editPeerInfo')}</p>
-        <Panel bodyFill eventKey={1} header={t('peerList.panels.logo')}>
+      <Drawer.Header>
+        <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Panel bodyFill header={t('peerList.panels.image')}>
           <ChooseEditImage
             image={logoImage}
             header={''}
@@ -124,7 +125,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             removeImage={() => setLogoImage(undefined)}
           />
         </Panel>
-        <Panel eventKey={2} header={t('peerList.panels.information')}>
+        <Panel header={t('peerList.panels.information')}>
           <Form fluid={true}>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
@@ -138,11 +139,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 onChange={value => setThemeColor(value)}
               />
             </FormGroup>
-          </Form>
-        </Panel>
 
-        <Panel eventKey={3} header={t('peerList.panels.callToActionURL')}>
-          <Form>
             <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
             <div
               style={{
@@ -156,7 +153,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('peerList.panels.callToActionURL')}</ControlLabel>
                 <FormControl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
@@ -165,10 +161,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 />
               </FormGroup>
             </div>
-          </Form>
-        </Panel>
-        <Panel eventKey={4} header={t('peerList.panels.callToActionImage')}>
-          <Form>
+            <br />
+            <ControlLabel>{t('peerList.panels.callToActionImage')}</ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -194,6 +188,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   }}
                   removeImage={() => setCallToActionImage(undefined)}
                 />
+              </FormGroup>
+              <FormGroup>
                 <FormControl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
@@ -210,20 +206,18 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             </div>
           </Form>
         </Panel>
-      </PanelGroup>
+      </Drawer.Body>
 
-      <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-        {t('peerList.panels.save')}
-      </Button>
-      <Button appearance={'subtle'} onClick={() => onClose?.()}>
-        {t('peerList.panels.close')}
-      </Button>
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {t('peerList.panels.save')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('peerList.panels.close')}
+        </Button>
+      </Drawer.Footer>
 
-      <Modal
-        style={{zIndex: 1061}}
-        show={isChooseModalOpen}
-        size={'sm'}
-        onHide={() => setChooseModalOpen(false)}>
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -231,7 +225,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
           }}
         />
-      </Modal>
+      </Drawer>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         {(logoImage || callToActionImage) && (

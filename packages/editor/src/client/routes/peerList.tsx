@@ -9,7 +9,9 @@ import {
   PeerListRoute,
   PeerCreateRoute,
   PeerEditRoute,
-  routeLink
+  routeLink,
+  PeerInfoEditRoute,
+  IconButtonLink
 } from '../route'
 
 import {
@@ -33,13 +35,12 @@ import {
   Button,
   Divider,
   Modal,
-  Alert,
-  Popover,
-  Whisper
+  Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {NavigationBar} from '../atoms/navigationBar'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+// import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -51,6 +52,10 @@ type Peer = NonNullable<PeerListQuery['peers']>[number]
 export function PeerList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
+
+  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
+    current?.type === RouteType.PeerProfileEdit
+  )
 
   const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
 
@@ -83,6 +88,10 @@ export function PeerList() {
 
   useEffect(() => {
     switch (current?.type) {
+      case RouteType.PeerProfileEdit:
+        setPeerProfileEditModalOpen(true)
+        break
+
       case RouteType.PeerCreate:
         setEditID(undefined)
         setEditModalOpen(true)
@@ -94,8 +103,6 @@ export function PeerList() {
         break
     }
   }, [current])
-
-  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
 
   const peers = peerListData?.peers?.map((peer, index) => {
     const {id, name, profile, hostURL} = peer
@@ -145,14 +152,15 @@ export function PeerList() {
 
   return (
     <>
-      <div style={{border: 'solid 4px #f7f7fa', padding: '10px', borderRadius: '5px'}}>
+      <h5>{t('peerList.overview.profile')}</h5>
+      <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
         <NavigationBar
           centerChildren={
             <div style={{textAlign: 'center'}}>
-              {' '}
               <Avatar
                 size="lg"
                 circle
+                style={{border: 'solid 2px #3498ff'}}
                 src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
                 alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
               />
@@ -161,23 +169,13 @@ export function PeerList() {
             </div>
           }
           rightChildren={
-            <Whisper
-              enterable
-              open={menuIsOpen}
-              onBlur={() => setMenuIsOpen(true)}
-              onClick={() => setMenuIsOpen(!menuIsOpen)}
-              placement="autoHorizontalStart"
-              // width set at 500px to allow for richtext toolbar
-              speaker={
-                <Popover style={{width: '500px'}}>
-                  <PeerInfoEditPanel
-                    onClose={() => setMenuIsOpen(false)}
-                    onSave={() => setMenuIsOpen(false)}
-                  />
-                </Popover>
-              }>
-              <IconButton icon={<Icon icon={'ellipsis-v'} />} />
-            </Whisper>
+            <IconButtonLink
+              size="lg"
+              appearance="link"
+              icon={<Icon icon="cog" />}
+              circle={true}
+              route={PeerInfoEditRoute.create({})}
+            />
           }
         />
       </div>
@@ -205,6 +203,22 @@ export function PeerList() {
           <p>{t('peerList.overview.noPeersFound')}</p>
         ) : null}
       </div>
+
+      <Drawer
+        show={isPeerProfileEditModalOpen}
+        size={'sm'}
+        onHide={() => setPeerProfileEditModalOpen(false)}>
+        <PeerInfoEditPanel
+          onClose={() => {
+            setPeerProfileEditModalOpen(false)
+
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: PeerListRoute.create({})
+            })
+          }}
+        />
+      </Drawer>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         {peerInfoData?.peerProfile.hostURL && (
