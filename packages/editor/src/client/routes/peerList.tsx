@@ -152,7 +152,7 @@ export function PeerList() {
 
   return (
     <>
-      <h5>{t('peerList.overview.profile')}</h5>
+      <h5>{t('peerList.overview.myPeerProfile')}</h5>
       <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
         <NavigationBar
           centerChildren={
