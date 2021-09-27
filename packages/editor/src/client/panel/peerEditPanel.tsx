@@ -220,13 +220,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 {profile?.name}
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                <div
-                  style={{
-                    backgroundColor: profile?.themeColor,
-                    width: '40px',
-                    height: '20px',
-                    padding: '5px'
-                  }}></div>
+                {profile?.themeColor}
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                 {!!profile?.callToActionText && (
