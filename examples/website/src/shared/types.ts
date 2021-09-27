@@ -158,6 +158,8 @@ export interface Peer {
   themeColor: string
   callToActionText: Node[]
   callToActionURL: string
+  callToActionImage: string
+  callToActionImageURL: string
 }
 
 export enum BlockType {
