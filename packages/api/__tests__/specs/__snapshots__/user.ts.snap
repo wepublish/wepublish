@@ -459,7 +459,7 @@ Object {
   "data": Object {
     "updateUser": Object {
       "email": "batman@email.com",
-      "emailVerified": "2021-09-24T13:16:33.961Z",
+      "emailVerified": "2021-09-27T12:00:00.000Z",
       "id": Any<String>,
       "name": "Dark Knight",
       "roles": Array [],

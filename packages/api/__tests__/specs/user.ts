@@ -130,7 +130,7 @@ describe('Users', () => {
           input: {
             name: 'Dark Knight',
             email: 'batman@email.com',
-            emailVerified: new Date().toISOString(),
+            emailVerified: new Date('2021-09-27T14:00:00').toISOString(),
             properties: [],
             active: true,
             roleIDs: []
