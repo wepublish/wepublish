@@ -18,28 +18,28 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
     field: props => <TitleBlock {...props} />,
     defaultValue: {title: '', lead: ''},
-    label: 'Title',
+    label: 'blocks.title.label',
     icon: 'header'
   },
 
   [BlockType.RichText]: {
     field: props => <RichTextBlock {...props} />,
     defaultValue: createDefaultValue,
-    label: 'Rich Text',
+    label: 'blocks.richText.label',
     icon: 'file-text'
   },
 
   [BlockType.Image]: {
     field: props => <ImageBlock {...props} />,
     defaultValue: {image: null, caption: ''},
-    label: 'Image',
+    label: 'blocks.image.label',
     icon: 'image'
   },
 
   [BlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {images: [{caption: '', image: null}]},
-    label: 'Gallery',
+    label: 'blocks.imageGallery.label',
     icon: 'clone'
   },
 
@@ -57,14 +57,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         }
       ]
     },
-    label: 'Listicle',
+    label: 'blocks.listicle.label',
     icon: 'th-list'
   },
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
     defaultValue: {quote: '', author: ''},
-    label: 'Quote',
+    label: 'blocks.quote.label',
     icon: 'quote-left'
   },
 
@@ -82,21 +82,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       image: undefined,
       hideButton: false
     },
-    label: 'Break',
+    label: 'blocks.linkPageBreak.label',
     icon: 'coffee'
   },
 
   [BlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
     defaultValue: {type: EmbedType.Other},
-    label: 'Embed',
+    label: 'blocks.embeds.label',
     icon: 'code'
   },
 
   [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
-    label: '1 Col',
+    label: 'blocks.teaserGrid1.label',
     icon: 'ellipsis-v'
   },
 
@@ -113,7 +113,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         [nanoid(), null]
       ]
     },
-    label: '6 Cols',
+    label: 'blocks.teaserGrid6.label',
     icon: 'ellipsis-h'
   }
 }
