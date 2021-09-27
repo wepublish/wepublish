@@ -43,7 +43,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
-  const [emailVerified, setEmailVerified] = useState<Date | null>(null)
+  const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
@@ -83,7 +83,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       setName(data.user.name)
       setPreferredName(data.user.preferredName ?? undefined)
       setEmail(data.user.email)
-      setEmailVerified(data.user.emailVerified ? new Date(data.user.emailVerified) : null)
+      setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
       setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
@@ -117,7 +117,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             name,
             preferredName,
             email,
-            emailVerified: emailVerified ? emailVerified.toISOString() : null,
+            emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
             active,
             properties: data.user.properties,
             roleIDs: roles.map(role => role.id)
@@ -133,7 +133,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             name,
             preferredName,
             email,
-            emailVerified: null,
+            emailVerifiedAt: null,
             active,
             properties: [],
             roleIDs: roles.map(role => role.id)

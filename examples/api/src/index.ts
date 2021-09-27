@@ -109,7 +109,7 @@ async function asyncMain() {
       await adapter.user.createUser({
         input: {
           email: 'dev@wepublish.ch',
-          emailVerified: new Date(),
+          emailVerifiedAt: new Date(),
           name: 'Dev User',
           active: true,
           properties: [],
@@ -121,7 +121,7 @@ async function asyncMain() {
       await adapter.user.createUser({
         input: {
           email: 'editor@wepublish.ch',
-          emailVerified: new Date(),
+          emailVerifiedAt: new Date(),
           name: 'Editor User',
           active: true,
           properties: [],

@@ -38,7 +38,7 @@ describe('Users', () => {
       const input: UserInput = {
         name: 'Bruce Wayne',
         email: `bwayne@mymail${ids.length}.com`,
-        emailVerified: new Date().toISOString(),
+        emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
         roleIDs: []
@@ -58,7 +58,7 @@ describe('Users', () => {
       const input: UserInput = {
         name: 'Robin Wayne',
         email: `rwayne@mymail${ids.length}.com`,
-        emailVerified: new Date().toISOString(),
+        emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
         roleIDs: []
@@ -130,7 +130,7 @@ describe('Users', () => {
           input: {
             name: 'Dark Knight',
             email: 'batman@email.com',
-            emailVerified: null,
+            emailVerifiedAt: null,
             properties: [],
             active: true,
             roleIDs: []

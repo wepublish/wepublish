@@ -1632,7 +1632,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
-  emailVerified?: Maybe<Scalars['DateTime']>
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
@@ -1677,7 +1677,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
-  emailVerified?: Maybe<Scalars['DateTime']>
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']
@@ -2526,7 +2526,7 @@ export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'del
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<
   User,
-  'id' | 'name' | 'email' | 'emailVerified'
+  'id' | 'name' | 'email' | 'emailVerifiedAt'
 > & {roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>}
 
 export type UserListQueryVariables = Exact<{
@@ -3103,7 +3103,7 @@ export const FullUser = gql`
     id
     name
     email
-    emailVerified
+    emailVerifiedAt
     roles {
       ...FullUserRole
     }

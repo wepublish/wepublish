@@ -101,7 +101,7 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
-  emailVerified: Date | null
+  emailVerifiedAt: Date | null
   name: string
   preferredName?: string
   address?: UserAddress

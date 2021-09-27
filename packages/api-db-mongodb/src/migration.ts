@@ -601,9 +601,9 @@ export const Migrations: Migration[] = [
       const users = await db.collection(CollectionName.Users)
       await users.updateMany(
         {
-          emailVerified: {$exists: false}
+          emailVerifiedAt: {$exists: false}
         },
-        {$set: {emailVerified: null}}
+        {$set: {emailVerifiedAt: null}}
       )
 
       await users.updateMany(

@@ -2,7 +2,7 @@ fragment FullUser on User {
     id
     name
     email
-    emailVerified
+    emailVerifiedAt
     roles {
         ...FullUserRole
     }
