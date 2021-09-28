@@ -595,7 +595,7 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Rename street field in address to address
+    //  Add emailVerifiedAt and oauth2Accounts to user model
     version: 14,
     async migrate(db, locale) {
       const users = await db.collection(CollectionName.Users)
