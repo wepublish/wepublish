@@ -593,6 +593,26 @@ export const Migrations: Migration[] = [
         }
       )
     }
+  },
+  {
+    //  Add emailVerifiedAt and oauth2Accounts to user model
+    version: 14,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          emailVerifiedAt: {$exists: false}
+        },
+        {$set: {emailVerifiedAt: null}}
+      )
+
+      await users.updateMany(
+        {
+          oauth2Accounts: {$exists: false}
+        },
+        {$set: {oauth2Accounts: []}}
+      )
+    }
   }
 ]
 
