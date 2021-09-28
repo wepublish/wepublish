@@ -40,7 +40,6 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {NavigationBar} from '../atoms/navigationBar'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
-// import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
