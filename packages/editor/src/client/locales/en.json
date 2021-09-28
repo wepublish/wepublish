@@ -365,6 +365,7 @@
     "dateTimePicker": {
       "hour": "{{hour}}:00",
       "nextSaturday": "Next Saturday",
+      "nextMonday": "Next Monday",
       "now": "Now",
       "today": "Today",
       "tomorrow": "Tomorrow"
