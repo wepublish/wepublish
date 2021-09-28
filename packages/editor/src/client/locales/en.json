@@ -501,6 +501,8 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
+      "peers": "Peers",
+      "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
       "users": "Users",
@@ -650,7 +652,8 @@
       "overview": {
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
-        "peers": "Peers"
+        "peers": "Peers",
+        "myPeerProfile": "My Peer Profile"
       },
       "panels": {
         "callToAction": "Call To Action",
@@ -671,6 +674,7 @@
         "editImage": "Edit Image",
         "editPeer": "Edit Peer",
         "editPeerInfo": "Edit Peer Info",
+        "logo": "Logo",
         "infoEditError": "Edit Token Error",
         "information": "Information",
         "invalidURL": "Invalid URL",
@@ -683,7 +687,8 @@
         "save": "Save",
         "themeColor": "Theme Color",
         "token": "Token",
-        "Unknown": "Unknown",
+        "unknown": "Unknown",
+        "unnamed": "Unnamed",
         "URL": "URL",
         "validateToken": "Please confirm token is correct before saving",
         "leaveEmpty": "Leave empty if you don't want to change it"
