@@ -178,19 +178,20 @@ export function Base({children}: BaseProps) {
                   </DropdownItemLink>
                 </Dropdown>
 
-                <NavItemLink
-                  icon={<Icon icon="share" />}
-                  route={PeerListRoute.create({})}
-                  active={current?.type === RouteType.PeerList}>
-                  {t('navbar.peering')}
-                </NavItemLink>
-
-                <NavItemLink
-                  icon={<Icon icon="key" />}
-                  route={TokenListRoute.create({})}
-                  active={current?.type === RouteType.TokenList}>
-                  {t('navbar.tokens')}
-                </NavItemLink>
+                <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.PeerList}
+                    icon={<Icon icon="share" />}
+                    route={PeerListRoute.create({})}>
+                    {t('navbar.peers')}
+                  </DropdownItemLink>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.TokenList}
+                    icon={<Icon icon="key" />}
+                    route={TokenListRoute.create({})}>
+                    {t('navbar.tokens')}
+                  </DropdownItemLink>
+                </Dropdown>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
