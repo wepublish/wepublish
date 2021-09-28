@@ -11,13 +11,13 @@
         "metadata": "Metadaten",
         "noSlug": "Artikel nicht publiziert. Bitte Slug erfassen.",
         "notFound": "Artikel nicht gefunden",
-        "pending": "Publikation des Artikels geplant am {{date, lll}}",
+        "pending": "Publikation des Artikels geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
-        "published": "Artikel publiziert am {{date, lll}}.",
+        "published": "Artikel publiziert am {{date, ccc PP p}}.",
         "save": "Speichern",
         "unpublished": "Nicht publiziert",
-        "publishedAt": "{{publicationDate, lll}}",
-        "modifiedAt": "{{modificationDate, ll}} {{modificationDate, LTS}}"
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}"
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
@@ -35,7 +35,7 @@
         "chooseTeaser": "Teaser wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "createdAt": "{{createdAt, lll}}",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "default": "Default",
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
@@ -61,7 +61,7 @@
         "loadMore": "Mehr laden",
         "metadata": "Metadaten",
         "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
-        "modifiedAt": "{{modifiedAt, ll}} {{modifiedAt, LTS}}",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noAuthorsFound": "Kein*e Autor*in gefunden",
         "noImagesFound": "Keine Bilder gefunden",
@@ -113,7 +113,7 @@
         "value": "Wert",
         "yes": "Ja",
         "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, lll}} geplant. Eine erneute Publikation überschreibt diese. ",
+        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese. ",
         "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
         "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die \"kanonische\" oder \"bevorzugte\" Version einer Webseite angibt. <2>Canonical Url Guide</2>",
@@ -146,19 +146,19 @@
         "confirm": "Bestätigen",
         "createAuthorProfile": "Autor*innenprofil erstellen für {{name}}",
         "createdAt": "Erstellt am",
-        "createdAtDate": "{{createdAtDate, lll}}",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Löschen",
         "deleteArticle": "Artikel löschen?",
         "duplicateArticle": "Artikel duplizieren?",
         "lead": "Lead",
         "publishedAt": "Publiziert am",
-        "publishedAtDate": "{{publishedAtDate, lll}}",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titel",
         "unpublish": "Publikation rückgängig machen",
         "unpublishArticle": "Artikelpublikation rückgängig machen?",
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
-        "updatedAtDate": "{{updatedAtDate, ll}} {{updatedAtDate, LTS}}"
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
     "authors": {
@@ -197,6 +197,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Embed",
         "overview": {
           "editEmbed": "Embed bearbeiten"
         },
@@ -216,6 +217,7 @@
         }
       },
       "image": {
+        "label": "Bild",
         "overview": {
           "caption": "Bildunterschrift",
           "chooseImage": "Bild wählen",
@@ -223,6 +225,7 @@
         }
       },
       "imageGallery": {
+        "label": "Bildgalerie",
         "overview": {
           "add": "Hinzufügen",
           "caption": "Bildunterschrift",
@@ -244,22 +247,26 @@
         }
       },
       "linkPageBreak": {
+        "label": "Umbruch",
         "linkText": "Link-Text",
         "linkURL": "Link-URL",
         "text": "Text",
         "title": "Titel"
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Bild wählen",
         "editImage": "Bild bearbeiten",
         "removeImage": "Bild entfernen",
         "title": "Titel"
       },
       "quote": {
+        "label": "Zitat",
         "author": "Autor*in",
         "quote": "Zitat"
       },
       "richText": {
+        "label": "Rich text",
         "apply": "Anwenden",
         "cancel": "Abbrechen",
         "charCount": "Anzahl Zeichen {{charCount}}",
@@ -272,6 +279,7 @@
         "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen."
       },
       "richTextTable": {
+        "label": "Rich text Tabelle",
         "addBorders": "Rahmen hinzufügen",
         "cancel": "Abbrechen",
         "columns": "Spalten",
@@ -282,8 +290,15 @@
         "border": "Rand"
       },
       "title": {
+        "label": "Titel",
         "leadText": "Lead-Text ",
         "title": "Titel"
+      },
+      "teaserGrid1": {
+        "label": "1 Kol"
+      },
+      "teaserGrid6": {
+        "label": "6 Kol"
       }
     },
     "cancel": "Abbrechen",
@@ -306,7 +321,7 @@
         "title": "Titel",
         "untitled": "Ohne Titel",
         "updated": "Bearbeitet",
-        "modifiedAtDate": "{{modifiedAtDate, lll}}",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "userName": "User Name"
       },
       "panels": {
@@ -326,13 +341,13 @@
         "requestChangesOnComment": "Änderungen am Kommentar beantragen",
         "requestChangesReason": "Grund",
         "revisionCreatedAt": "Revision erstellt am",
-        "revisionCreatedAtDate": "{{revisionCreatedAtDate,lll}}",
+        "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Revisionen",
         "untitled": "Kein Titel",
         "updatedAt": "Aktualisiert am",
         "userName": "User Name",
         "parent": "Elter",
-        "parentDate": "{{parentDate,lll}}"
+        "parentDate": "{{parentDate,ccc PP p}}"
       },
       "state": {
         "approved": "Angenommen",
@@ -525,15 +540,15 @@
         "pageDraftCreated": "Seiten Entwurf erstellt",
         "pageDraftSaved": "Seiten Entwurf gespeichert",
         "pageNotFound": "Seite nicht gefunden",
-        "pending": "Publikation der Seite geplant am {{date, lll}}",
+        "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
         "save": "Speichern",
         "unpublished": "Nicht publiziert",
-        "published": "Seite publiziert am {{date, lll}}",
+        "published": "Seite publiziert am {{date, ccc PP p}}",
         "pagePublished": "Seite publiziert",
-        "publishedAt": "{{publicationDate, lll}}",
-        "modifiedAt": "{{modificationDate, ll}} {{modificationDate, LTS}}",
-        "publishedAtIfPending": "{{publishedAtIfPending, lll}}"
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
       },
       "panels": {
         "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -566,7 +581,7 @@
         "value": "Wert",
         "publishPage": "Seite publizieren",
         "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, lll}} geplant. Ein erneutes publizieren überschreibt diese. "
+        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese. "
       }
     },
     "pages": {
@@ -593,19 +608,19 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
-        "createdAtDate": "{{createdAtDate, lll}}",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Löschen",
         "deletePage": "Seite löschen?",
         "duplicatePage": "Seite duplizieren?",
         "lead": "Lead",
         "publishedAt": "Publiziert am",
-        "publishedAtDate": "{{publishedAtDate, lll}}",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titel",
         "unpublish": "Publikation rückgängig machen",
         "unpublishPage": "Seitenpublikation rückgängig machen?",
         "untitled": "Kein Titel",
         "updatedAt": "Aktualisiert am",
-        "updatedAtDate": "{{updatedAtDate, ll}} {{updatedAtDate, LTS}}"
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
     "paymentMethodList": {
@@ -688,11 +703,11 @@
       "overview": {
         "action": "Aktion",
         "createdAt": "Erstellt",
-        "createdAtDate": "{{createdAtDate, lll}}",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Löschen",
         "description": "Beschreibung",
         "modifiedAt": "Zuletzt bearbeitet",
-        "modifiedAtDate": "{{modifiedAtDate, lll}}",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newUser": "Neuer User",
         "noDescription": "Keine Beschreibung",
@@ -718,7 +733,7 @@
         "password": "Passwort",
         "passwordChangeSuccess": "Passwort erfolgreich geändert!",
         "payedUntil": "Bezahlt bis",
-        "paidUntilDate": "{{paidUntilDate, lll}}",
+        "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
         "preferredName": "Bevorzugter Name",
         "remove": "Entfernen",
         "resetPassword": "Passwort zurücksetzen",
@@ -726,7 +741,7 @@
         "save": "Speichern",
         "selectUserRole": "Userrolle wählen",
         "startedAt": "Gestartet",
-        "startedAdDate": "{{startedAtDate, lll}}",
+        "startedAdDate": "{{startedAtDate, ccc PP p}}",
         "subCreate": "Erstellen",
         "subEdit": "Bearbeiten",
         "subTitle": "Abonnement",
