@@ -8,6 +8,7 @@ import fr from './locales/fr.json'
 
 import {format as formatDate, isDate, Locale} from 'date-fns'
 import {de as deLocale, enGB as enLocale, fr as frLocale} from 'date-fns/locale'
+import {registerLocale, setDefaultLocale} from 'react-datepicker'
 
 const dateFormatMap = new Map<string, Locale>([
   ['de', deLocale],
@@ -36,5 +37,9 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     fr
   }
 })
+
+// TODO: how to handle other date amd time formats
+registerLocale('de', deLocale)
+setDefaultLocale('de')
 
 export default i18n
