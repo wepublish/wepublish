@@ -18,6 +18,9 @@ fragment PeerRef on Peer {
   name
   slug
   hostURL
+  profile {
+    ...FullPeerProfile
+  }
 }
 
 fragment PeerWithProfile on Peer {
@@ -29,6 +32,12 @@ fragment PeerWithProfile on Peer {
 
 query PeerProfile {
   peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+query RemotePeerPrfoile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
     ...FullPeerProfile
   }
 }
