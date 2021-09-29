@@ -209,7 +209,7 @@ export function PageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  {rowData.published && (
+                  {(rowData.published || rowData.pending) && (
                     <IconButton
                       icon={<Icon icon="btn-off" />}
                       circle

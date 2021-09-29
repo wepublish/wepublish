@@ -222,17 +222,17 @@ export function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  {rowData.published && (
+                  {(rowData.published || rowData.pending) && (
                     <IconButton
-                      icon={<Icon icon="btn-off" />}
-                      circle
-                      size="sm"
-                      onClick={e => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
+                    icon={<Icon icon="btn-off" />}
+                    circle
+                    size="sm"
+                    onClick={e => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Unpublish)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                   )}
                   <IconButton
                     icon={<Icon icon="trash" />}
