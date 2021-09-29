@@ -150,16 +150,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreatePeer, roles)
         const link = new URL('/admin', hostURL)
-
         const fetcher = await createFetcher(link.toString(), token)
-
         const schema = await introspectSchema(fetcher)
-
         const remoteExecutableSchema = await makeRemoteExecutableSchema({
           schema,
           fetcher
         })
-
         const remoteAnswer = await delegateToSchema({
           info,
           fieldName: 'peerProfile',

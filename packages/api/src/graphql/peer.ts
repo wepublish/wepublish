@@ -50,12 +50,6 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
       resolve: createProxyingResolver((profile, args, {loaders}, info) => {
         return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
       })
-    },
-    randomField: {
-      type: GraphQLNonNull(GraphQLString),
-      resolve: () => {
-        return 'randomText'
-      }
     }
   }
 })
