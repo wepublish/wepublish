@@ -271,14 +271,12 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                               </defaultProps(ControlLabel)>
                               <defaultProps(FormControlWrapper)
                                 classPrefix="rs-form-control"
-                                errorMessage=""
                                 name="peerList.panels.URL"
                                 onChange={[Function]}
                                 value="https://host-url.ch/"
                               >
                                 <FormControlWrapper
                                   classPrefix="rs-form-control"
-                                  errorMessage=""
                                   name="peerList.panels.URL"
                                   onChange={[Function]}
                                   value="https://host-url.ch/"
@@ -318,7 +316,6 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                       }
                                     }
                                     classPrefix="rs-form-control"
-                                    errorMessage=""
                                     errorPlacement="bottomStart"
                                     formValue={Object {}}
                                     name="peerList.panels.URL"
@@ -551,6 +548,67 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           </FormGroup>
                         </defaultProps(FormGroup)>
                       </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(Button))
+                        appearance="primary"
+                        className="fetchButton"
+                        classPrefix="rs-btn"
+                        componentClass="button"
+                        disabled={false}
+                        onClick={[Function]}
+                        ripple={true}
+                      >
+                        <defaultProps(Button)
+                          appearance="primary"
+                          className="fetchButton"
+                          classPrefix="rs-btn"
+                          componentClass="button"
+                          disabled={false}
+                          onClick={[Function]}
+                          ripple={true}
+                        >
+                          <Button
+                            appearance="primary"
+                            className="fetchButton"
+                            classPrefix="rs-btn"
+                            componentClass="button"
+                            disabled={false}
+                            onClick={[Function]}
+                            ripple={true}
+                          >
+                            <button
+                              className="rs-btn rs-btn-primary fetchButton"
+                              disabled={false}
+                              onClick={[Function]}
+                              type="button"
+                            >
+                              peerList.panels.getRemote
+                              <defaultProps(Ripple)
+                                classPrefix="rs-ripple"
+                              >
+                                <Ripple
+                                  classPrefix="rs-ripple"
+                                >
+                                  <span
+                                    className="rs-ripple-pond"
+                                  >
+                                    <Transition
+                                      enteringClassName="rs-ripple-rippling"
+                                      in={false}
+                                      onEntered={[Function]}
+                                      timeout={1000}
+                                    >
+                                      <span
+                                        className="rs-ripple"
+                                        style={Object {}}
+                                      />
+                                    </Transition>
+                                  </span>
+                                </Ripple>
+                              </defaultProps(Ripple)>
+                            </button>
+                          </Button>
+                        </defaultProps(Button)>
+                      </withStyleProps(defaultProps(Button))>
                     </form>
                   </Form>
                 </div>
@@ -1244,6 +1302,7 @@ exports[`Peer Edit Panel should render 1`] = `
                       </withStyleProps(defaultProps(FormGroup))>
                       <withStyleProps(defaultProps(Button))
                         appearance="primary"
+                        className="fetchButton"
                         classPrefix="rs-btn"
                         componentClass="button"
                         disabled={true}
@@ -1252,7 +1311,7 @@ exports[`Peer Edit Panel should render 1`] = `
                       >
                         <defaultProps(Button)
                           appearance="primary"
-                          className=""
+                          className="fetchButton"
                           classPrefix="rs-btn"
                           componentClass="button"
                           disabled={true}
@@ -1261,7 +1320,7 @@ exports[`Peer Edit Panel should render 1`] = `
                         >
                           <Button
                             appearance="primary"
-                            className=""
+                            className="fetchButton"
                             classPrefix="rs-btn"
                             componentClass="button"
                             disabled={true}
@@ -1269,7 +1328,7 @@ exports[`Peer Edit Panel should render 1`] = `
                             ripple={true}
                           >
                             <button
-                              className="rs-btn rs-btn-primary rs-btn-disabled"
+                              className="rs-btn rs-btn-primary fetchButton rs-btn-disabled"
                               disabled={true}
                               onClick={[Function]}
                               type="button"
@@ -2003,6 +2062,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                       </withStyleProps(defaultProps(FormGroup))>
                       <withStyleProps(defaultProps(Button))
                         appearance="primary"
+                        className="fetchButton"
                         classPrefix="rs-btn"
                         componentClass="button"
                         disabled={true}
@@ -2011,7 +2071,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                       >
                         <defaultProps(Button)
                           appearance="primary"
-                          className=""
+                          className="fetchButton"
                           classPrefix="rs-btn"
                           componentClass="button"
                           disabled={true}
@@ -2020,7 +2080,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                         >
                           <Button
                             appearance="primary"
-                            className=""
+                            className="fetchButton"
                             classPrefix="rs-btn"
                             componentClass="button"
                             disabled={true}
@@ -2028,7 +2088,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                             ripple={true}
                           >
                             <button
-                              className="rs-btn rs-btn-primary rs-btn-disabled"
+                              className="rs-btn rs-btn-primary fetchButton rs-btn-disabled"
                               disabled={true}
                               onClick={[Function]}
                               type="button"

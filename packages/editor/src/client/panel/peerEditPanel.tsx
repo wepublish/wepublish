@@ -170,6 +170,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
             </FormGroup>
             <Button
+              className="fetchButton"
               appearance={'primary'}
               disabled={!urlString || !token}
               onClick={() => handleFetch()}>
