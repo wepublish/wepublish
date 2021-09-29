@@ -56,7 +56,7 @@ import {PageSort} from '../db/page'
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
-import {delegateToPeerSchema, base64Encode, base64Decode} from '../utility'
+import {delegateToPeerSchema, base64Encode, base64Decode, markResultAsProxied} from '../utility'
 
 import {
   authorise,
@@ -169,7 +169,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           // otherwise client doesn't know who (own or remote api) threw the error
           throw new PeerTokenInvalidError(link.toString())
         } else {
-          return remoteAnswer
+          return await markResultAsProxied(remoteAnswer)
         }
       }
     },
