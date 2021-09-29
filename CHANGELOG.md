@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.10.0-alpha.1 (2021-09-29)
+
+#### :bug: Bug Fix
+* `editor`
+  * map user metadata properties for save
+
 ## v2.10.0-alpha.0 (2021-09-28)
 
 #### :heart: New Feature
