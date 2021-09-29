@@ -531,19 +531,6 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                   </FormControl>
                                 </FormControlWrapper>
                               </defaultProps(FormControlWrapper)>
-                              <defaultProps(HelpBlock)
-                                classPrefix="rs-help-block"
-                              >
-                                <HelpBlock
-                                  classPrefix="rs-help-block"
-                                >
-                                  <span
-                                    className="rs-help-block"
-                                  >
-                                    peerList.panels.validateToken
-                                  </span>
-                                </HelpBlock>
-                              </defaultProps(HelpBlock)>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>
@@ -1285,17 +1272,6 @@ exports[`Peer Edit Panel should render 1`] = `
                                   </FormControl>
                                 </FormControlWrapper>
                               </defaultProps(FormControlWrapper)>
-                              <defaultProps(HelpBlock)
-                                classPrefix="rs-help-block"
-                              >
-                                <HelpBlock
-                                  classPrefix="rs-help-block"
-                                >
-                                  <span
-                                    className="rs-help-block"
-                                  />
-                                </HelpBlock>
-                              </defaultProps(HelpBlock)>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>
@@ -2045,17 +2021,6 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                   </FormControl>
                                 </FormControlWrapper>
                               </defaultProps(FormControlWrapper)>
-                              <defaultProps(HelpBlock)
-                                classPrefix="rs-help-block"
-                              >
-                                <HelpBlock
-                                  classPrefix="rs-help-block"
-                                >
-                                  <span
-                                    className="rs-help-block"
-                                  />
-                                </HelpBlock>
-                              </defaultProps(HelpBlock)>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>
