@@ -1,16 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Alert,
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Panel,
-  HelpBlock
-} from 'rsuite'
+import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -167,7 +157,6 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                   setToken(value)
                 }}
               />
-              <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
             </FormGroup>
             <Button
               className="fetchButton"
