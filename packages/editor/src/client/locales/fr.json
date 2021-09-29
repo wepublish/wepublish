@@ -7,15 +7,17 @@
         "notFound": "Article non trouvé",
         "articlePublished": "Article publié",
         "publish": "Publier",
-        "pending": "Article en attente de publication sur {{date}} à {{time}}",
+        "pending": "Publication de l'article prévue le {{date, ccc PP p}}",
         "noSlug": "Article non publié. Veuillez ajouter un slug.",
         "draftSaved": "Projet d'article sauvegardé",
         "draftCreated": "Projet d'article créé",
         "draft": "Draft",
         "back": "Retour",
         "unpublished": "Non publié",
-        "published": "Article publiè le {{date}} à {{time}}",
-        "save": "Sauvegarder"
+        "published": "Article publié le {{date, ccc PP p}}.",
+        "save": "Sauvegarder",
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}"
       },
       "panels": {
         "addTag": "Appuyez Entrée pour ajouter une tag",
@@ -32,7 +34,7 @@
         "published": "Publié",
         "removeTeaser": "Retirer le Teaser",
         "Untitled": "Sans titre",
-        "articlePending": "Il y a déjà une publication en attente programmée à {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Une nouvelle publication annulera cette publication. ",
+        "articlePending": "Il y a déjà une publication en attente programmée au {{pendingPublishDate, ccc PP p}}. Une nouvelle publication annulera cette publication. ",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l'article publié. <2>Guide des slugs</2>",
         "leadHelpBlock": "Veuillez utiliser un lead optimisé pour le référencement",
         "metadata": "Métadonnés",
@@ -53,6 +55,7 @@
         "chooseImage": "Choisir une image",
         "close": "Fermer",
         "confirm": "Confirmer",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "default": "Défaut",
         "displayOptions": "Options d'affichage",
         "draft": "Draft",
@@ -72,6 +75,7 @@
         "light": "Light",
         "loading": "Chargement ...",
         "loadMore": "Charger plus",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noAuthorsFound": "Aucun auteur/autrice trouvé",
         "outlined": "Aperçu de",
@@ -144,10 +148,12 @@
         "cancel": "Annuler",
         "confirm": "Confirmer",
         "createdAt": "Créé le",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Supprimer",
         "deleteArticle": "Supprimer l'article?",
         "lead": "Lead",
         "publishedAt": "Publié le",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titre",
         "unpublish": "Dépublier",
         "unpublishArticle": "Dépublier l'article?",
@@ -157,6 +163,7 @@
     "comments": {
       "overview": {
         "untitled": "Sans titre",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "updated": "Modifié le",
         "state": "Statut",
         "action": "Action",
@@ -180,6 +187,7 @@
         "delete": "Supprimer",
         "id": "Id",
         "parent": "Parent",
+        "parentDate": "{{parentDate,ccc PP p}}",
         "reject": "Rejeter",
         "rejectComment": "Rejeter le commentaire",
         "rejectionReason": "Motif du rejet",
@@ -187,6 +195,7 @@
         "requestChangesOnComment": "Demander des modifications sur un commentaire",
         "requestChangesReason": "Raison",
         "revisionCreatedAt": "Révision créée le",
+        "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Révisions",
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le"
@@ -220,7 +229,9 @@
       },
       "panels": {
         "createdAt": "Créé le",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "updatedAt": "Mis à jour le",
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}",
         "cancel": "Annuler",
         "close": "Fermer",
         "confirm": "Confirmer",
@@ -229,6 +240,7 @@
         "duplicatePage": "Dupliquer la page ?",
         "lead": "Lead",
         "publishedAt": "Publié le",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titre",
         "unpublish": "Dépublier",
         "unpublishPage": "Dépublier la page ?",
@@ -415,20 +427,24 @@
         "save": "Sauvegarder",
         "password": "Mot de passe",
         "payedUntil": "Payé jusqu'à",
+        "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
         "preferredName": "Nom préféré",
         "resetPassword": "Réinitialiser le mot de passe",
         "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
         "selectUserRole": "Sélectionnez le rôle de l'utilisateur/utilisatrices",
         "startedAt": "Démarré",
+        "startedAdDate": "{{startedAtDate, ccc PP p}}",
         "subEdit": "Modifier",
         "subCreate": "Créer"
       },
       "overview": {
         "action": "Actions",
         "createdAt": "Créé",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Annuler",
         "description": "Description",
         "modifiedAt": "Dernière modification",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
         "newUser": "Nouvel utilisateur/utilisatrices",
         "noDescription": "Pas de description",
@@ -504,6 +520,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Intégration",
         "overview": {
           "editEmbed": "Modifier l'intégration"
         },
@@ -523,12 +540,14 @@
         }
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Choisir une image",
         "editImage": "Modifier l'image",
         "removeImage": "Supprimer l'image",
         "title": "Titre"
       },
       "richText": {
+        "label": "Texte enrichi",
         "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
         "apply": "Appliquer",
         "cancel": "Annuler",
@@ -541,6 +560,7 @@
         "text": "Texte"
       },
       "richTextTable": {
+        "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
         "delete": "Supprimer",
         "addBorders": "Ajouter des bordures",
@@ -551,6 +571,7 @@
         "rows": "Rangs"
       },
       "image": {
+        "label": "Image",
         "overview": {
           "caption": "Légende",
           "chooseImage": "Choisir une image",
@@ -558,6 +579,7 @@
         }
       },
       "imageGallery": {
+        "label": "Galerie",
         "overview": {
           "add": "Ajouter",
           "caption": "Légende",
@@ -579,18 +601,27 @@
         }
       },
       "linkPageBreak": {
+        "label": "Saut de ligne",
         "linkText": "Texte du lien",
         "linkURL": "Lien URL",
         "text": "Texte",
         "title": "Titre"
       },
       "quote": {
+        "label": "Citation",
         "author": "Auteur/Autrice",
         "quote": "Citation"
       },
       "title": {
+        "label": "Titre",
         "leadText": "Lead ",
         "title": "Titre"
+      },
+      "teaserGrid1": {
+        "label": "1 Col"
+      },
+      "teaserGrid6": {
+        "label": "6 Col"
       }
     },
     "login": {
@@ -712,10 +743,13 @@
         "pageDraftSaved": "Page Projet sauvegardé",
         "pageNotFound": "Page non trouvée",
         "pagePublished": "Page publiée",
-        "pending": "Page en attente de publication le {{date}} à {{time}}",
+        "pending": "Publication de la page prévue le {{date, ccc PP p}}",
         "publish": "Publier",
-        "published": "Page publiée le {{date}} à {{time}}",
-        "save": "Sauvegarder"
+        "published": "Page publiée le {{date, ccc PP p}}",
+        "save": "Sauvegarder",
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
       },
       "panels": {
         "confirm": "Confirmer",
@@ -731,7 +765,7 @@
         "invalidDate": "Date non valide",
         "key": "Key",
         "metadata": "Métadonnées",
-        "pagePending": "Une publication en attente est déjà prévue à {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Une nouvelle publication annulera cette publication. ",
+        "pagePending": "Une publication en attente est déjà prévue le {{pendingPublishDate, ccc PP p}}. Une nouvelle publication annulera cette publication. ",
         "postImage": "Image du poste",
         "private": "Privé",
         "properties": "Propriétés",

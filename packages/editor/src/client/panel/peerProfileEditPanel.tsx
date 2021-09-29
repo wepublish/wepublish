@@ -1,6 +1,16 @@
 import React, {useState, useEffect} from 'react'
 
-import {Button, Drawer, Panel, Form, FormGroup, ControlLabel, FormControl, Alert} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Panel,
+  Form,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Alert,
+  Message
+} from 'rsuite'
 
 import {
   usePeerProfileQuery,
@@ -19,6 +29,7 @@ import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
+import {ColorPicker} from '../atoms/colorPicker'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -123,10 +134,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
-              <FormControl
-                name="themeColor"
-                value={themeColor}
-                onChange={value => setThemeColor(value)}
+              <ColorPicker
+                setColor={color => {
+                  setThemeColor(color)
+                }}
+                currentColor={themeColor}
               />
             </FormGroup>
 
@@ -185,6 +197,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   name="callToActionImageURL"
                   value={callToActionImageURL}
                   onChange={url => setCallToActionImageURL(url)}
+                />
+                <Message
+                  style={{marginTop: '5px'}}
+                  showIcon
+                  type="info"
+                  description={t('peerList.panels.ctaImageInfo')}
                 />
               </FormGroup>
             </div>

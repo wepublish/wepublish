@@ -4,7 +4,6 @@ import webpack from 'webpack'
 import {ModuleMapPlugin, AssetListPlugin} from '@karma.run/webpack'
 
 export default (mode: string) =>
-  //@ts-ignore
   ({
     entry: {
       client: './src/client/index.ts',
