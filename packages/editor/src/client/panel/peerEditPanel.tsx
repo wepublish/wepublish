@@ -222,6 +222,9 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <DescriptionListItem label={t('peerList.panels.themeColor')}>
                 {profile?.themeColor}
               </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
+                {profile?.themeFontColor}
+              </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                 {!!profile?.callToActionText && (
                   <RichTextBlock

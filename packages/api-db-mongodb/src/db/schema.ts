@@ -63,6 +63,7 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  themeFontColor: string
   callToActionURL: string
   callToActionText: RichTextNode[]
   callToActionImageURL?: string

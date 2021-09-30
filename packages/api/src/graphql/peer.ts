@@ -20,6 +20,7 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
@@ -40,6 +41,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},

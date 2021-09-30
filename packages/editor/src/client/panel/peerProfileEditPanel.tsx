@@ -44,6 +44,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [logoImage, setLogoImage] = useState<PeerProfileImage>()
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
+  const [themeFontColor, setThemeFontColor] = useState('')
   const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
@@ -66,6 +67,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setLogoImage(data.peerProfile.logo)
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
+      setThemeFontColor(data.peerProfile.themeFontColor)
       setCallToActionText(
         data.peerProfile.callToActionText.length
           ? data.peerProfile.callToActionText
@@ -89,6 +91,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           name,
           logoID: logoImage?.id,
           themeColor,
+          themeFontColor,
           callToActionText,
           callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImage?.id,
@@ -137,6 +140,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 name="themeColor"
                 value={themeColor}
                 onChange={value => setThemeColor(value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.themeFontColor')}</ControlLabel>
+              <FormControl
+                name="fontColor"
+                value={themeFontColor}
+                onChange={value => setThemeFontColor(value)}
               />
             </FormGroup>
 
