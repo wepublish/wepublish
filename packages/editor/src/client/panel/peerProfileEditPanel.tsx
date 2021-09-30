@@ -146,10 +146,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.themeFontColor')}</ControlLabel>
-              <FormControl
-                name="fontColor"
-                value={themeFontColor}
-                onChange={value => setThemeFontColor(value)}
+              <ColorPicker
+                setColor={color => {
+                  setThemeFontColor(color)
+                }}
+                currentColor={themeFontColor}
               />
             </FormGroup>
 
