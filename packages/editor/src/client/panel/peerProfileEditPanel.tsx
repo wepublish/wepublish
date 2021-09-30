@@ -29,6 +29,7 @@ import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
+import {ColorPicker} from '../atoms/colorPicker'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -136,10 +137,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
-              <FormControl
-                name="themeColor"
-                value={themeColor}
-                onChange={value => setThemeColor(value)}
+              <ColorPicker
+                setColor={color => {
+                  setThemeColor(color)
+                }}
+                currentColor={themeColor}
               />
             </FormGroup>
             <FormGroup>

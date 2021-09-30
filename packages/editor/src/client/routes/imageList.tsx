@@ -145,9 +145,7 @@ export function ImageList() {
                     <Typography variant="body2" color="white" ellipsize>
                       {image.title || t('images.panels.Untitled')}
                     </Typography>
-                    <Typography className="displayThreeLinesOnly">
-                      {image.description}
-                    </Typography>
+                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
                   </Overlay>
                   <IconButton
                     style={{position: 'absolute', top: '5px', right: '5px'}}
