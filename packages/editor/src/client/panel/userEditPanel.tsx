@@ -119,7 +119,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             email,
             emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
             active,
-            properties: data.user.properties,
+            properties: data.user.properties.map(({value, key, public: publicValue}) => ({
+              value,
+              key,
+              public: publicValue
+            })),
             roleIDs: roles.map(role => role.id)
           }
         }
