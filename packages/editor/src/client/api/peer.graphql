@@ -36,7 +36,7 @@ query PeerProfile {
   }
 }
 
-query RemotePeerPrfoile($hostURL: String!, $token: String!) {
+query RemotePeerProfile($hostURL: String!, $token: String!) {
   remotePeerProfile(hostURL: $hostURL, token: $token) {
     ...FullPeerProfile
   }

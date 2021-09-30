@@ -1252,7 +1252,6 @@ export type PeerProfile = {
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImage?: Maybe<Image>;
-  randomField: Scalars['String'];
 };
 
 export type PeerProfileInput = {
@@ -3208,13 +3207,13 @@ export type PeerProfileQuery = (
   ) }
 );
 
-export type RemotePeerPrfoileQueryVariables = Exact<{
+export type RemotePeerProfileQueryVariables = Exact<{
   hostURL: Scalars['String'];
   token: Scalars['String'];
 }>;
 
 
-export type RemotePeerPrfoileQuery = (
+export type RemotePeerProfileQuery = (
   { __typename?: 'Query' }
   & { remotePeerProfile?: Maybe<(
     { __typename?: 'PeerProfile' }
@@ -6147,8 +6146,8 @@ export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
 export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
 export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
-export const RemotePeerPrfoileDocument = gql`
-    query RemotePeerPrfoile($hostURL: String!, $token: String!) {
+export const RemotePeerProfileDocument = gql`
+    query RemotePeerProfile($hostURL: String!, $token: String!) {
   remotePeerProfile(hostURL: $hostURL, token: $token) {
     ...FullPeerProfile
   }
@@ -6156,33 +6155,33 @@ export const RemotePeerPrfoileDocument = gql`
     ${FullPeerProfileFragmentDoc}`;
 
 /**
- * __useRemotePeerPrfoileQuery__
+ * __useRemotePeerProfileQuery__
  *
- * To run a query within a React component, call `useRemotePeerPrfoileQuery` and pass it any options that fit your needs.
- * When your component renders, `useRemotePeerPrfoileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useRemotePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemotePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useRemotePeerPrfoileQuery({
+ * const { data, loading, error } = useRemotePeerProfileQuery({
  *   variables: {
  *      hostURL: // value for 'hostURL'
  *      token: // value for 'token'
  *   },
  * });
  */
-export function useRemotePeerPrfoileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerPrfoileQuery, RemotePeerPrfoileQueryVariables>) {
+export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RemotePeerPrfoileQuery, RemotePeerPrfoileQueryVariables>(RemotePeerPrfoileDocument, options);
+        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
       }
-export function useRemotePeerPrfoileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerPrfoileQuery, RemotePeerPrfoileQueryVariables>) {
+export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RemotePeerPrfoileQuery, RemotePeerPrfoileQueryVariables>(RemotePeerPrfoileDocument, options);
+          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
         }
-export type RemotePeerPrfoileQueryHookResult = ReturnType<typeof useRemotePeerPrfoileQuery>;
-export type RemotePeerPrfoileLazyQueryHookResult = ReturnType<typeof useRemotePeerPrfoileLazyQuery>;
-export type RemotePeerPrfoileQueryResult = Apollo.QueryResult<RemotePeerPrfoileQuery, RemotePeerPrfoileQueryVariables>;
+export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
+export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;
+export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>;
 export const UpdatePeerProfileDocument = gql`
     mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {

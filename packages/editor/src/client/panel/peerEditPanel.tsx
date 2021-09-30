@@ -9,7 +9,7 @@ import {
   usePeerQuery,
   useUpdatePeerMutation,
   FullPeerProfileFragment,
-  useRemotePeerPrfoileQuery
+  useRemotePeerProfileQuery
 } from '../api'
 
 import {slugify, getOperationNameFromDocument} from '../utility'
@@ -47,7 +47,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  const {refetch: fetchRemote} = useRemotePeerPrfoileQuery({skip: true})
+  const {refetch: fetchRemote} = useRemotePeerProfileQuery({skip: true})
 
   const isDisabled = isLoading || isCreating || isUpdating || !profile || !name
 
