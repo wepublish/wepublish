@@ -336,6 +336,7 @@ export function PeerArticleTemplateContainer({
 
 const PeerProfileBreakStyle = cssRule(({backgroundColor}: any) => ({
   backgroundColor: backgroundColor ?? Color.SecondaryLight,
+  // add font color here
   padding: `${pxToRem(25)} ${pxToRem(125)}`,
   borderTop: `1px solid ${Color.Secondary}`,
   borderBottom: `1px solid ${Color.Primary}`,
