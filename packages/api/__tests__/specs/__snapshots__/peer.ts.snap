@@ -150,7 +150,7 @@ Object {
       "logo": null,
       "name": "test peer profile",
       "themeColor": "#4287f5",
-      "themeFontColor": "#d68c15",
+      "themeFontColor": "#d67c15",
     },
   },
   "errors": undefined,
