@@ -29,7 +29,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
         name: '',
         themeColor: '#000000',
         callToActionURL: '',
-        callToActionText: [],
+        callToActionText: '',
         callToActionImageID: '',
         callToActionImageURL: ''
       }

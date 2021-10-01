@@ -1248,7 +1248,7 @@ export type PeerProfile = {
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
-  callToActionText: Scalars['RichText'];
+  callToActionText: Scalars['String'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImage?: Maybe<Image>;
@@ -1258,7 +1258,7 @@ export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
-  callToActionText: Scalars['RichText'];
+  callToActionText: Scalars['String'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImageID?: Maybe<Scalars['ID']>;
