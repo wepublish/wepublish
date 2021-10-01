@@ -3,7 +3,8 @@ import {
   GraphQLNonNull,
   GraphQLString,
   GraphQLInputObjectType,
-  GraphQLID
+  GraphQLID,
+  GraphQLUnionType,
 } from 'graphql'
 
 import {Peer, PeerProfile} from '../db/peer'
@@ -13,6 +14,25 @@ import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
 // import {GraphQLRichText} from './richText'
+
+
+// const GraphQLCallToActionText = new GraphQLUnionType({
+//   name: 'CallToActionText',
+//   types: [
+//     new GraphQLObjectType({
+//       name: 'CallToActionRichText',
+//       fields: {
+//         callToActionText: {type: GraphQLNonNull(GraphQLRichText)}
+//       }
+//     }),
+//     new GraphQLObjectType({
+//       name: 'CallToActionString',
+//       fields: {
+//         callToActionText: {type: GraphQLNonNull(GraphQLString)}
+//       }
+//     })
+//   ],
+// });
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
