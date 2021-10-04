@@ -14,7 +14,7 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
+import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button, Message} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
@@ -23,7 +23,6 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
-import { WarningMessage } from '../atoms/WarningMessage'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -330,9 +329,10 @@ export function PageList() {
             )}
           </DescriptionList>
 
-          <WarningMessage>
-            {t('articleEditor.overview.unpublishWarningMessage')}
-          </WarningMessage>
+          <Message showIcon type="warning"
+            title={t('Warning')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
         </Modal.Body>
 
         <Modal.Footer>

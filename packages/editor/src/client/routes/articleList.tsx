@@ -17,7 +17,7 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button, Message} from 'rsuite'
 
 import {
   DEFAULT_TABLE_PAGE_SIZES,
@@ -25,7 +25,6 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
-import { WarningMessage } from '../atoms/WarningMessage'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
@@ -348,9 +347,10 @@ export function ArticleList() {
             )}
           </DescriptionList>
 
-          <WarningMessage>
-            {t('articleEditor.overview.unpublishWarningMessage')}
-          </WarningMessage>
+          <Message showIcon type="warning"
+            title={t('Warning')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
 
         </Modal.Body>
 
