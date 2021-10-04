@@ -1103,22 +1103,6 @@
               "deprecationReason": null
             },
             {
-              "name": "fontColor",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Color",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "hostURL",
               "description": null,
               "args": [],
