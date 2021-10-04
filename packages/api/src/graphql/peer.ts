@@ -41,7 +41,12 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
-    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {
+      type: GraphQLNonNull(GraphQLColor)
+      // resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+      //   return profile.themeFontColor ? loaders.peer.load(profile.themeFontColor) : '#123456'
+      // })
+    },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
