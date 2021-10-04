@@ -8,11 +8,17 @@ import {
   Kind
 } from 'graphql'
 
-import {WrapQuery, ExtractField} from 'graphql-tools'
+import {
+  WrapQuery,
+  ExtractField,
+  introspectSchema,
+  delegateToSchema,
+  makeRemoteExecutableSchema
+} from 'graphql-tools'
 
 import {UserInputError} from 'apollo-server-express'
 
-import {Context} from '../context'
+import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
 import {GraphQLAuthProvider} from './auth'
@@ -50,7 +56,7 @@ import {PageSort} from '../db/page'
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
-import {delegateToPeerSchema, base64Encode, base64Decode} from '../utility'
+import {delegateToPeerSchema, base64Encode, base64Decode, markResultAsProxied} from '../utility'
 
 import {
   authorise,
@@ -89,7 +95,8 @@ import {
   CanGetPayments,
   CanGetPaymentProviders,
   CanGetArticlePreviewLink,
-  CanGetPagePreviewLink
+  CanGetPagePreviewLink,
+  CanCreatePeer
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -101,7 +108,7 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {NotAuthorisedError, NotFound} from '../error'
+import {NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
@@ -132,6 +139,40 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   fields: {
     // Peering
     // =======
+
+    remotePeerProfile: {
+      type: GraphQLPeerProfile,
+      args: {
+        hostURL: {type: GraphQLNonNull(GraphQLString)},
+        token: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {hostURL, token}, {authenticate}, info) {
+        const {roles} = authenticate()
+        authorise(CanCreatePeer, roles)
+        const link = new URL('/admin', hostURL)
+        const fetcher = await createFetcher(link.toString(), token)
+        const schema = await introspectSchema(fetcher)
+        const remoteExecutableSchema = await makeRemoteExecutableSchema({
+          schema,
+          fetcher
+        })
+        const remoteAnswer = await delegateToSchema({
+          info,
+          fieldName: 'peerProfile',
+          args: {},
+          schema: remoteExecutableSchema,
+          transforms: []
+        })
+
+        if (remoteAnswer?.extensions?.code === 'UNAUTHENTICATED') {
+          // check for unauthenticated error and throw more specific error.
+          // otherwise client doesn't know who (own or remote api) threw the error
+          throw new PeerTokenInvalidError(link.toString())
+        } else {
+          return await markResultAsProxied(remoteAnswer)
+        }
+      }
+    },
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
