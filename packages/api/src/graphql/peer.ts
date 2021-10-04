@@ -4,7 +4,6 @@ import {
   GraphQLString,
   GraphQLInputObjectType,
   GraphQLID,
-  GraphQLUnionType,
 } from 'graphql'
 
 import {Peer, PeerProfile} from '../db/peer'
