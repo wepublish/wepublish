@@ -61,7 +61,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
       })
       setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null)
     } catch (error) {
-      Alert.error(error.message, 0)
+      // Alert.error(error.message, 0)
     }
   }
 
