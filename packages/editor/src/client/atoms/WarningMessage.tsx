@@ -13,7 +13,7 @@ export function WarningMessage({children}: WarningMessageProps) {
   return (
     <div style={{backgroundColor: '#fffaf2', padding: '20px'}}>
       <div style={{fontSize: '16px'}}>
-        <span style={{marginRight: '10px'}}><Icon icon="warning"></Icon></span>
+        <span style={{marginRight: '10px'}}><Icon icon="remind"></Icon></span>
         <span>{t('articleEditor.overview.warningLabel')}</span>
       </div>
       <p style={{margin: '5px 0 0 25px', fontSize: '14px'}}>
