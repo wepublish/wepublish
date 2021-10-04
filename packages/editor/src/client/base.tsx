@@ -37,7 +37,7 @@ const iconStyles = {
   width: 56,
   height: 56,
   lineHeight: '56px',
-  textAlign: 'center'
+  textAlign: 'center' as const
 }
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -104,22 +104,17 @@ export function Base({children}: BaseProps) {
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
                   route={ArticleListRoute.create({})}
-                  active={current?.type === RouteType.ArticleList}>
+                  active={
+                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                  }>
                   {t('navbar.articles')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="file" />}
+                  icon={<Icon icon="frame" />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
-                </NavItemLink>
-
-                <NavItemLink
-                  icon={<Icon icon="people-group" />}
-                  route={AuthorListRoute.create({})}
-                  active={current?.type === RouteType.AuthorList}>
-                  {t('navbar.authors')}
                 </NavItemLink>
 
                 <NavItemLink
@@ -130,7 +125,7 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="camera-retro" />}
+                  icon={<Icon icon="image" />}
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
@@ -141,6 +136,13 @@ export function Base({children}: BaseProps) {
                   route={NavigationListRoute.create({})}
                   active={current?.type === RouteType.NavigationList}>
                   {t('navbar.navigations')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="people-group" />}
+                  route={AuthorListRoute.create({})}
+                  active={current?.type === RouteType.AuthorList}>
+                  {t('navbar.authors')}
                 </NavItemLink>
 
                 <Dropdown
@@ -170,25 +172,26 @@ export function Base({children}: BaseProps) {
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="money" />}
+                    icon={<Icon icon="credit-card" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
                 </Dropdown>
 
-                <NavItemLink
-                  icon={<Icon icon="share" />}
-                  route={PeerListRoute.create({})}
-                  active={current?.type === RouteType.PeerList}>
-                  {t('navbar.peering')}
-                </NavItemLink>
-
-                <NavItemLink
-                  icon={<Icon icon="key" />}
-                  route={TokenListRoute.create({})}
-                  active={current?.type === RouteType.TokenList}>
-                  {t('navbar.tokens')}
-                </NavItemLink>
+                <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.PeerList}
+                    icon={<Icon icon="share" />}
+                    route={PeerListRoute.create({})}>
+                    {t('navbar.peers')}
+                  </DropdownItemLink>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.TokenList}
+                    icon={<Icon icon="key" />}
+                    route={TokenListRoute.create({})}>
+                    {t('navbar.tokens')}
+                  </DropdownItemLink>
+                </Dropdown>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -199,8 +202,6 @@ export function Base({children}: BaseProps) {
                   placement="topStart"
                   trigger="click"
                   renderTitle={children => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
                     return <Icon style={iconStyles} icon="cog" className="icon-selector" />
                   }}>
                   <DropdownItemLink route={LogoutRoute.create({})}>

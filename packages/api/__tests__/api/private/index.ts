@@ -1208,6 +1208,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type PeerProfileInput = {
@@ -1216,6 +1218,8 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImageID?: Maybe<Scalars['ID']>
 }
 
 export type Permission = {
@@ -1628,6 +1632,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
@@ -1672,6 +1677,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']
@@ -2450,8 +2456,16 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+  | 'name'
+  | 'hostURL'
+  | 'themeColor'
+  | 'callToActionText'
+  | 'callToActionURL'
+  | 'callToActionImageURL'
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
@@ -2510,9 +2524,10 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
-export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
-    roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
-  }
+export type FullUserFragment = {__typename?: 'User'} & Pick<
+  User,
+  'id' | 'name' | 'email' | 'emailVerifiedAt'
+> & {roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>}
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
@@ -2876,6 +2891,10 @@ export const FullPeerProfile = gql`
     }
     callToActionText
     callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
   }
   ${ImageRef}
 `
@@ -3084,6 +3103,7 @@ export const FullUser = gql`
     id
     name
     email
+    emailVerifiedAt
     roles {
       ...FullUserRole
     }

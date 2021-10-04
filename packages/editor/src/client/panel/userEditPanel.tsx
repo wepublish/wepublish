@@ -43,6 +43,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
+  const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
@@ -82,6 +83,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       setName(data.user.name)
       setPreferredName(data.user.preferredName ?? undefined)
       setEmail(data.user.email)
+      setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
       setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
@@ -115,8 +117,13 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             name,
             preferredName,
             email,
+            emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
             active,
-            properties: data.user.properties,
+            properties: data.user.properties.map(({value, key, public: publicValue}) => ({
+              value,
+              key,
+              public: publicValue
+            })),
             roleIDs: roles.map(role => role.id)
           }
         }
@@ -130,6 +137,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             name,
             preferredName,
             email,
+            emailVerifiedAt: null,
             active,
             properties: [],
             roleIDs: roles.map(role => role.id)
@@ -219,10 +227,16 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           {subscription && (
             <DescriptionList>
               <DescriptionListItem label={t('userList.panels.startedAt')}>
-                {new Date(subscription.startsAt).toLocaleString()}
+                {t('userList.panels.startedAtDate', {
+                  startedAtDate: new Date(subscription.startsAt)
+                })}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.payedUntil')}>
-                {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
+                {subscription.paidUntil
+                  ? t('userList.panels.paidUntilDate', {
+                      paidUntilDate: new Date(subscription.paidUntil)
+                    })
+                  : ''}
               </DescriptionListItem>
               <DescriptionListItem label={t('userList.panels.memberPlan')}>
                 {subscription.memberPlan.name}

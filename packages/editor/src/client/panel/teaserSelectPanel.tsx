@@ -124,10 +124,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                   </h3>
                   <div>
                     <div style={{display: 'inline', fontSize: 12}}>
-                      {new Date(article.createdAt).toLocaleString()}
+                      {t('articleEditor.panels.createdAt', {
+                        createdAt: new Date(article.createdAt)
+                      })}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {new Date(article.modifiedAt).toLocaleString()}
+                      {t('articleEditor.panels.modifiedAt', {
+                        modifiedAt: new Date(article.modifiedAt)
+                      })}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}
@@ -164,10 +168,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                   </h3>
                   <div>
                     <div style={{display: 'inline', fontSize: 12}}>
-                      {new Date(article.createdAt).toLocaleString()}
+                      {t('articleEditor.panels.createdAt', {
+                        createdAt: new Date(article.createdAt)
+                      })}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {new Date(article.modifiedAt).toLocaleString()}
+                      {t('articleEditor.panels.modifiedAt', {
+                        modifiedAt: new Date(article.modifiedAt)
+                      })}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}
@@ -207,10 +215,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                   </h3>
                   <div>
                     <div style={{display: 'inline', fontSize: 12}}>
-                      {new Date(page.createdAt).toLocaleString()}
+                      {t('pageEditor.panels.createdAt', {createdAt: new Date(page.createdAt)})}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {new Date(page.modifiedAt).toLocaleString()}
+                      {t('pageEditor.panels.modifiedAt', {modifiedAt: new Date(page.modifiedAt)})}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}

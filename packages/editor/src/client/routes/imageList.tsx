@@ -70,9 +70,7 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      setImages(data.images.nodes)
+      setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>)
     }
   }, [data?.images])
 
@@ -138,7 +136,7 @@ export function ImageList() {
                     style={{
                       bottom: '0px',
                       width: '100%',
-                      maxHeight: '50%',
+                      maxHeight: '60%',
                       padding: '10px'
                     }}>
                     <Typography variant="subtitle1" color="gray" ellipsize>
@@ -147,6 +145,7 @@ export function ImageList() {
                     <Typography variant="body2" color="white" ellipsize>
                       {image.title || t('images.panels.Untitled')}
                     </Typography>
+                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
                   </Overlay>
                   <IconButton
                     style={{position: 'absolute', top: '5px', right: '5px'}}

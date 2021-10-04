@@ -28,7 +28,7 @@ export function ChooseEditImage({
   header = header ?? t('chooseEditImage.header')
   return (
     <Panel header={header} bodyFill={true} style={{height: 450, marginBottom: 10}}>
-      {!image && disabled === true && <Placeholder.Graph/>}
+      {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
