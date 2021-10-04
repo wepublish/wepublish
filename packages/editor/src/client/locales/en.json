@@ -688,6 +688,7 @@
         "peerUpdated": "Peer updated",
         "removeImage": "Remove Image",
         "save": "Save",
+        "getRemote": "Fetch Remote Peer Profile",
         "themeColor": "Theme Color",
         "token": "Token",
         "unknown": "Unknown",
