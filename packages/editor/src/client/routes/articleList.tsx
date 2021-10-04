@@ -348,7 +348,7 @@ export function ArticleList() {
           </DescriptionList>
 
           <Message showIcon type="warning"
-            title={t('Warning')}
+            title={t('articleEditor.overview.warningLabel')}
             description={t('articleEditor.overview.unpublishWarningMessage')}
           />
 
