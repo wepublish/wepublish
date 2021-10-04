@@ -23,6 +23,7 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
+import { WarningMessage } from '../atoms/WarningMessage'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -328,6 +329,10 @@ export function PageList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
+
+          <WarningMessage>
+            {t('articleEditor.overview.unpublishWarningMessage')}
+          </WarningMessage>
         </Modal.Body>
 
         <Modal.Footer>

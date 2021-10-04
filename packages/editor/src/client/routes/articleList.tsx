@@ -17,13 +17,15 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button, Message} from 'rsuite'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
+
 import {
   DEFAULT_TABLE_PAGE_SIZES,
   ListingStateBgColor,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
+import { WarningMessage } from '../atoms/WarningMessage'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
@@ -345,9 +347,10 @@ export function ArticleList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
-          <Message showIcon type="warning" header={`Warning`} style={{height: '100px', color: '#000'}}>
-            {`If you click on confirm button, you will unpublish any published and/or pending state`}
-          </Message>
+
+          <WarningMessage>
+            {t('articleEditor.overview.unpublishWarningMessage')}
+          </WarningMessage>
 
         </Modal.Body>
 
@@ -435,3 +438,5 @@ export function ArticleList() {
     </>
   )
 }
+
+
