@@ -17,7 +17,7 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button, Message} from 'rsuite'
 import {
   DEFAULT_TABLE_PAGE_SIZES,
   ListingStateBgColor,
@@ -345,6 +345,10 @@ export function ArticleList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
+          <Message showIcon type="warning" header={`Warning`} style={{height: '100px', color: '#000'}}>
+            {`If you click on confirm button, you will unpublish any published and/or pending state`}
+          </Message>
+
         </Modal.Body>
 
         <Modal.Footer>
