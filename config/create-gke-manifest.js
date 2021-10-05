@@ -830,6 +830,7 @@ async function applyApiServer() {
                     }
                   }
                 },
+                pathType: "Prefix",
                 path: '/'
               }
             ]
