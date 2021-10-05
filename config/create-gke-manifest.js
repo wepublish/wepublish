@@ -47,6 +47,7 @@ main().catch(e => {
   process.exit(1)
 })
 
+
 async function main() {
   await applyWebsite()
   await applyMediaServer()
