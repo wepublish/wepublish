@@ -16,7 +16,8 @@ import {
   UserSubscription,
   MailLogState,
   PaymentState,
-  UserAddress
+  UserAddress,
+  UserOAuth2Account
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -63,6 +64,7 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  themeFontColor: string
   callToActionURL: string
   callToActionText: RichTextNode[]
   callToActionImageURL?: string
@@ -100,10 +102,13 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
+  emailVerifiedAt: Date | null
   name: string
   preferredName?: string
   address?: UserAddress
   password: string
+
+  oauth2Accounts: UserOAuth2Account[]
 
   active: boolean
   lastLogin: Date | null

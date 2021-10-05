@@ -1,5 +1,5 @@
 import {ApolloError} from 'apollo-server-express'
-import { MAX_COMMENT_LENGTH } from './utility'
+import {MAX_COMMENT_LENGTH} from './utility'
 
 export enum ErrorCode {
   TokenExpired = 'TOKEN_EXPIRED',
@@ -16,7 +16,8 @@ export enum ErrorCode {
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
   UserInputError = 'USER_INPUT_ERROR',
   DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
-  CommentLengthError = 'COMMENT_LENGTH_ERROR'
+  CommentLengthError = 'COMMENT_LENGTH_ERROR',
+  PeerTokenInvalid = 'PEER_TOKEN_INVALID'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -111,6 +112,15 @@ export class DuplicatePageSlugError extends ApolloError {
 
 export class CommentLengthError extends ApolloError {
   constructor() {
-    super(`Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`, ErrorCode.CommentLengthError)
+    super(
+      `Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`,
+      ErrorCode.CommentLengthError
+    )
+  }
+}
+
+export class PeerTokenInvalidError extends ApolloError {
+  constructor(peerUrl: string) {
+    super(`Token for peer ${peerUrl} is invalid`, ErrorCode.PeerTokenInvalid)
   }
 }

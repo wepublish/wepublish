@@ -199,6 +199,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Embed",
         "overview": {
           "editEmbed": "Edit Embed"
         },
@@ -218,6 +219,7 @@
         }
       },
       "image": {
+        "label": "Image",
         "overview": {
           "caption": "Caption",
           "chooseImage": "Choose Image",
@@ -225,6 +227,7 @@
         }
       },
       "imageGallery": {
+        "label": "Gallery",
         "overview": {
           "add": "Add",
           "caption": "Caption",
@@ -246,22 +249,26 @@
         }
       },
       "linkPageBreak": {
+        "label": "Break",
         "linkText": "Link Text",
         "linkURL": "Link URL",
         "text": "Text",
         "title": "Title"
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
         "removeImage": "Remove Image",
         "title": "Title"
       },
       "quote": {
+        "label": "Quote",
         "author": "Author",
         "quote": "Quote"
       },
       "richText": {
+        "label": "Rich text",
         "apply": "Apply",
         "cancel": "Cancel",
         "charCount": "Characters count {{charCount}}",
@@ -274,6 +281,7 @@
         "text": "Text"
       },
       "richTextTable": {
+        "label": "Rich text table",
         "addBorders": "Add Borders",
         "border": "Border",
         "cancel": "Cancel",
@@ -284,8 +292,15 @@
         "rows": "Rows"
       },
       "title": {
+        "label": "Title",
         "leadText": "Lead Text ",
         "title": "Title"
+      },
+      "teaserGrid1": {
+        "label": "1 Col"
+      },
+      "teaserGrid6": {
+        "label": "6 Col"
       }
     },
     "cancel": "Cancel",
@@ -350,6 +365,7 @@
     "dateTimePicker": {
       "hour": "{{hour}}:00",
       "nextSaturday": "Next Saturday",
+      "nextMonday": "Next Monday",
       "now": "Now",
       "today": "Today",
       "tomorrow": "Tomorrow"
@@ -485,6 +501,8 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
+      "peers": "Peers",
+      "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
       "users": "Users",
@@ -634,7 +652,8 @@
       "overview": {
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
-        "peers": "Peers"
+        "peers": "Peers",
+        "myPeerProfile": "My Peer Profile"
       },
       "panels": {
         "callToAction": "Call To Action",
@@ -655,6 +674,7 @@
         "editImage": "Edit Image",
         "editPeer": "Edit Peer",
         "editPeerInfo": "Edit Peer Info",
+        "logo": "Logo",
         "infoEditError": "Edit Token Error",
         "information": "Information",
         "invalidURL": "Invalid URL",
@@ -665,9 +685,12 @@
         "peerUpdated": "Peer updated",
         "removeImage": "Remove Image",
         "save": "Save",
+        "getRemote": "Fetch Remote Peer Profile",
         "themeColor": "Theme Color",
+        "themeFontColor": "Font Color",
         "token": "Token",
-        "Unknown": "Unknown",
+        "unknown": "Unknown",
+        "unnamed": "Unnamed",
         "URL": "URL",
         "validateToken": "Please confirm token is correct before saving",
         "leaveEmpty": "Leave empty if you don't want to change it"

@@ -196,7 +196,6 @@
         "requestChangesReason": "Raison",
         "revisionCreatedAt": "Révision créée le",
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
-
         "revisions": "Révisions",
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le"
@@ -254,6 +253,7 @@
         "editPeerInfo": "Modifier les informations sur Peer",
         "peerUpdated": "Mise à jour des informations sur le peer",
         "themeColor": "Couleur du thème",
+        "themeFontColor": "Couleur du texte",
         "createPeer": "Créer un Peer",
         "name": "Nom",
         "callToAction": "Appel à l'action (CTA)",
@@ -521,6 +521,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Intégration",
         "overview": {
           "editEmbed": "Modifier l'intégration"
         },
@@ -540,12 +541,14 @@
         }
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Choisir une image",
         "editImage": "Modifier l'image",
         "removeImage": "Supprimer l'image",
         "title": "Titre"
       },
       "richText": {
+        "label": "Texte enrichi",
         "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
         "apply": "Appliquer",
         "cancel": "Annuler",
@@ -558,6 +561,7 @@
         "text": "Texte"
       },
       "richTextTable": {
+        "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
         "delete": "Supprimer",
         "addBorders": "Ajouter des bordures",
@@ -568,6 +572,7 @@
         "rows": "Rangs"
       },
       "image": {
+        "label": "Image",
         "overview": {
           "caption": "Légende",
           "chooseImage": "Choisir une image",
@@ -575,6 +580,7 @@
         }
       },
       "imageGallery": {
+        "label": "Galerie",
         "overview": {
           "add": "Ajouter",
           "caption": "Légende",
@@ -596,18 +602,27 @@
         }
       },
       "linkPageBreak": {
+        "label": "Saut de ligne",
         "linkText": "Texte du lien",
         "linkURL": "Lien URL",
         "text": "Texte",
         "title": "Titre"
       },
       "quote": {
+        "label": "Citation",
         "author": "Auteur/Autrice",
         "quote": "Citation"
       },
       "title": {
+        "label": "Titre",
         "leadText": "Lead ",
         "title": "Titre"
+      },
+      "teaserGrid1": {
+        "label": "1 Col"
+      },
+      "teaserGrid6": {
+        "label": "6 Col"
       }
     },
     "login": {

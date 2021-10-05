@@ -1,5 +1,5 @@
 import {hot} from 'react-hot-loader/root'
-import React from 'react'
+import React, {useState} from 'react'
 
 import 'rsuite/lib/styles/index.less'
 
@@ -24,6 +24,11 @@ import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
 import './global.less'
+import {IntlProvider} from 'rsuite'
+import enGB from 'rsuite/lib/IntlProvider/locales/en_GB'
+import fr from './locales/rsuiteFr'
+import de from './locales/rsuiteDe'
+import {useTranslation} from 'react-i18next'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -92,9 +97,7 @@ export function contentForRoute(route: Route) {
   return null
 }
 
-export function App() {
-  const {current} = useRoute()
-
+function GetComponents(current: any) {
   if (current) {
     switch (current.type) {
       case RouteType.Login:
@@ -121,5 +124,21 @@ export function App() {
 
   return null
 }
+export function App() {
+  const {current} = useRoute()
 
+  const {i18n} = useTranslation()
+  const [lng, setLang] = useState<Record<string, any>>(enGB)
+  const currentLanguageMap = new Map<string, any>([
+    ['fr', fr],
+    ['en', enGB],
+    ['de', de]
+  ])
+
+  i18n.on('languageChanged', lng => {
+    setLang(currentLanguageMap.get(lng))
+  })
+
+  return <IntlProvider locale={lng}>{GetComponents(current)}</IntlProvider>
+}
 export const HotApp = hot(App)
