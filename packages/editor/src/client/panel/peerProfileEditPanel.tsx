@@ -27,8 +27,7 @@ import {getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-// import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-// import {RichTextBlockValue} from '../blocks/types'
+
 import {ColorPicker} from '../atoms/colorPicker'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
@@ -86,7 +85,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           name,
           logoID: logoImage?.id,
           themeColor,
-          callToActionText: callToActionTextURL,
+          callToActionText: callToActionText,
           callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImage?.id,
           callToActionImageURL
@@ -154,7 +153,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   onChange={text => setCallToActionText(text)}
                   placeholder={t('Text')}
                 />
-                {/* <RichTextBlock value={callToActionText} onChange={setCallToActionText} /> */}
               </FormGroup>
               <FormGroup>
                 <FormControl
