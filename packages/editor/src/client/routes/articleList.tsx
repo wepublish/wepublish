@@ -260,8 +260,8 @@ export function ArticleList() {
                       }}
                     />
                   </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
-                    {rowData.draft && (
+                  {rowData.draft && (
+                    <IconButtonTooltip caption={t('articleEditor.overview.publish')}>
                       <IconButton
                         icon={<Icon icon="eye" />}
                         circle
@@ -272,8 +272,8 @@ export function ArticleList() {
                           setArticlePreviewLinkOpen(true)
                         }}
                       />
-                    )}
-                  </IconButtonTooltip>
+                    </IconButtonTooltip>
+                  )}
                 </>
               )}
             </Cell>

@@ -13,6 +13,8 @@ import {
   PageSort
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
@@ -206,50 +208,59 @@ export function PageList() {
               {(rowData: PageRefFragment) => (
                 <>
                   {rowData.published && (
-                    <IconButton
-                      icon={<Icon icon="btn-off" />}
-                      circle
-                      size="sm"
-                      onClick={e => {
-                        setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
+                    <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        onClick={e => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
                   )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  {rowData.draft && (
+                  <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="eye" />}
+                      icon={<Icon icon="trash" />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentPage(rowData)
-                        setPagePreviewLinkOpen(true)
+                        setConfirmAction(ConfirmAction.Delete)
+                        setConfirmationDialogOpen(true)
                       }}
                     />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
+                    <IconButton
+                      icon={<Icon icon="copy" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Duplicate)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+
+                  {rowData.draft && (
+                    <IconButtonTooltip caption={t('pageEditor.overview.publish')}>
+                      <IconButton
+                        icon={<Icon icon="eye" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setPagePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
                   )}
                 </>
               )}

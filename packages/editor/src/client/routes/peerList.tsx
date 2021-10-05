@@ -22,6 +22,8 @@ import {
   PeerListQuery
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
 import {useTranslation} from 'react-i18next'
@@ -132,17 +134,19 @@ export function PeerList() {
             </p>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-            <IconButton
-              disabled={isPeerInfoLoading}
-              icon={<Icon icon="trash" />}
-              circle
-              size="sm"
-              onClick={e => {
-                e.preventDefault()
-                setConfirmationDialogOpen(true)
-                setCurrentPeer(peer)
-              }}
-            />
+            <IconButtonTooltip caption={t('peerList.overview.delete')}>
+              <IconButton
+                disabled={isPeerInfoLoading}
+                icon={<Icon icon="trash" />}
+                circle
+                size="sm"
+                onClick={e => {
+                  e.preventDefault()
+                  setConfirmationDialogOpen(true)
+                  setCurrentPeer(peer)
+                }}
+              />
+            </IconButtonTooltip>
           </FlexboxGrid.Item>
         </FlexboxGrid>
       </ListItemLink>

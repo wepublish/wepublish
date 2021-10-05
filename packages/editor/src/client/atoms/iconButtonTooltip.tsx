@@ -8,7 +8,12 @@ interface IconButtonTooltipProps {
 
 export function IconButtonTooltip({children, caption}: IconButtonTooltipProps) {
   return (
-    <Whisper placement="top" trigger="hover" delayShow={600} speaker={<Tooltip>{caption}</Tooltip>}>
+    <Whisper
+      placement="top"
+      trigger="hover"
+      delayShow={400}
+      delayHide={0}
+      speaker={<Tooltip>{caption}</Tooltip>}>
       {children}
     </Whisper>
   )
