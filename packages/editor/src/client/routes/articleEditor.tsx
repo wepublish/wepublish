@@ -204,7 +204,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('articleEditor.overview.unpublished'))
     }
   }, [articleData, hasChanged])
@@ -409,7 +409,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={
