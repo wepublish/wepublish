@@ -68,7 +68,7 @@
     "clean:website-example": "yarn workspace @wepublish/website-example clean",
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
+    "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\""
   },
   "workspaces": [
     "packages/*",
@@ -96,7 +96,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern '{examples,packages,services}/**/*.{js,ts,tsx,json}'"
+      "pre-commit": "pretty-quick --staged --pattern \"{examples,packages,services}/**/*.{js,ts,tsx,json}\""
     }
   },
   "eslintConfig": {
