@@ -14,7 +14,17 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button, Message} from 'rsuite'
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  Table,
+  IconButton,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
@@ -329,7 +339,9 @@ export function PageList() {
             )}
           </DescriptionList>
 
-          <Message showIcon type="warning"
+          <Message
+            showIcon
+            type="warning"
             title={t('articleEditor.overview.warningLabel')}
             description={t('articleEditor.overview.unpublishWarningMessage')}
           />

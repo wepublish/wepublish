@@ -17,7 +17,17 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button, Message} from 'rsuite'
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  IconButton,
+  Table,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
 
 import {
   DEFAULT_TABLE_PAGE_SIZES,
@@ -225,15 +235,15 @@ export function ArticleList() {
                 <>
                   {(rowData.published || rowData.pending) && (
                     <IconButton
-                    icon={<Icon icon="btn-off" />}
-                    circle
-                    size="sm"
-                    onClick={e => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Unpublish)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
+                      icon={<Icon icon="btn-off" />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        setCurrentArticle(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
                   )}
                   <IconButton
                     icon={<Icon icon="trash" />}
@@ -347,11 +357,12 @@ export function ArticleList() {
             )}
           </DescriptionList>
 
-          <Message showIcon type="warning"
+          <Message
+            showIcon
+            type="warning"
             title={t('articleEditor.overview.warningLabel')}
             description={t('articleEditor.overview.unpublishWarningMessage')}
           />
-
         </Modal.Body>
 
         <Modal.Footer>
@@ -438,5 +449,3 @@ export function ArticleList() {
     </>
   )
 }
-
-
