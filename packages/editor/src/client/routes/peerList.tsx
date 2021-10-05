@@ -206,20 +206,34 @@ export function PeerList() {
       <Drawer
         show={isPeerProfileEditModalOpen}
         size={'sm'}
-        onHide={() => setPeerProfileEditModalOpen(false)}>
+        onHide={() => {
+          setPeerProfileEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({}, current ?? undefined)
+          })
+        }}>
         <PeerInfoEditPanel
           onClose={() => {
             setPeerProfileEditModalOpen(false)
-
             dispatch({
               type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
+              route: PeerListRoute.create({}, current ?? undefined)
             })
           }}
         />
       </Drawer>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({})
+          })
+        }}>
         {peerInfoData?.peerProfile.hostURL && (
           <PeerEditPanel
             id={editID}

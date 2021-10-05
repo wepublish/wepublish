@@ -3,7 +3,7 @@ import {
   GraphQLNonNull,
   GraphQLString,
   GraphQLInputObjectType,
-  GraphQLID,
+  GraphQLID
 } from 'graphql'
 
 import {Peer, PeerProfile} from '../db/peer'
@@ -19,6 +19,7 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: GraphQLNonNull(GraphQLString)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
@@ -39,6 +40,12 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {
+      type: GraphQLNonNull(GraphQLColor),
+      resolve(profile, args, {loaders}, info) {
+        return profile.themeFontColor ? profile.themeFontColor : '#fff'
+      }
+    },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionText: {type: GraphQLNonNull(GraphQLString)},
