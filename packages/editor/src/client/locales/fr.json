@@ -253,6 +253,7 @@
         "editPeerInfo": "Modifier les informations sur Peer",
         "peerUpdated": "Mise à jour des informations sur le peer",
         "themeColor": "Couleur du thème",
+        "themeFontColor": "Couleur du texte",
         "createPeer": "Créer un Peer",
         "name": "Nom",
         "callToAction": "Appel à l'action (CTA)",

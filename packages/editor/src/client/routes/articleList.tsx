@@ -17,23 +17,8 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  Icon,
-  IconButton,
-  Table,
-  Modal,
-  Button,
-  Message
-} from 'rsuite'
-
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  ListingStateBgColor,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button, Message} from 'rsuite'
+import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -215,12 +200,12 @@ export function ArticleList() {
                       textAlign: 'center',
                       borderRadius: '15px',
                       backgroundColor: rowData.pending
-                        ? ListingStateBgColor.pending
+                        ? StateColor.pending
                         : rowData.published
-                        ? ListingStateBgColor.published
+                        ? StateColor.published
                         : rowData.draft
-                        ? ListingStateBgColor.draft
-                        : ListingStateBgColor.none
+                        ? StateColor.draft
+                        : StateColor.none
                     }}>
                     {states.join(' / ')}
                   </div>
