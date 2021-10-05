@@ -1,27 +1,12 @@
 import React, {useState} from 'react'
 
-import {
-  PanelHeader,
-  Panel,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  NavigationButton,
-  TextInput,
-  PanelSectionHeader,
-  Spacing,
-  Box,
-  Typography
-} from '@karma.run/ui'
-
 import {ArticleMetadata} from './articleMetadataPanel'
-import {
-  MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconUpdate,
-  MaterialIconQueryBuilder
-} from '@karma.run/icons'
-import {dateTimeLocalString} from '../utility'
+
+import {useTranslation} from 'react-i18next'
+import {Button, Message, Modal} from 'rsuite'
+
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -41,105 +26,79 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDateString, setPublishDateString] = useState(
-    initialPublishDate ? dateTimeLocalString(initialPublishDate) : dateTimeLocalString(now)
-  )
-
-  const [updateDateString, setUpdateDateString] = useState(dateTimeLocalString(now))
-
-  const [publishDateError, setPublishDateError] = useState<string>()
-  const [updateDateError, setUpdateDateError] = useState<string>()
-
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
+  const {t} = useTranslation()
+
   return (
-    <Panel>
-      <PanelHeader
-        title="Publish Article"
-        leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
-        }
-        rightChildren={
-          <NavigationButton
-            icon={MaterialIconCheck}
-            label="Confirm"
-            disabled={!publishDate || !updateDate}
-            onClick={() => onConfirm(publishDate!, updateDate!)}
-          />
-        }
-      />
-      <PanelSection>
+    <>
+      <Modal.Header>
+        <Modal.Title>{t('articleEditor.panels.publishArticle')}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
         {pendingPublishDate && (
-          <Box marginBottom={Spacing.Small}>
-            <Typography variant="subtitle1" color="alert">
-              There is already a pending publication scheduled at{' '}
-              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              publishing again will override that publication.
-            </Typography>
-          </Box>
+          <Message
+            type="warning"
+            description={t('articleEditor.panels.articlePending', {
+              pendingPublishDate
+            })}
+          />
         )}
-        <TextInput
-          type="datetime-local"
-          label="Publish Date"
-          errorMessage={publishDateError}
-          icon={MaterialIconQueryBuilder}
-          marginBottom={Spacing.Small}
-          value={publishDateString}
-          onChange={e => {
-            const value = e.target.value
-            const publishDate = new Date(value)
-
-            if (!isNaN(publishDate.getTime())) {
-              setPublishDateError('')
-              setPublishDate(publishDate)
-            } else {
-              setPublishDateError('Invalid Date')
-              setPublishDate(undefined)
-            }
-
-            setPublishDateString(value)
-          }}
+        <DateTimePicker
+          dateTime={publishDate}
+          label={t('articleEditor.panels.publishDate')}
+          changeDate={date => setPublishDate(date)}
         />
-        <TextInput
-          type="datetime-local"
-          label="Update Date"
-          errorMessage={updateDateError}
-          icon={MaterialIconUpdate}
-          value={updateDateString}
-          onChange={e => {
-            const value = e.target.value
-            const updateDate = new Date(value)
-
-            if (!isNaN(updateDate.getTime())) {
-              setPublishDateError('')
-              setUpdateDate(updateDate)
-            } else {
-              setUpdateDateError('Invalid Date')
-              setUpdateDate(undefined)
-            }
-
-            setUpdateDateString(value)
-          }}
+        <DateTimePicker
+          dateTime={updateDate}
+          label={t('articleEditor.panels.updateDate')}
+          changeDate={date => setUpdateDate(date)}
         />
-      </PanelSection>
 
-      <PanelSectionHeader title="Metadata" />
-      <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label="Pre-title">{metadata.preTitle || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Title">{metadata.title || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Lead">{metadata.lead || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ') || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Breaking News">
-            {metadata.breaking ? 'Yes' : 'No'}
+          <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
+            {metadata.preTitle || '-'}
           </DescriptionListItem>
-          <DescriptionListItem label="Shared with peers">
-            {metadata.shared ? 'Yes' : 'No'}
+          <DescriptionListItem label={t('articleEditor.panels.title')}>
+            {metadata.title || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.lead')}>
+            {metadata.lead || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.seoTitle')}>
+            {metadata.seoTitle || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.slug')}>
+            {metadata.slug || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.tags')}>
+            {metadata.tags.join(', ') || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.breakingNews')}>
+            {metadata.breaking ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.sharedWithPeers')}>
+            {metadata.shared ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.hideAuthors')}>
+            {metadata.hideAuthor ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
         </DescriptionList>
-      </PanelSection>
-    </Panel>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          appearance="primary"
+          disabled={!publishDate || !updateDate}
+          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          {t('articleEditor.panels.confirm')}
+        </Button>
+        <Button appearance="subtle" onClick={() => onClose()}>
+          {t('articleEditor.panels.close')}
+        </Button>
+      </Modal.Footer>
+    </>
   )
 }

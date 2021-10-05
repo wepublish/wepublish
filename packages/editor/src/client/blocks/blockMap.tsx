@@ -1,24 +1,11 @@
 import React from 'react'
 import nanoid from 'nanoid'
 
-import {
-  MaterialIconTitle,
-  MaterialIconTextFormat,
-  MaterialIconImage,
-  MaterialIconFormatQuote,
-  MaterialIconViewDay,
-  MaterialIconCode,
-  IconColumn1,
-  IconColumn6,
-  MaterialIconCollections,
-  MaterialIconList
-} from '@karma.run/icons'
-
-import {BlockMapForValue} from '@karma.run/ui'
+import {BlockMapForValue} from '../atoms/blockList'
 
 import {BlockType, EmbedType, BlockValue} from './types'
 import {TitleBlock} from './titleBlock'
-import {RichTextBlock, createDefaultValue} from './richTextBlock'
+import {RichTextBlock, createDefaultValue} from './richTextBlock/richTextBlock'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'
@@ -31,29 +18,29 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
     field: props => <TitleBlock {...props} />,
     defaultValue: {title: '', lead: ''},
-    label: 'Title',
-    icon: MaterialIconTitle
+    label: 'blocks.title.label',
+    icon: 'header'
   },
 
   [BlockType.RichText]: {
     field: props => <RichTextBlock {...props} />,
     defaultValue: createDefaultValue,
-    label: 'Rich Text',
-    icon: MaterialIconTextFormat
+    label: 'blocks.richText.label',
+    icon: 'file-text'
   },
 
   [BlockType.Image]: {
     field: props => <ImageBlock {...props} />,
     defaultValue: {image: null, caption: ''},
-    label: 'Image',
-    icon: MaterialIconImage
+    label: 'blocks.image.label',
+    icon: 'image'
   },
 
   [BlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {images: [{caption: '', image: null}]},
-    label: 'Gallery',
-    icon: MaterialIconCollections
+    label: 'blocks.imageGallery.label',
+    icon: 'clone'
   },
 
   [BlockType.Listicle]: {
@@ -70,36 +57,47 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         }
       ]
     },
-    label: 'Listicle',
-    icon: MaterialIconList
+    label: 'blocks.listicle.label',
+    icon: 'th-list'
   },
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
     defaultValue: {quote: '', author: ''},
-    label: 'Quote',
-    icon: MaterialIconFormatQuote
+    label: 'blocks.quote.label',
+    icon: 'quote-left'
   },
 
   [BlockType.LinkPageBreak]: {
     field: props => <LinkPageBreakBlock {...props} />,
-    defaultValue: {text: '', linkText: '', linkURL: ''},
-    label: 'Break',
-    icon: MaterialIconViewDay
+    defaultValue: {
+      text: '',
+      linkText: '',
+      linkTarget: '',
+      linkURL: '',
+      styleOption: 'default',
+      layoutOption: 'default',
+      templateOption: 'none',
+      richText: createDefaultValue(),
+      image: undefined,
+      hideButton: false
+    },
+    label: 'blocks.linkPageBreak.label',
+    icon: 'coffee'
   },
 
   [BlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
     defaultValue: {type: EmbedType.Other},
-    label: 'Embed',
-    icon: MaterialIconCode
+    label: 'blocks.embeds.label',
+    icon: 'code'
   },
 
   [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
-    label: '1 Col',
-    icon: IconColumn1
+    label: 'blocks.teaserGrid1.label',
+    icon: 'ellipsis-v'
   },
 
   [BlockType.TeaserGrid6]: {
@@ -115,7 +113,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         [nanoid(), null]
       ]
     },
-    label: '6 Cols',
-    icon: IconColumn6
+    label: 'blocks.teaserGrid6.label',
+    icon: 'ellipsis-h'
   }
 }

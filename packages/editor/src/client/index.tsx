@@ -3,15 +3,11 @@ import 'regenerator-runtime/runtime'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {render as renderStyles} from 'fela-dom'
-import {ApolloClient} from 'apollo-client'
-import {ApolloLink} from 'apollo-link'
-import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory'
+import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
-import {ApolloProvider} from '@apollo/react-hooks'
+import {onError} from '@apollo/client/link/error'
 
-import {createStyleRenderer} from '@karma.run/ui'
-import {UIProvider} from '@karma.run/ui'
+import './i18n'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
@@ -48,10 +44,15 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 
   const result = await response.json()
 
-  const filteredData = result.data.__schema.types.filter((type: any) => type.possibleTypes !== null)
-  result.data.__schema.types = filteredData
+  const possibleTypes: any = {}
 
-  return result.data
+  result.data.__schema.types.forEach((supertype: any) => {
+    if (supertype.possibleTypes) {
+      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
+    }
+  })
+
+  return possibleTypes
 }
 
 const onDOMContentLoaded = async () => {
@@ -61,7 +62,6 @@ const onDOMContentLoaded = async () => {
 
   const adminAPIURL = `${apiURL}/admin`
 
-  const introspectionQueryResultData = await fetchIntrospectionQueryResultData(adminAPIURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
     const context = operation.getContext()
@@ -78,35 +78,53 @@ const onDOMContentLoaded = async () => {
     return forward(operation)
   })
 
-  const client = new ApolloClient({
-    link: authLink.concat(createUploadLink({uri: adminAPIURL})),
-    cache: new InMemoryCache({
-      fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
-    })
+  const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
+        if (
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          !(
+            window.location.pathname.includes('/logout') ||
+            window.location.pathname.includes('/login')
+          )
+        ) {
+          localStorage.removeItem(LocalStorageKey.SessionToken)
+          window.location.pathname = '/logout'
+        }
+      })
+      // if (networkError) console.log(`[Network error]: ${networkError}`)
+    }
+    return forward(operation)
   })
 
-  const styleRenderer = createStyleRenderer()
-  renderStyles(styleRenderer)
+  const mainLink = createUploadLink({uri: adminAPIURL})
+
+  const client = new ApolloClient({
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    link: authLink.concat(authErrorLink).concat(mainLink),
+    cache: new InMemoryCache({
+      possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
+    })
+  })
 
   window.addEventListener('dragover', e => e.preventDefault())
   window.addEventListener('drop', e => e.preventDefault())
 
   ReactDOM.render(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={ElementID.ReactRoot}>
-      <ApolloProvider client={client}>
-        <AuthProvider>
-          <RouteProvider>
-            <FacebookProvider sdkLanguage={'en_US'}>
-              <InstagramProvider>
-                <TwitterProvider>
-                  <HotApp />
-                </TwitterProvider>
-              </InstagramProvider>
-            </FacebookProvider>
-          </RouteProvider>
-        </AuthProvider>
-      </ApolloProvider>
-    </UIProvider>,
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <RouteProvider>
+          <FacebookProvider sdkLanguage={'en_US'}>
+            <InstagramProvider>
+              <TwitterProvider>
+                <HotApp />
+              </TwitterProvider>
+            </InstagramProvider>
+          </FacebookProvider>
+        </RouteProvider>
+      </AuthProvider>
+    </ApolloProvider>,
     document.getElementById(ElementID.ReactRoot)
   )
 }

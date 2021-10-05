@@ -12,13 +12,19 @@ import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
+import {GraphQLRichText} from './richText'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLNonNull(GraphQLColor)}
+    themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
+    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLID}
   }
 })
 
@@ -35,8 +41,23 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {
+      type: GraphQLNonNull(GraphQLColor),
+      resolve(profile, args, {loaders}, info) {
+        return profile.themeFontColor ? profile.themeFontColor : '#fff'
+      }
+    },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
-    websiteURL: {type: GraphQLNonNull(GraphQLString)}
+    websiteURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+        return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
+      })
+    }
   }
 })
 
@@ -74,7 +95,12 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     profile: {
       type: GraphQLPeerProfile,
       resolve: createProxyingResolver(async (source, args, context, info) => {
-        return delegateToPeerSchema(source.id, true, context, {fieldName: 'peerProfile', info})
+        const peerProfile = await delegateToPeerSchema(source.id, true, context, {
+          fieldName: 'peerProfile',
+          info
+        })
+        // TODO: Improve error handling for invalid tokens WPC-298
+        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }

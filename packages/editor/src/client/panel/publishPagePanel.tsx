@@ -1,26 +1,13 @@
 import React, {useState} from 'react'
 
-import {
-  PanelHeader,
-  Panel,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  NavigationButton,
-  TextInput,
-  Spacing,
-  Box,
-  Typography
-} from '@karma.run/ui'
+import {Button, Message, Modal} from 'rsuite'
 
-import {
-  MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconQueryBuilder,
-  MaterialIconUpdate
-} from '@karma.run/icons'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+
 import {PageMetadata} from './pageMetadataPanel'
-import {dateTimeLocalString} from '../utility'
+
+import {useTranslation} from 'react-i18next'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
@@ -40,96 +27,62 @@ export function PublishPagePanel({
 }: PublishPagePanelProps) {
   const now = new Date()
 
-  const [publishDateString, setPublishDateString] = useState(
-    initialPublishDate ? dateTimeLocalString(initialPublishDate) : dateTimeLocalString(now)
-  )
-
-  const [updateDateString, setUpdateDateString] = useState(dateTimeLocalString(now))
-
-  const [publishDateError, setPublishDateError] = useState<string>()
-  const [updateDateError, setUpdateDateError] = useState<string>()
-
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
+  const {t} = useTranslation()
+
   return (
-    <Panel>
-      <PanelHeader
-        title="Publish Page"
-        leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
-        }
-        rightChildren={
-          <NavigationButton
-            icon={MaterialIconCheck}
-            label="Confirm"
-            disabled={!publishDate || !updateDate}
-            onClick={() => onConfirm(publishDate!, updateDate!)}
-          />
-        }
-      />
-      <PanelSection>
+    <>
+      <Modal.Header>
+        <Modal.Title>{t('pageEditor.panels.publishPage')}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
         {pendingPublishDate && (
-          <Box marginBottom={Spacing.Small}>
-            <Typography variant="subtitle1" color="alert">
-              There is already a pending publication scheduled at{' '}
-              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              publishing again will override that publication.
-            </Typography>
-          </Box>
+          <Message
+            type="warning"
+            description={t('pageEditor.panels.pagePending', {pendingPublishDate})}
+          />
         )}
-        <TextInput
-          type="datetime-local"
-          label="Publish Date"
-          errorMessage={publishDateError}
-          icon={MaterialIconQueryBuilder}
-          marginBottom={Spacing.Small}
-          value={publishDateString}
-          onChange={e => {
-            const value = e.target.value
-            const publishDate = new Date(value)
-
-            if (!isNaN(publishDate.getTime())) {
-              setPublishDateError('')
-              setPublishDate(publishDate)
-            } else {
-              setPublishDateError('Invalid Date')
-              setPublishDate(undefined)
-            }
-
-            setPublishDateString(value)
-          }}
+        <DateTimePicker
+          dateTime={publishDate}
+          label={t('articleEditor.panels.publishDate')}
+          changeDate={date => setPublishDate(date)}
         />
-        <TextInput
-          type="datetime-local"
-          label="Update Date"
-          errorMessage={updateDateError}
-          icon={MaterialIconUpdate}
-          value={updateDateString}
-          onChange={e => {
-            const value = e.target.value
-            const updateDate = new Date(value)
-
-            if (!isNaN(updateDate.getTime())) {
-              setPublishDateError('')
-              setUpdateDate(updateDate)
-            } else {
-              setUpdateDateError('Invalid Date')
-              setUpdateDate(undefined)
-            }
-
-            setUpdateDateString(value)
-          }}
+        <DateTimePicker
+          dateTime={updateDate}
+          label={t('articleEditor.panels.updateDate')}
+          changeDate={date => setUpdateDate(date)}
         />
-      </PanelSection>
-      <PanelSection>
+
         <DescriptionList>
-          <DescriptionListItem label="Title">{metadata.title}</DescriptionListItem>
-          <DescriptionListItem label="Description">{metadata.description}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ')}</DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.title')}>
+            {metadata.title}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.description')}>
+            {metadata.description}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.slug')}>
+            {metadata.slug}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.tags')}>
+            {metadata.tags.join(', ')}
+          </DescriptionListItem>
         </DescriptionList>
-      </PanelSection>
-    </Panel>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          appearance="primary"
+          disabled={!publishDate || !updateDate}
+          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          {t('pageEditor.panels.confirm')}
+        </Button>
+        <Button appearance="subtle" onClick={() => onClose()}>
+          {t('pageEditor.panels.close')}
+        </Button>
+      </Modal.Footer>
+    </>
   )
 }

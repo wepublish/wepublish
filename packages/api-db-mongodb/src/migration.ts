@@ -85,8 +85,6 @@ export const Migrations: Migration[] = [
       await pages.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
       await pages.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
-      // TODO: Add unique index for slug on published page
-
       await db.createCollection(CollectionName.PagesHistory, {
         strict: true
       })
@@ -107,7 +105,7 @@ export const Migrations: Migration[] = [
 
       await userRoles.createIndex({name: 1}, {unique: true})
 
-      userRoles.insertMany([
+      await userRoles.insertMany([
         {
           _id: 'admin',
           createdAt: new Date(),
@@ -130,7 +128,7 @@ export const Migrations: Migration[] = [
 
       const user = db.collection(CollectionName.Users)
 
-      user.updateMany({}, [
+      await user.updateMany({}, [
         {
           $set: {
             name: '$email',
@@ -146,7 +144,7 @@ export const Migrations: Migration[] = [
     async migrate(db) {
       const userRoles = db.collection(CollectionName.UserRoles)
 
-      userRoles.insertOne({
+      await userRoles.insertOne({
         _id: 'peer',
         createdAt: new Date(),
         modifiedAt: new Date(),
@@ -233,6 +231,387 @@ export const Migrations: Migration[] = [
 
         await pages.findOneAndReplace({_id: page._id}, page)
       }
+    }
+  },
+  {
+    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    version: 3,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.properties = []
+        }
+
+        if (article.pending) {
+          article.pending.properties = []
+        }
+
+        if (article.published) {
+          article.published.properties = []
+        }
+
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.properties = []
+        }
+
+        if (page.pending) {
+          page.pending.properties = []
+        }
+
+        if (page.published) {
+          page.published.properties = []
+        }
+
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
+    }
+  },
+  {
+    // Add RTE to page break block if not exists in articles and pages
+    version: 4,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}
+        },
+        {$set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}},
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+
+      // Add RTE to page break block if not exists in pages
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+    }
+  },
+  {
+    // Add hideButton false to pageBreakBlocks
+    version: 5,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}
+        },
+        {$set: {'pending.blocks.$[elem].hideButton': false}},
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+
+      // Add RTE to page break block if not exists in pages
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+    }
+  },
+  {
+    // Add hide author property to article.
+    version: 6,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.hideAuthor': {$exists: false}
+        },
+        {$set: {'pending.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.hideAuthor': {$exists: false}
+        },
+        {$set: {'published.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.hideAuthor': {$exists: false}
+        },
+        {$set: {'draft.hideAuthor': false}}
+      )
+    }
+  },
+  {
+    // Add Call To Action Details to Peer Profile.
+    version: 7,
+    async migrate(db) {
+      await db.collection(CollectionName.PeerProfiles).updateMany(
+        {
+          callToActionURL: {$exists: false},
+          callToActionText: {$exists: false}
+        },
+        {
+          $set: {
+            callToActionURL: '',
+            callToActionText: []
+          }
+        }
+      )
+    }
+  },
+  {
+    // Add social media metatags to article.
+    version: 8,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'pending.socialMediaAuthorIDs': []
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'published.socialMediaAuthorIDs': []
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'draft.socialMediaAuthorIDs': []
+          }
+        }
+      )
+    }
+  },
+  {
+    // Add new collection MailLog
+    version: 9,
+    async migrate(db) {
+      const mailLogs = await db.createCollection(CollectionName.MailLog, {strict: true})
+      await mailLogs.createIndex({subject: 1})
+    }
+  },
+  {
+    //  Add MemberPlan Collection and PaymentMethod Collection
+    version: 10,
+    async migrate(db, locale) {
+      const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
+        strict: true
+      })
+
+      await memberPlans.createIndex({name: 1})
+      await memberPlans.createIndex({slug: 1}, {unique: true})
+
+      const paymentMethod = await db.createCollection(CollectionName.PaymentMethods, {
+        strict: true
+      })
+
+      await paymentMethod.createIndex({name: 1})
+      await paymentMethod.createIndex({paymentAdapter: 1})
+
+      const users = db.collection(CollectionName.Users)
+      await users.createIndex({'subscription.memberPlanId': 1})
+      await users.updateMany(
+        {
+          paymentProviderCustomers: {$exists: false}
+        },
+        {$set: {paymentProviderCustomers: {}}}
+      )
+
+      await users.updateMany(
+        {
+          active: {$exists: false}
+        },
+        {$set: {active: true}}
+      )
+
+      await users.updateMany(
+        {
+          lastLogin: {$exists: false}
+        },
+        {$set: {lastLogin: null}}
+      )
+
+      await users.updateMany(
+        {
+          properties: {$exists: false}
+        },
+        {$set: {properties: []}}
+      )
+
+      const invoices = await db.createCollection(CollectionName.Invoices, {
+        strict: true
+      })
+
+      await invoices.createIndex({mail: 1})
+
+      const payments = await db.createCollection(CollectionName.Payments, {
+        strict: true
+      })
+
+      await payments.createIndex({intentID: 1})
+    }
+  },
+  {
+    // Add Commenting Table.
+    version: 11,
+    async migrate(db) {
+      const comments = await db.createCollection(CollectionName.Comments, {
+        strict: true
+      })
+      await comments.createIndex({createdAt: -1})
+      await comments.createIndex({'revisions.createdAt': -1})
+    }
+  },
+  {
+    //  Make slug for published pages unique
+    version: 12,
+    async migrate(db, locale) {
+      const pages = await db.collection(CollectionName.Pages)
+      await pages.createIndex(
+        {'published.slug': 1},
+        {
+          collation: {locale, strength: 2},
+          unique: true,
+          partialFilterExpression: {'published.slug': {$exists: true}}
+        }
+      )
+    }
+  },
+  {
+    //  Rename street field in address to address
+    version: 13,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          'address.street': {$exists: true}
+        },
+        {
+          $rename: {'address.street': 'address.streetAddress'}
+        }
+      )
+    }
+  },
+  {
+    //  Add emailVerifiedAt and oauth2Accounts to user model
+    version: 14,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          emailVerifiedAt: {$exists: false}
+        },
+        {$set: {emailVerifiedAt: null}}
+      )
+
+      await users.updateMany(
+        {
+          oauth2Accounts: {$exists: false}
+        },
+        {$set: {oauth2Accounts: []}}
+      )
     }
   }
 ]

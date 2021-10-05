@@ -1,4 +1,24 @@
-import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
+import {
+  ArticleBlock,
+  CommentItemType,
+  CommentAuthorType,
+  CommentRejectionReason,
+  CommentState,
+  AvailablePaymentMethod,
+  FocalPoint,
+  InvoiceItem,
+  MetadataProperty,
+  NavigationLink,
+  PageBlock,
+  PaymentProviderCustomer,
+  RichTextNode,
+  CommentRevision,
+  UserSubscription,
+  MailLogState,
+  PaymentState,
+  UserAddress,
+  UserOAuth2Account
+} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -15,11 +35,20 @@ export enum CollectionName {
   Authors = 'authors',
   Images = 'images',
 
+  Comments = 'comments',
+
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
 
   Pages = 'pages',
-  PagesHistory = 'pages.history'
+  PagesHistory = 'pages.history',
+
+  MemberPlans = 'member.plans',
+  PaymentMethods = 'payment.methods',
+  Invoices = 'invoices',
+  Payments = 'payments',
+
+  MailLog = 'mail.log'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -35,6 +64,11 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  themeFontColor: string
+  callToActionURL: string
+  callToActionText: RichTextNode[]
+  callToActionImageURL?: string
+  callToActionImageID?: string
 }
 
 export interface DBPeer {
@@ -68,10 +102,23 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
+  emailVerifiedAt: Date | null
   name: string
+  preferredName?: string
+  address?: UserAddress
   password: string
 
+  oauth2Accounts: UserOAuth2Account[]
+
+  active: boolean
+  lastLogin: Date | null
+
+  properties: MetadataProperty[]
+
   roleIDs: string[]
+
+  subscription?: UserSubscription
+  paymentProviderCustomers: Record<string, PaymentProviderCustomer>
 }
 
 export interface DBUserRole {
@@ -116,6 +163,7 @@ export interface DBAuthor {
 
   slug: string
   name: string
+  jobTitle?: string
   imageID?: string
 
   links: Array<{title: string; url: string}>
@@ -166,6 +214,25 @@ export interface DBImage {
   focalPoint?: FocalPoint
 }
 
+export interface DBComment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  itemID: string
+  itemType: CommentItemType
+
+  userID: string
+
+  revisions: CommentRevision[]
+  parentID?: string
+
+  state: CommentState
+  rejectionReason?: CommentRejectionReason
+  authorType: CommentAuthorType
+}
+
 export interface DBArticle {
   _id: any
 
@@ -191,13 +258,23 @@ export interface DBArticleRevision {
   preTitle?: string
   title: string
   lead?: string
+  seoTitle?: string
   tags: string[]
+
+  properties: MetadataProperty[]
 
   imageID?: string
   authorIDs: string[]
 
   breaking: boolean
   blocks: ArticleBlock[]
+
+  hideAuthor: boolean
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs: string[]
+  socialMediaImageID?: string
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
@@ -230,7 +307,13 @@ export interface DBPageRevision {
   description?: string
   tags: string[]
 
+  properties: MetadataProperty[]
+
   imageID?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImageID?: string
 
   blocks: PageBlock[]
 }
@@ -238,4 +321,78 @@ export interface DBPageRevision {
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBMemberPlan {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  slug: string
+  imageID?: string
+  description: RichTextNode[]
+  active: boolean
+  amountPerMonthMin: number
+  availablePaymentMethods: AvailablePaymentMethod[]
+}
+
+export interface DBPaymentMethod {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  description: string
+  paymentProviderID: string
+  active: boolean
+}
+
+export interface DBInvoice {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  mail: string
+  dueAt: Date
+
+  userID?: string
+  description?: string
+  paidAt: Date | null
+  canceledAt: Date | null
+  sentReminderAt?: Date
+  items: InvoiceItem[]
+}
+
+export interface DBPayment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  invoiceID: string
+  state: PaymentState
+  paymentMethodID: string
+
+  intentID?: string
+  intentSecret?: string
+  intentData?: string
+
+  paymentData?: string
+}
+
+export interface DBMailLog {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  recipient: string
+  subject: string
+  state: MailLogState
+  mailProviderID: string
+  mailData?: string
 }

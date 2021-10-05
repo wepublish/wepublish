@@ -17,12 +17,14 @@ export enum RouteType {
   Tag = 'tag',
   Peer = 'peer',
   Author = 'author',
-  Modal = 'modal'
+  Modal = 'modal',
+  Login = 'login',
+  Logout = 'logout'
 }
 
 export const PeerArticleRoute = route(
   RouteType.PeerArticle,
-  routePath`/needs_to_be_fixed/${required('peerID')}/${required('id')}/${optional('slug')}`,
+  routePath`/p/${required('peerID')}/${required('id')}/${optional('slug')}`,
   null as PublishedArticle | null
 )
 
@@ -36,7 +38,18 @@ export const PageRoute = route(RouteType.Page, routePath`/${zeroOrMore('slug')}`
 export const TagRoute = route(RouteType.Tag, routePath`/tag/${required('tag')}`, null)
 export const AuthorRoute = route(RouteType.Author, routePath`/author/${required('id')}`, null)
 
-export const routes = [PeerArticleRoute, ArticleRoute, TagRoute, AuthorRoute, PageRoute] as const
+export const LoginRoute = route(RouteType.Login, routePath`/login`)
+export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
+
+export const routes = [
+  LoginRoute,
+  LogoutRoute,
+  PeerArticleRoute,
+  ArticleRoute,
+  TagRoute,
+  AuthorRoute,
+  PageRoute
+] as const
 
 export const {Link, RouteProvider, matchRoute, useRoute, useRouteDispatch} = createRouteContext(
   routes

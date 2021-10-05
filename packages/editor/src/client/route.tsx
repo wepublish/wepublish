@@ -7,15 +7,13 @@ import {
   RouteActionType,
   fullPathForRoute,
   zeroOrMore,
-  required,
-  optional
-} from '@karma.run/react'
+  required
+} from '@wepublish/karma.run-react'
 
-import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
-import {useMutation} from '@apollo/react-hooks'
+import {useMutation, gql} from '@apollo/client'
 import {LocalStorageKey} from './utility'
-import gql from 'graphql-tag'
+import {Button, IconButton} from 'rsuite'
 
 export enum RouteType {
   Login = 'login',
@@ -40,6 +38,10 @@ export enum RouteType {
   AuthorEdit = 'authorEdit',
   AuthorCreate = 'authorCreate',
 
+  NavigationList = 'navigationList',
+  NavigationEdit = 'navigationEdit',
+  NavigationCreate = 'navigationCreate',
+
   PeerList = 'peerList',
   PeerProfileEdit = 'peerProfileEdit',
   PeerCreate = 'peerCreate',
@@ -54,11 +56,26 @@ export enum RouteType {
 
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
-  UserRoleCreate = 'userRoleCreate'
+  UserRoleCreate = 'userRoleCreate',
+
+  CommentList = 'commentList',
+
+  MemberPlanList = 'memberPlanList',
+  MemberPlanEdit = 'memberPlanEdit',
+  MemberPlanCreate = 'memberPlanCreate',
+
+  PaymentMethodList = 'paymentMethodList',
+  PaymentMethodEdit = 'paymentMethodEdit',
+  PaymentMethodCreate = 'paymentMethodCreate'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
-export const LoginRoute = route(RouteType.Login, routePath`/login/${optional('provider')}`)
+export const LoginRoute = route(RouteType.Login, routePath`/login`)
+export const LoginOAuthRoute = route(
+  RouteType.Login,
+  routePath`/login/oauth/${required('provider')}`
+)
+export const LoginJWTRoute = route(RouteType.Login, routePath`/login/jwt`)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
 
 export const ArticleListRoute = route(RouteType.ArticleList, routePath`/articles`)
@@ -69,6 +86,8 @@ export const ArticleEditRoute = route(
 )
 
 export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`)
+
+export const CommentListRoute = route(RouteType.CommentList, routePath`/comments`)
 
 export const PageListRoute = route(RouteType.PageList, routePath`/pages`)
 export const PageCreateRoute = route(RouteType.PageCreate, routePath`/page/create`)
@@ -89,6 +108,16 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
+export const NavigationCreateRoute = route(
+  RouteType.NavigationCreate,
+  routePath`/navigation/create`
+)
+export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigations`)
+export const NavigationEditRoute = route(
+  RouteType.NavigationEdit,
+  routePath`/navigation/edit/${required('id')}`
+)
+
 export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
 export const PeerInfoEditRoute = route(RouteType.PeerProfileEdit, routePath`/peering/profile/edit`)
 export const PeerCreateRoute = route(RouteType.PeerCreate, routePath`/peering/create`)
@@ -108,11 +137,33 @@ export const UserRoleEditRoute = route(
 )
 export const UserRoleCreateRoute = route(RouteType.UserRoleCreate, routePath`/userrole/create`)
 
+export const MemberPlanListRoute = route(RouteType.MemberPlanList, routePath`/memberplans`)
+export const MemberPlanEditRoute = route(
+  RouteType.MemberPlanEdit,
+  routePath`/memberplan/edit/${required('id')}`
+)
+export const MemberPlanCreateRoute = route(
+  RouteType.MemberPlanCreate,
+  routePath`/memberplan/create`
+)
+
+export const PaymentMethodListRoute = route(RouteType.PaymentMethodList, routePath`/paymentmethods`)
+export const PaymentMethodEditRoute = route(
+  RouteType.PaymentMethodEdit,
+  routePath`/paymentmethod/edit/${required('id')}`
+)
+export const PaymentMethodCreateRoute = route(
+  RouteType.PaymentMethodCreate,
+  routePath`/paymentmethod/create`
+)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
   IndexRoute,
   LoginRoute,
+  LoginOAuthRoute,
+  LoginJWTRoute,
   LogoutRoute,
   PageListRoute,
   PageCreateRoute,
@@ -120,12 +171,16 @@ export const routes = [
   ArticleListRoute,
   ArticleCreateRoute,
   ArticleEditRoute,
+  CommentListRoute,
   ImageListRoute,
   ImageUploadRoute,
   ImageEditRoute,
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
+  NavigationListRoute,
+  NavigationEditRoute,
+  NavigationCreateRoute,
   PeerListRoute,
   PeerInfoEditRoute,
   PeerCreateRoute,
@@ -138,6 +193,12 @@ export const routes = [
   UserRoleListRoute,
   UserRoleEditRoute,
   UserRoleCreateRoute,
+  MemberPlanListRoute,
+  MemberPlanEditRoute,
+  MemberPlanCreateRoute,
+  PaymentMethodListRoute,
+  PaymentMethodEditRoute,
+  PaymentMethodCreateRoute,
   NotFoundRoute
 ] as const
 
@@ -150,10 +211,8 @@ export const {
   useRouteDispatch
 } = createRouteContext(routes)
 
-export const RouteLinkButton = routeLink(LinkButton)
-export const RouteLinkIconButton = routeLink(LinkIconButton)
-export const RouteMenuLinkButton = routeLink(MenuLinkButton)
-export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
+export const ButtonLink = routeLink(Button)
+export const IconButtonLink = routeLink(IconButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>
 
@@ -162,8 +221,8 @@ export interface RouteProviderProps {
 }
 
 const LogoutMutation = gql`
-  mutation Logout($token: String!) {
-    revokeSession(token: $token)
+  mutation Logout {
+    revokeActiveSession
   }
 `
 
@@ -177,10 +236,9 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         // TODO: Handle UnsavedChangesDialog popstate
         // TODO: Add a way to discard next route
-
         if (next.type === RouteType.Logout) {
           if (session) {
-            logout({variables: {token: session.sessionToken}})
+            logout().catch(error => console.warn('Error logging out ', error))
             localStorage.removeItem(LocalStorageKey.SessionToken)
             authDispatch({type: AuthDispatchActionType.Logout})
           }
@@ -211,7 +269,9 @@ export function RouteProvider({children}: RouteProviderProps) {
           }
         }
 
-        return () => {}
+        return () => {
+          /* do nothing more */
+        }
       }}>
       {children}
     </BaseRouteProvider>

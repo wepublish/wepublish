@@ -1,4 +1,5 @@
-import {PublishedArticle, Author, ArticleMeta, Peer} from '../types'
+// import { User } from '../../../../../packages/api/lib/db/user'
+import {PublishedArticle, Author, ArticleMeta, Comment, Peer} from '../types'
 import {imageAdapter, getArticleBlocks} from './blockAdapters'
 
 export function peerAdapter(peer: any): Peer {
@@ -8,7 +9,12 @@ export function peerAdapter(peer: any): Peer {
     name: peer.profile.name,
     logoURL: peer.profile.logo?.squareURL,
     websiteURL: peer.profile.websiteURL,
-    themeColor: peer.profile.themeColor
+    themeColor: peer.profile.themeColor,
+    themefontColor: peer.profile.themeFontColor,
+    callToActionText: peer.profile.callToActionText,
+    callToActionURL: peer.profile.callToActionURL,
+    callToActionImage: peer.profile.callToActionImage.largeURL,
+    callToActionImageURL: peer.profile.callToActionImageURL
   }
 }
 
@@ -20,6 +26,24 @@ export function authorsAdapter(authors: any): Author[] {
       slug: author.slug,
       name: author.name,
       image: author.image && imageAdapter(author.image)
+    }
+  })
+}
+
+export function commentsAdapter(comments: any): Comment[] {
+  return comments?.map((comment: Comment) => {
+    return {
+      id: comment.id,
+      state: comment.state,
+      rejectionReason: comment.rejectionReason,
+      text: comment.text,
+      itemType: comment.itemType,
+      itemID: comment.itemID,
+      modifiedAt: comment.modifiedAt,
+      parentID: comment.parentID,
+      authorType: comment.authorType,
+      userName: comment.user.name,
+      children: comment.children
     }
   })
 }
@@ -39,7 +63,13 @@ function articleMetaAdapter(article: any): ArticleMeta {
     slug: article.slug || undefined,
     authors: authorsAdapter(article.authors),
     isBreaking: article.breaking,
-    tags: article.tags
+    tags: article.tags,
+    canonicalUrl: article.canonicalUrl,
+    socialMediaTitle: article.socialMediaTitle,
+    socialMediaDescription: article.socialMediaDescription,
+    socialMediaAuthors: authorsAdapter(article.socialMediaAuthors),
+    socialMediaImage: imageAdapter(article.socialMediaImage),
+    comments: commentsAdapter(article.comments)
   }
 }
 

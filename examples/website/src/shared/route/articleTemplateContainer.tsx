@@ -1,7 +1,6 @@
 import React from 'react'
 
-import gql from 'graphql-tag'
-import {useQuery} from 'react-apollo'
+import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
 
 import {
@@ -14,6 +13,7 @@ import {
   vimeoVideoBlockDataFragment,
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -21,7 +21,8 @@ import {
   titleBlockDataFragment,
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
-  peerMetaDataFragment
+  peerMetaDataFragment,
+  peerArticleMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -34,13 +35,14 @@ import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
 import {useAppContext} from '../appContext'
 import {Peer, ArticleMeta} from '../types'
 import {useStyle, cssRule} from '@karma.run/react'
-import {Image} from '../atoms/image'
+import {Image, ImageFit} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
-  query Article($id: ID!) {
-    article(id: $id) {
+  query Article($id: ID, $slug: Slug, $token: String) {
+    article(id: $id, slug: $slug, token: $token) {
       ...ArticleMetaData
 
       blocks {
@@ -54,6 +56,7 @@ const ArticleQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -74,6 +77,7 @@ const ArticleQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -87,9 +91,24 @@ export interface ArticleTemplateContainerProps {
   slug?: string
 }
 
+const mapAuthors = (metaData: any[] | undefined) => {
+  return metaData?.map((author, index) => {
+    return <meta key={index} property="article:author" content={author.url} />
+  })
+}
+
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading} = useQuery(ArticleQuery, {variables: {id}})
+  const variables =
+    id === 'preview'
+      ? {
+          token: slug
+        }
+      : {id}
+
+  const {data, loading, error} = useQuery(ArticleQuery, {variables})
+
+  if (error) return <NotFoundTemplate statusCode={500} />
 
   if (loading) return <Loader text="Loading" />
 
@@ -97,45 +116,69 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
 
   if (!articleData) return <NotFoundTemplate />
 
-  const {title, lead, image, tags, authors, publishedAt, updatedAt, blocks} = articleData
+  const {
+    title,
+    lead,
+    image,
+    tags,
+    authors,
+    publishedAt,
+    updatedAt,
+    blocks,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaImage,
+    socialMediaAuthors,
+    comments,
+    canonicalUrl
+  } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
-  const canonicalURL = canonicalHost + path
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = canonicalUrl || canonicalHost + path
 
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-
-        <link rel="canonical" href={canonicalURL} />
-
-        <meta property="og:title" content={title} />
+        <link rel="canonical" href={canonicalPeerURL} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
+        <meta property="og:url" content={canonicalOwnURL} />
+        {socialMediaDescription && (
+          <meta property="og:description" content={socialMediaDescription} />
+        )}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
+        )}
+        {socialMediaAuthors && mapAuthors(socialMediaAuthors)}
+        {socialMediaAuthors?.length === 0 && mapAuthors(authors)}
 
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />
-
         {tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
-
-        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
-        {/* <meta property="article:author" content="" /> */}
+        <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
         isArticle={true}
         blocks={blocks}
       />
-      <ArticleFooterContainer tags={tags} authors={authors} publishDate={publishedAt} id={id} />
+      <ArticleFooterContainer
+        tags={tags}
+        authors={authors}
+        publishDate={publishedAt}
+        id={id}
+        comments={comments}
+      />
     </>
   )
 }
@@ -153,7 +196,7 @@ const PeerQuery = gql`
 const PeerArticleQuery = gql`
   query PeerArticle($peerID: ID!, $id: ID!) {
     peerArticle(peerID: $peerID, id: $id) {
-      ...ArticleMetaData
+      ...PeerArticleMetaData
 
       blocks {
         __typename
@@ -166,6 +209,7 @@ const PeerArticleQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -176,7 +220,7 @@ const PeerArticleQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${peerArticleMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -186,6 +230,7 @@ const PeerArticleQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -216,10 +261,25 @@ export function PeerArticleTemplateContainer({
 
   if (!articleData || !peer) return <NotFoundTemplate />
 
-  const {title, lead, image, tags, authors, publishedAt, updatedAt, blocks} = articleData
+  const {
+    title,
+    lead,
+    image,
+    tags,
+    authors,
+    publishedAt,
+    updatedAt,
+    blocks,
+    socialMediaImage,
+    socialMediaDescription,
+    socialMediaTitle,
+    socialMediaAuthors
+  } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const canonicalURL = canonicalHost + path
+
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = articleData.canonicalUrl || articleData.url
 
   return (
     <>
@@ -227,12 +287,19 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
 
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
+        <meta property="og:url" content={canonicalOwnURL} />
+        {socialMediaDescription && (
+          <meta property="og:description" content={socialMediaDescription} />
+        )}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
+        )}
+        {socialMediaAuthors && mapAuthors(socialMediaAuthors)}
+        {socialMediaAuthors?.length === 0 && mapAuthors(authors)}
 
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />
@@ -240,15 +307,12 @@ export function PeerArticleTemplateContainer({
         {tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
-
-        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
-        {/* <meta property="article:author" content="" /> */}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -256,6 +320,9 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
+      {peer.callToActionImage && peer.callToActionImageURL && (
+        <PeerProfileImageBlock peer={peer} article={articleData} />
+      )}
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
@@ -305,6 +372,10 @@ const PeerProfileNameContainer = cssRule({
   flexBasis: 0
 })
 
+const PeerProfileCallToActionURL = cssRule({
+  textAlign: 'center'
+})
+
 const PeerProfileImageStyle = cssRule({
   width: pxToRem(50),
   height: pxToRem(50),
@@ -344,6 +415,46 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
         </div>
         <div className={css(PeerProfileFiller)} />
       </div>
+      <div className={css(PeerProfileCallToActionURL)}>
+        {peer?.callToActionText?.length && (
+          <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
+            <RichTextBlock
+              value={peer?.callToActionText}
+              displayOnly
+              disabled
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
+  const css = useStyle()
+
+  return (
+    <div className={css(PeerProfileBreakStyle)}>
+      {peer?.callToActionImage && (
+        <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+          <div
+            style={{
+              backgroundColor: 'darkGray',
+              border: '1px solid gray',
+              display: 'flex',
+              width: '100%',
+              height: 'auto',
+              maxHeight: '90px',
+              marginRight: 'auto',
+              marginLeft: 'auto'
+            }}>
+            <Image src={peer?.callToActionImage} fit={ImageFit.Cover} />
+          </div>
+        </a>
+      )}
     </div>
   )
 }

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable i18next/no-literal-string */
+
 import React from 'react'
 
 import fs from 'fs'
@@ -24,12 +26,14 @@ async function asyncMain() {
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
   const clientSettings = {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    peerByDefault: process.env.PEER_BY_DEFAULT?.toLowerCase() === 'true'
   }
 
   const app = express()
 
   app.use('/assets', express.static(joinPath(__dirname, '../../assets'), {index: false}))
+  app.use('/static', express.static(joinPath(__dirname, '../../static'), {index: false}))
 
   app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
@@ -40,6 +44,8 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
+          <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
 
           <script
             type="application/json"

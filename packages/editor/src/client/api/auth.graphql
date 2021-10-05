@@ -2,9 +2,13 @@ mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
+
 }
 
 query GetAuthProviders($redirectUri: String!) {
@@ -18,6 +22,22 @@ mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $cod
   createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+
+
+mutation CreateSessionWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }

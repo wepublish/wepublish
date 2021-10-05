@@ -1,8 +1,8 @@
 import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {useQuery} from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import {useQuery, gql} from '@apollo/client'
 
 import {LocalStorageKey} from './utility'
+import {usePageVisibility} from 'react-page-visibility'
 
 export interface AuthContextState {
   readonly session?: {
@@ -65,8 +65,15 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
-  const {data, loading} = useQuery(MeQuery)
+  const {data, loading, refetch: refetchMeQuery} = useQuery(MeQuery)
   const [state, dispatch] = useReducer(authReducer, {})
+
+  const isPageActive = usePageVisibility()
+
+  // when it gets active, refetch the Me query to know if user still logged in.
+  useEffect(() => {
+    if (isPageActive) refetchMeQuery()
+  }, [isPageActive])
 
   useEffect(() => {
     if (data?.me) {

@@ -1,8 +1,9 @@
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
 
-import {delegateToSchema, IDelegateToSchemaOptions} from 'graphql-tools'
+import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} from 'graphql-tools'
 
 import {Context} from './context'
+import {TeaserStyle} from './db/block'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -91,6 +92,40 @@ export function createProxyingIsTypeOf<TSource, TContext>(
   }
 }
 
+export function mapEnumsBack(result: any) {
+  if (!result) return null
+
+  for (const key in result) {
+    const value = result[key]
+
+    if (typeof value === 'object' && value !== null) {
+      mapEnumsBack(value)
+    }
+  }
+  if (
+    result.__typename === 'ArticleTeaser' ||
+    result.__typename === 'PeerArticleTeaser' ||
+    result.__typename === 'PageTeaser'
+  ) {
+    switch (result.style) {
+      case 'DEFAULT':
+        return Object.assign(result, {style: TeaserStyle.Default})
+      case 'LIGHT':
+        return Object.assign(result, {style: TeaserStyle.Light})
+      case 'TEXT':
+        return Object.assign(result, {style: TeaserStyle.Text})
+    }
+  }
+  return result
+}
+
+class ResetGraphQLEnums implements Transform {
+  transformResult(result: ExecutionResult) {
+    // FIXME: WPC-415 created
+    return mapEnumsBack(result)
+  }
+}
+
 export async function delegateToPeerSchema(
   peerID: string,
   fetchAdminEndpoint: boolean,
@@ -107,7 +142,26 @@ export async function delegateToPeerSchema(
     await delegateToSchema({
       ...opts,
       schema: schema,
-      transforms: [...(opts.transforms ?? [])]
+      transforms: [new ResetGraphQLEnums(), ...(opts.transforms ?? [])]
     })
   )
 }
+
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export function countRichtextChars(blocksCharLength: number, nodes: any) {
+  return nodes.reduce((charLength: number, node: any) => {
+    if (!node.text && !node.children) return charLength
+    if (node.text) {
+      return charLength + (node.text as string).length
+    }
+    return countRichtextChars(charLength, node.children)
+  }, blocksCharLength)
+}
+
+export const MAX_COMMENT_LENGTH = 1000
+
+export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
+export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS

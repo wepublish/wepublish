@@ -4,27 +4,41 @@ try {
   require('dotenv').config()
 } catch (e) {}
 
-let {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
+function slugify(text, separator = "-") {
+  return text
+    .toString()
+    .normalize('NFD')                   // split an accented letter in the base letter and the acent
+    .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, separator);
+};
 
-const ENVIRONMENT_NAME = 'production'
-/*if (GITHUB_REF === 'refs/heads/production' || GITHUB_REF === 'production') {
+const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
+
+let ENVIRONMENT_NAME = 'development'
+if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_NAME) {
   ENVIRONMENT_NAME = 'production'
-}*/
+}
+
+const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME)
+
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
-const NAMESPACE = 'wepublish'
+const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
-const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
-const domainSan = envSwitch(
-  ENVIRONMENT_NAME,
-  `www.${domain}`,
-  'staging.website.34.65.204.205.nip.io'
-)
+const devDomain = `${GITHUB_REF_SHORT}.wepublish.dev`
+const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
+const domainSan = envSwitch(ENVIRONMENT_NAME, `www.${domain}`, `www.${devDomain}`)
 
-const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `staging.media.${domain}`)
-const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${domain}`)
-const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
-const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `staging.login.${domain}`)
+const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
+const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
+const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
+const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
+
+const databaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish`
+const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish-oauth2`
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
@@ -34,7 +48,6 @@ main().catch(e => {
 })
 
 async function main() {
-  await applyNamespace()
   await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
@@ -43,24 +56,10 @@ async function main() {
   await applyMongo()
 }
 
-async function applyNamespace() {
-  let namespace = {
-    apiVersion: 'v1',
-    kind: 'Namespace',
-    metadata: {
-      name: NAMESPACE,
-      labels: {
-        name: NAMESPACE
-      }
-    }
-  }
-  await applyConfig('namespace', namespace)
-}
-
 async function applyWebsite() {
   const servicePort = 8000
   const app = 'website'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
 
   const service = {
     apiVersion: 'v1',
@@ -80,6 +79,7 @@ async function applyWebsite() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       sessionAffinity: 'None',
@@ -113,7 +113,7 @@ async function applyWebsite() {
     hosts = hosts.concat(domains)
   }
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -152,6 +152,7 @@ async function applyWebsite() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -160,6 +161,7 @@ async function applyWebsite() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -175,6 +177,7 @@ async function applyWebsite() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -191,15 +194,11 @@ async function applyWebsite() {
                 },
                 {
                   name: 'HOST_ENV',
-                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'development')
                 },
                 {
                   name: 'CANONICAL_HOST',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'https://demo.wepublish.media',
-                    'https://demo.wepublish.media'
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'API_URL',
@@ -220,7 +219,7 @@ async function applyWebsite() {
               resources: {
                 requests: {
                   cpu: '0m',
-                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '256Mi')
+                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '128Mi')
                 }
               },
               readinessProbe: {
@@ -267,8 +266,27 @@ async function applyWebsite() {
 
 async function applyMediaServer() {
   const app = 'media'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
+
+  const pvc = {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: {
+      name: `${GITHUB_REF_SHORT}-media-server`,
+      namespace: NAMESPACE
+    },
+    spec: {
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", '1Gi')
+        }
+      }
+    }
+  }
+
+  await applyConfig(`pvc-${app}`, pvc)
 
   const deployment = {
     apiVersion: 'apps/v1',
@@ -278,6 +296,7 @@ async function applyMediaServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -286,6 +305,7 @@ async function applyMediaServer() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -297,6 +317,7 @@ async function applyMediaServer() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -362,13 +383,8 @@ async function applyMediaServer() {
           volumes: [
             {
               name: 'media-volume',
-              gcePersistentDisk: {
-                fsType: 'ext4',
-                pdName: envSwitch(
-                  ENVIRONMENT_NAME,
-                  'wepublish-media-production',
-                  'wepublish-media-staging'
-                )
+              persistentVolumeClaim: {
+                claimName: `${GITHUB_REF_SHORT}-media-server`
               }
             }
           ]
@@ -396,6 +412,7 @@ async function applyMediaServer() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -403,7 +420,7 @@ async function applyMediaServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -411,6 +428,7 @@ async function applyMediaServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -451,7 +469,7 @@ async function applyMediaServer() {
 
 async function applyApiServer() {
   const app = 'api'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -462,6 +480,7 @@ async function applyApiServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -470,6 +489,7 @@ async function applyApiServer() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -485,19 +505,38 @@ async function applyApiServer() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
         spec: {
+          volumes: [
+            {
+              name: 'google-cloud-key',
+              secret: {
+                secretName: 'log-the-things'
+              }
+            }
+          ],
           containers: [
             {
               name: appName,
               image: image,
               command: ['node', './examples/api/dist/index.js'],
+              volumeMounts: [
+                {
+                  name: 'google-cloud-key',
+                  mountPath: '/var/secrets/google'
+                }
+              ],
               env: [
                 {
                   name: 'NODE_ENV',
                   value: `production`
+                },
+                {
+                  name: 'GOOGLE_APPLICATION_CREDENTIALS',
+                  value: '/var/secrets/google/key.json'
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
@@ -525,11 +564,7 @@ async function applyApiServer() {
                 // },
                 {
                   name: 'MONGO_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'mongodb://mongo-production:27017/wepublish',
-                    'mongodb://mongo-staging:27017/wepublish'
-                  )
+                  value: databaseURL
                 },
                 {
                   name: 'MONGO_LOCALE',
@@ -538,19 +573,11 @@ async function applyApiServer() {
 
                 {
                   name: 'HOST_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'https://api.demo.wepublish.media',
-                    'https://api.demo.wepublish.media'
-                  )
+                  value: `https://${domainAPI}`
                 },
                 {
                   name: 'WEBSITE_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'https://demo.wepublish.media',
-                    'https://demo.wepublish.media'
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'MEDIA_SERVER_TOKEN',
@@ -594,7 +621,7 @@ async function applyApiServer() {
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: 'https://login.demo.wepublish.media/.well-known/openid-configuration'
+                  value: `https://${domainOauth}/.well-known/openid-configuration`
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_CLIENT_ID',
@@ -622,6 +649,98 @@ async function applyApiServer() {
                       key: 'oauth_wepublish_redirect_url'
                     }
                   }
+                },
+                {
+                  name: 'MAILGUN_API_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'mailgun_api_key'
+                    }
+                  }
+                },
+                {
+                  name: 'MAILGUN_BASE_DOMAIN',
+                  value: 'api.eu.mailgun.net'
+                },
+                {
+                  name: 'MAILGUN_MAIL_DOMAIN',
+                  value: 'mg.wepublish.media'
+                },
+                {
+                  name: 'MAILGUN_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'mailgun_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'JWT_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'jwt_secret_key'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_secret_key'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_CHECKOUT_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_checkout_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'PAYREXX_INSTANCE_NAME',
+                  value: 'tsridev'
+                },
+                {
+                  name: 'PAYREXX_API_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'payrexx_api_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'SENTRY_DSN',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'sentry_dsn'
+                    }
+                  }
+                },
+                {
+                  name: 'SENTRY_ENV',
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
+                },
+                {
+                  name: 'GOOGLE_PROJECT',
+                  value: PROJECT_ID
                 }
               ],
               ports: [
@@ -665,6 +784,7 @@ async function applyApiServer() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -672,7 +792,7 @@ async function applyApiServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -680,6 +800,7 @@ async function applyApiServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -720,7 +841,7 @@ async function applyApiServer() {
 
 async function applyEditor() {
   const app = 'editor'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -731,6 +852,7 @@ async function applyEditor() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -739,6 +861,7 @@ async function applyEditor() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -754,6 +877,7 @@ async function applyEditor() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -771,6 +895,10 @@ async function applyEditor() {
                 {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
+                },
+                {
+                  name: 'PEER_BY_DEFAULT',
+                  value: 'true'
                 }
               ],
               ports: [
@@ -818,6 +946,7 @@ async function applyEditor() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -825,7 +954,7 @@ async function applyEditor() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -833,6 +962,7 @@ async function applyEditor() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -873,7 +1003,7 @@ async function applyEditor() {
 
 async function applyOAuth2() {
   const app = 'oauth2'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -884,6 +1014,7 @@ async function applyOAuth2() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -892,6 +1023,7 @@ async function applyOAuth2() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -907,6 +1039,7 @@ async function applyOAuth2() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -915,7 +1048,7 @@ async function applyOAuth2() {
             {
               name: appName,
               image: image,
-              command: ['node', './packages/oauth2/dist/server/index.js'],
+              command: ['node', './examples/oauth2/dist/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -923,11 +1056,11 @@ async function applyOAuth2() {
                 },
                 {
                   name: 'MONGO_URL',
-                  value: `mongodb://mongo-production:27017/wepublish`
+                  value: databaseURL
                 },
                 {
                   name: 'OAUTH_MONGODB_URI',
-                  value: `mongodb://mongo-production:27017/wepublish-oauth2`
+                  value: oauthDatabaseURL
                 },
                 {
                   name: 'OAUTH_CLIENT_ID',
@@ -1029,6 +1162,7 @@ async function applyOAuth2() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -1036,7 +1170,7 @@ async function applyOAuth2() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -1085,7 +1219,26 @@ async function applyOAuth2() {
 async function applyMongo() {
   const app = 'mongo'
   const port = 27017
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
+
+  const pvc = {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: {
+      name: `${GITHUB_REF_SHORT}-mongo-data`,
+      namespace: NAMESPACE
+    },
+    spec: {
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
+        }
+      }
+    }
+  }
+
+  await applyConfig(`pvc-${app}`, pvc)
 
   const deployment = {
     apiVersion: 'apps/v1',
@@ -1095,6 +1248,7 @@ async function applyMongo() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -1103,6 +1257,7 @@ async function applyMongo() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -1114,6 +1269,7 @@ async function applyMongo() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -1153,13 +1309,8 @@ async function applyMongo() {
           volumes: [
             {
               name: 'mongo-volume',
-              gcePersistentDisk: {
-                fsType: 'ext4',
-                pdName: envSwitch(
-                  ENVIRONMENT_NAME,
-                  'wepublish-mongo-production',
-                  'wepublish-mongo-staging'
-                )
+              persistentVolumeClaim: {
+                claimName: `${GITHUB_REF_SHORT}-mongo-data`,
               }
             }
           ]
@@ -1187,6 +1338,7 @@ async function applyMongo() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'

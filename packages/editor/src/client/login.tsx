@@ -1,23 +1,32 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {LoginTemplate, TextInput, Button, Spacing, Toast, Link, Box} from '@karma.run/ui'
-import {RouteActionType, styled} from '@karma.run/react'
+import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
-import {useRouteDispatch, matchRoute, useRoute, IndexRoute, LoginRoute} from './route'
+import {LoginTemplate} from './atoms/loginTemplate'
+
+import {
+  useRouteDispatch,
+  matchRoute,
+  useRoute,
+  IndexRoute,
+  LoginRoute,
+  IconButtonLink
+} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
 import {LocalStorageKey} from './utility'
 import {Logo} from './logo'
 import {
   useCreateSessionWithOAuth2CodeMutation,
+  useCreateSessionWithJwtMutation,
   useCreateSessionMutation,
-  useGetAuthProvidersQuery
+  useGetAuthProvidersQuery,
+  FullUserRoleFragment
 } from './api'
 
-const LoginForm = styled('form', () => ({
-  display: 'flex',
-  flexDirection: 'column',
-  margin: 0
-}))
+import {useTranslation} from 'react-i18next'
+import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert} from 'rsuite'
+import {SVGIcon} from 'rsuite/lib/@types/common'
+import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -28,26 +37,48 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  const [authenticate, {loading, error}] = useCreateSessionMutation()
+  const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
   const [
     authenticateWithOAuth2Code,
     {loading: loadingOAuth2, error: errorOAuth2}
   ] = useCreateSessionWithOAuth2CodeMutation()
 
+  const [
+    authenticateWithJWT,
+    {loading: loadingJWT, error: errorJWT}
+  ] = useCreateSessionWithJwtMutation()
+
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
-      redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+      redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}/oauth`
     }
   })
 
+  const {t} = useTranslation()
+
   useEffect(() => {
-    if (current !== null && current.params !== null && current.query && current.query.code) {
-      //@ts-ignore
-      const provider = current.params.provider
+    if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
+      authenticateWithJWT({
+        variables: {
+          jwt: current.query.jwt
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail, roles}
+          } = response.data.createSessionWithJWT
+
+          authenticateUser(sessionToken, responseEmail, roles)
+        })
+        .catch(error => {
+          console.warn('auth error', error)
+          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+        })
+    } else if (current !== null && current.params !== null && current.query && current.query.code) {
+      // TODO: fix this
+      const provider = (current as RouteInstance).params.provider
       const {code} = current!.query
       authenticateWithOAuth2Code({
         variables: {
@@ -59,10 +90,10 @@ export function Login() {
         .then((response: any) => {
           const {
             token: sessionToken,
-            user: {email: responseEmail}
+            user: {email: responseEmail, roles}
           } = response.data.createSessionWithOAuth2Code
 
-          authenticateUser(sessionToken, responseEmail)
+          authenticateUser(sessionToken, responseEmail, roles)
         })
         .catch(() => {
           routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
@@ -71,15 +102,9 @@ export function Login() {
   }, [current])
 
   useEffect(() => {
-    if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
-    }
-    if (errorOAuth2) {
-      setErrorToastOpen(true)
-      setErrorMessage(errorOAuth2.message)
-    }
-  }, [error, errorOAuth2])
+    const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
+    if (error) Alert.error(error, 0)
+  }, [errorLogin, errorOAuth2, errorJWT])
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -90,13 +115,26 @@ export function Login() {
 
     const {
       token: sessionToken,
-      user: {email: responseEmail}
+      user: {email: responseEmail, roles}
     } = response.data.createSession
 
-    authenticateUser(sessionToken, responseEmail)
+    authenticateUser(sessionToken, responseEmail, roles)
   }
 
-  function authenticateUser(sessionToken: string, responseEmail: string) {
+  function authenticateUser(
+    sessionToken: string,
+    responseEmail: string,
+    userRoles: FullUserRoleFragment[]
+  ) {
+    const permissions = userRoles.reduce((permissions, userRole) => {
+      return [...permissions, ...userRole.permissions.map(permission => permission.id)]
+    }, [] as string[])
+
+    if (!permissions.includes('CAN_LOGIN_EDITOR')) {
+      Alert.error(t('login.unauthorized'), 0)
+      return
+    }
+
     localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
 
     authDispatch({
@@ -115,134 +153,145 @@ export function Login() {
     routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
   }
 
-  return (
-    <>
-      <LoginTemplate backgroundChildren={<Background />}>
-        {!loadingOAuth2 && (
-          <>
-            <LoginForm onSubmit={login}>
-              <TextInput
-                label="Email"
-                value={email}
-                autoComplete="username"
-                onChange={event => setEmail(event.target.value)}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                type="password"
-                label="Password"
-                value={password}
-                autoComplete="current-password"
-                onChange={event => setPassword(event.target.value)}
-                marginBottom={Spacing.Small}
-              />
-              <Button color="primary" label="Login" disabled={loading} />
-            </LoginForm>
-            {!!providerData?.authProviders?.length && (
-              <>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  marginTop={Spacing.Small}
-                  alignItems="center">
-                  <p>Or Login with:</p>
-                  {providerData.authProviders.map(
-                    (provider: {url: string; name: string}, index: number) => {
-                      return (
-                        <Link href={provider.url} key={index}>
-                          <Box margin={Spacing.Tiny}>
-                            <Button label={provider.name} variant="outlined" color="primary" />
-                          </Box>
-                        </Link>
-                      )
-                    }
-                  )}
-                </Box>
-              </>
-            )}
-          </>
-        )}
-        {loadingOAuth2 && (
-          <div>
-            <p>Authenticating against OAuth2</p>
-          </div>
-        )}
-      </LoginTemplate>
+  function getAuthLogo(name: string): IconNames | SVGIcon {
+    switch (name) {
+      case 'google':
+        return 'google'
+      case 'facebook':
+        return 'facebook'
+      case 'twitter':
+        return 'twitter'
+      default:
+        return 'space-shuttle'
+    }
+  }
 
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-    </>
+  return (
+    <LoginTemplate backgroundChildren={<Background />}>
+      {!loadingOAuth2 && (
+        <>
+          <Form
+            fluid={true}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              margin: 0
+            }}>
+            <FormGroup>
+              <ControlLabel>{t('login.email')}</ControlLabel>
+              <FormControl
+                value={email}
+                autoComplete={'username'}
+                onChange={email => setEmail(email)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('login.password')}</ControlLabel>
+              <FormControl
+                type="password"
+                value={password}
+                autoComplete={'currentPassword'}
+                onChange={password => setPassword(password)}
+              />
+            </FormGroup>
+            <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
+              {t('login.login')}
+            </Button>
+          </Form>
+          {!!providerData?.authProviders?.length && (
+            <>
+              <Divider />
+              {providerData.authProviders.map(
+                (provider: {url: string; name: string}, index: number) => (
+                  <IconButtonLink
+                    style={{marginBottom: 10}}
+                    key={index}
+                    appearance="subtle"
+                    href={provider.url}
+                    icon={<Icon icon={getAuthLogo(provider.name)} />}>
+                    {provider.name}
+                  </IconButtonLink>
+                )
+              )}
+            </>
+          )}
+        </>
+      )}
+      {loadingOAuth2 && (
+        <div>
+          <p>{t('login.OAuth2')}</p>
+        </div>
+      )}
+      {loadingJWT && (
+        <div>
+          <p>{t('login.jwt')}</p>
+        </div>
+      )}
+    </LoginTemplate>
   )
 }
 
-const BackgroundWrapper = styled('div', () => ({
-  position: 'relative',
-  width: 340,
-  height: 40,
-  transform: 'translateY(-0px)'
-}))
-
-const RedCircle = styled('div', () => ({
-  position: 'absolute',
-  width: 340,
-  height: 340,
-  borderRadius: '100%',
-  transform: 'translateY(-80px)',
-  background: 'linear-gradient(-90deg, #D95560 0%, #FF6370 100%)'
-}))
-
-const OrangeCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateX(-180px) translateY(-40px)',
-  background: 'linear-gradient(230deg, #F08C1F 0%, #FFA463 100%)'
-}))
-
-const GreenCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateX(180px) translateY(-40px)',
-  background: 'linear-gradient(10deg, #29805A 0%, #34D690 100%)'
-}))
-
-const BlueCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateY(-140px)',
-  background: 'linear-gradient(-40deg, #03738C 0%, #04C4D9 100%)'
-}))
-
-const LogoWrapper = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 230
-}))
-
 function Background() {
   return (
-    <BackgroundWrapper>
-      <OrangeCircle />
-      <GreenCircle />
-      <BlueCircle />
-      <RedCircle />
-      <LogoWrapper>
+    <div
+      style={{
+        position: 'relative',
+        width: 340,
+        height: 40,
+        transform: 'translateY(-0px)'
+      }}>
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateX(-180px) translateY(-40px)',
+          background: 'linear-gradient(230deg, #F08C1F 0%, #FFA463 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateX(180px) translateY(-40px)',
+          background: 'linear-gradient(10deg, #29805A 0%, #34D690 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateY(-140px)',
+          background: 'linear-gradient(-40deg, #03738C 0%, #04C4D9 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          width: 340,
+          height: 340,
+          borderRadius: '100%',
+          transform: 'translateY(-80px)',
+          background: 'linear-gradient(-90deg, #D95560 0%, #FF6370 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 230
+        }}>
         <Logo />
-      </LogoWrapper>
-    </BackgroundWrapper>
+      </div>
+    </div>
   )
 }

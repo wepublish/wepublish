@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
-import {MaterialIconArrowBack} from '@karma.run/icons'
 
 import {TeaserSelectPanel} from './teaserSelectPanel'
 import {TeaserEditPanel} from './teaserEditPanel'
 import {TeaserLink, Teaser} from '../blocks/types'
 import {TeaserStyle} from '../api'
-import {Drawer} from '@karma.run/ui'
+import {Drawer} from 'rsuite'
+
+import {useTranslation} from 'react-i18next'
 
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void
@@ -16,6 +17,8 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
   const [teaser, setTeaser] = useState<TeaserLink>()
   const [isEditOpen, setEditOpen] = useState(false)
 
+  const {t} = useTranslation()
+
   return (
     <>
       <TeaserSelectPanel
@@ -25,25 +28,22 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
           setTeaser(teaser)
         }}
       />
-      <Drawer open={isEditOpen} width={480}>
-        {() => (
-          <TeaserEditPanel
-            closeLabel="Back"
-            closeIcon={MaterialIconArrowBack}
-            initialTeaser={{
-              ...teaser!,
-              style: TeaserStyle.Default,
-              preTitle: '',
-              title: '',
-              lead: ''
-            }}
-            onClose={() => setEditOpen(false)}
-            onConfirm={teaser => {
-              setEditOpen(false)
-              onSelect(teaser)
-            }}
-          />
-        )}
+      <Drawer show={isEditOpen} size={'sm'} onHide={() => setEditOpen(false)}>
+        <TeaserEditPanel
+          closeLabel={t('articleEditor.panels.back')}
+          initialTeaser={{
+            ...teaser!,
+            style: TeaserStyle.Default,
+            preTitle: '',
+            title: '',
+            lead: ''
+          }}
+          onClose={() => setEditOpen(false)}
+          onConfirm={teaser => {
+            setEditOpen(false)
+            onSelect(teaser)
+          }}
+        />
       </Drawer>
     </>
   )

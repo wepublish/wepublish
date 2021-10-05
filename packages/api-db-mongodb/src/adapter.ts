@@ -13,10 +13,16 @@ import {MongoDBNavigationAdapter} from './db/navigation'
 import {MongoDBImageAdapter} from './db/image'
 import {MongoDBTokenAdapter} from './db/token'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
+import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBUserRoleAdapter} from './db/userRole'
+import {MongoDBMemberPlanAdapter} from './db/memberPlan'
+import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
+import {MongoDBInvoiceAdapter} from './db/invoice'
+import {MongoDBPaymentAdapter} from './db/payment'
+import {MongoDBMailLogAdapter} from './db/mailLog'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -63,8 +69,14 @@ export class MongoDBAdapter implements DBAdapter {
   readonly navigation: MongoDBNavigationAdapter
   readonly author: MongoDBAuthorAdapter
   readonly image: MongoDBImageAdapter
+  readonly comment: MongoDBCommentAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
+  readonly memberPlan: MongoDBMemberPlanAdapter
+  readonly paymentMethod: MongoDBPaymentMethodAdapter
+  readonly invoice: MongoDBInvoiceAdapter
+  readonly payment: MongoDBPaymentAdapter
+  readonly mailLog: MongoDBMailLogAdapter
 
   // Init
   // ====
@@ -89,10 +101,16 @@ export class MongoDBAdapter implements DBAdapter {
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)
+    this.comment = new MongoDBCommentAdapter(db, locale)
     this.author = new MongoDBAuthorAdapter(db, locale)
     this.image = new MongoDBImageAdapter(db, locale)
     this.article = new MongoDBArticleAdapter(db, locale)
     this.page = new MongoDBPageAdapter(db, locale)
+    this.memberPlan = new MongoDBMemberPlanAdapter(db, locale)
+    this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
+    this.invoice = new MongoDBInvoiceAdapter(db, locale)
+    this.payment = new MongoDBPaymentAdapter(db, locale)
+    this.mailLog = new MongoDBMailLogAdapter(db, locale)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {
@@ -170,7 +188,10 @@ export class MongoDBAdapter implements DBAdapter {
     if (!migrationState) {
       const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
       await seed?.(adapter)
+      await adapter.client.close()
     }
+
+    await client.close()
 
     return {
       migrated: {

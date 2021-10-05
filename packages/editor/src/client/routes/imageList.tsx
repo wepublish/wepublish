@@ -1,55 +1,43 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Typography,
-  Box,
-  Spacing,
-  Grid,
-  Column,
-  Drawer,
-  Image,
-  Card,
-  SearchInput,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  ZIndex,
-  IconButton,
-  Overlay,
-  Button
-} from '@karma.run/ui'
-
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {
   ImageUploadRoute,
-  RouteLinkButton,
   useRoute,
   RouteType,
   ImageListRoute,
   useRouteDispatch,
   Link,
-  ImageEditRoute
+  ImageEditRoute,
+  ButtonLink
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {
   useImageListQuery,
   useDeleteImageMutation,
   ImageRefFragment,
   ImageListQuery,
-  ImageListDocument
+  ImageListDocument,
+  FullImageFragment
 } from '../api'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
-enum ConfirmAction {
-  Delete = 'delete'
-}
+import {useTranslation} from 'react-i18next'
+import {
+  FlexboxGrid,
+  Icon,
+  Input,
+  InputGroup,
+  Panel,
+  IconButton,
+  Drawer,
+  Modal,
+  Button
+} from 'rsuite'
+import {Overlay} from '../atoms/overlay'
+import {Typography} from '../atoms/typography'
 
 const ImagesPerPage = 24
 
@@ -63,25 +51,28 @@ export function ImageList() {
   const [editID, setEditID] = useState<string | null>(
     current?.type === RouteType.ImageEdit ? current.params.id : null
   )
+  const [images, setImages] = useState<FullImageFragment[]>([])
 
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const listVariables = {filter: filter || undefined, first: ImagesPerPage}
-  const {data, fetchMore, loading: isLoading} = useImageListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
 
   const [deleteImage, {loading: isDeleting}] = useDeleteImageMutation()
 
-  const images = data?.images.nodes ?? []
+  const {t} = useTranslation()
 
-  const missingColumns =
-    images.length % 3 !== 0 ? new Array(3 - (images.length % 3)).fill(null) : []
+  useEffect(() => {
+    if (data?.images?.nodes) {
+      setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>)
+    }
+  }, [data?.images])
 
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
@@ -94,7 +85,7 @@ export function ImageList() {
     }
   }, [current])
 
-  function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -108,196 +99,172 @@ export function ImageList() {
         }
       }
     })
-  }
+  } */
 
   return (
     <>
-      <Box flexDirection="row" marginBottom={Spacing.Small} display="flex">
-        <Typography variant="h1">Image Library</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          label="Upload Image"
-          color="primary"
-          route={ImageUploadRoute.create({}, current ?? undefined)}
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('images.overview.imageLibrary')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink appearance="primary" disabled={isLoading} route={ImageUploadRoute.create({})}>
+            {t('images.overview.uploadImage')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+
+      {images.length > 0 ? (
+        <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
+          {images.map((image, key) => (
+            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
+              <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
+                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
+                  <img
+                    src={image.mediumURL || ''}
+                    style={{height: '200', display: 'block', margin: '0 auto'}}
+                  />
+                  <Overlay
+                    style={{
+                      bottom: '0px',
+                      width: '100%',
+                      maxHeight: '60%',
+                      padding: '10px'
+                    }}>
+                    <Typography variant="subtitle1" color="gray" ellipsize>
+                      {`${image.filename || t('images.panels.untitled')}${image.extension}`}
+                    </Typography>
+                    <Typography variant="body2" color="white" ellipsize>
+                      {image.title || t('images.panels.Untitled')}
+                    </Typography>
+                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
+                  </Overlay>
+                  <IconButton
+                    style={{position: 'absolute', top: '5px', right: '5px'}}
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    onClick={event => {
+                      event.preventDefault()
+                      setCurrentImage(image)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </Panel>
+              </Link>
+            </FlexboxGrid.Item>
+          ))}
+        </FlexboxGrid>
+      ) : (
+        <p>{t('images.overview.noImagesFound')}</p>
+      )}
+
+      <Drawer
+        show={isUploadModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setUploadModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: ImageListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <ImageUploadAndEditPanel
+          onClose={() => {
+            setUploadModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: ImageListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onUpload={() => {
+            setUploadModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: ImageListRoute.create({}, current ?? undefined)
+            })
+          }}
         />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder="Search"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
+      </Drawer>
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: ImageListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <ImagedEditPanel
+          id={editID!}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: ImageListRoute.create({}, current ?? undefined)
+            })
+          }}
         />
-      </Box>
-      <Box>
-        {images.length ? (
-          <>
-            <Box marginBottom={Spacing.Small}>
-              <Grid spacing={Spacing.Small}>
-                {images.map(image => {
-                  const {id, thumbURL, title, filename, extension} = image
-
-                  return (
-                    <Column key={id} ratio={1 / 3}>
-                      <Card
-                        position="relative"
-                        overflow="hidden"
-                        width="100%"
-                        height={200}
-                        flexGrow={1}>
-                        <Box
-                          position="absolute"
-                          zIndex={ZIndex.Default}
-                          right={0}
-                          top={0}
-                          padding={Spacing.ExtraSmall}>
-                          <IconButton
-                            icon={MaterialIconDeleteOutlined}
-                            onClick={item => {
-                              setCurrentImage(image)
-                              setConfirmationDialogOpen(true)
-                              setConfirmAction(ConfirmAction.Delete)
-                            }}
-                          />
-                        </Box>
-                        <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
-                          {thumbURL && <Image src={thumbURL} width="100%" height="100%" />}
-
-                          <Overlay
-                            bottom={0}
-                            width="100%"
-                            maxHeight="50%"
-                            padding={Spacing.ExtraSmall}>
-                            <Typography variant="subtitle1" color="gray" ellipsize>
-                              {`${filename || 'untitled'}${extension}`}
-                            </Typography>
-                            <Typography variant="body2" color="white" ellipsize>
-                              {title || 'Untitled'}
-                            </Typography>
-                          </Overlay>
-                        </Link>
-                      </Card>
-                    </Column>
-                  )
-                })}
-                {missingColumns.map((value, index) => (
-                  <Column key={index} ratio={1 / 3}></Column>
-                ))}
-              </Grid>
-            </Box>
-            <Box display="flex" justifyContent="center">
-              {data?.images.pageInfo.hasNextPage && <Button label="Load More" onClick={loadMore} />}
-            </Box>
-          </>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            No Images found
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isUploadModalOpen} width={480}>
-        {() => (
-          <ImageUploadAndEditPanel
-            onClose={() => {
-              setUploadModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: ImageListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onUpload={() => {
-              setUploadModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: ImageListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <ImagedEditPanel
-            id={editID!}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: ImageListRoute.create({}, current ?? undefined)
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Title>{t('images.panels.deleteImage')}</Modal.Title>
+
+        <Modal.Body>
+          <p>
+            {`${currentImage?.filename || t('images.panels.untitled')}${currentImage?.extension}` ||
+              '-'}
+          </p>
+          <p>{currentImage?.title || t('images.panels.untitled')}</p>
+          <p>{currentImage?.description || '-'}</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentImage) return
+
+              await deleteImage({
+                variables: {id: currentImage.id},
+                update: cache => {
+                  const query = cache.readQuery<ImageListQuery>({
+                    query: ImageListDocument,
+                    variables: listVariables
+                  })
+
+                  if (!query) return
+
+                  cache.writeQuery<ImageListQuery>({
+                    query: ImageListDocument,
+                    data: {
+                      images: {
+                        ...query.images,
+                        nodes: query.images.nodes.filter(article => article.id !== currentImage.id)
+                      }
+                    },
+                    variables: listVariables
+                  })
+                }
               })
+              setConfirmationDialogOpen(false)
             }}
-          />
-        )}
-      </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title="Delete Image?"
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label="Cancel"
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label="Confirm"
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentImage) return
-
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteImage({
-                          variables: {id: currentImage.id},
-                          update: cache => {
-                            const query = cache.readQuery<ImageListQuery>({
-                              query: ImageListDocument,
-                              variables: listVariables
-                            })
-
-                            if (!query) return
-
-                            cache.writeQuery<ImageListQuery>({
-                              query: ImageListDocument,
-                              data: {
-                                images: {
-                                  ...query.images,
-                                  nodes: query.images.nodes.filter(
-                                    article => article.id !== currentImage.id
-                                  )
-                                }
-                              },
-                              variables: listVariables
-                            })
-                          }
-                        })
-                        break
-                    }
-
-                    setConfirmationDialogOpen(false)
-                  }}
-                />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label="Filename">
-                  {`${currentImage?.filename || 'untitled'}${currentImage?.extension}` || '-'}
-                </DescriptionListItem>
-                <DescriptionListItem label="Title">
-                  {currentImage?.title || 'Untitled'}
-                </DescriptionListItem>
-                <DescriptionListItem label="Description">
-                  {currentImage?.description || '-'}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+            color="red">
+            {t('images.panels.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('images.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

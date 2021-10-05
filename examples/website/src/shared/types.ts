@@ -31,9 +31,36 @@ export interface Author {
   image: ImageData
 }
 
+export interface Comment {
+  id: string
+  state: string
+  rejectionReason: string
+  itemID: string
+  itemType: CommentItemType
+  text: RichTextBlockValue
+  modifiedAt: Date
+  parentID?: string
+  authorType: CommentAuthorType
+  user: User
+  userName: string
+  children: Comment[]
+}
+
+export enum CommentAuthorType {
+  Team = 'team',
+  Author = 'author',
+  VerifiedUser = 'verifiedUser'
+}
+
+export enum CommentItemType {
+  Article = 'article',
+  Page = 'page'
+}
+
 export interface NavigationItem {
   title: string
-  route: Route
+  route?: Route
+  url?: string
   isActive: boolean
 }
 
@@ -55,11 +82,49 @@ export interface ArticleMeta {
   slug?: string
   isBreaking: boolean
 
+  canonicalUrl: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthors: Author[]
+  socialMediaImage?: any
+
+  comments?: Comment[]
+
   teaserType?: TeaserType
   teaserStyle?: TeaserStyle
 }
 
 export type PublishedArticle = ArticleMeta & {
+  blocks: Block[]
+}
+
+// PageMeta
+export interface PageMeta {
+  id: string
+  url: string
+
+  tags: string[]
+
+  publishedAt: Date
+  updatedAt: Date
+
+  title: string
+  description: string
+  image: any
+  slug?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImage?: any
+
+  comments?: Comment[]
+
+  teaserType?: TeaserType
+  teaserStyle?: TeaserStyle
+}
+
+export type PublishedPage = PageMeta & {
   blocks: Block[]
 }
 
@@ -91,12 +156,14 @@ export interface Peer {
   logoURL: string
   websiteURL: string
   themeColor: string
+  themefontColor: string
+  callToActionText: Node[]
+  callToActionURL: string
+  callToActionImage: string
+  callToActionImageURL: string
 }
 
 export enum BlockType {
-  Foo = 'foo',
-  Bar = 'bar',
-
   // Content
   TitleImage = 'titleImage',
   Title = 'title',
@@ -112,6 +179,8 @@ export enum BlockType {
   // Layout
   Grid = 'grid'
 }
+
+export type RichTextBlockValue = Node[]
 
 export interface BaseBlock<T extends BlockType, V> {
   type: T
@@ -133,35 +202,40 @@ export type TitleBlockValue = {
   lead: string
   isHeader?: boolean
 }
-export interface TitleBlock extends BaseBlock<BlockType.Title, TitleBlockValue> {}
+export type TitleBlock = BaseBlock<BlockType.Title, TitleBlockValue>
 
-export interface QuoteBlock extends BaseBlock<BlockType.Quote, {text: string; author: string}> {}
+export type QuoteBlock = BaseBlock<BlockType.Quote, {text: string; author: string}>
 
-export interface ImageBlock extends BaseBlock<BlockType.Image, ImageData> {}
-export interface TitleImageBlock extends BaseBlock<BlockType.TitleImage, ImageData> {}
+export type ImageBlock = BaseBlock<BlockType.Image, ImageData>
+export type TitleImageBlock = BaseBlock<BlockType.TitleImage, ImageData>
 
-export interface ListicleBlock
-  extends BaseBlock<
-    BlockType.Listicle,
-    {
-      title: string
-      image: ImageData
-      text: Node[]
-    }[]
-  > {}
+export type ListicleBlock = BaseBlock<
+  BlockType.Listicle,
+  {
+    title: string
+    image: ImageData
+    text: Node[]
+  }[]
+>
 
-export interface PeerPageBreakBlock
-  extends BaseBlock<
-    BlockType.PeerPageBreak,
-    {
-      peer: Peer
-      text: string
-      linkURL: string
-      linkText: string
-    }
-  > {}
+export type PeerPageBreakBlock = BaseBlock<
+  BlockType.PeerPageBreak,
+  {
+    peer: Peer
+    text: string
+    richText: Node[]
+    linkURL: string
+    linkText: string
+    linkTarget: string
+    hideButton: false
+    styleOption: string
+    layoutOption: string
+    templateOption: string
+    image?: ImageRefData | null
+  }
+>
 
-export interface RichTextBlock extends BaseBlock<BlockType.RichText, Node[]> {}
+export type RichTextBlock = BaseBlock<BlockType.RichText, Node[]>
 
 export type GalleryBlock = BaseBlock<
   BlockType.Gallery,
@@ -180,6 +254,7 @@ export enum EmbedType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   IFrame = 'iframe'
 }
 
@@ -215,6 +290,11 @@ export interface SoundCloudTrackEmbedData {
   trackID: string
 }
 
+export interface PolisConversationEmbedData {
+  type: EmbedType.PolisConversation
+  conversationID: string
+}
+
 export interface IFrameEmbed {
   type: EmbedType.IFrame
   title?: string
@@ -231,6 +311,7 @@ export type EmbedData =
   | VimeoVideoEmbedData
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
+  | PolisConversationEmbedData
   | IFrameEmbed
 
 export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
@@ -313,4 +394,26 @@ export interface PageInfo {
   readonly endCursor?: string
   readonly hasNextPage: boolean
   readonly hasPreviousPage: boolean
+}
+
+export interface User {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+  readonly name: string
+  readonly preferredName?: string
+  readonly email: string
+
+  readonly active: boolean
+  readonly lastLogin: Date | null
+
+  readonly properties: MetadataProperty[]
+
+  readonly roleIDs: string[]
+}
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
 }

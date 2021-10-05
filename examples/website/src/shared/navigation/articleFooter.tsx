@@ -1,12 +1,13 @@
 import React from 'react'
 import {Peer, ArticleMeta} from '../types'
 import {RelatedArticle} from '../molecules/relatedArticle'
+import {CommentList, LoginToComment} from '../molecules/commentTemplate'
 import {Tag} from '../atoms/tag'
 import {Link, AuthorRoute, ArticleRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
 import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
-import {Author} from '../types'
+import {Author, Comment} from '../types'
 import {RoundImage} from '../atoms/roundImage'
 
 import {pxToRem, whenTablet, whenDesktop} from '../style/helpers'
@@ -65,8 +66,10 @@ const TitleStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
 
 export interface ArticleFooterProps {
   readonly relatedArticles: ArticleMeta[]
+  readonly itemID: string
   readonly tags: string[]
   readonly authors?: Author[]
+  readonly comments?: Comment[]
   readonly peer?: Peer
   readonly showImage?: boolean
   isPeerArticle?: boolean
@@ -114,6 +117,9 @@ export function ArticleFooter(props: ArticleFooterProps) {
           })}
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
+      <LoginToComment itemID={props.itemID} itemType={'Article'} />
+
+      <CommentList comments={props.comments} />
     </div>
   )
 }

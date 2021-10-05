@@ -1,9 +1,8 @@
 import React from 'react'
-import {Peer} from '../types'
+import {Peer, Author} from '../types'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
 import {cssRule, useStyle} from '@karma.run/react'
-import {Author} from '../types'
 import {getHumanReadableTimePassed} from '../utility'
 import {pxToRem, hexToRgb, whenTablet} from '../style/helpers'
 import {Color} from '../style/colors'
@@ -67,6 +66,8 @@ export interface TextTeaserProps {
   readonly tags: string[]
   readonly isSingle?: boolean
   readonly route: Route
+  readonly url: string
+  readonly isPeerArticle?: boolean
 }
 
 export function TextTeaser({
@@ -78,14 +79,19 @@ export function TextTeaser({
   tags,
   isSingle,
   route,
-  preTitle
+  preTitle,
+  url,
+  isPeerArticle
 }: TextTeaserProps) {
   const css = useStyle({isSingle})
 
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>
-      <Link route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <h2
           className={css(
             DefaultTeaserTitleStyle,

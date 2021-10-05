@@ -1,0 +1,87 @@
+fragment ArticleRef on Article {
+    id
+    publishedAt
+    updatedAt
+    tags
+    preTitle
+    title
+    lead
+    image {
+        ...ImageRef
+    }
+}
+
+query ArticleList($filter: [String!], $after: ID, $first: Int) {
+    articles(first: $first, after: $after, filter: {tags: $filter}) {
+        nodes {
+            ...ArticleRef
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+
+
+query Article($id: ID!) {
+    article(id: $id) {
+        id
+        updatedAt
+        publishedAt
+        slug
+        url
+        preTitle
+        title
+        lead
+        tags
+        properties {
+            key
+            value
+        }
+        image {
+            ...ImageRef
+        }
+        authors {
+            ...AuthorRef
+        }
+        breaking
+        blocks {
+            ...FullBlock
+        }
+    }
+}
+
+query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
+    peerArticle(id: $id, peerSlug: $peerSlug, peerID: $peerID) {
+        id
+        updatedAt
+        publishedAt
+        slug
+        url
+        preTitle
+        title
+        lead
+        tags
+        properties {
+            key
+            value
+        }
+        image {
+            ...ImageRef
+        }
+        authors {
+            ...AuthorRef
+        }
+        breaking
+        blocks {
+            ...FullBlock
+        }
+    }
+}

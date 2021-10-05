@@ -1,7 +1,6 @@
 import React from 'react'
 
-import gql from 'graphql-tag'
-import {useQuery} from 'react-apollo'
+import {gql, useQuery} from '@apollo/client'
 
 import {
   imageBlockDataFragment,
@@ -13,12 +12,13 @@ import {
   vimeoVideoBlockDataFragment,
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
-  articleMetaDataFragment,
+  pageMetaDataFragment,
   gridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
@@ -33,14 +33,18 @@ import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
 
 const PageQuery = gql`
-  query Page($slug: Slug, $id: ID) {
-    page(id: $id, slug: $slug) {
+  query Page($id: ID, $slug: Slug, $token: String) {
+    page(id: $id, slug: $slug, token: $token) {
       updatedAt
       publishedAt
-
       slug
       title
       description
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...SimpleImageData
+      }
       image {
         ...SimpleImageData
       }
@@ -56,6 +60,7 @@ const PageQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -66,7 +71,7 @@ const PageQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${pageMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -76,6 +81,7 @@ const PageQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -87,19 +93,28 @@ const PageQuery = gql`
 export interface PageTemplateContainerProps {
   slug?: string
   id?: string
+  token?: string
 }
 
-export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
+export function PageTemplateContainer({slug, id, token}: PageTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-
-  const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id}})
+  if (!token) token = slug
+  const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id, token}})
 
   if (loading) return <Loader text="Loading" />
 
   if (error) return <NotFoundTemplate statusCode={500} />
   if (!data?.page) return <NotFoundTemplate />
 
-  const {title, slug: pageSlug, description, image} = data.page
+  const {
+    title,
+    slug: pageSlug,
+    description,
+    image,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaImage
+  } = data.page
 
   const path = PageRoute.reverse({slug: pageSlug || undefined})
   const canonicalURL = canonicalHost + path
@@ -110,11 +125,16 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
         <title>Wepublish | {title}</title>
         {description && <meta name="description" content={description} />}
         <link rel="canonical" href={canonicalURL} />
-
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
+        {(socialMediaDescription || description) && (
+          <meta property="og:description" content={socialMediaDescription ?? description} />
+        )}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
+        )}
+        <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
       <PageTemplate title={slug !== '' ? data.page.title : undefined}>
         <BlockRenderer

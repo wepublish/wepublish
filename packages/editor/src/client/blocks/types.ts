@@ -1,4 +1,6 @@
-import {BlockListValue, ListValue} from '@karma.run/ui'
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
+
 import {Node} from 'slate'
 
 import nanoid from 'nanoid'
@@ -64,8 +66,15 @@ export interface QuoteBlockValue {
 
 export interface LinkPageBreakBlockValue {
   text: string
+  richText: RichTextBlockValue
   linkURL: string
   linkText: string
+  linkTarget?: string
+  hideButton: boolean
+  styleOption?: string
+  layoutOption?: string
+  templateOption?: string
+  image?: ImageRefFragment | undefined
 }
 
 export enum EmbedType {
@@ -76,6 +85,7 @@ export enum EmbedType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   Other = 'other'
 }
 
@@ -117,6 +127,11 @@ export interface SoundCloudTrackEmbed {
   trackID: string
 }
 
+export interface PolisConversationEmbed {
+  type: EmbedType.PolisConversation
+  conversationID: string
+}
+
 export interface OtherEmbed {
   type: EmbedType.Other
   url?: string
@@ -134,12 +149,19 @@ export type EmbedBlockValue =
   | VimeoVideoEmbed
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
+  | PolisConversationEmbed
   | OtherEmbed
 
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
   Page = 'page'
+}
+
+export enum MetaDataType {
+  General = 'general',
+  SocialMedia = 'socialMedia',
+  Properties = 'properties'
 }
 
 export interface ArticleTeaserLink {
@@ -268,7 +290,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         linkPageBreak: {
           text: block.value.text || undefined,
           linkText: block.value.linkText || undefined,
-          linkURL: block.value.linkURL || undefined
+          linkURL: block.value.linkURL || undefined,
+          styleOption: block.value.styleOption || undefined,
+          layoutOption: block.value.layoutOption || undefined,
+          templateOption: block.value.templateOption || undefined,
+          richText: block.value.richText,
+          linkTarget: block.value.linkTarget || undefined,
+          hideButton: block.value.hideButton,
+          imageID: block.value.image?.id || undefined
         }
       }
 
@@ -328,6 +357,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
 
+        case EmbedType.PolisConversation:
+          return {
+            polisConversation: {
+              conversationID: value.conversationID
+            }
+          }
+
         case EmbedType.Other:
           return {
             embed: {
@@ -339,6 +375,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
       }
+      break
     }
 
     case BlockType.TeaserGrid1:
@@ -352,6 +389,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   article: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     articleID: value.article.id
@@ -363,6 +401,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   peerArticle: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     peerID: value.peer.id,
@@ -375,6 +414,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   page: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     pageID: value.page.id
@@ -506,6 +546,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {type: EmbedType.SoundCloudTrack, trackID: block.trackID}
       }
 
+    case 'PolisConversationBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
+      }
+
     case 'EmbedBlock':
       return {
         key,
@@ -544,7 +591,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     : null
                 ]
 
-              case 'PeerArticleTeaser':
               case 'PeerArticleTeaser':
                 return [
                   nanoid(),
@@ -593,7 +639,14 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           text: block.text ?? '',
           linkText: block.linkText ?? '',
-          linkURL: block.linkURL ?? ''
+          linkURL: block.linkURL ?? '',
+          styleOption: block.styleOption ?? '',
+          layoutOption: block.layoutOption ?? '',
+          templateOption: block.templateOption ?? '',
+          richText: block.richText,
+          linkTarget: block.linkTarget ?? '',
+          hideButton: block.hideButton,
+          image: block.image ?? undefined
         }
       }
 

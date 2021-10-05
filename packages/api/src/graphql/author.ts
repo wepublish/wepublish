@@ -9,13 +9,12 @@ import {
   GraphQLEnumType
 } from 'graphql'
 
-import {Author} from '../db/author'
+import {Author, AuthorSort} from '../db/author'
 import {Context} from '../context'
 
 import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
 import {GraphQLSlug} from './slug'
-import {AuthorSort} from '../db/author'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
@@ -46,6 +45,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     },
     links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
     bio: {type: GraphQLRichText},
+    jobTitle: {type: GraphQLString},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
@@ -66,7 +66,8 @@ export const GraphQLAuthorSort = new GraphQLEnumType({
   name: 'AuthorSort',
   values: {
     CREATED_AT: {value: AuthorSort.CreatedAt},
-    MODIFIED_AT: {value: AuthorSort.ModifiedAt}
+    MODIFIED_AT: {value: AuthorSort.ModifiedAt},
+    NAME: {value: AuthorSort.Name}
   }
 })
 
@@ -94,6 +95,7 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
+    jobTitle: {type: GraphQLString},
     imageID: {type: GraphQLID}
   }
 })

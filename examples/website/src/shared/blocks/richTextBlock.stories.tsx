@@ -1,6 +1,6 @@
 import React from 'react'
 import {storiesOf} from '@storybook/react'
-import {RichTextBlock} from './richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {centerLayoutDecorator} from '../.storybook/decorators'
 import {mockRichTextValue} from '../.storybook/storiesMockData'
 

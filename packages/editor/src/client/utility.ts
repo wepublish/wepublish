@@ -1,6 +1,7 @@
 import nanoid from 'nanoid'
-import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {PaymentPeriodicity, SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -41,7 +42,7 @@ export function slugify(str: string) {
     .replace(/[ŹŻŽ]/gi, 'z')
     .replace(/[·/_,:;\\']/gi, '-')
     .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '')
+    .replace(/[^\w\-]+/g, '') //eslint-disable-line
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')
@@ -63,8 +64,15 @@ export function dateTimeLocalString(date: Date) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
-export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
-  if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
+export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
+  if (typeof window !== 'object')
+    return {
+      isLoaded: false,
+      isLoading: false,
+      load: () => {
+        /* do nothing */
+      }
+    }
 
   const scriptRef = useRef<HTMLScriptElement | null>(null)
 
@@ -109,14 +117,59 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   return firstOperation.name.value
 }
 
-export function transformCssStringToObject(styleCustom: string): object {
+export function transformCssStringToObject(styleCustom: string): Record<string, unknown> {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
-  return styleRules.reduce((previousValue: object, currentValue: string) => {
+  return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
       return Object.assign(previousValue, {[key.trim()]: value.trim()})
     }
     return previousValue
   }, {})
+}
+
+export type SortType = 'asc' | 'desc' | null
+export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrder | null {
+  switch (sortType) {
+    case 'desc':
+      return SortOrder.Descending
+    case 'asc':
+      return SortOrder.Ascending
+    default:
+      return null
+  }
+}
+
+export const DEFAULT_TABLE_PAGE_SIZES = [
+  {
+    value: 10,
+    label: 10
+  },
+  {
+    value: 20,
+    label: 20
+  },
+  {
+    value: 50,
+    label: 50
+  },
+  {
+    value: 100,
+    label: 100
+  }
+]
+
+export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly
+]
+
+export enum StateColor {
+  pending = '#f8def2',
+  published = '#e1f8de',
+  draft = '#f8efde',
+  none = 'white'
 }

@@ -1,9 +1,17 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState, useCallback} from 'react'
 
-import {BlockProps, TypographicTextArea, Box} from '@karma.run/ui'
-import {LinkPageBreakBlockValue} from './types'
+import {Drawer, IconButton, Icon, Input} from 'rsuite'
+import {BlockProps} from '../atoms/blockList'
+import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {isFunctionalUpdate} from '@wepublish/karma.run-react'
 
-export interface LinkPageBreakBlockProps extends BlockProps<LinkPageBreakBlockValue> {}
+import {useTranslation} from 'react-i18next'
+import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({
   value,
@@ -11,44 +19,89 @@ export function LinkPageBreakBlock({
   autofocus,
   disabled
 }: LinkPageBreakBlockProps) {
-  const {text, linkText, linkURL} = value
+  const {text, richText, image} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
+  const focusInputRef = useRef<HTMLInputElement>(null)
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
   }, [])
 
+  const handleRichTextChange = useCallback(
+    (richText: React.SetStateAction<RichTextBlockValue>) =>
+      onChange(value => ({
+        ...value,
+        richText: isFunctionalUpdate(richText) ? richText(value.richText) : richText
+      })),
+    [onChange]
+  )
+
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
+  const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [isEditPanelOpen, setEditPanelOpen] = useState(false)
+
   return (
     <>
-      <Box flexGrow={1}>
-        <TypographicTextArea
-          ref={focusRef}
-          variant="h2"
-          placeholder="Text"
-          align="center"
-          value={text}
-          disabled={disabled}
-          onChange={e => onChange({...value, text: e.target.value})}
+      <div style={{position: 'relative', width: '100%'}}>
+        <div style={{position: 'absolute', zIndex: 1, height: '100%', right: 0}}>
+          <IconButton
+            size={'lg'}
+            icon={<Icon icon="pencil" />}
+            onClick={() => setEditPanelOpen(true)}
+          />
+        </div>
+      </div>
+      <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50}}>
+        <div style={{flex: '1 0 25%', alignSelf: 'center', marginBottom: '10px'}}>
+          <ChooseEditImage
+            header={''}
+            image={image}
+            disabled={false}
+            openChooseModalOpen={() => setChooseModalOpen(true)}
+            openEditModalOpen={() => setEditModalOpen(true)}
+            removeImage={() => onChange(value => ({...value, image: undefined}))}
+          />
+        </div>
+        <div style={{flex: '1 0 70%'}}>
+          <Input
+            ref={focusInputRef}
+            placeholder={t('blocks.linkPageBreak.title')}
+            style={{fontSize: '24px', marginBottom: 20}}
+            value={text}
+            disabled={disabled}
+            onChange={text => onChange({...value, text})}
+          />
+
+          <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
+        </div>
+      </div>
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={image => {
+            setChooseModalOpen(false)
+            onChange(value => ({...value, image, imageID: image.id}))
+          }}
         />
-      </Box>
-      <TypographicTextArea
-        ref={focusRef}
-        variant="body1"
-        placeholder="Link Text"
-        align="center"
-        value={linkText}
-        disabled={disabled}
-        onChange={e => onChange({...value, linkText: e.target.value})}
-      />
-      <TypographicTextArea
-        ref={focusRef}
-        variant="subtitle2"
-        placeholder="Link URL"
-        align="center"
-        value={linkURL}
-        disabled={disabled}
-        onChange={e => onChange({...value, linkURL: e.target.value})}
-      />
+      </Drawer>
+      {image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+          <ImagedEditPanel
+            id={image!.id}
+            onClose={() => setEditModalOpen(false)}
+            onSave={() => setEditModalOpen(false)}
+          />
+        </Drawer>
+      )}
+      <Drawer show={isEditPanelOpen} size={'sm'} onHide={() => setEditPanelOpen(false)}>
+        <LinkPageBreakEditPanel
+          value={value}
+          onClose={() => setEditPanelOpen(false)}
+          onChange={onChange}
+        />
+      </Drawer>
     </>
   )
 }

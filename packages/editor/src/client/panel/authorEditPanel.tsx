@@ -1,31 +1,21 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
   Drawer,
-  IconButton,
-  Image,
-  Toast,
-  ZIndex,
-  ListInput,
-  ListValue
-} from '@karma.run/ui'
+  Form,
+  FormControl,
+  Panel,
+  Input,
+  Alert,
+  PanelGroup,
+  InputGroup,
+  Icon,
+  ControlLabel,
+  FormGroup
+} from 'rsuite'
 
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+import {ListInput, ListValue} from '../atoms/listInput'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -42,8 +32,11 @@ import {
 } from '../api'
 
 import {slugify, generateID, getOperationNameFromDocument} from '../utility'
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
+
+import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -55,12 +48,12 @@ export interface AuthorEditPanelProps {
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
+  const [jobTitle, setJobTitle] = useState<Maybe<string>>()
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
-  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
+  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
+    {id: generateID(), value: {title: '', url: ''}}
+  ])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -68,7 +61,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const {data, loading: isLoading, error: loadError} = useAuthorQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [createAuthor, {loading: isCreating, error: createError}] = useCreateAuthorMutation({
@@ -77,12 +70,15 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError != undefined
+  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.author) {
       setName(data.author.name)
       setSlug(data.author.slug)
+      setJobTitle(data.author.jobTitle)
       setImage(data.author.image)
       setBio(data.author.bio ? data.author.bio : createDefaultValue())
       setLinks(
@@ -100,16 +96,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   }, [data?.author])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    }
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -124,6 +112,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
+            jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
             bio: bio
@@ -138,6 +127,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
+            jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
             bio: bio
@@ -151,125 +141,118 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? 'Edit Author' : 'Create Author'}
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Name"
-              value={name}
-              disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-                setSlug(slugify(e.target.value))
-              }}
+      <Drawer.Body>
+        <PanelGroup>
+          <Panel>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('authors.panels.name')}</ControlLabel>
+                <FormControl
+                  name={t('authors.panels.name')}
+                  value={name}
+                  disabled={isDisabled}
+                  onChange={value => {
+                    setName(value)
+                    setSlug(slugify(value))
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+                <FormControl
+                  name={t('authors.panels.jobTitle')}
+                  value={jobTitle}
+                  disabled={isDisabled}
+                  onChange={value => {
+                    setJobTitle(value)
+                  }}
+                />
+              </FormGroup>
+            </Form>
+          </Panel>
+          <Panel header={t('authors.panels.image')}>
+            <ChooseEditImage
+              image={image}
+              header={''}
+              top={0}
+              left={0}
+              disabled={isLoading}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => setImage(undefined)}
             />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Image" />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <IconButton
-                        icon={MaterialIconImageOutlined}
-                        title="Choose Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setChooseModalOpen(true)}
-                      />
-                      <IconButton
-                        icon={MaterialIconEditOutlined}
-                        title="Edit Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setEditModalOpen(true)}
-                      />
-                      <IconButton
-                        icon={MaterialIconClose}
-                        title="Remove Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setImage(undefined)}
-                      />
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Links" />
-        <PanelSection>
-          <ListInput
-            value={links}
-            onChange={links => setLinks(links)}
-            defaultValue={{title: '', url: ''}}>
-            {({value, onChange}) => (
-              <Box display="flex" flexDirection="row">
-                <TextInput
-                  label="Title"
-                  flexBasis="30%"
-                  marginRight={Spacing.ExtraSmall}
-                  value={value.title}
-                  onChange={e => onChange({...value, title: e.target.value})}
-                />
-                <TextInput
-                  label="Link"
-                  flexBasis="70%"
-                  value={value.url}
-                  onChange={e => onChange({...value, url: e.target.value})}
-                />
-              </Box>
-            )}
-          </ListInput>
-        </PanelSection>
-        <PanelSectionHeader title="Biographical Information" />
-        <PanelSection>
-          <RichTextBlock value={bio} onChange={value => setBio(value)} />
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
+          </Panel>
+          <Panel header={t('authors.panels.links')}>
+            <ListInput
+              value={links}
+              onChange={links => setLinks(links)}
+              defaultValue={{title: '', url: ''}}>
+              {({value, onChange}) => (
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <Input
+                    placeholder={t('authors.panels.title')}
+                    style={{
+                      width: '30%',
+                      marginRight: '10px'
+                    }}
+                    value={value.title}
+                    onChange={title => onChange({...value, title})}
+                  />
+                  <InputGroup inside>
+                    <InputGroup.Addon>
+                      <Icon icon="link" />
+                    </InputGroup.Addon>
+                    <Input
+                      placeholder={t('authors.panels.link')}
+                      style={{
+                        width: '70%'
+                      }}
+                      value={value.url}
+                      onChange={url => onChange({...value, url})}
+                    />
+                  </InputGroup>
+                </div>
+              )}
+            </ListInput>
+          </Panel>
+          <Panel header={t('authors.panels.bioInformation')}>
+            <div className="richTextFrame">
+              <RichTextBlock value={bio} onChange={value => setBio(value)} />
+            </div>
+          </Panel>
+        </PanelGroup>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('authors.panels.save') : t('authors.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('authors.panels.close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <ImagedEditPanel
-            id={image!.id}
-            onClose={() => setEditModalOpen(false)}
-            onSave={() => setEditModalOpen(false)}
-          />
-        )}
+      <Drawer show={isEditModalOpen} size={'sm'}>
+        <ImagedEditPanel
+          id={image?.id}
+          onClose={() => setEditModalOpen(false)}
+          onSave={() => setEditModalOpen(false)}
+        />
       </Drawer>
     </>
   )

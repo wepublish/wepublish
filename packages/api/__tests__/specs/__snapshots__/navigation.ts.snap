@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navigations can be created/edited/deleted: can be created 1`] = `
+Object {
+  "data": Object {
+    "createNavigation": Object {
+      "id": Any<String>,
+      "key": "createNavKey321",
+      "links": Any<Array>,
+      "name": "Create Navigation Name",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deleteNavigation": Any<String>,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be read by id 1`] = `
+Object {
+  "data": Object {
+    "navigation": Object {
+      "id": Any<String>,
+      "key": "TestKey3",
+      "links": Array [
+        Object {
+          "__typename": "ExternalNavigationLink",
+          "label": "External Label",
+          "url": "linkurl.ch/",
+        },
+        Object {
+          "__typename": "ArticleNavigationLink",
+          "article": null,
+          "label": "Article Label",
+        },
+        Object {
+          "__typename": "PageNavigationLink",
+          "label": "Page Label",
+          "page": null,
+        },
+      ],
+      "name": "Test 3",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be read in list 1`] = `
+Object {
+  "data": Object {
+    "navigations": Array [
+      Object {
+        "id": Any<String>,
+        "key": "TestKey2",
+        "links": Any<Array>,
+        "name": "Test 2",
+      },
+      Object {
+        "id": Any<String>,
+        "key": "createNavKey321",
+        "links": Any<Array>,
+        "name": "Create Navigation Name",
+      },
+      Object {
+        "id": Any<String>,
+        "key": "TestKey0",
+        "links": Any<Array>,
+        "name": "Test 0",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be updated 1`] = `
+Object {
+  "data": Object {
+    "updateNavigation": Object {
+      "id": Any<String>,
+      "key": "updatedNavKey321",
+      "links": Array [
+        Object {
+          "__typename": "ExternalNavigationLink",
+          "label": "New External Label",
+          "url": "newlinkurl.ch/",
+        },
+        Object {
+          "__typename": "ArticleNavigationLink",
+          "article": null,
+          "label": "New Article Label",
+        },
+        Object {
+          "__typename": "PageNavigationLink",
+          "label": "New Page Label",
+          "page": null,
+        },
+      ],
+      "name": "Updated Navigation Name",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

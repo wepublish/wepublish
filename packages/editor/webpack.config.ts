@@ -1,3 +1,4 @@
+/* eslint i18next/no-literal-string: [0] */
 import path from 'path'
 import webpack from 'webpack'
 
@@ -16,7 +17,7 @@ export default (env: any, {mode}: any) => {
       publicPath: mode === 'production' ? '/assets' : 'http://localhost:3001/'
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
+      extensions: ['.mjs', '.ts', '.tsx', '.js'],
       alias:
         mode === 'production'
           ? {}
@@ -27,6 +28,11 @@ export default (env: any, {mode}: any) => {
     module: {
       rules: [
         {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        },
+        {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
@@ -34,7 +40,8 @@ export default (env: any, {mode}: any) => {
             presets: [
               '@babel/preset-react',
               '@babel/preset-typescript',
-              ['@babel/preset-env', {modules: false}]
+              ['@babel/preset-env', {modules: false}],
+              ['rsuite', {style: true, theme: 'default'}]
             ],
             plugins: [
               '@babel/plugin-syntax-dynamic-import',
@@ -43,6 +50,21 @@ export default (env: any, {mode}: any) => {
               ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
             ]
           }
+        },
+        {
+          test: /\.(css|less)$/i,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true
+                }
+              }
+            }
+          ]
         }
       ]
     },

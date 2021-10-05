@@ -7,7 +7,8 @@ import {
   TitleBlockValue,
   HeaderType,
   TeaserStyle,
-  TeaserType
+  TeaserType,
+  PageMeta
 } from '../types'
 import {BlockTypes} from './gqlFragments'
 import {authorsAdapter, peerAdapter} from './articleAdapter'
@@ -21,7 +22,11 @@ export function getArticleBlocks(blocks: any, articleMeta: ArticleMeta) {
   return getBlocks(blocks, articleMeta)
 }
 
-function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
+export function getPageBlocks(blocks: any, pageMeta: PageMeta) {
+  return getBlocks(blocks, undefined, pageMeta)
+}
+
+function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta): Block[] {
   let hasTitleImage = false
 
   return blocks.map((block: any, index: number) => {
@@ -90,8 +95,15 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           key: index,
           value: {
             text: block.text,
+            richText: block.richText,
             linkURL: block.linkURL,
-            linkText: block.linkText
+            linkText: block.linkText,
+            linkTarget: block.linkTarget,
+            styleOption: block.styleOption,
+            layoutOption: block.layoutOption,
+            templateOption: block.templateOption,
+            hideButton: block.hideButton,
+            image: block.image && imageAdapter(block.image)
           }
         }
 
@@ -120,6 +132,10 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           value.type = HeaderType.Breaking
           value.preTitle = articleMeta.preTitle
           value.date = new Date(articleMeta.publishedAt)
+          value.isHeader = true
+        }
+        if (pageMeta && (index == 0 || (hasTitleImage && index == 1))) {
+          value.date = new Date(pageMeta.publishedAt)
           value.isHeader = true
         }
         return {
@@ -191,6 +207,16 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           }
         }
 
+      case 'PolisConversationBlock':
+        return {
+          type: BlockType.Embed,
+          key: index,
+          value: {
+            type: EmbedType.PolisConversation,
+            conversationID: block.conversationID
+          }
+        }
+
       case 'EmbedBlock':
         return {
           type: BlockType.Embed,
@@ -210,6 +236,9 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
     }
   })
 }
+
+// Other
+// =====
 
 export function imageAdapter(image: any): ImageData {
   return image
@@ -299,7 +328,9 @@ export function teaserAdapter(teaser: any): ArticleMeta | null {
     teaserType,
     teaserStyle: data.breaking ? TeaserStyle.Breaking : teaserStyle,
     authors: data.authors && authorsAdapter(data.authors),
+    socialMediaAuthors: data.socialMediaAuthors && authorsAdapter(data.socialMediaAuthors),
     tags: data.tags ?? [],
-    isBreaking: data.breaking
+    isBreaking: data.breaking,
+    canonicalUrl: data.canonicalUrl
   }
 }

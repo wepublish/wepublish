@@ -1,273 +1,545 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  Toggle,
-  TextArea,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
+  ControlLabel,
   Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  TagPicker,
+  Toggle,
+  HelpBlock,
+  Nav,
+  Icon,
+  Panel,
+  Message,
+  InputGroup,
   IconButton,
-  Image,
-  TagInput,
-  AutocompleteInput,
-  AutocompleteInputListProps,
-  SelectList,
-  SelectListItem,
-  MarginProps,
-  Avatar,
-  PlaceholderImage,
-  ZIndex
-} from '@karma.run/ui'
-
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined
-} from '@karma.run/icons'
+  Tooltip,
+  Whisper,
+  Input
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
+import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
+import {generateID, slugify} from '../utility'
+import {AuthorRefFragment, ImageRefFragment} from '../api'
+
+import {useTranslation, Trans} from 'react-i18next'
+import {MetaDataType} from '../blocks/types'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
+
+export interface ArticleMetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
   readonly title: string
   readonly lead: string
+  readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
+  readonly properties: ArticleMetadataProperty[]
+  readonly canonicalUrl: string
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
+  readonly hideAuthor: boolean
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthors: AuthorRefFragment[]
+  readonly socialMediaImage?: ImageRefFragment
+}
+
+export interface InfoData {
+  readonly charCount: number
 }
 
 export interface ArticleMetadataPanelProps {
   readonly value: ArticleMetadata
+  readonly infoData: InfoData
 
   onClose?(): void
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
+export function ArticleMetadataPanel({
+  value,
+  infoData,
+  onClose,
+  onChange
+}: ArticleMetadataPanelProps) {
+  const {
+    canonicalUrl,
+    preTitle,
+    title,
+    lead,
+    seoTitle,
+    slug,
+    tags,
+    authors,
+    shared,
+    breaking,
+    image,
+    hideAuthor,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaAuthors,
+    socialMediaImage,
+    properties
+  } = value
+
+  const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageRefFragment) {
-    onChange?.({...value, image})
+  const [metaDataProperties, setMetadataProperties] = useState<
+    ListValue<ArticleMetadataProperty>[]
+  >(
+    properties
+      ? properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
+  )
+
+  const {t} = useTranslation()
+
+  useEffect(() => {
+    if (metaDataProperties) {
+      onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+    }
+  }, [metaDataProperties])
+
+  function handleImageChange(currentImage: ImageRefFragment) {
+    switch (activeKey) {
+      case MetaDataType.General: {
+        const image = currentImage
+        onChange?.({...value, image})
+        break
+      }
+      case MetaDataType.SocialMedia: {
+        const socialMediaImage = currentImage
+        onChange?.({...value, socialMediaImage})
+        break
+      }
+      default: {
+      }
+    }
+  }
+
+  const preTitleMax = 30
+  const seoTitleMax = 70
+  const titleMax = 140
+  const leadMax = 350
+  const socialMediaTitleMax = 100
+  const socialMediaDescriptionMax = 140
+
+  function currentContent() {
+    switch (activeKey) {
+      case MetaDataType.SocialMedia:
+        return (
+          <Panel>
+            <Form fluid={true}>
+              <FormGroup>
+                <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.socialMediaTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/
+                    {socialMediaTitleMax}
+                  </label>
+                </ControlLabel>
+                <FormControl
+                  value={socialMediaTitle || ''}
+                  onChange={socialMediaTitle => {
+                    onChange?.({...value, socialMediaTitle})
+                  }}
+                />
+                {value.socialMediaTitle && value.socialMediaTitle?.length > socialMediaTitleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {
+                      charCountWarning: socialMediaTitleMax
+                    })}
+                  </label>
+                )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.socialMediaDescription')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/
+                    {socialMediaDescriptionMax}
+                  </label>
+                </ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={socialMediaDescription || ''}
+                  onChange={socialMediaDescription => {
+                    onChange?.({...value, socialMediaDescription})
+                  }}
+                />
+                {value.socialMediaDescription &&
+                  value.socialMediaDescription?.length > socialMediaDescriptionMax && (
+                    <label style={{color: 'gold'}}>
+                      {t('articleEditor.panels.charCountWarning', {
+                        charCountWarning: socialMediaDescriptionMax
+                      })}
+                    </label>
+                  )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
+                <AuthorCheckPicker
+                  list={socialMediaAuthors}
+                  onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.socialMediaImage')}</ControlLabel>
+                <ChooseEditImage
+                  header={''}
+                  image={socialMediaImage}
+                  disabled={false}
+                  openChooseModalOpen={() => {
+                    setChooseModalOpen(true)
+                  }}
+                  openEditModalOpen={() => {
+                    setEditModalOpen(true)
+                  }}
+                  removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
+                />
+              </FormGroup>
+            </Form>
+          </Panel>
+        )
+      case MetaDataType.General:
+        return (
+          <Panel>
+            <Form fluid={true}>
+              <div style={{paddingBottom: '20px'}}>
+                {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
+              </div>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.preTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.preTitle.length}/{preTitleMax}{' '}
+                  </label>
+                </ControlLabel>
+                <FormControl
+                  value={preTitle}
+                  onChange={preTitle => onChange?.({...value, preTitle})}
+                />
+                {value.preTitle.length > preTitleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: preTitleMax})}
+                  </label>
+                )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.title')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.title.length}/{titleMax}{' '}
+                  </label>
+                </ControlLabel>
+                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+                <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
+                {value.title.length > titleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}
+                  </label>
+                )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.lead')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.lead.length}/{leadMax}{' '}
+                  </label>
+                </ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={lead}
+                  onChange={lead => {
+                    onChange?.({...value, lead})
+                  }}
+                />
+                <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
+                {value.lead.length > leadMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: leadMax})}
+                  </label>
+                )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>
+                  {t('articleEditor.panels.seoTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.seoTitle.length}/{seoTitleMax}{' '}
+                  </label>
+                </ControlLabel>
+                <FormControl
+                  value={seoTitle}
+                  onChange={seoTitle => onChange?.({...value, seoTitle})}
+                />
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page/"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
+                {value.seoTitle.length > seoTitleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: seoTitleMax})}
+                  </label>
+                )}
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
+                <InputGroup style={{width: '100%'}}>
+                  <FormControl
+                    value={slug}
+                    onChange={slug => onChange?.({...value, slug})}
+                    onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  />
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
+                    <IconButton
+                      icon={<Icon icon="magic" />}
+                      onClick={() => {
+                        onChange?.({...value, title, slug: slugify(seoTitle)})
+                      }}
+                    />
+                  </Whisper>
+                </InputGroup>
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.dontChangeSlug'}>
+                    text{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page-2/"
+                      target="_blank"
+                      rel="noreferrer"></a>
+                  </Trans>
+                </HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
+                <AuthorCheckPicker
+                  list={authors}
+                  onChange={authors => onChange?.({...value, authors})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
+                <Toggle
+                  checked={hideAuthor}
+                  onChange={hideAuthor => onChange?.({...value, hideAuthor})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
+                <TagPicker
+                  block
+                  value={tags}
+                  creatable={true}
+                  data={tags.map(tag => ({label: tag, value: tag}))}
+                  onChange={tags => {
+                    onChange?.({...value, tags})
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
+                <Toggle
+                  checked={breaking}
+                  onChange={breaking => onChange?.({...value, breaking})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
+                <FormControl
+                  value={canonicalUrl}
+                  onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
+                />
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
+              </FormGroup>
+            </Form>
+            <Form fluid={true} style={{marginTop: '20px'}}>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
+                <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
+                <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
+              </FormGroup>
+            </Form>
+            <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
+            <ChooseEditImage
+              header={''}
+              image={image}
+              disabled={false}
+              openChooseModalOpen={() => {
+                setChooseModalOpen(true)
+              }}
+              openEditModalOpen={() => {
+                setEditModalOpen(true)
+              }}
+              removeImage={() => onChange?.({...value, image: undefined})}
+            />
+          </Panel>
+        )
+      case MetaDataType.Properties:
+        return (
+          <Panel>
+            <Form fluid={true}>
+              <FormGroup>
+                <Message
+                  showIcon
+                  type="info"
+                  description={t('articleEditor.panels.propertiesInfo')}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
+                <ListInput
+                  value={metaDataProperties}
+                  onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                  defaultValue={{key: '', value: '', public: true}}>
+                  {({value, onChange}) => (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <Input
+                        placeholder={t('articleEditor.panels.key')}
+                        style={{
+                          width: '40%',
+                          marginRight: '10px'
+                        }}
+                        value={value.key}
+                        onChange={propertyKey => onChange({...value, key: propertyKey})}
+                      />
+                      <Input
+                        placeholder={t('articleEditor.panels.value')}
+                        style={{
+                          width: '60%'
+                        }}
+                        value={value.value}
+                        onChange={propertyValue => onChange({...value, value: propertyValue})}
+                      />
+                      <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                        <Toggle
+                          style={{maxWidth: '70px', minWidth: '70px'}}
+                          checkedChildren={t('articleEditor.panels.public')}
+                          unCheckedChildren={t('articleEditor.panels.private')}
+                          checked={value.public}
+                          value={value.public}
+                          onChange={isPublic => onChange({...value, public: isPublic})}
+                        />
+                      </FormGroup>
+                    </div>
+                  )}
+                </ListInput>
+              </FormGroup>
+            </Form>
+          </Panel>
+        )
+      default:
+        return <></>
+    }
   }
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title="Metadata"
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
-          }
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Nav
+          appearance="tabs"
+          activeKey={activeKey}
+          onSelect={activeKey => setActiveKey(activeKey)}
+          style={{marginBottom: 20}}>
+          <Nav.Item eventKey={MetaDataType.General} icon={<Icon icon="cog" />}>
+            {t('articleEditor.panels.general')}
+          </Nav.Item>
+          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
+            {t('articleEditor.panels.socialMedia')}
+          </Nav.Item>
+          <Nav.Item eventKey={MetaDataType.Properties} icon={<Icon icon="list" />}>
+            {t('articleEditor.panels.properties')}
+          </Nav.Item>
+        </Nav>
+        {currentContent()}
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.saveAndClose')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer
+        show={isChooseModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setChooseModalOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
         />
-
-        <PanelSection>
-          <TextInput
-            label="Pre-title"
-            value={preTitle}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e => onChange?.({...value, preTitle: e.target.value})}
-          />
-
-          <TextInput
-            label="Title"
-            value={title}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e =>
-              onChange?.({...value, title: e.target.value, slug: slugify(e.target.value)})
-            }
-          />
-
-          <TextArea
-            label="Lead"
-            value={lead}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e => onChange?.({...value, lead: e.target.value})}
-          />
-
-          <AuthorInput
-            label="Authors"
-            value={authors}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={authors => onChange?.({...value, authors: authors || []})}
-          />
-
-          <TagInput
-            label="Tags"
-            description="Press enter to add tag"
-            value={tags}
-            marginBottom={Spacing.Small}
-            onChange={tags => onChange?.({...value, tags: tags ?? []})}
-          />
-
-          <Box>
-            <Toggle
-              label="Breaking News"
-              checked={breaking}
-              onChange={e => onChange?.({...value, breaking: e.target.checked})}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Image" />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconImageOutlined}
-                          title="Choose Image"
-                          onClick={() => setChooseModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconEditOutlined}
-                          title="Edit Image"
-                          onClick={() => setEditModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconClose}
-                          title="Remove Image"
-                          onClick={() => onChange?.({...value, image: undefined})}
-                        />
-                      </Box>
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Peering" />
-        <PanelSection>
-          <Toggle
-            label="Share with peers"
-            description="Allow peers to publish this article."
-            checked={shared}
-            onChange={e => onChange?.({...value, shared: e.target.checked})}
-          />
-        </PanelSection>
-      </Panel>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />}
-      </Drawer>
+      {(value.image || value.socialMediaImage) && (
+        <Drawer
+          show={isEditModalOpen}
+          size={'sm'}
+          onHide={() => {
+            setEditModalOpen(false)
+          }}>
+          <ImagedEditPanel
+            id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
+            onClose={() => setEditModalOpen(false)}
+          />
+        </Drawer>
+      )}
     </>
-  )
-}
-
-export interface AuthorInputProps extends MarginProps {
-  label?: string
-  description?: string
-  value: AuthorRefFragment[]
-  onChange(author?: AuthorRefFragment[]): void
-}
-
-export function AuthorInput(props: AuthorInputProps) {
-  return (
-    <AutocompleteInput
-      {...props}
-      valueToChipData={author => ({
-        id: author.id,
-        label: author.name,
-        imageURL: author.image?.squareURL ?? undefined
-      })}>
-      {props => <AuthorInputList {...props} />}
-    </AutocompleteInput>
-  )
-}
-
-function AuthorInputList({
-  isOpen,
-  inputValue,
-  highlightedIndex,
-  getItemProps,
-  getMenuProps
-}: AutocompleteInputListProps) {
-  const [items, setItems] = useState<AuthorRefFragment[]>([])
-  const {data, loading: isLoading} = useAuthorListQuery({
-    variables: {filter: inputValue || undefined, first: 10},
-    fetchPolicy: 'network-only'
-  })
-
-  useEffect(() => {
-    setItems(data?.authors.nodes ?? [])
-  }, [data])
-
-  return (
-    <SelectList {...getMenuProps()}>
-      {isOpen && inputValue ? (
-        !isLoading ? (
-          items.length ? (
-            items.map((item, index) => (
-              <SelectListItem
-                key={item.id}
-                highlighted={index === highlightedIndex}
-                {...getItemProps({item, index})}>
-                <Box display="flex">
-                  <Avatar marginRight={Spacing.Tiny}>
-                    {item.image?.squareURL ? (
-                      <Image src={item.image.squareURL} width={20} height={20} />
-                    ) : (
-                      <PlaceholderImage width={20} height={20} />
-                    )}
-                  </Avatar>
-                  {item.name}
-                </Box>
-              </SelectListItem>
-            ))
-          ) : (
-            <SelectListItem>No Authors found</SelectListItem>
-          )
-        ) : (
-          <SelectListItem>Loading...</SelectListItem>
-        )
-      ) : null}
-    </SelectList>
   )
 }

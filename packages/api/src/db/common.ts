@@ -56,15 +56,35 @@ export enum LimitType {
 export interface Limit {
   readonly type: LimitType
   readonly count: number
+  readonly skip?: number
 }
 
-export function Limit(first?: number, last?: number): Limit {
+export function Limit(first?: number, last?: number, skip?: number): Limit {
   if ((first == null && last == null) || (first != null && last != null)) {
     throw new UserInputError('You must provide either `first` or `last`.')
   }
-
+  const count = first || last!
   return {
     type: first ? LimitType.First : LimitType.Last,
-    count: first || last!
+    count,
+    skip: skip ? skip * count : 0
   }
+}
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
+}
+
+export enum DateFilterComparison {
+  GreaterThan = 'gt',
+  GreaterThanOrEqual = 'gte',
+  Equal = 'eq',
+  LowerThan = 'lt',
+  LowerThanOrEqual = 'lte'
+}
+export interface DateFilter {
+  date: Date | null
+  comparison: DateFilterComparison
 }

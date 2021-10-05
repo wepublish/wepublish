@@ -2,9 +2,16 @@ fragment FullPeerProfile on PeerProfile {
   name
   hostURL
   themeColor
+  themeFontColor
   logo {
     ...ImageRef
   }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
 
 fragment PeerRef on Peer {
@@ -12,6 +19,9 @@ fragment PeerRef on Peer {
   name
   slug
   hostURL
+  profile {
+    ...FullPeerProfile
+  }
 }
 
 fragment PeerWithProfile on Peer {
@@ -23,6 +33,12 @@ fragment PeerWithProfile on Peer {
 
 query PeerProfile {
   peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
     ...FullPeerProfile
   }
 }

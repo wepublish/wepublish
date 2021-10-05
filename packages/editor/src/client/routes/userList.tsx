@@ -1,45 +1,50 @@
-import React, {useState, useEffect} from 'react'
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Drawer,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
+import React, {useEffect, useState} from 'react'
 
 import {
-  RouteLinkButton,
+  ButtonLink,
   Link,
   RouteType,
-  useRoute,
-  useRouteDispatch,
-  UserEditRoute,
   UserCreateRoute,
-  UserListRoute
+  UserEditRoute,
+  UserListRoute,
+  useRoute,
+  useRouteDispatch
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
-import {
-  MaterialIconDeleteOutlined,
-  MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconRestoreOutlined
-} from '@karma.run/icons'
-import {useDeleteUserMutation, FullUserFragment, useUserListQuery} from '../api'
+import {RouteActionType} from '@wepublish/karma.run-react'
+
+import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
-enum ConfirmAction {
-  Delete = 'delete'
+import {useTranslation} from 'react-i18next'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Table
+} from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
+
+function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return UserSort.CreatedAt
+    case 'modifiedAt':
+      return UserSort.ModifiedAt
+    case 'name':
+      return UserSort.Name
+    default:
+      return null
+  }
 }
 
 export function UserList() {
@@ -50,8 +55,8 @@ export function UserList() {
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.UserEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.UserEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -59,21 +64,41 @@ export function UserList() {
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<FullUserFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [users, setUsers] = useState<FullUserFragment[]>([])
 
   const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
-      first: 50 // TODO: Pagination
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     },
     fetchPolicy: 'network-only'
   })
 
+  useEffect(() => {
+    refetch({
+      filter: filter || undefined,
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    })
+  }, [filter, page, limit, sortOrder, sortField])
+
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (current?.type === RouteType.UserCreate) {
-      setEditID(null)
+      setEditID(undefined)
       setEditModalOpen(true)
     }
 
@@ -83,170 +108,210 @@ export function UserList() {
     }
   }, [current])
 
-  /*function loadMore() {
-    fetchMore({
-      variables: {first: 50, after: data?.users.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          users: {
-            ...fetchMoreResult.users,
-            nodes: [...prev.users.nodes, ...fetchMoreResult?.users.nodes]
-          }
-        }
+  useEffect(() => {
+    if (data?.users?.nodes) {
+      setUsers(data.users.nodes)
+      if (data.users.totalCount + 9 < page * limit) {
+        setPage(1)
       }
-    })
-  }*/
-
-  const users = data?.users.nodes.map(user => {
-    const {id, name, email} = user
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Link route={UserEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
-            </Typography>
-            <Typography variant="body1" color={email ? 'dark' : 'gray'}>
-              {email || 'No Description'}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {id: 'resetUserPassword', label: 'Reset Password', icon: MaterialIconRestoreOutlined},
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-            ]}
-            onMenuItemClick={item => {
-              setCurrentUser(user)
-              switch (item.id) {
-                case ConfirmAction.Delete:
-                  setConfirmationDialogOpen(true)
-                  setConfirmAction(item.id as ConfirmAction)
-                  break
-                case 'resetUserPassword':
-                  setIsResetUserPasswordOpen(true)
-                  break
-              }
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
+    }
+  }, [data?.users])
 
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Users</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label="New User" route={UserCreateRoute.create({})} />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder="Search"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('userList.overview.users')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink appearance="primary" disabled={isLoading} route={UserCreateRoute.create({})}>
+            {t('userList.overview.newUser')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={users}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullUserFragment) =>
+                t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
+              }
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: FullUserFragment) =>
+                t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              }
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
+            <Cell dataKey={'name'}>
+              {(rowData: FullUserFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('userList.overview.unknown')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('email')}</HeaderCell>
+            <Cell dataKey="email" />
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullUserFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="lock" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={e => {
+                      setCurrentUser(rowData)
+                      setIsResetUserPasswordOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentUser(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          activePage={page}
+          displayLength={limit}
+          total={data?.users.totalCount}
+          onChangePage={page => setPage(page)}
+          onChangeLength={limit => setLimit(limit)}
         />
-      </Box>
-      <Box>
-        {users?.length ? (
-          users
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            No Users found
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <UserEditPanel
-            id={editID!}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: UserListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              refetch()
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: UserListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
+      </div>
+
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <UserEditPanel
+          id={editID!}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: UserListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            refetch()
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: UserListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
       </Drawer>
-      <Dialog
-        open={isResetUserPasswordOpen}
-        onClose={() => setIsResetUserPasswordOpen(false)}
-        width={480}
-        closeOnBackgroundClick>
-        {() => (
+
+      <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
           <ResetUserPasswordPanel
             userID={currentUser?.id}
             userName={currentUser?.name}
             onClose={() => setIsResetUserPasswordOpen(false)}
           />
-        )}
-      </Dialog>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title="Delete User?"
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label="Cancel"
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label="Confirm"
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentUser) return
+        </Modal.Body>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteUser({
-                          variables: {id: currentUser.id}
-                        })
-                        break
-                    }
+        <Modal.Footer>
+          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+            {t('userList.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-                    setConfirmationDialogOpen(false)
-                    refetch()
-                  }}
-                />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentUser?.name || 'Unknown'}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('userList.panels.name')}>
+              {currentUser?.name || t('userList.panels.Unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentUser) return
+
+              await deleteUser({
+                variables: {id: currentUser.id}
+              })
+
+              setConfirmationDialogOpen(false)
+              refetch()
+            }}
+            color="red">
+            {t('userList.panels.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('userList.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

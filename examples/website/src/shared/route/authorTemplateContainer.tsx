@@ -13,7 +13,7 @@ import {RoundImage} from '../atoms/roundImage'
 import {LoadMoreButton} from '../atoms/loadMoreButton'
 import {useListArticlesQuery, useAuthorQuery} from '../query'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
-import {RichTextBlock} from '../blocks/richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RoundIconButton} from '../atoms/roundIconButton'
 import {IconType} from '../atoms/icon'
 import {pxToRem} from '../style/helpers'
@@ -131,7 +131,14 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
       )}
 
       {/* {bio && <RichText value={bio} />} */}
-      {bio && <RichTextBlock value={bio} />}
+      {bio && (
+        <RichTextBlock
+          value={bio}
+          onChange={() => {
+            /* do nothing */
+          }}
+        />
+      )}
 
       <GridBlock numColumns={articles.length <= 1 ? 1 : 3}>
         {articles.map(article => (
@@ -146,6 +153,7 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
             route={ArticleRoute.create({id: article.id, slug: article.slug})}
             authors={article.authors}
             isSingle={true}
+            url={article.url}
           />
         ))}
       </GridBlock>

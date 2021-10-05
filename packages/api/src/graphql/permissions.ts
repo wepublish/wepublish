@@ -20,13 +20,13 @@ export function isAuthorised(neededPermission: Permission, userRoles: UserRole[]
 
   const userPermissions = userRoles.reduce<string[]>((permissions, role) => {
     if (role.id === 'admin') {
-      return role.permissionIDs.concat(AllPermissions.map(permission => permission.id))
+      return [...permissions, ...AllPermissions.map(permission => permission.id)]
     } else if (role.id === 'editor') {
-      return role.permissionIDs.concat(EditorPermissions.map(permission => permission.id))
+      return [...permissions, ...EditorPermissions.map(permission => permission.id)]
     } else if (role.id === 'peer') {
-      return role.permissionIDs.concat(PeerPermissions.map(permission => permission.id))
+      return [...permissions, ...PeerPermissions.map(permission => permission.id)]
     } else {
-      return role.permissionIDs.concat(permissions)
+      return [...permissions, ...role.permissionIDs]
     }
   }, [])
 
@@ -47,7 +47,7 @@ export const CanGetNavigations: Permission = {
 
 export const CanCreateNavigation: Permission = {
   id: 'CAN_CREATE_NAVIGATION',
-  description: 'Allows to get navigation',
+  description: 'Allows to create navigation',
   deprecated: false
 }
 
@@ -159,6 +159,24 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanGetArticlePreviewLink: Permission = {
+  id: 'CAN_GET_ARTICLE_PREVIEW_LINK',
+  description: 'Allows to get preview links for articles',
+  deprecated: false
+}
+
+export const CanTakeActionOnComment: Permission = {
+  id: 'CAN_TAKE_COMMENT_ACTION',
+  description: 'Allows to take an action on comment',
+  deprecated: false
+}
+
+export const CanGetComments: Permission = {
+  id: 'CAN_GET_COMMENTS',
+  description: 'Allows to get all comments',
+  deprecated: false
+}
+
 export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
@@ -186,6 +204,12 @@ export const CanPublishPage: Permission = {
 export const CanDeletePage: Permission = {
   id: 'CAN_DELETE_PAGE',
   description: 'Allows to delete Pages',
+  deprecated: false
+}
+
+export const CanGetPagePreviewLink: Permission = {
+  id: 'CAN_GET_PAGE_PREVIEW_LINK',
+  description: 'Allows to get preview links for pages',
   deprecated: false
 }
 
@@ -309,7 +333,116 @@ export const CanGetPermissions: Permission = {
   deprecated: false
 }
 
+export const CanCreateMemberPlan: Permission = {
+  id: 'CAN_CREATE_MEMBER_PLAN',
+  description: 'Allows to create a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlan: Permission = {
+  id: 'CAN_GET_MEMBER_PLAN',
+  description: 'Allows to get a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlans: Permission = {
+  id: 'CAN_GET_MEMBER_PLANS',
+  description: 'Allows to get all member plans',
+  deprecated: false
+}
+
+export const CanDeleteMemberPlan: Permission = {
+  id: 'CAN_DELETE_MEMBER_PLAN',
+  description: 'Allows to delete member plan',
+  deprecated: false
+}
+
+export const CanCreatePaymentMethod: Permission = {
+  id: 'CAN_CREATE_PAYMENT_METHOD',
+  description: 'Allows to create a payment method',
+  deprecated: false
+}
+
+export const CanGetPaymentMethod: Permission = {
+  id: 'CAN_GET_PAYMENT_METHOD',
+  description: 'Allows to get a payment method',
+  deprecated: false
+}
+
+export const CanGetPaymentMethods: Permission = {
+  id: 'CAN_GET_PAYMENT_METHODS',
+  description: 'Allows to get all payment methods',
+  deprecated: false
+}
+
+export const CanDeletePaymentMethod: Permission = {
+  id: 'CAN_DELETE_PAYMENT_METHOD',
+  description: 'Allows to delete payment method',
+  deprecated: false
+}
+
+export const CanCreateInvoice: Permission = {
+  id: 'CAN_CREATE_INVOICE',
+  description: 'Allows to create an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoice: Permission = {
+  id: 'CAN_GET_INVOICE',
+  description: 'Allows to get an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoices: Permission = {
+  id: 'CAN_GET_INVOICES',
+  description: 'Allows to get all invoices',
+  deprecated: false
+}
+
+export const CanDeleteInvoice: Permission = {
+  id: 'CAN_DELETE_INVOICE',
+  description: 'Allows to delete invoice',
+  deprecated: false
+}
+
+export const CanCreatePayment: Permission = {
+  id: 'CAN_CREATE_PAYMENT',
+  description: 'Allows to create a payment',
+  deprecated: false
+}
+
+export const CanGetPayment: Permission = {
+  id: 'CAN_GET_PAYMENT',
+  description: 'Allows to get an payment',
+  deprecated: false
+}
+
+export const CanGetPayments: Permission = {
+  id: 'CAN_GET_PAYMENTS',
+  description: 'Allows to get all payments',
+  deprecated: false
+}
+
+export const CanGetPaymentProviders: Permission = {
+  id: 'CAN_GET_PAYMENT_PROVIDERS',
+  description: 'Allows to get all payment providers',
+  deprecated: false
+}
+
+export const CanSendJWTLogin: Permission = {
+  id: 'CAN_SEND_JWT_LOGIN',
+  description: 'Allows to send a JWT Login',
+  deprecated: false
+}
+
+export const CanLoginEditor: Permission = {
+  id: 'CAN_LOGIN_EDITOR',
+  description: 'Allows to login editor',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
+  CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
   CanGetNavigations,
@@ -326,6 +459,7 @@ export const AllPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanDeleteArticle,
+  CanGetArticlePreviewLink,
   CanPublishArticle,
   CanGetPeerArticle,
   CanGetPeerArticles,
@@ -334,6 +468,7 @@ export const AllPermissions: Permission[] = [
   CanGetPages,
   CanDeletePage,
   CanPublishPage,
+  CanGetPagePreviewLink,
   CanUpdatePeerProfile,
   CanGetPeerProfile,
   CanCreatePeer,
@@ -341,7 +476,9 @@ export const AllPermissions: Permission[] = [
   CanGetPeers,
   CanDeletePeer,
   CanCreateToken,
+  CanDeleteToken,
   CanGetTokens,
+  CanDeleteToken,
   CanCreateUser,
   CanResetUserPassword,
   CanGetUser,
@@ -352,10 +489,31 @@ export const AllPermissions: Permission[] = [
   CanGetUserRoles,
   CanDeleteUserRole,
   CanGetPermission,
-  CanGetPermissions
+  CanGetPermissions,
+  CanGetComments,
+  CanCreateMemberPlan,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanDeleteMemberPlan,
+  CanCreatePaymentMethod,
+  CanGetPaymentMethod,
+  CanGetPaymentMethods,
+  CanDeletePaymentMethod,
+  CanCreateInvoice,
+  CanGetInvoice,
+  CanGetInvoices,
+  CanDeleteInvoice,
+  CanCreatePayment,
+  CanGetPayment,
+  CanGetPayments,
+  CanGetPaymentProviders,
+  CanSendJWTLogin,
+  CanLoginEditor
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetComments,
+  CanTakeActionOnComment,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -366,12 +524,14 @@ export const EditorPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanPublishArticle,
+  CanGetArticlePreviewLink,
   CanCreatePage,
   CanGetPage,
   CanGetPages,
   CanPublishPage,
   CanGetPeer,
-  CanGetPeers
+  CanGetPeers,
+  CanLoginEditor
 ]
 
 export const PeerPermissions: Permission[] = [

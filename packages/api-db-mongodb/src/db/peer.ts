@@ -27,7 +27,12 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     if (!value) {
       return {
         name: '',
-        themeColor: '#000000'
+        themeColor: '#000000',
+        themeFontColor: '#ffffff',
+        callToActionURL: '',
+        callToActionText: [],
+        callToActionImageID: '',
+        callToActionImageURL: ''
       }
     }
 
@@ -41,7 +46,12 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
         $set: {
           name: input.name,
           logoID: input.logoID,
-          themeColor: input.themeColor
+          themeColor: input.themeColor,
+          themeFontColor: input.themeFontColor,
+          callToActionURL: input.callToActionURL,
+          callToActionText: input.callToActionText,
+          callToActionImageID: input.callToActionImageID,
+          callToActionImageURL: input.callToActionImageURL
         }
       },
       {

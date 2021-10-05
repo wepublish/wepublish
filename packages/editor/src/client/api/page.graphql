@@ -36,6 +36,7 @@ fragment PageRef on Page {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -57,8 +58,8 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: String, $after: ID, $first: Int) {
-  pages(first: $first, after: $after, filter: {title: $filter}) {
+query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }
@@ -102,9 +103,23 @@ mutation DeletePage($id: ID!) {
   deletePage(id: $id)
 }
 
+mutation DuplicatePage($id: ID!) {
+  duplicatePage(id: $id) {
+   ...MutationPage
+  }
+}
+
+query PagePreviewLink($id: ID!, $hours: Int!) {
+  pagePreviewLink(id: $id, hours: $hours)
+}
+
 query Page($id: ID!) {
   page(id: $id) {
     id
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt
@@ -125,6 +140,16 @@ query Page($id: ID!) {
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage{
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }

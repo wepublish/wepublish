@@ -2,26 +2,6 @@ import React, {useState, useEffect} from 'react'
 import prettyBytes from 'pretty-bytes'
 
 import {
-  Box,
-  Spacing,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  Toast,
-  NavigationButton,
-  FocalPointInput,
-  DescriptionList,
-  DescriptionListItem,
-  PanelSectionHeader,
-  TextInput,
-  Point,
-  Link,
-  TagInput
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
-
-import {
   useUploadImageMutation,
   useUpdateImageMutation,
   useImageQuery,
@@ -29,6 +9,24 @@ import {
   ImageListDocument
 } from '../api'
 import {getOperationNameFromDocument} from '../utility'
+
+import {Link} from '../route'
+
+import {useTranslation} from 'react-i18next'
+import {FocalPointInput} from '../atoms/focalPointInput'
+import {Point} from '../atoms/draggable'
+import {
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Panel,
+  TagPicker,
+  Alert
+} from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -39,10 +37,6 @@ export interface ImageEditPanelProps {
 }
 
 export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
-  const [isSavedToastOpen, setSavedToastOpen] = useState(false)
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
-
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -69,7 +63,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   const {data, error: loadingError} = useImageQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [updateImage, {loading: isUpdating, error: savingError}] = useUpdateImageMutation()
@@ -80,7 +74,9 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
   const [isLoading, setLoading] = useState(true)
   const isDisabled = isLoading || isUpdating || isUploading
-  const isUpload = file != undefined
+  const isUpload = file !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (file) {
@@ -89,11 +85,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       const extension = `.${extensions.join('.')}`
       const image = new Image()
 
-      function handleReaderLoad() {
+      const handleReaderLoad = function () {
         image.src = reader.result as string
       }
 
-      function handleImageLoad() {
+      const handleImageLoad = function () {
         setCreatedAt(undefined)
         setUpdatedAt(undefined)
 
@@ -146,29 +142,18 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
         setLoading(false)
       } else {
-        setErrorToastOpen(true)
-        setErrorMessage('Image not found!')
+        Alert.error(t('images.panels.notFound'), 0)
       }
     }
 
-    return () => {}
+    return () => {
+      /* do nothing */
+    }
   }, [file, data])
 
   useEffect(() => {
-    if (loadingError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadingError.message)
-    }
-
-    if (savingError) {
-      setErrorToastOpen(true)
-      setErrorMessage(savingError.message)
-    }
-
-    if (uploadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(uploadError.message)
-    }
+    const error = loadingError?.message ?? savingError?.message ?? uploadError?.message
+    if (error) Alert.error(error, 0)
   }, [loadingError, savingError, uploadError])
 
   async function handleSave() {
@@ -200,7 +185,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         variables: {id: id!, input: commonInput}
       })
 
-      setSavedToastOpen(true)
+      Alert.success(t('images.panels.imageUpdated'), 2000)
 
       if (data?.updateImage) {
         onSave?.(data.updateImage)
@@ -210,145 +195,139 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={isUpload ? 'Upload Image' : 'Edit Image'}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={isUpload ? 'Cancel' : 'Close'}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={isUpload ? 'Upload' : 'Save'}
-              onClick={() => handleSave()}
-              disabled={isDisabled}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
+        </Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
         {!isLoading && (
           <>
-            <PanelSection dark>
-              <Box marginBottom={Spacing.Medium}>
-                {imageURL && imageWidth && imageHeight && (
-                  <FocalPointInput
-                    imageURL={imageURL}
-                    imageWidth={imageWidth}
-                    imageHeight={imageHeight}
-                    maxHeight={300}
-                    focalPoint={focalPoint}
-                    onChange={point => setFocalPoint(point)}
-                  />
-                )}
-              </Box>
+            <Panel style={{backgroundColor: 'dark'}}>
+              {imageURL && imageWidth && imageHeight && (
+                <FocalPointInput
+                  imageURL={imageURL}
+                  imageWidth={imageWidth}
+                  imageHeight={imageHeight}
+                  maxHeight={300}
+                  focalPoint={focalPoint}
+                  onChange={point => setFocalPoint(point)}
+                />
+              )}
+            </Panel>
+            <Panel header={t('images.panels.description')}>
               <DescriptionList>
-                <DescriptionListItem label="Filename">
-                  {filename || 'untitled'}
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {filename || t('images.panels.untitled')}
                   {extension}
                 </DescriptionListItem>
-                <DescriptionListItem label="Dimension">
-                  {imageWidth} x {imageHeight}
+                <DescriptionListItem label={t('images.panels.dimension')}>
+                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
                 </DescriptionListItem>
                 {createdAt && (
-                  <DescriptionListItem label="Created">
-                    {new Date(createdAt).toLocaleString()}
+                  <DescriptionListItem label={t('images.panels.created')}>
+                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
                   </DescriptionListItem>
                 )}
                 {updatedAt && (
-                  <DescriptionListItem label="Updated">
-                    {new Date(updatedAt).toLocaleString()}
+                  <DescriptionListItem label={t('images.panels.updated')}>
+                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
                   </DescriptionListItem>
                 )}
-                <DescriptionListItem label="File Size">{prettyBytes(fileSize)}</DescriptionListItem>
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
 
                 {originalImageURL && (
-                  <DescriptionListItem label="Link">
+                  <DescriptionListItem label={t('images.panels.link')}>
                     <Link href={originalImageURL} target="_blank">
                       {originalImageURL}
                     </Link>
                   </DescriptionListItem>
                 )}
               </DescriptionList>
-            </PanelSection>
-            <PanelSectionHeader title="Information" />
-            <PanelSection>
-              <TextInput
-                label="Filename"
-                value={filename}
-                onChange={e => setFilename(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                label="Title"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                label="Description"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-
-              <TagInput
-                label="Tags"
-                description="Press enter to add tag"
-                value={tags}
-                disabled={isDisabled}
-                onChange={tags => setTags(tags ?? [])}
-              />
-            </PanelSection>
-            <PanelSectionHeader title="Attribution" />
-            <PanelSection>
-              <TextInput
-                label="Author"
-                value={author}
-                onChange={e => setAuthor(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                label="Source"
-                description="Link to original source of the image."
-                value={source}
-                onChange={e => setSource(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                label="License"
-                value={license}
-                onChange={e => setLicense(e.target.value)}
-                disabled={isDisabled}
-                marginBottom={Spacing.Small}
-              />
-            </PanelSection>
+            </Panel>
+            <Panel header={t('images.panels.information')}>
+              <Form fluid={true}>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.filename')}</ControlLabel>
+                  <FormControl
+                    value={filename}
+                    disabled={isDisabled}
+                    onChange={value => setFilename(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.title')}</ControlLabel>
+                  <FormControl
+                    value={title}
+                    disabled={isDisabled}
+                    onChange={value => setTitle(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.description')}</ControlLabel>
+                  <FormControl
+                    value={description}
+                    disabled={isDisabled}
+                    onChange={value => setDescription(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.tags')}</ControlLabel>
+                  <TagPicker
+                    block={true}
+                    creatable={true}
+                    disabled={isDisabled}
+                    value={tags}
+                    data={tags.map(tag => ({value: tag, label: tag}))}
+                    onChange={value => setTags(value ?? [])}
+                  />
+                </FormGroup>
+              </Form>
+            </Panel>
+            <Panel header={t('images.panels.attribution')}>
+              <Form fluid={true}>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.author')}</ControlLabel>
+                  <FormControl
+                    value={author}
+                    disabled={isDisabled}
+                    onChange={value => setAuthor(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                  <FormControl
+                    value={source}
+                    disabled={isDisabled}
+                    onChange={value => setSource(value)}
+                  />
+                  <p>{t('images.panels.sourceLink')}</p>
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                  <FormControl
+                    value={license}
+                    disabled={isDisabled}
+                    onChange={value => setLicense(value)}
+                  />
+                </FormGroup>
+              </Form>
+            </Panel>
           </>
         )}
-      </Panel>
+      </Drawer.Body>
 
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-
-      <Toast
-        type="success"
-        open={isSavedToastOpen}
-        autoHideDuration={2000}
-        onClose={() => setSavedToastOpen(false)}>
-        Image Updated
-      </Toast>
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

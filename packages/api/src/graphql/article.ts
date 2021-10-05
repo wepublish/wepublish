@@ -18,10 +18,18 @@ import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
-import {GraphQLPageInfo, GraphQLUnidirectionalPageInfo} from './common'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic,
+  GraphQLPageInfo,
+  GraphQLUnidirectionalPageInfo
+} from './common'
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
+import {GraphQLPublicComment} from './comment'
+import {SessionType} from '../db/session'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -70,13 +78,25 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
 
     shared: {type: GraphQLNonNull(GraphQLBoolean)},
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
+    socialMediaImageID: {type: GraphQLID},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
@@ -95,11 +115,18 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
 
+    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     image: {
       type: GraphQLImage,
@@ -116,6 +143,26 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
+        return Promise.all(
+          socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
+            loaders.authorsByID.load(socialMediaAuthorIDs)
+          )
+        )
+      })
+    },
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
+      })
+    },
+
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
 })
@@ -161,6 +208,16 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
     },
+    peeredArticleURL: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(
+        async ({peerID, article}, {}, {loaders, dbAdapter, urlAdapter}) => {
+          const peer = await loaders.peer.load(peerID)
+          if (!peer || !article) return ''
+          return urlAdapter.getPeeredArticleURL(peer, article)
+        }
+      )
+    },
     article: {type: GraphQLNonNull(GraphQLArticle)}
   }
 })
@@ -197,7 +254,17 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    canonicalUrl: {type: GraphQLString},
+
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) => {
+        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+      }
+    },
 
     image: {
       type: GraphQLImage,
@@ -208,13 +275,50 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
-        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+        if (hideAuthor) {
+          return []
+        } else {
+          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+        }
       })
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
+        return Promise.all(
+          socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
+            loaders.authorsByID.load(socialMediaAuthorIDs)
+          )
+        )
+      })
+    },
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
+      })
+    },
+
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
+        // if session exists, should get user's un-approved comments as well
+        // if not we should get approved ones
+        const userSession = session?.type === SessionType.User ? authenticateUser() : null
+        return await dbAdapter.comment.getPublicCommentsForItemByID({
+          id,
+          userID: userSession?.user?.id
+        })
+      })
+    }
   }
 })
 

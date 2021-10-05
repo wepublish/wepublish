@@ -23,6 +23,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBPage} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBPageAdapter implements DBPageAdapter {
   private pages: Collection<DBPage>
@@ -89,6 +90,12 @@ export class MongoDBPageAdapter implements DBPageAdapter {
 
             'draft.imageID': data.imageID,
             'draft.tags': data.tags,
+
+            'draft.socialMediaTitle': data.socialMediaTitle,
+            'draft.socialMediaDescription': data.socialMediaDescription,
+            'draft.socialMediaImageID': data.socialMediaImageID,
+
+            'draft.properties': data.properties,
 
             'draft.blocks': data.blocks
           }
@@ -274,9 +281,9 @@ export class MongoDBPageAdapter implements DBPageAdapter {
     if (filter?.title != undefined) {
       // TODO: Only match based on state filter
       textFilter['$or'] = [
-        {'draft.title': {$regex: filter.title, $options: 'i'}},
-        {'pending.title': {$regex: filter.title, $options: 'i'}},
-        {'published.title': {$regex: filter.title, $options: 'i'}}
+        {'draft.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'pending.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'published.title': {$regex: escapeRegExp(filter.title), $options: 'i'}}
       ]
     }
 
@@ -317,6 +324,7 @@ export class MongoDBPageAdapter implements DBPageAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])

@@ -1,25 +1,25 @@
 import {IncomingMessage} from 'http'
 import url from 'url'
 import crypto from 'crypto'
-
+import jwt, {SignOptions} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLSchema, print, GraphQLError} from 'graphql'
+import {GraphQLError, GraphQLSchema, print} from 'graphql'
 
 import {
-  makeRemoteExecutableSchema,
-  introspectSchema,
   Fetcher,
-  IFetcherOperation
+  IFetcherOperation,
+  introspectSchema,
+  makeRemoteExecutableSchema
 } from 'graphql-tools'
 
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {TokenSession, UserSession, SessionType, OptionalSession, Session} from './db/session'
+import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
 
 import {DBAdapter} from './db/adapter'
 import {MediaAdapter} from './mediaAdapter'
@@ -34,6 +34,16 @@ import {OptionalPage, OptionalPublicPage} from './db/page'
 
 import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
+import {OptionalMemberPlan} from './db/memberPlan'
+import {OptionalPaymentMethod} from './db/paymentMethod'
+import {Invoice, OptionalInvoice} from './db/invoice'
+import {OptionalPayment, Payment, PaymentState} from './db/payment'
+import {PaymentProvider} from './payments/paymentProvider'
+import {BaseMailProvider} from './mails/mailProvider'
+import {OptionalMailLog} from './db/mailLog'
+import {MemberContext} from './memberContext'
+import {Client, Issuer} from 'openid-client'
+import {MailContext, MailContextOptions} from './mails/mailContext'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -53,11 +63,26 @@ export interface DataLoaderContext {
 
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
 
+  readonly mailLogsByID: DataLoader<string, OptionalMailLog>
+
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>
 
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
+
+  readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
+  readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
+  readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
+  readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
+  readonly invoicesByID: DataLoader<string, OptionalInvoice>
+  readonly paymentsByID: DataLoader<string, OptionalPayment>
+}
+
+export interface OAuth2Clients {
+  name: string
+  provider: Oauth2Provider
+  client: Client
 }
 
 export interface Context {
@@ -67,15 +92,26 @@ export interface Context {
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
+  readonly mailContext: MailContext
+  readonly memberContext: MemberContext
+
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
+  readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
+
+  getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
+
+  generateJWT(props: GenerateJWTProps): string
+  verifyJWT(token: string): string
+
+  createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
 }
 
 export interface Oauth2Provider {
@@ -94,13 +130,50 @@ export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
+  readonly mailProvider?: BaseMailProvider
+  readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
+  readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
 }
 
+export interface SendMailFromProviderProps {
+  recipient: string
+  replyToAddress: string
+  subject: string
+  message?: string
+  template?: string
+  templateData?: Record<string, any>
+}
+
+export interface CreatePaymentWithProvider {
+  paymentMethodID: string
+  invoice: Invoice
+  saveCustomer: boolean
+  successURL?: string
+  failureURL?: string
+}
+
+export interface GenerateJWTProps {
+  id: string
+  audience?: string
+  expiresInMinutes?: number
+}
+
 export async function contextFromRequest(
-  req: IncomingMessage,
-  {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
+  req: IncomingMessage | null,
+  {
+    hostURL,
+    websiteURL,
+    dbAdapter,
+    mediaAdapter,
+    urlAdapter,
+    oauth2Providers,
+    hooks,
+    mailProvider,
+    mailContextOptions,
+    paymentProviders
+  }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.session.getSessionByToken(token) : null
@@ -114,93 +187,145 @@ export async function contextFromRequest(
     dbAdapter.peer.getPeersByID(ids)
   )
 
+  const loaders: DataLoaderContext = {
+    navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
+    navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+
+    authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
+    authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
+
+    images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
+
+    articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
+    publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+
+    pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
+    publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
+    publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+
+    userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+
+    mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
+
+    peer: peerDataLoader,
+    peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
+      dbAdapter.peer.getPeersBySlug(slugs)
+    ),
+
+    peerSchema: new DataLoader(async ids => {
+      const peers = await peerDataLoader.loadMany(ids)
+
+      return Promise.all(
+        peers.map(async peer => {
+          try {
+            if (!peer) return null
+
+            if (peer instanceof Error) {
+              console.error(peer)
+              return null
+            }
+
+            const fetcher = createFetcher(peer.hostURL, peer.token)
+
+            return makeRemoteExecutableSchema({
+              schema: await introspectSchema(fetcher),
+              fetcher
+            })
+          } catch (err) {
+            console.error(err)
+            return null
+          }
+        })
+      )
+    }),
+
+    peerAdminSchema: new DataLoader(async ids => {
+      const peers = await peerDataLoader.loadMany(ids)
+
+      return Promise.all(
+        peers.map(async peer => {
+          try {
+            if (!peer) return null
+
+            if (peer instanceof Error) {
+              console.error(peer)
+              return null
+            }
+
+            const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
+
+            return makeRemoteExecutableSchema({
+              schema: await introspectSchema(fetcher),
+              fetcher
+            })
+          } catch (err) {
+            console.error(err)
+            return null
+          }
+        })
+      )
+    }),
+
+    memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
+    activeMemberPlansByID: new DataLoader(ids =>
+      dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    ),
+    paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
+    activePaymentMethodsByID: new DataLoader(ids =>
+      dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+    ),
+    invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
+    paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
+  }
+
+  const mailContext = new MailContext({
+    dbAdapter,
+    mailProvider,
+    defaultFromAddress: mailContextOptions.defaultFromAddress,
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
+    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
+    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+  })
+
+  const memberContext = new MemberContext({
+    loaders,
+    dbAdapter,
+    paymentProviders,
+    mailContext
+  })
+
   return {
     hostURL,
     websiteURL,
     session: isSessionValid ? session : null,
-    loaders: {
-      navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
-      navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+    loaders,
 
-      authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
-      authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
-
-      images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
-
-      articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
-      publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
-
-      pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
-      publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
-      publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
-
-      userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
-
-      peer: peerDataLoader,
-      peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
-        dbAdapter.peer.getPeersBySlug(slugs)
-      ),
-
-      peerSchema: new DataLoader(async ids => {
-        const peers = await peerDataLoader.loadMany(ids)
-
-        return Promise.all(
-          peers.map(async peer => {
-            try {
-              if (!peer) return null
-
-              if (peer instanceof Error) {
-                console.error(peer)
-                return null
-              }
-
-              const fetcher = createFetcher(peer.hostURL, peer.token)
-
-              return makeRemoteExecutableSchema({
-                schema: await introspectSchema(fetcher),
-                fetcher
-              })
-            } catch (err) {
-              console.error(err)
-              return null
-            }
-          })
-        )
-      }),
-
-      peerAdminSchema: new DataLoader(async ids => {
-        const peers = await peerDataLoader.loadMany(ids)
-
-        return Promise.all(
-          peers.map(async peer => {
-            try {
-              if (!peer) return null
-
-              if (peer instanceof Error) {
-                console.error(peer)
-                return null
-              }
-
-              const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
-
-              return makeRemoteExecutableSchema({
-                schema: await introspectSchema(fetcher),
-                fetcher
-              })
-            } catch (err) {
-              console.error(err)
-              return null
-            }
-          })
-        )
-      })
-    },
-
+    memberContext,
+    mailContext,
     dbAdapter,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
+    paymentProviders,
     hooks,
+
+    async getOauth2Clients() {
+      return await Promise.all(
+        oauth2Providers.map(async provider => {
+          const issuer = await Issuer.discover(provider.discoverUrl)
+          return {
+            name: provider.name,
+            provider,
+            client: new issuer.Client({
+              client_id: provider.clientId,
+              client_secret: provider.clientKey,
+              redirect_uris: provider.redirectUri,
+              response_types: ['code']
+            })
+          }
+        })
+      )
+    },
 
     authenticateUser() {
       if (!session || session.type !== SessionType.User) {
@@ -232,12 +357,79 @@ export async function contextFromRequest(
       }
 
       return session
+    },
+
+    generateJWT(props: GenerateJWTProps): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const jwtOptions: SignOptions = {
+        issuer: hostURL,
+        audience: props.audience ?? websiteURL,
+        algorithm: 'HS256',
+        expiresIn: `${props.expiresInMinutes ?? 5}m`
+      }
+      return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
+    },
+
+    verifyJWT(token: string): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+      return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+    },
+
+    async createPaymentWithProvider({
+      paymentMethodID,
+      invoice,
+      saveCustomer,
+      failureURL,
+      successURL
+    }: CreatePaymentWithProvider): Promise<Payment> {
+      const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      const paymentProvider = paymentProviders.find(
+        pp => pp.id === paymentMethod?.paymentProviderID
+      )
+
+      if (!paymentProvider) {
+        throw new Error('paymentProvider not found')
+      }
+
+      const payment = await dbAdapter.payment.createPayment({
+        input: {
+          paymentMethodID,
+          invoiceID: invoice.id,
+          state: PaymentState.Created
+        }
+      })
+
+      const intent = await paymentProvider.createIntent({
+        paymentID: payment.id,
+        invoice,
+        saveCustomer,
+        successURL,
+        failureURL
+      })
+
+      const updatedPayment = await dbAdapter.payment.updatePayment({
+        id: payment.id,
+        input: {
+          state: intent.state,
+          intentID: intent.intentID,
+          intentData: intent.intentData,
+          intentSecret: intent.intentSecret,
+          paymentData: intent.paymentData,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
+
+      if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
+
+      return updatedPayment
     }
   }
 }
 
-export function tokenFromRequest(req: IncomingMessage): string | null {
-  if (req.headers.authorization) {
+export function tokenFromRequest(req: IncomingMessage | null): string | null {
+  if (req?.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
@@ -275,7 +467,6 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
                 ]
               }
             }
-
             return await fetchResult.json()
           } catch (err) {
             if (err.type === 'aborted') {

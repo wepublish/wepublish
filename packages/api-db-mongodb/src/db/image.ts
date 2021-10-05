@@ -18,6 +18,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBImage} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBImageAdapter implements DBImageAdapter {
   private images: Collection<DBImage>
@@ -133,8 +134,8 @@ export class MongoDBImageAdapter implements DBImageAdapter {
     // TODO: Rename to search
     if (filter?.title != undefined) {
       textFilter['$or'] = [
-        {title: {$regex: filter.title, $options: 'i'}},
-        {filename: {$regex: filter.title, $options: 'i'}}
+        {title: {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {filename: {$regex: escapeRegExp(filter.title), $options: 'i'}}
       ]
     }
 

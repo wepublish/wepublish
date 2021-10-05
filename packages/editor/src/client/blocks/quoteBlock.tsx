@@ -1,13 +1,18 @@
 import React, {useRef, useEffect} from 'react'
 
-import {BlockProps, TypographicTextArea, Box, Spacing} from '@karma.run/ui'
+import {BlockProps} from '../atoms/blockList'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+
 import {QuoteBlockValue} from './types'
 
-export interface QuoteBlockProps extends BlockProps<QuoteBlockValue> {}
+import {useTranslation} from 'react-i18next'
+
+export type QuoteBlockProps = BlockProps<QuoteBlockValue>
 
 export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockProps) {
   const {quote, author} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
@@ -18,21 +23,31 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
       <TypographicTextArea
         ref={focusRef}
         variant="h1"
-        placeholder="Quote"
+        placeholder={t('blocks.quote.quote')}
         value={quote}
         disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}
       />
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Box marginRight={Spacing.Tiny}>—</Box>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+        <div
+          style={{
+            marginRight: 5
+          }}>
+          —
+        </div>
         <TypographicTextArea
           variant="body1"
-          placeholder="Author"
+          placeholder={t('blocks.quote.author')}
           value={author}
           disabled={disabled}
           onChange={e => onChange({...value, author: e.target.value})}
         />
-      </Box>
+      </div>
     </>
   )
 }

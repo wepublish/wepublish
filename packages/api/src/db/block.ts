@@ -11,6 +11,7 @@ export enum BlockType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   Embed = 'embed',
   Quote = 'quote',
   Image = 'image',
@@ -79,6 +80,11 @@ export interface SoundCloudTrackBlock {
   trackID: string
 }
 
+export interface PolisConversationBlock {
+  type: BlockType.PolisConversation
+  conversationID: string
+}
+
 export interface EmbedBlock {
   type: BlockType.Embed
   url?: string
@@ -102,8 +108,15 @@ export interface ListicleBlock {
 export interface LinkPageBreakBlock {
   type: BlockType.LinkPageBreak
   text: string
+  richText: RichTextNode[]
   linkURL: string
   linkText: string
+  linkTarget: string
+  hideButton: boolean
+  styleOption?: string
+  layoutOption?: string
+  templateOption?: string
+  imageID?: string
 }
 
 export interface TitleBlock {
@@ -186,6 +199,7 @@ export type ArticleBlock =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | PolisConversationBlock
   | TeaserGridBlock
 
 export type PageBlock = ArticleBlock

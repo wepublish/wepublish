@@ -1,42 +1,32 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
-import {
-  EditorTemplate,
-  NavigationBar,
-  NavigationButton,
-  BlockList,
-  Drawer,
-  Toast,
-  Dialog,
-  useBlockMap
-} from '@karma.run/ui'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
-import {
-  MaterialIconArrowBack,
-  MaterialIconInsertDriveFileOutlined,
-  MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {NavigationBar} from '../atoms/navigationBar'
+import {EditorTemplate} from '../atoms/editorTemplate'
 
-import {RouteActionType} from '@karma.run/react'
-
-import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
+import {IconButtonLink, PageEditRoute, PageListRoute, useRouteDispatch} from '../route'
 
 import {
   PageInput,
   useCreatePageMutation,
-  useUpdatePageMutation,
   usePageQuery,
-  usePublishPageMutation
+  usePublishPageMutation,
+  useUpdatePageMutation
 } from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
-import {blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
+
+import {useTranslation} from 'react-i18next'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag} from 'rsuite'
+import {StateColor} from '../utility'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -64,32 +54,32 @@ export function PageEditor({id}: PageEditorProps) {
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
-  const [isSuccessToastOpen, setSuccessToastOpen] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
     description: '',
     tags: [],
-    image: undefined
+    properties: [],
+    image: undefined,
+    socialMediaTitle: undefined,
+    socialMediaDescription: undefined,
+    socialMediaImage: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, loading: isLoading} = usePageQuery({
+  const {data: pageData, refetch, loading: isLoading} = usePageQuery({
     skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
   })
+
+  const {t} = useTranslation()
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
@@ -110,7 +100,18 @@ export function PageEditor({id}: PageEditorProps) {
   useEffect(() => {
     if (pageData?.page) {
       const {latest, published} = pageData.page
-      const {slug, title, description, tags, image, blocks} = latest
+      const {
+        slug,
+        title,
+        description,
+        tags,
+        image,
+        blocks,
+        properties,
+        socialMediaTitle,
+        socialMediaDescription,
+        socialMediaImage
+      } = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -120,18 +121,48 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
-        image: image ? image : undefined
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
+        image: image || undefined,
+        socialMediaTitle: socialMediaTitle || '',
+        socialMediaDescription: socialMediaDescription || '',
+        socialMediaImage: socialMediaImage || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [pageData])
 
+  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
+  const [tagTitle, setTagTitle] = useState<string>('')
+
   useEffect(() => {
-    if (createError || updateError || publishError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
+    if (pageData?.page?.pending) {
+      setStateColor(StateColor.pending)
+      setTagTitle(
+        t('pageEditor.overview.pending', {
+          date: new Date(pageData?.page?.pending?.publishAt ?? '')
+        })
+      )
+    } else if (pageData?.page?.published) {
+      setStateColor(StateColor.published)
+      setTagTitle(
+        t('pageEditor.overview.published', {
+          date: new Date(pageData?.page?.published?.publishedAt ?? '')
+        })
+      )
+    } else {
+      setStateColor(StateColor.draft)
+      setTagTitle(t('pageEditor.overview.unpublished'))
     }
+  }, [pageData, hasChanged])
+
+  useEffect(() => {
+    const error = createError?.message ?? updateError?.message ?? publishError?.message
+    if (error) Alert.error(error, 0)
   }, [createError, updateError, publishError])
 
   function createInput(): PageInput {
@@ -141,6 +172,10 @@ export function PageEditor({id}: PageEditorProps) {
       description: metadata.description,
       imageID: metadata.image?.id,
       tags: metadata.tags,
+      properties: metadata.properties,
+      socialMediaTitle: metadata.socialMediaTitle || undefined,
+      socialMediaDescription: metadata.socialMediaDescription || undefined,
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
       blocks: blocks.map(unionMapForBlock)
     }
   }
@@ -152,8 +187,7 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Saved')
+      Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -165,9 +199,9 @@ export function PageEditor({id}: PageEditorProps) {
       }
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Created')
+      Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
     }
+    await refetch({id: pageID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
@@ -190,115 +224,127 @@ export function PageEditor({id}: PageEditorProps) {
           setPublishedAt(new Date(publishData?.publishPage?.published.publishedAt))
         }
       }
+      await refetch({id: pageID})
     }
 
     setChanged(false)
-    setSuccessToastOpen(true)
-    setSuccessMessage('Page Published')
+    Alert.success(t('pageEditor.overview.pagePublished'), 2000)
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage('Page Not Found')
-      setErrorToastOpen(true)
+      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
     }
   }, [isNotFound])
 
   return (
     <>
-      <EditorTemplate
-        navigationChildren={
-          <NavigationBar
-            leftChildren={
-              <RouteNavigationLinkButton
-                icon={MaterialIconArrowBack}
-                label="Back"
-                route={PageListRoute.create({})}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) e.preventDefault()
-                }}
-              />
-            }
-            centerChildren={
-              <>
-                <NavigationButton
-                  icon={MaterialIconInsertDriveFileOutlined}
-                  label="Metadata"
-                  onClick={() => setMetaDrawerOpen(true)}
-                  disabled={isDisabled}
-                />
-
-                {isNew && createData == null ? (
-                  <NavigationButton
-                    icon={MaterialIconSaveOutlined}
-                    label="Create"
-                    onClick={() => handleSave()}
+      <fieldset style={{borderColor: stateColor}}>
+        <legend style={{width: 'auto', margin: '0px auto'}}>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
+        </legend>
+        <EditorTemplate
+          navigationChildren={
+            <NavigationBar
+              leftChildren={
+                <IconButtonLink
+                  style={{marginTop: '4px', marginBottom: '20px'}}
+                  size={'lg'}
+                  icon={<Icon icon="arrow-left" />}
+                  route={PageListRoute.create({})}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault()
+                  }}>
+                  {t('Back')}
+                </IconButtonLink>
+              }
+              centerChildren={
+                <div style={{marginTop: '4px'}}>
+                  <IconButton
+                    icon={<Icon icon="newspaper-o" />}
+                    size={'lg'}
                     disabled={isDisabled}
-                  />
-                ) : (
-                  <>
-                    <NavigationButton
-                      icon={MaterialIconSaveOutlined}
-                      label="Save"
-                      onClick={() => handleSave()}
+                    onClick={() => setMetaDrawerOpen(true)}>
+                    {t('pageEditor.overview.metadata')}
+                  </IconButton>
+
+                  {isNew && createData == null ? (
+                    <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
+                      size={'lg'}
+                      icon={<Icon icon="save" />}
                       disabled={isDisabled}
-                    />
-                    <NavigationButton
-                      icon={MaterialIconPublishOutlined}
-                      label="Publish"
-                      onClick={() => setPublishDialogOpen(true)}
-                      disabled={isDisabled}
-                    />
-                  </>
-                )}
-              </>
-            }
-          />
-        }>
-        <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
-          {useBlockMap<BlockValue>(() => BlockMap, [])}
-        </BlockList>
-      </EditorTemplate>
-      <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
-        {() => (
-          <PageMetadataPanel
-            value={metadata}
-            onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => {
-              setMetadata(value)
-              setChanged(true)
-            }}
-          />
-        )}
+                      onClick={() => handleSave()}>
+                      {t('pageEditor.overview.create')}
+                    </IconButton>
+                  ) : (
+                    <>
+                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="save" />}
+                          disabled={isDisabled}
+                          onClick={() => handleSave()}>
+                          {t('pageEditor.overview.save')}
+                        </IconButton>
+                      </Badge>
+                      <Badge
+                        className={
+                          pageData?.page?.draft || !pageData?.page?.published ? 'unsaved' : 'saved'
+                        }>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="cloud-upload" />}
+                          disabled={isDisabled}
+                          onClick={() => setPublishDialogOpen(true)}>
+                          {t('pageEditor.overview.publish')}
+                        </IconButton>
+                      </Badge>
+                    </>
+                  )}
+                </div>
+              }
+            />
+          }>
+          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
+            {useBlockMap<BlockValue>(() => BlockMap, [])}
+          </BlockList>
+        </EditorTemplate>
+      </fieldset>
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+        <PageMetadataPanel
+          value={metadata}
+          onClose={() => {
+            handleSave()
+            setMetaDrawerOpen(false)
+          }}
+          onChange={value => {
+            setMetadata(value)
+            setChanged(true)
+          }}
+        />
       </Drawer>
-      <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
-        {() => (
-          <PublishPagePanel
-            initialPublishDate={publishedAt}
-            pendingPublishDate={pendingPublishDate}
-            metadata={metadata}
-            onClose={() => setPublishDialogOpen(false)}
-            onConfirm={(publishDate, updateDate) => {
-              handlePublish(publishDate, updateDate)
-              setPublishDialogOpen(false)
-            }}
-          />
-        )}
-      </Dialog>
-      <Toast
-        type="success"
-        open={isSuccessToastOpen}
-        autoHideDuration={2000}
-        onClose={() => setSuccessToastOpen(false)}>
-        {successMessage}
-      </Toast>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+
+      <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
+        <PublishPagePanel
+          initialPublishDate={publishedAt}
+          pendingPublishDate={pendingPublishDate}
+          metadata={metadata}
+          onClose={() => setPublishDialogOpen(false)}
+          onConfirm={(publishDate, updateDate) => {
+            handlePublish(publishDate, updateDate)
+            setPublishDialogOpen(false)
+          }}
+        />
+      </Modal>
     </>
   )
 }

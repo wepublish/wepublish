@@ -36,6 +36,7 @@ fragment ArticleRef on Article {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -52,14 +53,18 @@ fragment ArticleRef on Article {
     preTitle
     title
     lead
+    authors {
+      name
+    }
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
 
-query ArticleList($filter: String, $after: ID, $first: Int) {
-  articles(first: $first, after: $after, filter: {title: $filter}) {
+query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -81,6 +86,8 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
       peer {
         ...PeerWithProfile
       }
+
+      peeredArticleURL
 
       article {
         ...ArticleRef
@@ -129,10 +136,24 @@ mutation DeleteArticle($id: ID!) {
   deleteArticle(id: $id)
 }
 
+mutation DuplicateArticle($id: ID!) {
+  duplicateArticle(id: $id) {
+   ...MutationArticle
+  }
+}
+
+query ArticlePreviewLink($id: ID!, $hours: Int!) {
+  articlePreviewLink(id: $id, hours: $hours)
+}
+
 query Article($id: ID!) {
   article(id: $id) {
     id
     shared
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt
@@ -146,20 +167,37 @@ query Article($id: ID!) {
     latest {
       publishedAt
       updatedAt
-
       revision
       slug
       preTitle
       title
       lead
+      seoTitle
       image {
         ...ImageRef
       }
       tags
+      canonicalUrl
+      properties {
+        key
+        value
+        public
+      }
       authors {
         ...AuthorRef
       }
+      hideAuthor
+
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage{
+        ...ImageRef
+      }
+
       blocks {
         ...FullBlock
       }

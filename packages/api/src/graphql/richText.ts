@@ -9,7 +9,10 @@ export enum ElementNodeType {
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
   ListItem = 'list-item',
-  Link = 'link'
+  Link = 'link',
+  Table = 'table',
+  TableRow = 'table-row',
+  TableCell = 'table-cell'
 }
 
 export enum TextNodeFields {
@@ -17,7 +20,9 @@ export enum TextNodeFields {
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
-  Strikethrough = 'strikethrough'
+  Strikethrough = 'strikethrough',
+  Superscript = 'superscript',
+  Subscript = 'subscript'
 }
 
 export enum ElementNodeFields {
@@ -30,6 +35,10 @@ export enum LinkNodeFields {
   Title = 'title'
 }
 
+export enum TableCellNodeFields {
+  Bordercolor = 'borderColor'
+}
+
 export interface RichTextBlockNode {
   readonly type:
     | ElementNodeType.H1
@@ -39,6 +48,15 @@ export interface RichTextBlockNode {
     | ElementNodeType.UnorderedList
     | ElementNodeType.OrderedList
     | ElementNodeType.ListItem
+    | ElementNodeType.Table
+    | ElementNodeType.TableRow
+
+  readonly children: RichTextNode[]
+}
+
+export interface RichTextTableCellNode {
+  readonly type: ElementNodeType.TableCell
+  readonly borderColor: string
   readonly children: RichTextNode[]
 }
 
@@ -54,10 +72,16 @@ export interface RichTextTextNode {
   readonly italic?: boolean
   readonly underline?: boolean
   readonly strikethrough?: boolean
+  readonly superscript?: boolean
+  readonly subscript?: boolean
   readonly text: string
 }
 
-export type RichTextNode = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
+export type RichTextNode =
+  | RichTextBlockNode
+  | RichTextTableCellNode
+  | RichTextLinkNode
+  | RichTextTextNode
 
 export const GraphQLRichText = new GraphQLScalarType({
   name: 'RichText',
@@ -84,6 +108,11 @@ const ElmentNodeFieldsArr: string[] = Object.values(ElementNodeFields)
 const LinkNodeFieldsArr: string[] = [
   ...Object.values(ElementNodeFields),
   ...Object.values(LinkNodeFields)
+]
+
+const TableCellNodeFieldsArr: string[] = [
+  ...Object.values(ElementNodeFields),
+  ...Object.values(TableCellNodeFields)
 ]
 
 const ElementNodeTypeArr: string[] = Object.values(ElementNodeType)
@@ -130,20 +159,38 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       ])
     }
 
+    if (value.superscript != undefined && !isBoolean(value.superscript)) {
+      throw createRichTextError(`Expected boolean found ${value.superscript}`, [
+        ...path,
+        'superscript'
+      ])
+    }
+
+    if (value.subscript != undefined && !isBoolean(value.subscript)) {
+      throw createRichTextError(`Expected boolean found ${value.subscript}`, [...path, 'subscript'])
+    }
+
     return Object.assign(
       {text: value.text},
       value.bold != undefined ? {bold: value.bold as boolean} : {},
       value.italic != undefined ? {italic: value.italic as boolean} : {},
       value.underline != undefined ? {underline: value.underline as boolean} : {},
-      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {}
+      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {},
+      value.superscript != undefined ? {superscript: value.superscript as boolean} : {},
+      value.subscript != undefined ? {subscript: value.subscript as boolean} : {}
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
+    const isTableCellNode = value.type === ElementNodeType.TableCell
 
     for (const field of Object.keys(value)) {
       if (isLinkNode) {
         if (!LinkNodeFieldsArr.includes(field)) {
           throw createRichTextError(`Unknown LinkNode field "${field}".`, path)
+        }
+      } else if (isTableCellNode) {
+        if (!TableCellNodeFieldsArr.includes(field)) {
+          throw createRichTextError(`Unknown TableCellNode field "${field}".`, path)
         }
       } else {
         if (!ElmentNodeFieldsArr.includes(field)) {
@@ -184,6 +231,22 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
           },
           value.title != undefined ? {title: value.title as string} : {}
         )
+      }
+
+      case ElementNodeType.TableCell: {
+        if (!isString(value.borderColor)) {
+          // TODO: Check URL for malicious content.
+          throw createRichTextError(`Expected string found ${value.borderColor}`, [
+            ...path,
+            'borderColor'
+          ])
+        }
+
+        return {
+          type,
+          borderColor: value.borderColor,
+          children: parseRichTextNodes(value.children, [...path, 'children'])
+        }
       }
 
       default:

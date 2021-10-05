@@ -1,18 +1,30 @@
 import {ArticleBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
+import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
 
 export interface ArticleData {
   readonly preTitle?: string
   readonly title: string
   readonly lead?: string
+  readonly seoTitle?: string
   readonly slug: string
   readonly tags: string[]
+
+  readonly canonicalUrl?: string
+
+  readonly properties: MetadataProperty[]
 
   readonly imageID?: string
   readonly authorIDs: string[]
 
   readonly breaking: boolean
   readonly blocks: ArticleBlock[]
+
+  readonly hideAuthor: boolean
+
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthorIDs: string[]
+  readonly socialMediaImageID?: string
 }
 
 // Article State Flow:
@@ -142,6 +154,8 @@ export interface DBArticleAdapter {
 
   getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
+
+  getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle>
 
   getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
   getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>

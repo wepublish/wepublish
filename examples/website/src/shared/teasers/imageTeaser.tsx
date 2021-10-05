@@ -1,11 +1,11 @@
 import React from 'react'
 import {cssRule, useStyle} from '@karma.run/react'
-import {Peer} from '../types'
+import {Peer, ImageData, Author} from '../types'
 
 import {Image, ImageFit} from '../atoms/image'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
-import {ImageData, Author} from '../types'
+
 import {getHumanReadableTimePassed} from '../utility'
 import {pxToRem, hexToRgb, whenTablet} from '../style/helpers'
 import {
@@ -111,7 +111,9 @@ export interface LightTeaserProps {
   readonly peer?: Peer
   readonly tags: string[]
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
+  readonly isPeerArticle?: boolean
 }
 
 export function ImageTeaser({
@@ -124,17 +126,26 @@ export function ImageTeaser({
   date,
   lead,
   route,
-  preTitle
+  preTitle,
+  url,
+  isPeerArticle
 }: LightTeaserProps) {
   const css = useStyle({isSingle})
   return (
     <div className={css(ImageTeaserStyle)}>
       <span className={css(PreTitleStyle, ImageTeaserPreTitleStyle)}>{preTitle}</span>
-      <Link route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <div className={css(ImageTeaserImageStyle)}>
           <Image
-            src={image.format === 'gif' ? image.url : image.largeURL}
-            alt={image.description || image.caption}
+            src={
+              image?.format === 'gif'
+                ? image?.url
+                : image?.largeURL || 'https://via.placeholder.com/240x240'
+            }
+            alt={image?.description || image?.caption}
             fit={ImageFit.Cover}
           />
         </div>

@@ -1,20 +1,15 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PanelSectionHeader,
-  Toast,
-  Toggle,
-  Typography
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
+  Alert,
+  Button,
+  CheckPicker,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup
+} from 'rsuite'
 
 import {
   Permission,
@@ -24,6 +19,8 @@ import {
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '../api'
+
+import {useTranslation} from 'react-i18next'
 
 export interface UserRoleEditPanelProps {
   id?: string
@@ -37,14 +34,12 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
   const [description, setDescription] = useState('')
   const [systemRole, setSystemRole] = useState(false)
   const [permissions, setPermissions] = useState<Permission[]>([])
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
+  const [allPermissions, setAllPermissions] = useState<Permission[]>([])
 
   const {data, loading: isLoading, error: loadError} = useUserRoleQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const {
@@ -52,8 +47,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     loading: isPermissionLoading,
     error: loadPermissionError
   } = usePermissionListQuery({
-    fetchPolicy: 'network-only',
-    skip: id != undefined
+    fetchPolicy: 'network-only'
   })
 
   const [createUserRole, {loading: isCreating, error: createError}] = useCreateUserRoleMutation()
@@ -65,7 +59,9 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     isPermissionLoading ||
     isCreating ||
     isUpdating ||
-    loadError != undefined
+    loadError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.userRole) {
@@ -78,24 +74,17 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   useEffect(() => {
     if (permissionData?.permissions) {
-      setPermissions(permissionData.permissions)
+      setAllPermissions(permissionData.permissions)
     }
   }, [permissionData?.permissions])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    } else if (loadPermissionError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadPermissionError.message)
-    }
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      loadPermissionError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadPermissionError])
 
   async function handleSave() {
@@ -106,7 +95,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           input: {
             name,
             description,
-            permissionIDs: permissions.filter(permission => permission.checked).map(({id}) => id)
+            permissionIDs: permissions.map(({id}) => id)
           }
         }
       })
@@ -118,7 +107,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           input: {
             name,
             description,
-            permissionIDs: permissions.filter(permission => permission.checked).map(({id}) => id)
+            permissionIDs: permissions.map(({id}) => id)
           }
         }
       })
@@ -129,84 +118,60 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? 'Edit UserRole' : 'Create UserRole'}
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Name"
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
+            <FormControl
+              name={t('userRoles.panels.name')}
               value={name}
               disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
+              onChange={value => setName(value)}
             />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Description"
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
+            <FormControl
+              name={t('userRoles.panels.description')}
               value={description}
               disabled={isDisabled}
-              onChange={e => {
-                setDescription(e.target.value)
+              onChange={value => setDescription(value)}
+            />
+          </FormGroup>
+          {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
+          <FormGroup>
+            <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
+            <CheckPicker
+              block={true}
+              disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
+              value={permissions.map(per => per.id)}
+              data={allPermissions.map(permission => ({
+                value: permission.id,
+                label: permission.description
+              }))}
+              onChange={value => {
+                // setPermissions(value)
+                setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
               }}
             />
-          </Box>
-          {systemRole && (
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">is a System Role and can't be edited</Typography>
-            </Box>
-          )}
-        </PanelSection>
-        <PanelSectionHeader title="Permissions" />
-        <PanelSection>
-          {permissions.map(permission => {
-            return (
-              <Toggle
-                key={permission.id}
-                label={permission.id}
-                description={permission.description}
-                disabled={isDisabled}
-                checked={permission.checked}
-                onChange={e => {
-                  setPermissions(
-                    permissions.map(per => {
-                      if (per.id === permission.id) {
-                        return {
-                          ...permission,
-                          checked: e.target.checked
-                        }
-                      }
-                      return per
-                    })
-                  )
-                }}
-              />
-            )
-          })}
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+          </FormGroup>
+        </Form>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('userRoles.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

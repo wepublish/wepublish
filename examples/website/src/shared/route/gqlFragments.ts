@@ -11,6 +11,7 @@ export enum BlockTypes {
   VimeoVideoBlock = 'TwitterTweetBlock',
   YouTubeVideoBlock = 'YouTubeVideoBlock',
   SoundCloudTrackBlock = 'SoundCloudTrackBlock',
+  PolisConversationBlock = 'PolisConversationBlock',
   ListicleBlock = 'ListicleBlock',
   LinkPageBreakBlock = 'LinkPageBreakBlock'
 }
@@ -58,6 +59,33 @@ export const imageEdgeDataFragment = gql`
   ${simpleImageDataFragment}
 `
 
+export const commentsDataFragment = gql`
+  fragment CommentsData on Comment {
+    id
+    state
+    rejectionReason
+    itemID
+    itemType
+    text
+    modifiedAt
+    parentID
+    authorType
+    user {
+      id
+      name
+      preferredName
+    }
+  }
+`
+
+export const recursiveCommentsDataFragment = gql`
+  fragment RecursiveCommentsData on Comment {
+    children {
+      ...CommentsData
+    }
+  }
+`
+
 export const articleMetaDataFragment = gql`
   fragment ArticleMetaData on Article {
     __typename
@@ -79,9 +107,63 @@ export const articleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    canonicalUrl
+
+    socialMediaTitle
+    socialMediaDescription
+    socialMediaAuthors {
+      ...AuthorsData
+    }
+    socialMediaImage {
+      ...SimpleImageData
+    }
+    comments {
+      ...CommentsData
+      ...RecursiveCommentsData
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}
+  ${commentsDataFragment}
+  ${recursiveCommentsDataFragment}
+`
+
+export const peerArticleMetaDataFragment = gql`
+  fragment PeerArticleMetaData on Article {
+    __typename
+    id
+    url
+
+    updatedAt
+    publishedAt
+
+    slug
+    preTitle
+    title
+    lead
+    breaking
+    tags
+    authors {
+      ...AuthorsData
+    }
+    image {
+      ...SimpleImageData
+    }
+    canonicalUrl
+
+    socialMediaTitle
+    socialMediaDescription
+    socialMediaAuthors {
+      ...AuthorsData
+    }
+    socialMediaImage {
+      ...SimpleImageData
+    }
+  }
+  ${simpleImageDataFragment}
+  ${authorsDataFragment}
+  ${commentsDataFragment}
+  ${recursiveCommentsDataFragment}
 `
 
 export const pageMetaDataFragment = gql`
@@ -101,6 +183,11 @@ export const pageMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    # Not yet needed in MVP
+    # comments {
+    #  ...CommentsData
+    #  ...RecursiveCommentsData
+    #}
   }
   ${simpleImageDataFragment}
 `
@@ -113,7 +200,14 @@ export const peerMetaDataFragment = gql`
       name
       websiteURL
       themeColor
+      themeFontColor
       logo {
+        ...SimpleImageData
+      }
+      callToActionText
+      callToActionURL
+      callToActionImageURL
+      callToActionImage {
         ...SimpleImageData
       }
     }
@@ -160,7 +254,7 @@ export const gridBlockFrontDataGQLfragment = gql`
 
         articleID
         article {
-          ...ArticleMetaData
+          ...PeerArticleMetaData
         }
       }
 
@@ -185,6 +279,7 @@ export const gridBlockFrontDataGQLfragment = gql`
   ${articleMetaDataFragment}
   ${pageMetaDataFragment}
   ${peerMetaDataFragment}
+  ${peerArticleMetaDataFragment}
 `
 
 // # transform(input: [{width: 1280, height: 400}])
@@ -265,6 +360,12 @@ export const soundCloudTrackBlockDataFragment = gql`
     trackID
   }
 `
+export const polisConversationBlockDataFragment = gql`
+  fragment PolisConversationBlockData on PolisConversationBlock {
+    __typename
+    conversationID
+  }
+`
 export const embedBlockDataFragment = gql`
   fragment EmbedBlockData on EmbedBlock {
     __typename
@@ -294,8 +395,17 @@ export const linkPageBreakBlockDataFragment = gql`
   fragment LinkPageBreakBlockData on LinkPageBreakBlock {
     __typename
     text
+    richText
     linkURL
     linkText
+    hideButton
+    linkTarget
+    styleOption
+    layoutOption
+    templateOption
+    image {
+      ...SimpleImageData
+    }
   }
 `
 

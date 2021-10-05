@@ -1,20 +1,10 @@
 import React, {useState} from 'react'
 
-import {
-  PanelHeader,
-  Panel,
-  PanelSection,
-  NavigationButton,
-  TextInput,
-  Spacing,
-  Typography,
-  Button,
-  Toast,
-  ToastType
-} from '@karma.run/ui'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Notification, Panel} from 'rsuite'
 
-import {MaterialIconClose} from '@karma.run/icons'
 import {useResetUserPasswordMutation} from '../api'
+
+import {useTranslation} from 'react-i18next'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string
@@ -25,9 +15,6 @@ export interface ResetUserPasswordPanelProps {
 export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPasswordPanelProps) {
   const [password, setPassword] = useState('')
 
-  const [open, setOpen] = useState(false)
-  const [type, setType] = useState<ToastType>('success')
-
   const [
     resetUserPassword,
     {loading: isUpdating, error: updateError}
@@ -35,53 +22,47 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   const isDisabled = isUpdating
 
+  const {t} = useTranslation()
+
   return (
-    <>
-      <Panel>
-        <PanelHeader
-          title="Reset Password"
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
-          }
-        />
-        <PanelSection>
-          <Typography variant="body1">Reset the password for {userName}</Typography>
-          <TextInput
+    <Panel>
+      <Form fluid={true}>
+        <FormGroup>
+          <ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</ControlLabel>
+          <FormControl
             disabled={isDisabled}
             type="password"
-            label="Password"
+            placeholder={t('userList.panels.password')}
             errorMessage={updateError?.message}
-            marginBottom={Spacing.Small}
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={value => setPassword(value)}
           />
-          <Button
-            disabled={isDisabled}
-            label="Reset Password"
-            variant="outlined"
-            color="primary"
-            onClick={async () => {
-              if (!userID || !password) {
-                return
-              }
-              const {data} = await resetUserPassword({
-                variables: {
-                  id: userID,
-                  password: password
-                }
-              })
-              if (data?.resetUserPassword) {
-                setType('success')
-                setOpen(true)
-                onClose()
-              }
-            }}
-          />
-        </PanelSection>
-      </Panel>
-      <Toast type={type} open={open} onClose={() => setOpen(false)} autoHideDuration={2000}>
-        Password successfuly changed!
-      </Toast>
-    </>
+        </FormGroup>
+      </Form>
+
+      <Button
+        disabled={isDisabled}
+        appearance="primary"
+        onClick={async () => {
+          if (!userID || !password) {
+            return
+          }
+          const {data} = await resetUserPassword({
+            variables: {
+              id: userID,
+              password: password
+            }
+          })
+          if (data?.resetUserPassword) {
+            Notification.success({
+              title: t('userList.panels.passwordChangeSuccess'),
+              duration: 2000
+            })
+            onClose()
+          }
+        }}>
+        {t('userList.panels.resetPassword')}
+      </Button>
+    </Panel>
   )
 }

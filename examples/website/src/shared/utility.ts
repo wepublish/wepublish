@@ -3,10 +3,15 @@ import {useRef, useEffect, useState, useMemo, useCallback} from 'react'
 import {createRenderer} from 'fela'
 import felaPrefixer from 'fela-plugin-prefixer'
 import felaFallbackValue from 'fela-plugin-fallback-value'
-
+import {fetch} from 'cross-fetch'
 import {onlyMobileMediaQuery, desktopMediaQuery, tabletMediaQuery} from './style/helpers'
+import {RichTextBlockValue} from './types'
 
 export const PODCAST_SLUG = 'piepston'
+
+export enum LocalStorageKey {
+  SessionToken = 'sessionToken'
+}
 
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
   if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
@@ -125,3 +130,55 @@ export function transformCssStringToObject(styleCustom: string): object {
     return previousValue
   }, {})
 }
+
+export function countRichtextChars(blocksCharLength: number, nodes: RichTextBlockValue): number {
+  return nodes.reduce((charLength: number, node: any) => {
+    if (!node.text && !node.children) return charLength
+    // node either has text (leaf node) or children (element node)
+    if (node.text) {
+      return charLength + (node.text as string).length
+    }
+    return countRichtextChars(charLength, node.children)
+  }, blocksCharLength)
+}
+
+export function countRichTextBlocksChars(block: RichTextBlockValue) {
+  return countRichtextChars(0, block)
+}
+
+export async function fetchIntrospectionQueryResultData(url: string) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      variables: {},
+      query: `
+      {
+        __schema {
+          types {
+            kind
+            name
+            possibleTypes {
+              name
+            }
+          }
+        }
+      }
+    `
+    })
+  })
+
+  const result = await response.json()
+
+  const possibleTypes: any = {}
+
+  result.data.__schema.types.forEach((supertype: any) => {
+    if (supertype.possibleTypes) {
+      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
+    }
+  })
+
+  return possibleTypes
+}
+
+export const maxCommentLength = 1000

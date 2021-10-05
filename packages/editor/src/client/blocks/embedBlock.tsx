@@ -1,18 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 
-import {
-  PlaceholderInput,
-  Drawer,
-  BlockProps,
-  Box,
-  Spacing,
-  IconButton,
-  ZIndex,
-  Card,
-  ThemeContext
-} from '@karma.run/ui'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {Drawer, Panel, IconButton, Icon} from 'rsuite'
 
-import {MaterialIconEditOutlined} from '@karma.run/icons'
+import {BlockProps} from '../atoms/blockList'
+
 import {EmbedEditPanel} from '../panel/embedEditPanel'
 import {EmbedBlockValue, EmbedType} from './types'
 import {YouTubeVideoEmbed} from './embeds/youTube'
@@ -21,13 +13,16 @@ import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {InstagramPostEmbed} from './embeds/instagram'
 import {TwitterTweetEmbed} from './embeds/twitter'
 import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
+import {PolisEmbed} from './embeds/polis'
 import {IframeEmbed} from './embeds/iframe'
+
+import {useTranslation} from 'react-i18next'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
-  const theme = useContext(ThemeContext)
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
-  const isEmpty = value.type === EmbedType.Other && value.url == undefined
+  const isEmpty = value.type === EmbedType.Other && value.url === undefined
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus && isEmpty) {
@@ -37,37 +32,50 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
 
   return (
     <>
-      <Card
-        height={isEmpty ? 300 : undefined}
-        overflow="hidden"
-        style={{backgroundColor: theme.colors.light}}>
+      <Panel
+        bodyFill={true}
+        bordered={true}
+        style={{
+          height: isEmpty ? 300 : undefined,
+          padding: 0,
+          overflow: 'hidden',
+          backgroundColor: '#f7f9fa'
+        }}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <Box position="relative" width="100%">
-              <Box position="absolute" zIndex={ZIndex.Default} height="100%" right={0}>
+            <div
+              style={{
+                position: 'relative',
+                width: '100%'
+              }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  zIndex: 1,
+                  height: '100%',
+                  right: 0
+                }}>
                 <IconButton
-                  icon={MaterialIconEditOutlined}
-                  title="Edit Embed"
-                  onClick={() => setEmbedDialogOpen(true)}
-                  margin={Spacing.ExtraSmall}
-                />
-              </Box>
+                  size={'lg'}
+                  icon={<Icon icon="pencil" />}
+                  onClick={() => setEmbedDialogOpen(true)}>
+                  {t('blocks.embeds.overview.editEmbed')}
+                </IconButton>
+              </div>
               <EmbedPreview value={value} />
-            </Box>
+            </div>
           )}
         </PlaceholderInput>
-      </Card>
-      <Drawer open={isEmbedDialogOpen} width={480}>
-        {() => (
-          <EmbedEditPanel
-            value={value}
-            onClose={() => setEmbedDialogOpen(false)}
-            onConfirm={value => {
-              setEmbedDialogOpen(false)
-              onChange(value)
-            }}
-          />
-        )}
+      </Panel>
+      <Drawer size={'sm'} show={isEmbedDialogOpen} onHide={() => setEmbedDialogOpen(false)}>
+        <EmbedEditPanel
+          value={value}
+          onClose={() => setEmbedDialogOpen(false)}
+          onConfirm={value => {
+            setEmbedDialogOpen(false)
+            onChange(value)
+          }}
+        />
       </Drawer>
     </>
   )
@@ -99,6 +107,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
 
     case EmbedType.SoundCloudTrack:
       return <SoundCloudTrackEmbed trackID={value.trackID} />
+
+    case EmbedType.PolisConversation:
+      return <PolisEmbed conversationID={value.conversationID} />
 
     default:
       return value.url ? (

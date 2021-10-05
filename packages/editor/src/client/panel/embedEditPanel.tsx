@@ -1,19 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import {MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
-import {
-  NavigationButton,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  TextArea,
-  Spacing,
-  Typography,
-  Box
-} from '@karma.run/ui'
+import {Button, Drawer, Input, Message} from 'rsuite'
 
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
+
+import {useTranslation} from 'react-i18next'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
@@ -25,7 +17,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
-  const isEmpty = embed.type === EmbedType.Other && embed.url == undefined
+  const isEmpty = embed.type === EmbedType.Other && embed.url === undefined
+  const {t} = useTranslation()
 
   useEffect(() => {
     setErrorMessage(undefined)
@@ -36,6 +29,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const twitterMatch = input.match(/twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/)
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
     const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
+    const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
 
     if (facebookPostMatch) {
       const [, userID, postID] = facebookPostMatch
@@ -55,6 +49,9 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     } else if (youTubeMatch) {
       const [, videoID] = youTubeMatch
       setEmbed({type: EmbedType.YouTubeVideo, videoID})
+    } else if (polisMatch) {
+      const [, conversationID] = polisMatch
+      setEmbed({type: EmbedType.PolisConversation, conversationID})
     } else {
       if (input) {
         const parser = new DOMParser()
@@ -86,7 +83,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             setEmbed({type: EmbedType.Other, url: new URL(input).toString()})
           } catch {
             setEmbed({type: EmbedType.Other})
-            setErrorMessage('Invalid URL or iframe code')
+            setErrorMessage(t('blocks.embeds.panels.invalidURL'))
           }
         }
       } else {
@@ -96,53 +93,42 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   }, [input])
 
   return (
-    <Panel>
-      <PanelHeader
-        title="Edit Embed"
-        leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
-        }
-        rightChildren={
-          <NavigationButton
-            icon={MaterialIconCheck}
-            label="Confirm"
-            onClick={() => onConfirm(embed)}
-            disabled={isEmpty}
-          />
-        }
-      />
-      <PanelSection>
-        <TextArea
-          marginBottom={Spacing.ExtraSmall}
-          label="Embed"
-          errorMessage={errorMessage}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-        />
-        <Box marginBottom={Spacing.ExtraSmall}>
-          <Typography variant="subtitle1" spacing="small">
-            Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted
-            like e.g.
-          </Typography>
-          <code>https://www.facebook.com/id/posts/id/</code>
-          <Typography variant="subtitle1" spacing="small">
-            Embed codes attributes <code>title, src, width, height</code> are validated e.g.
-          </Typography>
-          <code>{'<iframe width="560" height="315" src="https://..."></iframe>'}</code>
-          <Typography variant="subtitle1" spacing="small">
-            Set <code>style</code> alternatively as attribute to overwrite the defaults and disable
-            auto ratio size scaling .e.g.
-          </Typography>
-          <code>{'<iframe style="height:350px;width:100%;" src="https://..."></iframe>'}</code>
-          <Typography variant="subtitle1" spacing="small">
-            Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
-            limited to simple iframes and supported embeds listed above.
-          </Typography>
-        </Box>
+    <>
+      <Drawer.Header>
+        <Drawer.Title>{t('blocks.embeds.panels.editEmbed')}</Drawer.Title>
+      </Drawer.Header>
 
+      <Drawer.Body>
+        <Input
+          componentClass="textarea"
+          rows={3}
+          style={{width: '100%'}}
+          placeholder={t('blocks.embeds.panels.embed')}
+          value={input}
+          onChange={input => setInput(input)}
+        />
+        {errorMessage && <Message type="error" description={errorMessage} />}
+        <div style={{marginBottom: 8}}>
+          <p>{t('blocks.embeds.panels.socialMediaList')}</p>
+          <code>{t('blocks.embeds.panels.fbPosts')}</code>
+          <p>{t('blocks.embeds.panels.embedCodeAttributes')}</p>
+          <code>{t('blocks.embeds.panels.iframe1Sample')}</code>
+          <p>{t('blocks.embeds.panels.alternativeStyling')}</p>
+          <code>{t('blocks.embeds.panels.iframe2Sample')}</code>
+          <p>{t('blocks.embeds.panels.GDPRInfo')}</p>
+        </div>
         <EmbedPreview value={embed} />
-      </PanelSection>
-    </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isEmpty} onClick={() => onConfirm(embed)}>
+          {t('blocks.embeds.panels.confirm')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('blocks.embeds.panels.close')}
+        </Button>
+      </Drawer.Footer>
+    </>
   )
 }
 
@@ -169,7 +155,10 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
     case EmbedType.SoundCloudTrack:
       return `https://api.soundcloud.com/tracks/${embed.trackID}`
 
-    case EmbedType.Other:
+    case EmbedType.PolisConversation:
+      return `https://pol.is/${embed.conversationID}`
+
+    case EmbedType.Other: {
       const hasTitle = !!embed.title
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
@@ -181,5 +170,6 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
             hasStyles ? ` style="${embed.styleCustom}"` : ''
           }/>`
         : ''
+    }
   }
 }
