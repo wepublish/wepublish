@@ -794,7 +794,7 @@ async function applyApiServer() {
   await applyConfig(`service-${app}`, service)
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -818,7 +818,7 @@ async function applyApiServer() {
     spec: {
       rules: [
         {
-          host: `"${domainAPI}"`,
+          host: domainAPI,
           http: {
             paths: [
               {
@@ -834,7 +834,7 @@ async function applyApiServer() {
       ],
       tls: [
         {
-          hosts: [`"${domainAPI}"`],
+          hosts: [domainAPI],
           secretName: `development-wepublish-wildcard-tls-fuck`
         }
       ]
