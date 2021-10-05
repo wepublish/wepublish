@@ -1368,8 +1368,8 @@ export const FullPeerProfile = gql`
       ...ImageRef
     }
   }
-}
-    ${ImageRef}`
+  ${ImageRef}
+`
 export const PeerWithProfile = gql`
   fragment PeerWithProfile on Peer {
     ...PeerRef
