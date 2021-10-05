@@ -67,7 +67,7 @@
     "start:oauth2-example": "yarn workspace @wepublish/oauth2-example start",
     "clean:website-example": "yarn workspace @wepublish/website-example clean",
     "build:website-example": "yarn workspace @wepublish/website-example build",
-    "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
+    "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
   },
   "workspaces": [
