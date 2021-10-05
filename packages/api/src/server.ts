@@ -44,23 +44,31 @@ export class WepublishServer {
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
           if (methodName in dbAdapter[dbAdapterKeyTyped]) {
             // @ts-ignore
-            dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(dbAdapter[dbAdapterKeyTyped][methodName], {
-              // create proxy for method
-              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
-                setImmediate(async () => {
-                  // make sure event gets executed in the next event loop
-                  try {
-                    logger('server').info('emitting event for %s', methodName)
-                    // @ts-ignore
-                    mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
-                  } catch (error) {
-                    logger('server').error(error, 'error during emitting event for %s', methodName)
-                  }
-                })
-                return result // return actual result "Article, Page, User, ..."
+            dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(
+              // @ts-ignore
+              dbAdapter[dbAdapterKeyTyped][methodName],
+              {
+                // create proxy for method
+                async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
+                  const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
+                  setImmediate(async () => {
+                    // make sure event gets executed in the next event loop
+                    try {
+                      logger('server').info('emitting event for %s', methodName)
+                      // @ts-ignore
+                      mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
+                    } catch (error) {
+                      logger('server').error(
+                        error,
+                        'error during emitting event for %s',
+                        methodName
+                      )
+                    }
+                  })
+                  return result // return actual result "Article, Page, User, ..."
+                }
               }
-            })
+            )
           } else {
             logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
           }

@@ -17,11 +17,7 @@ import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  ListingStateBgColor,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
+import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -191,12 +187,12 @@ export function PageList() {
                       textAlign: 'center',
                       borderRadius: '15px',
                       backgroundColor: rowData.pending
-                        ? ListingStateBgColor.pending
+                        ? StateColor.pending
                         : rowData.published
-                        ? ListingStateBgColor.published
+                        ? StateColor.published
                         : rowData.draft
-                        ? ListingStateBgColor.draft
-                        : ListingStateBgColor.none
+                        ? StateColor.draft
+                        : StateColor.none
                     }}>
                     {states.join(' / ')}
                   </div>
