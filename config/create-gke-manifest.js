@@ -818,7 +818,7 @@ async function applyApiServer() {
     spec: {
       rules: [
         {
-          host: domainAPI,
+          host: `"${domainAPI}"`,
           http: {
             paths: [
               {
@@ -834,8 +834,8 @@ async function applyApiServer() {
       ],
       tls: [
         {
-          hosts: [domainAPI],
-          secretName: `development-wepublish-wildcard-tls-newnew`
+          hosts: [`"${domainAPI}"`],
+          secretName: `development-wepublish-wildcard-tls-fuck`
         }
       ]
     }
