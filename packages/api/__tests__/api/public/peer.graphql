@@ -2,6 +2,7 @@ fragment FullPeerProfile on PeerProfile {
   name
   hostURL
   themeColor
+  themeFontColor
   logo {
     ...ImageRef
   }
