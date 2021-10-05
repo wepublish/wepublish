@@ -823,8 +823,12 @@ async function applyApiServer() {
             paths: [
               {
                 backend: {
-                  serviceName: appName,
-                  servicePort: appPort
+                  service: {
+                    name: appName,
+                    port: {
+                      number: appPort
+                    }
+                  }
                 },
                 path: '/'
               }
