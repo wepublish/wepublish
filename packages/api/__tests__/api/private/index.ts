@@ -1218,7 +1218,7 @@ export type PeerProfileInput = {
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
   themeFontColor: Scalars['Color']
-  callToActionText: Scalars['RichText']
+  callToActionText: Scalars['String']
   callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
   callToActionImageID?: Maybe<Scalars['ID']>
@@ -1261,6 +1261,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query'
+  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1297,6 +1298,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+}
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String']
+  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
@@ -2461,6 +2467,7 @@ export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   | 'name'
   | 'hostURL'
   | 'themeColor'
+  | 'themeFontColor'
   | 'callToActionText'
   | 'callToActionURL'
   | 'callToActionImageURL'
@@ -2888,6 +2895,7 @@ export const FullPeerProfile = gql`
     name
     hostURL
     themeColor
+    themeFontColor
     logo {
       ...ImageRef
     }
