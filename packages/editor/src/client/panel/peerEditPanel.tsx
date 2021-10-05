@@ -183,7 +183,22 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                       width: '30px',
                       height: '20px',
                       padding: '5px',
-                      marginLeft: '5px'
+                      marginLeft: '5px',
+                      border: '1px solid #575757'
+                    }}></div>
+                </div>
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <p>{profile?.themeFontColor}</p>
+                  <div
+                    style={{
+                      backgroundColor: profile?.themeFontColor,
+                      width: '30px',
+                      height: '20px',
+                      padding: '5px',
+                      marginLeft: '5px',
+                      border: '1px solid #575757'
                     }}></div>
                 </div>
               </DescriptionListItem>

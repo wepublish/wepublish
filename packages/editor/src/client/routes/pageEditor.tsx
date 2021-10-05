@@ -155,7 +155,7 @@ export function PageEditor({id}: PageEditorProps) {
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('pageEditor.overview.unpublished'))
     }
   }, [pageData, hasChanged])
@@ -241,7 +241,7 @@ export function PageEditor({id}: PageEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

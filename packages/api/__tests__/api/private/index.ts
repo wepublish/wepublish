@@ -1204,6 +1204,7 @@ export type PeerProfile = {
   name: Scalars['String']
   logo?: Maybe<Image>
   themeColor: Scalars['Color']
+  themeFontColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
@@ -1216,6 +1217,7 @@ export type PeerProfileInput = {
   name: Scalars['String']
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
+  themeFontColor: Scalars['Color']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
@@ -2459,6 +2461,7 @@ export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   | 'name'
   | 'hostURL'
   | 'themeColor'
+  | 'themeFontColor'
   | 'callToActionText'
   | 'callToActionURL'
   | 'callToActionImageURL'
@@ -2886,6 +2889,7 @@ export const FullPeerProfile = gql`
     name
     hostURL
     themeColor
+    themeFontColor
     logo {
       ...ImageRef
     }
