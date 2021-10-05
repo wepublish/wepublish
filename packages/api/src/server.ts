@@ -45,6 +45,7 @@ export class WepublishServer {
           if (methodName in dbAdapter[dbAdapterKeyTyped]) {
             // @ts-ignore
             dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(
+              // @ts-ignore
               dbAdapter[dbAdapterKeyTyped][methodName],
               {
                 // create proxy for method
