@@ -1246,6 +1246,7 @@ export type PeerProfile = {
   name: Scalars['String'];
   logo?: Maybe<Image>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
@@ -1258,6 +1259,7 @@ export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
@@ -1301,6 +1303,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  remotePeerProfile?: Maybe<PeerProfile>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1337,6 +1340,12 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+};
+
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
 };
 
 
@@ -1704,6 +1713,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
   active: Scalars['Boolean'];
@@ -1748,6 +1758,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
   active: Scalars['Boolean'];
@@ -3159,7 +3170,7 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3172,6 +3183,10 @@ export type FullPeerProfileFragment = (
 export type PeerRefFragment = (
   { __typename?: 'Peer' }
   & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
+  & { profile?: Maybe<(
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  )> }
 );
 
 export type PeerWithProfileFragment = (
@@ -3192,6 +3207,20 @@ export type PeerProfileQuery = (
     { __typename?: 'PeerProfile' }
     & FullPeerProfileFragment
   ) }
+);
+
+export type RemotePeerProfileQueryVariables = Exact<{
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
+}>;
+
+
+export type RemotePeerProfileQuery = (
+  { __typename?: 'Query' }
+  & { remotePeerProfile?: Maybe<(
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  )> }
 );
 
 export type UpdatePeerProfileMutationVariables = Exact<{
@@ -3321,7 +3350,7 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
@@ -3656,19 +3685,12 @@ export const ArticleRefFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}`;
-export const PeerRefFragmentDoc = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  hostURL
-}
-    `;
 export const FullPeerProfileFragmentDoc = gql`
     fragment FullPeerProfile on PeerProfile {
   name
   hostURL
   themeColor
+  themeFontColor
   logo {
     ...ImageRef
   }
@@ -3680,6 +3702,17 @@ export const FullPeerProfileFragmentDoc = gql`
   callToActionImageURL
 }
     ${ImageRefFragmentDoc}`;
+export const PeerRefFragmentDoc = gql`
+    fragment PeerRef on Peer {
+  id
+  name
+  slug
+  hostURL
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
     fragment PeerWithProfile on Peer {
   ...PeerRef
@@ -3960,6 +3993,7 @@ export const FullUserFragmentDoc = gql`
     public
   }
   email
+  emailVerifiedAt
   roles {
     ...FullUserRole
   }
@@ -6115,6 +6149,42 @@ export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
 export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
 export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
+export const RemotePeerProfileDocument = gql`
+    query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
+
+/**
+ * __useRemotePeerProfileQuery__
+ *
+ * To run a query within a React component, call `useRemotePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemotePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemotePeerProfileQuery({
+ *   variables: {
+ *      hostURL: // value for 'hostURL'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+      }
+export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+        }
+export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
+export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;
+export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>;
 export const UpdatePeerProfileDocument = gql`
     mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {

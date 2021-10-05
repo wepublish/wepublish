@@ -144,20 +144,18 @@ export function PageEditor({id}: PageEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.pending?.publishAt ?? '')
         })
       )
     } else if (pageData?.page?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.published?.publishedAt ?? '')
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('pageEditor.overview.unpublished'))
     }
   }, [pageData, hasChanged])
@@ -243,7 +241,7 @@ export function PageEditor({id}: PageEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

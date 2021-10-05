@@ -41,7 +41,9 @@ export function PublishArticlePanel({
         {pendingPublishDate && (
           <Message
             type="warning"
-            description={t('articleEditor.panels.articlePending', {pendingPublishDate})}
+            description={t('articleEditor.panels.articlePending', {
+              pendingPublishDate
+            })}
           />
         )}
         <DateTimePicker

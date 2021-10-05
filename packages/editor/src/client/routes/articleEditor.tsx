@@ -193,20 +193,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('articleEditor.overview.pending', {
-          date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.pending?.publishAt ?? '')
         })
       )
     } else if (articleData?.article?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.published?.publishedAt ?? '')
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('articleEditor.overview.unpublished'))
     }
   }, [articleData, hasChanged])
@@ -411,7 +409,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

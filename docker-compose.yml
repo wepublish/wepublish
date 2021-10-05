@@ -30,7 +30,8 @@ services:
       OAUTH_WEPUBLISH_CLIENT_KEY: secret
       OAUTH_WEPUBLISH_REDIRECT_URL: http://localhost:4000/auth/wepublish
   editor:
-    build: .
+    #build: .
+    image: eu.gcr.io/wepublish-dev/wepublish/wepublish/main:51a4b828c2189fa1aa28dbb327e5bf490046d8e4
     ports:
       - 3006:8000
     command: ['node', './packages/editor/dist/server/index.js']
@@ -73,8 +74,8 @@ services:
     depends_on:
       - mongo
 
-  test:
-    build: .
-    command: [ 'yarn', 'test']
-    environment:
-      TEST_MONGO_URL: mongodb://mongo:27017/wepublish-test
+#  test:
+#    build: .
+#    command: [ 'yarn', 'test']
+#    environment:
+#      TEST_MONGO_URL: mongodb://mongo:27017/wepublish-test

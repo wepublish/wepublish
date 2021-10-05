@@ -11,17 +11,20 @@
         "metadata": "Metadata",
         "noSlug": "Article Not Published. Please add a slug.",
         "notFound": "Article Not Found",
-        "pending": "Article pending publication on {{date}} at {{time}}",
+        "pending": "Article pending publication on {{date, ccc PP p}}.",
         "publish": "Publish",
-        "published": "Article published on {{date}} at {{time}}",
+        "published": "Article published on {{date, ccc PP p}}.",
         "save": "Save",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
       },
       "panels": {
         "addTag": "Press enter to add tag",
         "allowPeerPublishing": "Allow peers to publish this article.",
         "article": "Article",
-        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication. ",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",
@@ -35,6 +38,7 @@
         "chooseTeaser": "Choose Teaser",
         "close": "Close",
         "confirm": "Confirm",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "default": "Default",
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published. <2>Slug Guide</2>",
@@ -56,11 +60,11 @@
         "lead": "Lead",
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "light": "Light",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "loading": "Loading ...",
         "loadMore": "Load More",
         "metadata": "Metadata",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
         "noAuthorsFound": "No Authors found",
         "noImagesFound": "No Images found",
@@ -143,16 +147,19 @@
         "confirm": "Confirm",
         "createAuthorProfile": "Create Author Profile for {{name}}",
         "createdAt": "Created At",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Delete",
         "deleteArticle": "Delete Article?",
         "duplicateArticle": "Duplicate Article?",
         "lead": "Lead",
         "publishedAt": "Published At",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Title",
         "unpublish": "Unpublish",
         "unpublishArticle": "Unpublish Article?",
         "untitled": "Untitled",
-        "updatedAt": "Updated At"
+        "updatedAt": "Updated At",
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
     "authors": {
@@ -162,6 +169,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "delete": "Delete",
         "deleteAuthor": "Delete Author?",
         "loadMore": "Load More",
@@ -191,6 +199,7 @@
     },
     "blocks": {
       "embeds": {
+        "label": "Embed",
         "overview": {
           "editEmbed": "Edit Embed"
         },
@@ -210,6 +219,7 @@
         }
       },
       "image": {
+        "label": "Image",
         "overview": {
           "caption": "Caption",
           "chooseImage": "Choose Image",
@@ -217,6 +227,7 @@
         }
       },
       "imageGallery": {
+        "label": "Gallery",
         "overview": {
           "add": "Add",
           "caption": "Caption",
@@ -238,22 +249,26 @@
         }
       },
       "linkPageBreak": {
+        "label": "Break",
         "linkText": "Link Text",
         "linkURL": "Link URL",
         "text": "Text",
         "title": "Title"
       },
       "listicle": {
+        "label": "Listicle",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
         "removeImage": "Remove Image",
         "title": "Title"
       },
       "quote": {
+        "label": "Quote",
         "author": "Author",
         "quote": "Quote"
       },
       "richText": {
+        "label": "Rich text",
         "apply": "Apply",
         "cancel": "Cancel",
         "charCount": "Characters count {{charCount}}",
@@ -266,6 +281,7 @@
         "text": "Text"
       },
       "richTextTable": {
+        "label": "Rich text table",
         "addBorders": "Add Borders",
         "border": "Border",
         "cancel": "Cancel",
@@ -276,8 +292,15 @@
         "rows": "Rows"
       },
       "title": {
+        "label": "Title",
         "leadText": "Lead Text ",
         "title": "Title"
+      },
+      "teaserGrid1": {
+        "label": "1 Col"
+      },
+      "teaserGrid6": {
+        "label": "6 Col"
       }
     },
     "cancel": "Cancel",
@@ -300,6 +323,7 @@
         "title": "Title",
         "untitled": "Untitled",
         "updated": "Modified",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "userName": "User Name"
       },
       "panels": {
@@ -313,6 +337,7 @@
         "delete": "Delete",
         "id": "Id",
         "parent": "Parent",
+        "parentDate": "{{parentDate,ccc PP p}}",
         "reject": "Reject",
         "rejectComment": "Reject Comment",
         "rejectionReason": "Rejection Reason",
@@ -320,10 +345,13 @@
         "requestChangesOnComment": "Request Changes On Comment",
         "requestChangesReason": "Reason",
         "revisionCreatedAt": "Revision created at",
+        "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Revisions",
         "untitled": "Untitled",
         "updatedAt": "Updated At",
-        "userName": "User Name"
+        "userName": "User Name",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "modifiedAt": "{{modifiedAt, ccc PP p}}"
       },
       "state": {
         "approved": "Approved",
@@ -337,6 +365,7 @@
     "dateTimePicker": {
       "hour": "{{hour}}:00",
       "nextSaturday": "Next Saturday",
+      "nextMonday": "Next Monday",
       "now": "Now",
       "today": "Today",
       "tomorrow": "Tomorrow"
@@ -358,6 +387,7 @@
         "close": "Close",
         "confirm": "Confirm",
         "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "deleteImage": "Delete image?",
         "description": "Description",
         "dimension": "Dimension",
@@ -378,6 +408,7 @@
         "untitled": "untitled",
         "Untitled": "Untitled",
         "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadImage": "Upload Image"
       }
@@ -470,6 +501,8 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
+      "peers": "Peers",
+      "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
       "users": "Users",
@@ -493,6 +526,7 @@
         "article": "Article",
         "close": "Close",
         "create": "Create",
+        "createdAt": "{{testDate}} hello",
         "createNavigation": "Create Navigation",
         "editNavigation": "Edit Navigation",
         "key": "Key",
@@ -517,27 +551,31 @@
         "pageDraftSaved": "Page Draft Saved",
         "pageNotFound": "Page Not Found",
         "pagePublished": "Page Published",
-        "pending": "Page pending publication on {{date}} at {{time}}",
+        "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
-        "published": "Page published on {{date}} at {{time}}",
+        "published": "Page published on {{date, ccc PP p}}",
         "save": "Save",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "publishedAt": "{{publicationDate, ccc PP p}}",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
       },
       "panels": {
         "addTag": "Press enter to add tag",
         "chooseImage": "Choose Image",
         "close": "Close",
         "confirm": "Confirm",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "description": "SEO Description",
         "descriptionHelpBlock": "Please use an SEO-optimised description",
         "editImage": "Edit Image",
         "image": "Image",
         "invalidDate": "Invalid Date",
         "key": "Key",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "metadata": "Metadata",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
-        "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
+        "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication. ",
         "postImage": "Image for Post",
         "private": "Private",
         "properties": "Properties",
@@ -582,16 +620,19 @@
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "Created At",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Delete",
         "deletePage": "Delete Page?",
         "duplicatePage": "Duplicate Page?",
         "lead": "Lead",
         "publishedAt": "Published At",
+        "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Title",
         "unpublish": "Unpublish",
         "unpublishPage": "Unpublish Page?",
         "untitled": "Untitled",
-        "updatedAt": "Updated At"
+        "updatedAt": "Updated At",
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
     "paymentMethodList": {
@@ -611,13 +652,16 @@
       "overview": {
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
-        "peers": "Peers"
+        "peers": "Peers",
+        "myPeerProfile": "My Peer Profile"
       },
       "panels": {
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
         "callToActionImage": "Call To Action Image",
+        "callToActionImageURL": "Call To Action Image URL",
         "callToActionURL": "Call To Action URL",
+        "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",
         "cancel": "Cancel",
@@ -630,7 +674,7 @@
         "editImage": "Edit Image",
         "editPeer": "Edit Peer",
         "editPeerInfo": "Edit Peer Info",
-        "image": "Image",
+        "logo": "Logo",
         "infoEditError": "Edit Token Error",
         "information": "Information",
         "invalidURL": "Invalid URL",
@@ -641,11 +685,15 @@
         "peerUpdated": "Peer updated",
         "removeImage": "Remove Image",
         "save": "Save",
+        "getRemote": "Fetch Remote Peer Profile",
         "themeColor": "Theme Color",
+        "themeFontColor": "Font Color",
         "token": "Token",
-        "Unknown": "Unknown",
+        "unknown": "Unknown",
+        "unnamed": "Unnamed",
         "URL": "URL",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "leaveEmpty": "Leave empty if you don't want to change it"
       }
     },
     "save": "Save",
@@ -675,9 +723,11 @@
       "overview": {
         "action": "Action",
         "createdAt": "Created",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "delete": "Delete",
         "description": "Description",
         "modifiedAt": "Last modified",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newUser": "New User",
         "noDescription": "No Description",
@@ -703,6 +753,7 @@
         "password": "Password",
         "passwordChangeSuccess": "Password successfuly changed!",
         "payedUntil": "Payed Until",
+        "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
         "preferredName": "Preferred Name",
         "remove": "Remove",
         "resetPassword": "Reset Password",
@@ -710,6 +761,7 @@
         "save": "Save",
         "selectUserRole": "Select User Role",
         "startedAt": "Started",
+        "startedAdDate": "{{startedAtDate, ccc PP p}}",
         "subCreate": "Create",
         "subDisableDescription": "Subscription can only be added once the user has been created.",
         "subEdit": "Edit",

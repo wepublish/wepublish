@@ -200,11 +200,16 @@ export const peerMetaDataFragment = gql`
       name
       websiteURL
       themeColor
+      themeFontColor
       logo {
         ...SimpleImageData
       }
       callToActionText
       callToActionURL
+      callToActionImageURL
+      callToActionImage {
+        ...SimpleImageData
+      }
     }
   }
   ${simpleImageDataFragment}
