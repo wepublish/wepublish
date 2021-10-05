@@ -835,7 +835,7 @@ async function applyApiServer() {
       tls: [
         {
           hosts: [domainAPI],
-          secretName: `wildcard-wepublish-dev-tls`
+          secretName: `development-wepublish-wildcard-tls`
         }
       ]
     }
