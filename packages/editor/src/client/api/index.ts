@@ -1246,6 +1246,7 @@ export type PeerProfile = {
   name: Scalars['String'];
   logo?: Maybe<Image>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
@@ -1258,6 +1259,7 @@ export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
@@ -1301,6 +1303,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  remotePeerProfile?: Maybe<PeerProfile>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1337,6 +1340,12 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+};
+
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
 };
 
 
@@ -1704,6 +1713,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
   active: Scalars['Boolean'];
@@ -1748,6 +1758,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
   active: Scalars['Boolean'];
