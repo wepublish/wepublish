@@ -48,11 +48,11 @@ main().catch(e => {
 })
 
 async function main() {
-  //await applyWebsite()
+  await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
-  //await applyEditor()
-  //await applyOAuth2()
+  await applyEditor()
+  await applyOAuth2()
   await applyMongo()
 }
 
