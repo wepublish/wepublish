@@ -86,7 +86,7 @@ async function applyCertificate() {
         size: 2048
       },
       usages: ['server auth', 'client auth'],
-      dnsNames: [`*.${domainCn}`],
+      dnsNames: [`*.${domainCn}`, domainCn],
       issuerRef: {
         name: 'wepublish-dev-prod-issuer',
         kind: 'Issuer'
