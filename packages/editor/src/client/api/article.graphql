@@ -84,6 +84,7 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
   peerArticles(first: $first, after: $after, filter: {title: $filter}) {
     nodes {
       peer {
+        ...PeerWithProfile
       }
 
       peeredArticleURL
