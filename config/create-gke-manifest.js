@@ -42,6 +42,8 @@ const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
+const certificateSecrentName= `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
+
 main().catch(e => {
   process.stderr.write(e.toString())
   process.exit(1)
@@ -49,12 +51,50 @@ main().catch(e => {
 
 
 async function main() {
+  if(ENVIRONMENT_NAME === 'development') {
+    await applyCertificate()
+  }
   await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
   await applyOAuth2()
   await applyMongo()
+}
+
+async function applyCertificate() {
+  const certName = `${GITHUB_REF_SHORT}-wildcard-certificate-${ENVIRONMENT_NAME}`
+
+  const certificate = {
+    apiVersion: 'cert-manager.io/v1',
+    kind: 'Certificate',
+    metadata: {
+      name: certName,
+      namespace: NAMESPACE,
+    },
+    spec: {
+      secretName: certificateSecrentName,
+      duration: '2160h',
+      renewBefore: '360h',
+      subject: {
+        organizations: ['wepublish']
+      },
+      isCA: false,
+      privateKey: {
+        algorithm: 'RSA',
+        encoding: 'PKCS1',
+        size: 2048
+      },
+      usages: ['server auth', 'client auth'],
+      dnsName: [`*.${domainCn}`],
+      issuerRef: {
+        name: 'wepublish-dev-prod-issuer',
+        kind: 'Issuer'
+      }
+    }
+  }
+
+  await applyConfig(`certificate-wildcard`, certificate)
 }
 
 async function applyWebsite() {
@@ -134,8 +174,12 @@ async function applyWebsite() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/acme-challenge-type': 'dns01',
-        'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -143,7 +187,7 @@ async function applyWebsite() {
       tls: [
         {
           hosts: hosts,
-          secretName: `development-wepublish-wildcard-tls-fuck`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
         }
       ]
     }
@@ -443,8 +487,12 @@ async function applyMediaServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/acme-challenge-type': 'dns01',
-        'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -472,7 +520,7 @@ async function applyMediaServer() {
       tls: [
         {
           hosts: [domainMedia],
-          secretName: `development-wepublish-wildcard-tls-fuck`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
         }
       ]
     }
@@ -821,8 +869,12 @@ async function  applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/acme-challenge-type': 'dns01',
-        'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -850,7 +902,7 @@ async function  applyApiServer() {
       tls: [
         {
           hosts: [domainAPI],
-          secretName: `development-wepublish-wildcard-tls-fuck`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
         }
       ]
     }
@@ -989,8 +1041,12 @@ async function applyEditor() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/acme-challenge-type': 'dns01',
-        'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -1018,7 +1074,7 @@ async function applyEditor() {
       tls: [
         {
           hosts: [domainEditor],
-          secretName: `development-wepublish-wildcard-tls-fuck`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
         }
       ]
     }
@@ -1210,8 +1266,12 @@ async function applyOAuth2() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/acme-challenge-type': 'dns01',
-        'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -1239,7 +1299,7 @@ async function applyOAuth2() {
       tls: [
         {
           hosts: [domainOauth],
-          secretName: `development-wepublish-wildcard-tls-fuck`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
         }
       ]
     }
