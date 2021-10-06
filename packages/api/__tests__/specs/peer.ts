@@ -168,7 +168,7 @@ describe('Peers', () => {
         logoID: 'logoID123',
         themeColor: '#4287f5',
         themeFontColor: '#d67c15',
-        callToActionText: [{text: 'rich text call to action'}],
+        callToActionText: 'rich text call to action',
         callToActionURL: 'calltoactionurl.ch/'
       }
       const res = await mutate({
