@@ -38,7 +38,6 @@ import {useStyle, cssRule} from '@karma.run/react'
 import {Image, ImageFit} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
   query Article($id: ID, $slug: Slug, $token: String) {
