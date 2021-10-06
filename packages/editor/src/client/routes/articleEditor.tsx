@@ -333,6 +333,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title: t('articleEditor.overview.draftSaved'),
         duration: 2000
       })
+      await refetch({id: articleID})
     } else {
       const {data} = await createArticle({variables: {input}})
 
@@ -348,7 +349,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         duration: 2000
       })
     }
-    await refetch({id: articleID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {

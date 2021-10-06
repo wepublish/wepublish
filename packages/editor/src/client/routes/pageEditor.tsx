@@ -188,6 +188,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       setChanged(false)
       Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
+      await refetch({id: pageID})
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -197,11 +198,9 @@ export function PageEditor({id}: PageEditorProps) {
           route: PageEditRoute.create({id: data?.createPage.id})
         })
       }
-
       setChanged(false)
       Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
     }
-    await refetch({id: pageID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
