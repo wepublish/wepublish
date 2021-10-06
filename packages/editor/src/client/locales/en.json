@@ -378,7 +378,7 @@
     },
     "images": {
       "overview": {
-        "delete": "delete",
+        "delete": "Delete",
         "imageLibrary": "Image Library",
         "loadMore": "Load More",
         "noImagesFound": "No Images found",
