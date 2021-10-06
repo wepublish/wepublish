@@ -809,7 +809,7 @@ async function applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/issuer': 'wepublish-dev-prod-issuer',
+        // 'cert-manager.io/issuer': 'wepublish-dev-prod-issuer',
         'cert-manager.io/acme-challenge-type': 'dns01',
         'cert-manager.io/acme-dns01-provider': 'cloudDNS'
         // 'cert-manager.io/cluster-issuer': 'letsencrypt-production'
