@@ -619,8 +619,7 @@ export const Migrations: Migration[] = [
     //  change rich text for callToAction to string
     version: 15,
     async migrate(db, locale) {
-      const callToActionString = richTextToString('', [])
-      console.log('callToActionString=====================', callToActionString)
+      richTextToString('', [])
     }
   }
 ]
