@@ -1,4 +1,6 @@
 import { ClientFunction, Role, Selector } from "testcafe";
+import {slugify} from '../config/utilities'
+import * as process from "process";
 
 const loginName = Selector('input').withAttribute('autocomplete','username')
 const loginPassword = Selector('input').withAttribute('autocomplete','currentPassword')
@@ -6,7 +8,6 @@ const createArticle = Selector('a').withAttribute('href', '/article/create')
 const metadataButton = Selector('button').child('i.rs-icon-newspaper-o')
 const createButton = Selector('button').child('i.rs-icon-save')
 const publishButton = Selector('button').child('i.rs-icon-cloud-upload')
-const backButton = Selector('a').withAttribute('href', '/articles')
 
 const closeButton = Selector('.rs-drawer-footer').child('button.rs-btn-primary')
 const confirmButton = Selector('.rs-modal-footer').child('button.rs-btn-primary')
@@ -16,16 +17,10 @@ const metaLeadInput = Selector('textarea.lead')
 
 const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Title')
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text ')
-const lastAddButton = Selector('button').child('i.rs-icon-plus').nth(2)
-const richTextButton = Selector('button').child('span').withText('Rich Text')
-const richTextBox = Selector('div').withAttribute('role','textbox')
 
-const deleteButton = Selector('button').child('span').withText('Delete')
 
-const EDITOR_URL = process.env.E2E_TEST_EDITOR_URL
-const WEBSITE_URL = process.env.E2E_TEST_WEBSITE_URL
-
-console.log('WeBSITE', WEBSITE_URL)
+const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
+const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
 function makeid(length) {
   let result           = '';

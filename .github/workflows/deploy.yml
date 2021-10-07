@@ -48,11 +48,10 @@ jobs:
           node ./notify.js
   e2eTest:
     needs: deployment
-    name: Runs e2e Test on demo.wepublish.media
+    name: Runs e2e Test on Feature instance
     runs-on: ubuntu-latest
     env:
-      E2E_TEST_EDITOR_URL: 'https://editor.demo.wepublish.media'
-      E2E_TEST_WEBSITE_URL: 'https://demo.wepublish.media'
+      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/setup-node@v1
         with:
