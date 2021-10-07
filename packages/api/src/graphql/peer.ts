@@ -12,7 +12,6 @@ import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
-import {GraphQLRichText} from './richText'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -21,7 +20,7 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
     themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionText: {type: GraphQLNonNull(GraphQLString)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
     callToActionImageID: {type: GraphQLID}
@@ -49,7 +48,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionText: {type: GraphQLNonNull(GraphQLString)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
     callToActionImage: {

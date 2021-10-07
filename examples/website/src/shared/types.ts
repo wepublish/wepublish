@@ -157,7 +157,7 @@ export interface Peer {
   websiteURL: string
   themeColor: string
   themeFontColor: string
-  callToActionText: Node[]
+  callToActionText: string
   callToActionURL: string
   callToActionImage: string
   callToActionImageURL: string

@@ -1,5 +1,6 @@
 import {Db} from 'mongodb'
 import {CollectionName} from './db/schema'
+import {richTextToString} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -612,6 +613,13 @@ export const Migrations: Migration[] = [
         },
         {$set: {oauth2Accounts: []}}
       )
+    }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 15,
+    async migrate(db, locale) {
+      richTextToString('', [])
     }
   }
 ]

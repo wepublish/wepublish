@@ -1,11 +1,9 @@
-import {RichTextNode} from '../graphql/richText'
-
 export interface PeerProfile {
   name: string
   logoID?: string
   themeColor: string
   themeFontColor: string
-  callToActionText: RichTextNode[]
+  callToActionText: string
   callToActionURL: string
   callToActionImageID?: string
   callToActionImageURL?: string
@@ -18,7 +16,7 @@ export interface PeerProfileInput {
   logoID?: string
   themeColor: string
   themeFontColor: string
-  callToActionText: RichTextNode[]
+  callToActionText: string
   callToActionURL: string
   callToActionImageID?: string
   callToActionImageURL?: string
