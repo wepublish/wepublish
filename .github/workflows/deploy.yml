@@ -57,6 +57,10 @@ jobs:
         with:
           node-version: '12.x'
       - uses: actions/checkout@v1
+      - name: Sleep for 10s
+        uses: juliangruber/sleep-action@v1
+        with:
+          time: 60s
       - name: Run TestCafe Tests
         uses: DevExpress/testcafe-action@latest
         with:
