@@ -334,8 +334,9 @@ export function PeerArticleTemplateContainer({
   )
 }
 
-const PeerProfileBreakStyle = cssRule(isArticle => ({
-  backgroundColor: Color.SecondaryLight,
+const PeerProfileBreakStyle = cssRule(({backgroundColor}: any, {themeFontColor}: any) => ({
+  backgroundColor: backgroundColor ?? Color.SecondaryLight,
+  color: themeFontColor ?? Color.White,
   padding: `${pxToRem(25)} ${pxToRem(125)}`,
   borderTop: `1px solid ${Color.Secondary}`,
   borderBottom: `1px solid ${Color.Primary}`,
@@ -399,10 +400,12 @@ export interface PeerProfileBlockProps {
 }
 
 export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
-  const css = useStyle()
+  const css = useStyle({backgroundColor: peer.themeColor, themeFontColor: peer.themeFontColor})
 
   return (
-    <div className={css(PeerProfileBreakStyle)}>
+    <div
+      className={css(PeerProfileBreakStyle)}
+      style={{backgroundColor: peer.themeColor, color: peer.themeFontColor}}>
       <div className={css(PeerProfileInnerStyle)}>
         <div className={css(PeerProfileFiller)}>
           <Link href={article.url}>Zum Originalartikel</Link>
