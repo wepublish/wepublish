@@ -46,8 +46,9 @@ const getPath = ClientFunction(() => {
   return document.location.pathname
 });
 
-const goToPath = ClientFunction((websiteUrl, articleID,articleTitle) => {
-  document.location.href = `${websiteUrl}/a/${articleID}/${articleTitle}`
+const goToPath = ClientFunction((websiteUrl, articleID) => {
+  console.log('Goto Path', `${websiteUrl}/a/${articleID}`)
+  document.location.href = `${websiteUrl}/a/${articleID}`
 });
 
 fixture `Create and publish an article`
@@ -60,7 +61,11 @@ fixture `Create and publish an article`
 
 
 let articleID = ''
-const articleTitle = makeid(15)
+
+test('Is logged in', async t => {
+  await t
+    .expect(Selector('i.rs-icon-cog').exists).ok()
+})
 
 test('Create an article', async t => {
   await t
@@ -76,6 +81,7 @@ test('Create an article', async t => {
 
   const path = await getPath()
   articleID = path.substr(path.lastIndexOf('/') + 1)
+  console.log('articleID', articleID)
   await t.expect(path).contains('/article/edit')
 
   await t
@@ -93,11 +99,10 @@ test('Create an article', async t => {
 
 });
 
-test
-  .page(`${WEBSITE_URL}`)
-  ('Test Website', async t => {
-    await goToPath(WEBSITE_URL, articleID, articleTitle)
-    await t.expect(Selector('h1').innerText).eql('404')
+test('Test Website', async t => {
+    await t
+      .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
+      .expect(Selector('h1').innerText).eql('404')
   })
 
 test('Publish article', async t => {
@@ -117,13 +122,11 @@ test('Publish article', async t => {
     .expect(Selector('div.rs-tag-default').child('span.rs-tag-text').innerText).contains('Article published')
 })
 
-test
-  .page(`${WEBSITE_URL}`)
-  ('Test Website', async t => {
+test('Test Website', async t => {
     const h1Title = Selector('h1')
-    await goToPath(WEBSITE_URL, articleID, articleTitle)
 
     await t
+      .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
       .expect(h1Title.innerText).eql('This is the article Title')
   })
 
