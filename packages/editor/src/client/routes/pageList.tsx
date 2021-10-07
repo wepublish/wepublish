@@ -16,7 +16,17 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  Table,
+  IconButton,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
@@ -207,7 +217,7 @@ export function PageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  {rowData.published && (
+                  {(rowData.published || rowData.pending) && (
                     <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
                       <IconButton
                         icon={<Icon icon="btn-off" />}
@@ -335,6 +345,13 @@ export function PageList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
+
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
         </Modal.Body>
 
         <Modal.Footer>
