@@ -22,6 +22,9 @@ const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead
 const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
 const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
+console.log('Editor_URL', EDITOR_URL)
+console.log('Editor_URL', WEBSITE_URL)
+
 function makeid(length) {
   let result           = '';
   const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
