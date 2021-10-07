@@ -69,7 +69,7 @@
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "test:e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts"
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts"
   },
   "workspaces": [
     "packages/*",
