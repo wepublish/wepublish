@@ -1,6 +1,6 @@
 
 
-export function slugify(text, separator = '-') {
+function slugify(text, separator = '-') {
   return text
     .toString()
     .normalize('NFD')                   // split an accented letter in the base letter and the accent
