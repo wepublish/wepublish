@@ -17,7 +17,17 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  IconButton,
+  Table,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -218,7 +228,7 @@ export function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  {rowData.published && (
+                  {(rowData.published || rowData.pending) && (
                     <IconButton
                       icon={<Icon icon="btn-off" />}
                       circle
@@ -341,6 +351,13 @@ export function ArticleList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
+
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
         </Modal.Body>
 
         <Modal.Footer>

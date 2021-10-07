@@ -18,7 +18,9 @@
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
-        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
+        "unpublishWarningMessage": "If you confirm, you’ll unpublish any published and/or pending state",
+        "warningLabel": "Warning"
       },
       "panels": {
         "addTag": "Press enter to add tag",
