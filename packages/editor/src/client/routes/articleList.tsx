@@ -279,10 +279,6 @@ export function ArticleList() {
             </Cell>
           </Column>
         </Table>
-        <IconButtonTooltip caption={'Click'}>
-          <p>Some Test</p>
-        </IconButtonTooltip>
-
         <Pagination
           style={{height: '50px'}}
           lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
