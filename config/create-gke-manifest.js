@@ -42,7 +42,7 @@ const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
-const certificateSecrentName= `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
+const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
 
 main().catch(e => {
   process.stderr.write(e.toString())
@@ -73,7 +73,7 @@ async function applyCertificate() {
       namespace: NAMESPACE,
     },
     spec: {
-      secretName: certificateSecrentName,
+      secretName: certificateSecretName,
       duration: '2160h',
       renewBefore: '360h',
       subject: {
@@ -187,7 +187,7 @@ async function applyWebsite() {
       tls: [
         {
           hosts: hosts,
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -520,7 +520,7 @@ async function applyMediaServer() {
       tls: [
         {
           hosts: [domainMedia],
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -902,7 +902,7 @@ async function  applyApiServer() {
       tls: [
         {
           hosts: [domainAPI],
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -1074,7 +1074,7 @@ async function applyEditor() {
       tls: [
         {
           hosts: [domainEditor],
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -1299,7 +1299,7 @@ async function applyOAuth2() {
       tls: [
         {
           hosts: [domainOauth],
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecrentName)
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
