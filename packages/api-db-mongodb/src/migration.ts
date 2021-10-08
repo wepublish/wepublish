@@ -619,7 +619,13 @@ export const Migrations: Migration[] = [
     //  change rich text for callToAction to string
     version: 15,
     async migrate(db, locale) {
-      richTextToString('', [])
+      const peerProfiles = await db.collection(CollectionName.PeerProfiles)
+      await peerProfiles.updateMany(
+        {
+          callToActionText: {$exists: false}
+        },
+        {$set: {callToActionText: richTextToString('callToActionText', [])}}
+      )
     }
   }
 ]
