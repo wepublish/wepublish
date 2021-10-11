@@ -619,16 +619,17 @@ export const Migrations: Migration[] = [
     //  change rich text for callToAction to string
     version: 15,
     async migrate(db, locale) {
-      const peerProfiles = await db.collection(CollectionName.PeerProfiles)
-      const profile = await peerProfiles.findOne({callToActionText: {$exists: true}})
-      peerProfiles.updateOne(
-        {
-          callToActionText: {$exists: true}
-        },
-        {
-          $set: {callToActionText: richTextToString(profile.callToActionText, [])}
-        }
-      )
+      const peerProfiles = await db.collection(CollectionName.PeerProfiles).find({}).toArray()
+      peerProfiles.map(async profile => {
+        await db.collection(CollectionName.PeerProfiles).updateOne(
+          {
+            _id: profile._id
+          },
+          {
+            $set: {callToActionText: richTextToString(profile.callToActionText, [])}
+          }
+        )
+      })
     }
   }
 ]
