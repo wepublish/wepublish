@@ -172,13 +172,15 @@ export function PeerList() {
             </div>
           }
           rightChildren={
-            <IconButtonLink
-              size="lg"
-              appearance="link"
-              icon={<Icon icon="cog" />}
-              circle={true}
-              route={PeerInfoEditRoute.create({})}
-            />
+            <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
+              <IconButtonLink
+                size="lg"
+                appearance="link"
+                icon={<Icon icon="cog" />}
+                circle={true}
+                route={PeerInfoEditRoute.create({})}
+              />
+            </IconButtonTooltip>
           }
         />
       </div>

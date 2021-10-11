@@ -131,7 +131,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, published, shared} = articleData.article
+      const {latestttt, published, shared} = articleData.article
       const {
         slug,
         preTitle,

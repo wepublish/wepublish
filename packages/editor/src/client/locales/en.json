@@ -665,6 +665,7 @@
     "peerList": {
       "overview": {
         "delete": "Delete",
+        "editProfile": "Edit profile",
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
         "peers": "Peers",
