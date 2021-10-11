@@ -42,18 +42,59 @@ const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
+const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
+
 main().catch(e => {
   process.stderr.write(e.toString())
   process.exit(1)
 })
 
+
 async function main() {
+  if(ENVIRONMENT_NAME === 'development') {
+    await applyCertificate()
+  }
   await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
   await applyOAuth2()
   await applyMongo()
+}
+
+async function applyCertificate() {
+  const certName = `${GITHUB_REF_SHORT}-wildcard-certificate-${ENVIRONMENT_NAME}`
+
+  const certificate = {
+    apiVersion: 'cert-manager.io/v1',
+    kind: 'Certificate',
+    metadata: {
+      name: certName,
+      namespace: NAMESPACE,
+    },
+    spec: {
+      secretName: certificateSecretName,
+      duration: '2160h',
+      renewBefore: '360h',
+      subject: {
+        organizations: ['wepublish']
+      },
+      isCA: false,
+      privateKey: {
+        algorithm: 'RSA',
+        encoding: 'PKCS1',
+        size: 2048
+      },
+      usages: ['server auth', 'client auth'],
+      dnsNames: [`*.${domainCn}`, domainCn],
+      issuerRef: {
+        name: 'wepublish-dev-prod-issuer',
+        kind: 'Issuer'
+      }
+    }
+  }
+
+  await applyConfig(`certificate-wildcard`, certificate)
 }
 
 async function applyWebsite() {
@@ -95,9 +136,14 @@ async function applyWebsite() {
         paths: [
           {
             backend: {
-              serviceName: appName,
-              servicePort: servicePort
+              service: {
+                name: appName,
+                port: {
+                  number: servicePort
+                }
+              }
             },
+            pathType: "Prefix",
             path: '/'
           }
         ]
@@ -114,7 +160,7 @@ async function applyWebsite() {
   }
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -128,7 +174,12 @@ async function applyWebsite() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -136,7 +187,7 @@ async function applyWebsite() {
       tls: [
         {
           hosts: hosts,
-          secretName: `${appName}-tls`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -421,7 +472,7 @@ async function applyMediaServer() {
   await applyConfig(`service-${app}`, service)
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -436,7 +487,12 @@ async function applyMediaServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -447,9 +503,14 @@ async function applyMediaServer() {
             paths: [
               {
                 backend: {
-                  serviceName: appName,
-                  servicePort: appPort
+                  service: {
+                    name: appName,
+                    port: {
+                      number: appPort
+                    }
+                  }
                 },
+                pathType: "Prefix",
                 path: '/'
               }
             ]
@@ -459,7 +520,7 @@ async function applyMediaServer() {
       tls: [
         {
           hosts: [domainMedia],
-          secretName: `${appName}-tls`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -467,7 +528,7 @@ async function applyMediaServer() {
   await applyConfig(`ingress-${app}`, ingress)
 }
 
-async function applyApiServer() {
+async function  applyApiServer() {
   const app = 'api'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
@@ -793,7 +854,7 @@ async function applyApiServer() {
   await applyConfig(`service-${app}`, service)
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -808,7 +869,12 @@ async function applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -819,9 +885,14 @@ async function applyApiServer() {
             paths: [
               {
                 backend: {
-                  serviceName: appName,
-                  servicePort: appPort
+                  service: {
+                    name: appName,
+                    port: {
+                      number: appPort
+                    }
+                  }
                 },
+                pathType: "Prefix",
                 path: '/'
               }
             ]
@@ -831,7 +902,7 @@ async function applyApiServer() {
       tls: [
         {
           hosts: [domainAPI],
-          secretName: `${appName}-tls`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -955,7 +1026,7 @@ async function applyEditor() {
   await applyConfig(`service-${app}`, service)
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -970,7 +1041,12 @@ async function applyEditor() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -981,9 +1057,14 @@ async function applyEditor() {
             paths: [
               {
                 backend: {
-                  serviceName: appName,
-                  servicePort: appPort
+                  service: {
+                    name: appName,
+                    port: {
+                      number: appPort
+                    }
+                  }
                 },
+                pathType: "Prefix",
                 path: '/'
               }
             ]
@@ -993,7 +1074,7 @@ async function applyEditor() {
       tls: [
         {
           hosts: [domainEditor],
-          secretName: `${appName}-tls`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
@@ -1171,7 +1252,7 @@ async function applyOAuth2() {
   await applyConfig(`service-${app}`, service)
 
   const ingress = {
-    apiVersion: 'networking.k8s.io/v1beta1',
+    apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -1185,7 +1266,12 @@ async function applyOAuth2() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        ...envSwitch(ENVIRONMENT_NAME, {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+        }, {
+          'cert-manager.io/acme-challenge-type': 'dns01',
+          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+        })
       }
     },
     spec: {
@@ -1196,9 +1282,14 @@ async function applyOAuth2() {
             paths: [
               {
                 backend: {
-                  serviceName: appName,
-                  servicePort: appPort
+                  service: {
+                    name: appName,
+                    port: {
+                      number: appPort
+                    }
+                  }
                 },
+                pathType: "Prefix",
                 path: '/'
               }
             ]
@@ -1208,7 +1299,7 @@ async function applyOAuth2() {
       tls: [
         {
           hosts: [domainOauth],
-          secretName: `${appName}-tls`
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
     }
