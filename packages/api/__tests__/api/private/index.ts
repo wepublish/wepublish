@@ -1261,6 +1261,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query'
+  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1297,6 +1298,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+}
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String']
+  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
@@ -2482,6 +2488,15 @@ export type PeerProfileQuery = {__typename?: 'Query'} & {
   peerProfile: {__typename?: 'PeerProfile'} & FullPeerProfileFragment
 }
 
+export type RemotePeerProfileQueryVariables = Exact<{
+  hostURL: Scalars['String']
+  token: Scalars['String']
+}>
+
+export type RemotePeerProfileQuery = {__typename?: 'Query'} & {
+  remotePeerProfile?: Maybe<{__typename?: 'PeerProfile'} & FullPeerProfileFragment>
+}
+
 export type UpdatePeerProfileMutationVariables = Exact<{
   input: PeerProfileInput
 }>
@@ -3476,6 +3491,14 @@ export const Page = gql`
 export const PeerProfile = gql`
   query PeerProfile {
     peerProfile {
+      ...FullPeerProfile
+    }
+  }
+  ${FullPeerProfile}
+`
+export const RemotePeerProfile = gql`
+  query RemotePeerProfile($hostURL: String!, $token: String!) {
+    remotePeerProfile(hostURL: $hostURL, token: $token) {
       ...FullPeerProfile
     }
   }

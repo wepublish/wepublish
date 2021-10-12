@@ -16,8 +16,8 @@ export type Scalars = {
   DateTime: string
   /** A hexidecimal color value. */
   Color: string
-  RichText: Node[]
   Slug: string
+  RichText: Node[]
 }
 
 export type Article = {

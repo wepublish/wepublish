@@ -33,7 +33,7 @@
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy-license build",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
-    "test": "node -r dotenv/config ./node_modules/.bin/jest --runInBand"
+    "test": "jest"
   },
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
