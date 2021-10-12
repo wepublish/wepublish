@@ -14,7 +14,7 @@ if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_N
   ENVIRONMENT_NAME = 'production'
 }
 
-const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME)
+const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME.substring(0,12))
 
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
