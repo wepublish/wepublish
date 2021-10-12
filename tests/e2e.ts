@@ -19,8 +19,8 @@ const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Tit
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text ')
 
 
-const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
-const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME)}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
+const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
+const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
 console.log('Editor_URL', EDITOR_URL)
 console.log('Editor_URL', WEBSITE_URL)
