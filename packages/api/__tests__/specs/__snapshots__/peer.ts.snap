@@ -115,7 +115,7 @@ Object {
     "peerProfile": Object {
       "callToActionImage": null,
       "callToActionImageURL": "",
-      "callToActionText": Array [],
+      "callToActionText": "",
       "callToActionURL": "",
       "hostURL": "https://fakeURL",
       "logo": null,
@@ -140,11 +140,7 @@ Object {
     "updatePeerProfile": Object {
       "callToActionImage": null,
       "callToActionImageURL": null,
-      "callToActionText": Array [
-        Object {
-          "text": "rich text call to action",
-        },
-      ],
+      "callToActionText": "",
       "callToActionURL": "calltoactionurl.ch/",
       "hostURL": "https://fakeURL",
       "logo": null,
