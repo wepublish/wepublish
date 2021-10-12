@@ -64,6 +64,12 @@ fixture `Create and publish an article`
 
 let articleID = ''
 
+test('Check Front site', async t => {
+  await t
+    .navigateTo(`${WEBSITE_URL}`)
+    .expect(Selector('a').withAttribute('href', 'https://www.facebook.com/wepublish').getAttribute('target')).eql('_blank')
+})
+
 test('Is logged in', async t => {
   console.log('is logged in', await ClientFunction(() => {
     return document.location.toString()
