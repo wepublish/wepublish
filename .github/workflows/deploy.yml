@@ -64,7 +64,7 @@ jobs:
       - name: Run TestCafe Tests
         uses: DevExpress/testcafe-action@latest
         with:
-          args: 'chrome ./tests/e2e.ts'
+          args: 'chromium:headless ./tests/e2e.ts'
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact
