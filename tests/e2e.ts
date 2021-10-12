@@ -37,6 +37,7 @@ function makeid(length) {
 
 const admin = Role(`${EDITOR_URL}/login`, async t => {
   console.log('body looks like:',await Selector('body').innerText)
+  console.log('NEW LINE')
   await t
     .typeText(loginName, 'dev@wepublish.ch')
     .typeText(loginPassword, '123')
