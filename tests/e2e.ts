@@ -1,6 +1,6 @@
-import { ClientFunction, Role, Selector } from "testcafe";
-import {slugify} from '../config/utilities'
-import * as process from "process";
+import { ClientFunction, Role, Selector, t } from "testcafe";
+// import {slugify} from '../config/utilities'
+// import * as process from "process";
 
 const loginName = Selector('input').withAttribute('autocomplete','username')
 const loginPassword = Selector('input').withAttribute('autocomplete','currentPassword')
@@ -19,8 +19,21 @@ const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Tit
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text ')
 
 
-const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
-const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
+/*const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
+const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL*/
+
+//const EDITOR_URL = 'https://editor.ftestingin.wepublish.dev/'
+//const WEBSITE_URL = 'https://www.ftestingin.wepublish.dev/'
+
+const EDITOR_URL = 'http://127.0.0.1:3000'
+const WEBSITE_URL = 'http://127.0.0.1:5000'
+
+export default async function consoleOut() {
+  const { error } = await t.getBrowserConsoleMessages();
+  console.log('error', error)
+  await t.expect(error[0]).notOk();
+}
+
 
 console.log('Editor URL', EDITOR_URL)
 console.log('Website URL', WEBSITE_URL)
@@ -56,7 +69,11 @@ const goToPath = ClientFunction((websiteUrl, articleID) => {
 
 fixture `Create and publish an article`
   .disablePageCaching
+  .beforeEach(async t => {
+    await t.useRole(admin)
+  })
   .page`${EDITOR_URL}`
+  .afterEach(() => consoleOut())
 
 
 let articleID = ''
@@ -69,7 +86,7 @@ test('Check Front site', async t => {
 
 
 test('Create an article', async t => {
-  await t.navigateTo(EDITOR_URL).useRole(admin)
+  await t.navigateTo(EDITOR_URL)
 
   await t
     .click(createArticle)
