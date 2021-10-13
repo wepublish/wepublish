@@ -1,12 +1,6 @@
 # Change Log
 
-## v2.10.0-alpha.1 (2021-09-29)
-
-#### :bug: Bug Fix
-* `editor`
-  * map user metadata properties for save
-
-## v2.10.0-alpha.0 (2021-09-28)
+## v2.10.0 (2021-09-29)
 
 #### :heart: New Feature
 * `api-db-mongodb`, `api`, `editor`
@@ -37,7 +31,7 @@
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 
 
-## v2.9.0-alpha.0 (2021-09-14)
+## v2.9.0 (2021-09-14)
 
 #### :nail_care: Polish
 * `editor`
