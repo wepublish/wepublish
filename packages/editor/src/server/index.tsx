@@ -58,6 +58,7 @@ async function asyncMain() {
             <script async src={`${assetHost}/${entry}`} crossOrigin="" />
           </head>
           <body>
+            <h1>ugly test</h1>
             <noscript>Please enable JavaScript!</noscript>
             <div id={ElementID.ReactRoot}></div>
           </body>
