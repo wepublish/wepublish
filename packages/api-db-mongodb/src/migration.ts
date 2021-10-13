@@ -1,5 +1,6 @@
 import {Db} from 'mongodb'
 import {CollectionName} from './db/schema'
+import {richTextToString} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -611,6 +612,24 @@ export const Migrations: Migration[] = [
           oauth2Accounts: {$exists: false}
         },
         {$set: {oauth2Accounts: []}}
+      )
+    }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 15,
+    async migrate(db, locale) {
+      const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
+        callToActionText: {$exists: true}
+      })
+      await db.collection(CollectionName.PeerProfiles).updateOne(
+        {
+          callToActionText: {$exists: true}
+        },
+        {
+          $set: {callToActionText: richTextToString(peerProfile.callToActionText, [])}
+        },
+        {upsert: true}
       )
     }
   }
