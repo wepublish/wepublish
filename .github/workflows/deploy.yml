@@ -49,22 +49,24 @@ jobs:
   e2eTest:
     needs: deployment
     name: Runs e2e Test on Feature instance
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - uses: actions/checkout@v1
       - name: Sleep for 30s
         uses: juliangruber/sleep-action@v1
         with:
           time: 30s
-      - name: Run TestCafe Tests
-        uses: DevExpress/testcafe-action@latest
+      - uses: actions/setup-node@v2
         with:
-          args: 'chrome ./tests/e2e.ts'
+          node-version: '12'
+        run: |
+          yarn install
+          yarn e2e:chromium
+      #- name: Run TestCafe Tests
+      #  uses: DevExpress/testcafe-action@latest
+      #  with:
+      #    args: 'chrome ./tests/e2e.ts'
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact
