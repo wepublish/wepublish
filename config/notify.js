@@ -16,7 +16,7 @@ async function main() {
   const {SLACK_WEBHOOK_URL, BRANCH_NAME, PR_NUMBER} = process.env
   const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
-  const GITHUB_REF_SHORT = slugify(BRANCH_NAME)
+  const GITHUB_REF_SHORT = slugify(BRANCH_NAME.substring(0,12))
 
   await webhook.send({
     text: `We.Publish PR Deployment :white_check_mark:. 

@@ -167,6 +167,7 @@ describe('Peers', () => {
         name: 'test peer profile',
         logoID: 'logoID123',
         themeColor: '#4287f5',
+        themeFontColor: '#d67c15',
         callToActionText: [{text: 'rich text call to action'}],
         callToActionURL: 'calltoactionurl.ch/'
       }

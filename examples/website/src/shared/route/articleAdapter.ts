@@ -10,6 +10,7 @@ export function peerAdapter(peer: any): Peer {
     logoURL: peer.profile.logo?.squareURL,
     websiteURL: peer.profile.websiteURL,
     themeColor: peer.profile.themeColor,
+    themeFontColor: peer.profile.themeFontColor,
     callToActionText: peer.profile.callToActionText,
     callToActionURL: peer.profile.callToActionURL,
     callToActionImage: peer.profile.callToActionImage.largeURL,

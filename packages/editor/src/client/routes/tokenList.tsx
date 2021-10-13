@@ -18,6 +18,8 @@ import {
   TokenListDocument
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
@@ -93,15 +95,17 @@ export function TokenList() {
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentToken(token)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('tokenList.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentToken(token)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
             </List.Item>

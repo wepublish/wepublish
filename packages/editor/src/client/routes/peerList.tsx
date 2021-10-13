@@ -22,6 +22,8 @@ import {
   PeerListQuery
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
 import {useTranslation} from 'react-i18next'
@@ -132,17 +134,19 @@ export function PeerList() {
             </p>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-            <IconButton
-              disabled={isPeerInfoLoading}
-              icon={<Icon icon="trash" />}
-              circle
-              size="sm"
-              onClick={e => {
-                e.preventDefault()
-                setConfirmationDialogOpen(true)
-                setCurrentPeer(peer)
-              }}
-            />
+            <IconButtonTooltip caption={t('peerList.overview.delete')}>
+              <IconButton
+                disabled={isPeerInfoLoading}
+                icon={<Icon icon="trash" />}
+                circle
+                size="sm"
+                onClick={e => {
+                  e.preventDefault()
+                  setConfirmationDialogOpen(true)
+                  setCurrentPeer(peer)
+                }}
+              />
+            </IconButtonTooltip>
           </FlexboxGrid.Item>
         </FlexboxGrid>
       </ListItemLink>
@@ -168,13 +172,15 @@ export function PeerList() {
             </div>
           }
           rightChildren={
-            <IconButtonLink
-              size="lg"
-              appearance="link"
-              icon={<Icon icon="cog" />}
-              circle={true}
-              route={PeerInfoEditRoute.create({})}
-            />
+            <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
+              <IconButtonLink
+                size="lg"
+                appearance="link"
+                icon={<Icon icon="cog" />}
+                circle={true}
+                route={PeerInfoEditRoute.create({})}
+              />
+            </IconButtonTooltip>
           }
         />
       </div>
@@ -206,20 +212,34 @@ export function PeerList() {
       <Drawer
         show={isPeerProfileEditModalOpen}
         size={'sm'}
-        onHide={() => setPeerProfileEditModalOpen(false)}>
+        onHide={() => {
+          setPeerProfileEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({}, current ?? undefined)
+          })
+        }}>
         <PeerInfoEditPanel
           onClose={() => {
             setPeerProfileEditModalOpen(false)
-
             dispatch({
               type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
+              route: PeerListRoute.create({}, current ?? undefined)
             })
           }}
         />
       </Drawer>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({})
+          })
+        }}>
         {peerInfoData?.peerProfile.hostURL && (
           <PeerEditPanel
             id={editID}

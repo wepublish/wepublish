@@ -14,15 +14,23 @@ import {
   ArticleSort
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  ListingStateBgColor,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  IconButton,
+  Table,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
+import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -204,12 +212,12 @@ export function ArticleList() {
                       textAlign: 'center',
                       borderRadius: '15px',
                       backgroundColor: rowData.pending
-                        ? ListingStateBgColor.pending
+                        ? StateColor.pending
                         : rowData.published
-                        ? ListingStateBgColor.published
+                        ? StateColor.published
                         : rowData.draft
-                        ? ListingStateBgColor.draft
-                        : ListingStateBgColor.none
+                        ? StateColor.draft
+                        : StateColor.none
                     }}>
                     {states.join(' / ')}
                   </div>
@@ -222,58 +230,65 @@ export function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  {rowData.published && (
-                    <IconButton
-                      icon={<Icon icon="btn-off" />}
-                      circle
-                      size="sm"
-                      onClick={e => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
+                  {(rowData.published || rowData.pending) && (
+                    <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        onClick={e => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
                   )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  {rowData.draft && (
+                  <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="eye" />}
+                      icon={<Icon icon="trash" />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentArticle(rowData)
-                        setArticlePreviewLinkOpen(true)
+                        setConfirmAction(ConfirmAction.Delete)
+                        setConfirmationDialogOpen(true)
                       }}
                     />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
+                    <IconButton
+                      icon={<Icon icon="copy" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setConfirmAction(ConfirmAction.Duplicate)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  {rowData.draft && (
+                    <IconButtonTooltip caption={t('articleEditor.overview.publish')}>
+                      <IconButton
+                        icon={<Icon icon="eye" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setArticlePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
                   )}
                 </>
               )}
             </Cell>
           </Column>
         </Table>
-
         <Pagination
           style={{height: '50px'}}
           lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
@@ -345,6 +360,13 @@ export function ArticleList() {
               </DescriptionListItem>
             )}
           </DescriptionList>
+
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
         </Modal.Body>
 
         <Modal.Footer>
