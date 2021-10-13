@@ -1,6 +1,6 @@
 import { ClientFunction, Role, Selector, t } from "testcafe";
-import {slugify} from '../config/utilities'
-import * as process from "process";
+// import {slugify} from '../config/utilities'
+// import * as process from "process";
 
 const loginName = Selector('input.username')
 const loginPassword = Selector('input.password')
@@ -19,11 +19,11 @@ const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Tit
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text ')
 
 
-const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
-const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
+//const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
+//const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
-// const EDITOR_URL = 'https://editor.ftestingin.wepublish.dev'
-// const WEBSITE_URL = 'https://www.ftestingin.wepublish.dev'
+const EDITOR_URL = 'https://editor.ftestingin.wepublish.dev'
+const WEBSITE_URL = 'https://www.ftestingin.wepublish.dev'
 
 // const EDITOR_URL = 'http://127.0.0.1:3000'
 // const WEBSITE_URL = 'http://127.0.0.1:5000'
@@ -31,7 +31,7 @@ const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env
 export default async function consoleOut() {
   const { error } = await t.getBrowserConsoleMessages();
   console.log('error', error)
-  await t.expect(error[0]).notOk();
+  //await t.expect(error[0]).notOk();
 }
 
 
@@ -73,7 +73,7 @@ fixture `Create and publish an article`
     await t.useRole(admin)
   })
   .page`${EDITOR_URL}`
-  // .afterEach(() => consoleOut())
+  .afterEach(() => consoleOut())
 
 
 let articleID = ''
