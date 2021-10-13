@@ -58,9 +58,9 @@ jobs:
         with:
           time: 30s
       - uses: actions/setup-node@v2
-      - name: run tests
         with:
           node-version: '12'
+      - name: run tests
         run: |
           yarn install
           yarn e2e:chromium
