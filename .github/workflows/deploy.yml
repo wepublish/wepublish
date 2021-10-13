@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: run tests
         if: always()
-        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless /wepublish/tests/e2e.ts --assertion-timeout 10000
+        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
 #      - name: Sleep for 30s
 #        uses: juliangruber/sleep-action@v1
 #        with:
