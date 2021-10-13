@@ -37,11 +37,12 @@ export function escapeRegExp(string: string) {
 }
 
 export function richTextToString(blocksString: string, nodes: any = []) {
-  return nodes.reduce((string: string, node: any) => {
+  const richTextNode = nodes.reduce((string: string, node: any) => {
     if (!node.text && !node.children) return string
     if (node.text) {
       return `${string} ${node.text}`
     }
     return richTextToString(string, node.children)
   }, blocksString)
+  return richTextNode
 }

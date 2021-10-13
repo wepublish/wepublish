@@ -1261,6 +1261,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query'
+  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1297,6 +1298,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+}
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String']
+  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
