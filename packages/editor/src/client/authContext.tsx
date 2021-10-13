@@ -34,6 +34,7 @@ export const AuthDispatchContext = createContext<Dispatch<AuthDispatchAction>>((
   throw new Error('No AuthProvider found in component tree.')
 })
 
+// TODO: implement session loading state
 export function authReducer(
   prevState: AuthContextState,
   action: AuthDispatchAction
@@ -76,7 +77,6 @@ export function AuthProvider({children}: AuthProviderProps) {
       dispatch({
         type: AuthDispatchActionType.Logout
       })
-      window.location.hash = `logout`
     })
   }, [isPageActive])
 

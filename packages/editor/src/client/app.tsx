@@ -1,9 +1,9 @@
 import {hot} from 'react-hot-loader/root'
-import React, {useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 
 import 'rsuite/lib/styles/index.less'
 
-import {useRoute, RouteType, Route} from './route'
+import {useRoute, RouteType, Route, useRouteDispatch, LoginRoute} from './route'
 
 import {Login} from './login'
 import {Base} from './base'
@@ -29,6 +29,8 @@ import enGB from 'rsuite/lib/IntlProvider/locales/en_GB'
 import fr from './locales/rsuiteFr'
 import de from './locales/rsuiteDe'
 import {useTranslation} from 'react-i18next'
+import {AuthContext} from './authContext'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -138,6 +140,19 @@ export function App() {
   i18n.on('languageChanged', lng => {
     setLang(currentLanguageMap.get(lng))
   })
+
+  const {session} = useContext(AuthContext)
+  const dispatch = useRouteDispatch()
+
+  useEffect(() => {
+    console.log('session is', session)
+    if (!session) {
+      dispatch({
+        type: RouteActionType.SetCurrentRoute,
+        route: LoginRoute.create({})
+      })
+    }
+  }, [session])
 
   return <IntlProvider locale={lng}>{GetComponents(current)}</IntlProvider>
 }
