@@ -52,6 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: testcafe/testcafe
+      options: --user root
       #options: -v /__w/wepublish/wepublish:/wepublish/:rw
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
