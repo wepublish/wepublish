@@ -55,11 +55,7 @@ const goToPath = ClientFunction((websiteUrl, articleID) => {
 });
 
 fixture `Create and publish an article`
-/*   .disablePageCaching
-  .beforeEach(async t => {
-    await t.useRole(admin)
-
-  }) */
+  .disablePageCaching
   .page`${EDITOR_URL}`
 
 
