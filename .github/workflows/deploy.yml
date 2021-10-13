@@ -70,6 +70,7 @@ jobs:
       #  with:
       #    args: 'chrome ./tests/e2e.ts'
       - uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
         with:
           name: my-artifact
           path: screenshots/
