@@ -58,10 +58,10 @@ jobs:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/checkout@v2
-      - name: Sleep for 30s
+      - name: Sleep for 300s
         uses: juliangruber/sleep-action@v1
         with:
-          time: 30s
+          time: 300s
       - name: run tests
         if: always()
         run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
