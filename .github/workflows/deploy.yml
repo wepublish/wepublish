@@ -50,27 +50,29 @@ jobs:
     needs: deployment
     name: Runs e2e Test on Feature instance
     runs-on: ubuntu-latest
+    container:
+      image: testcafe/testcafe
+      options: -v tests:/tests
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/checkout@v2
-      - name: Sleep for 30s
-        uses: juliangruber/sleep-action@v1
-        with:
-          time: 30s
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: run tests
-        run: |
-          yarn install
-          yarn e2e:chromium
-      #- name: Run TestCafe Tests
-      #  uses: DevExpress/testcafe-action@latest
-      #  with:
-      #    args: 'chrome ./tests/e2e.ts'
-      - uses: actions/upload-artifact@v2
-        if: ${{ failure() }}
-        with:
-          name: my-artifact
-          path: screenshots/
+        if: always()
+        run: chromium:headless /tests/e2e.ts --assertion-timeout 10000
+#      - name: Sleep for 30s
+#        uses: juliangruber/sleep-action@v1
+#        with:
+#          time: 30s
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: '12'
+#      - name: run tests
+#        run: |
+#          yarn install
+#          yarn e2e:chromium
+#      - uses: actions/upload-artifact@v2
+#        if: ${{ failure() }}
+#        with:
+#          name: my-artifact
+#          path: screenshots/
