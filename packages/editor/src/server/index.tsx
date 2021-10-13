@@ -36,34 +36,31 @@ async function asyncMain() {
   app.use('/static', express.static(joinPath(__dirname, '../../static'), {index: false}))
 
   app.get('/*', (_req, res) => {
-    const markup =
-      '<!doctype html>' +
-      renderToStaticMarkup(
-        <html>
-          <head>
-            <link
-              href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap"
-              rel="stylesheet"
-            />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
-            <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
+    const markup = renderToStaticMarkup(
+      <html>
+        <head>
+          <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap"
+            rel="stylesheet"
+          />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
+          <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
 
-            <script
-              type="application/json"
-              id={ElementID.Settings}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(clientSettings)}}
-            />
+          <script
+            type="application/json"
+            id={ElementID.Settings}
+            dangerouslySetInnerHTML={{__html: JSON.stringify(clientSettings)}}
+          />
 
-            <script async src={`${assetHost}/${entry}`} crossOrigin="" />
-          </head>
-          <body>
-            <h1>ugly test</h1>
-            <noscript>Please enable JavaScript!</noscript>
-            <div id={ElementID.ReactRoot}></div>
-          </body>
-        </html>
-      )
+          <script async src={`${assetHost}/${entry}`} />
+        </head>
+        <body>
+          <noscript>Please enable JavaScript!</noscript>
+          <div id={ElementID.ReactRoot}></div>
+        </body>
+      </html>
+    )
 
     res.header('content-type', 'text/html; charset=UTF-8')
     res.header('content-length', Buffer.byteLength(markup).toString())

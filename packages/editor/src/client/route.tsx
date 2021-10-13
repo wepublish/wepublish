@@ -236,6 +236,7 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         // TODO: Handle UnsavedChangesDialog popstate
         // TODO: Add a way to discard next route
+        console.log('next', next)
         if (next.type === RouteType.Logout) {
           if (session) {
             logout().catch(error => console.warn('Error logging out ', error))
@@ -250,7 +251,7 @@ export function RouteProvider({children}: RouteProviderProps) {
           } else {
             dispatch({
               type: RouteActionType.SetCurrentRoute,
-              route: next
+              route: {...next, hash: ''}
             })
           }
         } else {

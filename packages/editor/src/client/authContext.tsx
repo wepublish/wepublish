@@ -65,14 +65,19 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
-  const {data, loading, refetch: refetchMeQuery} = useQuery(MeQuery)
+  const {data, loading, fetchMore: fetchAgainQuery, error} = useQuery(MeQuery)
   const [state, dispatch] = useReducer(authReducer, {})
 
   const isPageActive = usePageVisibility()
 
-  // when it gets active, refetch the Me query to know if user still logged in.
+  // when it gets active, fetch the Me query again to know if user still logged in.
   useEffect(() => {
-    if (isPageActive) refetchMeQuery()
+    fetchAgainQuery({query: MeQuery}).catch(() => {
+      dispatch({
+        type: AuthDispatchActionType.Logout
+      })
+      window.location.hash = `logout`
+    })
   }, [isPageActive])
 
   useEffect(() => {
@@ -84,8 +89,12 @@ export function AuthProvider({children}: AuthProviderProps) {
         email,
         sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
       })
+    } else {
+      dispatch({
+        type: AuthDispatchActionType.Logout
+      })
     }
-  }, [data])
+  }, [data?.me, error])
 
   return loading ? null : (
     <AuthDispatchContext.Provider value={dispatch}>
