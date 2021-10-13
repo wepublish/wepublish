@@ -145,7 +145,6 @@ export function App() {
   const dispatch = useRouteDispatch()
 
   useEffect(() => {
-    console.log('session is', session)
     if (!session) {
       dispatch({
         type: RouteActionType.SetCurrentRoute,
