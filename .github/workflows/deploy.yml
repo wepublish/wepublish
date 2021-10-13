@@ -53,6 +53,7 @@ jobs:
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
+      - uses: actions/checkout@v2
       - name: Sleep for 30s
         uses: juliangruber/sleep-action@v1
         with:
