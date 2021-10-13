@@ -157,7 +157,11 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             <Form fluid={true}>
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
-                <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+                <FormControl
+                  className="metaSlugInput"
+                  value={slug}
+                  onChange={slug => onChange?.({...value, slug})}
+                />
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
