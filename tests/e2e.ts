@@ -72,7 +72,7 @@ test('Check Front site', async t => {
 
 
 test('Create an article', async t => {
-  await t.useRole(admin).navigateTo(EDITOR_URL)
+  await t.navigateTo(EDITOR_URL).useRole(admin)
 
   await t
     .click(createArticle)
@@ -112,7 +112,7 @@ test('Test Website', async t => {
   })
 
 test('Publish article', async t => {
-  await t.useRole(admin).navigateTo(EDITOR_URL)
+  await t.navigateTo(EDITOR_URL).useRole(admin)
 
   await t
     .click(Selector('a').withAttribute('href',`/article/edit/${articleID}`))
