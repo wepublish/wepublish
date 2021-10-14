@@ -1,6 +1,6 @@
 import {Db} from 'mongodb'
 import {CollectionName} from './db/schema'
-// import {richTextToString} from './utility'
+import {richTextToString} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -614,46 +614,25 @@ export const Migrations: Migration[] = [
         {$set: {oauth2Accounts: []}}
       )
     }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 15,
+    async migrate(db, locale) {
+      const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
+        callToActionText: {$exists: true}
+      })
+      await db.collection(CollectionName.PeerProfiles).updateOne(
+        {
+          callToActionText: {$exists: true}
+        },
+        {
+          $set: {callToActionText: richTextToString(peerProfile.callToActionText, [])}
+        },
+        {upsert: true}
+      )
+    }
   }
 ]
 
 export const LatestMigration = Migrations[Migrations.length - 1]
-
-// {
-//   //  change rich text for callToAction to string
-//   version: 15,
-//   async migrate(db, locale) {
-//     const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne(
-//       {
-//         'callToActionText': {$exists: true}
-//       }
-//     )
-//     await db.collection(CollectionName.PeerProfiles).updateOne(
-//       {
-//         'callToActionText': {$exists: true}
-//       },
-//       {
-//         $set: { 'callToActionText': richTextToString(peerProfile.callToActionText, [])}
-//       },
-//       { upsert: true }
-//     )
-//   }
-// }
-
-// {
-//   //  change rich text for callToAction to string
-//   version: 15,
-//   async migrate(db, locale) {
-//     const peerProfiles = await db.collection(CollectionName.PeerProfiles).find({}).toArray()
-//     peerProfiles.map(async profile => {
-//       await db.collection(CollectionName.PeerProfiles).updateOne(
-//         {
-//           _id: profile._id
-//         },
-//         {
-//           $set: {callToActionText: richTextToString(profile.callToActionText, [])}
-//         }
-//       )
-//     })
-//   }
-// }
