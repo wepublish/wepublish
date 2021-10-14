@@ -105,107 +105,6 @@ test('Is logged in', async t => {
     .expect(Selector('i.rs-icon-cog').exists).ok()
 })
 
-test('Create an article', async t => {
-  await t
-    .click(createArticle)
-
-  await t
-    .expect(await getPath()).contains('/article/create')
-
-  await t
-    .typeText(articleTitleInput, 'This is the article Title')
-    .typeText(articleLeadInput, 'This is the article lead')
-    .click(createButton);
-
-  const path = await getPath()
-  articleID = path.substr(path.lastIndexOf('/') + 1)
-  console.log('articleID', articleID)
-  await t.expect(path).contains('/article/edit')
-
-  await t
-    .click(metadataButton)
-    .expect(metaTitleInput.value).contains('This is the article Title')
-    .expect(metaLeadInput.value).contains('This is the article lead')
-    .typeText(metaPreTitleInput, 'This is a Pre-title')
-    .click(closeButton)
-
-  /* await t
-    .click(lastAddButton)
-    .click(richTextButton)
-    .typeText(richTextBox, 'This is some random text') */
-
-
-});
-
-test('Test Website', async t => {
-  await t
-    .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
-    .expect(Selector('h1').innerText).eql('404')
-})
-
-test('Publish article', async t => {
-  await t
-    .click(Selector('a').withAttribute('href', `/article/edit/${articleID}`))
-    .click(publishButton)
-    .click(confirmButton)
-    .expect(Selector('div.rs-alert-container').exists).ok()
-    .click(Selector('div.rs-alert-item-close'))
-
-  await t
-    .click(metadataButton)
-    .click(Selector('button').child('i.rs-icon-magic'))
-    .click(closeButton)
-    .click(publishButton)
-    .click(confirmButton)
-    .expect(Selector('div.rs-tag-default').child('span.rs-tag-text').innerText).contains('Article published')
-})
-
-test('Test Website', async t => {
-  const h1Title = Selector('h1')
-
-  await t
-    .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
-    .expect(h1Title.innerText).eql('This is the article Title')
-})
-
-/* test('Delete article', async t => {
-  const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
-  await t
-    .click(articleBox.child('div').nth(1).child('div').nth(4).child('button'))
-    .click(deleteButton)
-    .click(confirmButton)
-    .expect(articleBox.exists).notOk()
-}) */
-
-
-// // TEST PAGE 
-
-// fixture`Create and publish a page`
-//   .disablePageCaching
-//   .beforeEach(async t => {
-//     await t.useRole(admin)
-
-//   })
-//   .page(`${EDITOR_URL}`)
-
-
-// let pageID = ''
-
-// test('Check Front site', async t => {
-//   await t
-//     .navigateTo(`${WEBSITE_URL}`)
-//     .expect(Selector('a').withAttribute('href', 'https://www.facebook.com/wepublish').getAttribute('target')).eql('_blank')
-// })
-
-// test('Is logged in', async t => {
-//   console.log('is logged in', await ClientFunction(() => {
-//     return document.location.toString()
-//   })())
-//   console.log('body looks like:', await Selector('body').innerText)
-//   await t
-//     .expect(Selector('i.rs-icon-cog').exists).ok()
-// })
-
 // test('Create an article', async t => {
 //   await t
 //     .click(createArticle)
@@ -230,10 +129,10 @@ test('Test Website', async t => {
 //     .typeText(metaPreTitleInput, 'This is a Pre-title')
 //     .click(closeButton)
 
-//   /* await t
-//     .click(lastAddButton)
-//     .click(richTextButton)
-//     .typeText(richTextBox, 'This is some random text') */
+  /* await t
+    .click(lastAddButton)
+    .click(richTextButton)
+    .typeText(richTextBox, 'This is some random text') */
 
 
 // });
@@ -269,13 +168,12 @@ test('Test Website', async t => {
 //     .expect(h1Title.innerText).eql('This is the article Title')
 // })
 
-// /* test('Delete article', async t => {
-//   const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
-//   await t
-//     .click(articleBox.child('div').nth(1).child('div').nth(4).child('button'))
-//     .click(deleteButton)
-//     .click(confirmButton)
-//     .expect(articleBox.exists).notOk()
-// }) */
-
+/* test('Delete article', async t => {
+  const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
+  await t
+    .click(articleBox.child('div').nth(1).child('div').nth(4).child('button'))
+    .click(deleteButton)
+    .click(confirmButton)
+    .expect(articleBox.exists).notOk()
+}) */
 
