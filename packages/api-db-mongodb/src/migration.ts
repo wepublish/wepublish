@@ -627,7 +627,11 @@ export const Migrations: Migration[] = [
           callToActionText: {$exists: true}
         },
         {
-          $set: {callToActionText: richTextToString(peerProfile.callToActionText, [])}
+          $set: {
+            callToActionText: richTextToString(peerProfile.callToActionText, [
+              {children: [{text: ''}], type: 'paragraph'}
+            ])
+          }
         },
         {upsert: true}
       )
