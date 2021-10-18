@@ -1,5 +1,6 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
+import {FlexTeaser} from '@wepublish/editor/src/client/blocks/types'
 
 export enum BlockType {
   Title = 'title',
@@ -18,7 +19,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  TeaserGridFlex = 'teaserGridFlex'
 }
 
 export interface RichTextBlock {
@@ -185,6 +187,11 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+export interface TeaserFlexGridBlock {
+  type: BlockType.TeaserGridFlex
+  flexTeasers: FlexTeaser[]
+}
+
 export type ArticleBlock =
   | RichTextBlock
   | ImageBlock
@@ -201,6 +208,7 @@ export type ArticleBlock =
   | SoundCloudTrackBlock
   | PolisConversationBlock
   | TeaserGridBlock
+  | TeaserFlexGridBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

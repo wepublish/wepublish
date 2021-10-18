@@ -306,6 +306,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserFlexGrid": {
+        "label": "Flex Grid Teasers"
       }
     },
     "cancel": "Cancel",

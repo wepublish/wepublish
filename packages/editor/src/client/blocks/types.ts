@@ -25,7 +25,8 @@ export enum BlockType {
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid1 = 'teaserGrid1',
-  TeaserGrid6 = 'teaserGrid6'
+  TeaserGrid6 = 'teaserGrid6',
+  TeaserGridFlex = 'teaserGridFlex'
 }
 
 export type RichTextBlockValue = Node[]
@@ -202,6 +203,24 @@ export interface TeaserGridBlockValue {
   numColumns: number
 }
 
+export interface FlexItemAlignment {
+  i?: string
+  x?: number
+  y?: number
+  w?: number
+  h?: number
+  static: boolean
+}
+
+export interface FlexTeaser {
+  alignment: FlexItemAlignment
+  teaser: Teaser | null
+}
+
+export interface TeaserFlexGridBlockValue {
+  flexTeasers: FlexTeaser[]
+}
+
 export type RichTextBlockListValue = BlockListValue<BlockType.RichText, RichTextBlockValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
 export type ImageGalleryBlockListValue = BlockListValue<
@@ -221,6 +240,11 @@ export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, Te
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
 
+export type TeaserFlexGridBlockListValue = BlockListValue<
+  BlockType.TeaserGridFlex,
+  TeaserFlexGridBlockValue
+>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -232,6 +256,7 @@ export type BlockValue =
   | LinkPageBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
+  | TeaserFlexGridBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -377,6 +402,57 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       }
       break
     }
+
+    case BlockType.TeaserGridFlex:
+      return {
+        teaserGridFlex: {
+          flexTeasers: block.value.flexTeasers
+            .map(value => value.teaser)
+            .map(value => {
+              switch (value?.type) {
+                case TeaserType.Article:
+                  return {
+                    article: {
+                      style: value.style,
+                      imageID: value.image?.id,
+                      preTitle: value.preTitle || undefined,
+                      title: value.title || undefined,
+                      lead: value.lead || undefined,
+                      articleID: value.article.id
+                    }
+                  }
+
+                case TeaserType.PeerArticle:
+                  return {
+                    peerArticle: {
+                      style: value.style,
+                      imageID: value.image?.id,
+                      preTitle: value.preTitle || undefined,
+                      title: value.title || undefined,
+                      lead: value.lead || undefined,
+                      peerID: value.peer.id,
+                      articleID: value.articleID
+                    }
+                  }
+
+                case TeaserType.Page:
+                  return {
+                    page: {
+                      style: value.style,
+                      imageID: value.image?.id,
+                      preTitle: value.preTitle || undefined,
+                      title: value.title || undefined,
+                      lead: value.lead || undefined,
+                      pageID: value.page.id
+                    }
+                  }
+
+                default:
+                  return null
+              }
+            })
+        }
+      }
 
     case BlockType.TeaserGrid1:
     case BlockType.TeaserGrid6:
@@ -567,6 +643,102 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
+    case 'TeaserFlexGridBlock':
+      return {
+        key,
+        type: BlockType.TeaserGridFlex,
+        value: {
+          flexTeasers: block?.flexTeasers.map(flexTeaser => {
+            switch (flexTeaser?.teaser?.__typename) {
+              case 'ArticleTeaser':
+                return {
+                  // teaser: flexTeaser?.teaser as ArticleTeaser,
+                  teaser: flexTeaser?.teaser.article
+                    ? {
+                        type: TeaserType.Article,
+                        style: flexTeaser.teaser.style,
+                        image: flexTeaser.teaser.image ?? undefined,
+                        preTitle: flexTeaser.teaser.preTitle ?? undefined,
+                        title: flexTeaser.teaser.title ?? undefined,
+                        lead: flexTeaser.teaser.lead ?? undefined,
+                        article: flexTeaser.teaser.article
+                      }
+                    : null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+
+              case 'PeerArticleTeaser':
+                return {
+                  teaser: flexTeaser?.teaser.peer
+                    ? {
+                        type: TeaserType.PeerArticle,
+                        style: flexTeaser?.teaser.style,
+                        image: flexTeaser?.teaser.image ?? undefined,
+                        preTitle: flexTeaser?.teaser.preTitle ?? undefined,
+                        title: flexTeaser?.teaser.title ?? undefined,
+                        lead: flexTeaser?.teaser.lead ?? undefined,
+                        peer: flexTeaser?.teaser.peer,
+                        articleID: flexTeaser?.teaser.articleID,
+                        article: flexTeaser?.teaser.article ?? undefined
+                      }
+                    : null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+
+              case 'PageTeaser':
+                return {
+                  teaser: flexTeaser?.teaser.page
+                    ? {
+                        type: TeaserType.Page,
+                        style: flexTeaser?.teaser.style,
+                        image: flexTeaser?.teaser.image ?? undefined,
+                        preTitle: flexTeaser?.teaser.preTitle ?? undefined,
+                        title: flexTeaser?.teaser.title ?? undefined,
+                        lead: flexTeaser?.teaser.lead ?? undefined,
+                        page: flexTeaser?.teaser.page
+                      }
+                    : null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+
+              default:
+                return {
+                  teaser: null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+            }
+          })
+        }
+      }
+
     case 'TeaserGridBlock':
       return {
         key,
@@ -574,6 +746,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => {
+            // TODO
+            // returnTeaserType(teaser)
             switch (teaser?.__typename) {
               case 'ArticleTeaser':
                 return [
@@ -654,3 +828,63 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
       throw new Error('Invalid Block')
   }
 }
+
+// TODO: consolidate function
+/*
+export const returnTeaserType = (teaser: FullTeaserFragment | null | undefined) => {
+  switch (teaser?.__typename) {
+    case 'ArticleTeaser':
+      return [
+        nanoid(),
+        teaser.article
+          ? {
+              type: TeaserType.Article,
+              style: teaser.style,
+              image: teaser.image ?? undefined,
+              preTitle: teaser.preTitle ?? undefined,
+              title: teaser.title ?? undefined,
+              lead: teaser.lead ?? undefined,
+              article: teaser.article
+            }
+          : null
+      ]
+
+    case 'PeerArticleTeaser':
+      return [
+        nanoid(),
+        teaser.peer
+          ? {
+              type: TeaserType.PeerArticle,
+              style: teaser.style,
+              image: teaser.image ?? undefined,
+              preTitle: teaser.preTitle ?? undefined,
+              title: teaser.title ?? undefined,
+              lead: teaser.lead ?? undefined,
+              peer: teaser.peer,
+              articleID: teaser.articleID,
+              article: teaser.article ?? undefined
+            }
+          : null
+      ]
+
+    case 'PageTeaser':
+      return [
+        nanoid(),
+        teaser.page
+          ? {
+              type: TeaserType.Page,
+              style: teaser.style,
+              image: teaser.image ?? undefined,
+              preTitle: teaser.preTitle ?? undefined,
+              title: teaser.title ?? undefined,
+              lead: teaser.lead ?? undefined,
+              page: teaser.page
+            }
+          : null
+      ]
+
+    default:
+      return [nanoid(), null]
+  }
+}
+*/

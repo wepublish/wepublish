@@ -160,4 +160,19 @@ fragment FullBlock on Block {
     }
     numColumns
   }
+
+    ... on TeaserFlexGridBlock {
+        flexTeasers {
+            alignment {
+            i
+            x
+            y
+            w
+            h
+            static
+        }
+        teaser {
+        ...FullTeaser
+        }
+    }
 }
