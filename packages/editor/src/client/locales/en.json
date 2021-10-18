@@ -669,7 +669,8 @@
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
         "peers": "Peers",
-        "myPeerProfile": "My Peer Profile"
+        "myPeerProfile": "My Peer Profile",
+        "invalidURLTooltip": "Invalid URL"
       },
       "panels": {
         "callToAction": "Call To Action",

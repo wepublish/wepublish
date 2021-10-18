@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {
   Button,
@@ -66,6 +66,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const isDisabled = isLoading || isSaving || validCallToActionUrl
 
   const {t} = useTranslation()
+  const [ctaUrltooltip, setCtaUrlTooltip] = useState(
+    <Tooltip>{t('peerList.overview.invalidURLTooltip')}</Tooltip>
+  )
 
   useEffect(() => {
     if (data?.peerProfile) {
@@ -108,15 +111,19 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
-  const tooltip = <Tooltip>{t('Invalid url')}</Tooltip>
-  const validateCallToActionTextUrl = async (url: string) => {
-    const checkUrl = await validateURL(url)
-    if (checkUrl) {
-      setValidCallToActionUrl(false)
-      return <Tooltip>{t('Invalid url')}</Tooltip>
-    }
-    return <div></div>
-  }
+  const validateCallToActionTextUrl = useCallback(
+    async (url: string) => {
+      const checkUrl = await validateURL(url)
+      if (checkUrl) {
+        setValidCallToActionUrl(false)
+        setCtaUrlTooltip(<div></div>)
+      } else {
+        setValidCallToActionUrl(true)
+        setCtaUrlTooltip(<Tooltip>{t('Invalid url')}</Tooltip>)
+      }
+    },
+    [setCallToActionTextURL]
+  )
 
   return (
     <>
@@ -181,7 +188,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <Whisper placement="top" trigger="focus" speaker={tooltip}>
+                <Whisper placement="top" trigger="focus" speaker={ctaUrltooltip}>
                   <FormControl
                     placeholder={t('peerList.panels.URL')}
                     name="callToActionTextURL"
