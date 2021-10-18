@@ -119,7 +119,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         setCtaUrlTooltip(<div></div>)
       } else {
         setValidCallToActionUrl(true)
-        setCtaUrlTooltip(<Tooltip>{t('Invalid url')}</Tooltip>)
+        setCtaUrlTooltip(<Tooltip>{t('peerList.overview.invalidURLTooltip')}</Tooltip>)
       }
     },
     [setCallToActionTextURL]
