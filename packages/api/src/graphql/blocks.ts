@@ -749,7 +749,7 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
 export const GraphQLTeaserFlexGridBlockInput = new GraphQLInputObjectType({
   name: 'TeaserFlexGridBlockInput',
   fields: {
-    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLTeaserInput)))}
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserInput))}
   }
 })
 

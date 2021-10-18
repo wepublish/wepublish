@@ -142,7 +142,7 @@ fragment FullBlock on Block {
     trackID
   }
 
-    ... on PolisConversationBlock {
+  ... on PolisConversationBlock {
     conversationID
   }
 
@@ -161,18 +161,19 @@ fragment FullBlock on Block {
     numColumns
   }
 
-    ... on TeaserFlexGridBlock {
-        flexTeasers {
-            alignment {
-            i
-            x
-            y
-            w
-            h
-            static
-        }
-        teaser {
+  ... on TeaserFlexGridBlock {
+    flexTeasers {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      teaser {
         ...FullTeaser
-        }
+      }
     }
+  }
 }
