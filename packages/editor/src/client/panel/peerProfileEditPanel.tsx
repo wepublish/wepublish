@@ -9,7 +9,9 @@ import {
   ControlLabel,
   FormControl,
   Alert,
-  Message
+  Message,
+  Tooltip,
+  Whisper
 } from 'rsuite'
 
 import {
@@ -30,6 +32,7 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
+import {validateURL} from './../blocks/richTextBlock/toolbar/linkMenu'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -51,6 +54,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState<string | undefined>()
   const [isLogoChange, setIsLogoChange] = useState(false)
+  const [validCallToActionUrl, setValidCallToActionUrl] = useState(true)
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -59,7 +63,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving
+  const isDisabled = isLoading || isSaving || validCallToActionUrl
 
   const {t} = useTranslation()
 
@@ -102,6 +106,16 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     })
     Alert.success(t('peerList.panels.peerInfoUpdated'), 2000)
     onClose?.()
+  }
+
+  const tooltip = <Tooltip>{t('Invalid url')}</Tooltip>
+  const validateCallToActionTextUrl = async (url: string) => {
+    const checkUrl = await validateURL(url)
+    if (checkUrl) {
+      setValidCallToActionUrl(false)
+      return <Tooltip>{t('Invalid url')}</Tooltip>
+    }
+    return <div></div>
   }
 
   return (
@@ -167,12 +181,17 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <FormControl
-                  placeholder={t('peerList.panels.URL')}
-                  name="callToActionTextURL"
-                  value={callToActionTextURL}
-                  onChange={url => setCallToActionTextURL(url)}
-                />
+                <Whisper placement="top" trigger="focus" speaker={tooltip}>
+                  <FormControl
+                    placeholder={t('peerList.panels.URL')}
+                    name="callToActionTextURL"
+                    value={callToActionTextURL}
+                    onChange={url => {
+                      setCallToActionTextURL(url)
+                      validateCallToActionTextUrl(url)
+                    }}
+                  />
+                </Whisper>
               </FormGroup>
             </div>
             <br />
