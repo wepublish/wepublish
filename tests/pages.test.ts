@@ -1,7 +1,4 @@
 import {
-    admin,
-    getPath,
-    makeid,
     EDITOR_URL,
     WEBSITE_URL,
     loginName,
@@ -12,15 +9,38 @@ import {
     publishButton,
     closeButton,
     confirmButton,
-    metaPreTitleInput,
-    metaTitleInput,
-    metaLeadInput,
     pageLeadInput,
     pageTitleInput,
-    metaSlugInput
-} from "./e2e";
+    metaSlugInput,
+    goToPath,
+
+} from "./common";
 
 import { ClientFunction, Role, Selector } from "testcafe";
+
+
+console.log('Editor URL', EDITOR_URL)
+console.log('Website URL', WEBSITE_URL)
+
+
+const admin = Role(`${EDITOR_URL}/login`, async t => {
+    console.log('body looks like:', await Selector('body').innerText)
+    console.log('NEW LINE')
+    await t
+      .typeText(loginName, 'dev@wepublish.ch')
+      .typeText(loginPassword, '123')
+      .click('form > button')
+  });
+  
+  const getPath = ClientFunction(() => {
+    return document.location.pathname
+  });
+
+
+  const goToPagePath = ClientFunction((websiteUrl, pageID) => {
+    console.log('Goto Path', `${websiteUrl}/a/${pageID}`)
+    document.location.href = `${websiteUrl}/a/${pageID}`
+  });
 
 
 fixture`Create and publish a page`
@@ -99,15 +119,3 @@ test('Test Website', async t => {
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
         .expect(h1Title.innerText).eql('This is the page Title')
 })
-
-// Delete page at the end of the tests to avoid reusing "" slug (if no ID)
-//Otherwise find a way to delete with the ID
-test('Delete page', async t => {
-    await t
-    .navigateTo(`${EDITOR_URL}/pages`)
-    .click(Selector('a').child('.rs-icon-trash'))
-    .click(Selector('button').withText('Confirm'))
-    .expect(Selector('.rs-table-body-info').innerText).eql('No data found')
-})
-
-// Should the slug be the ID ? 
