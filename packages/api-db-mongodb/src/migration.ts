@@ -628,9 +628,7 @@ export const Migrations: Migration[] = [
         },
         {
           $set: {
-            callToActionText: richTextToString(peerProfile.callToActionText, [
-              {children: [{text: ''}], type: 'paragraph'}
-            ])
+            callToActionText: richTextToString('', peerProfile?.callToActionText)
           }
         },
         {upsert: true}
