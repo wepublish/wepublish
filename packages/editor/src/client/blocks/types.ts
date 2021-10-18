@@ -746,8 +746,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => {
-            // TODO
-            // returnTeaserType(teaser)
             switch (teaser?.__typename) {
               case 'ArticleTeaser':
                 return [

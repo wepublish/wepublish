@@ -37,10 +37,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   // const [isEditModalOpen, setEditModalOpen] = useState(false)
   // const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
-  const {flexTeasers} = value
+  // const {flexTeasers} = value
 
-  const layout = flexTeasers.map(flexTeaser => flexTeaser.alignment)
-  const teasers = flexTeasers.map(flexTeaser => flexTeaser.teaser)
+  // const layout = flexTeasers.map(flexTeaser => flexTeaser.alignment)
+  // const teasers = flexTeasers.map(flexTeaser => flexTeaser.teaser)
 
   // function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
   // onChange({
@@ -76,9 +76,9 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         cols={12}
         rowHeight={30}
         width={1200}>
-        {teasers.map((teaser, index) => {
-          ;<div>{teaser}</div>
-        })}
+        {/*{teasers.map((teaser, index) => {*/}
+        {/*  ;<div>{teaser}</div>*/}
+        {/*})}*/}
 
         {/* <GridItem
           key={key}

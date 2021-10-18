@@ -42,14 +42,15 @@ import {
   PageTeaser,
   TeaserType,
   RichTextBlock,
-  FacebookVideoBlock
+  FacebookVideoBlock,
+  FlexItemAlignment,
+  FlexTeaser
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
 import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerSchema} from '../utility'
-import {FlexItemAlignment, FlexTeaser} from '@wepublish/editor/src/client/blocks/types'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',

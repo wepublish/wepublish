@@ -1,6 +1,5 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
-import {FlexTeaser} from '@wepublish/editor/src/client/blocks/types'
 
 export enum BlockType {
   Title = 'title',
@@ -185,6 +184,20 @@ export interface TeaserGridBlock {
   type: BlockType.TeaserGrid
   teasers: Teaser[]
   numColumns: number
+}
+
+export interface FlexItemAlignment {
+  i?: string
+  x?: number
+  y?: number
+  w?: number
+  h?: number
+  static: boolean
+}
+
+export interface FlexTeaser {
+  alignment: FlexItemAlignment
+  teaser: Teaser | null
 }
 
 export interface TeaserFlexGridBlock {
