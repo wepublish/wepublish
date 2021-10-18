@@ -13,6 +13,7 @@ import {
     pageTitleInput,
     metaSlugInput,
     goToPath,
+    addContentButton
 
 } from "./common";
 
@@ -71,7 +72,7 @@ test('Create a page', async t => {
         .expect(await getPath()).contains('/page/create')
 
     await t
-        .click(Selector('button').child('i.rs-icon-plus'))
+        .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-header'))
         .typeText(pageTitleInput, 'This is the page Title')
         .typeText(pageLeadInput, 'This is the page lead')
@@ -87,6 +88,7 @@ test('Create a page', async t => {
         .typeText(metaSlugInput, pageID)
         .click(closeButton)
         .click(publishButton)
+        // Change this to next monday when date picker fixed
         .click(Selector('.react-datepicker__input-container'))
         .click(Selector('.react-datepicker__navigation--next'))
         .click(Selector('.react-datepicker__day').withText('30'))
@@ -96,9 +98,8 @@ test('Create a page', async t => {
 test('Test Website', async t => {
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
-        // Why is it showing 500 and not 404?
-        // Test should be eql(404)
-        .expect(Selector('h1').innerText).eql('500')
+        // Gives 500 error 
+        .expect(Selector('h1').innerText).eql('404')
 })
 
 test('Publish page', async t => {

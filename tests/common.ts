@@ -9,9 +9,11 @@
     const metadataButton = Selector('button').child('i.rs-icon-newspaper-o')
     const createButton = Selector('button').child('i.rs-icon-save')
     const publishButton = Selector('button').child('i.rs-icon-cloud-upload')
+    const addContentButton = Selector('button').child('i.rs-icon-plus')
     
     const closeButton = Selector('.rs-drawer-footer').child('button.rs-btn-primary')
     const confirmButton = Selector('.rs-modal-footer').child('button.rs-btn-primary')
+    const deleteButton = Selector('button').child('i.rs-icon-trash')
     const metaPreTitleInput = Selector('input.preTitle')
     const metaTitleInput = Selector('input.title')
     const metaLeadInput = Selector('textarea.lead')
@@ -64,6 +66,7 @@
     
     export {
         admin, 
+        createArticle,
         getPath, 
         EDITOR_URL, 
         WEBSITE_URL, 
@@ -82,6 +85,10 @@
         pageLeadInput,
         metaSlugInput,
         goToPath,
-        goToPagePath
+        goToPagePath,
+        articleTitleInput,
+        articleLeadInput,
+        deleteButton,
+        addContentButton
       }
 
