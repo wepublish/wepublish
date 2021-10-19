@@ -1,8 +1,8 @@
+import { ClientFunction, Selector } from "testcafe";
 import {
+    admin,
     EDITOR_URL,
     WEBSITE_URL,
-    loginName,
-    loginPassword,
     createPage,
     metadataButton,
     createButton,
@@ -12,36 +12,15 @@ import {
     pageLeadInput,
     pageTitleInput,
     metaSlugInput,
-    goToPath,
-    addContentButton
+    addContentButton,
+    getPath,
+
 
 } from "./common";
-
-import { ClientFunction, Role, Selector } from "testcafe";
 
 
 console.log('Editor URL', EDITOR_URL)
 console.log('Website URL', WEBSITE_URL)
-
-
-const admin = Role(`${EDITOR_URL}/login`, async t => {
-    console.log('body looks like:', await Selector('body').innerText)
-    console.log('NEW LINE')
-    await t
-      .typeText(loginName, 'dev@wepublish.ch')
-      .typeText(loginPassword, '123')
-      .click('form > button')
-  });
-  
-  const getPath = ClientFunction(() => {
-    return document.location.pathname
-  });
-
-
-  const goToPagePath = ClientFunction((websiteUrl, pageID) => {
-    console.log('Goto Path', `${websiteUrl}/a/${pageID}`)
-    document.location.href = `${websiteUrl}/a/${pageID}`
-  });
 
 
 fixture`Create and publish a page`
@@ -52,6 +31,11 @@ fixture`Create and publish a page`
     })
     .page(`${EDITOR_URL}/pages`)
 
+test('Check Front site', async t => {
+  await t
+    .navigateTo(`${WEBSITE_URL}`)
+    .expect(Selector('a').withAttribute('href', 'https://www.facebook.com/wepublish').getAttribute('target')).eql('_blank')
+})
 
 let pageID = ''
 
@@ -79,7 +63,9 @@ test('Create a page', async t => {
         .click(createButton)
 
     const path = await getPath()
+    // retrieve ID automatically created
     pageID = path.substr(path.lastIndexOf('/') + 1)
+    console.log('path', path)
     console.log('pageID: ', pageID)
     await t.expect(path).contains('/page/edit')
 
