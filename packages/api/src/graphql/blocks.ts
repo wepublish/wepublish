@@ -180,11 +180,11 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
 export const GraphQLFlexGridItemAlignment = new GraphQLObjectType<FlexItemAlignment, Context>({
   name: 'FlexItemAlignment',
   fields: {
-    i: {type: GraphQLString},
-    x: {type: GraphQLInt},
-    y: {type: GraphQLInt},
-    w: {type: GraphQLInt},
-    h: {type: GraphQLInt},
+    i: {type: GraphQLNonNull(GraphQLString)},
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)},
     static: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -200,7 +200,7 @@ export const GraphQLFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
 export const GraphQLTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>({
   name: 'TeaserFlexGridBlock',
   fields: {
-    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexTeaser)))}
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaser))}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGridFlex

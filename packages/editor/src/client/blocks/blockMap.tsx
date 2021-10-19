@@ -123,11 +123,11 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       flexTeasers: [
         {
-          alignment: {i: nanoid(), x: 1, y: 1, w: 2, h: 2, static: false},
+          alignment: {i: 'a', x: 5, y: 5, w: 5, h: 5, static: false},
           teaser: null
         },
         {
-          alignment: {i: nanoid(), x: 1, y: 1, w: 2, h: 2, static: false},
+          alignment: {i: 'b', x: 10, y: 10, w: 20, h: 20, static: false},
           teaser: null
         }
       ]

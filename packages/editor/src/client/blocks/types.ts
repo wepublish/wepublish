@@ -204,11 +204,11 @@ export interface TeaserGridBlockValue {
 }
 
 export interface FlexItemAlignment {
-  i?: string
-  x?: number
-  y?: number
-  w?: number
-  h?: number
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
   static: boolean
 }
 
