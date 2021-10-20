@@ -188,7 +188,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <Whisper placement="top" trigger="focus" speaker={ctaUrltooltip}>
+                <Whisper placement="topStart" trigger="focus" speaker={ctaUrltooltip}>
                   <FormControl
                     placeholder={t('peerList.panels.URL')}
                     name="callToActionTextURL"
