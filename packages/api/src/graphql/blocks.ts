@@ -189,6 +189,18 @@ export const GraphQLFlexGridItemAlignment = new GraphQLObjectType<FlexItemAlignm
   }
 })
 
+export const GraphQLFlexGridItemAlignmentInput = new GraphQLInputObjectType({
+  name: 'FlexItemAlignmentInput',
+  fields: {
+    i: {type: GraphQLNonNull(GraphQLString)},
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)},
+    static: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
 export const GraphQLFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
   fields: {
@@ -319,11 +331,21 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
   })
 })
 
+export const GraphQLPublicFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
+  name: 'FlexTeaser',
+  fields: {
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignment)},
+    teaser: {type: GraphQLPublicTeaser}
+  }
+})
+
 export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>(
   {
     name: 'TeaserFlexGridBlock',
     fields: {
-      flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaser))}
+      flexTeasers: {
+        type: GraphQLNonNull(GraphQLList(GraphQLPublicFlexTeaser))
+      }
     },
     isTypeOf: createProxyingIsTypeOf(value => {
       return value.type === BlockType.TeaserGridFlex
@@ -750,7 +772,7 @@ export const GraphQLFlexTeaserInput = new GraphQLInputObjectType({
   name: 'FlexTeaserInput',
   fields: {
     teaser: {type: GraphQLTeaserInput},
-    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignment)}
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignmentInput)}
   }
 })
 
