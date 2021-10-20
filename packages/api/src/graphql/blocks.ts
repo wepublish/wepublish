@@ -323,7 +323,7 @@ export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlex
   {
     name: 'TeaserFlexGridBlock',
     fields: {
-      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaser))}
+      flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaser))}
     },
     isTypeOf: createProxyingIsTypeOf(value => {
       return value.type === BlockType.TeaserGridFlex
@@ -746,10 +746,18 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLFlexTeaserInput = new GraphQLInputObjectType({
+  name: 'FlexTeaserInput',
+  fields: {
+    teaser: {type: GraphQLTeaserInput},
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignment)}
+  }
+})
+
 export const GraphQLTeaserFlexGridBlockInput = new GraphQLInputObjectType({
   name: 'TeaserFlexGridBlockInput',
   fields: {
-    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserInput))}
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaserInput))}
   }
 })
 
