@@ -29,6 +29,13 @@ const metaSlugInput = Selector('.metaSlugInput')
 const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0, 12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
 const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0, 12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
+const userName = getRandomString(7)
+const userEmail = userName+'@mail.com'
+const userPassword = getRandomString(3)
+
+const userNameInput = Selector('input').withAttribute('name', 'Name')
+const userEmailInput = Selector('input').withAttribute('name', 'Email')
+const userPasswordInput = Selector('input').withAttribute('name', 'Password')
 
 export function makeid(length) {
     let result = '';
@@ -63,6 +70,16 @@ const goToPagePath = ClientFunction((websiteUrl, pageID) => {
     document.location.href = `${websiteUrl}/a/${pageID}`
 });
 
+function getRandomString(length) {
+    var randomChars = 'abcdefghijklmnopqrstuvwxyz';
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+}
+
+
 // not used 
 
 // function makeid(length) {
@@ -76,7 +93,18 @@ const goToPagePath = ClientFunction((websiteUrl, pageID) => {
 // }
 
 
+// const isLoggedIn = test('Is logged in', async t => {
+//     console.log('is logged in', await ClientFunction(() => {
+//       return document.location.toString()
+//     })())
+//     console.log('body looks like:', await Selector('body').innerText)
+//     await t
+//       .expect(Selector('i.rs-icon-cog').exists).ok()
+//   })
+
+
 export {
+    getRandomString,
     admin,
     createArticle,
     getPath,
@@ -101,6 +129,13 @@ export {
     articleTitleInput,
     articleLeadInput,
     deleteButton,
-    addContentButton
+    addContentButton,
+    userName,
+    userPassword,
+    userEmail,
+    userNameInput,
+    userPasswordInput,
+    userEmailInput
+    // isLoggedIn
 }
 
