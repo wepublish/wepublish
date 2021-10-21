@@ -3,7 +3,7 @@ import {FormControl, Whisper, Tooltip} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {validateURL} from '../utility'
 
-export async function useUrlValidation(url: string) {
+async function useUrlValidation(url: string) {
   const checkUrl = await validateURL(url)
   if (checkUrl) {
     return {isValidURL: true}

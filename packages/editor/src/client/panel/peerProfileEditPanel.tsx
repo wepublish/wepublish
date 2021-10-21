@@ -23,14 +23,14 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument} from '../utility'
+import {getOperationNameFromDocument, validateURL} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
-import {FormControlUrl, useUrlValidation} from '../atoms/formControlUrl'
+import {FormControlUrl} from '../atoms/formControlUrl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -89,7 +89,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   useEffect(() => {
     const checkCallToActionURL = async () => {
-      const {isValidURL} = await useUrlValidation(callToActionTextURL)
+      const isValidURL = await validateURL(callToActionTextURL)
       setValidCallToActionUrl(!isValidURL)
     }
     checkCallToActionURL()
