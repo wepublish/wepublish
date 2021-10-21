@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {
   Button,
@@ -9,9 +9,7 @@ import {
   ControlLabel,
   FormControl,
   Alert,
-  Message,
-  Tooltip,
-  Whisper
+  Message
 } from 'rsuite'
 
 import {
@@ -32,7 +30,7 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
-import {validateURL} from './../blocks/richTextBlock/toolbar/linkMenu'
+import {FormControlUrl, useUrlValidation} from '../atoms/formControlUrl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -66,9 +64,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const isDisabled = isLoading || isSaving || validCallToActionUrl
 
   const {t} = useTranslation()
-  const [ctaUrltooltip, setCtaUrlTooltip] = useState(
-    <Tooltip>{t('peerList.overview.invalidURLTooltip')}</Tooltip>
-  )
 
   useEffect(() => {
     if (data?.peerProfile) {
@@ -92,6 +87,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     if (error) Alert.error(error, 0)
   }, [fetchError, saveError])
 
+  useEffect(() => {
+    const checkCallToActionURL = async () => {
+      const {isValidURL} = await useUrlValidation(callToActionTextURL)
+      setValidCallToActionUrl(!isValidURL)
+    }
+    checkCallToActionURL()
+  }, [callToActionTextURL])
+
   async function handleSave() {
     await updateSettings({
       variables: {
@@ -110,20 +113,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     Alert.success(t('peerList.panels.peerInfoUpdated'), 2000)
     onClose?.()
   }
-
-  const validateCallToActionTextUrl = useCallback(
-    async (url: string) => {
-      const checkUrl = await validateURL(url)
-      if (checkUrl) {
-        setValidCallToActionUrl(false)
-        setCtaUrlTooltip(<div></div>)
-      } else {
-        setValidCallToActionUrl(true)
-        setCtaUrlTooltip(<Tooltip>{t('peerList.overview.invalidURLTooltip')}</Tooltip>)
-      }
-    },
-    [setCallToActionTextURL]
-  )
 
   return (
     <>
@@ -188,17 +177,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <Whisper placement="topStart" trigger="focus" speaker={ctaUrltooltip}>
-                  <FormControl
-                    placeholder={t('peerList.panels.URL')}
-                    name="callToActionTextURL"
-                    value={callToActionTextURL}
-                    onChange={url => {
-                      setCallToActionTextURL(url)
-                      validateCallToActionTextUrl(url)
-                    }}
-                  />
-                </Whisper>
+                <FormControlUrl
+                  placeholder={t('peerList.panels.URL')}
+                  name="callToActionTextURL"
+                  value={callToActionTextURL}
+                  urlInput={setCallToActionTextURL}
+                />
               </FormGroup>
             </div>
             <br />

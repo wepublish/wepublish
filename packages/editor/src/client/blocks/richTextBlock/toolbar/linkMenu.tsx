@@ -137,7 +137,7 @@ export function LinkMenu() {
   )
 }
 
-export async function validateURL(url: string) {
+async function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
