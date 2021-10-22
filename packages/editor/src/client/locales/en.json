@@ -670,7 +670,8 @@
         "noPeersFound": "No peers found",
         "peers": "Peers",
         "myPeerProfile": "My Peer Profile",
-        "invalidURLTooltip": "Invalid URL"
+        "invalidURLTooltip": "Invalid URL",
+        "validURLTooltip": "Valid URL"
       },
       "panels": {
         "callToAction": "Call To Action",

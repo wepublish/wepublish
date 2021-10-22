@@ -181,7 +181,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
                   value={callToActionTextURL}
-                  urlInput={setCallToActionTextURL}
+                  onChange={setCallToActionTextURL}
                 />
               </FormGroup>
             </div>

@@ -174,7 +174,7 @@ export enum StateColor {
   none = 'white'
 }
 
-export async function validateURL(url: string) {
+export function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
