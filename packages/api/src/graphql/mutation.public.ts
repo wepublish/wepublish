@@ -340,14 +340,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updatePassword: {
       type: GraphQLPublicUser,
       args: {
+        oldPassword: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)},
         passwordRepeated: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
         "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
-      async resolve(root, {password, passwordRepeated}, {authenticateUser, dbAdapter}) {
+      async resolve(
+        root,
+        {oldPassword, password, passwordRepeated},
+        {authenticateUser, dbAdapter}
+      ) {
         const {user} = authenticateUser()
         if (!user) throw new NotAuthenticatedError()
+
+        // request user again with oldPassword and session user email
+        const compareUser = await dbAdapter.user.getUserForCredentials({
+          email: user.email,
+          password: oldPassword
+        })
+        if (!compareUser) throw new UserInputError('old password does not match')
 
         if (password !== passwordRepeated)
           throw new UserInputError('password and passwordRepeat are not equal')
