@@ -209,7 +209,7 @@ export interface FlexItemAlignment {
   y: number
   w: number
   h: number
-  static: boolean
+  static?: boolean
 }
 
 export interface FlexTeaser {
@@ -406,51 +406,85 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.TeaserGridFlex:
       return {
         teaserGridFlex: {
-          flexTeasers: block.value.flexTeasers
-            .map(value => value.teaser)
-            .map(value => {
-              switch (value?.type) {
-                case TeaserType.Article:
-                  return {
+          flexTeasers: block.value.flexTeasers.map(flexTeaser => {
+            switch (flexTeaser.teaser?.type) {
+              case TeaserType.Article:
+                return {
+                  teaser: {
                     article: {
-                      style: value.style,
-                      imageID: value.image?.id,
-                      preTitle: value.preTitle || undefined,
-                      title: value.title || undefined,
-                      lead: value.lead || undefined,
-                      articleID: value.article.id
+                      style: flexTeaser.teaser.style,
+                      imageID: flexTeaser.teaser.image?.id,
+                      preTitle: flexTeaser.teaser.preTitle || undefined,
+                      title: flexTeaser.teaser.title || undefined,
+                      lead: flexTeaser.teaser.lead || undefined,
+                      articleID: flexTeaser.teaser.article.id
                     }
+                  },
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
                   }
+                }
 
-                case TeaserType.PeerArticle:
-                  return {
-                    peerArticle: {
-                      style: value.style,
-                      imageID: value.image?.id,
-                      preTitle: value.preTitle || undefined,
-                      title: value.title || undefined,
-                      lead: value.lead || undefined,
-                      peerID: value.peer.id,
-                      articleID: value.articleID
-                    }
+              case TeaserType.PeerArticle:
+                return {
+                  peerArticle: {
+                    style: flexTeaser.teaser.style,
+                    imageID: flexTeaser.teaser.image?.id,
+                    preTitle: flexTeaser.teaser.preTitle || undefined,
+                    title: flexTeaser.teaser.title || undefined,
+                    lead: flexTeaser.teaser.lead || undefined,
+                    peerID: flexTeaser.teaser.peer.id,
+                    articleID: flexTeaser.teaser.articleID
+                  },
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
                   }
+                }
 
-                case TeaserType.Page:
-                  return {
-                    page: {
-                      style: value.style,
-                      imageID: value.image?.id,
-                      preTitle: value.preTitle || undefined,
-                      title: value.title || undefined,
-                      lead: value.lead || undefined,
-                      pageID: value.page.id
-                    }
+              case TeaserType.Page:
+                return {
+                  page: {
+                    style: flexTeaser.teaser.style,
+                    imageID: flexTeaser.teaser.image?.id,
+                    preTitle: flexTeaser.teaser.preTitle || undefined,
+                    title: flexTeaser.teaser.title || undefined,
+                    lead: flexTeaser.teaser.lead || undefined,
+                    pageID: flexTeaser.teaser.page.id
+                  },
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
                   }
+                }
 
-                default:
-                  return null
-              }
-            })
+              default:
+                return {
+                  teaser: null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 3,
+                    h: flexTeaser?.alignment.h ?? 4,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+            }
+          })
         }
       }
 
@@ -729,8 +763,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     i: flexTeaser?.alignment.i ?? nanoid(),
                     x: flexTeaser?.alignment.x ?? 1,
                     y: flexTeaser?.alignment.y ?? 1,
-                    w: flexTeaser?.alignment.w ?? 1,
-                    h: flexTeaser?.alignment.h ?? 1,
+                    w: flexTeaser?.alignment.w ?? 3,
+                    h: flexTeaser?.alignment.h ?? 4,
                     static: flexTeaser?.alignment.static ?? false
                   }
                 }

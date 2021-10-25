@@ -192,7 +192,7 @@ export interface FlexItemAlignment {
   y: number
   w: number
   h: number
-  static: boolean
+  static?: boolean
 }
 
 export interface FlexTeaser {

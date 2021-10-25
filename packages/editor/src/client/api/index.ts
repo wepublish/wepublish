@@ -377,18 +377,32 @@ export type FacebookVideoBlockInput = {
 
 export type FlexItemAlignment = {
   __typename?: 'FlexItemAlignment';
-  i?: Maybe<Scalars['String']>;
-  x?: Maybe<Scalars['Int']>;
-  y?: Maybe<Scalars['Int']>;
-  w?: Maybe<Scalars['Int']>;
-  h?: Maybe<Scalars['Int']>;
-  static: Scalars['Boolean'];
+  i: Scalars['String'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+  static?: Maybe<Scalars['Boolean']>;
+};
+
+export type FlexItemAlignmentInput = {
+  i: Scalars['String'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+  static?: Maybe<Scalars['Boolean']>;
 };
 
 export type FlexTeaser = {
   __typename?: 'FlexTeaser';
   alignment: FlexItemAlignment;
   teaser?: Maybe<Teaser>;
+};
+
+export type FlexTeaserInput = {
+  teaser?: Maybe<TeaserInput>;
+  alignment: FlexItemAlignmentInput;
 };
 
 export type GalleryImageEdge = {
@@ -1631,11 +1645,11 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock';
-  flexTeasers: Array<FlexTeaser>;
+  flexTeasers: Array<Maybe<FlexTeaser>>;
 };
 
 export type TeaserFlexGridBlockInput = {
-  flexTeasers: Array<Maybe<TeaserInput>>;
+  flexTeasers: Array<Maybe<FlexTeaserInput>>;
 };
 
 export type TeaserGridBlock = {
@@ -2497,7 +2511,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
 
 type FullBlock_TeaserFlexGridBlock_Fragment = (
   { __typename: 'TeaserFlexGridBlock' }
-  & { flexTeasers: Array<(
+  & { flexTeasers: Array<Maybe<(
     { __typename?: 'FlexTeaser' }
     & { alignment: (
       { __typename?: 'FlexItemAlignment' }
@@ -2512,7 +2526,7 @@ type FullBlock_TeaserFlexGridBlock_Fragment = (
       { __typename?: 'PageTeaser' }
       & FullTeaser_PageTeaser_Fragment
     )> }
-  )> }
+  )>> }
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserFlexGridBlock_Fragment;

@@ -185,7 +185,7 @@ export const GraphQLFlexGridItemAlignment = new GraphQLObjectType<FlexItemAlignm
     y: {type: GraphQLNonNull(GraphQLInt)},
     w: {type: GraphQLNonNull(GraphQLInt)},
     h: {type: GraphQLNonNull(GraphQLInt)},
-    static: {type: GraphQLNonNull(GraphQLBoolean)}
+    static: {type: GraphQLBoolean}
   }
 })
 
@@ -197,7 +197,7 @@ export const GraphQLFlexGridItemAlignmentInput = new GraphQLInputObjectType({
     y: {type: GraphQLNonNull(GraphQLInt)},
     w: {type: GraphQLNonNull(GraphQLInt)},
     h: {type: GraphQLNonNull(GraphQLInt)},
-    static: {type: GraphQLNonNull(GraphQLBoolean)}
+    static: {type: GraphQLBoolean}
   }
 })
 
@@ -344,7 +344,7 @@ export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlex
     name: 'TeaserFlexGridBlock',
     fields: {
       flexTeasers: {
-        type: GraphQLNonNull(GraphQLList(GraphQLPublicFlexTeaser))
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicFlexTeaser)))
       }
     },
     isTypeOf: createProxyingIsTypeOf(value => {

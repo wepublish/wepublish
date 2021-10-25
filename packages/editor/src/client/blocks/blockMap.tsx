@@ -123,11 +123,15 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       flexTeasers: [
         {
-          alignment: {i: 'a', x: 5, y: 5, w: 5, h: 5, static: false},
+          alignment: {i: 'a', x: 0, y: 0, w: 3, h: 6, static: false},
           teaser: null
         },
         {
-          alignment: {i: 'b', x: 10, y: 10, w: 20, h: 20, static: false},
+          alignment: {i: 'b', x: 3, y: 0, w: 5, h: 3, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: 'c', x: 3, y: 3, w: 5, h: 3, static: false},
           teaser: null
         }
       ]
