@@ -176,6 +176,7 @@ export interface User {
   readonly roleIDs: string[]
   readonly subscription?: UserSubscription
   readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+  readonly authorID: string
 }
 
 export interface UserInput {
@@ -190,6 +191,7 @@ export interface UserInput {
 
   readonly properties: MetadataProperty[]
   readonly roleIDs: string[]
+  readonly authorID: string
 }
 
 export interface UpdatePaymentProviderCustomerArgs {
@@ -206,6 +208,12 @@ export interface GetUsersArgs {
   readonly filter?: UserFilter
   readonly sort: UserSort
   readonly order: SortOrder
+}
+
+export interface AuthorUsers {
+  readonly id: string
+  readonly name: string
+  readonly email: string
 }
 
 export interface DBUserAdapter {
@@ -236,4 +244,6 @@ export interface DBUserAdapter {
   ): Promise<OptionalUserSubscription>
 
   updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
+  // getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]>
+  getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]>
 }

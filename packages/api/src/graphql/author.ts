@@ -18,12 +18,22 @@ import {GraphQLSlug} from './slug'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
+import {resolve} from 'path'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
   fields: {
     title: {type: GraphQLNonNull(GraphQLString)},
     url: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLAuthorUsers = new GraphQLObjectType({
+  name: 'AuthorUsers',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -50,6 +60,12 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+    users: {
+      type: GraphQLList(GraphQLAuthorUsers),
+      resolve: createProxyingResolver(({id}, args, {dbAdapter}) => {
+        return id ? dbAdapter.user.getUsersByAuthorID(id) : null
       })
     }
   }

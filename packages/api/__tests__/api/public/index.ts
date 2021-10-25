@@ -90,6 +90,7 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>
   jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
+  users?: Maybe<Array<Maybe<AuthorUsers>>>
 }
 
 export type AuthorConnection = {
@@ -113,6 +114,13 @@ export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
   Name = 'NAME'
+}
+
+export type AuthorUsers = {
+  __typename?: 'AuthorUsers'
+  id: Scalars['String']
+  name: Scalars['String']
+  email: Scalars['String']
 }
 
 export type AuthProvider = {

@@ -147,6 +147,7 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>
   jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
+  users?: Maybe<Array<Maybe<AuthorUsers>>>
 }
 
 export type AuthorConnection = {
@@ -184,6 +185,13 @@ export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
   Name = 'NAME'
+}
+
+export type AuthorUsers = {
+  __typename?: 'AuthorUsers'
+  id: Scalars['String']
+  name: Scalars['String']
+  email: Scalars['String']
 }
 
 export type AuthProvider = {
@@ -1261,6 +1269,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query'
+  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1297,6 +1306,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+}
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String']
+  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
@@ -1642,6 +1656,7 @@ export type User = {
   properties: Array<Properties>
   roles: Array<UserRole>
   subscription?: Maybe<UserSubscription>
+  authorID?: Maybe<Scalars['String']>
 }
 
 export type UserAddress = {
@@ -1685,6 +1700,7 @@ export type UserInput = {
   active: Scalars['Boolean']
   properties: Array<PropertiesInput>
   roleIDs?: Maybe<Array<Scalars['String']>>
+  authorID?: Maybe<Scalars['String']>
 }
 
 export type UserRole = {

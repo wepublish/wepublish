@@ -107,7 +107,8 @@ export const GraphQLUser = new GraphQLObjectType({
         return Promise.all(roleIDs.map((roleID: string) => loaders.userRolesByID.load(roleID)))
       }
     },
-    subscription: {type: GraphQLUserSubscription}
+    subscription: {type: GraphQLUserSubscription},
+    authorID: {type: GraphQLString}
   }
 })
 
@@ -189,7 +190,8 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
 
-    roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    authorID: {type: GraphQLString}
   }
 })
 
@@ -215,6 +217,7 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput}
+    // authorID: {type: GraphQLString}
   }
 })
 

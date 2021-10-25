@@ -24,7 +24,8 @@ import {
   User,
   UserOAuth2Account,
   UserOAuth2AccountArgs,
-  UserSort
+  UserSort,
+  AuthorUsers
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -64,7 +65,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: input.properties,
         roleIDs: input.roleIDs,
         password: passwordHash,
-        paymentProviderCustomers: {}
+        paymentProviderCustomers: {},
+        authorID: input.authorID
       })
 
       return this.getUserByID(id)
@@ -94,7 +96,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         lastLogin: user.lastLogin,
         properties: user.properties,
         roleIDs: user.roleIDs,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     } else {
       return null
@@ -114,7 +117,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           properties: input.properties,
           email: input.email,
           emailVerifiedAt: input.emailVerifiedAt,
-          roleIDs: input.roleIDs
+          roleIDs: input.roleIDs,
+          authorID: input.authorID
         }
       },
       {returnOriginal: false}
@@ -167,7 +171,19 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
+      }
+    })
+  }
+
+  async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
+    const users = await this.users.find({authorID: authorID}).toArray()
+    return users.map(user => {
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name
       }
     })
   }
@@ -191,7 +207,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     }
 
@@ -216,7 +233,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     } else {
       return null
@@ -246,7 +264,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     } else {
       return null

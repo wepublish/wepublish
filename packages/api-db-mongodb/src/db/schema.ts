@@ -119,6 +119,7 @@ export interface DBUser {
 
   subscription?: UserSubscription
   paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+  authorID: any
 }
 
 export interface DBUserRole {
