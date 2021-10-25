@@ -56,6 +56,7 @@ export function DateTimePicker({
     }
     day.setDate(day.getDate() + offset)
     setDateSelection(day)
+    changeDate(day)
   }
 
   const handleTimePresetButton = (hour: number) => {
@@ -65,9 +66,11 @@ export function DateTimePicker({
       day.setHours(now.getHours())
       day.setMinutes(now.getMinutes())
       setDateSelection(day)
+      changeDate(day)
     } else {
       day.setHours(hour, 0, 0)
       setDateSelection(day)
+      changeDate(day)
     }
   }
   return (
