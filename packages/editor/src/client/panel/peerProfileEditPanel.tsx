@@ -89,7 +89,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   useEffect(() => {
     const checkCallToActionTextURL = async () => {
-      const isValidURL = await validateURL(callToActionTextURL)
+      const isValidURL = validateURL(callToActionTextURL)
       setValidCallToActionTextURL(!isValidURL)
     }
     checkCallToActionTextURL()
@@ -214,11 +214,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 />
               </FormGroup>
               <FormGroup>
-                <FormControl
+                <FormControlUrl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
                   value={callToActionImageURL}
-                  onChange={url => setCallToActionImageURL(url)}
+                  onChange={setCallToActionImageURL}
                 />
                 <Message
                   style={{marginTop: '5px'}}
