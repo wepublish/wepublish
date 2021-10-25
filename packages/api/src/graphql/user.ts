@@ -216,8 +216,8 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     email: {type: GraphQLNonNull(GraphQLString)},
 
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddressInput}
-    // authorID: {type: GraphQLString}
+    address: {type: GraphQLUserAddressInput},
+    authorID: {type: GraphQLString}
   }
 })
 
