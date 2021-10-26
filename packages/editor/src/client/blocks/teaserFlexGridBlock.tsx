@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import GridLayout from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -19,6 +19,7 @@ import 'react-resizable/css/styles.css'
 
 import {
   FlexItemAlignment,
+  FlexTeaser,
   TeaserFlexGridBlockValue
   // Teaser,
   // TeaserType,
@@ -26,6 +27,11 @@ import {
   // FlexGridItemLayout
 } from './types'
 import {BlockProps} from '../atoms/blockList'
+import nanoid from 'nanoid'
+import {Icon, IconButton, Panel} from 'rsuite'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {contentForTeaser, TeaserBlock, TeaserBlockProps} from './teaserGridBlock'
+import {PlaceholderInput} from '../atoms/placeholderInput'
 
 // import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 // import {TeaserEditPanel} from '../panel/teaserEditPanel'
@@ -39,7 +45,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   // const [isEditModalOpen, setEditModalOpen] = useState(false)
   // const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
-  const {flexTeasers} = value
+  const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
 
   const alignment: FlexItemAlignment[] = []
   flexTeasers.map(flexTeaser => {
@@ -49,15 +55,44 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const teasers = flexTeasers.map(flexTeaser => flexTeaser.teaser)
 
-  // const handleLayoutChange = (layout: FlexItemAlignment[]) => {
-  //   setLayout(layout)
-  //
-  //   onChange({
-  //     ...value,
-  //     flexTeasers: newflex
-  //     })
-  //   })
-  // }
+  const handleLayoutChange = (layout: FlexItemAlignment[]) => {
+    setLayout(layout)
+    onChange({
+      ...value,
+      flexTeasers: flexTeasers.map((flexTeaser, i) => {
+        return {
+          teaser: flexTeaser.teaser,
+          alignment: layout[i]
+        }
+      })
+    })
+  }
+
+  const handleAddTeaser = () => {
+    const newTeaser: FlexTeaser = {
+      alignment: {
+        i: nanoid(),
+        x: Infinity,
+        y: Infinity, // puts it at the bottom
+        w: 2,
+        h: 2
+      },
+      teaser: null
+    }
+    flexTeasers.push(newTeaser)
+    onChange({
+      ...value,
+      flexTeasers: [...flexTeasers]
+    })
+  }
+
+  const handleRemoveTeaser = (index: number) => {
+    flexTeasers.splice(index, 1)
+    onChange({
+      ...value,
+      flexTeasers: [...flexTeasers]
+    })
+  }
 
   // function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
   // onChange({
@@ -87,21 +122,102 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     <>
       <p>{JSON.stringify(layout)}</p>
       <p>{JSON.stringify(teasers)}</p>
+      <IconButtonTooltip caption="add">
+        <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaser} />
+      </IconButtonTooltip>
       <GridLayout
         // onDragStart={handleSortStart}
         // onDragStop={() => handleSortEnd}
-        layout={alignment}
+        onLayoutChange={handleLayoutChange}
+        layout={layout}
         className="layout"
         cols={12}
         rowHeight={30}
         width={1200}>
-        {value.flexTeasers.map(flexTeaser => (
-          <div key={flexTeaser.alignment.i} style={{backgroundColor: 'lightsalmon'}}>
+        {value.flexTeasers.map((flexTeaser, i) => (
+          <div key={flexTeaser.alignment.i} style={{backgroundColor: 'lightgray'}}>
             {flexTeaser.teaser}
+            <FlexTeaserBlock
+              teaser={flexTeaser.teaser}
+              showGrabCursor={teasers.length !== 1}
+              onEdit={() => console.log('edit')}
+              onChoose={() => console.log('choose')}
+              onRemove={() => console.log('remove')}
+            />
+            <IconButtonTooltip caption="delete">
+              <IconButton
+                icon={<Icon icon="trash" />}
+                circle
+                size="sm"
+                onClick={() => handleRemoveTeaser(i)}
+              />
+            </IconButtonTooltip>
           </div>
         ))}
       </GridLayout>
     </>
+  )
+}
+
+export function FlexTeaserBlock({
+  teaser,
+  showGrabCursor,
+  onEdit,
+  onChoose,
+  onRemove
+}: TeaserBlockProps) {
+  return (
+    <Panel
+      bodyFill={true}
+      style={{
+        cursor: showGrabCursor ? 'grab' : '',
+        height: 300,
+        overflow: 'hidden',
+        zIndex: 1
+      }}>
+      <PlaceholderInput onAddClick={onChoose}>
+        {teaser && (
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%'
+            }}>
+            {contentForTeaser(teaser)}
+
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                right: 0,
+                top: 0
+              }}>
+              <IconButton
+                icon={<Icon icon="file" />}
+                onClick={onChoose}
+                style={{
+                  margin: 10
+                }}
+              />
+              <IconButton
+                icon={<Icon icon="pencil" />}
+                onClick={onEdit}
+                style={{
+                  margin: 10
+                }}
+              />
+              <IconButton
+                icon={<Icon icon="trash" />}
+                onClick={onRemove}
+                style={{
+                  margin: 10
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </PlaceholderInput>
+    </Panel>
   )
 }
 // <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
