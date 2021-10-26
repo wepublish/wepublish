@@ -111,20 +111,10 @@ Object {
 
 exports[`Peers can be created/edited/deleted: can read peer profile 1`] = `
 Object {
-  "data": Object {
-    "peerProfile": Object {
-      "callToActionImage": null,
-      "callToActionImageURL": "",
-      "callToActionText": "",
-      "callToActionURL": "",
-      "hostURL": "https://fakeURL",
-      "logo": null,
-      "name": "",
-      "themeColor": "#000000",
-      "themeFontColor": "#ffffff",
-    },
-  },
-  "errors": undefined,
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Cannot return null for non-nullable field PeerProfile.name.],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {
