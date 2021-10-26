@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react'
+import React, {useState, useCallback} from 'react'
 import {FormControl, Message} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {validateURL} from '../utility'
