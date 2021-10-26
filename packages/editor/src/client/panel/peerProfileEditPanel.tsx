@@ -52,7 +52,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState<string | undefined>()
   const [isLogoChange, setIsLogoChange] = useState(false)
-  const [validCallToActionTextURL, setValidCallToActionTextURL] = useState(true)
+  const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -61,7 +61,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving || validCallToActionTextURL
+  const isDisabled = isLoading || isSaving || validCallToActionURL
 
   const {t} = useTranslation()
 
@@ -88,12 +88,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   }, [fetchError, saveError])
 
   useEffect(() => {
-    const checkCallToActionTextURL = async () => {
-      const isValidURL = validateURL(callToActionTextURL)
-      setValidCallToActionTextURL(!isValidURL)
+    const checkCallToActionURL = async () => {
+      const isValidTextURL = validateURL(callToActionTextURL)
+      const isValidImageURL = validateURL(callToActionImageURL || '')
+      setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
     }
-    checkCallToActionTextURL()
-  }, [callToActionTextURL])
+    checkCallToActionURL()
+  }, [callToActionTextURL, callToActionImageURL])
 
   async function handleSave() {
     await updateSettings({
