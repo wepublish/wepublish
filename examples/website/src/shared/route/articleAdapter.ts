@@ -13,7 +13,7 @@ export function peerAdapter(peer: any): Peer {
     themeFontColor: peer.profile.themeFontColor,
     callToActionText: peer.profile.callToActionText,
     callToActionURL: peer.profile.callToActionURL,
-    callToActionImage: peer.profile.callToActionImage.largeURL,
+    callToActionImage: peer.profile.callToActionImage?.largeURL,
     callToActionImageURL: peer.profile.callToActionImageURL
   }
 }

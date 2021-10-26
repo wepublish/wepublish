@@ -5,9 +5,11 @@
         "articlePublished": "Article Published",
         "back": "Back",
         "create": "Create",
+        "delete": "Delete",
         "draft": "Draft",
         "draftCreated": "Article Draft Created",
         "draftSaved": "Article Draft Saved",
+        "duplicate": "Duplicate",
         "metadata": "Metadata",
         "noSlug": "Article Not Published. Please add a slug.",
         "notFound": "Article Not Found",
@@ -15,6 +17,7 @@
         "publish": "Publish",
         "published": "Article published on {{date, ccc PP p}}.",
         "save": "Save",
+        "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -316,9 +319,12 @@
     "comments": {
       "overview": {
         "action": "Action",
+        "approve": "Approve",
         "comments": "Comments",
         "created": "Created",
         "loadMore": "Load More",
+        "reject": "Reject",
+        "requestChange": "Request Change",
         "search": "Search",
         "state": "State",
         "text": "Text",
@@ -374,6 +380,7 @@
     },
     "images": {
       "overview": {
+        "delete": "Delete",
         "imageLibrary": "Image Library",
         "loadMore": "Load More",
         "noImagesFound": "No Images found",
@@ -469,6 +476,7 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "createNew": "New Member Plan",
       "createTitle": "Create Member Plan",
+      "delete": "Delete",
       "deleteModalTitle": "Delete Member Plan",
       "description": "Description",
       "editTitle": "Edit Member Plan",
@@ -547,7 +555,9 @@
       "overview": {
         "back": "Back",
         "create": "Create",
+        "delete": "Delete",
         "draft": "Draft",
+        "duplicate": "Duplicate",
         "metadata": "Metadata",
         "pageDraftCreated": "Page Draft Created",
         "pageDraftSaved": "Page Draft Saved",
@@ -557,6 +567,7 @@
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
         "save": "Save",
+        "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -644,6 +655,7 @@
       "adapter": "Payment Adapter",
       "createNew": "New Payment Method",
       "createTitle": "Create Payment Method",
+      "delete": "Delete",
       "deleteModalTitle": "Delete Payment Method",
       "description": "Description",
       "editTitle": "Edit Payment Method",
@@ -652,6 +664,8 @@
     },
     "peerList": {
       "overview": {
+        "delete": "Delete",
+        "editProfile": "Edit profile",
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
         "peers": "Peers",
@@ -701,6 +715,7 @@
     "save": "Save",
     "tokenList": {
       "overview": {
+        "delete": "Delete",
         "generateToken": "Generate Token",
         "loading": "loading...",
         "tokens": "Tokens"

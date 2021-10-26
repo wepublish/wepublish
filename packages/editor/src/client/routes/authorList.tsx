@@ -12,6 +12,7 @@ import {
 } from '../route'
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@wepublish/karma.run-react'
 
@@ -186,16 +187,18 @@ export function AuthorList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentAuthor(rowData)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('authors.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentAuthor(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>

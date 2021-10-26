@@ -24,6 +24,8 @@ import {
   FullImageFragment
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {useTranslation} from 'react-i18next'
 import {
   FlexboxGrid,
@@ -147,17 +149,19 @@ export function ImageList() {
                     </Typography>
                     <Typography className="displayThreeLinesOnly">{image.description}</Typography>
                   </Overlay>
-                  <IconButton
-                    style={{position: 'absolute', top: '5px', right: '5px'}}
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    onClick={event => {
-                      event.preventDefault()
-                      setCurrentImage(image)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('images.overview.delete')}>
+                    <IconButton
+                      style={{position: 'absolute', top: '5px', right: '5px'}}
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      onClick={event => {
+                        event.preventDefault()
+                        setCurrentImage(image)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </Panel>
               </Link>
             </FlexboxGrid.Item>

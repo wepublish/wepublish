@@ -90,7 +90,7 @@ export function TitleBlockBreaking({
 
   return (
     <div ref={ref} className={css(TitleBlockStyle)}>
-      <p className={css(preTitleStyle)}>{preTitle && {preTitle}}</p>
+      {preTitle && <p className={css(preTitleStyle)}>{preTitle}</p>}
       <h1 className={css(TitleStyle)}>{title}</h1>
 
       <p className={css(AuthorContainerStyle)}>

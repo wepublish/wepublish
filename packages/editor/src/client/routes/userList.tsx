@@ -14,6 +14,7 @@ import {
 import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
@@ -191,26 +192,30 @@ export function UserList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullUserFragment) => (
                 <>
-                  <IconButton
-                    icon={<Icon icon="lock" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={e => {
-                      setCurrentUser(rowData)
-                      setIsResetUserPasswordOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentUser(rowData)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
+                    <IconButton
+                      icon={<Icon icon="lock" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={e => {
+                        setCurrentUser(rowData)
+                        setIsResetUserPasswordOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('userList.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentUser(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>
