@@ -622,19 +622,17 @@ export const Migrations: Migration[] = [
       const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
         callToActionText: {$exists: true}
       })
-      if (peerProfile) {
-        await db.collection(CollectionName.PeerProfiles).updateOne(
-          {
-            callToActionText: {$exists: true}
-          },
-          {
-            $set: {
-              callToActionText: richTextToString('', peerProfile?.callToActionText)
-            }
-          },
-          {upsert: true}
-        )
-      }
+      await db.collection(CollectionName.PeerProfiles).updateOne(
+        {
+          callToActionText: {$exists: true}
+        },
+        {
+          $set: {
+            callToActionText: richTextToString('', peerProfile?.callToActionText)
+          }
+        },
+        {upsert: true}
+      )
     }
   }
 ]
