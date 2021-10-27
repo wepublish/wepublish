@@ -5,14 +5,10 @@ import {
     WEBSITE_URL,
     createPage,
     metadataButton,
-    createButton,
     publishButton,
     closeButton,
     confirmButton,
-    pageLeadInput,
-    pageTitleInput,
     metaSlugInput,
-    addContentButton,
     getPath,
     addTestingContent,
     checkTestingContentOnWebsite,
@@ -21,7 +17,6 @@ import {
 
 console.log('Editor URL', EDITOR_URL)
 console.log('Website URL', WEBSITE_URL)
-
 
 fixture`Create and publish a page`
     .disablePageCaching
@@ -96,8 +91,6 @@ test('Publish page', async t => {
 
 
 test('Test Website', async t => {
-    const h1Title = Selector('h1')
-
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
     await checkTestingContentOnWebsite()

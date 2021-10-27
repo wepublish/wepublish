@@ -6,7 +6,6 @@ import {
   EDITOR_URL,
   WEBSITE_URL,
   metadataButton,
-  createButton,
   publishButton,
   closeButton,
   confirmButton,
@@ -14,8 +13,8 @@ import {
   metaTitleInput,
   metaLeadInput,
   createArticle,
-  articleTitleInput,
-  articleLeadInput,
+  addTestingContent,
+  checkTestingContentOnWebsite
 } from "./common"
 
 
@@ -46,10 +45,8 @@ test('Create an article', async t => {
   await t
     .expect(await getPath()).contains('/article/create')
 
-  await t
-    .typeText(articleTitleInput, 'This is the article Title')
-    .typeText(articleLeadInput, 'This is the article lead')
-    .click(createButton);
+  await 
+      addTestingContent()
 
   const path = await getPath()
   articleID = path.substr(path.lastIndexOf('/') + 1)
@@ -58,18 +55,10 @@ test('Create an article', async t => {
 
   await t
     .click(metadataButton)
-    .expect(metaTitleInput.value).contains('This is the article Title')
-    .expect(metaLeadInput.value).contains('This is the article lead')
+    .expect(metaTitleInput.value).contains('This is the Title')
+    .expect(metaLeadInput.value).contains('This is the lead')
     .typeText(metaPreTitleInput, 'This is a Pre-title')
     .click(closeButton)
-
-
-  //  What is this for? 
-  //    await t
-  //     .click(lastAddButton)
-  //     .click(richTextButton)
-  //     .typeText(richTextBox, 'This is some random text') 
-
 });
 
 test('Test Website', async t => {
@@ -96,11 +85,9 @@ test('Publish article', async t => {
 })
 
 test('Test Website', async t => {
-  const h1Title = Selector('h1')
-
   await t
     .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
-    .expect(h1Title.innerText).eql('This is the article Title')
+  await checkTestingContentOnWebsite()
 })
 
 test('Delete article', async t => {

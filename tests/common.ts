@@ -59,6 +59,14 @@ const admin = Role(`${EDITOR_URL}/login`, async t => {
         .click('form > button')
 });
 
+
+const userOne = Role(`${EDITOR_URL}/login`, async t => {
+    await t
+    .typeText(loginName, userEmail)
+    .typeText(loginPassword, userPassword)
+    .click('form > button')
+});
+
 const getPath = ClientFunction(() => {
     return document.location.pathname
 });
@@ -107,8 +115,8 @@ async function addTitleAndLead() {
     await t
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-header'))
-        .typeText(pageTitleInput, 'This is the page Title')
-        .typeText(pageLeadInput, 'This is the page lead')
+        .typeText(pageTitleInput, 'This is the Title')
+        .typeText(pageLeadInput, 'This is the lead')
 }
 
 async function addImgGallery() {
@@ -118,11 +126,6 @@ async function addImgGallery() {
         .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
         .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './felix.JPG')
         .click(Selector('button').withText('Upload'))
-        // .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
-        // .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
-        // .click(Selector('img'))
-
-        // Draggable problem?
         .click(Selector('button').withText('Save'))
 }
 
@@ -130,11 +133,8 @@ async function addImg() {
     await t
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-image'))
-        .click(Selector('img'))
-        // .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './arvine.JPG')
-        // .click(Selector('button').withText('Upload'))
-        // .click(Selector('button').withText('Save'))
-
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './arvine.JPG')
+        .click(Selector('button').withText('Upload'))
 }
 
 async function addListicle() {
@@ -178,30 +178,27 @@ async function addRichText() {
         .typeText(Selector('h1'), 'This is a rich text element')
         .pressKey('ctrl+a')
         .click(Selector('i.rs-icon-italic'))
-        // .click(Selector('i.rs-icon-smile-o'))
-        // .click(Selector('button').withAttribute('aria-label','😀, grinning').nth(1))
-        // .click(Selector('button').child('i.rs-icon-close'))
 }
 
 
 export async function addTestingContent() {
 
-    // await addTitleAndLead()
+    await addTitleAndLead()
     await addImgGallery()
     await addImg()   
-    // await addListicle()
-    // await addQuote()
-    // await addEmbeddedVideo()
-    // await addOneColArticle()
-    // await addRichText()
+    await addListicle()
+    await addQuote()
+    await addEmbeddedVideo()
+    await addOneColArticle()
+    await addRichText()
     await t
         .click(createButton);
 }
 
 async function checkTitleAndLeadOnWebsite() {
     await t
-        .expect(Selector('h1').withText('This is the page Title').exists).ok()
-        .expect(Selector('div').child().withText('This is the page lead').exists).ok()
+        .expect(Selector('h1').withText('This is the Title').exists).ok()
+        .expect(Selector('div').child().withText('This is the lead').exists).ok()
 }
 
 async function checkImgOnWebsite() {
@@ -251,13 +248,14 @@ async function checkOneColArticleOnWebsite() {
 }
 
 export async function checkTestingContentOnWebsite() {
-    // await checkTitleAndLeadOnWebsite()
-    // await checkListicleOnWebsite()
-    // await checkEmbedVideoOnWebsite()
-    // await checkQuoteOnWebsite()
+    // add test article
+    await checkTitleAndLeadOnWebsite()
+    await checkListicleOnWebsite()
+    await checkEmbedVideoOnWebsite()
+    await checkQuoteOnWebsite()
     await checkImgOnWebsite()
     await checkImgGalleryOnWebsite()
-    // await checkRichTextOnWebsite()
+    await checkRichTextOnWebsite()
 }
 
 
@@ -293,6 +291,7 @@ export {
     userEmail,
     userNameInput,
     userPasswordInput,
-    userEmailInput
+    userEmailInput,
+    userOne
 }
 
