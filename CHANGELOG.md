@@ -1,5 +1,16 @@
 # Change Log
 
+## v2.12.0-alpha.0 (2021-10-27)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#394](https://github.com/wepublish/wepublish/pull/394) fix preset buttons on date picker ([@penk85](https://github.com/penk85))
+
+#### Committers: 2
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
 ## v2.11.0 (2021-10-13)
 
 #### :heart: New Feature
