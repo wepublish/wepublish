@@ -1,5 +1,5 @@
 
-import { ClientFunction, Role, Selector } from "testcafe";
+import { ClientFunction, Role, Selector, t } from "testcafe";
 import { slugify } from '../config/utilities'
 import * as process from "process";
 
@@ -10,6 +10,7 @@ const metadataButton = Selector('button').child('i.rs-icon-newspaper-o')
 const createButton = Selector('button').child('i.rs-icon-save')
 const publishButton = Selector('button').child('i.rs-icon-cloud-upload')
 const addContentButton = Selector('button').child('i.rs-icon-plus')
+const richtTextElement = Selector('h1').withAttribute('data-slate-node', 'element')
 
 const closeButton = Selector('.rs-drawer-footer').child('button.rs-btn-primary')
 const confirmButton = Selector('.rs-modal-footer').child('button.rs-btn-primary')
@@ -30,12 +31,14 @@ const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.e
 const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0, 12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
 const userName = getRandomString(7)
-const userEmail = userName+'@mail.com'
+const userEmail = userName + '@mail.com'
 const userPassword = getRandomString(3)
 
 const userNameInput = Selector('input').withAttribute('name', 'Name')
 const userEmailInput = Selector('input').withAttribute('name', 'Email')
 const userPasswordInput = Selector('input').withAttribute('name', 'Password')
+
+const videoUrl = '<iframe width="560" height="315" src="https://www.youtube.com/embed/evS8294sOXg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 
 export function makeid(length) {
     let result = '';
@@ -73,12 +76,11 @@ const goToPagePath = ClientFunction((websiteUrl, pageID) => {
 function getRandomString(length) {
     var randomChars = 'abcdefghijklmnopqrstuvwxyz';
     var result = '';
-    for ( var i = 0; i < length; i++ ) {
+    for (var i = 0; i < length; i++) {
         result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
     }
     return result;
 }
-
 
 // not used 
 
@@ -92,7 +94,6 @@ function getRandomString(length) {
 //   return result;
 // }
 
-
 // const isLoggedIn = test('Is logged in', async t => {
 //     console.log('is logged in', await ClientFunction(() => {
 //       return document.location.toString()
@@ -101,6 +102,163 @@ function getRandomString(length) {
 //     await t
 //       .expect(Selector('i.rs-icon-cog').exists).ok()
 //   })
+
+async function addTitleAndLead() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-header'))
+        .typeText(pageTitleInput, 'This is the page Title')
+        .typeText(pageLeadInput, 'This is the page lead')
+}
+
+async function addImgGallery() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-clone'))
+        .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './felix.JPG')
+        .click(Selector('button').withText('Upload'))
+        // .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
+        // .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
+        // .click(Selector('img'))
+
+        // Draggable problem?
+        .click(Selector('button').withText('Save'))
+}
+
+async function addImg() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-image'))
+        .click(Selector('img'))
+        // .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './arvine.JPG')
+        // .click(Selector('button').withText('Upload'))
+        // .click(Selector('button').withText('Save'))
+
+}
+
+async function addListicle() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-th-list'))
+        .typeText(Selector('div').withAttribute('role', 'textbox'), 'Hello World')
+}
+
+async function addQuote() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-quote-left'))
+        .typeText(Selector('textarea').withAttribute('placeholder', 'Quote'), 'Hello World')
+        .typeText(Selector('textarea').withAttribute('placeholder', 'Author'), 'Great author')
+}
+
+
+async function addEmbeddedVideo() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-code'))
+        .typeText(Selector('textarea').withAttribute('placeholder', 'Embed'), videoUrl)
+        .click(Selector(closeButton))
+}
+
+async function addOneColArticle() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-ellipsis-v'))
+        .click(Selector('button').child('i.rs-icon-plus-circle'))
+        .click(Selector('div.rs-list-item'))
+        .click(Selector(closeButton))
+}
+
+async function addRichText() {
+    await t
+        .click(addContentButton)
+        .click(Selector('a').child('i.rs-icon-file-text'))
+        .click(Selector('svg.bi-type-h1'))
+        .typeText(Selector('h1'), 'This is a rich text element')
+        .pressKey('ctrl+a')
+        .click(Selector('i.rs-icon-italic'))
+        // .click(Selector('i.rs-icon-smile-o'))
+        // .click(Selector('button').withAttribute('aria-label','😀, grinning').nth(1))
+        // .click(Selector('button').child('i.rs-icon-close'))
+}
+
+
+export async function addTestingContent() {
+
+    // await addTitleAndLead()
+    await addImgGallery()
+    await addImg()   
+    // await addListicle()
+    // await addQuote()
+    // await addEmbeddedVideo()
+    // await addOneColArticle()
+    // await addRichText()
+    await t
+        .click(createButton);
+}
+
+async function checkTitleAndLeadOnWebsite() {
+    await t
+        .expect(Selector('h1').withText('This is the page Title').exists).ok()
+        .expect(Selector('div').child().withText('This is the page lead').exists).ok()
+}
+
+async function checkImgOnWebsite() {
+    const imgSrc = Selector('img').getAttribute('src')
+    const imgSrcCheck = (await imgSrc).slice(-10)
+    console.log(imgSrcCheck)
+    await t
+        .expect(imgSrcCheck).eql('arvine.JPG')
+}
+
+async function checkListicleOnWebsite() {
+    await t
+        .expect(Selector('div').withText('1').exists).ok()
+        .expect(Selector('span').withAttribute('data-slate-string', "true")
+        .withText('Hello\u00a0World').exists).ok()
+}
+
+async function checkQuoteOnWebsite() {
+    await t
+        .expect(Selector('blockquote').child().withText('Hello World').exists).ok()
+        .expect(Selector('blockquote').child().withText('Great author').exists).ok()
+}
+
+async function checkEmbedVideoOnWebsite() {
+    await t
+         .expect(Selector('iframe')
+         .withAttribute('src', 'https://www.youtube.com/embed/evS8294sOXg')
+         .exists).ok()}
+
+
+async function checkImgGalleryOnWebsite() {
+    await t
+    .expect(Selector('svg').withAttribute('xmlns', 'http://www.w3.org/2000/svg').exists).ok()
+}
+
+async function checkRichTextOnWebsite() {
+    await t
+    .expect(richtTextElement
+    .child().child().child().withText('This\u00a0is\u00a0a\u00a0rich\u00a0text\u00a0element').exists).ok()
+    .expect(richtTextElement 
+    .child().child().child('em').exists).ok()
+}
+
+async function checkOneColArticleOnWebsite() {
+    await t
+    .expect(Selector('div').child('a').withAttribute('href', "/a/F87Vg5Yx7rMvbcmT/article-to-test").exists).ok()
+}
+
+export async function checkTestingContentOnWebsite() {
+    // await checkTitleAndLeadOnWebsite()
+    // await checkListicleOnWebsite()
+    // await checkEmbedVideoOnWebsite()
+    // await checkQuoteOnWebsite()
+    await checkImgOnWebsite()
+    checkImgGalleryOnWebsite()
+    // await checkRichTextOnWebsite()
+}
 
 
 export {
@@ -136,6 +294,5 @@ export {
     userNameInput,
     userPasswordInput,
     userEmailInput
-    // isLoggedIn
 }
 

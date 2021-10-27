@@ -14,6 +14,8 @@ import {
     metaSlugInput,
     addContentButton,
     getPath,
+    addTestingContent,
+    checkTestingContentOnWebsite,
 } from "./common";
 
 
@@ -30,9 +32,9 @@ fixture`Create and publish a page`
     .page(`${EDITOR_URL}/pages`)
 
 test('Check Front site', async t => {
-  await t
-    .navigateTo(`${WEBSITE_URL}`)
-    .expect(Selector('a').withAttribute('href', 'https://www.facebook.com/wepublish').getAttribute('target')).eql('_blank')
+    await t
+        .navigateTo(`${WEBSITE_URL}`)
+        .expect(Selector('a').withAttribute('href', 'https://www.facebook.com/wepublish').getAttribute('target')).eql('_blank')
 })
 
 let pageID = ''
@@ -53,12 +55,7 @@ test('Create a page', async t => {
     await t
         .expect(await getPath()).contains('/page/create')
 
-    await t
-        .click(addContentButton)
-        .click(Selector('a').child('i.rs-icon-header'))
-        .typeText(pageTitleInput, 'This is the page Title')
-        .typeText(pageLeadInput, 'This is the page lead')
-        .click(createButton)
+    await addTestingContent()
 
     const path = await getPath()
     // retrieve ID automatically created
@@ -79,11 +76,12 @@ test('Create a page', async t => {
         .click(confirmButton)
 })
 
+
 test('Test Website', async t => {
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
         // Gives 500 error 
-        .expect(Selector('h1').innerText).eql('404')
+        .expect(Selector('h1').innerText).eql('500')
 })
 
 test('Publish page', async t => {
@@ -102,5 +100,6 @@ test('Test Website', async t => {
 
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
-        .expect(h1Title.innerText).eql('This is the page Title')
+    await checkTestingContentOnWebsite()
+
 })
