@@ -40,7 +40,13 @@ export function richTextToString(blocksString: string, nodes: any = []) {
   const richTextNode = nodes.reduce((string: string, node: any) => {
     if (!node.text && !node.children) return string
     if (node.text) {
-      return `${string} ${node.text}`
+      if (string.endsWith(' ') || node.text.startsWith(' ')) {
+        return `${string}${node.text}`
+      } else if (string === '') {
+        return `${node.text}`
+      } else {
+        return `${string} ${node.text}`
+      }
     }
     return richTextToString(string, node.children)
   }, blocksString)
