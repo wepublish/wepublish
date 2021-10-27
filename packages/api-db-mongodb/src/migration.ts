@@ -620,21 +620,21 @@ export const Migrations: Migration[] = [
     version: 15,
     async migrate(db, locale) {
       const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
-          callToActionText: {$exists: true}
-        })
-        if (peerProfile) {
-          await db.collection(CollectionName.PeerProfiles).updateOne(
-            {
-              callToActionText: {$exists: true}
-            },
-            {
-              $set: {
-                callToActionText: richTextToString('', peerProfile?.callToActionText)
-              }
-            },
-            {upsert: true}
-          )
-        }
+        callToActionText: {$exists: true}
+      })
+      if (peerProfile) {
+        await db.collection(CollectionName.PeerProfiles).updateOne(
+          {
+            callToActionText: {$exists: true}
+          },
+          {
+            $set: {
+              callToActionText: richTextToString('', peerProfile?.callToActionText)
+            }
+          },
+          {upsert: true}
+        )
+      }
     }
   }
 ]
