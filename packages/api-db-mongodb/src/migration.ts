@@ -622,7 +622,8 @@ export const Migrations: Migration[] = [
       const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
         callToActionText: {$exists: true}
       })
-      if (peerProfile?.callToActionText) {
+      if (peerProfile !== null) {
+        console.log(peerProfile)
         await db.collection(CollectionName.PeerProfiles).updateOne(
           {
             callToActionText: {$exists: true}
