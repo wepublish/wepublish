@@ -256,7 +256,7 @@ export async function checkTestingContentOnWebsite() {
     // await checkEmbedVideoOnWebsite()
     // await checkQuoteOnWebsite()
     await checkImgOnWebsite()
-    checkImgGalleryOnWebsite()
+    await checkImgGalleryOnWebsite()
     // await checkRichTextOnWebsite()
 }
 
