@@ -2,6 +2,7 @@ import React from 'react'
 
 import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 import {
   imageBlockDataFragment,
@@ -418,9 +419,20 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
         <div className={css(PeerProfileFiller)} />
       </div>
       <div className={css(PeerProfileCallToActionURL)}>
-        {peer?.callToActionText?.length && (
+        {peer?.callToActionText?.length && peer?.callToActionText?.length > 0 ? (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
-            {peer?.callToActionText}
+            <RichTextBlock
+              value={peer?.callToActionText}
+              displayOnly
+              disabled
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
+          </a>
+        ) : (
+          <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
+            {peer.callToActionText}
           </a>
         )}
       </div>
