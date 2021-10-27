@@ -34,12 +34,6 @@ query PeerProfile {
   }
 }
 
-query RemotePeerProfile($hostURL: String!, $token: String!) {
-  remotePeerProfile(hostURL: $hostURL, token: $token) {
-    ...FullPeerProfile
-  }
-}
-
 mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {
     ...FullPeerProfile
