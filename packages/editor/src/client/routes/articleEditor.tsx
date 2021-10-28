@@ -13,8 +13,6 @@ import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} fr
 import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
-import {format} from 'date-fns'
-
 import {
   ArticleInput,
   AuthorRefFragment,
@@ -381,9 +379,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
 
-      const publicationDate = format(publishDate, 'y/LL/d-kk:mm')
-      const now = format(new Date(), 'y/LL/d-kk:mm')
-      publicationDate == now || publicationDate < now
+      const publicationDate = publishDate.getTime()
+      const now = new Date().getTime()
+      publicationDate === now || publicationDate < now
         ? Notification.success({
             title: t('articleEditor.overview.articlePublished'),
             duration: 2000
