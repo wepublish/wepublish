@@ -43,7 +43,6 @@ import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
-import {UniqueDirectivesPerLocationRule} from 'graphql'
 
 export interface ArticleEditorProps {
   readonly id?: string
