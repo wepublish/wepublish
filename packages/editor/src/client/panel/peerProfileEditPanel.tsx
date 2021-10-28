@@ -90,7 +90,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   useEffect(() => {
     const checkCallToActionURL = async () => {
       const isValidTextURL = validateURL(callToActionTextURL)
-      const isValidImageURL = validateURL(callToActionImageURL || '')
+      const isValidImageURL = validateURL(callToActionImageURL ?? '')
       setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
     }
     checkCallToActionURL()

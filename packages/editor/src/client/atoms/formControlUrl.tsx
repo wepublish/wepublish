@@ -12,7 +12,6 @@ interface UrlValidationProps {
 
 export function FormControlUrl({placeholder, name, value, onChange}: UrlValidationProps) {
   const {t} = useTranslation()
-  const [urlTooltip, setUrlTooltip] = useState(<div></div>)
   const [invalidInput, setInvalidInput] = useState(false)
 
   const handleUrlValidation = useCallback(
@@ -20,12 +19,8 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
       const isValidURL = validateURL(url)
       if (isValidURL) {
         setInvalidInput(false)
-        setUrlTooltip(<div></div>)
       } else {
         setInvalidInput(true)
-        setUrlTooltip(
-          <Message showIcon type="error" description={t('peerList.overview.invalidURLTooltip')} />
-        )
       }
     },
     [value]
@@ -33,7 +28,6 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
 
   return (
     <div>
-      {urlTooltip}
       <FormControl
         style={invalidInput ? {border: 'thin solid red'} : {}}
         placeholder={placeholder}
@@ -44,6 +38,14 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
           onChange(url)
         }}
       />
+      {invalidInput && (
+        <Message
+          showIcon
+          type="error"
+          description={t('peerList.overview.invalidURLTooltip')}
+          style={{marginTop: '5px'}}
+        />
+      )}
     </div>
   )
 }
