@@ -13,6 +13,8 @@ import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} fr
 import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
+import {format} from 'date-fns'
+
 import {
   ArticleInput,
   AuthorRefFragment,
@@ -41,6 +43,7 @@ import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
+import {UniqueDirectivesPerLocationRule} from 'graphql'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -378,10 +381,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       }
 
       setChanged(false)
-      Notification.success({
-        title: t('articleEditor.overview.articlePublished'),
-        duration: 2000
-      })
+
+      const publicationDate = format(publishDate, 'y/LL/d-kk:mm')
+      const now = format(new Date(), 'y/LL/d-kk:mm')
+      publicationDate == now || publicationDate < now
+        ? Notification.success({
+            title: t('articleEditor.overview.articlePublished'),
+            duration: 2000
+          })
+        : Notification.success({
+            title: t('articleEditor.overview.articlePending'),
+            duration: 2000
+          })
     }
     await refetch({id: articleID})
   }

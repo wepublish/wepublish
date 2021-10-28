@@ -3,6 +3,7 @@
     "articleEditor": {
       "overview": {
         "articlePublished": "Article Published",
+        "articlePending": "Article pending",
         "back": "Back",
         "create": "Create",
         "delete": "Delete",
@@ -563,6 +564,7 @@
         "pageDraftSaved": "Page Draft Saved",
         "pageNotFound": "Page Not Found",
         "pagePublished": "Page Published",
+        "pagePending": "Page pending",
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",

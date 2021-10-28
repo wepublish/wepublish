@@ -16,6 +16,8 @@ import {
   useUpdatePageMutation
 } from '../api'
 
+import {format} from 'date-fns'
+
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
@@ -228,7 +230,11 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    Alert.success(t('pageEditor.overview.pagePublished'), 2000)
+    const publicationDate = format(publishDate, 'y/LL/d-kk:mm')
+    const now = format(new Date(), 'y/LL/d-kk:mm')
+    publicationDate == now || publicationDate < now
+      ? Alert.success(t('pageEditor.overview.pagePublished'), 2000)
+      : Alert.success(t('pageEditor.overview.pagePending'), 2000)
   }
 
   useEffect(() => {
