@@ -1,12 +1,10 @@
-import { ClientFunction, Selector, t } from "testcafe";
+import { ClientFunction, Role, Selector, t } from "testcafe";
 
 import {
     admin,
     getPath,
     EDITOR_URL,
     closeButton,
-    loginName,
-    loginPassword,
     userName,
     userEmail,
     userPassword,
@@ -14,29 +12,20 @@ import {
     userEmailInput,
     userPasswordInput,
     createArticle,
-    articleTitleInput,
-    articleLeadInput,
     createButton,
-    userOne
-    // isLoggedIn
+    testUser,
+    addTitleAndLead,
+
 } from "./common"
-
-
-// login as an admin and add the create and delete article permission to the user role,
-//  login as the user again and create a new article, save the article. Expect the 
-// article to be saved. Delete the article and expect it to be deleted.
 
 fixture`Create a user role`
     .disablePageCaching
-    .beforeEach(async t => {
-        await t.useRole(admin)
-
-    })
     .page(`${EDITOR_URL}/userroles`)
 
 const userRoleName = userName
 test('create a role', async t => {
     await t
+        .useRole(admin)
         .navigateTo(`${EDITOR_URL}/userroles`)
         .click(Selector('a').withAttribute('href', '/userrole/create'))
 
@@ -57,6 +46,7 @@ test('create a role', async t => {
 
 test('create new user and add user role', async t => {
     await t
+        .useRole(admin)
         .navigateTo(`${EDITOR_URL}/users`)
         .click(Selector('a').withAttribute('href', '/user/create'))
 
@@ -73,73 +63,60 @@ test('create new user and add user role', async t => {
         .click(Selector('.rs-drawer-footer').child().withText('Create'))
         .navigateTo(`${EDITOR_URL}/users`)
         .expect(Selector('a').withText(userName).exists).ok()
+        .useRole(Role.anonymous())
 })
 
-// login as user, try to create a new article and expect an error, try to delete an article and expect an error.
-
-// test('log in as user and create article', async t => {
-//     console.log(userEmail, userPassword)
-//     await t
-//         .click(Selector('i.rs-icon-cog'))
-//         .click(Selector('a').withAttribute('href', '/logout'))
-//     await t
-//         .typeText(loginName, userEmail)
-//         .typeText(loginPassword, userPassword)
-//         .click('form > button')
-//         .expect(Selector('i.rs-icon-cog').exists).ok()
-//         .navigateTo(EDITOR_URL)
-//         .click(createArticle)
-//         .typeText(articleTitleInput, 'This is the article Title')
-//         .typeText(articleLeadInput, 'This is the article lead')
-//         .click(createButton)
-//         // expect error ok
-//         .click(Selector('a').child('i').withText('Back'))
-//         .click(Selector('button').child('i.rs-icon-trash').nth(0))
-//     // expect no delete possible
-
-// })
-
-test('login with userOne', async T => {
+test('login with testUser, fail to create article', async t => {
     await t
-        .useRole(userOne)
+        .useRole(testUser)
         .navigateTo(EDITOR_URL)
         .click(createArticle)
-        .typeText(articleTitleInput, 'This is the article Title')
-        .typeText(articleLeadInput, 'This is the article lead')
+    await addTitleAndLead()
+    await t
         .click(createButton)
-        // Here I get logged out after getting the message error
+    // How can I get this as a successfull test? 
 })
 
-// test('delete an article', async t => {
-//     await t
-//         .navigateTo(EDITOR_URL)
-//         .click(Selector('button').child('i.rs-icon-trash'))
-// })
-// test('create an article', async t => {
+test('fail to delete article', async t => {
+    await t
+        .useRole(testUser)
+        .navigateTo(EDITOR_URL)
+        .click(Selector('i.rs-icon-trash'))
+        .click(Selector('button').withText('Confirm'))
+    // No alert with error message ? 
+})
 
-//     await t
-//         .navigateTo(EDITOR_URL)
-//         .click(createArticle)
-//         .typeText(articleTitleInput, 'This is the article Title')
-//         .typeText(articleLeadInput, 'This is the article lead')
-//         .click(createButton)
-//     await t
-//     window.addEventListener('error', function (e) {
-//         console.error(e.message);
-//     });
-// })(`Skip error but log it`, async t => {
-//     console.log(await t.getBrowserConsoleMessages());
+test('add article permissions to testUser', async t => {
+    await t
+        .useRole(admin)
+        .navigateTo(`${EDITOR_URL}/userroles`)
+        .click(Selector('a').withText(userName))
+        .click(Selector('a').withAttribute('role', 'combobox'))
+        .click(Selector('label').withText('Allows to create article'))
+        .click(Selector('label').withText('Allows to delete article'))
+        .click(closeButton)
+})
 
-// });
+test('add and delete article with testUser', async t => {
+    let articleID = ''
+    await t
+        .useRole(testUser)
+        .navigateTo(EDITOR_URL)
+        .click(createArticle)
+    await addTitleAndLead()
+    await t.click(createButton)
+    const path = await getPath()
+    articleID = path.substr(path.lastIndexOf('/') + 1)
+    await t
+        .navigateTo(EDITOR_URL)
+    await t
+        .expect(Selector('a').withAttribute('href', `/article/edit/${articleID}`).exists).ok()
+    
+        const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent()
+    await t
+        .click(articleBox.parent().parent().parent().child(1)
+            .child().child().child().child('i.rs-icon-trash'))
+        .click(Selector('button').withText('Confirm'))
+        .expect(articleBox.exists).notOk()
+})
 
-
-// })
-
-
-// test('log in with admin role', async t => {
-//     await t
-//         .typeText(loginName, userEmail)
-//         .typeText(loginPassword, userPassword)
-//         .click('form > button')
-//         .expect(Selector('i.rs-icon-cog').exists).ok()
-// })

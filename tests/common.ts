@@ -60,7 +60,7 @@ const admin = Role(`${EDITOR_URL}/login`, async t => {
 });
 
 
-const userOne = Role(`${EDITOR_URL}/login`, async t => {
+const testUser = Role(`${EDITOR_URL}/login`, async t => {
     await t
     .typeText(loginName, userEmail)
     .typeText(loginPassword, userPassword)
@@ -152,7 +152,6 @@ async function addQuote() {
         .typeText(Selector('textarea').withAttribute('placeholder', 'Author'), 'Great author')
 }
 
-
 async function addEmbeddedVideo() {
     await t
         .click(addContentButton)
@@ -204,7 +203,6 @@ async function checkTitleAndLeadOnWebsite() {
 async function checkImgOnWebsite() {
     const imgSrc = Selector('img').getAttribute('src')
     const imgSrcCheck = (await imgSrc).slice(-10)
-    console.log(imgSrcCheck)
     await t
         .expect(imgSrcCheck).eql('arvine.JPG')
 }
@@ -242,13 +240,12 @@ async function checkRichTextOnWebsite() {
     .child().child().child('em').exists).ok()
 }
 
-async function checkOneColArticleOnWebsite() {
+export async function checkOneColArticleOnWebsite() {
     await t
-    .expect(Selector('div').child('a').withAttribute('href', "/a/F87Vg5Yx7rMvbcmT/article-to-test").exists).ok()
+    .expect(Selector('span').withText('Test article on page').exists).ok()
 }
 
 export async function checkTestingContentOnWebsite() {
-    // add test article
     await checkTitleAndLeadOnWebsite()
     await checkListicleOnWebsite()
     await checkEmbedVideoOnWebsite()
@@ -292,6 +289,7 @@ export {
     userNameInput,
     userPasswordInput,
     userEmailInput,
-    userOne
+    testUser,
+    addTitleAndLead,
 }
 

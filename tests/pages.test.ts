@@ -12,6 +12,10 @@ import {
     getPath,
     addTestingContent,
     checkTestingContentOnWebsite,
+    createArticle,
+    addTitleAndLead,
+    metaPreTitleInput,
+    checkOneColArticleOnWebsite,
 } from "./common";
 
 
@@ -43,6 +47,24 @@ test('Is logged in', async t => {
         .expect(Selector('i.rs-icon-cog').exists).ok()
 })
 
+// Create an article for later testing purposes
+test('Create an article', async t => {
+    await t
+        .navigateTo(EDITOR_URL)
+        .click(createArticle)
+
+    await
+        addTitleAndLead()
+
+    await t
+        .click(metadataButton)
+        .typeText(metaPreTitleInput, 'Test article on page')
+        .click(Selector('button').child('i.rs-icon-magic'))
+        .click(closeButton)
+        .click(publishButton)
+        .click(confirmButton)
+});
+
 test('Create a page', async t => {
     await t
         .click(createPage)
@@ -53,10 +75,7 @@ test('Create a page', async t => {
     await addTestingContent()
 
     const path = await getPath()
-    // retrieve ID automatically created
     pageID = path.substr(path.lastIndexOf('/') + 1)
-    console.log('path', path)
-    console.log('pageID: ', pageID)
     await t.expect(path).contains('/page/edit')
 
     await t
@@ -64,7 +83,6 @@ test('Create a page', async t => {
         .typeText(metaSlugInput, pageID)
         .click(closeButton)
         .click(publishButton)
-        // Change this to next monday when date picker fixed
         .click(Selector('.react-datepicker__input-container'))
         .click(Selector('.react-datepicker__navigation--next'))
         .click(Selector('.react-datepicker__day').withText('30'))
@@ -94,5 +112,6 @@ test('Test Website', async t => {
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
     await checkTestingContentOnWebsite()
+    await checkOneColArticleOnWebsite()
 
 })
