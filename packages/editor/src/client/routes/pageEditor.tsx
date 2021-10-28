@@ -228,9 +228,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    const publicationDate = publishDate.getTime()
-    const now = new Date().getTime()
-    publicationDate === now || publicationDate < now
+    publishData === new Date() || publishDate < new Date()
       ? Alert.success(t('pageEditor.overview.pagePublished'), 2000)
       : Alert.success(t('pageEditor.overview.pagePending'), 2000)
   }

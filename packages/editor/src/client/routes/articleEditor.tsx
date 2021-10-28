@@ -379,9 +379,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
 
-      const publicationDate = publishDate.getTime()
-      const now = new Date().getTime()
-      publicationDate === now || publicationDate < now
+      publishData === new Date() || publishDate < new Date()
         ? Notification.success({
             title: t('articleEditor.overview.articlePublished'),
             duration: 2000
