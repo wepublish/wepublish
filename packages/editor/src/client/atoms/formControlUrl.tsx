@@ -17,11 +17,7 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
   const handleUrlValidation = useCallback(
     (url: string) => {
       const isValidURL = validateURL(url)
-      if (isValidURL) {
-        setInvalidInput(!isValidURL)
-      } else {
-        setInvalidInput(isValidURL)
-      }
+      setInvalidInput(!isValidURL)
     },
     [value]
   )
