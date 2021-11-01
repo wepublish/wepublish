@@ -1,4 +1,4 @@
-import { ClientFunction, Role, Selector, t } from "testcafe";
+import { Role, Selector, t } from "testcafe";
 
 import {
     admin,
@@ -75,7 +75,6 @@ test('login with testUser, fail to create article', async t => {
     await t
         .click(createButton)
         .expect(Selector('.rs-notification-error').exists).ok()
-    // How can I get this as a successfull test? 
 })
 
 test('fail to delete article', async t => {
@@ -85,7 +84,6 @@ test('fail to delete article', async t => {
         .click(Selector('i.rs-icon-trash'))
         .click(Selector('button').withText('Confirm'))
         .expect(Selector('button').withText('Confirm').exists).ok()
-    // No alert with error message ? 
 })
 
 test('add article permissions to testUser', async t => {

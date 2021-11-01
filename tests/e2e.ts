@@ -1,4 +1,4 @@
-import { ClientFunction, Selector } from "testcafe";
+import { Selector } from "testcafe";
 
 import {
   admin,
@@ -14,7 +14,9 @@ import {
   metaLeadInput,
   createArticle,
   addTestingContent,
-  checkTestingContentOnWebsite
+  checkTestingContentOnWebsite,
+  checkOneColArticleOnWebsite,
+  checkIfLoggedIn
 } from "./common"
 
 
@@ -30,12 +32,8 @@ fixture`Create and publish an article`
 let articleID = ''
 
 test('Is logged in', async t => {
-  console.log('is logged in', await ClientFunction(() => {
-    return document.location.toString()
-  })())
-  console.log('body looks like:', await Selector('body').innerText)
-  await t
-    .expect(Selector('i.rs-icon-cog').exists).ok()
+  await
+  checkIfLoggedIn()
 })
 
 test('Create an article', async t => {

@@ -62,9 +62,9 @@ const admin = Role(`${EDITOR_URL}/login`, async t => {
 
 const testUser = Role(`${EDITOR_URL}/login`, async t => {
     await t
-    .typeText(loginName, userEmail)
-    .typeText(loginPassword, userPassword)
-    .click('form > button')
+        .typeText(loginName, userEmail)
+        .typeText(loginPassword, userPassword)
+        .click('form > button')
 });
 
 const getPath = ClientFunction(() => {
@@ -90,26 +90,16 @@ function getRandomString(length) {
     return result;
 }
 
-// not used 
+export async function checkIfLoggedIn() {
+    await t
+    console.log('is logged in', await ClientFunction(() => {
+        return document.location.toString()
+    })())
+    console.log('body looks like:', await Selector('body').innerText)
+    await t
+        .expect(Selector('i.rs-icon-cog').exists).ok()
+}
 
-// function makeid(length) {
-//   let result = '';
-//   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//   const charactersLength = characters.length;
-//   for (let i = 0; i < length; i++) {
-//     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-//   }
-//   return result;
-// }
-
-// const isLoggedIn = test('Is logged in', async t => {
-//     console.log('is logged in', await ClientFunction(() => {
-//       return document.location.toString()
-//     })())
-//     console.log('body looks like:', await Selector('body').innerText)
-//     await t
-//       .expect(Selector('i.rs-icon-cog').exists).ok()
-//   })
 
 async function addTitleAndLead() {
     await t
@@ -181,10 +171,9 @@ async function addRichText() {
 
 
 export async function addTestingContent() {
-
     await addTitleAndLead()
     await addImgGallery()
-    await addImg()   
+    await addImg()
     await addListicle()
     await addQuote()
     await addEmbeddedVideo()
@@ -211,7 +200,7 @@ async function checkListicleOnWebsite() {
     await t
         .expect(Selector('div').withText('1').exists).ok()
         .expect(Selector('span').withAttribute('data-slate-string', "true")
-        .withText('Hello\u00a0World').exists).ok()
+            .withText('Hello\u00a0World').exists).ok()
 }
 
 async function checkQuoteOnWebsite() {
@@ -222,27 +211,28 @@ async function checkQuoteOnWebsite() {
 
 async function checkEmbedVideoOnWebsite() {
     await t
-         .expect(Selector('iframe')
-         .withAttribute('src', 'https://www.youtube.com/embed/evS8294sOXg')
-         .exists).ok()}
+        .expect(Selector('iframe')
+            .withAttribute('src', 'https://www.youtube.com/embed/evS8294sOXg')
+            .exists).ok()
+}
 
 
 async function checkImgGalleryOnWebsite() {
     await t
-    .expect(Selector('svg').withAttribute('xmlns', 'http://www.w3.org/2000/svg').exists).ok()
+        .expect(Selector('svg').withAttribute('xmlns', 'http://www.w3.org/2000/svg').exists).ok()
 }
 
 async function checkRichTextOnWebsite() {
     await t
-    .expect(richtTextElement
-    .child().child().child().withText('This\u00a0is\u00a0a\u00a0rich\u00a0text\u00a0element').exists).ok()
-    .expect(richtTextElement 
-    .child().child().child('em').exists).ok()
+        .expect(richtTextElement
+            .child().child().child().withText('This\u00a0is\u00a0a\u00a0rich\u00a0text\u00a0element').exists).ok()
+        .expect(richtTextElement
+            .child().child().child('em').exists).ok()
 }
 
 export async function checkOneColArticleOnWebsite() {
     await t
-    .expect(Selector('span').withText('Test article on page').exists).ok()
+        .expect(Selector('span').withText('Test article on page').exists).ok()
 }
 
 export async function checkTestingContentOnWebsite() {

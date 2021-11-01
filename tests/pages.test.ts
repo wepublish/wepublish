@@ -1,4 +1,4 @@
-import { ClientFunction, Selector } from "testcafe";
+import { Selector } from "testcafe";
 import {
     admin,
     EDITOR_URL,
@@ -16,6 +16,7 @@ import {
     addTitleAndLead,
     metaPreTitleInput,
     checkOneColArticleOnWebsite,
+    checkIfLoggedIn
 } from "./common";
 
 
@@ -39,12 +40,7 @@ test('Check Front site', async t => {
 let pageID = ''
 
 test('Is logged in', async t => {
-    console.log('is logged in', await ClientFunction(() => {
-        return document.location.toString()
-    })())
-    console.log('body looks like:', await Selector('body').innerText)
-    await t
-        .expect(Selector('i.rs-icon-cog').exists).ok()
+    await checkIfLoggedIn()
 })
 
 // Create an article for later testing purposes
@@ -93,8 +89,7 @@ test('Create a page', async t => {
 test('Test Website', async t => {
     await t
         .navigateTo(`${WEBSITE_URL}/${pageID}`)
-        // Gives 500 error 
-        .expect(Selector('h1').innerText).eql('500')
+        .expect(Selector('h1').innerText).eql('404')
 })
 
 test('Publish page', async t => {
