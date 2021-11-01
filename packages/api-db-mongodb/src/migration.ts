@@ -625,14 +625,14 @@ export const Migrations: Migration[] = [
       if (peerProfile) {
         await db.collection(CollectionName.PeerProfiles).updateOne(
           {
-            callToActionText: {$exists: true}
+            callToActionText: {_id: peerProfile._id}
           },
           {
             $set: {
               callToActionText: richTextToString('', peerProfile?.callToActionText)
             }
           },
-          {upsert: true}
+          {upsert: false}
         )
       }
     }
