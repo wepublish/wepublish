@@ -50,7 +50,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
-  const [callToActionImageURL, setCallToActionImageURL] = useState<string | undefined>()
+  const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
   const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
@@ -90,7 +90,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   useEffect(() => {
     const checkCallToActionURL = async () => {
       const isValidTextURL = validateURL(callToActionTextURL)
-      const isValidImageURL = validateURL(callToActionImageURL ?? '')
+      const isValidImageURL = validateURL(callToActionImageURL)
       setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
     }
     checkCallToActionURL()
