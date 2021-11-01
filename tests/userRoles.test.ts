@@ -74,6 +74,7 @@ test('login with testUser, fail to create article', async t => {
     await addTitleAndLead()
     await t
         .click(createButton)
+        .expect(Selector('.rs-notification-error').exists).ok()
     // How can I get this as a successfull test? 
 })
 
@@ -83,6 +84,7 @@ test('fail to delete article', async t => {
         .navigateTo(EDITOR_URL)
         .click(Selector('i.rs-icon-trash'))
         .click(Selector('button').withText('Confirm'))
+        .expect(Selector('button').withText('Confirm').exists).ok()
     // No alert with error message ? 
 })
 
