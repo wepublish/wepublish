@@ -25,7 +25,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag} from 'rsuite'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag, Notification} from 'rsuite'
 import {StateColor} from '../utility'
 
 export interface PageEditorProps {
@@ -160,6 +160,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }, [pageData, hasChanged])
 
+  // Change this with notification ?
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message
     if (error) Alert.error(error, 0)
@@ -187,7 +188,10 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftSaved'),
+        duration: 2000
+      })
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -199,7 +203,10 @@ export function PageEditor({id}: PageEditorProps) {
       }
 
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftCreated'),
+        duration: 2000
+      })
     }
     await refetch({id: pageID})
   }
@@ -228,14 +235,23 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    publishData === new Date() || publishDate < new Date()
-      ? Alert.success(t('pageEditor.overview.pagePublished'), 2000)
-      : Alert.success(t('pageEditor.overview.pagePending'), 2000)
+    publishDate <= new Date()
+      ? Notification.success({
+          title: t('pageEditor.overview.pagePublished'),
+          duration: 2000
+        })
+      : Notification.success({
+          title: t('pageEditor.overview.pagePending'),
+          duration: 2000
+        })
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
+      Notification.error({
+        title: t('pageEditor.overview.pageNotFound'),
+        duration: 0
+      })
     }
   }, [isNotFound])
 

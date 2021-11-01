@@ -379,7 +379,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
 
-      publishData === new Date() || publishDate < new Date()
+      publishDate <= new Date()
         ? Notification.success({
             title: t('articleEditor.overview.articlePublished'),
             duration: 2000
