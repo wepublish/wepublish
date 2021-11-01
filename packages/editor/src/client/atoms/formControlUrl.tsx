@@ -18,9 +18,9 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
     (url: string) => {
       const isValidURL = validateURL(url)
       if (isValidURL) {
-        setInvalidInput(false)
+        setInvalidInput(!isValidURL)
       } else {
-        setInvalidInput(true)
+        setInvalidInput(isValidURL)
       }
     },
     [value]
