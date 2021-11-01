@@ -15,7 +15,6 @@ import {
   createArticle,
   addTestingContent,
   checkTestingContentOnWebsite,
-  checkOneColArticleOnWebsite,
   checkIfLoggedIn
 } from "./common"
 
@@ -97,6 +96,3 @@ test('Delete article', async t => {
     .click(Selector('button').withText('Confirm'))
     .expect(articleBox.exists).notOk()
 })
-
-
-

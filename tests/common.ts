@@ -114,7 +114,7 @@ async function addImgGallery() {
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-clone'))
         .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
-        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './felix.JPG')
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testPhoto1.JPG')
         .click(Selector('button').withText('Upload'))
         .click(Selector('button').withText('Save'))
 }
@@ -123,7 +123,7 @@ async function addImg() {
     await t
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-image'))
-        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './arvine.JPG')
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testPhoto2.JPG')
         .click(Selector('button').withText('Upload'))
 }
 
@@ -191,9 +191,10 @@ async function checkTitleAndLeadOnWebsite() {
 
 async function checkImgOnWebsite() {
     const imgSrc = Selector('img').getAttribute('src')
-    const imgSrcCheck = (await imgSrc).slice(-10)
+    const imgSrcCheck = (await imgSrc).slice(-14)
+    console.log(imgSrcCheck)
     await t
-        .expect(imgSrcCheck).eql('arvine.JPG')
+        .expect(imgSrcCheck).eql('testPhoto2.JPG')
 }
 
 async function checkListicleOnWebsite() {
@@ -215,7 +216,6 @@ async function checkEmbedVideoOnWebsite() {
             .withAttribute('src', 'https://www.youtube.com/embed/evS8294sOXg')
             .exists).ok()
 }
-
 
 async function checkImgGalleryOnWebsite() {
     await t
