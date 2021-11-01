@@ -123,8 +123,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
     setFlexTeasers(
       flexTeasers.map((flexTeaser, i) => {
-        console.log('index of teaser ', index)
-        console.log('index of flex teaser ', i)
         return {
           teaser: i === index ? teaserLink : flexTeaser.teaser,
           alignment: flexTeaser.alignment
@@ -132,8 +130,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       })
     )
     onChange({
-      ...value,
-      flexTeasers: [...flexTeasers]
+      flexTeasers: flexTeasers
     })
   }
 
@@ -146,9 +143,9 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         }
       })
     )
+    console.log('flex teasers', flexTeasers)
     onChange({
-      ...value,
-      flexTeasers: [...flexTeasers]
+      flexTeasers: flexTeasers
     })
   }
 
@@ -165,16 +162,14 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     }
     flexTeasers.push(newTeaser)
     onChange({
-      ...value,
-      flexTeasers: [...flexTeasers]
+      flexTeasers: flexTeasers
     })
   }
 
   const handleRemoveTeaser = (index: number) => {
     flexTeasers.splice(index, 1)
     onChange({
-      ...value,
-      flexTeasers: [...flexTeasers]
+      flexTeasers: flexTeasers
     })
   }
 
@@ -213,12 +208,12 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         // onDragStart={handleSortStart}
         // onDragStop={() => handleSortEnd}
         onLayoutChange={handleLayoutChange}
-        layout={flexTeasers.map(flexTeasers => flexTeasers.alignment)}
+        layout={flexTeasers.map(flexTeaser => flexTeaser.alignment)}
         cols={12}
         rowHeight={30}
         width={1200}>
         {value.flexTeasers.map((flexTeaser, i) => (
-          <div key={i}>
+          <div key={i.toString()}>
             <FlexTeaserBlock
               teaser={flexTeasers[i].teaser}
               showGrabCursor={teasers.length !== 1}
