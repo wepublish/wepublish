@@ -527,5 +527,3 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     </>
   )
 }
-
-// djdjdjdj
