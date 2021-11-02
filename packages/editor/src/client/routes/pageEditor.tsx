@@ -160,7 +160,6 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }, [pageData, hasChanged])
 
-  // Change this with notification ?
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message
     if (error) Alert.error(error, 0)
@@ -235,23 +234,19 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    publishDate <= new Date()
-      ? Notification.success({
-          title: t('pageEditor.overview.pagePublished'),
-          duration: 2000
-        })
-      : Notification.success({
-          title: t('pageEditor.overview.pagePending'),
-          duration: 2000
-        })
+    Notification.success({
+      title: t(
+        publishDate <= new Date()
+          ? 'pageEditor.overview.pagePublished'
+          : 'pageEditor.overview.pagePending'
+      ),
+      duration: 2000
+    })
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Notification.error({
-        title: t('pageEditor.overview.pageNotFound'),
-        duration: 0
-      })
+      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
     }
   }, [isNotFound])
 

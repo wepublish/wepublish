@@ -210,12 +210,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [articleData, hasChanged])
 
   useEffect(() => {
-    if (createError || updateError || publishError) {
-      Notification.error({
-        title: updateError?.message ?? createError?.message ?? publishError!.message,
-        duration: 5000
-      })
-    }
+    const error = createError?.message ?? updateError?.message ?? publishError?.message
+    if (error) Alert.error(error, 0)
   }, [createError, updateError, publishError])
 
   function countRichtextChars(blocksCharLength: number, nodes: any) {
@@ -378,26 +374,21 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       }
 
       setChanged(false)
-
-      publishDate <= new Date()
-        ? Notification.success({
-            title: t('articleEditor.overview.articlePublished'),
-            duration: 2000
-          })
-        : Notification.success({
-            title: t('articleEditor.overview.articlePending'),
-            duration: 2000
-          })
+      Notification.success({
+        title: t(
+          publishDate <= new Date()
+            ? 'articleEditor.overview.articlePublished'
+            : 'articleEditor.overview.articlePending'
+        ),
+        duration: 2000
+      })
     }
     await refetch({id: articleID})
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Notification.error({
-        title: t('articleEditor.overview.notFound'),
-        duration: 5000
-      })
+      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
     }
   }, [isNotFound])
 
