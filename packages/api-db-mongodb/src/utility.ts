@@ -40,7 +40,7 @@ export function richTextToString(blocksString: string, nodes: any = []) {
   const richTextNode = nodes.reduce((string: string, node: any) => {
     if (!node.text && !node.children) return string
     if (node.text) {
-      return string === '' ? `${node.text.trim()}` : `${string.trim()}${node.text.trim()}`
+      return string === '' ? `${node.text}` : `${string} ${node.text}`
     }
     return richTextToString(string, node.children)
   }, blocksString)
