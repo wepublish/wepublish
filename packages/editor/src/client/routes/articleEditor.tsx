@@ -388,7 +388,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (isNotFound) {
-      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
+      Alert.error(t('articleEditor.overview.notFound'), 0)
     }
   }, [isNotFound])
 
