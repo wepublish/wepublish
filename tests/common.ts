@@ -150,7 +150,7 @@ async function addEmbeddedVideo() {
         .click(Selector(closeButton))
 }
 
-async function addOneColArticle() {
+export async function addOneColArticle() {
     await t
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-ellipsis-v'))
