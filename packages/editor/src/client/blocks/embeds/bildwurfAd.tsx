@@ -1,21 +1,32 @@
 import React, {useEffect} from 'react'
 import {useScript} from '../../utility'
 
+declare global {
+  interface Window {
+    _ASO: {
+      loadAd(param1: string, param2: string): void
+    }
+  }
+}
+
 export interface BildwurfAdEmbedProps {
   zoneID: string
 }
 
 export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
-  const randomNumber = new Date().getTime()
-
   const {load} = useScript(
-    `https://media.online.bildwurf.ch/js/code.min.js?timestamp=${randomNumber}`,
-    () => false,
+    `https://media.online.bildwurf.ch/js/code.min.js`,
+    () => !!window._ASO,
     false
   )
 
   useEffect(() => {
     load()
+    try {
+      window._ASO.loadAd('bildwurf-injection-wrapper', zoneID)
+    } catch (error) {
+      console.warn('could not call _ASO.loadAd()')
+    }
   }, [])
 
   return (
