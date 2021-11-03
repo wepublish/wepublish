@@ -1,5 +1,42 @@
 # Change Log
 
+## v2.11.0 (2021-10-13)
+
+#### :heart: New Feature
+* `editor`
+  * [#375](https://github.com/wepublish/wepublish/pull/375) f/wpc-539-unpublish-pending-pages ([@lakeside763](https://github.com/lakeside763))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#374](https://github.com/wepublish/wepublish/pull/374) mapping metadata properties to get rid of __typename ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#381](https://github.com/wepublish/wepublish/pull/381) F/wpc 500 add hovering ([@camilleory](https://github.com/camilleory))
+* Other
+  * [#368](https://github.com/wepublish/wepublish/pull/368) f/wpc-526-theme-color-visible-on-website ([@camilleory](https://github.com/camilleory))
+* `api-db-mongodb`, `api`, `editor`
+  * [#376](https://github.com/wepublish/wepublish/pull/376) F/wpc 522 add font color to peered articles ([@camilleory](https://github.com/camilleory))
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+
+#### :house: Internal
+* Other
+  * [#384](https://github.com/wepublish/wepublish/pull/384) Wildcard certificate for feature branches ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#379](https://github.com/wepublish/wepublish/pull/379) chore(api): prettier cleanup ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#377](https://github.com/wepublish/wepublish/pull/377) make state colors of articles/pages consistent ([@penk85](https://github.com/penk85))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@lakeside763](https://github.com/lakeside763)
+
+
 ## v2.10.0 (2021-09-29)
 
 #### :heart: New Feature
