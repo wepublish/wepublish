@@ -210,12 +210,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [articleData, hasChanged])
 
   useEffect(() => {
-    if (createError || updateError || publishError) {
-      Notification.error({
-        title: updateError?.message ?? createError?.message ?? publishError!.message,
-        duration: 5000
-      })
-    }
+    const error = createError?.message ?? updateError?.message ?? publishError?.message
+    if (error) Alert.error(error, 0)
   }, [createError, updateError, publishError])
 
   function countRichtextChars(blocksCharLength: number, nodes: any) {
@@ -379,7 +375,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       Notification.success({
-        title: t('articleEditor.overview.articlePublished'),
+        title: t(
+          publishDate <= new Date()
+            ? 'articleEditor.overview.articlePublished'
+            : 'articleEditor.overview.articlePending'
+        ),
         duration: 2000
       })
     }
@@ -388,10 +388,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (isNotFound) {
-      Notification.error({
-        title: t('articleEditor.overview.notFound'),
-        duration: 5000
-      })
+      Alert.error(t('articleEditor.overview.notFound'), 0)
     }
   }, [isNotFound])
 
