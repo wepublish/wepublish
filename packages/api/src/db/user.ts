@@ -176,7 +176,7 @@ export interface User {
   readonly roleIDs: string[]
   readonly subscription?: UserSubscription
   readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
-  readonly authorID: string
+  readonly authorID?: string
 }
 
 export interface UserInput {
@@ -191,7 +191,7 @@ export interface UserInput {
 
   readonly properties: MetadataProperty[]
   readonly roleIDs: string[]
-  readonly authorID: string
+  readonly authorID?: string
 }
 
 export interface UpdatePaymentProviderCustomerArgs {

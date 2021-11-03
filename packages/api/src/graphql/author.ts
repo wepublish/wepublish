@@ -18,7 +18,6 @@ import {GraphQLSlug} from './slug'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
-import {resolve} from 'path'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',

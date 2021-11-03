@@ -235,8 +235,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             emailVerifiedAt: null,
             active: false,
             properties: [],
-            roleIDs: [],
-            authorID
+            roleIDs: []
           },
           password: crypto.randomBytes(48).toString('hex')
         })

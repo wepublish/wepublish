@@ -829,6 +829,7 @@ export type UserInput = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
+  authorID?: Maybe<Scalars['String']>
 }
 
 export type UserSubscription = {

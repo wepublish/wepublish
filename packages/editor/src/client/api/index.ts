@@ -149,7 +149,6 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>;
   jobTitle?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
-  users?: Maybe<Array<Maybe<AuthorUsers>>>;
 };
 
 export type AuthorConnection = {
@@ -188,13 +187,6 @@ export enum AuthorSort {
   ModifiedAt = 'MODIFIED_AT',
   Name = 'NAME'
 }
-
-export type AuthorUsers = {
-  __typename?: 'AuthorUsers';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-};
 
 export type AuthProvider = {
   __typename?: 'AuthProvider';
@@ -1729,7 +1721,6 @@ export type User = {
   properties: Array<Properties>;
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
-  authorID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -1773,7 +1764,6 @@ export type UserInput = {
   active: Scalars['Boolean'];
   properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
-  authorID?: Maybe<Scalars['String']>;
 };
 
 export type UserRole = {
