@@ -51,8 +51,6 @@ export function makeid(length) {
 }
 
 const admin = Role(`${EDITOR_URL}/login`, async t => {
-    console.log('body looks like:', await Selector('body').innerText)
-    console.log('NEW LINE')
     await t
         .typeText(loginName, 'dev@wepublish.ch')
         .typeText(loginPassword, '123')
@@ -67,17 +65,23 @@ const testUser = Role(`${EDITOR_URL}/login`, async t => {
         .click('form > button')
 });
 
+export const demoEditorUser = Role('https://editor.demo.wepublish.media/login', async t => {
+    await t
+    // .navigateTo(`https://editor.demo.wepublish.media`)
+    .typeText(loginName, 'dev@wepublish.ch')
+    .typeText(loginPassword, '123')
+    .click('form > button')
+})
+
 const getPath = ClientFunction(() => {
     return document.location.pathname
 });
 
 const goToPath = ClientFunction((websiteUrl, articleID) => {
-    console.log('Goto Path', `${websiteUrl}/a/${articleID}`)
     document.location.href = `${websiteUrl}/a/${articleID}`
 });
 
 const goToPagePath = ClientFunction((websiteUrl, pageID) => {
-    console.log('Goto Path', `${websiteUrl}/a/${pageID}`)
     document.location.href = `${websiteUrl}/a/${pageID}`
 });
 
@@ -95,7 +99,6 @@ export async function checkIfLoggedIn() {
     console.log('is logged in', await ClientFunction(() => {
         return document.location.toString()
     })())
-    console.log('body looks like:', await Selector('body').innerText)
     await t
         .expect(Selector('i.rs-icon-cog').exists).ok()
 }
@@ -183,7 +186,7 @@ export async function addTestingContent() {
         .click(createButton);
 }
 
-async function checkTitleAndLeadOnWebsite() {
+export async function checkTitleAndLeadOnWebsite() {
     await t
         .expect(Selector('h1').withText('This is the Title').exists).ok()
         .expect(Selector('div').child().withText('This is the lead').exists).ok()
