@@ -4159,6 +4159,11 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
+"@types/compress.js@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/compress.js/-/compress.js-1.1.1.tgz#cb8d599e84cad42b2b942bb704b8c32db5e1040e"
+  integrity sha512-6ShoR1Qu7jyD/Q2T5m6b+rt/iu/4WvMx+UD6QHFwUE3iVlmQgcoEU5Vc+oQvc41XLsCp2QQ4OWWkc0WeL46v/A==
+
 "@types/connect@*":
   version "3.4.33"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.33.tgz#31610c901eca573b8713c3330abc6e6b9f588546"
@@ -7266,6 +7271,13 @@ component-emitter@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
   integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
+
+compress.js@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/compress.js/-/compress.js-1.2.1.tgz#84ec9484095d16d8ccc534e7d29bd9b781e2cd48"
+  integrity sha512-+Goh6V8oXvg4EZjGJCswGr/U0hkgdk2msUE+oNPr0Toj9B/cJ9LTbDxO5VNMJGfJvLMHrElAEh7UQIYdmZB01g==
+  dependencies:
+    regenerator-runtime "^0.13.9"
 
 compressible@~2.0.16:
   version "2.0.18"
@@ -16500,6 +16512,11 @@ regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
   version "0.13.5"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.5.tgz#d878a1d094b4306d10b9096484b33ebd55e26697"
   integrity sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
+
+regenerator-runtime@^0.13.9:
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
+  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
 
 regenerator-transform@^0.14.2:
   version "0.14.4"
