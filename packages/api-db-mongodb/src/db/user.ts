@@ -174,16 +174,16 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     })
   }
 
-  // async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
-  //   const users = await this.users.find({authorID: authorID}).toArray()
-  //   return users.map(user => {
-  //     return {
-  //       id: user._id,
-  //       email: user.email,
-  //       name: user.name
-  //     }
-  //   })
-  // }
+  async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
+    const users = await this.users.find({authorID: authorID}).toArray()
+    return users.map(user => {
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      }
+    })
+  }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
