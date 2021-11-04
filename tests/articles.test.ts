@@ -47,7 +47,6 @@ test('Create an article', async t => {
 
   const path = await getPath()
   articleID = path.substr(path.lastIndexOf('/') + 1)
-  console.log('articleID', articleID)
   await t.expect(path).contains('/article/edit')
 
   await t

@@ -40,7 +40,7 @@ const userPasswordInput = Selector('input').withAttribute('name', 'Password')
 
 const videoUrl = '<iframe width="560" height="315" src="https://www.youtube.com/embed/evS8294sOXg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 
-export function makeid(length) {
+ function makeid(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -51,8 +51,6 @@ export function makeid(length) {
 }
 
 const admin = Role(`${EDITOR_URL}/login`, async t => {
-    console.log('body looks like:', await Selector('body').innerText)
-    console.log('NEW LINE')
     await t
         .typeText(loginName, 'dev@wepublish.ch')
         .typeText(loginPassword, '123')
@@ -72,12 +70,10 @@ const getPath = ClientFunction(() => {
 });
 
 const goToPath = ClientFunction((websiteUrl, articleID) => {
-    console.log('Goto Path', `${websiteUrl}/a/${articleID}`)
     document.location.href = `${websiteUrl}/a/${articleID}`
 });
 
 const goToPagePath = ClientFunction((websiteUrl, pageID) => {
-    console.log('Goto Path', `${websiteUrl}/a/${pageID}`)
     document.location.href = `${websiteUrl}/a/${pageID}`
 });
 
@@ -90,12 +86,7 @@ function getRandomString(length) {
     return result;
 }
 
-export async function checkIfLoggedIn() {
-    await t
-    console.log('is logged in', await ClientFunction(() => {
-        return document.location.toString()
-    })())
-    console.log('body looks like:', await Selector('body').innerText)
+ async function checkIfLoggedIn() {
     await t
         .expect(Selector('i.rs-icon-cog').exists).ok()
 }
@@ -114,7 +105,7 @@ async function addImgGallery() {
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-clone'))
         .click(Selector('.rs-drawer-content button i.rs-icon-plus-circle'))
-        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testPhoto1.JPG')
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testphoto1.jpg')
         .click(Selector('button').withText('Upload'))
         .click(Selector('button').withText('Save'))
 }
@@ -123,7 +114,7 @@ async function addImg() {
     await t
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-image'))
-        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testPhoto2.JPG')
+        .setFilesToUpload(Selector('input').withAttribute('type', 'file'), './testphoto2.jpg')
         .click(Selector('button').withText('Upload'))
 }
 
@@ -170,7 +161,7 @@ async function addRichText() {
 }
 
 
-export async function addTestingContent() {
+async function addTestingContent() {
     await addTitleAndLead()
     await addImgGallery()
     await addImg()
@@ -192,9 +183,8 @@ async function checkTitleAndLeadOnWebsite() {
 async function checkImgOnWebsite() {
     const imgSrc = Selector('img').getAttribute('src')
     const imgSrcCheck = (await imgSrc).slice(-14)
-    console.log(imgSrcCheck)
     await t
-        .expect(imgSrcCheck).eql('testPhoto2.JPG')
+        .expect(imgSrcCheck).eql('testphoto2.jpg')
 }
 
 async function checkListicleOnWebsite() {
@@ -230,12 +220,12 @@ async function checkRichTextOnWebsite() {
             .child().child().child('em').exists).ok()
 }
 
-export async function checkOneColArticleOnWebsite() {
+async function checkOneColArticleOnWebsite() {
     await t
         .expect(Selector('span').withText('Test article on page').exists).ok()
 }
 
-export async function checkTestingContentOnWebsite() {
+ async function checkTestingContentOnWebsite() {
     await checkTitleAndLeadOnWebsite()
     await checkListicleOnWebsite()
     await checkEmbedVideoOnWebsite()
@@ -248,6 +238,11 @@ export async function checkTestingContentOnWebsite() {
 
 export {
     getRandomString,
+    checkTestingContentOnWebsite,
+    makeid,
+    checkIfLoggedIn,
+    checkOneColArticleOnWebsite,
+    addTestingContent,
     admin,
     createArticle,
     getPath,
