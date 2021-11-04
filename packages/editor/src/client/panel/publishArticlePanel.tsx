@@ -47,7 +47,7 @@ export function PublishArticlePanel({
           />
         )}
         <DateTimePicker
-          dateTime={publishDate}
+          dateTime={pendingPublishDate ?? publishDate}
           label={t('articleEditor.panels.publishDate')}
           changeDate={date => setPublishDate(date)}
         />

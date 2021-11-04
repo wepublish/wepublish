@@ -3,6 +3,7 @@
     "articleEditor": {
       "overview": {
         "articlePublished": "Article Published",
+        "articlePending": "Article Pending",
         "back": "Back",
         "create": "Create",
         "delete": "Delete",
@@ -563,6 +564,7 @@
         "pageDraftSaved": "Page Draft Saved",
         "pageNotFound": "Page Not Found",
         "pagePublished": "Page Published",
+        "pagePending": "Page Pending",
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
@@ -669,7 +671,9 @@
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
         "peers": "Peers",
-        "myPeerProfile": "My Peer Profile"
+        "myPeerProfile": "My Peer Profile",
+        "invalidURLTooltip": "Invalid URL",
+        "validURLTooltip": "Valid URL"
       },
       "panels": {
         "callToAction": "Call To Action",
