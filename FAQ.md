@@ -58,7 +58,17 @@ A: Basically this error means that you have a conflict in your database caused b
 
 You can solve this issue by stopping everything, running `docker-compose down` followed by `yarn clean && yarn build`. These commands will delete the current database and remove any residuals. 
 
-Now if you start your database up and run `yarn watch` you'll get a fresh new database. and everything should be running again. 
+Now if you start your database up and run `yarn watch` you'll get a fresh new database. and everything should be running again.
+
+### Q: Why can't I upload any images after `yarn dev`? (request to http://localhost:3004/ failed, reason: connect ECONNREFUSED 127.0.0.1:3004)
+A: The media server is not running. Try the following:
+1. cd into examples/api and open .env file
+2. change the following key to: `MEDIA_SERVER_TOKEN=tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf` (like in the docker-compose file)
+3. restart your development environment by running `yarn dev`
+4. cd into examples/media
+5. run `docker-compose up media`
+
+Now you should have a running media server.
 
 ## Windows Specific Problem 
 ### Q: What do I do if I'm using Windows and 'examples/media' doesn't run and I receive the error `Error: Cannot find module '../build/Release/magic'` in the terminal and I receive an error when trying to install this module?
