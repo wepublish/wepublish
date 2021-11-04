@@ -613,6 +613,14 @@ export const Migrations: Migration[] = [
         {$set: {oauth2Accounts: []}}
       )
     }
+  },
+  {
+    //  Set paymentProviderCustomers to an empty array
+    version: 15,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany({}, {$set: {paymentProviderCustomers: []}})
+    }
   }
 ]
 
