@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 
 import {
+  AuthorUsers,
   ConnectionResult,
   CreateUserArgs,
   CreateUserSubscriptionPeriodArgs,
@@ -213,6 +214,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
+    console.log(user)
+
     if (user) {
       return {
         id: user._id,
@@ -229,7 +232,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     } else {
       return null
