@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 
 import {
+  AuthorUsers,
   ConnectionResult,
   CreateUserArgs,
   CreateUserSubscriptionPeriodArgs,
@@ -174,16 +175,16 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     })
   }
 
-  // async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
-  //   const users = await this.users.find({authorID: authorID}).toArray()
-  //   return users.map(user => {
-  //     return {
-  //       id: user._id,
-  //       email: user.email,
-  //       name: user.name
-  //     }
-  //   })
-  // }
+  async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
+    const users = await this.users.find({authorID: authorID}).toArray()
+    return users.map(user => {
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      }
+    })
+  }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
@@ -213,6 +214,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
+    console.log(user)
+
     if (user) {
       return {
         id: user._id,
@@ -229,7 +232,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
-        paymentProviderCustomers: user.paymentProviderCustomers
+        paymentProviderCustomers: user.paymentProviderCustomers,
+        authorID: user.authorID
       }
     } else {
       return null
