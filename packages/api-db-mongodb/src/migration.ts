@@ -1,5 +1,6 @@
 import {Db} from 'mongodb'
-import {CollectionName} from './db/schema'
+import {CollectionName, DBUser} from './db/schema'
+import {PaymentProviderCustomer} from '@wepublish/api'
 
 export interface Migration {
   readonly version: number
@@ -619,7 +620,26 @@ export const Migrations: Migration[] = [
     version: 15,
     async migrate(db, locale) {
       const users = await db.collection(CollectionName.Users)
-      await users.updateMany({}, {$set: {paymentProviderCustomers: []}})
+
+      const allUsers: DBUser[] = await users.find({}).toArray()
+
+      for (const user of allUsers) {
+        const paymentProvidersCustomersArray: PaymentProviderCustomer[] = []
+        const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
+        paymentProviderCustomers.forEach(ppc => {
+          // @ts-ignore
+          const temp = user.paymentProviderCustomers[ppc]
+          paymentProvidersCustomersArray.push({
+            paymentProviderID: ppc,
+            customerID: temp.id
+          })
+        })
+
+        await users.updateOne(
+          {_id: user._id},
+          {$set: {paymentProviderCustomers: paymentProvidersCustomersArray}}
+        )
+      }
     }
   }
 ]
