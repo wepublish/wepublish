@@ -28,7 +28,8 @@ import {
   ImageRefFragment,
   Maybe,
   FullAuthorFragment,
-  AuthorListDocument
+  AuthorListDocument,
+  AuthorUsers
 } from '../api'
 
 import {slugify, generateID, getOperationNameFromDocument} from '../utility'
@@ -54,6 +55,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
     {id: generateID(), value: {title: '', url: ''}}
   ])
+  const [users, setUsers] = useState<AuthorUsers[]>([])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -92,6 +94,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             }))
           : []
       )
+      setUsers(data.author.users)
     }
   }, [data?.author])
 
@@ -149,6 +152,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
       <Drawer.Body>
         <PanelGroup>
+          <Panel>
+            <div>{users}</div>
+          </Panel>
           <Panel>
             <Form fluid={true}>
               <FormGroup>
