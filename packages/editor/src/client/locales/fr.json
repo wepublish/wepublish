@@ -339,7 +339,8 @@
         "untitled": "sans titre",
         "Untitled": "Sans titre",
         "upload": "Télécharger",
-        "uploadImage": "Télécharger une image"
+        "uploadImage": "Télécharger une image",
+        "resizedImage": "La taille de l'image a été automatiquement réduite"
       },
       "overview": {
         "imageLibrary": "Bibliothèque d'images",

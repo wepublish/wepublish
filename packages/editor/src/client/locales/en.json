@@ -420,7 +420,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "resizedImage": "The image size was automatically reduced"
       }
     },
     "linkPageBreakEditPanel": {

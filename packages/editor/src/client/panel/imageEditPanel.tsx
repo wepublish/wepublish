@@ -31,12 +31,13 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
+  readonly resizedFile: boolean
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, resizedFile, onClose, onSave}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -193,6 +194,17 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     }
   }
 
+  function resizedImageHint(resized: boolean) {
+    if (resized) {
+      return (
+        <>
+          <DescriptionListItem>{t('images.panels.resizedImage')}</DescriptionListItem>
+        </>
+      )
+    }
+    return undefined
+  }
+
   return (
     <>
       <Drawer.Header>
@@ -238,6 +250,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 <DescriptionListItem label={t('images.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
+                {resizedImageHint(resizedFile)}
 
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>

@@ -403,7 +403,8 @@
         "updated": "Updated",
         "upload": "Hochladen",
         "uploadImage": "Bild hochladen",
-        "attribution": "Attribut"
+        "attribution": "Attribut",
+        "resizedImage": "Die Bildgrösse wurde automatisch reduziert"
       }
     },
     "linkPageBreakEditPanel": {
