@@ -404,7 +404,7 @@
         "upload": "Hochladen",
         "uploadImage": "Bild hochladen",
         "attribution": "Attribut",
-        "resizedImage": "Die Bildgrösse wurde automatisch reduziert"
+        "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch reduziert."
       }
     },
     "linkPageBreakEditPanel": {

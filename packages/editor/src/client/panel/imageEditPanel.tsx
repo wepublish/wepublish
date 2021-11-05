@@ -27,17 +27,17 @@ import {
   Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import Compress from 'compress.js'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
-  readonly resizedFile: boolean
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, resizedFile, onClose, onSave}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -172,9 +172,10 @@ export function ImagedEditPanel({id, file, resizedFile, onClose, onSave}: ImageE
     }
 
     if (isUpload) {
+      const optimizedImage: File = await resizeImage(file!)
       const {data} = await uploadImage({
         variables: {
-          input: {file: file!, ...commonInput}
+          input: {file: optimizedImage!, ...commonInput}
         }
       })
 
@@ -194,8 +195,51 @@ export function ImagedEditPanel({id, file, resizedFile, onClose, onSave}: ImageE
     }
   }
 
-  function resizedImageHint(resized: boolean) {
-    if (resized) {
+  /**
+   * Resizes an image on client side, if larger than 10 MB, which is the upload max of the api
+   * @param file
+   */
+  async function resizeImage(file: File): Promise<File> {
+    // only resize image if larger than 10 MB
+    if (!willImageResize(file)) {
+      return file // do not resize
+    }
+    const originalFileName: string = file.name
+    if (!originalFileName) {
+      throw new Error('No file name provided!')
+    }
+    const resizedImage = await new Compress().compress([file], {
+      size: 10, // the max size in MB, defaults to 2MB
+      quality: 1, // the quality of the image, max is 1,
+      resize: false // defaults to true, set false if you do not want to resize the image width and height
+    })
+    const img = resizedImage[0]
+    const base64str = img.data
+    const imgExt = img.ext
+    const blob: Blob = Compress.convertBase64ToFile(base64str, imgExt)
+    // convert blob to file
+    return new File([blob], originalFileName, {type: blob.type})
+  }
+
+  /**
+   * Decide whether an image will be automatically resized or not. The limit is 10 MB which
+   * is the api's max image size
+   * @param file
+   */
+  function willImageResize(file: File) {
+    const originalFileSize: number = file.size / (1000 * 1000)
+    if (originalFileSize > 10) {
+      return true
+    }
+    return false
+  }
+
+  /**
+   * draw a hint to the user, if the image will be automatically resized on upload
+   * @param file
+   */
+  function resizeImageHint(file: File) {
+    if (willImageResize(file)) {
       return (
         <>
           <DescriptionListItem>{t('images.panels.resizedImage')}</DescriptionListItem>
@@ -250,7 +294,7 @@ export function ImagedEditPanel({id, file, resizedFile, onClose, onSave}: ImageE
                 <DescriptionListItem label={t('images.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
-                {resizedImageHint(resizedFile)}
+                {resizeImageHint(file!)}
 
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>

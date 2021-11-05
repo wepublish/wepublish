@@ -421,7 +421,7 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadImage": "Upload Image",
-        "resizedImage": "The image size was automatically reduced"
+        "resizedImage": "The image size is automatically reduced when uploading."
       }
     },
     "linkPageBreakEditPanel": {
