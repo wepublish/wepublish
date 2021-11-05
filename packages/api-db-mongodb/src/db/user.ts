@@ -117,7 +117,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           properties: input.properties,
           email: input.email,
           emailVerifiedAt: input.emailVerifiedAt,
-          roleIDs: input.roleIDs
+          roleIDs: input.roleIDs,
+          authorID: input.authorID
         }
       },
       {returnOriginal: false}
@@ -214,7 +215,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
-    console.log(user)
 
     if (user) {
       return {
