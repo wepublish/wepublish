@@ -7,6 +7,12 @@ fragment AuthorRef on Author {
   }
 }
 
+fragment AuthorUsersRef on AuthorUsers {
+  id
+  name
+  email
+}
+
 fragment FullAuthor on Author {
   slug
   links {
@@ -16,6 +22,9 @@ fragment FullAuthor on Author {
   bio
   createdAt
   ...AuthorRef
+  users {
+    ...AuthorUsersRef
+  }
 }
 
 query AuthorList(

@@ -89,6 +89,7 @@ export function AuthorList() {
 
   useEffect(() => {
     authorListRefetch(authorListQueryVariables)
+    console.log(authors)
   }, [filter, page, limit, sortOrder, sortField])
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()

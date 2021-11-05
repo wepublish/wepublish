@@ -2231,13 +2231,21 @@ export type AuthorRefFragment = (
   )> }
 );
 
+export type AuthorUsersRefFragment = (
+  { __typename?: 'AuthorUsers' }
+  & Pick<AuthorUsers, 'id' | 'name' | 'email'>
+);
+
 export type FullAuthorFragment = (
   { __typename?: 'Author' }
   & Pick<Author, 'slug' | 'bio' | 'createdAt'>
   & { links?: Maybe<Array<(
     { __typename?: 'AuthorLink' }
     & Pick<AuthorLink, 'title' | 'url'>
-  )>> }
+  )>>, users?: Maybe<Array<Maybe<(
+    { __typename?: 'AuthorUsers' }
+    & AuthorUsersRefFragment
+  )>>> }
   & AuthorRefFragment
 );
 
@@ -3360,7 +3368,7 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt' | 'authorID'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
@@ -3649,6 +3657,13 @@ export const AuthorRefFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}`;
+export const AuthorUsersRefFragmentDoc = gql`
+    fragment AuthorUsersRef on AuthorUsers {
+  id
+  name
+  email
+}
+    `;
 export const FullAuthorFragmentDoc = gql`
     fragment FullAuthor on Author {
   slug
@@ -3659,8 +3674,12 @@ export const FullAuthorFragmentDoc = gql`
   bio
   createdAt
   ...AuthorRef
+  users {
+    ...AuthorUsersRef
+  }
 }
-    ${AuthorRefFragmentDoc}`;
+    ${AuthorRefFragmentDoc}
+${AuthorUsersRefFragmentDoc}`;
 export const ArticleRefFragmentDoc = gql`
     fragment ArticleRef on Article {
   id
@@ -4010,6 +4029,7 @@ export const FullUserFragmentDoc = gql`
   subscription {
     ...FullUserSubscription
   }
+  authorID
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
