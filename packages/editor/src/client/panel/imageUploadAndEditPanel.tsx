@@ -11,7 +11,7 @@ export interface ImageUploadAndEditPanelProps {
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
   const [file, setFile] = useState<File | null>(null)
 
-  async function handleUpload(file: File) {
+  function handleUpload(file: File) {
     setFile(file)
   }
 
