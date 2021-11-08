@@ -49,7 +49,7 @@ jobs:
   e2eTest:
     needs: deployment
     name: Runs e2e Test on Feature instance
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container:
       image: testcafe/testcafe
       options: --user root
