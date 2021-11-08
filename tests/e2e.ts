@@ -1,6 +1,6 @@
 import { ClientFunction, Role, Selector, t } from "testcafe";
-// import {slugify} from '../config/utilities'
-// import * as process from "process";
+import {slugify} from '../config/utilities'
+import * as process from "process";
 
 const loginName = Selector('input.username')
 const loginPassword = Selector('input.password')
@@ -18,41 +18,12 @@ const metaLeadInput = Selector('textarea.lead')
 const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Title')
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text ')
 
+const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
+const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
 
-//const EDITOR_URL = process.env.BRANCH_NAME ? `https://editor.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_EDITOR_URL
-//const WEBSITE_URL = process.env.BRANCH_NAME ? `https://www.${slugify(process.env.BRANCH_NAME.substring(0,12))}.wepublish.dev` : process.env.E2E_TEST_WEBSITE_URL
-
-const EDITOR_URL = 'https://editor.ftestingin.wepublish.dev'
-const WEBSITE_URL = 'https://www.ftestingin.wepublish.dev'
-
-// const EDITOR_URL = 'http://127.0.0.1:3000'
-// const WEBSITE_URL = 'http://127.0.0.1:5000'
-
-export default async function consoleOut() {
-  const { error } = await t.getBrowserConsoleMessages();
-  console.log('error', error)
-  //await t.expect(error[0]).notOk();
-}
-
-
-console.log('Editor URL', EDITOR_URL)
-console.log('Website URL', WEBSITE_URL)
-
-function makeid(length) {
-  let result           = '';
-  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 const admin = Role(`${EDITOR_URL}/login`, async t => {
-  console.log('body looks like:',await Selector('body').innerText)
-  console.log('NEW LINE')
   await t
-    .navigateTo(`${EDITOR_URL}/logout`)
     .typeText(loginName, 'dev@wepublish.ch')
     .typeText(loginPassword, '123')
     .click('form > button')
@@ -62,18 +33,12 @@ const getPath = ClientFunction(() => {
   return document.location.pathname
 });
 
-const goToPath = ClientFunction((websiteUrl, articleID) => {
-  console.log('Goto Path', `${websiteUrl}/a/${articleID}`)
-  document.location.href = `${websiteUrl}/a/${articleID}`
-});
-
 fixture `Create and publish an article`
   .disablePageCaching
   .beforeEach(async t => {
     await t.useRole(admin)
   })
   .page`${EDITOR_URL}`
-  .afterEach(() => consoleOut())
 
 
 let articleID = ''
@@ -110,13 +75,6 @@ test('Create an article', async t => {
     .expect(metaLeadInput.value).contains('This is the article lead')
     .typeText(metaPreTitleInput, 'This is a Pre-title')
     .click(closeButton)
-
-  /* await t
-    .click(lastAddButton)
-    .click(richTextButton)
-    .typeText(richTextBox, 'This is some random text') */
-
-
 });
 
 test('Test Website', async t => {
@@ -150,13 +108,4 @@ test('Test Website', async t => {
     await t
       .navigateTo(`${WEBSITE_URL}/a/${articleID}`)
       .expect(h1Title.innerText).eql('This is the article Title')
-  })
-
-/* test('Delete article', async t => {
-  const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
-  await t
-    .click(articleBox.child('div').nth(1).child('div').nth(4).child('button'))
-    .click(deleteButton)
-    .click(confirmButton)
-    .expect(articleBox.exists).notOk()
-}) */
+})

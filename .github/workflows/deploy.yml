@@ -57,6 +57,9 @@ jobs:
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
       - uses: actions/checkout@v2
       - name: Sleep for 60s
         uses: juliangruber/sleep-action@v1

@@ -69,7 +69,8 @@
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium:headless ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000 --video screenshots/videos"
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
+    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000"
   },
   "workspaces": [
     "packages/*",
@@ -140,7 +141,5 @@
       "assets"
     ]
   },
-  "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.1.0"
-  }
+  "dependencies": {}
 }
