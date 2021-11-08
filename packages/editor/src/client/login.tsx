@@ -180,6 +180,7 @@ export function Login() {
             <FormGroup>
               <ControlLabel>{t('login.email')}</ControlLabel>
               <FormControl
+                className={'username'}
                 value={email}
                 autoComplete={'username'}
                 onChange={email => setEmail(email)}
@@ -188,6 +189,7 @@ export function Login() {
             <FormGroup>
               <ControlLabel>{t('login.password')}</ControlLabel>
               <FormControl
+                className={'password'}
                 type="password"
                 value={password}
                 autoComplete={'currentPassword'}
