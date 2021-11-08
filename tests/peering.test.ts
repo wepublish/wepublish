@@ -28,7 +28,7 @@ fixture`Test peering`
 //     await t.useRole(Role.anonymous());
 // })
   // .page(`${EDITOR_URL}`)
-  
+
 let articleID = ''
 let token = ''
 
@@ -55,7 +55,8 @@ test('Login to demo editor, create article and token', async t => {
     .click(confirmButton)
     .navigateTo(`https://editor.demo.wepublish.media/tokens`)
     .click(Selector('a').withAttribute('href', '/tokens/generate'))
-    .typeText(Selector('input'), 'testPeering')
+    .typeText(Selector('input'),`${Math.random()}testPeering`)
+    // .typeText(Selector('input'), 'testPeering')
     .click(closeButton)
   token = await Selector('.rs-panel').textContent
   // console.log('token is: ', token)
