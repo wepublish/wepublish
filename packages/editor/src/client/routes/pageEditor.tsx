@@ -191,6 +191,7 @@ export function PageEditor({id}: PageEditorProps) {
         title: t('pageEditor.overview.pageDraftSaved'),
         duration: 2000
       })
+      await refetch({id: pageID})
     } else {
       const {data} = await createPage({variables: {input}})
 
