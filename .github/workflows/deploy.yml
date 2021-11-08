@@ -50,22 +50,18 @@ jobs:
     needs: deployment
     name: Runs e2e Test on Feature instance
     runs-on: self-hosted
-#    container:
-#      image: testcafe/testcafe
-#      options: --user root
-#      #options: -v /__w/wepublish/wepublish:/wepublish/:rw
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: '12.x'
       - uses: actions/checkout@v2
       - name: Sleep for 60s
         uses: juliangruber/sleep-action@v1
-        with:
+        with:qq
           time: 60s
-      - name: run tests
+      - name: Run E2E tests
         uses: DevExpress/testcafe-action@latest
         with:
           args: "chromium tests/e2e.ts"
