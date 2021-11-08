@@ -250,7 +250,7 @@ export function RouteProvider({children}: RouteProviderProps) {
           } else {
             dispatch({
               type: RouteActionType.SetCurrentRoute,
-              route: next
+              route: {...next, hash: ''}
             })
           }
         } else {

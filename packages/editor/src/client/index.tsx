@@ -89,7 +89,7 @@ const onDOMContentLoaded = async () => {
           )
         ) {
           localStorage.removeItem(LocalStorageKey.SessionToken)
-          window.location.pathname = '/logout'
+          // TODO: implement this handling console.warn()
         }
       })
       // if (networkError) console.log(`[Network error]: ${networkError}`)

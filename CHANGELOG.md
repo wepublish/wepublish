@@ -1,6 +1,74 @@
 # Change Log
 
-## v2.9.0-alpha.0 (2021-09-14)
+## v2.11.0 (2021-10-13)
+
+#### :heart: New Feature
+* `editor`
+  * [#375](https://github.com/wepublish/wepublish/pull/375) f/wpc-539-unpublish-pending-pages ([@lakeside763](https://github.com/lakeside763))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#374](https://github.com/wepublish/wepublish/pull/374) mapping metadata properties to get rid of __typename ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#381](https://github.com/wepublish/wepublish/pull/381) F/wpc 500 add hovering ([@camilleory](https://github.com/camilleory))
+* Other
+  * [#368](https://github.com/wepublish/wepublish/pull/368) f/wpc-526-theme-color-visible-on-website ([@camilleory](https://github.com/camilleory))
+* `api-db-mongodb`, `api`, `editor`
+  * [#376](https://github.com/wepublish/wepublish/pull/376) F/wpc 522 add font color to peered articles ([@camilleory](https://github.com/camilleory))
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+
+#### :house: Internal
+* Other
+  * [#384](https://github.com/wepublish/wepublish/pull/384) Wildcard certificate for feature branches ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#379](https://github.com/wepublish/wepublish/pull/379) chore(api): prettier cleanup ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#377](https://github.com/wepublish/wepublish/pull/377) make state colors of articles/pages consistent ([@penk85](https://github.com/penk85))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@lakeside763](https://github.com/lakeside763)
+
+
+## v2.10.0 (2021-09-29)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#370](https://github.com/wepublish/wepublish/pull/370) user and session improvements ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#346](https://github.com/wepublish/wepublish/pull/346) keyboard date input ([@penk85](https://github.com/penk85))
+* `editor`
+  * [#331](https://github.com/wepublish/wepublish/pull/331) image cta on website ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#369](https://github.com/wepublish/wepublish/pull/369) F/wpc 524 color picker peered articles color ([@camilleory](https://github.com/camilleory))
+  * [#348](https://github.com/wepublish/wepublish/pull/348) add my peer info page ([@HanaAyman](https://github.com/HanaAyman))
+  * [#365](https://github.com/wepublish/wepublish/pull/365) f/499-translation-rsuite-js ([@camilleory](https://github.com/camilleory))
+  * [#358](https://github.com/wepublish/wepublish/pull/358) F/wpc 482 format date with fns ([@camilleory](https://github.com/camilleory))
+  * [#351](https://github.com/wepublish/wepublish/pull/351) F/wpc-482-publication-date-without-seconds ([@camilleory](https://github.com/camilleory))
+  * [#332](https://github.com/wepublish/wepublish/pull/332) wpc-458-highlight-pending-articles-and-pages ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `api-db-mongodb`, `api`, `editor`
+  * [#337](https://github.com/wepublish/wepublish/pull/337) Get rid of @ts-ignore ([@gianantoniopini](https://github.com/gianantoniopini))
+
+#### Committers: 5
+- Camille ([@camilleory](https://github.com/camilleory))
+- Gianantonio Pini ([@gianantoniopini](https://github.com/gianantoniopini))
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+## v2.9.0 (2021-09-14)
 
 #### :nail_care: Polish
 * `editor`

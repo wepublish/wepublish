@@ -19,10 +19,6 @@ import {
     checkIfLoggedIn
 } from "./common";
 
-
-console.log('Editor URL', EDITOR_URL)
-console.log('Website URL', WEBSITE_URL)
-
 fixture`Create and publish a page`
     .disablePageCaching
     .beforeEach(async t => {
