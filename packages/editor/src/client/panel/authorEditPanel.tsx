@@ -153,7 +153,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <div>{users}</div>
+            <div>{t('Replace with users')}</div>
           </Panel>
           <Panel>
             <Form fluid={true}>

@@ -11,7 +11,8 @@ import {
   FormGroup,
   Modal,
   Panel,
-  Toggle
+  Toggle,
+  SelectPicker
 } from 'rsuite'
 
 import {DescriptionListItem, DescriptionList} from '../atoms/descriptionList'
@@ -23,7 +24,9 @@ import {
   useUserQuery,
   useUserRoleListQuery,
   FullUserRoleFragment,
-  FullUserSubscriptionFragment
+  FullUserSubscriptionFragment,
+  AuthorRefFragment,
+  useAuthorListQuery
 } from '../api'
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
@@ -31,6 +34,7 @@ import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
 import {Typography} from '../atoms/typography'
+// import { AuthorSelectPicker } from './selectPicker'
 
 export interface UserEditPanelProps {
   id?: string
@@ -49,6 +53,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
+  const [authorID, setAuthorID] = useState('')
+  const [authors, setAuthors] = useState<AuthorRefFragment[]>([])
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isUserSubscriptonEditOpen, setIsUserSubscriptonEditOpen] = useState(false)
@@ -58,6 +64,19 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     fetchPolicy: 'network-only',
     skip: id === undefined
   })
+
+  const [authorsFilter, setAuthorsFilter] = useState('')
+  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
+  const {data: authorData} = useAuthorListQuery({
+    variables: authorsVariables,
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    if (authorData?.authors?.nodes) {
+      setAuthors(authorData.authors.nodes)
+    }
+  }, [authorData?.authors])
 
   const {
     data: userRoleData,
@@ -90,6 +109,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         // TODO: fix this
         setRoles(data.user.roles as FullUserRoleFragment[])
       }
+      setAuthorID(data.user.authorID ?? '')
     }
   }, [data?.user])
 
@@ -124,7 +144,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               key,
               public: publicValue
             })),
-            roleIDs: roles.map(role => role.id)
+            roleIDs: roles.map(role => role.id),
+            authorID
           }
         }
       })
@@ -140,7 +161,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             emailVerifiedAt: null,
             active,
             properties: [],
-            roleIDs: roles.map(role => role.id)
+            roleIDs: roles.map(role => role.id),
+            authorID
           },
           password
         }
@@ -218,6 +240,22 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
                 onChange={value => {
                   setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('Author')}</ControlLabel>
+              <SelectPicker
+                size="md"
+                block={true}
+                placeholder={t('Select Author')}
+                value={authorID}
+                data={authors.map(author => ({value: author.id, label: author.name}))}
+                onChange={author => {
+                  setAuthorID(author)
+                }}
+                onSearch={searchKeyword => {
+                  setAuthorsFilter(searchKeyword)
                 }}
               />
             </FormGroup>
