@@ -628,10 +628,10 @@ export const Migrations: Migration[] = [
         const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
         paymentProviderCustomers.forEach(ppc => {
           // @ts-ignore
-          const temp = user.paymentProviderCustomers[ppc]
+          const userPPC = user.paymentProviderCustomers[ppc]
           paymentProvidersCustomersArray.push({
             paymentProviderID: ppc,
-            customerID: temp.id
+            customerID: userPPC.id
           })
         })
 
