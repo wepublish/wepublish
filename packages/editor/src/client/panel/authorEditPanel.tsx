@@ -56,6 +56,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     {id: generateID(), value: {title: '', url: ''}}
   ])
   const [users, setUsers] = useState<Maybe<AuthorUsers>[]>([])
+  console.log(users)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
