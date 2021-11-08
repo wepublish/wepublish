@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Sleep for 60s
         uses: juliangruber/sleep-action@v1
-        with:qq
+        with:
           time: 60s
       - name: Run E2E tests
         uses: DevExpress/testcafe-action@latest
