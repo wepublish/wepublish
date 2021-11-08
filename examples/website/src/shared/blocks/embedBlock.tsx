@@ -35,7 +35,6 @@ const EmbedBlockStyle = cssRule<{showBackground: boolean}>(({showBackground}) =>
   }),
 
   ...whenDesktop({
-    //width: '50%',
     maxWidth: pxToRem(900),
     margin: `0 auto ${pxToRem(70)}`,
     display: 'flex',
