@@ -23,20 +23,19 @@ import {
 } from './common'
 
 fixture`Test peering`
-  .disablePageCaching
+  .disablePageCaching `Test peering`
 // .beforeEach(async t => {
 //     await t.useRole(Role.anonymous());
-
-
 // })
-//   .page(`${EDITOR_URL}`)
+  // .page(`${EDITOR_URL}`)
+  
 let articleID = ''
 let token = ''
 
 test('Login to demo editor, create article and token', async t => {
   await t
     // .useRole(demoEditorUser)
-    .navigateTo(`https://editor.demo.wepublish.media/login`)
+    .navigateTo(`https://editor.demo.wepublish.media`)
     .typeText(loginName, 'dev@wepublish.ch')
     .typeText(loginPassword, '123')
     .click('form > button')
@@ -64,6 +63,11 @@ test('Login to demo editor, create article and token', async t => {
 
 test('Login to local editor, create peer', async t => {
   await t.useRole(admin)
+  // await t
+  // .navigateTo(`${EDITOR_URL}/login`)
+  // .typeText(loginName, 'dev@wepublish.ch')
+  // .typeText(loginPassword, '123')
+  // .click('form > button')
     .navigateTo(`${EDITOR_URL}/peering`)
     .click(Selector('a').withAttribute('href', '/peering/create'))
     .typeText(userNameInput, 'testPeer')
