@@ -123,10 +123,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           : flexTeaser
       })
     )
-    onChange({
-      ...value,
-      flexTeasers: flexTeasers
-    })
   }
 
   useEffect(() => {
@@ -139,6 +135,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         }
       })
     )
+    onChange({
+      ...value,
+      flexTeasers: flexTeasers
+    })
   }, [flexTeasers])
 
   useEffect(() => {
@@ -165,10 +165,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
 
     setFlexTeasers(newFlexTeasers)
-    onChange({
-      ...value,
-      flexTeasers: flexTeasers
-    })
   }
 
   const handleAddTeaser = () => {
@@ -184,17 +180,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     }
 
     setFlexTeasers(flexTeasers => [...flexTeasers, newTeaser])
-
-    onChange({
-      flexTeasers: flexTeasers
-    })
   }
 
   const handleRemoveTeaser = (index: string) => {
     setFlexTeasers(flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index))
-    onChange({
-      flexTeasers: flexTeasers
-    })
   }
 
   // function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
@@ -233,7 +222,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         className="layout"
         // onDragStart={handleSortStart}
         // onDragStop={() => handleSortEnd}
-        onLayoutChange={handleLayoutChange}
+        onLayoutChange={() => handleLayoutChange}
         layout={layout}
         cols={12}
         rowHeight={30}
@@ -269,6 +258,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
+          // TODO change teaser
           initialTeaser={flexTeasers[0].teaser!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
