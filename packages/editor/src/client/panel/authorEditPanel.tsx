@@ -12,7 +12,9 @@ import {
   InputGroup,
   Icon,
   ControlLabel,
-  FormGroup
+  FormGroup,
+  TagGroup,
+  Tag
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -152,7 +154,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <div>{users && users.map(user => <p key={user?.id}>{user?.name}</p>)}</div>
+            <ControlLabel>{t('Linked users')}</ControlLabel>
+            <TagGroup style={{marginTop: '0px'}}>
+              {users && users.map(user => <Tag key={user?.id}>{user?.name}</Tag>)}
+            </TagGroup>
           </Panel>
           <Panel>
             <Form fluid={true}>
