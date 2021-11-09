@@ -10,9 +10,10 @@ import {VimeoEmbed} from '../atoms/vimeoEmbed'
 import {SoundCloudEmbed} from '../atoms/soundCloudEmbed'
 import {PolisEmbed} from '../atoms/polisEmbed'
 import {cssRule, useStyle} from '@karma.run/react'
-import {pxToRem, whenTablet, whenDesktop} from '../style/helpers'
+import {pxToRem, whenDesktop, whenTablet} from '../style/helpers'
 import {usePermanentVisibility} from '../utils/hooks'
 import {transformCssStringToObject} from '../utility'
+import {BildwurfAdEmbed} from '../atoms/bildwurfAdEmbed'
 
 export interface EmbedBlockProps {
   readonly data: EmbedData
@@ -34,7 +35,6 @@ const EmbedBlockStyle = cssRule<{showBackground: boolean}>(({showBackground}) =>
   }),
 
   ...whenDesktop({
-    width: '50%',
     maxWidth: pxToRem(900),
     margin: `0 auto ${pxToRem(70)}`,
     display: 'flex',
@@ -64,6 +64,9 @@ function embedForData(data: EmbedData) {
 
     case EmbedType.PolisConversation:
       return <PolisEmbed {...data} />
+
+    case EmbedType.BildwurfAd:
+      return <BildwurfAdEmbed {...data} />
 
     case EmbedType.IFrame:
       // TODO: Move into component
