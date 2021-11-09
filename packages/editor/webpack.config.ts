@@ -6,8 +6,8 @@ import {AssetListPlugin} from '@karma.run/webpack'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
-export default (env: any, {mode}: any) => {
-  return {
+export default (env: any, {mode}: any) =>
+  ({
     entry: {
       client: './src/client/index.tsx'
     },
@@ -84,5 +84,4 @@ export default (env: any, {mode}: any) => {
       port: 3001,
       headers: {'Access-Control-Allow-Origin': '*'}
     }
-  } as webpack.Configuration
-}
+  } as webpack.Configuration)
