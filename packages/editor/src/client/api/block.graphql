@@ -142,8 +142,12 @@ fragment FullBlock on Block {
     trackID
   }
 
-    ... on PolisConversationBlock {
+  ... on PolisConversationBlock {
     conversationID
+  }
+
+  ... on BildwurfAdBlock {
+    zoneID
   }
 
   ... on EmbedBlock {

@@ -12,6 +12,7 @@ export enum BlockType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  BildwurfAd = 'bildwurfAd',
   Embed = 'embed',
   Quote = 'quote',
   Image = 'image',
@@ -83,6 +84,11 @@ export interface SoundCloudTrackBlock {
 export interface PolisConversationBlock {
   type: BlockType.PolisConversation
   conversationID: string
+}
+
+export interface BildwurfAdBlock {
+  type: BlockType.BildwurfAd
+  zoneID: string
 }
 
 export interface EmbedBlock {
@@ -200,6 +206,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | BildwurfAdBlock
   | TeaserGridBlock
 
 export type PageBlock = ArticleBlock
