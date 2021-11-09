@@ -201,7 +201,8 @@
         "removeImage": "Remove Image",
         "save": "Save",
         "title": "Title",
-        "linkedUsers": "Linked Users"
+        "linkedUsers": "Linked Users",
+        "none": "None"
       }
     },
     "blocks": {
