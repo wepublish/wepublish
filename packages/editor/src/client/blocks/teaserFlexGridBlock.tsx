@@ -105,7 +105,7 @@ export function FlexTeaserBlock({
 }
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
-  const [editIndex, setEditIndex] = useState(0)
+  const [editIndex, setEditIndex] = useState('')
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -113,23 +113,18 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
 
   const [layout, setLayout] = useState<FlexItemAlignment[]>([])
-  // flexTeasers.map(flexTeaser => flexTeaser.alignment))
   const [teasers, setTeasers] = useState<TeaserWithID[]>([])
 
-  // flexTeasers.map((flexTeaser, i) => {
-  //   return {
-  //     teaser: flexTeaser.teaser,
-  //     layoutID: flexTeasers[i].alignment.i
-  //   }
-  // })
-
-  function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
+  function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
     setFlexTeasers(
       flexTeasers.map((flexTeaser, i) => {
-        return i === index ? {alignment: flexTeaser.alignment, teaser: teaserLink} : flexTeaser
+        return flexTeaser.alignment.i === index
+          ? {alignment: flexTeaser.alignment, teaser: teaserLink}
+          : flexTeaser
       })
     )
     onChange({
+      ...value,
       flexTeasers: flexTeasers
     })
   }
@@ -162,14 +157,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
     // const changedLayout = alignment.map(({i, x, y, w, h}) => ({i, x, y, w, h}))
+    const newFlexTeasers = alignment.map(v => {
+      return {
+        teaser: teasers.find(({layoutID}) => v.i === layoutID)?.teaser ?? null,
+        alignment: v
+      }
+    })
+
+    setFlexTeasers(newFlexTeasers)
     onChange({
       ...value,
-      flexTeasers: alignment.map(v => {
-        return {
-          teaser: teasers.find(({layoutID}) => v.i === layoutID)?.teaser ?? null,
-          alignment: v
-        }
-      })
+      flexTeasers: flexTeasers
     })
   }
 
@@ -240,17 +238,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         cols={12}
         rowHeight={30}
         width={1200}>
-        {flexTeasers.map((flexTeaser, i) => (
+        {flexTeasers.map(flexTeaser => (
           <div key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}
               showGrabCursor={teasers.length !== 1}
               onEdit={() => {
-                setEditIndex(i)
+                setEditIndex(flexTeaser.alignment.i)
                 setEditModalOpen(true)
               }}
               onChoose={() => {
-                setEditIndex(i)
+                setEditIndex(flexTeaser.alignment.i)
                 setChooseModalOpen(true)
               }}
               onRemove={() => console.log('remove')}
@@ -271,7 +269,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
-          initialTeaser={flexTeasers[editIndex].teaser!}
+          initialTeaser={flexTeasers[0].teaser!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)
