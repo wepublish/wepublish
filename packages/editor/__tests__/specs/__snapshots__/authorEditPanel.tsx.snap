@@ -121,7 +121,34 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   "marginTop": "0px",
                                 }
                               }
-                            />
+                            >
+                              <withStyleProps(defaultProps(Tag))
+                                classPrefix="rs-tag"
+                                componentClass="div"
+                              >
+                                <defaultProps(Tag)
+                                  className="rs-tag-default"
+                                  classPrefix="rs-tag"
+                                  componentClass="div"
+                                >
+                                  <Tag
+                                    className="rs-tag-default"
+                                    classPrefix="rs-tag"
+                                    componentClass="div"
+                                  >
+                                    <div
+                                      className="rs-tag rs-tag-default"
+                                    >
+                                      <span
+                                        className="rs-tag-text"
+                                      >
+                                        authors.panels.none
+                                      </span>
+                                    </div>
+                                  </Tag>
+                                </defaultProps(Tag)>
+                              </withStyleProps(defaultProps(Tag))>
+                            </div>
                           </TagGroup>
                         </defaultProps(TagGroup)>
                       </div>
@@ -3160,7 +3187,34 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                   "marginTop": "0px",
                                 }
                               }
-                            />
+                            >
+                              <withStyleProps(defaultProps(Tag))
+                                classPrefix="rs-tag"
+                                componentClass="div"
+                              >
+                                <defaultProps(Tag)
+                                  className="rs-tag-default"
+                                  classPrefix="rs-tag"
+                                  componentClass="div"
+                                >
+                                  <Tag
+                                    className="rs-tag-default"
+                                    classPrefix="rs-tag"
+                                    componentClass="div"
+                                  >
+                                    <div
+                                      className="rs-tag rs-tag-default"
+                                    >
+                                      <span
+                                        className="rs-tag-text"
+                                      >
+                                        authors.panels.none
+                                      </span>
+                                    </div>
+                                  </Tag>
+                                </defaultProps(Tag)>
+                              </withStyleProps(defaultProps(Tag))>
+                            </div>
                           </TagGroup>
                         </defaultProps(TagGroup)>
                       </div>
@@ -6189,7 +6243,34 @@ exports[`Author Edit Panel should render 1`] = `
                                   "marginTop": "0px",
                                 }
                               }
-                            />
+                            >
+                              <withStyleProps(defaultProps(Tag))
+                                classPrefix="rs-tag"
+                                componentClass="div"
+                              >
+                                <defaultProps(Tag)
+                                  className="rs-tag-default"
+                                  classPrefix="rs-tag"
+                                  componentClass="div"
+                                >
+                                  <Tag
+                                    className="rs-tag-default"
+                                    classPrefix="rs-tag"
+                                    componentClass="div"
+                                  >
+                                    <div
+                                      className="rs-tag rs-tag-default"
+                                    >
+                                      <span
+                                        className="rs-tag-text"
+                                      >
+                                        authors.panels.none
+                                      </span>
+                                    </div>
+                                  </Tag>
+                                </defaultProps(Tag)>
+                              </withStyleProps(defaultProps(Tag))>
+                            </div>
                           </TagGroup>
                         </defaultProps(TagGroup)>
                       </div>
@@ -9220,7 +9301,34 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   "marginTop": "0px",
                                 }
                               }
-                            />
+                            >
+                              <withStyleProps(defaultProps(Tag))
+                                classPrefix="rs-tag"
+                                componentClass="div"
+                              >
+                                <defaultProps(Tag)
+                                  className="rs-tag-default"
+                                  classPrefix="rs-tag"
+                                  componentClass="div"
+                                >
+                                  <Tag
+                                    className="rs-tag-default"
+                                    classPrefix="rs-tag"
+                                    componentClass="div"
+                                  >
+                                    <div
+                                      className="rs-tag rs-tag-default"
+                                    >
+                                      <span
+                                        className="rs-tag-text"
+                                      >
+                                        authors.panels.none
+                                      </span>
+                                    </div>
+                                  </Tag>
+                                </defaultProps(Tag)>
+                              </withStyleProps(defaultProps(Tag))>
+                            </div>
                           </TagGroup>
                         </defaultProps(TagGroup)>
                       </div>
