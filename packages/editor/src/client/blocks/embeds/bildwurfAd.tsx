@@ -30,7 +30,7 @@ export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
   }, [])
 
   return (
-    <div id="bildwurf-injection-wrapper">
+    <div id="bildwurf-injection-wrapper" style={{pointerEvents: 'none'}}>
       <ins className="aso-zone" data-zone={zoneID}></ins>
     </div>
   )
