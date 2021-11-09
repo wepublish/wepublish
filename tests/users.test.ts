@@ -4,7 +4,7 @@ import {
     admin,
     getPath,
     EDITOR_URL,
-    closeButton,
+    drawerConfirmButton,
     loginName,
     loginPassword,
     userName,
@@ -13,6 +13,7 @@ import {
     userNameInput,
     userEmailInput,
     userPasswordInput,
+    cogIcon,
 } from "./common"
 
 
@@ -33,7 +34,7 @@ test('create user', async t => {
         .typeText(userNameInput, userName)
         .typeText(userEmailInput, userEmail)
         .typeText(userPasswordInput, userPassword)
-        .click(closeButton)
+        .click(drawerConfirmButton)
         .useRole(Role.anonymous())
 })
 
@@ -54,7 +55,7 @@ test('log in as admin and give user an admin role', async t => {
         .click(Selector('a').withAttribute('name', 'User Roles'))
         .click(Selector('label').withText('Admin'))
         .click(Selector('input').withAttribute('name', 'Preferred Name'))
-        .click(Selector('button').withText('Save'))
+        .click(drawerConfirmButton)
         .useRole(Role.anonymous())
 })
 
@@ -63,6 +64,6 @@ test('log in with admin role', async t => {
         .typeText(loginName, userEmail)
         .typeText(loginPassword, userPassword)
         .click('form > button')
-        .expect(Selector('i.rs-icon-cog').exists).ok()
+        .expect(cogIcon.exists).ok()
 })
 

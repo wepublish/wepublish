@@ -4,7 +4,7 @@ import {
     admin,
     getPath,
     EDITOR_URL,
-    closeButton,
+    drawerConfirmButton,
     userName,
     userEmail,
     userPassword,
@@ -15,6 +15,7 @@ import {
     createButton,
     testUser,
     addTitleAndLead,
+    confirmDeleteButton,
 
 } from "./common"
 
@@ -41,7 +42,7 @@ test('create a role', async t => {
         .click(Selector('.rs-picker-search-bar-input'))
         .typeText(Selector('.rs-picker-search-bar-input'), 'editor')
         .click(Selector('label').withText('Allows to login editor'))
-        .click(closeButton)
+        .click(drawerConfirmButton)
 })
 
 test('create new user and add user role', async t => {
@@ -74,6 +75,7 @@ test('login with testUser, fail to create article', async t => {
     await addTitleAndLead()
     await t
         .click(createButton)
+        // problem here
         .expect(Selector('.rs-notification-error').exists).ok()
 })
 
@@ -82,8 +84,8 @@ test('fail to delete article', async t => {
         .useRole(testUser)
         .navigateTo(EDITOR_URL)
         .click(Selector('i.rs-icon-trash'))
-        .click(Selector('button').withText('Confirm'))
-        .expect(Selector('button').withText('Confirm').exists).ok()
+        .click(confirmDeleteButton)
+        .expect(confirmDeleteButton.exists).ok()
 })
 
 test('add article permissions to testUser', async t => {
@@ -94,7 +96,7 @@ test('add article permissions to testUser', async t => {
         .click(Selector('a').withAttribute('role', 'combobox'))
         .click(Selector('label').withText('Allows to create article'))
         .click(Selector('label').withText('Allows to delete article'))
-        .click(closeButton)
+        .click(drawerConfirmButton)
 })
 
 test('add and delete article with testUser', async t => {
@@ -116,7 +118,7 @@ test('add and delete article with testUser', async t => {
     await t
         .click(articleBox.parent().parent().parent().child(1)
             .child().child().child().child('i.rs-icon-trash'))
-        .click(Selector('button').withText('Confirm'))
+        .click(confirmDeleteButton)
         .expect(articleBox.exists).notOk()
 })
 

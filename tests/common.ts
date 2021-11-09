@@ -12,8 +12,14 @@ const publishButton = Selector('button').child('i.rs-icon-cloud-upload')
 const addContentButton = Selector('button').child('i.rs-icon-plus')
 const richtTextElement = Selector('h1').withAttribute('data-slate-node', 'element')
 
-const closeButton = Selector('.rs-drawer-footer').child('button.rs-btn-primary')
-const confirmButton = Selector('.rs-modal-footer').child('button.rs-btn-primary')
+const drawerConfirmButton = Selector('.rs-drawer-footer').child('button.rs-btn-primary')
+const modalCoonfirmButton = Selector('.rs-modal-footer').child('button.rs-btn-primary')
+const confirmDeleteButton = Selector('.rs-modal-footer').child('button.rs-btn-red')
+const addSlugButton = (Selector('button').child('i.rs-icon-magic'))
+
+const cogIcon = Selector('i.rs-icon-cog')
+// add alert and check why not working --> alert to notification ? 
+
 const deleteButton = Selector('button').child('i.rs-icon-trash')
 const metaPreTitleInput = Selector('input.preTitle')
 const metaTitleInput = Selector('input.title')
@@ -88,7 +94,7 @@ function getRandomString(length) {
 
  async function checkIfLoggedIn() {
     await t
-        .expect(Selector('i.rs-icon-cog').exists).ok()
+        .expect(cogIcon.exists).ok()
 }
 
 
@@ -138,7 +144,7 @@ async function addEmbeddedVideo() {
         .click(addContentButton)
         .click(Selector('a').child('i.rs-icon-code'))
         .typeText(Selector('textarea').withAttribute('placeholder', 'Embed'), videoUrl)
-        .click(Selector(closeButton))
+        .click(Selector(drawerConfirmButton))
 }
 
 async function addOneColArticle() {
@@ -147,7 +153,7 @@ async function addOneColArticle() {
         .click(Selector('a').child('i.rs-icon-ellipsis-v'))
         .click(Selector('button').child('i.rs-icon-plus-circle'))
         .click(Selector('div.rs-list-item'))
-        .click(Selector(closeButton))
+        .click(Selector(drawerConfirmButton))
 }
 
 async function addRichText() {
@@ -254,8 +260,8 @@ export {
     metadataButton,
     createButton,
     publishButton,
-    closeButton,
-    confirmButton,
+    drawerConfirmButton,
+    modalCoonfirmButton,
     metaPreTitleInput,
     metaTitleInput,
     metaLeadInput,
@@ -275,6 +281,9 @@ export {
     userPasswordInput,
     userEmailInput,
     testUser,
+    confirmDeleteButton,
+    addSlugButton,
     addTitleAndLead,
+    cogIcon
 }
 

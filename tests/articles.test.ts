@@ -7,15 +7,17 @@ import {
   WEBSITE_URL,
   metadataButton,
   publishButton,
-  closeButton,
-  confirmButton,
+  drawerConfirmButton,
+  modalCoonfirmButton,
   metaPreTitleInput,
   metaTitleInput,
   metaLeadInput,
   createArticle,
   addTestingContent,
   checkTestingContentOnWebsite,
-  checkIfLoggedIn
+  checkIfLoggedIn,
+  confirmDeleteButton,
+  addSlugButton
 } from "./common"
 
 
@@ -54,7 +56,7 @@ test('Create an article', async t => {
     .expect(metaTitleInput.value).contains('This is the Title')
     .expect(metaLeadInput.value).contains('This is the lead')
     .typeText(metaPreTitleInput, 'This is a Pre-title')
-    .click(closeButton)
+    .click(drawerConfirmButton)
 });
 
 test('Test Website', async t => {
@@ -67,16 +69,16 @@ test('Publish article', async t => {
   await t
     .click(Selector('a').withAttribute('href', `/article/edit/${articleID}`))
     .click(publishButton)
-    .click(confirmButton)
+    .click(modalCoonfirmButton)
     .expect(Selector('div.rs-alert-container').exists).ok()
     .click(Selector('div.rs-alert-item-close'))
 
   await t
     .click(metadataButton)
-    .click(Selector('button').child('i.rs-icon-magic'))
-    .click(closeButton)
+    .click(addSlugButton)
+    .click(drawerConfirmButton)
     .click(publishButton)
-    .click(confirmButton)
+    .click(modalCoonfirmButton)
     .expect(Selector('div.rs-tag-default').child('span.rs-tag-text').innerText).contains('Article published')
 })
 
@@ -92,6 +94,6 @@ test('Delete article', async t => {
   await t
     .click(articleBox.parent().parent().parent().child(1)
       .child().child().child().child('i.rs-icon-trash'))
-    .click(Selector('button').withText('Confirm'))
+    .click(confirmDeleteButton)
     .expect(articleBox.exists).notOk()
 })

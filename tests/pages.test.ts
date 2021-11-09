@@ -6,8 +6,8 @@ import {
     createPage,
     metadataButton,
     publishButton,
-    closeButton,
-    confirmButton,
+    drawerConfirmButton,
+    modalCoonfirmButton,
     metaSlugInput,
     getPath,
     addTestingContent,
@@ -16,7 +16,8 @@ import {
     addTitleAndLead,
     metaPreTitleInput,
     checkOneColArticleOnWebsite,
-    checkIfLoggedIn
+    checkIfLoggedIn,
+    addSlugButton
 } from "./common";
 
 fixture`Create and publish a page`
@@ -51,10 +52,10 @@ test('Create an article', async t => {
     await t
         .click(metadataButton)
         .typeText(metaPreTitleInput, 'Test article on page')
-        .click(Selector('button').child('i.rs-icon-magic'))
-        .click(closeButton)
+        .click(addSlugButton)
+        .click(drawerConfirmButton)
         .click(publishButton)
-        .click(confirmButton)
+        .click(modalCoonfirmButton)
 });
 
 test('Create a page', async t => {
@@ -73,12 +74,12 @@ test('Create a page', async t => {
     await t
         .click(metadataButton)
         .typeText(metaSlugInput, pageID)
-        .click(closeButton)
+        .click(drawerConfirmButton)
         .click(publishButton)
         .click(Selector('.react-datepicker__input-container'))
         .click(Selector('.react-datepicker__navigation--next'))
         .click(Selector('.react-datepicker__day').withText('30'))
-        .click(confirmButton)
+        .click(modalCoonfirmButton)
 })
 
 
@@ -92,9 +93,10 @@ test('Publish page', async t => {
     await t
         .click(Selector('a').withAttribute('href', `/page/edit/${pageID}`))
         .click(publishButton)
-        .click(confirmButton)
+        .click(modalCoonfirmButton)
+        // problem here
         .expect(Selector('div.rs-alert-container').exists).ok()
-        .click(Selector('div.rs-alert-item-close'))
+        // .click(Selector('div.rs-alert-item-close'))
         .expect(Selector('div.rs-tag-default').child('span.rs-tag-text').innerText).contains('Page published')
 });
 
