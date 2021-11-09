@@ -64,8 +64,3 @@ jobs:
       - name: Run E2E tests
         if: always()
         run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
-#      - uses: actions/upload-artifact@v2
-#        if: ${{ failure() }}
-#        with:
-#          name: my-artifact
-#          path: screenshots/

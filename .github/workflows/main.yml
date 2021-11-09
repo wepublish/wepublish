@@ -50,16 +50,19 @@ jobs:
   e2eTest:
     needs: release
     name: Runs e2e Test on demo.wepublish.media
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    container:
+      image: testcafe/testcafe
+      options: --user root
     env:
       E2E_TEST_EDITOR_URL: 'https://editor.demo.wepublish.media'
       E2E_TEST_WEBSITE_URL: 'https://demo.wepublish.media'
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - name: Sleep for 60s
+        uses: juliangruber/sleep-action@v1
         with:
-          node-version: '12.x'
-      - uses: actions/checkout@v1
-      - name: Run TestCafe Tests
-        uses: DevExpress/testcafe-action@latest
-        with:
-          args: 'chrome ./tests/e2e.ts'
+          time: 60s
+      - name: Run E2E tests
+        if: always()
+        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
