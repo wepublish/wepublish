@@ -41,7 +41,6 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface AuthorEditPanelProps {
   id?: string
-
   onClose?(): void
   onSave?(author: FullAuthorFragment): void
 }
@@ -55,7 +54,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
     {id: generateID(), value: {title: '', url: ''}}
   ])
-  const [users, setUsers] = useState<AuthorUsers[]>([])
+  const [users, setUsers] = useState<Maybe<AuthorUsers>[]>([])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -94,7 +93,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             }))
           : []
       )
-      setUsers(data.author.users)
+      setUsers(data.author?.users || [])
     }
   }, [data?.author])
 
@@ -153,7 +152,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <div>{t('Replace with users')}</div>
+            <div>{users && users.map(user => <p key={user?.id}>{user?.name}</p>)}</div>
           </Panel>
           <Panel>
             <Form fluid={true}>
