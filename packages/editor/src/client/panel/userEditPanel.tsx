@@ -34,7 +34,6 @@ import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
 import {Typography} from '../atoms/typography'
-// import { AuthorSelectPicker } from './selectPicker'
 
 export interface UserEditPanelProps {
   id?: string
