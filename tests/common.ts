@@ -34,6 +34,8 @@ const userName = getRandomString(7)
 const userEmail = userName + '@mail.com'
 const userPassword = getRandomString(3)
 
+const tokenName = 'testToken-'+getRandomString(3)
+
 const userNameInput = Selector('input').withAttribute('name', 'Name')
 const userEmailInput = Selector('input').withAttribute('name', 'Email')
 const userPasswordInput = Selector('input').withAttribute('name', 'Password')
@@ -283,6 +285,7 @@ export {
     userPasswordInput,
     userEmailInput,
     testUser,
+    tokenName,
     addTitleAndLead,
 }
 

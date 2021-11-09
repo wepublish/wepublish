@@ -18,27 +18,18 @@ import {
   demoEditorUser,
   addTitleAndLead,
   checkTitleAndLeadOnWebsite,
-  loginName,
-  loginPassword
+  tokenName,
 } from './common'
 
 fixture`Test peering`
-  .disablePageCaching `Test peering`
-// .beforeEach(async t => {
-//     await t.useRole(Role.anonymous());
-// })
-  // .page(`${EDITOR_URL}`)
+  .disablePageCaching
 
 let articleID = ''
 let token = ''
 
 test('Login to demo editor, create article and token', async t => {
   await t
-    // .useRole(demoEditorUser)
-    .navigateTo(`https://editor.demo.wepublish.media`)
-    .typeText(loginName, 'dev@wepublish.ch')
-    .typeText(loginPassword, '123')
-    .click('form > button')
+    .useRole(demoEditorUser)
     .navigateTo(`https://editor.demo.wepublish.media/articles`)
   await t
     .click(createArticle)
@@ -55,20 +46,13 @@ test('Login to demo editor, create article and token', async t => {
     .click(confirmButton)
     .navigateTo(`https://editor.demo.wepublish.media/tokens`)
     .click(Selector('a').withAttribute('href', '/tokens/generate'))
-    .typeText(Selector('input'),`${Math.random()}testPeering`)
-    // .typeText(Selector('input'), 'testPeering')
+    .typeText(Selector('input'), tokenName)
     .click(closeButton)
   token = await Selector('.rs-panel').textContent
-  // console.log('token is: ', token)
 })
 
 test('Login to local editor, create peer', async t => {
   await t.useRole(admin)
-  // await t
-  // .navigateTo(`${EDITOR_URL}/login`)
-  // .typeText(loginName, 'dev@wepublish.ch')
-  // .typeText(loginPassword, '123')
-  // .click('form > button')
     .navigateTo(`${EDITOR_URL}/peering`)
     .click(Selector('a').withAttribute('href', '/peering/create'))
     .typeText(userNameInput, 'testPeer')
@@ -117,9 +101,7 @@ test('Check peered article on website', async t => {
   await checkTitleAndLeadOnWebsite()
   await t
     .expect(Selector('a').withAttribute('href', `https://demo.wepublish.media/a/${articleID}/this-is-the-title`).exists).ok()
-    // .expect(Selector('p').withText('We.Publish Demo').exists).ok()
     .click(Selector('a').withAttribute('href', `https://demo.wepublish.media/a/${articleID}/this-is-the-title`))
-  // get full path
   const path = getPath()
   await t.expect(path).eql(`/a/${articleID}/this-is-the-title`)
 })
@@ -127,53 +109,49 @@ test('Check peered article on website', async t => {
 
 test('Delete peered article in demo editor', async t => {
   await t
-  // .navigateTo(`https://editor.demo.wepublish.media`)
-  .useRole(demoEditorUser)
-  .navigateTo(`https://editor.demo.wepublish.media/articles`)
+    .useRole(demoEditorUser)
+    .navigateTo(`https://editor.demo.wepublish.media/articles`)
   const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent()
   await t
     .click(articleBox.parent().parent().parent().child(1)
       .child().child().child().child('i.rs-icon-trash'))
-          .click(Selector('button').withText('Confirm'))
-          .expect(articleBox.exists).notOk()
+    .click(Selector('button').withText('Confirm'))
+    .expect(articleBox.exists).notOk()
 })
 
 test('Peered article not peerable anymore', async t => {
   await t
-  .useRole(admin)
-  .navigateTo(`${EDITOR_URL}/pages`)
-  .click(Selector('a').withAttribute('href', `/page/edit/${pageID}`))
-  .click(addContentButton)
-  .click(Selector('a').child('i.rs-icon-ellipsis-v'))
-  .click(Selector('button').child('i.rs-icon-plus-circle'))
-  .click(Selector('a').withText('Peer Article'))
-  .expect(Selector('h3').withText('We.Publish Demo - This is the Title').exists).notOk()
-  .click(Selector('button').withText('Close'))
-  .click(publishButton)
-  .click(Selector('button').withText('Confirm'))
+    .useRole(admin)
+    .navigateTo(`${EDITOR_URL}/pages`)
+    .click(Selector('a').withAttribute('href', `/page/edit/${pageID}`))
+    .click(addContentButton)
+    .click(Selector('a').child('i.rs-icon-ellipsis-v'))
+    .click(Selector('button').child('i.rs-icon-plus-circle'))
+    .click(Selector('a').withText('Peer Article'))
+    .expect(Selector('h3').withText('We.Publish Demo - This is the Title').exists).notOk()
+    .click(Selector('button').withText('Close'))
+    .click(publishButton)
+    .click(Selector('button').withText('Confirm'))
   // navigate to website and expect article not to be there ?
 })
 
 test('Delete Peer', async t => {
   await t
-  .useRole(admin)
-  .navigateTo(`${EDITOR_URL}/peering`)
-  // Select right peer ?
-  .click(Selector('i.rs-icon-trash'))
-  .click(Selector('button').withText('Confirm'))
-  .expect(Selector('h5').withText('testPeer').exists).notOk()
+    .useRole(admin)
+    .navigateTo(`${EDITOR_URL}/peering`)
+    .click(Selector('h5').withText('testPeer').parent().nextSibling().child('button'))
+    .click(Selector('button').withText('Confirm'))
+    .expect(Selector('h5').withText('testPeer').exists).notOk()
 })
 
 test('Delete token', async t => {
   await t
-  .useRole(demoEditorUser)
+    .useRole(demoEditorUser)
   await t
-  .navigateTo(`https://editor.demo.wepublish.media/tokens`)
+    .navigateTo(`https://editor.demo.wepublish.media/tokens`)
   await t
-  .click(Selector('div.div.rs-flex-box-grid-item-23').parent().child().nth(1).child())
+    .click(Selector('div.rs-flex-box-grid-item-23').withText(tokenName).parent().child().nth(1).child('button'))
+    .click(Selector('button').withText('Confirm'))
 })
 
-
-// create article in demo editor, peer it, check if displayed on website, then delete it, 
-// check if not peerable anymore, delete token
 
