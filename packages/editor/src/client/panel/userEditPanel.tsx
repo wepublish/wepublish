@@ -243,19 +243,15 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('Author')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.authors')}</ControlLabel>
               <SelectPicker
                 size="md"
                 block={true}
-                placeholder={t('Select Author')}
+                placeholder={t('userList.panels.selectAuthor')}
                 value={authorID}
                 data={authors.map(author => ({value: author.id, label: author.name}))}
-                onChange={author => {
-                  setAuthorID(author)
-                }}
-                onSearch={searchKeyword => {
-                  setAuthorsFilter(searchKeyword)
-                }}
+                onChange={author => setAuthorID(author)}
+                onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
               />
             </FormGroup>
           </Form>

@@ -1509,6 +1509,509 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                           </FormGroup>
                         </defaultProps(FormGroup)>
                       </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.authors
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <withLocale(defaultProps(SelectPicker))
+                                block={true}
+                                data={Array []}
+                                onChange={[Function]}
+                                onSearch={[Function]}
+                                placeholder="userList.panels.selectAuthor"
+                                size="md"
+                                value=""
+                              >
+                                <defaultProps(SelectPicker)
+                                  appearance="default"
+                                  block={true}
+                                  childrenKey="children"
+                                  classPrefix="rs-picker"
+                                  cleanable={true}
+                                  data={Array []}
+                                  disabledItemValues={Array []}
+                                  labelKey="label"
+                                  locale={
+                                    Object {
+                                      "checkAll": "All",
+                                      "formatDate": [Function],
+                                      "noResultsText": "No results found",
+                                      "placeholder": "Select",
+                                      "searchPlaceholder": "Search",
+                                    }
+                                  }
+                                  maxHeight={320}
+                                  menuAutoWidth={true}
+                                  onChange={[Function]}
+                                  onSearch={[Function]}
+                                  placeholder="userList.panels.selectAuthor"
+                                  placement="bottomStart"
+                                  searchable={true}
+                                  size="md"
+                                  value=""
+                                  valueKey="value"
+                                  virtualized={true}
+                                >
+                                  <SelectPicker
+                                    appearance="default"
+                                    block={true}
+                                    childrenKey="children"
+                                    classPrefix="rs-picker"
+                                    cleanable={true}
+                                    data={Array []}
+                                    disabledItemValues={Array []}
+                                    labelKey="label"
+                                    locale={
+                                      Object {
+                                        "checkAll": "All",
+                                        "formatDate": [Function],
+                                        "noResultsText": "No results found",
+                                        "placeholder": "Select",
+                                        "searchPlaceholder": "Search",
+                                      }
+                                    }
+                                    maxHeight={320}
+                                    menuAutoWidth={true}
+                                    onChange={[Function]}
+                                    onSearch={[Function]}
+                                    placeholder="userList.panels.selectAuthor"
+                                    placement="bottomStart"
+                                    searchable={true}
+                                    size="md"
+                                    value=""
+                                    valueKey="value"
+                                    virtualized={true}
+                                  >
+                                    <PickerToggleTrigger
+                                      onEntered={[Function]}
+                                      onExited={[Function]}
+                                      pickerProps={
+                                        Object {
+                                          "appearance": "default",
+                                          "block": true,
+                                          "childrenKey": "children",
+                                          "classPrefix": "rs-picker",
+                                          "cleanable": true,
+                                          "data": Array [],
+                                          "disabledItemValues": Array [],
+                                          "labelKey": "label",
+                                          "locale": Object {
+                                            "checkAll": "All",
+                                            "formatDate": [Function],
+                                            "noResultsText": "No results found",
+                                            "placeholder": "Select",
+                                            "searchPlaceholder": "Search",
+                                          },
+                                          "maxHeight": 320,
+                                          "menuAutoWidth": true,
+                                          "onChange": [Function],
+                                          "onSearch": [Function],
+                                          "placeholder": "userList.panels.selectAuthor",
+                                          "placement": "bottomStart",
+                                          "searchable": true,
+                                          "size": "md",
+                                          "value": "",
+                                          "valueKey": "value",
+                                          "virtualized": true,
+                                        }
+                                      }
+                                      positionRef={[Function]}
+                                      speaker={
+                                        <defaultProps(MenuWrapper)
+                                          autoWidth={true}
+                                          className="rs-picker-select-menu"
+                                          classPrefix="rs-picker-menu"
+                                          getPositionInstance={[Function]}
+                                          getToggleInstance={[Function]}
+                                          onKeyDown={[Function]}
+                                        >
+                                          <defaultProps(SearchBar)
+                                            classPrefix="rs-picker-search-bar"
+                                            onChange={[Function]}
+                                            placeholder="Search"
+                                            value=""
+                                          />
+                                          <div
+                                            className="rs-picker-none"
+                                          >
+                                            No results found
+                                          </div>
+                                        </defaultProps(MenuWrapper)>
+                                      }
+                                    >
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        onEntered={[Function]}
+                                        onExited={[Function]}
+                                        placement="bottomStart"
+                                        positionRef={[Function]}
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(MenuWrapper)
+                                            autoWidth={true}
+                                            className="rs-picker-select-menu"
+                                            classPrefix="rs-picker-menu"
+                                            getPositionInstance={[Function]}
+                                            getToggleInstance={[Function]}
+                                            onKeyDown={[Function]}
+                                          >
+                                            <defaultProps(SearchBar)
+                                              classPrefix="rs-picker-search-bar"
+                                              onChange={[Function]}
+                                              placeholder="Search"
+                                              value=""
+                                            />
+                                            <div
+                                              className="rs-picker-none"
+                                            >
+                                              No results found
+                                            </div>
+                                          </defaultProps(MenuWrapper)>
+                                        }
+                                        trigger="click"
+                                      >
+                                        <div
+                                          className="rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block"
+                                          key="triggerComponent"
+                                          onClick={[Function]}
+                                          role="menu"
+                                          tabIndex={-1}
+                                        >
+                                          <defaultProps(PickerToggle)
+                                            caret={true}
+                                            classPrefix="rs-picker-toggle"
+                                            cleanable={true}
+                                            componentClass={
+                                              Object {
+                                                "$$typeof": Symbol(react.forward_ref),
+                                                "render": [Function],
+                                              }
+                                            }
+                                            hasValue={false}
+                                            onClean={[Function]}
+                                            onKeyDown={[Function]}
+                                            size="md"
+                                            tabIndex={0}
+                                          >
+                                            <PickerToggle
+                                              caret={true}
+                                              classPrefix="rs-picker-toggle"
+                                              cleanable={true}
+                                              componentClass={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              hasValue={false}
+                                              onClean={[Function]}
+                                              onKeyDown={[Function]}
+                                              size="md"
+                                              tabIndex={0}
+                                            >
+                                              <DefaultToggleButton
+                                                className="rs-picker-toggle"
+                                                onBlur={[Function]}
+                                                onFocus={[Function]}
+                                                onKeyDown={[Function]}
+                                                role="combobox"
+                                                size="md"
+                                                tabIndex={0}
+                                              >
+                                                <withStyleProps(defaultProps(Button))
+                                                  appearance="default"
+                                                  className="rs-picker-toggle"
+                                                  classPrefix="rs-btn"
+                                                  componentClass="a"
+                                                  onBlur={[Function]}
+                                                  onFocus={[Function]}
+                                                  onKeyDown={[Function]}
+                                                  ripple={false}
+                                                  role="combobox"
+                                                  size="md"
+                                                  tabIndex={0}
+                                                >
+                                                  <defaultProps(Button)
+                                                    appearance="default"
+                                                    className="rs-picker-toggle rs-btn-md"
+                                                    classPrefix="rs-btn"
+                                                    componentClass="a"
+                                                    onBlur={[Function]}
+                                                    onFocus={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    ripple={false}
+                                                    role="combobox"
+                                                    tabIndex={0}
+                                                  >
+                                                    <Button
+                                                      appearance="default"
+                                                      className="rs-picker-toggle rs-btn-md"
+                                                      classPrefix="rs-btn"
+                                                      componentClass="a"
+                                                      onBlur={[Function]}
+                                                      onFocus={[Function]}
+                                                      onKeyDown={[Function]}
+                                                      ripple={false}
+                                                      role="combobox"
+                                                      tabIndex={0}
+                                                    >
+                                                      <a
+                                                        className="rs-btn rs-btn-default rs-picker-toggle rs-btn-md"
+                                                        onBlur={[Function]}
+                                                        onFocus={[Function]}
+                                                        onKeyDown={[Function]}
+                                                        role="combobox"
+                                                        tabIndex={0}
+                                                      >
+                                                        <span
+                                                          className="rs-picker-toggle-placeholder"
+                                                        >
+                                                          userList.panels.selectAuthor
+                                                        </span>
+                                                        <span
+                                                          className="rs-picker-toggle-caret"
+                                                        />
+                                                      </a>
+                                                    </Button>
+                                                  </defaultProps(Button)>
+                                                </withStyleProps(defaultProps(Button))>
+                                              </DefaultToggleButton>
+                                            </PickerToggle>
+                                          </defaultProps(PickerToggle)>
+                                        </div>
+                                        <Portal
+                                          key="portal"
+                                        >
+                                          <Portal
+                                            containerInfo={
+                                              <body>
+                                                <div
+                                                  class="rs-picker-menu fade in placement-bottom-start rs-picker-check-menu"
+                                                  style="left: 0px; top: 0px;"
+                                                >
+                                                  <div
+                                                    class="rs-picker-search-bar"
+                                                  >
+                                                    <input
+                                                      class="rs-picker-search-bar-input"
+                                                      placeholder="Search"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="rs-picker-check-menu-items"
+                                                    role="list"
+                                                    style="max-height: 320px;"
+                                                  >
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 1
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 2
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="rs-picker-menu fade in placement-bottom-start rs-picker-check-menu"
+                                                  style="left: 0px; top: 0px;"
+                                                >
+                                                  <div
+                                                    class="rs-picker-search-bar"
+                                                  >
+                                                    <input
+                                                      class="rs-picker-search-bar-input"
+                                                      placeholder="Search"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="rs-picker-check-menu-items"
+                                                    role="list"
+                                                    style="max-height: 320px;"
+                                                  >
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item rs-checkbox-checked"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 1
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 2
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </body>
+                                            }
+                                          >
+                                            <Overlay
+                                              onEntered={[Function]}
+                                              onExited={[Function]}
+                                              onHide={[Function]}
+                                              placement="bottomStart"
+                                              positionRef={[Function]}
+                                              rootClose={true}
+                                              target={[Function]}
+                                            >
+                                              <BaseOverlay
+                                                onEntered={[Function]}
+                                                onExited={[Function]}
+                                                onHide={[Function]}
+                                                placement="bottomStart"
+                                                positionRef={[Function]}
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "render": [Function],
+                                                  }
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </PickerToggleTrigger>
+                                  </SelectPicker>
+                                </defaultProps(SelectPicker)>
+                              </withLocale(defaultProps(SelectPicker))>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                     </form>
                   </Form>
                 </div>
@@ -4227,6 +4730,427 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                   </CheckPicker>
                                 </defaultProps(CheckPicker)>
                               </withLocale(defaultProps(CheckPicker))>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.authors
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <withLocale(defaultProps(SelectPicker))
+                                block={true}
+                                data={Array []}
+                                onChange={[Function]}
+                                onSearch={[Function]}
+                                placeholder="userList.panels.selectAuthor"
+                                size="md"
+                                value=""
+                              >
+                                <defaultProps(SelectPicker)
+                                  appearance="default"
+                                  block={true}
+                                  childrenKey="children"
+                                  classPrefix="rs-picker"
+                                  cleanable={true}
+                                  data={Array []}
+                                  disabledItemValues={Array []}
+                                  labelKey="label"
+                                  locale={
+                                    Object {
+                                      "checkAll": "All",
+                                      "formatDate": [Function],
+                                      "noResultsText": "No results found",
+                                      "placeholder": "Select",
+                                      "searchPlaceholder": "Search",
+                                    }
+                                  }
+                                  maxHeight={320}
+                                  menuAutoWidth={true}
+                                  onChange={[Function]}
+                                  onSearch={[Function]}
+                                  placeholder="userList.panels.selectAuthor"
+                                  placement="bottomStart"
+                                  searchable={true}
+                                  size="md"
+                                  value=""
+                                  valueKey="value"
+                                  virtualized={true}
+                                >
+                                  <SelectPicker
+                                    appearance="default"
+                                    block={true}
+                                    childrenKey="children"
+                                    classPrefix="rs-picker"
+                                    cleanable={true}
+                                    data={Array []}
+                                    disabledItemValues={Array []}
+                                    labelKey="label"
+                                    locale={
+                                      Object {
+                                        "checkAll": "All",
+                                        "formatDate": [Function],
+                                        "noResultsText": "No results found",
+                                        "placeholder": "Select",
+                                        "searchPlaceholder": "Search",
+                                      }
+                                    }
+                                    maxHeight={320}
+                                    menuAutoWidth={true}
+                                    onChange={[Function]}
+                                    onSearch={[Function]}
+                                    placeholder="userList.panels.selectAuthor"
+                                    placement="bottomStart"
+                                    searchable={true}
+                                    size="md"
+                                    value=""
+                                    valueKey="value"
+                                    virtualized={true}
+                                  >
+                                    <PickerToggleTrigger
+                                      onEntered={[Function]}
+                                      onExited={[Function]}
+                                      pickerProps={
+                                        Object {
+                                          "appearance": "default",
+                                          "block": true,
+                                          "childrenKey": "children",
+                                          "classPrefix": "rs-picker",
+                                          "cleanable": true,
+                                          "data": Array [],
+                                          "disabledItemValues": Array [],
+                                          "labelKey": "label",
+                                          "locale": Object {
+                                            "checkAll": "All",
+                                            "formatDate": [Function],
+                                            "noResultsText": "No results found",
+                                            "placeholder": "Select",
+                                            "searchPlaceholder": "Search",
+                                          },
+                                          "maxHeight": 320,
+                                          "menuAutoWidth": true,
+                                          "onChange": [Function],
+                                          "onSearch": [Function],
+                                          "placeholder": "userList.panels.selectAuthor",
+                                          "placement": "bottomStart",
+                                          "searchable": true,
+                                          "size": "md",
+                                          "value": "",
+                                          "valueKey": "value",
+                                          "virtualized": true,
+                                        }
+                                      }
+                                      positionRef={[Function]}
+                                      speaker={
+                                        <defaultProps(MenuWrapper)
+                                          autoWidth={true}
+                                          className="rs-picker-select-menu"
+                                          classPrefix="rs-picker-menu"
+                                          getPositionInstance={[Function]}
+                                          getToggleInstance={[Function]}
+                                          onKeyDown={[Function]}
+                                        >
+                                          <defaultProps(SearchBar)
+                                            classPrefix="rs-picker-search-bar"
+                                            onChange={[Function]}
+                                            placeholder="Search"
+                                            value=""
+                                          />
+                                          <div
+                                            className="rs-picker-none"
+                                          >
+                                            No results found
+                                          </div>
+                                        </defaultProps(MenuWrapper)>
+                                      }
+                                    >
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        onEntered={[Function]}
+                                        onExited={[Function]}
+                                        placement="bottomStart"
+                                        positionRef={[Function]}
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(MenuWrapper)
+                                            autoWidth={true}
+                                            className="rs-picker-select-menu"
+                                            classPrefix="rs-picker-menu"
+                                            getPositionInstance={[Function]}
+                                            getToggleInstance={[Function]}
+                                            onKeyDown={[Function]}
+                                          >
+                                            <defaultProps(SearchBar)
+                                              classPrefix="rs-picker-search-bar"
+                                              onChange={[Function]}
+                                              placeholder="Search"
+                                              value=""
+                                            />
+                                            <div
+                                              className="rs-picker-none"
+                                            >
+                                              No results found
+                                            </div>
+                                          </defaultProps(MenuWrapper)>
+                                        }
+                                        trigger="click"
+                                      >
+                                        <div
+                                          className="rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block"
+                                          key="triggerComponent"
+                                          onClick={[Function]}
+                                          role="menu"
+                                          tabIndex={-1}
+                                        >
+                                          <defaultProps(PickerToggle)
+                                            caret={true}
+                                            classPrefix="rs-picker-toggle"
+                                            cleanable={true}
+                                            componentClass={
+                                              Object {
+                                                "$$typeof": Symbol(react.forward_ref),
+                                                "render": [Function],
+                                              }
+                                            }
+                                            hasValue={false}
+                                            onClean={[Function]}
+                                            onKeyDown={[Function]}
+                                            size="md"
+                                            tabIndex={0}
+                                          >
+                                            <PickerToggle
+                                              caret={true}
+                                              classPrefix="rs-picker-toggle"
+                                              cleanable={true}
+                                              componentClass={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              hasValue={false}
+                                              onClean={[Function]}
+                                              onKeyDown={[Function]}
+                                              size="md"
+                                              tabIndex={0}
+                                            >
+                                              <DefaultToggleButton
+                                                className="rs-picker-toggle"
+                                                onBlur={[Function]}
+                                                onFocus={[Function]}
+                                                onKeyDown={[Function]}
+                                                role="combobox"
+                                                size="md"
+                                                tabIndex={0}
+                                              >
+                                                <withStyleProps(defaultProps(Button))
+                                                  appearance="default"
+                                                  className="rs-picker-toggle"
+                                                  classPrefix="rs-btn"
+                                                  componentClass="a"
+                                                  onBlur={[Function]}
+                                                  onFocus={[Function]}
+                                                  onKeyDown={[Function]}
+                                                  ripple={false}
+                                                  role="combobox"
+                                                  size="md"
+                                                  tabIndex={0}
+                                                >
+                                                  <defaultProps(Button)
+                                                    appearance="default"
+                                                    className="rs-picker-toggle rs-btn-md"
+                                                    classPrefix="rs-btn"
+                                                    componentClass="a"
+                                                    onBlur={[Function]}
+                                                    onFocus={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    ripple={false}
+                                                    role="combobox"
+                                                    tabIndex={0}
+                                                  >
+                                                    <Button
+                                                      appearance="default"
+                                                      className="rs-picker-toggle rs-btn-md"
+                                                      classPrefix="rs-btn"
+                                                      componentClass="a"
+                                                      onBlur={[Function]}
+                                                      onFocus={[Function]}
+                                                      onKeyDown={[Function]}
+                                                      ripple={false}
+                                                      role="combobox"
+                                                      tabIndex={0}
+                                                    >
+                                                      <a
+                                                        className="rs-btn rs-btn-default rs-picker-toggle rs-btn-md"
+                                                        onBlur={[Function]}
+                                                        onFocus={[Function]}
+                                                        onKeyDown={[Function]}
+                                                        role="combobox"
+                                                        tabIndex={0}
+                                                      >
+                                                        <span
+                                                          className="rs-picker-toggle-placeholder"
+                                                        >
+                                                          userList.panels.selectAuthor
+                                                        </span>
+                                                        <span
+                                                          className="rs-picker-toggle-caret"
+                                                        />
+                                                      </a>
+                                                    </Button>
+                                                  </defaultProps(Button)>
+                                                </withStyleProps(defaultProps(Button))>
+                                              </DefaultToggleButton>
+                                            </PickerToggle>
+                                          </defaultProps(PickerToggle)>
+                                        </div>
+                                        <Portal
+                                          key="portal"
+                                        >
+                                          <Portal
+                                            containerInfo={
+                                              <body>
+                                                <div
+                                                  class="rs-picker-menu fade in placement-bottom-start rs-picker-check-menu"
+                                                  style="left: 0px; top: 0px;"
+                                                >
+                                                  <div
+                                                    class="rs-picker-search-bar"
+                                                  >
+                                                    <input
+                                                      class="rs-picker-search-bar-input"
+                                                      placeholder="Search"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="rs-picker-check-menu-items"
+                                                    role="list"
+                                                    style="max-height: 320px;"
+                                                  >
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 1
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 2
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </body>
+                                            }
+                                          >
+                                            <Overlay
+                                              onEntered={[Function]}
+                                              onExited={[Function]}
+                                              onHide={[Function]}
+                                              placement="bottomStart"
+                                              positionRef={[Function]}
+                                              rootClose={true}
+                                              target={[Function]}
+                                            >
+                                              <BaseOverlay
+                                                onEntered={[Function]}
+                                                onExited={[Function]}
+                                                onHide={[Function]}
+                                                placement="bottomStart"
+                                                positionRef={[Function]}
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "render": [Function],
+                                                  }
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </PickerToggleTrigger>
+                                  </SelectPicker>
+                                </defaultProps(SelectPicker)>
+                              </withLocale(defaultProps(SelectPicker))>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>
@@ -7095,6 +8019,509 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           </FormGroup>
                         </defaultProps(FormGroup)>
                       </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.authors
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <withLocale(defaultProps(SelectPicker))
+                                block={true}
+                                data={Array []}
+                                onChange={[Function]}
+                                onSearch={[Function]}
+                                placeholder="userList.panels.selectAuthor"
+                                size="md"
+                                value=""
+                              >
+                                <defaultProps(SelectPicker)
+                                  appearance="default"
+                                  block={true}
+                                  childrenKey="children"
+                                  classPrefix="rs-picker"
+                                  cleanable={true}
+                                  data={Array []}
+                                  disabledItemValues={Array []}
+                                  labelKey="label"
+                                  locale={
+                                    Object {
+                                      "checkAll": "All",
+                                      "formatDate": [Function],
+                                      "noResultsText": "No results found",
+                                      "placeholder": "Select",
+                                      "searchPlaceholder": "Search",
+                                    }
+                                  }
+                                  maxHeight={320}
+                                  menuAutoWidth={true}
+                                  onChange={[Function]}
+                                  onSearch={[Function]}
+                                  placeholder="userList.panels.selectAuthor"
+                                  placement="bottomStart"
+                                  searchable={true}
+                                  size="md"
+                                  value=""
+                                  valueKey="value"
+                                  virtualized={true}
+                                >
+                                  <SelectPicker
+                                    appearance="default"
+                                    block={true}
+                                    childrenKey="children"
+                                    classPrefix="rs-picker"
+                                    cleanable={true}
+                                    data={Array []}
+                                    disabledItemValues={Array []}
+                                    labelKey="label"
+                                    locale={
+                                      Object {
+                                        "checkAll": "All",
+                                        "formatDate": [Function],
+                                        "noResultsText": "No results found",
+                                        "placeholder": "Select",
+                                        "searchPlaceholder": "Search",
+                                      }
+                                    }
+                                    maxHeight={320}
+                                    menuAutoWidth={true}
+                                    onChange={[Function]}
+                                    onSearch={[Function]}
+                                    placeholder="userList.panels.selectAuthor"
+                                    placement="bottomStart"
+                                    searchable={true}
+                                    size="md"
+                                    value=""
+                                    valueKey="value"
+                                    virtualized={true}
+                                  >
+                                    <PickerToggleTrigger
+                                      onEntered={[Function]}
+                                      onExited={[Function]}
+                                      pickerProps={
+                                        Object {
+                                          "appearance": "default",
+                                          "block": true,
+                                          "childrenKey": "children",
+                                          "classPrefix": "rs-picker",
+                                          "cleanable": true,
+                                          "data": Array [],
+                                          "disabledItemValues": Array [],
+                                          "labelKey": "label",
+                                          "locale": Object {
+                                            "checkAll": "All",
+                                            "formatDate": [Function],
+                                            "noResultsText": "No results found",
+                                            "placeholder": "Select",
+                                            "searchPlaceholder": "Search",
+                                          },
+                                          "maxHeight": 320,
+                                          "menuAutoWidth": true,
+                                          "onChange": [Function],
+                                          "onSearch": [Function],
+                                          "placeholder": "userList.panels.selectAuthor",
+                                          "placement": "bottomStart",
+                                          "searchable": true,
+                                          "size": "md",
+                                          "value": "",
+                                          "valueKey": "value",
+                                          "virtualized": true,
+                                        }
+                                      }
+                                      positionRef={[Function]}
+                                      speaker={
+                                        <defaultProps(MenuWrapper)
+                                          autoWidth={true}
+                                          className="rs-picker-select-menu"
+                                          classPrefix="rs-picker-menu"
+                                          getPositionInstance={[Function]}
+                                          getToggleInstance={[Function]}
+                                          onKeyDown={[Function]}
+                                        >
+                                          <defaultProps(SearchBar)
+                                            classPrefix="rs-picker-search-bar"
+                                            onChange={[Function]}
+                                            placeholder="Search"
+                                            value=""
+                                          />
+                                          <div
+                                            className="rs-picker-none"
+                                          >
+                                            No results found
+                                          </div>
+                                        </defaultProps(MenuWrapper)>
+                                      }
+                                    >
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        onEntered={[Function]}
+                                        onExited={[Function]}
+                                        placement="bottomStart"
+                                        positionRef={[Function]}
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(MenuWrapper)
+                                            autoWidth={true}
+                                            className="rs-picker-select-menu"
+                                            classPrefix="rs-picker-menu"
+                                            getPositionInstance={[Function]}
+                                            getToggleInstance={[Function]}
+                                            onKeyDown={[Function]}
+                                          >
+                                            <defaultProps(SearchBar)
+                                              classPrefix="rs-picker-search-bar"
+                                              onChange={[Function]}
+                                              placeholder="Search"
+                                              value=""
+                                            />
+                                            <div
+                                              className="rs-picker-none"
+                                            >
+                                              No results found
+                                            </div>
+                                          </defaultProps(MenuWrapper)>
+                                        }
+                                        trigger="click"
+                                      >
+                                        <div
+                                          className="rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block"
+                                          key="triggerComponent"
+                                          onClick={[Function]}
+                                          role="menu"
+                                          tabIndex={-1}
+                                        >
+                                          <defaultProps(PickerToggle)
+                                            caret={true}
+                                            classPrefix="rs-picker-toggle"
+                                            cleanable={true}
+                                            componentClass={
+                                              Object {
+                                                "$$typeof": Symbol(react.forward_ref),
+                                                "render": [Function],
+                                              }
+                                            }
+                                            hasValue={false}
+                                            onClean={[Function]}
+                                            onKeyDown={[Function]}
+                                            size="md"
+                                            tabIndex={0}
+                                          >
+                                            <PickerToggle
+                                              caret={true}
+                                              classPrefix="rs-picker-toggle"
+                                              cleanable={true}
+                                              componentClass={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              hasValue={false}
+                                              onClean={[Function]}
+                                              onKeyDown={[Function]}
+                                              size="md"
+                                              tabIndex={0}
+                                            >
+                                              <DefaultToggleButton
+                                                className="rs-picker-toggle"
+                                                onBlur={[Function]}
+                                                onFocus={[Function]}
+                                                onKeyDown={[Function]}
+                                                role="combobox"
+                                                size="md"
+                                                tabIndex={0}
+                                              >
+                                                <withStyleProps(defaultProps(Button))
+                                                  appearance="default"
+                                                  className="rs-picker-toggle"
+                                                  classPrefix="rs-btn"
+                                                  componentClass="a"
+                                                  onBlur={[Function]}
+                                                  onFocus={[Function]}
+                                                  onKeyDown={[Function]}
+                                                  ripple={false}
+                                                  role="combobox"
+                                                  size="md"
+                                                  tabIndex={0}
+                                                >
+                                                  <defaultProps(Button)
+                                                    appearance="default"
+                                                    className="rs-picker-toggle rs-btn-md"
+                                                    classPrefix="rs-btn"
+                                                    componentClass="a"
+                                                    onBlur={[Function]}
+                                                    onFocus={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    ripple={false}
+                                                    role="combobox"
+                                                    tabIndex={0}
+                                                  >
+                                                    <Button
+                                                      appearance="default"
+                                                      className="rs-picker-toggle rs-btn-md"
+                                                      classPrefix="rs-btn"
+                                                      componentClass="a"
+                                                      onBlur={[Function]}
+                                                      onFocus={[Function]}
+                                                      onKeyDown={[Function]}
+                                                      ripple={false}
+                                                      role="combobox"
+                                                      tabIndex={0}
+                                                    >
+                                                      <a
+                                                        className="rs-btn rs-btn-default rs-picker-toggle rs-btn-md"
+                                                        onBlur={[Function]}
+                                                        onFocus={[Function]}
+                                                        onKeyDown={[Function]}
+                                                        role="combobox"
+                                                        tabIndex={0}
+                                                      >
+                                                        <span
+                                                          className="rs-picker-toggle-placeholder"
+                                                        >
+                                                          userList.panels.selectAuthor
+                                                        </span>
+                                                        <span
+                                                          className="rs-picker-toggle-caret"
+                                                        />
+                                                      </a>
+                                                    </Button>
+                                                  </defaultProps(Button)>
+                                                </withStyleProps(defaultProps(Button))>
+                                              </DefaultToggleButton>
+                                            </PickerToggle>
+                                          </defaultProps(PickerToggle)>
+                                        </div>
+                                        <Portal
+                                          key="portal"
+                                        >
+                                          <Portal
+                                            containerInfo={
+                                              <body>
+                                                <div
+                                                  class="rs-picker-menu fade in placement-bottom-start rs-picker-check-menu"
+                                                  style="left: 0px; top: 0px;"
+                                                >
+                                                  <div
+                                                    class="rs-picker-search-bar"
+                                                  >
+                                                    <input
+                                                      class="rs-picker-search-bar-input"
+                                                      placeholder="Search"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="rs-picker-check-menu-items"
+                                                    role="list"
+                                                    style="max-height: 320px;"
+                                                  >
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 1
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 2
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  class="rs-picker-menu fade in placement-bottom-start rs-picker-check-menu"
+                                                  style="left: 0px; top: 0px;"
+                                                >
+                                                  <div
+                                                    class="rs-picker-search-bar"
+                                                  >
+                                                    <input
+                                                      class="rs-picker-search-bar-input"
+                                                      placeholder="Search"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="rs-picker-check-menu-items"
+                                                    role="list"
+                                                    style="max-height: 320px;"
+                                                  >
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item rs-checkbox-checked"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 1
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      role="menuitem"
+                                                      tabindex="-1"
+                                                    >
+                                                      <div
+                                                        class="rs-checkbox rs-check-item"
+                                                      >
+                                                        <div
+                                                          class="rs-checkbox-checker"
+                                                        >
+                                                          <label>
+                                                            <span
+                                                              aria-disabled="false"
+                                                              class="rs-checkbox-wrapper"
+                                                            >
+                                                              <input
+                                                                role="presentation"
+                                                                tabindex="0"
+                                                                type="checkbox"
+                                                              />
+                                                              <span
+                                                                aria-hidden="true"
+                                                                class="rs-checkbox-inner"
+                                                                role="presentation"
+                                                              />
+                                                            </span>
+                                                            Role 2
+                                                          </label>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </body>
+                                            }
+                                          >
+                                            <Overlay
+                                              onEntered={[Function]}
+                                              onExited={[Function]}
+                                              onHide={[Function]}
+                                              placement="bottomStart"
+                                              positionRef={[Function]}
+                                              rootClose={true}
+                                              target={[Function]}
+                                            >
+                                              <BaseOverlay
+                                                onEntered={[Function]}
+                                                onExited={[Function]}
+                                                onHide={[Function]}
+                                                placement="bottomStart"
+                                                positionRef={[Function]}
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "render": [Function],
+                                                  }
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </PickerToggleTrigger>
+                                  </SelectPicker>
+                                </defaultProps(SelectPicker)>
+                              </withLocale(defaultProps(SelectPicker))>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                     </form>
                   </Form>
                 </div>
@@ -8878,6 +10305,342 @@ exports[`User Edit Panel should render 1`] = `
                           </FormGroup>
                         </defaultProps(FormGroup)>
                       </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.authors
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <withLocale(defaultProps(SelectPicker))
+                                block={true}
+                                data={Array []}
+                                onChange={[Function]}
+                                onSearch={[Function]}
+                                placeholder="userList.panels.selectAuthor"
+                                size="md"
+                                value=""
+                              >
+                                <defaultProps(SelectPicker)
+                                  appearance="default"
+                                  block={true}
+                                  childrenKey="children"
+                                  classPrefix="rs-picker"
+                                  cleanable={true}
+                                  data={Array []}
+                                  disabledItemValues={Array []}
+                                  labelKey="label"
+                                  locale={
+                                    Object {
+                                      "checkAll": "All",
+                                      "formatDate": [Function],
+                                      "noResultsText": "No results found",
+                                      "placeholder": "Select",
+                                      "searchPlaceholder": "Search",
+                                    }
+                                  }
+                                  maxHeight={320}
+                                  menuAutoWidth={true}
+                                  onChange={[Function]}
+                                  onSearch={[Function]}
+                                  placeholder="userList.panels.selectAuthor"
+                                  placement="bottomStart"
+                                  searchable={true}
+                                  size="md"
+                                  value=""
+                                  valueKey="value"
+                                  virtualized={true}
+                                >
+                                  <SelectPicker
+                                    appearance="default"
+                                    block={true}
+                                    childrenKey="children"
+                                    classPrefix="rs-picker"
+                                    cleanable={true}
+                                    data={Array []}
+                                    disabledItemValues={Array []}
+                                    labelKey="label"
+                                    locale={
+                                      Object {
+                                        "checkAll": "All",
+                                        "formatDate": [Function],
+                                        "noResultsText": "No results found",
+                                        "placeholder": "Select",
+                                        "searchPlaceholder": "Search",
+                                      }
+                                    }
+                                    maxHeight={320}
+                                    menuAutoWidth={true}
+                                    onChange={[Function]}
+                                    onSearch={[Function]}
+                                    placeholder="userList.panels.selectAuthor"
+                                    placement="bottomStart"
+                                    searchable={true}
+                                    size="md"
+                                    value=""
+                                    valueKey="value"
+                                    virtualized={true}
+                                  >
+                                    <PickerToggleTrigger
+                                      onEntered={[Function]}
+                                      onExited={[Function]}
+                                      pickerProps={
+                                        Object {
+                                          "appearance": "default",
+                                          "block": true,
+                                          "childrenKey": "children",
+                                          "classPrefix": "rs-picker",
+                                          "cleanable": true,
+                                          "data": Array [],
+                                          "disabledItemValues": Array [],
+                                          "labelKey": "label",
+                                          "locale": Object {
+                                            "checkAll": "All",
+                                            "formatDate": [Function],
+                                            "noResultsText": "No results found",
+                                            "placeholder": "Select",
+                                            "searchPlaceholder": "Search",
+                                          },
+                                          "maxHeight": 320,
+                                          "menuAutoWidth": true,
+                                          "onChange": [Function],
+                                          "onSearch": [Function],
+                                          "placeholder": "userList.panels.selectAuthor",
+                                          "placement": "bottomStart",
+                                          "searchable": true,
+                                          "size": "md",
+                                          "value": "",
+                                          "valueKey": "value",
+                                          "virtualized": true,
+                                        }
+                                      }
+                                      positionRef={[Function]}
+                                      speaker={
+                                        <defaultProps(MenuWrapper)
+                                          autoWidth={true}
+                                          className="rs-picker-select-menu"
+                                          classPrefix="rs-picker-menu"
+                                          getPositionInstance={[Function]}
+                                          getToggleInstance={[Function]}
+                                          onKeyDown={[Function]}
+                                        >
+                                          <defaultProps(SearchBar)
+                                            classPrefix="rs-picker-search-bar"
+                                            onChange={[Function]}
+                                            placeholder="Search"
+                                            value=""
+                                          />
+                                          <div
+                                            className="rs-picker-none"
+                                          >
+                                            No results found
+                                          </div>
+                                        </defaultProps(MenuWrapper)>
+                                      }
+                                    >
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        onEntered={[Function]}
+                                        onExited={[Function]}
+                                        placement="bottomStart"
+                                        positionRef={[Function]}
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(MenuWrapper)
+                                            autoWidth={true}
+                                            className="rs-picker-select-menu"
+                                            classPrefix="rs-picker-menu"
+                                            getPositionInstance={[Function]}
+                                            getToggleInstance={[Function]}
+                                            onKeyDown={[Function]}
+                                          >
+                                            <defaultProps(SearchBar)
+                                              classPrefix="rs-picker-search-bar"
+                                              onChange={[Function]}
+                                              placeholder="Search"
+                                              value=""
+                                            />
+                                            <div
+                                              className="rs-picker-none"
+                                            >
+                                              No results found
+                                            </div>
+                                          </defaultProps(MenuWrapper)>
+                                        }
+                                        trigger="click"
+                                      >
+                                        <div
+                                          className="rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block"
+                                          key="triggerComponent"
+                                          onClick={[Function]}
+                                          role="menu"
+                                          tabIndex={-1}
+                                        >
+                                          <defaultProps(PickerToggle)
+                                            caret={true}
+                                            classPrefix="rs-picker-toggle"
+                                            cleanable={true}
+                                            componentClass={
+                                              Object {
+                                                "$$typeof": Symbol(react.forward_ref),
+                                                "render": [Function],
+                                              }
+                                            }
+                                            hasValue={false}
+                                            onClean={[Function]}
+                                            onKeyDown={[Function]}
+                                            size="md"
+                                            tabIndex={0}
+                                          >
+                                            <PickerToggle
+                                              caret={true}
+                                              classPrefix="rs-picker-toggle"
+                                              cleanable={true}
+                                              componentClass={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              hasValue={false}
+                                              onClean={[Function]}
+                                              onKeyDown={[Function]}
+                                              size="md"
+                                              tabIndex={0}
+                                            >
+                                              <DefaultToggleButton
+                                                className="rs-picker-toggle"
+                                                onBlur={[Function]}
+                                                onFocus={[Function]}
+                                                onKeyDown={[Function]}
+                                                role="combobox"
+                                                size="md"
+                                                tabIndex={0}
+                                              >
+                                                <withStyleProps(defaultProps(Button))
+                                                  appearance="default"
+                                                  className="rs-picker-toggle"
+                                                  classPrefix="rs-btn"
+                                                  componentClass="a"
+                                                  onBlur={[Function]}
+                                                  onFocus={[Function]}
+                                                  onKeyDown={[Function]}
+                                                  ripple={false}
+                                                  role="combobox"
+                                                  size="md"
+                                                  tabIndex={0}
+                                                >
+                                                  <defaultProps(Button)
+                                                    appearance="default"
+                                                    className="rs-picker-toggle rs-btn-md"
+                                                    classPrefix="rs-btn"
+                                                    componentClass="a"
+                                                    onBlur={[Function]}
+                                                    onFocus={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    ripple={false}
+                                                    role="combobox"
+                                                    tabIndex={0}
+                                                  >
+                                                    <Button
+                                                      appearance="default"
+                                                      className="rs-picker-toggle rs-btn-md"
+                                                      classPrefix="rs-btn"
+                                                      componentClass="a"
+                                                      onBlur={[Function]}
+                                                      onFocus={[Function]}
+                                                      onKeyDown={[Function]}
+                                                      ripple={false}
+                                                      role="combobox"
+                                                      tabIndex={0}
+                                                    >
+                                                      <a
+                                                        className="rs-btn rs-btn-default rs-picker-toggle rs-btn-md"
+                                                        onBlur={[Function]}
+                                                        onFocus={[Function]}
+                                                        onKeyDown={[Function]}
+                                                        role="combobox"
+                                                        tabIndex={0}
+                                                      >
+                                                        <span
+                                                          className="rs-picker-toggle-placeholder"
+                                                        >
+                                                          userList.panels.selectAuthor
+                                                        </span>
+                                                        <span
+                                                          className="rs-picker-toggle-caret"
+                                                        />
+                                                      </a>
+                                                    </Button>
+                                                  </defaultProps(Button)>
+                                                </withStyleProps(defaultProps(Button))>
+                                              </DefaultToggleButton>
+                                            </PickerToggle>
+                                          </defaultProps(PickerToggle)>
+                                        </div>
+                                        <Portal
+                                          key="portal"
+                                        >
+                                          <Portal
+                                            containerInfo={<body />}
+                                          >
+                                            <Overlay
+                                              onEntered={[Function]}
+                                              onExited={[Function]}
+                                              onHide={[Function]}
+                                              placement="bottomStart"
+                                              positionRef={[Function]}
+                                              rootClose={true}
+                                              target={[Function]}
+                                            >
+                                              <BaseOverlay
+                                                onEntered={[Function]}
+                                                onExited={[Function]}
+                                                onHide={[Function]}
+                                                placement="bottomStart"
+                                                positionRef={[Function]}
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "render": [Function],
+                                                  }
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </PickerToggleTrigger>
+                                  </SelectPicker>
+                                </defaultProps(SelectPicker)>
+                              </withLocale(defaultProps(SelectPicker))>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                     </form>
                   </Form>
                 </div>
@@ -10529,6 +12292,342 @@ exports[`User Edit Panel should render with ID 1`] = `
                                   </CheckPicker>
                                 </defaultProps(CheckPicker)>
                               </withLocale(defaultProps(CheckPicker))>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.authors
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <withLocale(defaultProps(SelectPicker))
+                                block={true}
+                                data={Array []}
+                                onChange={[Function]}
+                                onSearch={[Function]}
+                                placeholder="userList.panels.selectAuthor"
+                                size="md"
+                                value=""
+                              >
+                                <defaultProps(SelectPicker)
+                                  appearance="default"
+                                  block={true}
+                                  childrenKey="children"
+                                  classPrefix="rs-picker"
+                                  cleanable={true}
+                                  data={Array []}
+                                  disabledItemValues={Array []}
+                                  labelKey="label"
+                                  locale={
+                                    Object {
+                                      "checkAll": "All",
+                                      "formatDate": [Function],
+                                      "noResultsText": "No results found",
+                                      "placeholder": "Select",
+                                      "searchPlaceholder": "Search",
+                                    }
+                                  }
+                                  maxHeight={320}
+                                  menuAutoWidth={true}
+                                  onChange={[Function]}
+                                  onSearch={[Function]}
+                                  placeholder="userList.panels.selectAuthor"
+                                  placement="bottomStart"
+                                  searchable={true}
+                                  size="md"
+                                  value=""
+                                  valueKey="value"
+                                  virtualized={true}
+                                >
+                                  <SelectPicker
+                                    appearance="default"
+                                    block={true}
+                                    childrenKey="children"
+                                    classPrefix="rs-picker"
+                                    cleanable={true}
+                                    data={Array []}
+                                    disabledItemValues={Array []}
+                                    labelKey="label"
+                                    locale={
+                                      Object {
+                                        "checkAll": "All",
+                                        "formatDate": [Function],
+                                        "noResultsText": "No results found",
+                                        "placeholder": "Select",
+                                        "searchPlaceholder": "Search",
+                                      }
+                                    }
+                                    maxHeight={320}
+                                    menuAutoWidth={true}
+                                    onChange={[Function]}
+                                    onSearch={[Function]}
+                                    placeholder="userList.panels.selectAuthor"
+                                    placement="bottomStart"
+                                    searchable={true}
+                                    size="md"
+                                    value=""
+                                    valueKey="value"
+                                    virtualized={true}
+                                  >
+                                    <PickerToggleTrigger
+                                      onEntered={[Function]}
+                                      onExited={[Function]}
+                                      pickerProps={
+                                        Object {
+                                          "appearance": "default",
+                                          "block": true,
+                                          "childrenKey": "children",
+                                          "classPrefix": "rs-picker",
+                                          "cleanable": true,
+                                          "data": Array [],
+                                          "disabledItemValues": Array [],
+                                          "labelKey": "label",
+                                          "locale": Object {
+                                            "checkAll": "All",
+                                            "formatDate": [Function],
+                                            "noResultsText": "No results found",
+                                            "placeholder": "Select",
+                                            "searchPlaceholder": "Search",
+                                          },
+                                          "maxHeight": 320,
+                                          "menuAutoWidth": true,
+                                          "onChange": [Function],
+                                          "onSearch": [Function],
+                                          "placeholder": "userList.panels.selectAuthor",
+                                          "placement": "bottomStart",
+                                          "searchable": true,
+                                          "size": "md",
+                                          "value": "",
+                                          "valueKey": "value",
+                                          "virtualized": true,
+                                        }
+                                      }
+                                      positionRef={[Function]}
+                                      speaker={
+                                        <defaultProps(MenuWrapper)
+                                          autoWidth={true}
+                                          className="rs-picker-select-menu"
+                                          classPrefix="rs-picker-menu"
+                                          getPositionInstance={[Function]}
+                                          getToggleInstance={[Function]}
+                                          onKeyDown={[Function]}
+                                        >
+                                          <defaultProps(SearchBar)
+                                            classPrefix="rs-picker-search-bar"
+                                            onChange={[Function]}
+                                            placeholder="Search"
+                                            value=""
+                                          />
+                                          <div
+                                            className="rs-picker-none"
+                                          >
+                                            No results found
+                                          </div>
+                                        </defaultProps(MenuWrapper)>
+                                      }
+                                    >
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        onEntered={[Function]}
+                                        onExited={[Function]}
+                                        placement="bottomStart"
+                                        positionRef={[Function]}
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(MenuWrapper)
+                                            autoWidth={true}
+                                            className="rs-picker-select-menu"
+                                            classPrefix="rs-picker-menu"
+                                            getPositionInstance={[Function]}
+                                            getToggleInstance={[Function]}
+                                            onKeyDown={[Function]}
+                                          >
+                                            <defaultProps(SearchBar)
+                                              classPrefix="rs-picker-search-bar"
+                                              onChange={[Function]}
+                                              placeholder="Search"
+                                              value=""
+                                            />
+                                            <div
+                                              className="rs-picker-none"
+                                            >
+                                              No results found
+                                            </div>
+                                          </defaultProps(MenuWrapper)>
+                                        }
+                                        trigger="click"
+                                      >
+                                        <div
+                                          className="rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block"
+                                          key="triggerComponent"
+                                          onClick={[Function]}
+                                          role="menu"
+                                          tabIndex={-1}
+                                        >
+                                          <defaultProps(PickerToggle)
+                                            caret={true}
+                                            classPrefix="rs-picker-toggle"
+                                            cleanable={true}
+                                            componentClass={
+                                              Object {
+                                                "$$typeof": Symbol(react.forward_ref),
+                                                "render": [Function],
+                                              }
+                                            }
+                                            hasValue={false}
+                                            onClean={[Function]}
+                                            onKeyDown={[Function]}
+                                            size="md"
+                                            tabIndex={0}
+                                          >
+                                            <PickerToggle
+                                              caret={true}
+                                              classPrefix="rs-picker-toggle"
+                                              cleanable={true}
+                                              componentClass={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              hasValue={false}
+                                              onClean={[Function]}
+                                              onKeyDown={[Function]}
+                                              size="md"
+                                              tabIndex={0}
+                                            >
+                                              <DefaultToggleButton
+                                                className="rs-picker-toggle"
+                                                onBlur={[Function]}
+                                                onFocus={[Function]}
+                                                onKeyDown={[Function]}
+                                                role="combobox"
+                                                size="md"
+                                                tabIndex={0}
+                                              >
+                                                <withStyleProps(defaultProps(Button))
+                                                  appearance="default"
+                                                  className="rs-picker-toggle"
+                                                  classPrefix="rs-btn"
+                                                  componentClass="a"
+                                                  onBlur={[Function]}
+                                                  onFocus={[Function]}
+                                                  onKeyDown={[Function]}
+                                                  ripple={false}
+                                                  role="combobox"
+                                                  size="md"
+                                                  tabIndex={0}
+                                                >
+                                                  <defaultProps(Button)
+                                                    appearance="default"
+                                                    className="rs-picker-toggle rs-btn-md"
+                                                    classPrefix="rs-btn"
+                                                    componentClass="a"
+                                                    onBlur={[Function]}
+                                                    onFocus={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    ripple={false}
+                                                    role="combobox"
+                                                    tabIndex={0}
+                                                  >
+                                                    <Button
+                                                      appearance="default"
+                                                      className="rs-picker-toggle rs-btn-md"
+                                                      classPrefix="rs-btn"
+                                                      componentClass="a"
+                                                      onBlur={[Function]}
+                                                      onFocus={[Function]}
+                                                      onKeyDown={[Function]}
+                                                      ripple={false}
+                                                      role="combobox"
+                                                      tabIndex={0}
+                                                    >
+                                                      <a
+                                                        className="rs-btn rs-btn-default rs-picker-toggle rs-btn-md"
+                                                        onBlur={[Function]}
+                                                        onFocus={[Function]}
+                                                        onKeyDown={[Function]}
+                                                        role="combobox"
+                                                        tabIndex={0}
+                                                      >
+                                                        <span
+                                                          className="rs-picker-toggle-placeholder"
+                                                        >
+                                                          userList.panels.selectAuthor
+                                                        </span>
+                                                        <span
+                                                          className="rs-picker-toggle-caret"
+                                                        />
+                                                      </a>
+                                                    </Button>
+                                                  </defaultProps(Button)>
+                                                </withStyleProps(defaultProps(Button))>
+                                              </DefaultToggleButton>
+                                            </PickerToggle>
+                                          </defaultProps(PickerToggle)>
+                                        </div>
+                                        <Portal
+                                          key="portal"
+                                        >
+                                          <Portal
+                                            containerInfo={<body />}
+                                          >
+                                            <Overlay
+                                              onEntered={[Function]}
+                                              onExited={[Function]}
+                                              onHide={[Function]}
+                                              placement="bottomStart"
+                                              positionRef={[Function]}
+                                              rootClose={true}
+                                              target={[Function]}
+                                            >
+                                              <BaseOverlay
+                                                onEntered={[Function]}
+                                                onExited={[Function]}
+                                                onHide={[Function]}
+                                                placement="bottomStart"
+                                                positionRef={[Function]}
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "render": [Function],
+                                                  }
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </PickerToggleTrigger>
+                                  </SelectPicker>
+                                </defaultProps(SelectPicker)>
+                              </withLocale(defaultProps(SelectPicker))>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>

@@ -84,6 +84,63 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                       <div
                         className="rs-panel-body"
                       >
+                        <defaultProps(ControlLabel)
+                          classPrefix="rs-control-label"
+                        >
+                          <ControlLabel
+                            classPrefix="rs-control-label"
+                          >
+                            <label
+                              className="rs-control-label"
+                              htmlFor={null}
+                            >
+                              authors.panels.linkedUsers
+                            </label>
+                          </ControlLabel>
+                        </defaultProps(ControlLabel)>
+                        <defaultProps(TagGroup)
+                          classPrefix="rs-tag-group"
+                          style={
+                            Object {
+                              "marginTop": "0px",
+                            }
+                          }
+                        >
+                          <TagGroup
+                            classPrefix="rs-tag-group"
+                            style={
+                              Object {
+                                "marginTop": "0px",
+                              }
+                            }
+                          >
+                            <div
+                              className="rs-tag-group"
+                              style={
+                                Object {
+                                  "marginTop": "0px",
+                                }
+                              }
+                            />
+                          </TagGroup>
+                        </defaultProps(TagGroup)>
+                      </div>
+                    </div>
+                  </Panel>
+                </defaultProps(Panel)>
+                <defaultProps(Panel)
+                  classPrefix="rs-panel"
+                  key="1/.1"
+                >
+                  <Panel
+                    classPrefix="rs-panel"
+                  >
+                    <div
+                      className="rs-panel rs-panel-default"
+                    >
+                      <div
+                        className="rs-panel-body"
+                      >
                         <Form
                           checkDelay={500}
                           checkTrigger="change"
@@ -412,7 +469,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.image"
-                  key="1/.1"
+                  key="2/.2"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -609,7 +666,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.links"
-                  key="2/.2"
+                  key="3/.3"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -1234,7 +1291,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.bioInformation"
-                  key="3/.3"
+                  key="4/.4"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -3066,6 +3123,63 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                       <div
                         className="rs-panel-body"
                       >
+                        <defaultProps(ControlLabel)
+                          classPrefix="rs-control-label"
+                        >
+                          <ControlLabel
+                            classPrefix="rs-control-label"
+                          >
+                            <label
+                              className="rs-control-label"
+                              htmlFor={null}
+                            >
+                              authors.panels.linkedUsers
+                            </label>
+                          </ControlLabel>
+                        </defaultProps(ControlLabel)>
+                        <defaultProps(TagGroup)
+                          classPrefix="rs-tag-group"
+                          style={
+                            Object {
+                              "marginTop": "0px",
+                            }
+                          }
+                        >
+                          <TagGroup
+                            classPrefix="rs-tag-group"
+                            style={
+                              Object {
+                                "marginTop": "0px",
+                              }
+                            }
+                          >
+                            <div
+                              className="rs-tag-group"
+                              style={
+                                Object {
+                                  "marginTop": "0px",
+                                }
+                              }
+                            />
+                          </TagGroup>
+                        </defaultProps(TagGroup)>
+                      </div>
+                    </div>
+                  </Panel>
+                </defaultProps(Panel)>
+                <defaultProps(Panel)
+                  classPrefix="rs-panel"
+                  key="1/.1"
+                >
+                  <Panel
+                    classPrefix="rs-panel"
+                  >
+                    <div
+                      className="rs-panel rs-panel-default"
+                    >
+                      <div
+                        className="rs-panel-body"
+                      >
                         <Form
                           checkDelay={500}
                           checkTrigger="change"
@@ -3394,7 +3508,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.image"
-                  key="1/.1"
+                  key="2/.2"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -3591,7 +3705,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.links"
-                  key="2/.2"
+                  key="3/.3"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -4216,7 +4330,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.bioInformation"
-                  key="3/.3"
+                  key="4/.4"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -6038,6 +6152,63 @@ exports[`Author Edit Panel should render 1`] = `
                       <div
                         className="rs-panel-body"
                       >
+                        <defaultProps(ControlLabel)
+                          classPrefix="rs-control-label"
+                        >
+                          <ControlLabel
+                            classPrefix="rs-control-label"
+                          >
+                            <label
+                              className="rs-control-label"
+                              htmlFor={null}
+                            >
+                              authors.panels.linkedUsers
+                            </label>
+                          </ControlLabel>
+                        </defaultProps(ControlLabel)>
+                        <defaultProps(TagGroup)
+                          classPrefix="rs-tag-group"
+                          style={
+                            Object {
+                              "marginTop": "0px",
+                            }
+                          }
+                        >
+                          <TagGroup
+                            classPrefix="rs-tag-group"
+                            style={
+                              Object {
+                                "marginTop": "0px",
+                              }
+                            }
+                          >
+                            <div
+                              className="rs-tag-group"
+                              style={
+                                Object {
+                                  "marginTop": "0px",
+                                }
+                              }
+                            />
+                          </TagGroup>
+                        </defaultProps(TagGroup)>
+                      </div>
+                    </div>
+                  </Panel>
+                </defaultProps(Panel)>
+                <defaultProps(Panel)
+                  classPrefix="rs-panel"
+                  key="1/.1"
+                >
+                  <Panel
+                    classPrefix="rs-panel"
+                  >
+                    <div
+                      className="rs-panel rs-panel-default"
+                    >
+                      <div
+                        className="rs-panel-body"
+                      >
                         <Form
                           checkDelay={500}
                           checkTrigger="change"
@@ -6366,7 +6537,7 @@ exports[`Author Edit Panel should render 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.image"
-                  key="1/.1"
+                  key="2/.2"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -6563,7 +6734,7 @@ exports[`Author Edit Panel should render 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.links"
-                  key="2/.2"
+                  key="3/.3"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -7188,7 +7359,7 @@ exports[`Author Edit Panel should render 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.bioInformation"
-                  key="3/.3"
+                  key="4/.4"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -9012,6 +9183,63 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       <div
                         className="rs-panel-body"
                       >
+                        <defaultProps(ControlLabel)
+                          classPrefix="rs-control-label"
+                        >
+                          <ControlLabel
+                            classPrefix="rs-control-label"
+                          >
+                            <label
+                              className="rs-control-label"
+                              htmlFor={null}
+                            >
+                              authors.panels.linkedUsers
+                            </label>
+                          </ControlLabel>
+                        </defaultProps(ControlLabel)>
+                        <defaultProps(TagGroup)
+                          classPrefix="rs-tag-group"
+                          style={
+                            Object {
+                              "marginTop": "0px",
+                            }
+                          }
+                        >
+                          <TagGroup
+                            classPrefix="rs-tag-group"
+                            style={
+                              Object {
+                                "marginTop": "0px",
+                              }
+                            }
+                          >
+                            <div
+                              className="rs-tag-group"
+                              style={
+                                Object {
+                                  "marginTop": "0px",
+                                }
+                              }
+                            />
+                          </TagGroup>
+                        </defaultProps(TagGroup)>
+                      </div>
+                    </div>
+                  </Panel>
+                </defaultProps(Panel)>
+                <defaultProps(Panel)
+                  classPrefix="rs-panel"
+                  key="1/.1"
+                >
+                  <Panel
+                    classPrefix="rs-panel"
+                  >
+                    <div
+                      className="rs-panel rs-panel-default"
+                    >
+                      <div
+                        className="rs-panel-body"
+                      >
                         <Form
                           checkDelay={500}
                           checkTrigger="change"
@@ -9340,7 +9568,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.image"
-                  key="1/.1"
+                  key="2/.2"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -9537,7 +9765,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.links"
-                  key="2/.2"
+                  key="3/.3"
                 >
                   <Panel
                     classPrefix="rs-panel"
@@ -9689,7 +9917,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 <defaultProps(Panel)
                   classPrefix="rs-panel"
                   header="authors.panels.bioInformation"
-                  key="3/.3"
+                  key="4/.4"
                 >
                   <Panel
                     classPrefix="rs-panel"

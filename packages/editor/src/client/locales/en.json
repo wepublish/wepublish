@@ -200,7 +200,8 @@
         "name": "Name",
         "removeImage": "Remove Image",
         "save": "Save",
-        "title": "Title"
+        "title": "Title",
+        "linkedUsers": "Linked Users"
       }
     },
     "blocks": {
@@ -788,7 +789,9 @@
         "subEdit": "Edit",
         "subTitle": "Subscription",
         "Unknown": "Unknown",
-        "userRoles": "User Roles"
+        "userRoles": "User Roles",
+        "authors": "Authors",
+        "selectAuthor": "Select Author"
       }
     },
     "userRoles": {
