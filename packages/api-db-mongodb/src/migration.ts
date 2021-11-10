@@ -1,5 +1,6 @@
 import {Db} from 'mongodb'
-import {CollectionName} from './db/schema'
+import {CollectionName, DBUser} from './db/schema'
+import {PaymentProviderCustomer} from '@wepublish/api'
 import {richTextToString} from './utility'
 
 export interface Migration {
@@ -616,8 +617,35 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  change rich text for callToAction to string
+    //  Set paymentProviderCustomers to an empty array
     version: 15,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+
+      const allUsers: DBUser[] = await users.find({}).toArray()
+
+      for (const user of allUsers) {
+        const paymentProvidersCustomersArray: PaymentProviderCustomer[] = []
+        const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
+        paymentProviderCustomers.forEach(ppc => {
+          // @ts-ignore
+          const userPPC = user.paymentProviderCustomers[ppc]
+          paymentProvidersCustomersArray.push({
+            paymentProviderID: ppc,
+            customerID: userPPC.id
+          })
+        })
+
+        await users.updateOne(
+          {_id: user._id},
+          {$set: {paymentProviderCustomers: paymentProvidersCustomersArray}}
+        )
+      }
+    }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 16,
     async migrate(db, locale) {
       const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
         callToActionText: {$exists: true}
