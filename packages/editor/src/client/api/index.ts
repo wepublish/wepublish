@@ -1197,6 +1197,12 @@ export type PaymentProvider = {
   name: Scalars['String'];
 };
 
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer';
+  paymentProviderID: Scalars['String'];
+  customerID: Scalars['String'];
+};
+
 export enum PaymentSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
@@ -1740,6 +1746,7 @@ export type User = {
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
   authorID?: Maybe<Scalars['String']>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
 };
 
 export type UserAddress = {
