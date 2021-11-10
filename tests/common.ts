@@ -18,7 +18,6 @@ const confirmDeleteButton = Selector('.rs-modal-footer').child('button.rs-btn-re
 const addSlugButton = (Selector('button').child('i.rs-icon-magic'))
 
 const cogIcon = Selector('i.rs-icon-cog')
-// add alert and check why not working --> alert to notification ? 
 
 const deleteButton = Selector('button').child('i.rs-icon-trash')
 const metaPreTitleInput = Selector('input.preTitle')

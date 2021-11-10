@@ -76,7 +76,7 @@ test('login with testUser, fail to create article', async t => {
     await t
         .click(createButton)
         // problem here
-        .expect(Selector('.rs-notification-error').exists).ok()
+        .expect(Selector('.rs-alert-error').exists).ok()
 })
 
 test('fail to delete article', async t => {

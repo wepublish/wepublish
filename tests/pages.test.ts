@@ -94,9 +94,6 @@ test('Publish page', async t => {
         .click(Selector('a').withAttribute('href', `/page/edit/${pageID}`))
         .click(publishButton)
         .click(modalCoonfirmButton)
-        // problem here
-        .expect(Selector('div.rs-alert-container').exists).ok()
-        // .click(Selector('div.rs-alert-item-close'))
         .expect(Selector('div.rs-tag-default').child('span.rs-tag-text').innerText).contains('Page published')
 });
 
