@@ -375,7 +375,7 @@
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
-        "author": "Autor*in",
+        "author": "Quelle",
         "cancel": "Abbrechen",
         "chooseIMage": "Bild wählen",
         "close": "Schliessen",
@@ -394,7 +394,7 @@
         "link": "Link",
         "notFound": "Bild nicht gefunden!",
         "save": "Speichern",
-        "source": "Quelle",
+        "source": "Link",
         "sourceLink": "Link zur Original-Quelle des Bildes.",
         "tags": "Tags",
         "title": "Titel",
