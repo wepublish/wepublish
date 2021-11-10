@@ -71,6 +71,7 @@ const onDOMContentLoaded = async () => {
         authorization: token ? `Bearer ${token}` : '',
         ...context.headers
       },
+      credentials: 'include',
       ...context
     })
 
@@ -88,7 +89,7 @@ const onDOMContentLoaded = async () => {
           )
         ) {
           localStorage.removeItem(LocalStorageKey.SessionToken)
-          window.location.pathname = '/logout'
+          // TODO: implement this handling console.warn()
         }
       })
       // if (networkError) console.log(`[Network error]: ${networkError}`)
