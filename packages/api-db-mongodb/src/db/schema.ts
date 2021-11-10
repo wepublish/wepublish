@@ -118,7 +118,7 @@ export interface DBUser {
   roleIDs: string[]
 
   subscription?: UserSubscription
-  paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+  paymentProviderCustomers: PaymentProviderCustomer[]
   authorID?: string
 }
 

@@ -152,11 +152,15 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
               if (!invoice?.userID) return // no userID
               const user = await context.dbAdapter.user.getUserByID(invoice.userID)
               if (!user) return // no user
-              const {paymentProviderCustomers} = user
-              paymentProviderCustomers[paymentProvider.id] = {
-                id: paymentStatus.customerID,
-                createdAt: new Date()
-              }
+
+              // adding or updating paymentProvider customer ID for user
+              const paymentProviderCustomers = user.paymentProviderCustomers.filter(
+                ppc => ppc.paymentProviderID !== paymentProvider.id
+              )
+              paymentProviderCustomers.push({
+                paymentProviderID: paymentProvider.id,
+                customerID: paymentStatus.customerID
+              })
               await context.dbAdapter.user.updatePaymentProviderCustomers({
                 userID: user.id,
                 paymentProviderCustomers

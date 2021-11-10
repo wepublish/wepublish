@@ -117,8 +117,8 @@ export interface DeleteUserSubscriptionArgs {
 }
 
 export interface PaymentProviderCustomer {
-  readonly id: string
-  readonly createdAt: Date
+  readonly paymentProviderID: string
+  readonly customerID: string
 }
 
 export interface UserAddress {
@@ -174,8 +174,9 @@ export interface User {
   readonly properties: MetadataProperty[]
 
   readonly roleIDs: string[]
+
   readonly subscription?: UserSubscription
-  readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+  readonly paymentProviderCustomers: PaymentProviderCustomer[]
   readonly authorID?: string
 }
 
@@ -196,7 +197,7 @@ export interface UserInput {
 
 export interface UpdatePaymentProviderCustomerArgs {
   readonly userID: string
-  readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+  readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export type OptionalUser = User | null

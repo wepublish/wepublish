@@ -95,7 +95,8 @@ export class WepublishServer {
     })
 
     const corsOptions = {
-      origin: '*',
+      origin: true,
+      credentials: true,
       allowedHeaders: [
         'authorization',
         'content-type',
