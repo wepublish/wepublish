@@ -255,6 +255,7 @@ export enum EmbedType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  BildwurfAd = 'bildwurfAd',
   IFrame = 'iframe'
 }
 
@@ -295,6 +296,11 @@ export interface PolisConversationEmbedData {
   conversationID: string
 }
 
+export interface BildwurfAdConversationEmbedData {
+  type: EmbedType.BildwurfAd
+  zoneID: string
+}
+
 export interface IFrameEmbed {
   type: EmbedType.IFrame
   title?: string
@@ -312,6 +318,7 @@ export type EmbedData =
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
   | PolisConversationEmbedData
+  | BildwurfAdConversationEmbedData
   | IFrameEmbed
 
 export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>

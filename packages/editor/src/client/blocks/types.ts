@@ -86,6 +86,7 @@ export enum EmbedType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  BildwurfAd = 'bildwurfAd',
   Other = 'other'
 }
 
@@ -132,6 +133,11 @@ export interface PolisConversationEmbed {
   conversationID: string
 }
 
+export interface BildwurfAdEmbed {
+  type: EmbedType.BildwurfAd
+  zoneID: string
+}
+
 export interface OtherEmbed {
   type: EmbedType.Other
   url?: string
@@ -150,6 +156,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | BildwurfAdEmbed
   | OtherEmbed
 
 export enum TeaserType {
@@ -364,6 +371,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
 
+        case EmbedType.BildwurfAd:
+          return {
+            bildwurfAd: {
+              zoneID: value.zoneID
+            }
+          }
+
         case EmbedType.Other:
           return {
             embed: {
@@ -551,6 +565,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
+      }
+
+    case 'BildwurfAdBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.BildwurfAd, zoneID: block.zoneID}
       }
 
     case 'EmbedBlock':

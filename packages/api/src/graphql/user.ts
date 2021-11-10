@@ -81,6 +81,14 @@ export const GraphQLUserAddress = new GraphQLObjectType({
   }
 })
 
+export const GraphQLPaymentProviderCustomer = new GraphQLObjectType({
+  name: 'PaymentProviderCustomer',
+  fields: {
+    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
+    customerID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -107,7 +115,10 @@ export const GraphQLUser = new GraphQLObjectType({
         return Promise.all(roleIDs.map((roleID: string) => loaders.userRolesByID.load(roleID)))
       }
     },
-    subscription: {type: GraphQLUserSubscription}
+    subscription: {type: GraphQLUserSubscription},
+    paymentProviderCustomers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+    }
   }
 })
 
@@ -120,7 +131,10 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
     email: {type: GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
-    subscription: {type: GraphQLPublicUserSubscription}
+    subscription: {type: GraphQLPublicUserSubscription},
+    paymentProviderCustomers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+    }
   }
 })
 
@@ -215,6 +229,14 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput}
+  }
+})
+
+export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
+  name: 'PaymentProviderCustomerInput',
+  fields: {
+    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
+    customerID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
