@@ -13,6 +13,7 @@ import {
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
   polisConversationBlockDataFragment,
+  bildwurfAdBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -61,6 +62,7 @@ const PageQuery = gql`
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
         ...PolisConversationBlockData
+        ...BildwurfAdBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -82,6 +84,7 @@ const PageQuery = gql`
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
   ${polisConversationBlockDataFragment}
+  ${bildwurfAdBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}

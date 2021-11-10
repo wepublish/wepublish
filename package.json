@@ -68,7 +68,9 @@
     "clean:website-example": "yarn workspace @wepublish/website-example clean",
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\""
+    "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
+    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000"
   },
   "workspaces": [
     "packages/*",
@@ -78,6 +80,7 @@
     "@babel/eslint-plugin": "^7.11.5",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-config-standard": "^14.1.1",
@@ -92,7 +95,8 @@
     "lerna-changelog": "^1.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.1",
-    "pretty-quick": "^1.11.1"
+    "pretty-quick": "^1.11.1",
+    "testcafe": "^1.8.5"
   },
   "husky": {
     "hooks": {

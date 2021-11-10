@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {PlaceholderInput} from '../atoms/placeholderInput'
-import {Drawer, Panel, IconButton, Icon} from 'rsuite'
+import {Drawer, Icon, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 
@@ -17,6 +17,7 @@ import {PolisEmbed} from './embeds/polis'
 import {IframeEmbed} from './embeds/iframe'
 
 import {useTranslation} from 'react-i18next'
+import {BildwurfAdEmbed} from './embeds/bildwurfAd'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
@@ -51,7 +52,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
               <div
                 style={{
                   position: 'absolute',
-                  zIndex: 1,
+                  zIndex: 100,
                   height: '100%',
                   right: 0
                 }}>
@@ -110,6 +111,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
 
     case EmbedType.PolisConversation:
       return <PolisEmbed conversationID={value.conversationID} />
+
+    case EmbedType.BildwurfAd:
+      return <BildwurfAdEmbed zoneID={value.zoneID} />
 
     default:
       return value.url ? (

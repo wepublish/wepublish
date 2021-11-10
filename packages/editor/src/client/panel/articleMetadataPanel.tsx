@@ -243,6 +243,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </ControlLabel>
                 <FormControl
+                  className="preTitle"
                   value={preTitle}
                   onChange={preTitle => onChange?.({...value, preTitle})}
                 />
@@ -260,7 +261,11 @@ export function ArticleMetadataPanel({
                     {value.title.length}/{titleMax}{' '}
                   </label>
                 </ControlLabel>
-                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+                <FormControl
+                  className="title"
+                  value={title}
+                  onChange={title => onChange?.({...value, title})}
+                />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
                 {value.title.length > titleMax && (
                   <label style={{color: 'gold'}}>
@@ -277,6 +282,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </ControlLabel>
                 <FormControl
+                  className="lead"
                   rows={5}
                   componentClass="textarea"
                   value={lead}
@@ -300,6 +306,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </ControlLabel>
                 <FormControl
+                  className="seoTitle"
                   value={seoTitle}
                   onChange={seoTitle => onChange?.({...value, seoTitle})}
                 />
@@ -324,6 +331,7 @@ export function ArticleMetadataPanel({
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
                 <InputGroup style={{width: '100%'}}>
                   <FormControl
+                    className="slug"
                     value={slug}
                     onChange={slug => onChange?.({...value, slug})}
                     onBlur={() => onChange?.({...value, slug: slugify(slug)})}
@@ -360,6 +368,7 @@ export function ArticleMetadataPanel({
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
                 <Toggle
+                  className="hideAuthor"
                   checked={hideAuthor}
                   onChange={hideAuthor => onChange?.({...value, hideAuthor})}
                 />
@@ -379,6 +388,7 @@ export function ArticleMetadataPanel({
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
                 <Toggle
+                  className="breaking"
                   checked={breaking}
                   onChange={breaking => onChange?.({...value, breaking})}
                 />
@@ -386,6 +396,7 @@ export function ArticleMetadataPanel({
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
                 <FormControl
+                  className="canonicalUrl"
                   value={canonicalUrl}
                   onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
                 />
