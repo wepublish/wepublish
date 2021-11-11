@@ -962,6 +962,10 @@ async function applyEditor() {
                 {
                   name: 'PEER_BY_DEFAULT',
                   value: 'true'
+                },
+                {
+                  name: 'IMG_MIN_SIZE_TO_COMPRESS',
+                  value: '10'
                 }
               ],
               ports: [

@@ -27,7 +27,9 @@ import {
   Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import Compress from 'client-compress'
+import imageCompression from 'browser-image-compression'
+import {ClientSettings} from '../../shared/types'
+import {ElementID} from '../../shared/elementID'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -200,36 +202,25 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
    * @param file
    */
   async function resizeImage(file: File): Promise<File> {
-    // only resize image if larger than 10 MB
-    if (!willImageResize(file)) {
+    const imgMinSizeToCompress: number = getImgMinSizeToCompress()
+    // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
+    if (!willImageResize(file, imgMinSizeToCompress)) {
       return file // do not resize
     }
-    const originalFileName: string = file.name
-    if (!originalFileName) {
-      throw new Error('No file name provided!')
-    }
     const options = {
-      targetSize: 10, // the max size in MB, defaults to 2MB
-      quality: 1, // the quality of the image, max is 1,
-      resize: false // defaults to true, set false if you do not want to resize the image width and height
+      maxSizeMB: imgMinSizeToCompress // the max size in MB, defaults to 2MB
     }
-    const compressor = new Compress(options)
-    const conversions = await compressor.compress([file])
-    const {photo} = conversions[0]
-    const imgBlob: Blob = photo.data
-    // convert blob to file
-    return new File([imgBlob], originalFileName, {type: photo.type})
+    return imageCompression(file, options)
   }
 
   /**
    * Decide whether an image will be automatically resized or not. The limit is 10 MB which
    * is the api's max image size
    * @param file
+   * @param imgMinSizeToResize
    */
-  function willImageResize(file: File) {
+  function willImageResize(file: File, imgMinSizeToResize: number) {
     const originalFileSize: number = file.size / (1024 * 1024)
-    const envMinSize: string | undefined = process.env.IMG_MIN_SIZE_TO_RESIZE
-    const imgMinSizeToResize: number = envMinSize ? parseInt(envMinSize) : 10
     if (originalFileSize > imgMinSizeToResize) {
       return true
     }
@@ -237,14 +228,25 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   }
 
   /**
+   * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
+   */
+  function getImgMinSizeToCompress(): number {
+    const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
+      document.getElementById(ElementID.Settings)!.textContent!
+    )
+    return imgMinSizeToCompress ? parseInt(imgMinSizeToCompress) : 10
+  }
+
+  /**
    * draw a hint to the user, if the image will be automatically resized on upload
    * @param file
    */
   function resizeImageHint(file: File) {
-    if (willImageResize(file)) {
+    const imMinSizeToCompress: number = getImgMinSizeToCompress()
+    if (willImageResize(file, imMinSizeToCompress)) {
       return (
         <>
-          <DescriptionListItem>{t('images.panels.resizedImage')}</DescriptionListItem>
+          <Panel header={t('images.panels.resizedImage', {sizeMB: imMinSizeToCompress})}></Panel>
         </>
       )
     }
@@ -274,6 +276,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 />
               )}
             </Panel>
+            {resizeImageHint(file!)}
             <Panel header={t('images.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('images.panels.filename')}>
@@ -296,7 +299,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 <DescriptionListItem label={t('images.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
-                {resizeImageHint(file!)}
 
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>

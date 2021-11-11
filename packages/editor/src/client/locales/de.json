@@ -421,7 +421,7 @@
         "attribution": "Attribut",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch reduziert."
+        "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch auf ca. {{sizeMB}} MB reduziert."
       }
     },
     "linkPageBreakEditPanel": {

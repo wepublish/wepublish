@@ -27,7 +27,8 @@ async function asyncMain() {
 
   const clientSettings = {
     apiURL: process.env.API_URL,
-    peerByDefault: process.env.PEER_BY_DEFAULT?.toLowerCase() === 'true'
+    peerByDefault: process.env.PEER_BY_DEFAULT?.toLowerCase() === 'true',
+    imgMinSizeToCompress: process.env.IMG_MIN_SIZE_TO_COMPRESS
   }
 
   const app = express()
