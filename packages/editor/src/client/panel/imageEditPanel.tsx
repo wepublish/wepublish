@@ -198,7 +198,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   }
 
   /**
-   * Resizes an image on client side, if larger than 10 MB, which is the upload max of the api
+   * Resizes an image on client side, if larger than the IMG_MIN_SIZE_TO_COMPRESS env variable
    * @param file
    */
   async function resizeImage(file: File): Promise<File> {
@@ -214,8 +214,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   }
 
   /**
-   * Decide whether an image will be automatically resized or not. The limit is 10 MB which
-   * is the api's max image size
+   * Decide whether an image will be automatically resized or not. The limit is given by the
+   * IMG_MIN_SIZE_TO_COMPRESS env variable
    * @param file
    * @param imgMinSizeToResize
    */
