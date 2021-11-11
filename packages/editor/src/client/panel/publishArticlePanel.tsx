@@ -7,6 +7,7 @@ import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DateTimePicker} from '../atoms/dateTimePicker'
+import {appendFile} from 'fs'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -73,7 +74,18 @@ export function PublishArticlePanel({
             {metadata.seoTitle || '-'}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.slug')}>
-            {metadata.slug || '-'}
+            {!metadata.slug ? (
+              <div
+                style={{
+                  borderRadius: '8px',
+                  padding: '12px',
+                  backgroundColor: '#fde9ef'
+                }}>
+                {t('articleEditor.panels.addSlug')}
+              </div>
+            ) : (
+              metadata.slug
+            )}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.tags')}>
             {metadata.tags.join(', ') || '-'}
@@ -93,10 +105,11 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishDate || !updateDate}
+          disabled={!publishDate || !updateDate || !metadata.slug}
           onClick={() => onConfirm(publishDate!, updateDate!)}>
           {t('articleEditor.panels.confirm')}
         </Button>
+
         <Button appearance="subtle" onClick={() => onClose()}>
           {t('articleEditor.panels.close')}
         </Button>
