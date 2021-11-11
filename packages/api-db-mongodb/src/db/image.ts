@@ -46,7 +46,6 @@ export class MongoDBImageAdapter implements DBImageAdapter {
       title: input.title,
       description: input.description,
       tags: input.tags,
-      author: input.author,
       source: input.source,
       link: input.link,
       license: input.license,

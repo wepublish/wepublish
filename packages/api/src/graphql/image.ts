@@ -77,7 +77,6 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
 
     source: {type: GraphQLString},
     link: {type: GraphQLString},
-    author: {type: GraphQLString},
     license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}
@@ -95,7 +94,6 @@ export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
 
     source: {type: GraphQLString},
     link: {type: GraphQLString},
-    author: {type: GraphQLString},
     license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}

@@ -409,7 +409,6 @@ export type Image = {
   tags: Array<Scalars['String']>
   source?: Maybe<Scalars['String']>
   link?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   fileSize: Scalars['Int']
   extension: Scalars['String']
@@ -1625,7 +1624,6 @@ export type UploadImageInput = {
   tags?: Maybe<Array<Scalars['String']>>
   source?: Maybe<Scalars['String']>
   link?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   focalPoint?: Maybe<InputPoint>
 }
@@ -2194,7 +2192,6 @@ export type FullImageFragment = {__typename?: 'Image'} & Pick<
   | 'fileSize'
   | 'description'
   | 'tags'
-  | 'author'
   | 'source'
   | 'link'
   | 'license'
