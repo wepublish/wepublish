@@ -1604,7 +1604,6 @@ export type UpdateImageInput = {
   tags?: Maybe<Array<Scalars['String']>>
   source?: Maybe<Scalars['String']>
   link?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   focalPoint?: Maybe<InputPoint>
 }
