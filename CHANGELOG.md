@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.12.0-alpha.0 (2021-10-27)
+## v2.12.0 (2021-10-27)
 
 #### :bug: Bug Fix
 * `editor`
