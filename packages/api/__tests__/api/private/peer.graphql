@@ -2,11 +2,16 @@ fragment FullPeerProfile on PeerProfile {
   name
   hostURL
   themeColor
+  themeFontColor
   logo {
     ...ImageRef
   }
   callToActionText
   callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
 
 fragment PeerRef on Peer {

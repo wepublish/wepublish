@@ -14,6 +14,7 @@ import {
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
   polisConversationBlockDataFragment,
+  bildwurfAdBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -35,7 +36,7 @@ import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
 import {useAppContext} from '../appContext'
 import {Peer, ArticleMeta} from '../types'
 import {useStyle, cssRule} from '@karma.run/react'
-import {Image} from '../atoms/image'
+import {Image, ImageFit} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -57,6 +58,7 @@ const ArticleQuery = gql`
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
         ...PolisConversationBlockData
+        ...BildwurfAdBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -78,6 +80,7 @@ const ArticleQuery = gql`
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
   ${polisConversationBlockDataFragment}
+  ${bildwurfAdBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
@@ -129,20 +132,23 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaDescription,
     socialMediaImage,
     socialMediaAuthors,
-    comments
+    comments,
+    canonicalUrl
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
-  const canonicalURL = canonicalHost + path
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = canonicalUrl || canonicalHost + path
+
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -160,9 +166,9 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -274,7 +280,9 @@ export function PeerArticleTemplateContainer({
   } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const canonicalURL = canonicalHost + path
+
+  const canonicalOwnURL = canonicalHost + path
+  const canonicalPeerURL = articleData.canonicalUrl || articleData.url
 
   return (
     <>
@@ -282,11 +290,11 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalOwnURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -304,10 +312,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalOwnURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalOwnURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -315,6 +323,9 @@ export function PeerArticleTemplateContainer({
         blocks={blocks}
         isPeerArticle
       />
+      {peer.callToActionImage && peer.callToActionImageURL && (
+        <PeerProfileImageBlock peer={peer} article={articleData} />
+      )}
       <ArticleFooterContainer
         tags={tags}
         authors={authors}
@@ -326,8 +337,9 @@ export function PeerArticleTemplateContainer({
   )
 }
 
-const PeerProfileBreakStyle = cssRule(isArticle => ({
-  backgroundColor: Color.SecondaryLight,
+const PeerProfileBreakStyle = cssRule(({backgroundColor}: any, {themeFontColor}: any) => ({
+  backgroundColor: backgroundColor ?? Color.SecondaryLight,
+  color: themeFontColor ?? Color.White,
   padding: `${pxToRem(25)} ${pxToRem(125)}`,
   borderTop: `1px solid ${Color.Secondary}`,
   borderBottom: `1px solid ${Color.Primary}`,
@@ -391,10 +403,12 @@ export interface PeerProfileBlockProps {
 }
 
 export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
-  const css = useStyle()
+  const css = useStyle({backgroundColor: peer.themeColor, themeFontColor: peer.themeFontColor})
 
   return (
-    <div className={css(PeerProfileBreakStyle)}>
+    <div
+      className={css(PeerProfileBreakStyle)}
+      style={{backgroundColor: peer.themeColor, color: peer.themeFontColor}}>
       <div className={css(PeerProfileInnerStyle)}>
         <div className={css(PeerProfileFiller)}>
           <Link href={article.url}>Zum Originalartikel</Link>
@@ -421,6 +435,32 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
           </a>
         )}
       </div>
+    </div>
+  )
+}
+
+export function PeerProfileImageBlock({peer, article}: PeerProfileBlockProps) {
+  const css = useStyle()
+
+  return (
+    <div className={css(PeerProfileBreakStyle)}>
+      {peer?.callToActionImage && (
+        <a target="_blank" rel="noreferrer" href={peer?.callToActionImageURL}>
+          <div
+            style={{
+              backgroundColor: 'darkGray',
+              border: '1px solid gray',
+              display: 'flex',
+              width: '100%',
+              height: 'auto',
+              maxHeight: '90px',
+              marginRight: 'auto',
+              marginLeft: 'auto'
+            }}>
+            <Image src={peer?.callToActionImage} fit={ImageFit.Cover} />
+          </div>
+        </a>
+      )}
     </div>
   )
 }

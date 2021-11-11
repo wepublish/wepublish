@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -56,6 +58,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
+  canonicalUrl?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
   authorIDs: Array<Scalars['ID']>
   shared: Scalars['Boolean']
@@ -94,6 +97,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug']
   tags: Array<Scalars['String']>
   properties: Array<Properties>
+  canonicalUrl?: Maybe<Scalars['String']>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
@@ -251,7 +255,7 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
-  parentID?: Maybe<Scalars['ID']>
+  parentComment?: Maybe<Comment>
   revisions: Array<CommentRevision>
   state: CommentState
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -1162,6 +1166,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle'
   peer: Peer
+  peeredArticleURL: Scalars['String']
   article: Article
 }
 
@@ -1199,18 +1204,24 @@ export type PeerProfile = {
   name: Scalars['String']
   logo?: Maybe<Image>
   themeColor: Scalars['Color']
+  themeFontColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type PeerProfileInput = {
   name: Scalars['String']
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
+  themeFontColor: Scalars['Color']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImageID?: Maybe<Scalars['ID']>
 }
 
 export type Permission = {
@@ -1276,6 +1287,7 @@ export type Query = {
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
+  pagePreviewLink?: Maybe<Scalars['String']>
   memberPlan?: Maybe<MemberPlan>
   memberPlans: MemberPlanConnection
   paymentMethod?: Maybe<PaymentMethod>
@@ -1416,6 +1428,11 @@ export type QueryPagesArgs = {
   skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID']
+  hours: Scalars['Int']
 }
 
 export type QueryMemberPlanArgs = {
@@ -1617,6 +1634,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
@@ -1661,6 +1679,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']
@@ -2439,8 +2458,17 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+  | 'name'
+  | 'hostURL'
+  | 'themeColor'
+  | 'themeFontColor'
+  | 'callToActionText'
+  | 'callToActionURL'
+  | 'callToActionImageURL'
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
@@ -2499,9 +2527,10 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
-export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
-    roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
-  }
+export type FullUserFragment = {__typename?: 'User'} & Pick<
+  User,
+  'id' | 'name' | 'email' | 'emailVerifiedAt'
+> & {roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>}
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
@@ -2860,11 +2889,16 @@ export const FullPeerProfile = gql`
     name
     hostURL
     themeColor
+    themeFontColor
     logo {
       ...ImageRef
     }
     callToActionText
     callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
   }
   ${ImageRef}
 `
@@ -3073,6 +3107,7 @@ export const FullUser = gql`
     id
     name
     email
+    emailVerifiedAt
     roles {
       ...FullUserRole
     }

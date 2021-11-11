@@ -25,8 +25,10 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
@@ -117,16 +119,18 @@ export function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setCurrentNavigation(rowData)
-                    setConfirmationDialogOpen(true)
-                  }}
-                />
+                <IconButtonTooltip caption={t('navigation.overview.delete')}>
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentNavigation(rowData)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </IconButtonTooltip>
               </>
             )}
           </Cell>

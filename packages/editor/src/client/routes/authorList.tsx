@@ -12,8 +12,9 @@ import {
 } from '../route'
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -174,7 +175,11 @@ export function AuthorList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
+              {({createdAt}: FullAuthorFragment) =>
+                t('authors.overview.createdAt', {
+                  createdAt: new Date(createdAt)
+                })
+              }
             </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">
@@ -182,16 +187,18 @@ export function AuthorList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentAuthor(rowData)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('authors.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentAuthor(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>

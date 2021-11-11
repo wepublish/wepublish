@@ -5,6 +5,7 @@ Object {
   "data": Object {
     "createUser": Object {
       "email": "rwayne@mymail1.com",
+      "emailVerifiedAt": null,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": Array [],
@@ -40,6 +41,7 @@ Object {
   "data": Object {
     "user": Object {
       "email": "bwayne@mymail3.com",
+      "emailVerifiedAt": null,
       "id": Any<String>,
       "name": "Bruce Wayne",
       "roles": Array [],
@@ -62,24 +64,28 @@ Object {
       "nodes": Array [
         Object {
           "email": "bwayne@mymail2.com",
+          "emailVerifiedAt": null,
           "id": Any<String>,
           "name": "Bruce Wayne",
           "roles": Array [],
         },
         Object {
           "email": "rwayne@mymail1.com",
+          "emailVerifiedAt": null,
           "id": Any<String>,
           "name": "Robin Wayne",
           "roles": Array [],
         },
         Object {
           "email": "bwayne@mymail0.com",
+          "emailVerifiedAt": null,
           "id": Any<String>,
           "name": "Bruce Wayne",
           "roles": Array [],
         },
         Object {
           "email": "dev@wepublish.ch",
+          "emailVerifiedAt": null,
           "id": Any<String>,
           "name": "Dev User",
           "roles": Array [
@@ -217,6 +223,11 @@ Object {
                   "deprecated": false,
                   "description": "Allows to publish Pages",
                   "id": "CAN_PUBLISH_PAGE",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to get preview links for pages",
+                  "id": "CAN_GET_PAGE_PREVIEW_LINK",
                 },
                 Object {
                   "deprecated": false,
@@ -448,6 +459,7 @@ Object {
   "data": Object {
     "updateUser": Object {
       "email": "batman@email.com",
+      "emailVerifiedAt": null,
       "id": Any<String>,
       "name": "Dark Knight",
       "roles": Array [],
@@ -488,6 +500,7 @@ Object {
   "data": Object {
     "resetUserPassword": Object {
       "email": "bwayne@mymail5.com",
+      "emailVerifiedAt": null,
       "id": Any<String>,
       "name": "Bruce Wayne",
       "roles": Array [],

@@ -1,16 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Alert,
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Panel,
-  HelpBlock
-} from 'rsuite'
+import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -18,8 +8,8 @@ import {
   useCreatePeerMutation,
   usePeerQuery,
   useUpdatePeerMutation,
-  PeerProfileDocument,
-  FullPeerProfileFragment
+  FullPeerProfileFragment,
+  useRemotePeerProfileQuery
 } from '../api'
 
 import {slugify, getOperationNameFromDocument} from '../utility'
@@ -41,11 +31,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
-
-  const [isValidPeer, setValidPeer] = useState<boolean>()
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
-  const [profile, setProfile] = useState<FullPeerProfileFragment>()
+  const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null)
 
   const {data, loading: isLoading, error: loadError} = usePeerQuery({
     variables: {id: id!},
@@ -61,16 +47,34 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  const isDisabled =
-    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidPeer || (!token && !id)
+  const {refetch: fetchRemote} = useRemotePeerProfileQuery({skip: true})
+
+  const isDisabled = isLoading || isCreating || isUpdating || !profile || !name
 
   const {t} = useTranslation()
+
+  async function handleFetch() {
+    try {
+      const {data: remote} = await fetchRemote({
+        hostURL: urlString,
+        token
+      })
+      setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null)
+    } catch (error) {
+      Alert.error(error.message, 0)
+    }
+  }
 
   useEffect(() => {
     if (data?.peer) {
       setName(data.peer.name)
       setSlug(data.peer.slug)
       setURLString(data.peer.hostURL)
+      setTimeout(() => {
+        // setProfile in timeout because the useEffect that listens on
+        // urlString and token will set it otherwise to null
+        setProfile(data?.peer?.profile ? data.peer.profile : null)
+      }, 400)
     }
   }, [data?.peer])
 
@@ -80,62 +84,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   }, [loadError, createError, updateError])
 
   useEffect(() => {
-    setErrorMessage('')
-    if (urlString === '') return
-
-    // NOTICE: `useQuery` refetch doesn't cancel and tends to clog up on timeout.
-    // So we manually handle the preview request.
-    try {
-      const url = new URL(urlString)
-      const abortController =
-        typeof AbortController !== 'undefined' ? new AbortController() : undefined
-
-      fetch(url.toString(), {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json; charset=utf-8'},
-        body: JSON.stringify({query: PeerProfileDocument.loc!.source.body}),
-        signal: abortController?.signal
-      })
-        .then(response => {
-          if (response.status !== 200) throw new Error()
-          return response.json()
-        })
-        .then(response => {
-          setLoadingPeerProfile(false)
-
-          // TODO: Better validation
-
-          if (!response?.data?.peerProfile) {
-            setValidPeer(false)
-            setErrorMessage(t('peerList.panels.invalidURL'))
-          } else if (response?.data?.peerProfile.hostURL === hostURL) {
-            setValidPeer(false)
-            setErrorMessage(t('peerList.panels.peeredToHost'))
-          } else {
-            setValidPeer(true)
-            setProfile(response.data.peerProfile)
-          }
-        })
-        .catch(err => {
-          if (err.name === 'AbortError') return
-
-          setLoadingPeerProfile(false)
-          setValidPeer(false)
-          setErrorMessage(t('peerList.panels.invalidURL'))
-        })
-
-      setValidPeer(undefined)
-      setLoadingPeerProfile(true)
-
-      return () => abortController?.abort()
-    } catch (err) {
-      setLoadingPeerProfile(false)
-      setValidPeer(false)
-      return () => {
-        /* do nothing */
-      }
-    }
-  }, [urlString])
+    setProfile(null)
+  }, [urlString, token])
 
   async function handleSave() {
     if (id) {
@@ -192,7 +142,6 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <FormControl
                 value={urlString}
                 name={t('peerList.panels.URL')}
-                errorMessage={errorMessage}
                 onChange={value => {
                   setURLString(value)
                 }}
@@ -203,16 +152,22 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <FormControl
                 value={token}
                 name={t('peerList.panels.token')}
-                placeholder={id ? "Leave empty if you don't want to change it" : undefined}
+                placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
                 onChange={value => {
                   setToken(value)
                 }}
               />
-              <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
             </FormGroup>
+            <Button
+              className="fetchButton"
+              appearance={'primary'}
+              disabled={!urlString || !token}
+              onClick={() => handleFetch()}>
+              {t('peerList.panels.getRemote')}
+            </Button>
           </Form>
         </Panel>
-        {!isLoadingPeerProfile && (token || id) && isValidPeer && (
+        {profile && (
           <Panel header={t('peerList.panels.information')}>
             <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
@@ -220,7 +175,32 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 {profile?.name}
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                {profile?.themeColor}
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <p>{profile?.themeColor}</p>
+                  <div
+                    style={{
+                      backgroundColor: profile?.themeColor,
+                      width: '30px',
+                      height: '20px',
+                      padding: '5px',
+                      marginLeft: '5px',
+                      border: '1px solid #575757'
+                    }}></div>
+                </div>
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <p>{profile?.themeFontColor}</p>
+                  <div
+                    style={{
+                      backgroundColor: profile?.themeFontColor,
+                      width: '30px',
+                      height: '20px',
+                      padding: '5px',
+                      marginLeft: '5px',
+                      border: '1px solid #575757'
+                    }}></div>
+                </div>
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                 {!!profile?.callToActionText && (
@@ -235,6 +215,12 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
                 {profile?.callToActionURL}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
+                <img src={profile?.callToActionImage?.thumbURL || undefined} />
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
+                {profile?.callToActionImageURL}
               </DescriptionListItem>
             </DescriptionList>
           </Panel>

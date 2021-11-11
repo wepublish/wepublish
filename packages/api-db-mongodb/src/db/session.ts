@@ -99,6 +99,32 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
     return null
   }
 
+  async extendUserSessionByToken(token: string): Promise<OptionalUserSession> {
+    const {value} = await this.sessions.findOneAndUpdate(
+      {token},
+      {
+        $set: {
+          expiresAt: new Date(Date.now() + this.sessionTTL)
+        }
+      },
+      {returnOriginal: false}
+    )
+    if (!value) return null
+
+    const user = await this.user.getUserByID(value.userID)
+    if (!user) return null
+
+    return {
+      type: SessionType.User,
+      id: value._id,
+      token: value.token,
+      createdAt: value.createdAt,
+      expiresAt: value.expiresAt,
+      user,
+      roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
+    }
+  }
+
   async deleteUserSessionByID(user: User, id: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
     return deletedCount === 1

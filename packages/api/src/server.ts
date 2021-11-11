@@ -39,28 +39,36 @@ export class WepublishServer {
 
     methodsToProxy.forEach(mtp => {
       if (mtp.key in dbAdapter) {
+        const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
-          // @ts-ignore
-          if (methodName in dbAdapter[mtp.key]) {
+          if (methodName in dbAdapter[dbAdapterKeyTyped]) {
             // @ts-ignore
-            dbAdapter[mtp.key][methodName] = new Proxy(dbAdapter[mtp.key][methodName], {
-              // create proxy for method
-              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
-                setImmediate(async () => {
-                  // make sure event gets executed in the next event loop
-                  try {
-                    logger('server').info('emitting event for %s', methodName)
-                    // @ts-ignore
-                    mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
-                  } catch (error) {
-                    logger('server').error(error, 'error during emitting event for %s', methodName)
-                  }
-                })
-                return result // return actual result "Article, Page, User, ..."
+            dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(
+              // @ts-ignore
+              dbAdapter[dbAdapterKeyTyped][methodName],
+              {
+                // create proxy for method
+                async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
+                  const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
+                  setImmediate(async () => {
+                    // make sure event gets executed in the next event loop
+                    try {
+                      logger('server').info('emitting event for %s', methodName)
+                      // @ts-ignore
+                      mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
+                    } catch (error) {
+                      logger('server').error(
+                        error,
+                        'error during emitting event for %s',
+                        methodName
+                      )
+                    }
+                  })
+                  return result // return actual result "Article, Page, User, ..."
+                }
               }
-            })
+            )
           } else {
             logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
           }
@@ -72,7 +80,7 @@ export class WepublishServer {
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
-      playground: opts.playground ?? false,
+      playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
       context: ({req}) => contextFromRequest(req, opts)
@@ -80,14 +88,15 @@ export class WepublishServer {
 
     const publicServer = new ApolloServer({
       schema: GraphQLWepublishPublicSchema,
-      playground: opts.playground ?? false,
+      playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
       context: ({req}) => contextFromRequest(req, opts)
     })
 
     const corsOptions = {
-      origin: '*',
+      origin: true,
+      credentials: true,
       allowedHeaders: [
         'authorization',
         'content-type',

@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   deployment:
+    if: ${{ github.event.pull_request.base.repo.url == github.event.pull_request.head.repo.url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,12 +13,9 @@ jobs:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
           GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
         run: |
-          # https://cloud.google.com/container-registry/docs/advanced-authentication
           printenv GCLOUD_AUTH | docker login -u _json_key --password-stdin https://eu.gcr.io
-          docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
-          #docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
+          docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} .
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
-          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
@@ -48,3 +46,21 @@ jobs:
           cd ./config
           yarn install
           node ./notify.js
+  e2eTest:
+    needs: deployment
+    name: Runs e2e Test on Feature instance
+    runs-on: self-hosted
+    container:
+      image: testcafe/testcafe
+      options: --user root
+    env:
+      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Sleep for 60s
+        uses: juliangruber/sleep-action@v1
+        with:
+          time: 60s
+      - name: Run E2E tests
+        if: always()
+        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000

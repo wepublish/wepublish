@@ -10,9 +10,10 @@ import {
   Link
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -120,17 +121,19 @@ export function UserRoleList() {
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
-              <IconButton
-                icon={<Icon icon="trash" />}
-                disabled={rowData.systemRole}
-                circle
-                size="sm"
-                style={{marginLeft: '5px'}}
-                onClick={() => {
-                  setConfirmationDialogOpen(true)
-                  setCurrentUserRole(rowData)
-                }}
-              />
+              <IconButtonTooltip caption={t('userRoles.overview.delete')}>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  disabled={rowData.systemRole}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setCurrentUserRole(rowData)
+                  }}
+                />
+              </IconButtonTooltip>
             )}
           </Cell>
         </Column>

@@ -13,12 +13,14 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {
   FullPaymentMethodFragment,
   useDeletePaymentMethodMutation,
   usePaymentMethodListQuery
 } from '../api'
+
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 import {FlexboxGrid, Icon, IconButton, Drawer, Table, Modal, Button} from 'rsuite'
@@ -106,16 +108,18 @@ export function PaymentMethodList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentPaymentMethod(rowData)
-                  }}
-                />
+                <IconButtonTooltip caption={t('paymentMethodList.delete')}>
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentPaymentMethod(rowData)
+                    }}
+                  />
+                </IconButtonTooltip>
               </>
             )}
           </Cell>

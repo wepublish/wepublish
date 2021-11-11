@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {NavigationBar} from '../atoms/navigationBar'
@@ -25,7 +25,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag} from 'rsuite'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag, Notification} from 'rsuite'
 import {StateColor} from '../utility'
 
 export interface PageEditorProps {
@@ -144,20 +144,18 @@ export function PageEditor({id}: PageEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.pending?.publishAt ?? '')
         })
       )
     } else if (pageData?.page?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(pageData?.page?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(pageData?.page?.published?.publishedAt ?? '')
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('pageEditor.overview.unpublished'))
     }
   }, [pageData, hasChanged])
@@ -189,7 +187,11 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftSaved'),
+        duration: 2000
+      })
+      await refetch({id: pageID})
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -199,11 +201,12 @@ export function PageEditor({id}: PageEditorProps) {
           route: PageEditRoute.create({id: data?.createPage.id})
         })
       }
-
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftCreated'),
+        duration: 2000
+      })
     }
-    await refetch({id: pageID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
@@ -230,7 +233,14 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    Alert.success(t('pageEditor.overview.pagePublished'), 2000)
+    Notification.success({
+      title: t(
+        publishDate <= new Date()
+          ? 'pageEditor.overview.pagePublished'
+          : 'pageEditor.overview.pagePending'
+      ),
+      duration: 2000
+    })
   }
 
   useEffect(() => {
@@ -243,7 +253,7 @@ export function PageEditor({id}: PageEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

@@ -7,19 +7,19 @@
   &-row.approved:not(&-row-header),
   &-row.approved &-cell-group,
   &-row.approved &-cell {
-    background: rgb(225, 248, 222);
+    background: #e1f8de;
   }
 
   &-row.pending-user:not(&-row-header),
   &-row.pending-user &-cell-group,
   &-row.pending-user &-cell {
-    background: rgb(248, 239, 222);
+    background: #f8def2;
   }
 
   &-row.pending-approval:not(&-row-header),
   &-row.pending-approval &-cell-group,
   &-row.pending-approval &-cell {
-    background: rgb(248, 222, 242);
+    background: #f8def2;
   }
 
   &-row.rejected:not(&-row-header),
@@ -62,7 +62,7 @@
 }
 
 .unsaved {
-  .rs-badge-content{
+  .rs-badge-content {
     background: darkorange;
   }
 }
@@ -70,5 +70,23 @@
 .saved {
   .rs-badge-content {
     visibility: hidden;
+  }
+}
+
+.displayThreeLinesOnly {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.richTextFrame {
+  padding: 0px 20px 20px;
+  border: 1px solid #e5e5ea;
+  border-radius: 7px;
+  &:hover {
+    border-color: #1675e0;
   }
 }

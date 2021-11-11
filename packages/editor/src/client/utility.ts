@@ -168,8 +168,24 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
 ]
 
 export enum StateColor {
-  pending = 'blue',
-  published = 'green',
-  unpublished = 'red',
+  pending = '#f8def2',
+  published = '#e1f8de',
+  draft = '#f8efde',
   none = 'white'
+}
+
+export function validateURL(url: string) {
+  if (url) {
+    const pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    )
+    return pattern.test(url)
+  }
+  return false
 }

@@ -1,4 +1,11 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLList
+} from 'graphql'
 
 import {Issuer} from 'openid-client'
 import crypto from 'crypto'
@@ -18,11 +25,14 @@ import {
   EmailAlreadyInUseError,
   NotAuthorisedError as NotAuthorizedError,
   NotAuthenticatedError,
-  UserInputError
+  UserInputError,
+  CommentLengthError
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {
+  GraphQLPaymentProviderCustomer,
+  GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
   GraphQLPublicUserInput,
   GraphQLPublicUserSubscription,
@@ -34,6 +44,8 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
+import {SendMailType} from '../mails/mailContext'
 import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -123,6 +135,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
+        const commentLength = countRichtextChars(0, input.text)
+
+        if (commentLength > MAX_COMMENT_LENGTH) {
+          throw new CommentLengthError()
+        }
+
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
@@ -224,6 +242,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             name,
             preferredName,
             email,
+            emailVerifiedAt: null,
             active: false,
             properties: [],
             roleIDs: []
@@ -276,17 +295,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
-      async resolve(root, {email}, {dbAdapter, generateJWT, sendMailFromProvider}) {
+      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext}) {
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
 
         const token = generateJWT({id: user.id})
-        const link = `${process.env.WEBSITE_URL}/login?jwt=${token}`
-        await sendMailFromProvider({
-          message: `Click the link to login:\n\n${link}`,
-          recipient: email,
-          subject: 'Login Link',
-          replyToAddress: 'dev@wepublish.ch'
+        await mailContext.sendMail({
+          type: SendMailType.LoginLink,
+          recipient: user.email,
+          data: {
+            url: `${process.env.WEBSITE_URL}?jwt=${token}`,
+            user
+          }
         })
 
         return email
@@ -429,6 +449,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
         return updateSubscription
+      }
+    },
+
+    updatePaymentProviderCustomers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      args: {
+        input: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomerInput)))
+        }
+      },
+      description: 'This mutation allows to update the Payment Provider Customers',
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        const updateUser = await dbAdapter.user.updatePaymentProviderCustomers({
+          userID: user.id,
+          paymentProviderCustomers: input
+        })
+
+        if (!updateUser) throw new NotFound('User', user.id)
+        return updateUser.paymentProviderCustomers
       }
     },
 

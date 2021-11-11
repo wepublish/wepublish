@@ -6,7 +6,7 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
@@ -89,6 +89,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     authors: [],
     tags: [],
     properties: [],
+    canonicalUrl: '',
     shared: peerByDefault,
     breaking: false,
     image: undefined,
@@ -144,6 +145,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         blocks,
         properties,
         hideAuthor,
+        canonicalUrl,
         socialMediaTitle,
         socialMediaDescription,
         socialMediaAuthors,
@@ -165,6 +167,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           value: property.value,
           public: property.public
         })),
+        canonicalUrl: canonicalUrl ?? '',
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -190,31 +193,25 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('articleEditor.overview.pending', {
-          date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.pending?.publishAt ?? '')
         })
       )
     } else if (articleData?.article?.published) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
-          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+          date: new Date(articleData?.article?.published?.publishedAt ?? '')
         })
       )
     } else {
-      setStateColor(StateColor.unpublished)
+      setStateColor(StateColor.draft)
       setTagTitle(t('articleEditor.overview.unpublished'))
     }
   }, [articleData, hasChanged])
 
   useEffect(() => {
-    if (createError || updateError || publishError) {
-      Notification.error({
-        title: updateError?.message ?? createError?.message ?? publishError!.message,
-        duration: 5000
-      })
-    }
+    const error = createError?.message ?? updateError?.message ?? publishError?.message
+    if (error) Alert.error(error, 0)
   }, [createError, updateError, publishError])
 
   function countRichtextChars(blocksCharLength: number, nodes: any) {
@@ -288,6 +285,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
       hideAuthor: metadata.hideAuthor,
@@ -331,6 +329,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title: t('articleEditor.overview.draftSaved'),
         duration: 2000
       })
+      await refetch({id: articleID})
     } else {
       const {data} = await createArticle({variables: {input}})
 
@@ -346,7 +345,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         duration: 2000
       })
     }
-    await refetch({id: articleID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
@@ -377,7 +375,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       Notification.success({
-        title: t('articleEditor.overview.articlePublished'),
+        title: t(
+          publishDate <= new Date()
+            ? 'articleEditor.overview.articlePublished'
+            : 'articleEditor.overview.articlePending'
+        ),
         duration: 2000
       })
     }
@@ -386,10 +388,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (isNotFound) {
-      Notification.error({
-        title: t('articleEditor.overview.notFound'),
-        duration: 5000
-      })
+      Alert.error(t('articleEditor.overview.notFound'), 0)
     }
   }, [isNotFound])
 
@@ -407,7 +406,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     <>
       <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={stateColor}>{tagTitle}</Tag>
+          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

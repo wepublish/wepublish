@@ -11,9 +11,10 @@ import {
   useRouteDispatch
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
@@ -159,13 +160,17 @@ export function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+              {({createdAt}: FullUserFragment) =>
+                t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: FullUserFragment) =>
+                t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
@@ -187,26 +192,30 @@ export function UserList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullUserFragment) => (
                 <>
-                  <IconButton
-                    icon={<Icon icon="key" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={e => {
-                      setCurrentUser(rowData)
-                      setIsResetUserPasswordOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentUser(rowData)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
+                    <IconButton
+                      icon={<Icon icon="lock" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={e => {
+                        setCurrentUser(rowData)
+                        setIsResetUserPasswordOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('userList.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentUser(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>

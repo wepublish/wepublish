@@ -12,6 +12,7 @@ export enum BlockTypes {
   YouTubeVideoBlock = 'YouTubeVideoBlock',
   SoundCloudTrackBlock = 'SoundCloudTrackBlock',
   PolisConversationBlock = 'PolisConversationBlock',
+  BildwurfAdBlock = 'BildwurfAdBlock',
   ListicleBlock = 'ListicleBlock',
   LinkPageBreakBlock = 'LinkPageBreakBlock'
 }
@@ -107,6 +108,7 @@ export const articleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    canonicalUrl
 
     socialMediaTitle
     socialMediaDescription
@@ -148,6 +150,7 @@ export const peerArticleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    canonicalUrl
 
     socialMediaTitle
     socialMediaDescription
@@ -198,11 +201,16 @@ export const peerMetaDataFragment = gql`
       name
       websiteURL
       themeColor
+      themeFontColor
       logo {
         ...SimpleImageData
       }
       callToActionText
       callToActionURL
+      callToActionImageURL
+      callToActionImage {
+        ...SimpleImageData
+      }
     }
   }
   ${simpleImageDataFragment}
@@ -357,6 +365,12 @@ export const polisConversationBlockDataFragment = gql`
   fragment PolisConversationBlockData on PolisConversationBlock {
     __typename
     conversationID
+  }
+`
+export const bildwurfAdBlockDataFragment = gql`
+  fragment BildwurfAdBlockData on BildwurfAdBlock {
+    __typename
+    zoneID
   }
 `
 export const embedBlockDataFragment = gql`

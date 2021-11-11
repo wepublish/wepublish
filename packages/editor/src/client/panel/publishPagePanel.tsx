@@ -27,7 +27,9 @@ export function PublishPagePanel({
 }: PublishPagePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
+  const [publishDate, setPublishDate] = useState<Date | undefined>(
+    pendingPublishDate ?? initialPublishDate ?? now
+  )
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
   const {t} = useTranslation()

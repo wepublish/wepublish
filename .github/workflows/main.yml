@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -17,11 +17,8 @@ jobs:
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
           printenv GCLOUD_AUTH | docker login -u _json_key --password-stdin https://eu.gcr.io
-          docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
-          docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
-          #docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
+          docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} .
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
-          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
       - uses: actions/setup-node@v1
         with:
           node-version: '10.x'
@@ -50,3 +47,22 @@ jobs:
           SLACK_TITLE: 'CI/CD'
           SLACK_USERNAME: 'Github (wepublish)'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  e2eTest:
+    needs: release
+    name: Runs e2e Test on demo.wepublish.media
+    runs-on: self-hosted
+    container:
+      image: testcafe/testcafe
+      options: --user root
+    env:
+      E2E_TEST_EDITOR_URL: 'https://editor.demo.wepublish.media'
+      E2E_TEST_WEBSITE_URL: 'https://demo.wepublish.media'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Sleep for 60s
+        uses: juliangruber/sleep-action@v1
+        with:
+          time: 60s
+      - name: Run E2E tests
+        if: always()
+        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000

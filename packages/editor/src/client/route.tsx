@@ -8,7 +8,7 @@ import {
   fullPathForRoute,
   zeroOrMore,
   required
-} from '@karma.run/react'
+} from '@wepublish/karma.run-react'
 
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation, gql} from '@apollo/client'
@@ -270,7 +270,7 @@ export function RouteProvider({children}: RouteProviderProps) {
         }
 
         return () => {
-          /* do nothing */
+          /* do nothing more */
         }
       }}>
       {children}

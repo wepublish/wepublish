@@ -1,5 +1,6 @@
 import {Db} from 'mongodb'
-import {CollectionName} from './db/schema'
+import {CollectionName, DBUser} from './db/schema'
+import {PaymentProviderCustomer} from '@wepublish/api'
 
 export interface Migration {
   readonly version: number
@@ -592,6 +593,53 @@ export const Migrations: Migration[] = [
           $rename: {'address.street': 'address.streetAddress'}
         }
       )
+    }
+  },
+  {
+    //  Add emailVerifiedAt and oauth2Accounts to user model
+    version: 14,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          emailVerifiedAt: {$exists: false}
+        },
+        {$set: {emailVerifiedAt: null}}
+      )
+
+      await users.updateMany(
+        {
+          oauth2Accounts: {$exists: false}
+        },
+        {$set: {oauth2Accounts: []}}
+      )
+    }
+  },
+  {
+    //  Set paymentProviderCustomers to an empty array
+    version: 15,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+
+      const allUsers: DBUser[] = await users.find({}).toArray()
+
+      for (const user of allUsers) {
+        const paymentProvidersCustomersArray: PaymentProviderCustomer[] = []
+        const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
+        paymentProviderCustomers.forEach(ppc => {
+          // @ts-ignore
+          const userPPC = user.paymentProviderCustomers[ppc]
+          paymentProvidersCustomersArray.push({
+            paymentProviderID: ppc,
+            customerID: userPPC.id
+          })
+        })
+
+        await users.updateOne(
+          {_id: user._id},
+          {$set: {paymentProviderCustomers: paymentProvidersCustomersArray}}
+        )
+      }
     }
   }
 ]

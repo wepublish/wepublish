@@ -60,6 +60,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -98,6 +99,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
+  canonicalUrl?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -209,7 +211,16 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type BildwurfAdBlock = {
+  __typename?: 'BildwurfAdBlock';
+  zoneID: Scalars['String'];
+};
+
+export type BildwurfAdBlockInput = {
+  zoneID: Scalars['String'];
+};
+
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -226,6 +237,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
   polisConversation?: Maybe<PolisConversationBlockInput>;
+  bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
@@ -1244,18 +1256,24 @@ export type PeerProfile = {
   name: Scalars['String'];
   logo?: Maybe<Image>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImage?: Maybe<Image>;
 };
 
 export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImageID?: Maybe<Scalars['ID']>;
 };
 
 export type Permission = {
@@ -1295,6 +1313,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  remotePeerProfile?: Maybe<PeerProfile>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1321,6 +1340,7 @@ export type Query = {
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   pages: PageConnection;
+  pagePreviewLink?: Maybe<Scalars['String']>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
   paymentMethod?: Maybe<PaymentMethod>;
@@ -1330,6 +1350,12 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+};
+
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
 };
 
 
@@ -1480,6 +1506,12 @@ export type QueryPagesArgs = {
   skip?: Maybe<Scalars['Int']>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
 };
 
 
@@ -1691,6 +1723,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
   active: Scalars['Boolean'];
@@ -1735,6 +1768,7 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
   active: Scalars['Boolean'];
@@ -1859,7 +1893,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
@@ -2037,7 +2071,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -2089,6 +2123,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
+      ) | (
+        { __typename?: 'BildwurfAdBlock' }
+        & FullBlock_BildwurfAdBlock_Fragment
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
@@ -2403,6 +2440,11 @@ type FullBlock_PolisConversationBlock_Fragment = (
   & Pick<PolisConversationBlock, 'conversationID'>
 );
 
+type FullBlock_BildwurfAdBlock_Fragment = (
+  { __typename: 'BildwurfAdBlock' }
+  & Pick<BildwurfAdBlock, 'zoneID'>
+);
+
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
@@ -2442,7 +2484,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -2960,6 +3002,17 @@ export type DuplicatePageMutation = (
   ) }
 );
 
+export type PagePreviewLinkQueryVariables = Exact<{
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
+}>;
+
+
+export type PagePreviewLinkQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'pagePreviewLink'>
+);
+
 export type PageQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -3027,6 +3080,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
+      ) | (
+        { __typename?: 'BildwurfAdBlock' }
+        & FullBlock_BildwurfAdBlock_Fragment
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
@@ -3135,8 +3191,11 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, callToActionImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )> }
@@ -3145,6 +3204,10 @@ export type FullPeerProfileFragment = (
 export type PeerRefFragment = (
   { __typename?: 'Peer' }
   & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
+  & { profile?: Maybe<(
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  )> }
 );
 
 export type PeerWithProfileFragment = (
@@ -3165,6 +3228,20 @@ export type PeerProfileQuery = (
     { __typename?: 'PeerProfile' }
     & FullPeerProfileFragment
   ) }
+);
+
+export type RemotePeerProfileQueryVariables = Exact<{
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
+}>;
+
+
+export type RemotePeerProfileQuery = (
+  { __typename?: 'Query' }
+  & { remotePeerProfile?: Maybe<(
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  )> }
 );
 
 export type UpdatePeerProfileMutationVariables = Exact<{
@@ -3294,7 +3371,7 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
@@ -3625,7 +3702,25 @@ export const ArticleRefFragmentDoc = gql`
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerRefFragmentDoc = gql`
@@ -3634,20 +3729,11 @@ export const PeerRefFragmentDoc = gql`
   name
   slug
   hostURL
-}
-    `;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  logo {
-    ...ImageRef
+  profile {
+    ...FullPeerProfile
   }
-  callToActionText
-  callToActionURL
 }
-    ${ImageRefFragmentDoc}`;
+    ${FullPeerProfileFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
     fragment PeerWithProfile on Peer {
   ...PeerRef
@@ -3811,6 +3897,9 @@ export const FullBlockFragmentDoc = gql`
   ... on PolisConversationBlock {
     conversationID
   }
+  ... on BildwurfAdBlock {
+    zoneID
+  }
   ... on EmbedBlock {
     url
     title
@@ -3928,6 +4017,7 @@ export const FullUserFragmentDoc = gql`
     public
   }
   email
+  emailVerifiedAt
   roles {
     ...FullUserRole
   }
@@ -4416,6 +4506,7 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value
@@ -5743,6 +5834,40 @@ export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOption
 export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
 export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
 export type DuplicatePageMutationOptions = Apollo.BaseMutationOptions<DuplicatePageMutation, DuplicatePageMutationVariables>;
+export const PagePreviewLinkDocument = gql`
+    query PagePreviewLink($id: ID!, $hours: Int!) {
+  pagePreviewLink(id: $id, hours: $hours)
+}
+    `;
+
+/**
+ * __usePagePreviewLinkQuery__
+ *
+ * To run a query within a React component, call `usePagePreviewLinkQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePagePreviewLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePagePreviewLinkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      hours: // value for 'hours'
+ *   },
+ * });
+ */
+export function usePagePreviewLinkQuery(baseOptions: Apollo.QueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
+      }
+export function usePagePreviewLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>(PagePreviewLinkDocument, options);
+        }
+export type PagePreviewLinkQueryHookResult = ReturnType<typeof usePagePreviewLinkQuery>;
+export type PagePreviewLinkLazyQueryHookResult = ReturnType<typeof usePagePreviewLinkLazyQuery>;
+export type PagePreviewLinkQueryResult = Apollo.QueryResult<PagePreviewLinkQuery, PagePreviewLinkQueryVariables>;
 export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {
@@ -6048,6 +6173,42 @@ export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
 export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
 export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
+export const RemotePeerProfileDocument = gql`
+    query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
+
+/**
+ * __useRemotePeerProfileQuery__
+ *
+ * To run a query within a React component, call `useRemotePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemotePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemotePeerProfileQuery({
+ *   variables: {
+ *      hostURL: // value for 'hostURL'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+      }
+export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+        }
+export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
+export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;
+export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>;
 export const UpdatePeerProfileDocument = gql`
     mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {

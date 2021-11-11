@@ -1,16 +1,17 @@
 import React, {useState, useEffect} from 'react'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
-  PeerInfoEditRoute,
   RouteType,
   useRoute,
   useRouteDispatch,
   PeerListRoute,
   PeerCreateRoute,
   PeerEditRoute,
-  routeLink
+  routeLink,
+  PeerInfoEditRoute,
+  IconButtonLink
 } from '../route'
 
 import {
@@ -21,7 +22,8 @@ import {
   PeerListQuery
 } from '../api'
 
-import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
 import {useTranslation} from 'react-i18next'
@@ -38,11 +40,12 @@ import {
   Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {NavigationBar} from '../atoms/navigationBar'
+import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const ListItemLink = routeLink(List.Item)
-const IconButtonLink = routeLink(IconButton)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
@@ -131,17 +134,19 @@ export function PeerList() {
             </p>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-            <IconButton
-              disabled={isPeerInfoLoading}
-              icon={<Icon icon="trash" />}
-              circle
-              size="sm"
-              onClick={e => {
-                e.preventDefault()
-                setConfirmationDialogOpen(true)
-                setCurrentPeer(peer)
-              }}
-            />
+            <IconButtonTooltip caption={t('peerList.overview.delete')}>
+              <IconButton
+                disabled={isPeerInfoLoading}
+                icon={<Icon icon="trash" />}
+                circle
+                size="sm"
+                onClick={e => {
+                  e.preventDefault()
+                  setConfirmationDialogOpen(true)
+                  setCurrentPeer(peer)
+                }}
+              />
+            </IconButtonTooltip>
           </FlexboxGrid.Item>
         </FlexboxGrid>
       </ListItemLink>
@@ -150,25 +155,37 @@ export function PeerList() {
 
   return (
     <>
+      <h5>{t('peerList.overview.myPeerProfile')}</h5>
+      <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
+        <NavigationBar
+          centerChildren={
+            <div style={{textAlign: 'center'}}>
+              <Avatar
+                size="lg"
+                circle
+                style={{border: 'solid 2px #3498ff'}}
+                src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
+                alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
+              />
+              <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
+              <p>{peerInfoData?.peerProfile.hostURL}</p>
+            </div>
+          }
+          rightChildren={
+            <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
+              <IconButtonLink
+                size="lg"
+                appearance="link"
+                icon={<Icon icon="cog" />}
+                circle={true}
+                route={PeerInfoEditRoute.create({})}
+              />
+            </IconButtonTooltip>
+          }
+        />
+      </div>
+
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={2} style={{textAlign: 'center'}}>
-          <Avatar
-            circle={true}
-            src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
-            alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
-          />
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={21}>
-          <h5>{peerInfoData?.peerProfile.name || 'Unnamed'}</h5>
-          <p>{peerInfoData?.peerProfile.hostURL}</p>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={1}>
-          <IconButtonLink
-            icon={<Icon icon="cog" />}
-            circle={true}
-            route={PeerInfoEditRoute.create({})}
-          />
-        </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24}>
           <Divider />
         </FlexboxGrid.Item>
@@ -184,7 +201,6 @@ export function PeerList() {
           </ButtonLink>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-
       <div style={{marginTop: '20px'}}>
         {peerListData?.peers?.length ? (
           <List>{peers}</List>
@@ -196,20 +212,34 @@ export function PeerList() {
       <Drawer
         show={isPeerProfileEditModalOpen}
         size={'sm'}
-        onHide={() => setPeerProfileEditModalOpen(false)}>
+        onHide={() => {
+          setPeerProfileEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({}, current ?? undefined)
+          })
+        }}>
         <PeerInfoEditPanel
           onClose={() => {
             setPeerProfileEditModalOpen(false)
-
             dispatch({
               type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({})
+              route: PeerListRoute.create({}, current ?? undefined)
             })
           }}
         />
       </Drawer>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PeerListRoute.create({})
+          })
+        }}>
         {peerInfoData?.peerProfile.hostURL && (
           <PeerEditPanel
             id={editID}
@@ -246,7 +276,7 @@ export function PeerList() {
         <Modal.Body>
           <DescriptionList>
             <DescriptionListItem label={t('peerList.panels.name')}>
-              {currentPeer?.name || t('peerList.panels.Unknown')}
+              {currentPeer?.name || t('peerList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>

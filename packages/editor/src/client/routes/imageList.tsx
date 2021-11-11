@@ -13,7 +13,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {
   useImageListQuery,
@@ -23,6 +23,8 @@ import {
   ImageListDocument,
   FullImageFragment
 } from '../api'
+
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -70,9 +72,7 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      setImages(data.images.nodes)
+      setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>)
     }
   }, [data?.images])
 
@@ -134,25 +134,34 @@ export function ImageList() {
                     src={image.mediumURL || ''}
                     style={{height: '200', display: 'block', margin: '0 auto'}}
                   />
-                  <Overlay bottom={0} width="100%" maxHeight="50%" padding={10}>
+                  <Overlay
+                    style={{
+                      bottom: '0px',
+                      width: '100%',
+                      maxHeight: '60%',
+                      padding: '10px'
+                    }}>
                     <Typography variant="subtitle1" color="gray" ellipsize>
                       {`${image.filename || t('images.panels.untitled')}${image.extension}`}
                     </Typography>
                     <Typography variant="body2" color="white" ellipsize>
                       {image.title || t('images.panels.Untitled')}
                     </Typography>
+                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
                   </Overlay>
-                  <IconButton
-                    style={{position: 'absolute', top: '5px', right: '5px'}}
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    onClick={event => {
-                      event.preventDefault()
-                      setCurrentImage(image)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('images.overview.delete')}>
+                    <IconButton
+                      style={{position: 'absolute', top: '5px', right: '5px'}}
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      onClick={event => {
+                        event.preventDefault()
+                        setCurrentImage(image)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </Panel>
               </Link>
             </FlexboxGrid.Item>
@@ -250,7 +259,7 @@ export function ImageList() {
                   })
                 }
               })
-              setConfirmationDialogOpen(false);
+              setConfirmationDialogOpen(false)
             }}
             color="red">
             {t('images.panels.confirm')}

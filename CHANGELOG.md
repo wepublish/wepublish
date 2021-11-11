@@ -1,5 +1,180 @@
 # Change Log
 
+## v2.12.0 (2021-10-27)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#394](https://github.com/wepublish/wepublish/pull/394) fix preset buttons on date picker ([@penk85](https://github.com/penk85))
+
+#### Committers: 2
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+## v2.11.0 (2021-10-13)
+
+#### :heart: New Feature
+* `editor`
+  * [#375](https://github.com/wepublish/wepublish/pull/375) f/wpc-539-unpublish-pending-pages ([@lakeside763](https://github.com/lakeside763))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#374](https://github.com/wepublish/wepublish/pull/374) mapping metadata properties to get rid of __typename ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#381](https://github.com/wepublish/wepublish/pull/381) F/wpc 500 add hovering ([@camilleory](https://github.com/camilleory))
+* Other
+  * [#368](https://github.com/wepublish/wepublish/pull/368) f/wpc-526-theme-color-visible-on-website ([@camilleory](https://github.com/camilleory))
+* `api-db-mongodb`, `api`, `editor`
+  * [#376](https://github.com/wepublish/wepublish/pull/376) F/wpc 522 add font color to peered articles ([@camilleory](https://github.com/camilleory))
+* `api`, `editor`
+  * [#372](https://github.com/wepublish/wepublish/pull/372) peering between different versions ([@roosnic1](https://github.com/roosnic1))
+
+#### :house: Internal
+* Other
+  * [#384](https://github.com/wepublish/wepublish/pull/384) Wildcard certificate for feature branches ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#379](https://github.com/wepublish/wepublish/pull/379) chore(api): prettier cleanup ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#377](https://github.com/wepublish/wepublish/pull/377) make state colors of articles/pages consistent ([@penk85](https://github.com/penk85))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@lakeside763](https://github.com/lakeside763)
+
+
+## v2.10.0 (2021-09-29)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#370](https://github.com/wepublish/wepublish/pull/370) user and session improvements ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#346](https://github.com/wepublish/wepublish/pull/346) keyboard date input ([@penk85](https://github.com/penk85))
+* `editor`
+  * [#331](https://github.com/wepublish/wepublish/pull/331) image cta on website ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#369](https://github.com/wepublish/wepublish/pull/369) F/wpc 524 color picker peered articles color ([@camilleory](https://github.com/camilleory))
+  * [#348](https://github.com/wepublish/wepublish/pull/348) add my peer info page ([@HanaAyman](https://github.com/HanaAyman))
+  * [#365](https://github.com/wepublish/wepublish/pull/365) f/499-translation-rsuite-js ([@camilleory](https://github.com/camilleory))
+  * [#358](https://github.com/wepublish/wepublish/pull/358) F/wpc 482 format date with fns ([@camilleory](https://github.com/camilleory))
+  * [#351](https://github.com/wepublish/wepublish/pull/351) F/wpc-482-publication-date-without-seconds ([@camilleory](https://github.com/camilleory))
+  * [#332](https://github.com/wepublish/wepublish/pull/332) wpc-458-highlight-pending-articles-and-pages ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `api-db-mongodb`, `api`, `editor`
+  * [#337](https://github.com/wepublish/wepublish/pull/337) Get rid of @ts-ignore ([@gianantoniopini](https://github.com/gianantoniopini))
+
+#### Committers: 5
+- Camille ([@camilleory](https://github.com/camilleory))
+- Gianantonio Pini ([@gianantoniopini](https://github.com/gianantoniopini))
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+## v2.9.0 (2021-09-14)
+
+#### :nail_care: Polish
+* `editor`
+  * [#344](https://github.com/wepublish/wepublish/pull/344) make light teaser option use the original image ([@HanaAyman](https://github.com/HanaAyman))
+  * [#352](https://github.com/wepublish/wepublish/pull/352) Translations update from Weblate ([@wepublishweblate](https://github.com/wepublishweblate))
+  * [#345](https://github.com/wepublish/wepublish/pull/345) move authors position in the navigation  ([@HanaAyman](https://github.com/HanaAyman))
+  * [#338](https://github.com/wepublish/wepublish/pull/338) wpc-462-add-link-input ([@HanaAyman](https://github.com/HanaAyman))
+  * [#333](https://github.com/wepublish/wepublish/pull/333) wpc-459-add-image-description ([@HanaAyman](https://github.com/HanaAyman))
+* Other
+  * [#340](https://github.com/wepublish/wepublish/pull/340) Show comment characters length ([@HanaAyman](https://github.com/HanaAyman))
+  * [#339](https://github.com/wepublish/wepublish/pull/339) wpc-444-reply to comments only when logged in ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* [#350](https://github.com/wepublish/wepublish/pull/350) chore(deps): bump object-path from 0.11.5 to 0.11.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+
+
+## v2.8.0 (2021-09-14)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#290](https://github.com/wepublish/wepublish/pull/290) Use email-templates and pug to render mail templates ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#310](https://github.com/wepublish/wepublish/pull/310) Add image cta in peer profile ([@penk85](https://github.com/penk85))
+  * [#307](https://github.com/wepublish/wepublish/pull/307) added canonicalUrl field for article ([@bishoymelek](https://github.com/bishoymelek))
+* `api`, `editor`
+  * [#290](https://github.com/wepublish/wepublish/pull/290) Use email-templates and pug to render mail templates ([@roosnic1](https://github.com/roosnic1))
+  * [#305](https://github.com/wepublish/wepublish/pull/305) Preview links for pages ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#301](https://github.com/wepublish/wepublish/pull/301) add default peering ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#302](https://github.com/wepublish/wepublish/pull/302) wpc-435-fix image dropdown menu ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `editor`
+  * [#326](https://github.com/wepublish/wepublish/pull/326) wpc-461-add-frame-around-author-bio-info ([@HanaAyman](https://github.com/HanaAyman))
+  * [#329](https://github.com/wepublish/wepublish/pull/329) wpc-460 add frame around description in member plan panel  ([@HanaAyman](https://github.com/HanaAyman))
+  * [#330](https://github.com/wepublish/wepublish/pull/330) wpc-453-make-articles-highlighted ([@HanaAyman](https://github.com/HanaAyman))
+  * [#327](https://github.com/wepublish/wepublish/pull/327) Translations update from Weblate ([@wepublishweblate](https://github.com/wepublishweblate))
+  * [#325](https://github.com/wepublish/wepublish/pull/325) wpc-457-reset-password-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#323](https://github.com/wepublish/wepublish/pull/323) wpc-455-image-library-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#324](https://github.com/wepublish/wepublish/pull/324) wpc-456-payment-methods-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#322](https://github.com/wepublish/wepublish/pull/322) WPC-454 Change pages icon  ([@HanaAyman](https://github.com/HanaAyman))
+  * [#312](https://github.com/wepublish/wepublish/pull/312) Updated translations from Phrase ([@roosnic1](https://github.com/roosnic1))
+
+#### :memo: Documentation
+* [#268](https://github.com/wepublish/wepublish/pull/268) F/wpc 331 docs ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :house: Internal
+* `api`
+  * [#309](https://github.com/wepublish/wepublish/pull/309) wpc-211-comment-length-validation ([@HanaAyman](https://github.com/HanaAyman))
+* `editor`
+  * [#313](https://github.com/wepublish/wepublish/pull/313) Update react to v17 ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
+## v2.7.0 (2021-08-03)
+
+#### :bug: Bug Fix
+* [#295](https://github.com/wepublish/wepublish/pull/295) Handle URLs inside a peer article ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :nail_care: Polish
+* `editor`
+  * [#296](https://github.com/wepublish/wepublish/pull/296) Use JS SDK instead of iframe  ([@roosnic1](https://github.com/roosnic1))
+  * [#294](https://github.com/wepublish/wepublish/pull/294) Add properties tab to metadata ([@penk85](https://github.com/penk85))
+  * [#291](https://github.com/wepublish/wepublish/pull/291) b/wpc-423-ui-fixes ([@HanaAyman](https://github.com/HanaAyman))
+  * [#283](https://github.com/wepublish/wepublish/pull/283) F/wpc 165 article status indicator ([@penk85](https://github.com/penk85))
+
+#### :house: Internal
+* `editor`
+  * [#296](https://github.com/wepublish/wepublish/pull/296) Use JS SDK instead of iframe  ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`, `oauth2`
+  * [#293](https://github.com/wepublish/wepublish/pull/293) remove unused deps ([@HanaAyman](https://github.com/HanaAyman))
+
+#### Committers: 4
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.6.0 (2021-06-23)
 
 #### :boom: Breaking Change

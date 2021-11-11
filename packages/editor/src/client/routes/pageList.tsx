@@ -13,11 +13,24 @@ import {
   PageSort
 } from '../api'
 
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  Table,
+  IconButton,
+  Modal,
+  Button,
+  Message
+} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -46,6 +59,7 @@ export function PageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
@@ -138,13 +152,13 @@ export function PageList() {
             <Cell dataKey="published">
               {(pageRef: PageRefFragment) =>
                 pageRef.published?.publishedAt
-                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
-                      pageRef.published.publishedAt
-                    ).toLocaleTimeString()}`
+                  ? t('pageEditor.overview.publishedAt', {
+                      publicationDate: new Date(pageRef.published.publishedAt)
+                    })
                   : pageRef.pending?.publishAt
-                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
-                      pageRef.pending.publishAt
-                    ).toLocaleTimeString()}`
+                  ? t('pageEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                    })
                   : t('pages.overview.notPublished')
               }
             </Cell>
@@ -153,9 +167,9 @@ export function PageList() {
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>
-                `${new Date(modifiedAt).toDateString()} ${new Date(
-                  modifiedAt
-                ).toLocaleTimeString()}`
+                t('pageEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
               }
             </Cell>
           </Column>
@@ -179,49 +193,85 @@ export function PageList() {
                 if (rowData.pending) states.push(t('pages.overview.pending'))
                 if (rowData.published) states.push(t('pages.overview.published'))
 
-                return <div>{states.join(' / ')}</div>
+                return (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      borderRadius: '15px',
+                      backgroundColor: rowData.pending
+                        ? StateColor.pending
+                        : rowData.published
+                        ? StateColor.published
+                        : rowData.draft
+                        ? StateColor.draft
+                        : StateColor.none
+                    }}>
+                    {states.join(' / ')}
+                  </div>
+                )
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  {rowData.published && (
+                  {(rowData.published || rowData.pending) && (
+                    <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        onClick={e => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  )}
+                  <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="btn-off" />}
+                      icon={<Icon icon="trash" />}
                       circle
                       size="sm"
-                      onClick={e => {
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
                         setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmAction(ConfirmAction.Delete)
                         setConfirmationDialogOpen(true)
                       }}
                     />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
+                    <IconButton
+                      icon={<Icon icon="copy" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Duplicate)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+
+                  {rowData.draft && (
+                    <IconButtonTooltip caption={t('pageEditor.overview.publish')}>
+                      <IconButton
+                        icon={<Icon icon="eye" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setPagePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
                   )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
                 </>
               )}
             </Cell>
@@ -238,6 +288,15 @@ export function PageList() {
           onChangeLength={limit => setLimit(limit)}
         />
       </div>
+
+      <Modal show={isPagePreviewLinkOpen} width={'sm'} onHide={() => setPagePreviewLinkOpen(false)}>
+        {currentPage && (
+          <PagePreviewLinkPanel
+            props={{id: currentPage.id}}
+            onClose={() => setPagePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
 
       <Modal
         show={isConfirmationDialogOpen}
@@ -266,21 +325,33 @@ export function PageList() {
             )}
 
             <DescriptionListItem label={t('pages.panels.createdAt')}>
-              {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
+              {currentPage?.createdAt &&
+                t('pages.panels.createdAtDate', {createdAtDate: new Date(currentPage.createdAt)})}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
               {currentPage?.latest.updatedAt &&
-                new Date(currentPage.latest.updatedAt).toLocaleString()}
+                t('pages.panels.updatedAtDate', {
+                  updatedAtDate: new Date(currentPage.latest.updatedAt)
+                })}
             </DescriptionListItem>
 
             {currentPage?.latest.publishedAt && (
               <DescriptionListItem label={t('pages.panels.publishedAt')}>
                 {currentPage?.latest.publishedAt &&
-                  new Date(currentPage.createdAt).toLocaleString()}
+                  t('pages.panels.publishedAtDate', {
+                    publishedAtDate: new Date(currentPage.latest.publishedAt)
+                  })}
               </DescriptionListItem>
             )}
           </DescriptionList>
+
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+            description={t('articleEditor.overview.unpublishWarningMessage')}
+          />
         </Modal.Body>
 
         <Modal.Footer>

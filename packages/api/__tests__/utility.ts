@@ -45,6 +45,10 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
 
+  getPagePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/page/preview/${token}`
+  }
+
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
     if (comment.itemType === CommentItemType.Article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
@@ -69,6 +73,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       adminUser = await adapter.user.createUser({
         input: {
           email: 'dev@wepublish.ch',
+          emailVerifiedAt: new Date(),
           name: 'Dev User',
           roleIDs: [adminUserRoleId],
           active: true,
@@ -117,6 +122,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []
@@ -134,6 +144,11 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         websiteURL: 'https://fakeurl',
         dbAdapter,
         mediaAdapter,
+        mailContextOptions: {
+          defaultFromAddress: 'dev@fake.org',
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
+        },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
         paymentProviders: []
