@@ -98,7 +98,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           logoID: logoImage?.id,
           themeColor,
           themeFontColor,
-          callToActionText: callToActionText,
+          callToActionText,
           callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImage?.id,
           callToActionImageURL
