@@ -970,6 +970,10 @@ async function applyEditor() {
                 {
                   name: 'PEER_BY_DEFAULT',
                   value: 'true'
+                },
+                {
+                  name: 'IMG_MIN_SIZE_TO_RESIZE',
+                  value: 'true'
                 }
               ],
               ports: [

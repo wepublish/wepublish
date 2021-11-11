@@ -27,7 +27,7 @@ import {
   Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import Compress from 'compress.js'
+import Compress from 'client-compress'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -208,17 +208,17 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     if (!originalFileName) {
       throw new Error('No file name provided!')
     }
-    const resizedImage = await new Compress().compress([file], {
-      size: 10, // the max size in MB, defaults to 2MB
+    const options = {
+      targetSize: 10, // the max size in MB, defaults to 2MB
       quality: 1, // the quality of the image, max is 1,
       resize: false // defaults to true, set false if you do not want to resize the image width and height
-    })
-    const img = resizedImage[0]
-    const base64str = img.data
-    const imgExt = img.ext
-    const blob: Blob = Compress.convertBase64ToFile(base64str, imgExt)
+    }
+    const compressor = new Compress(options)
+    const conversions = await compressor.compress([file])
+    const {photo} = conversions[0]
+    const imgBlob: Blob = photo.data
     // convert blob to file
-    return new File([blob], originalFileName, {type: blob.type})
+    return new File([imgBlob], originalFileName, {type: photo.type})
   }
 
   /**
@@ -227,8 +227,10 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
    * @param file
    */
   function willImageResize(file: File) {
-    const originalFileSize: number = file.size / (1000 * 1000)
-    if (originalFileSize > 10) {
+    const originalFileSize: number = file.size / (1024 * 1024)
+    const envMinSize: string | undefined = process.env.IMG_MIN_SIZE_TO_RESIZE
+    const imgMinSizeToResize: number = envMinSize ? parseInt(envMinSize) : 10
+    if (originalFileSize > imgMinSizeToResize) {
       return true
     }
     return false
