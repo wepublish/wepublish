@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useReducer, useState} from 'react'
 import GridLayout from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -29,7 +29,7 @@ import {
 } from './types'
 import {BlockProps} from '../atoms/blockList'
 import nanoid from 'nanoid'
-import {Drawer, Icon, IconButton, Panel} from 'rsuite'
+import {ButtonToolbar, Drawer, Icon, IconButton, Panel} from 'rsuite'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {contentForTeaser, TeaserBlockProps} from './teaserGridBlock'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -157,9 +157,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
     // const changedLayout = alignment.map(({i, x, y, w, h}) => ({i, x, y, w, h}))
+
     const newFlexTeasers = alignment.map(v => {
       return {
-        teaser: teasers.find(({layoutID}) => v.i === layoutID)?.teaser ?? null,
+        teaser: flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i)?.teaser ?? null,
         alignment: v
       }
     })
@@ -171,14 +172,13 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     const newTeaser: FlexTeaser = {
       alignment: {
         i: nanoid(),
-        x: 1,
-        y: Infinity, // puts it at the bottom
+        x: 0,
+        y: 0,
         w: 4,
         h: 4
       },
       teaser: null
     }
-
     setFlexTeasers(flexTeasers => [...flexTeasers, newTeaser])
   }
 
@@ -222,8 +222,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         className="layout"
         // onDragStart={handleSortStart}
         // onDragStop={() => handleSortEnd}
-        onLayoutChange={() => handleLayoutChange}
-        layout={layout}
+        layout={flexTeasers.map(value => value.alignment)}
+        onLayoutChange={layout => handleLayoutChange(layout)}
         cols={12}
         rowHeight={30}
         width={1200}>
@@ -242,16 +242,20 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               }}
               onRemove={() => console.log('remove')}
             />
-            <IconButton
-              style={{top: 0, position: 'absolute'}}
-              icon={<Icon icon="trash" />}
-              onClick={() => handleRemoveTeaser(flexTeaser.alignment.i)}
-            />
-            <IconButton
-              style={{top: 0, right: 0, position: 'absolute'}}
-              icon={<Icon icon="thumb-tack" />}
-              onClick={() => console.log('pinned')}
-            />
+            <ButtonToolbar style={{top: 0, position: 'absolute'}}>
+              <IconButton
+                block
+                appearance="subtle"
+                icon={<Icon icon="trash" />}
+                onClick={() => handleRemoveTeaser(flexTeaser.alignment.i)}
+              />
+              <IconButton
+                block
+                appearance="subtle"
+                icon={<Icon icon="thumb-tack" />}
+                onClick={() => console.log('pinned')}
+              />
+            </ButtonToolbar>
           </div>
         ))}
       </GridLayout>
