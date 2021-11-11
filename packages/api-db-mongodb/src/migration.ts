@@ -659,8 +659,7 @@ export const Migrations: Migration[] = [
             $set: {
               callToActionText: richTextToString('', peerProfile?.callToActionText)
             }
-          },
-          {upsert: false}
+          }
         )
       }
     }
