@@ -33,8 +33,8 @@ export interface EditableImageComponents {
   readonly description?: string
   readonly tags: string[]
 
-  readonly author?: string
   readonly source?: string
+  readonly link?: string
   readonly license?: string
 
   readonly focalPoint?: FocalPoint

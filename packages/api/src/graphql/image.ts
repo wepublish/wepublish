@@ -76,6 +76,7 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
 
     source: {type: GraphQLString},
+    link: {type: GraphQLString},
     author: {type: GraphQLString},
     license: {type: GraphQLString},
 
@@ -93,6 +94,7 @@ export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
 
     source: {type: GraphQLString},
+    link: {type: GraphQLString},
     author: {type: GraphQLString},
     license: {type: GraphQLString},
 
@@ -130,7 +132,7 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     source: {type: GraphQLString},
-    author: {type: GraphQLString},
+    link: {type: GraphQLString},
     license: {type: GraphQLString},
 
     fileSize: {type: GraphQLNonNull(GraphQLInt)},

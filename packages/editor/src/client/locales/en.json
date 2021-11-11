@@ -391,7 +391,6 @@
       "panels": {
         "addTag": "Press enter to add tag",
         "attribution": "Attribution",
-        "author": "Source",
         "cancel": "Cancel",
         "chooseIMage": "Choose image",
         "close": "Close",
@@ -411,7 +410,7 @@
         "link": "Link",
         "notFound": "Image not found!",
         "save": "Save",
-        "source": "Link",
+        "source": "Source",
         "sourceLink": "Link to original source of the image.",
         "tags": "Tags",
         "title": "Title",

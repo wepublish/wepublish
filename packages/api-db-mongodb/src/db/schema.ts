@@ -207,8 +207,8 @@ export interface DBImage {
   description?: string
   tags: string[]
 
-  author?: string
   source?: string
+  link?: string
   license?: string
 
   focalPoint?: FocalPoint

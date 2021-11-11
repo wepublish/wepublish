@@ -35,7 +35,7 @@ fragment FullImage on Image {
   description
   tags
 
-  author
+  link
   source
   license
 

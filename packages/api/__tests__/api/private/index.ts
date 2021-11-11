@@ -408,6 +408,7 @@ export type Image = {
   description?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   source?: Maybe<Scalars['String']>
+  link?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   fileSize: Scalars['Int']
@@ -1603,6 +1604,7 @@ export type UpdateImageInput = {
   description?: Maybe<Scalars['String']>
   tags?: Maybe<Array<Scalars['String']>>
   source?: Maybe<Scalars['String']>
+  link?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   focalPoint?: Maybe<InputPoint>
@@ -1622,6 +1624,7 @@ export type UploadImageInput = {
   description?: Maybe<Scalars['String']>
   tags?: Maybe<Array<Scalars['String']>>
   source?: Maybe<Scalars['String']>
+  link?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
   focalPoint?: Maybe<InputPoint>
@@ -2193,6 +2196,7 @@ export type FullImageFragment = {__typename?: 'Image'} & Pick<
   | 'tags'
   | 'author'
   | 'source'
+  | 'link'
   | 'license'
 > & {focalPoint?: Maybe<{__typename?: 'Point'} & Pick<Point, 'x' | 'y'>>} & ImageRefFragment
 
@@ -2778,8 +2782,8 @@ export const FullImage = gql`
     fileSize
     description
     tags
-    author
     source
+    link
     license
     focalPoint {
       x
