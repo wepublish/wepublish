@@ -53,7 +53,7 @@ async function asyncMain() {
             dangerouslySetInnerHTML={{__html: JSON.stringify(clientSettings)}}
           />
 
-          <script async src={`${assetHost}/${entry}`} crossOrigin="" />
+          <script async src={`${assetHost}/${entry}`} />
         </head>
         <body>
           <noscript>Please enable JavaScript!</noscript>

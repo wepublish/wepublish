@@ -1,19 +1,11 @@
 const fs = require('fs')
 const {spawn, exec} = require('child_process')
+const {slugify} = require('./utilities')
+
 try {
   require('dotenv').config()
 } catch (e) {}
 
-function slugify(text, separator = "-") {
-  return text
-    .toString()
-    .normalize('NFD')                   // split an accented letter in the base letter and the acent
-    .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
-    .replace(/\s+/g, separator);
-}
 
 const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
 
