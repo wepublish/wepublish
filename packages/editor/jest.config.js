@@ -10,9 +10,6 @@ module.exports = {
     }
   },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
-  transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(react-native|my-project|react-native-button)/)'
-  ],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,

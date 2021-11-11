@@ -962,7 +962,7 @@ async function applyEditor() {
                 {
                   name: 'PEER_BY_DEFAULT',
                   value: 'true'
-                },
+                }
               ],
               ports: [
                 {
