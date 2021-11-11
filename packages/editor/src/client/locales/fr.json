@@ -17,7 +17,14 @@
         "published": "Article publié le {{date, ccc PP p}}.",
         "save": "Sauvegarder",
         "publishedAt": "{{publicationDate, ccc PP p}}",
-        "modifiedAt": "{{modificationDate, ccc PP pp}}"
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "warningLabel": "Attention",
+        "unpublishWarningMessage": "Si vous confirmez, vous dépublierez tout état publié et/ou en cours de publication",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
+        "unpublish": "Dépublier",
+        "duplicate": "Dupliquer",
+        "delete": "Supprimer",
+        "articlePending": "Article prévu"
       },
       "panels": {
         "addTag": "Appuyez Entrée pour ajouter une tag",
@@ -157,7 +164,8 @@
         "title": "Titre",
         "unpublish": "Dépublier",
         "unpublishArticle": "Dépublier l'article?",
-        "untitled": "Sans titre"
+        "untitled": "Sans titre",
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
     "comments": {
@@ -173,7 +181,10 @@
         "search": "Recherche",
         "text": "Texte",
         "title": "Titre",
-        "userName": "Nom de l'utilisateur/utilisatrices"
+        "userName": "Nom de l'utilisateur/utilisatrices",
+        "requestChange": "Demande de changement",
+        "reject": "Rejeter",
+        "approve": "Approuver"
       },
       "panels": {
         "userName": "Nom d'utilisateur/utilisatrices",
@@ -198,7 +209,9 @@
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Révisions",
         "untitled": "Sans titre",
-        "updatedAt": "Mis à jour le"
+        "updatedAt": "Mis à jour le",
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}"
       },
       "state": {
         "approved": "Approuvé",
@@ -280,12 +293,20 @@
         "URL": "URL",
         "validateToken": "Veuillez confirmer que le token est correct avant de sauvegarder",
         "callToActionImage": "Image d'appel à l'action (CTA)",
-        "text": "Texte"
+        "text": "Texte",
+        "logo": "Logo",
+        "ctaImageInfo": "Taille recommandée de l'image d'appel à l'action : 728x90",
+        "callToActionImageURL": "URL de l'image d'appel à l'action"
       },
       "overview": {
         "newPeer": "Nouveau Peer",
         "noPeersFound": "Aucun peer trouvé",
-        "peers": "Peers"
+        "peers": "Peers",
+        "validURLTooltip": "URL valide",
+        "invalidURLTooltip": "URL non valide",
+        "myPeerProfile": "Mon profil pair",
+        "editProfile": "Modifier le profil",
+        "delete": "Supprimer"
       }
     },
     "dateTimePicker": {
@@ -293,7 +314,8 @@
       "today": "Aujourd'hui",
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "nextMonday": "Lundi prochain"
     },
     "paymentMethodList": {
       "createTitle": "Créer une méthode de paiement",
@@ -306,7 +328,8 @@
       "description": "Description",
       "editTitle": "Modifier la méthode de paiement",
       "name": "Nom",
-      "title": "Méthodes de paiement"
+      "title": "Méthodes de paiement",
+      "delete": "Supprimer"
     },
     "images": {
       "panels": {
@@ -338,14 +361,17 @@
         "untitled": "sans titre",
         "Untitled": "Sans titre",
         "upload": "Télécharger",
-        "uploadImage": "Télécharger une image"
+        "uploadImage": "Télécharger une image",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "createdAt": "{{createdAt, ccc PP p}}"
       },
       "overview": {
         "imageLibrary": "Bibliothèque d'images",
         "loadMore": "Charger plus",
         "noImagesFound": "Aucune image trouvée",
         "search": "Recherche",
-        "uploadImage": "Télécharger une image"
+        "uploadImage": "Télécharger une image",
+        "delete": "Supprimer"
       }
     },
     "tokenList": {
@@ -469,7 +495,8 @@
         "name": "Nom",
         "noAuthorsFound": "Aucun auteur/autrice trouvé",
         "search": "Recherche",
-        "unknown": "Inconnu"
+        "unknown": "Inconnu",
+        "createdAt": "{{createdAt, ccc PP p}}"
       },
       "panels": {
         "chooseImage": "Choisir une image",
@@ -659,7 +686,8 @@
         "YEARLY": "Annuel"
       },
       "priceRange": "Prix (fourchette) en CHF",
-      "title": "Plans membres"
+      "title": "Plans membres",
+      "delete": "Supprimer"
     },
     "userSubscriptionEdit": {
       "memberPlanMonthlyAmount": "Montant mensuel (CHF)",
@@ -698,7 +726,9 @@
       "tokens": "Tokens",
       "userRoles": "Rôles de l'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur/Utilisatrices et membres"
+      "usersAndMembers": "Utilisateur/Utilisatrices et membres",
+      "myPeerInfo": "Mon profil pair",
+      "peers": "Peers"
     },
     "navigation": {
       "overview": {
@@ -729,7 +759,8 @@
         "save": "Sauvegarder",
         "selectArticle": "Sélectionner l'article",
         "selectPage": "Sélectionner la page",
-        "url": "URL"
+        "url": "URL",
+        "createdAt": "{{testDate}} bonjour"
       }
     },
     "pageEditor": {
@@ -749,7 +780,11 @@
         "save": "Sauvegarder",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
-        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
+        "unpublish": "Dépublier",
+        "pagePending": "Page en cours",
+        "duplicate": "Dupliquer",
+        "delete": "Supprimer"
       },
       "panels": {
         "confirm": "Confirmer",
@@ -782,7 +817,9 @@
         "title": "Titre de référencement (SEO)",
         "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement (SEO)",
         "updateDate": "Date de mise à jour",
-        "value": "Valeur"
+        "value": "Valeur",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
+        "createdAt": "{{createdAt, ccc PP p}}"
       }
     },
     "chooseEditImage": {

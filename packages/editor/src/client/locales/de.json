@@ -17,7 +17,14 @@
         "save": "Speichern",
         "unpublished": "Nicht publiziert",
         "publishedAt": "{{publicationDate, ccc PP p}}",
-        "modifiedAt": "{{modificationDate, ccc PP pp}}"
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
+        "warningLabel": "Warnung",
+        "unpublishWarningMessage": "Bei Bestätigung wird bei allen publizierten und geplanten Artikel die Publikation widerrufen",
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
+        "unpublish": "Publikation widerrufen",
+        "duplicate": "Duplizieren",
+        "delete": "Löschen",
+        "articlePending": "Artikel geplant"
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
@@ -175,7 +182,8 @@
         "noAuthorsFound": "Kein*e Autor*in gefunden",
         "search": "Suchen",
         "unknown": "Unbekannt",
-        "action": "Aktion"
+        "action": "Aktion",
+        "createdAt": "{{createdAt, ccc PP p}}"
       },
       "panels": {
         "bioInformation": "Biographie",
@@ -322,7 +330,10 @@
         "untitled": "Ohne Titel",
         "updated": "Bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "userName": "User Name"
+        "userName": "User Name",
+        "requestChange": "Änderung verlangen",
+        "reject": "Ablehnen",
+        "approve": "Freigeben"
       },
       "panels": {
         "approve": "Annehmen",
@@ -347,7 +358,9 @@
         "updatedAt": "Aktualisiert am",
         "userName": "User Name",
         "parent": "Elter",
-        "parentDate": "{{parentDate,ccc PP p}}"
+        "parentDate": "{{parentDate,ccc PP p}}",
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}"
       },
       "state": {
         "approved": "Angenommen",
@@ -363,7 +376,8 @@
       "nextSaturday": "Nächster Samstag",
       "now": "Jetzt",
       "today": "Heute",
-      "tomorrow": "Morgen"
+      "tomorrow": "Morgen",
+      "nextMonday": "Nächsten Montag"
     },
     "images": {
       "overview": {
@@ -371,7 +385,8 @@
         "loadMore": "Mehr laden",
         "noImagesFound": "Keine Bilder gefunden",
         "search": "Suchen",
-        "uploadImage": "Bild hochladen"
+        "uploadImage": "Bild hochladen",
+        "delete": "Löschen"
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
@@ -402,7 +417,9 @@
         "updated": "Updated",
         "upload": "Hochladen",
         "uploadImage": "Bild hochladen",
-        "attribution": "Attribut"
+        "attribution": "Attribut",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "createdAt": "{{createdAt, ccc PP p}}"
       }
     },
     "linkPageBreakEditPanel": {
@@ -475,7 +492,8 @@
       "priceRange": "Preis-(spanne) in CHF",
       "title": "Memberpläne",
       "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
-      "minimumMonthlyAmount": "Minimaler monatlicher Betrag in Rappen (CHF)"
+      "minimumMonthlyAmount": "Minimaler monatlicher Betrag in Rappen (CHF)",
+      "delete": "Löschen"
     },
     "navbar": {
       "articles": "Artikel",
@@ -496,7 +514,9 @@
       "userRoles": "Userrollen",
       "users": "User",
       "usersAndMembers": "User & Member",
-      "tokens": "Tokens"
+      "tokens": "Tokens",
+      "myPeerInfo": "Meine Peer Infos",
+      "peers": "Peers"
     },
     "navigation": {
       "overview": {
@@ -527,7 +547,8 @@
         "save": "Speichern",
         "selectArticle": "Artikel auswählen",
         "selectPage": "Seite auswählen",
-        "url": "URL"
+        "url": "URL",
+        "createdAt": "{{testDate}} hallo"
       }
     },
     "pageEditor": {
@@ -547,7 +568,11 @@
         "pagePublished": "Seite publiziert",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
-        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
+        "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
+        "unpublish": "Publikation widerrufen",
+        "pagePending": "Seite geplant",
+        "duplicate": "Duplizieren",
+        "delete": "Löschen"
       },
       "panels": {
         "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -580,7 +605,9 @@
         "value": "Wert",
         "publishPage": "Seite publizieren",
         "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese. "
+        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese. ",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
+        "createdAt": "{{createdAt, ccc PP p}}"
       }
     },
     "pages": {
@@ -633,13 +660,19 @@
       "editTitle": "Zahlungsmethode bearbeiten",
       "name": "Name",
       "title": "Zahlungsmethoden",
-      "active": "Aktiv"
+      "active": "Aktiv",
+      "delete": "Löschen"
     },
     "peerList": {
       "overview": {
         "newPeer": "Neuer Peer",
         "noPeersFound": "Keine Peers gefunden",
-        "peers": "Peers"
+        "peers": "Peers",
+        "validURLTooltip": "Gültige URL",
+        "invalidURLTooltip": "Ungültige URL",
+        "myPeerProfile": "Mein Peer Profil",
+        "editProfile": "Profil bearbeiten",
+        "delete": "Löschen"
       },
       "panels": {
         "callToAction": "Call to Action",
@@ -673,7 +706,14 @@
         "URL": "URL",
         "validateToken": "Bitte vor dem Speichern bestätigen, dass das Token korrekt ist",
         "text": "Text",
-        "callToActionImage": "Call To Action Bild"
+        "callToActionImage": "Call To Action Bild",
+        "leaveEmpty": "Leer lassen, falls keine Änderungen erwünscht",
+        "unnamed": "Unbenannt",
+        "unknown": "Unbekannt",
+        "getRemote": "Peer Profil abrufen",
+        "logo": "Logo",
+        "ctaImageInfo": "Empfohlene Call To Action Bildgrösse 728x90",
+        "callToActionImageURL": "Call To Action Bild URL"
       }
     },
     "save": "Speichern",
@@ -681,7 +721,8 @@
       "overview": {
         "generateToken": "Token generieren",
         "loading": "laden...",
-        "tokens": "Tokens"
+        "tokens": "Tokens",
+        "delete": "Löschen"
       },
       "panels": {
         "cancel": "Abbrechen",
