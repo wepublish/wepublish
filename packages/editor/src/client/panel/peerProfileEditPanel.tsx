@@ -173,7 +173,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   placeholder={t('peerList.panels.text')}
                   name="callToActionText"
                   value={callToActionText}
-                  onChange={text => setCallToActionText(text)}
+                  onChange={setCallToActionText}
                 />
               </FormGroup>
               <FormGroup>
