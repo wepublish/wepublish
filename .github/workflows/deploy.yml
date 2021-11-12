@@ -61,6 +61,6 @@ jobs:
         uses: juliangruber/sleep-action@v1
         with:
           time: 60s
-      - name: Run E2E tests
+      - name: Run E2E tests (wuuu)
         if: always()
         run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
