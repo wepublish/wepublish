@@ -243,7 +243,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userList.panels.authors')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.author')}</ControlLabel>
               <SelectPicker
                 size="md"
                 block={true}
