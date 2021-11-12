@@ -1533,7 +1533,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
-                                    userList.panels.authors
+                                    userList.panels.author
                                   </label>
                                 </ControlLabel>
                               </defaultProps(ControlLabel)>
@@ -4758,7 +4758,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
-                                    userList.panels.authors
+                                    userList.panels.author
                                   </label>
                                 </ControlLabel>
                               </defaultProps(ControlLabel)>
@@ -8043,7 +8043,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
-                                    userList.panels.authors
+                                    userList.panels.author
                                   </label>
                                 </ControlLabel>
                               </defaultProps(ControlLabel)>
@@ -10329,7 +10329,7 @@ exports[`User Edit Panel should render 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
-                                    userList.panels.authors
+                                    userList.panels.author
                                   </label>
                                 </ControlLabel>
                               </defaultProps(ControlLabel)>
@@ -12320,7 +12320,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
-                                    userList.panels.authors
+                                    userList.panels.author
                                   </label>
                                 </ControlLabel>
                               </defaultProps(ControlLabel)>
