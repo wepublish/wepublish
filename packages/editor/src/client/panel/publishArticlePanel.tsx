@@ -26,7 +26,9 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
+  const [publishDate, setPublishDate] = useState<Date | undefined>(
+    pendingPublishDate ?? initialPublishDate ?? now
+  )
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
   const {t} = useTranslation()
@@ -47,7 +49,7 @@ export function PublishArticlePanel({
           />
         )}
         <DateTimePicker
-          dateTime={pendingPublishDate ?? publishDate}
+          dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
           changeDate={date => setPublishDate(date)}
         />
