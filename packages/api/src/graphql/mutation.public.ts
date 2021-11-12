@@ -26,7 +26,8 @@ import {
   NotAuthorisedError as NotAuthorizedError,
   NotAuthenticatedError,
   UserInputError,
-  CommentLengthError
+  CommentLengthError,
+  UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -46,7 +47,6 @@ import {
 import {CommentAuthorType, CommentState} from '../db/comment'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
 import {SendMailType} from '../mails/mailContext'
-import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -422,32 +422,32 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
     cancelUserSubscription: {
       type: GraphQLPublicUserSubscription,
-      args: {
-        date: {type: GraphQLDateTime}
-      },
+      args: {},
       description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
-      async resolve(root, {date}, {authenticateUser, dbAdapter, loaders}) {
+        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
+      async resolve(root, {}, {authenticateUser, dbAdapter, loaders}) {
         const {user} = authenticateUser()
 
-        if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
+        if (!user.subscription) throw new NotFound('user.subscription', user.id)
+        if (user.subscription.deactivatedAt !== null)
+          throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivatedAt)
 
-        if (date && user.subscription.paidUntil !== null && user.subscription.paidUntil < date) {
-          throw new Error('Cancellation date can not be later then paid until date')
-        }
-
-        if ((date && date < new Date()) || !date) date = new Date()
-
+        // TODO: active subscription, user needs to be able to reactivate membership from current date,
+        // TODO: paidUntil + 1month easily restart after that subscription is inactive. user can login but needs to restart subscription.
+        const now = new Date()
+        const deactivationDate =
+          user.subscription.paidUntil !== null && user.subscription.paidUntil > now
+            ? user.subscription.paidUntil
+            : now
         const updateSubscription = await dbAdapter.user.updateUserSubscription({
           userID: user.id,
           input: {
             ...user.subscription,
-            deactivatedAt: date
+            deactivatedAt: deactivationDate
           }
         })
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
-
         return updateSubscription
       }
     },
