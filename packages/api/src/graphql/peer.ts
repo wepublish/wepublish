@@ -11,7 +11,7 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {createProxyingResolver, delegateToPeerSchema} from '../utility'
+import {createProxyingResolver, delegateToPeerSchema, richTextToString} from '../utility'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -48,7 +48,15 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLNonNull(GraphQLString)},
+    callToActionText: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: ({callToActionText}) => {
+        // this check is needed because callToActionText used to be a richText field
+        return Array.isArray(callToActionText)
+          ? richTextToString('', callToActionText)
+          : callToActionText
+      }
+    },
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
     callToActionImage: {

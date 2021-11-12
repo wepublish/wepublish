@@ -161,6 +161,16 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
   }, blocksCharLength)
 }
 
+export function richTextToString(blocksString: string, nodes: any = []) {
+  return nodes.reduce((string: string, node: any) => {
+    if (!node.text && !node.children) return string
+    if (node.text) {
+      return string === '' ? `${node.text}` : `${string}${node.text}`
+    }
+    return richTextToString(string, node.children)
+  }, blocksString)
+}
+
 export const MAX_COMMENT_LENGTH = 1000
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
