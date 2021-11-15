@@ -8,7 +8,7 @@ import {
   ImageRefFragment,
   ImageListDocument
 } from '../api'
-import {getOperationNameFromDocument} from '../utility'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 import {Link} from '../route'
 
@@ -28,8 +28,6 @@ import {
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
-import {ClientSettings} from '../../shared/types'
-import {ElementID} from '../../shared/elementID'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -37,16 +35,6 @@ export interface ImageEditPanelProps {
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
-}
-
-/**
- * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
- */
-export function getImgMinSizeToCompress(): number {
-  const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
-    document.getElementById(ElementID.Settings)!.textContent!
-  )
-  return imgMinSizeToCompress
 }
 
 export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
@@ -214,6 +202,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   async function resizeImage(file: File): Promise<File> {
     const imgMinSizeToCompress: number = getImgMinSizeToCompress()
     // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
+    // ATTENTION: Media server must be configured to accept the IMG_MIN_SIZE_TO_COMPRESS
     if (!willImageResize(file, imgMinSizeToCompress)) {
       return file // do not resize
     }

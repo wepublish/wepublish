@@ -5,7 +5,7 @@ import {Button, ControlLabel, Drawer, Icon, Notification} from 'rsuite'
 import {FileDropInput} from '../atoms/fileDropInput'
 
 import {useTranslation} from 'react-i18next'
-import {getImgMinSizeToCompress} from './imageEditPanel'
+import {getImgMinSizeToCompress} from '../utility'
 
 export interface ImageUploadPanelProps {
   onClose(): void
