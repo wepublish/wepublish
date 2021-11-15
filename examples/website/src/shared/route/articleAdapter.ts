@@ -12,6 +12,7 @@ export function peerAdapter(peer: any): Peer {
     themeColor: peer.profile.themeColor,
     themeFontColor: peer.profile.themeFontColor,
     callToActionText: peer.profile.callToActionText,
+    callToActionString: peer.profile.callToActionString,
     callToActionURL: peer.profile.callToActionURL,
     callToActionImage: peer.profile.callToActionImage?.largeURL,
     callToActionImageURL: peer.profile.callToActionImageURL
