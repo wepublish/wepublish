@@ -31,6 +31,8 @@ import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {styled} from '@wepublish/karma.run-react'
+import {BorderRadius} from '../atoms/helpers'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -266,7 +268,22 @@ export function ArticleMetadataPanel({
                   value={title}
                   onChange={title => onChange?.({...value, title})}
                 />
+                {!title ? (
+                  <HelpBlock
+                    style={{
+                      backgroundColor: '#ffebcd',
+                      height: '30px',
+                      padding: '5px',
+                      marginTop: '5px',
+                      borderRadius: '5px'
+                    }}>
+                    {t('articleEditor.panels.enterTitle')}
+                  </HelpBlock>
+                ) : (
+                  ''
+                )}
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
+
                 {value.title.length > titleMax && (
                   <label style={{color: 'gold'}}>
                     {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}
