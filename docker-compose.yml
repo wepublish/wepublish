@@ -51,7 +51,7 @@ services:
   oauth2:
     build: .
     ports:
-      - 4100:8000
+      - 4200:8000
     command: ['node','./examples/oauth2/dist/index.js']
     environment:
       MONGO_URL: mongodb://mongo:27017/wepublish
