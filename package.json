@@ -17,6 +17,7 @@
     "release": "node -r dotenv/config ./node_modules/.bin/lerna version --conventional-commits --no-changelog --force-git-tag --no-push",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
+    "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
     "watch": "run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
     "start:docker": "docker-compose up mongo mongo-express",

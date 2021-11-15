@@ -281,7 +281,9 @@ export class MemberContext implements MemberContext {
         continue
       }
 
-      const customer = user.paymentProviderCustomers[paymentMethod.paymentProviderID]
+      const customer = user.paymentProviderCustomers.find(
+        ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
+      )
 
       if (!customer) {
         logger('memberContext').warn(
@@ -345,7 +347,7 @@ export class MemberContext implements MemberContext {
       paymentID: payment.id,
       invoice,
       saveCustomer: false,
-      customerID: customer.id
+      customerID: customer.customerID
     })
 
     await this.dbAdapter.payment.updatePayment({

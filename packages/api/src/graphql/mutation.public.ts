@@ -1,4 +1,11 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLList
+} from 'graphql'
 
 import {Issuer} from 'openid-client'
 import crypto from 'crypto'
@@ -24,6 +31,8 @@ import {
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {
+  GraphQLPaymentProviderCustomer,
+  GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
   GraphQLPublicUserInput,
   GraphQLPublicUserSubscription,
@@ -407,6 +416,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
         return updateSubscription
+      }
+    },
+
+    updatePaymentProviderCustomers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      args: {
+        input: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomerInput)))
+        }
+      },
+      description: 'This mutation allows to update the Payment Provider Customers',
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        const updateUser = await dbAdapter.user.updatePaymentProviderCustomers({
+          userID: user.id,
+          paymentProviderCustomers: input
+        })
+
+        if (!updateUser) throw new NotFound('User', user.id)
+        return updateUser.paymentProviderCustomers
       }
     },
 
