@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import GridLayout from 'react-grid-layout'
 
 import 'react-grid-layout/css/styles.css'
@@ -112,8 +112,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
 
-  const [layout, setLayout] = useState<FlexItemAlignment[]>([])
-  const [teasers, setTeasers] = useState<TeaserWithID[]>([])
+  // const [layout, setLayout] = useState<FlexItemAlignment[]>([])
+  // const [teasers, setTeasers] = useState<TeaserWithID[]>([])
 
   function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
     setFlexTeasers(
@@ -126,7 +126,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   }
 
   useEffect(() => {
-    setLayout(flexTeasers.map(flexTeaser => flexTeaser.alignment))
+    /* setLayout(flexTeasers.map(flexTeaser => flexTeaser.alignment))
     setTeasers(
       flexTeasers.map((flexTeaser, i) => {
         return {
@@ -134,13 +134,13 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           layoutID: flexTeasers[i].alignment.i
         }
       })
-    )
+    ) */
     onChange({
       ...value,
       flexTeasers: flexTeasers
     })
   }, [flexTeasers])
-
+  /*
   useEffect(() => {
     if (value.flexTeasers.length && !teasers?.length) {
       setLayout(flexTeasers.map(flexTeaser => flexTeaser.alignment))
@@ -154,7 +154,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       )
     }
   }, [value.flexTeasers])
-
+*/
   const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
     // const changedLayout = alignment.map(({i, x, y, w, h}) => ({i, x, y, w, h}))
 
@@ -212,8 +212,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   return (
     <>
-      <p>{JSON.stringify(layout)}</p>
-      <p>{JSON.stringify(teasers)}</p>
+      {/* <p>{JSON.stringify(layout)}</p> */}
+      {/* <p>{JSON.stringify(teasers)}</p> */}
 
       <IconButtonTooltip caption="add">
         <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaser} />
@@ -222,16 +222,24 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         className="layout"
         // onDragStart={handleSortStart}
         // onDragStop={() => handleSortEnd}
-        layout={flexTeasers.map(value => value.alignment)}
+        // layout={flexTeasers.map(value => value.alignment)}
         onLayoutChange={layout => handleLayoutChange(layout)}
         cols={12}
         rowHeight={30}
         width={1200}>
         {flexTeasers.map(flexTeaser => (
-          <div key={flexTeaser.alignment.i}>
+          <div
+            data-grid={{
+              x: flexTeaser.alignment.x,
+              y: flexTeaser.alignment.y,
+              w: flexTeaser.alignment.w,
+              h: flexTeaser.alignment.h,
+              static: flexTeaser.alignment.static
+            }}
+            key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}
-              showGrabCursor={teasers.length !== 1}
+              showGrabCursor={true}
               onEdit={() => {
                 setEditIndex(flexTeaser.alignment.i)
                 setEditModalOpen(true)
