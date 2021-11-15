@@ -116,23 +116,26 @@ export class MemberContext implements MemberContext {
     userSubscription
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
-      const {periods = [], paidUntil} = userSubscription
+      const {periods = [], paidUntil, deactivatedAt} = userSubscription
       periods.sort((periodA, periodB) => {
         if (periodA.endsAt < periodB.endsAt) return -1
         if (periodA.endsAt > periodB.endsAt) return 1
         return 0
       })
       if (
-        periods.length > 0 &&
+        (periods.length > 0 || deactivatedAt === null) &&
         ((paidUntil === null && periods.length > 0) ||
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
+        console.log('inside periods', periods)
         const period = periods[periods.length - 1]
         return await this.loaders.invoicesByID.load(period.id)
       }
-      // TODO: implement check if paidUntil is super long time ago
+
       const startDate = new Date(
-        paidUntil ? paidUntil.getTime() + 1 * ONE_DAY_IN_MILLISECONDS : new Date().getTime()
+        paidUntil && deactivatedAt === null
+          ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
+          : new Date().getTime()
       )
       const nextDate = getNextDateForPeriodicity(startDate, userSubscription.paymentPeriodicity)
       const amount = calculateAmountForPeriodicity(
