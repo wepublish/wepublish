@@ -470,8 +470,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (user.subscription.deactivatedAt !== null)
           throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivatedAt)
 
-        // TODO: active subscription, user needs to be able to reactivate membership from current date,
-        // TODO: paidUntil + 1month easily restart after that subscription is inactive. user can login but needs to restart subscription.
         const now = new Date()
         const deactivationDate =
           user.subscription.paidUntil !== null && user.subscription.paidUntil > now
