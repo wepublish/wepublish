@@ -27,8 +27,6 @@ import {getOperationNameFromDocument, validateURL} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {FormControlUrl} from '../atoms/formControlUrl'
 
@@ -47,7 +45,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [themeFontColor, setThemeFontColor] = useState('')
-  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
+  const [callToActionString, setCallToActionString] = useState('')
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
@@ -71,11 +69,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
       setThemeFontColor(data.peerProfile.themeFontColor)
-      setCallToActionText(
-        data.peerProfile.callToActionText.length
-          ? data.peerProfile.callToActionText
-          : createDefaultValue()
-      )
+      setCallToActionString(data.peerProfile.callToActionString)
       setCallToActionTextURL(data.peerProfile.callToActionURL)
       setCallToActionImage(data?.peerProfile?.callToActionImage)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
@@ -104,7 +98,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           logoID: logoImage?.id,
           themeColor,
           themeFontColor,
-          callToActionText,
+          callToActionString,
           callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImage?.id,
           callToActionImageURL
@@ -175,7 +169,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}>
               <FormGroup>
                 <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
-                <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+                <FormControl
+                  placeholder={t('peerList.panels.text')}
+                  name="callToActionText"
+                  value={callToActionString}
+                  onChange={setCallToActionString}
+                />
               </FormGroup>
               <FormGroup>
                 <FormControlUrl

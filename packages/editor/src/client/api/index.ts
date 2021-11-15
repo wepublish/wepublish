@@ -1189,6 +1189,12 @@ export type PaymentProvider = {
   name: Scalars['String'];
 };
 
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer';
+  paymentProviderID: Scalars['String'];
+  customerID: Scalars['String'];
+};
+
 export enum PaymentSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
@@ -1260,6 +1266,7 @@ export type PeerProfile = {
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
   callToActionText: Scalars['RichText'];
+  callToActionString: Scalars['String'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImage?: Maybe<Image>;
@@ -1270,7 +1277,7 @@ export type PeerProfileInput = {
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
-  callToActionText: Scalars['RichText'];
+  callToActionString: Scalars['String'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImageID?: Maybe<Scalars['ID']>;
@@ -1731,6 +1738,7 @@ export type User = {
   properties: Array<Properties>;
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
 };
 
 export type UserAddress = {
@@ -3191,7 +3199,7 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionString' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3716,6 +3724,7 @@ export const FullPeerProfileFragmentDoc = gql`
     ...ImageRef
   }
   callToActionText
+  callToActionString
   callToActionURL
   callToActionImage {
     ...ImageRef
