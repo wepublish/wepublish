@@ -3,6 +3,7 @@ fragment FullPeerProfile on PeerProfile {
   hostURL
   themeColor
   themeFontColor
+  callToActionString
   logo {
     ...ImageRef
   }
