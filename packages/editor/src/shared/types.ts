@@ -1,5 +1,5 @@
 export interface ClientSettings {
   readonly apiURL: string
   readonly peerByDefault: boolean
-  readonly imgMinSizeToCompress: string | undefined
+  readonly imgMinSizeToCompress: number
 }

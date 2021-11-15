@@ -39,6 +39,16 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
+/**
+ * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
+ */
+export function getImgMinSizeToCompress(): number {
+  const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  return imgMinSizeToCompress
+}
+
 export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
@@ -227,32 +237,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     return false
   }
 
-  /**
-   * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
-   */
-  function getImgMinSizeToCompress(): number {
-    const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
-      document.getElementById(ElementID.Settings)!.textContent!
-    )
-    return imgMinSizeToCompress ? parseInt(imgMinSizeToCompress) : 10
-  }
-
-  /**
-   * draw a hint to the user, if the image will be automatically resized on upload
-   * @param file
-   */
-  function resizeImageHint(file: File) {
-    const imMinSizeToCompress: number = getImgMinSizeToCompress()
-    if (willImageResize(file, imMinSizeToCompress)) {
-      return (
-        <>
-          <Panel header={t('images.panels.resizedImage', {sizeMB: imMinSizeToCompress})}></Panel>
-        </>
-      )
-    }
-    return undefined
-  }
-
   return (
     <>
       <Drawer.Header>
@@ -276,7 +260,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 />
               )}
             </Panel>
-            {resizeImageHint(file!)}
             <Panel header={t('images.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('images.panels.filename')}>

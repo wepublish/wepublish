@@ -1,10 +1,11 @@
 import React from 'react'
 
-import {Button, Drawer, Icon, Notification} from 'rsuite'
+import {Button, ControlLabel, Drawer, Icon, Notification} from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
 
 import {useTranslation} from 'react-i18next'
+import {getImgMinSizeToCompress} from './imageEditPanel'
 
 export interface ImageUploadPanelProps {
   onClose(): void
@@ -43,6 +44,10 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
             onDrop={handleDrop}
           />
         </div>
+        <ControlLabel>
+          <br />
+          {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
+        </ControlLabel>
       </Drawer.Body>
 
       <Drawer.Footer>

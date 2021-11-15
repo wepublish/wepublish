@@ -29,6 +29,8 @@ async function asyncMain() {
     apiURL: process.env.API_URL,
     peerByDefault: process.env.PEER_BY_DEFAULT?.toLowerCase() === 'true',
     imgMinSizeToCompress: process.env.IMG_MIN_SIZE_TO_COMPRESS
+      ? parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
+      : 10
   }
 
   const app = express()
