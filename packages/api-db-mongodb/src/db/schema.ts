@@ -67,6 +67,7 @@ export interface DBPeerProfile {
   themeFontColor: string
   callToActionURL: string
   callToActionText: RichTextNode[]
+  callToActionString: string
   callToActionImageURL?: string
   callToActionImageID?: string
 }

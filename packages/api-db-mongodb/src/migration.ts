@@ -1,6 +1,7 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBUser} from './db/schema'
 import {PaymentProviderCustomer} from '@wepublish/api'
+import {richTextToString} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -638,6 +639,27 @@ export const Migrations: Migration[] = [
         await users.updateOne(
           {_id: user._id},
           {$set: {paymentProviderCustomers: paymentProvidersCustomersArray}}
+        )
+      }
+    }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 16,
+    async migrate(db, locale) {
+      const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
+        callToActionText: {$exists: true}
+      })
+      if (peerProfile) {
+        await db.collection(CollectionName.PeerProfiles).updateOne(
+          {
+            _id: peerProfile._id
+          },
+          {
+            $set: {
+              callToActionString: richTextToString('', peerProfile?.callToActionText)
+            }
+          }
         )
       }
     }

@@ -6,6 +6,7 @@ export interface PeerProfile {
   themeColor: string
   themeFontColor: string
   callToActionText: RichTextNode[]
+  callToActionString: string
   callToActionURL: string
   callToActionImageID?: string
   callToActionImageURL?: string
@@ -18,7 +19,7 @@ export interface PeerProfileInput {
   logoID?: string
   themeColor: string
   themeFontColor: string
-  callToActionText: RichTextNode[]
+  callToActionString: string
   callToActionURL: string
   callToActionImageID?: string
   callToActionImageURL?: string

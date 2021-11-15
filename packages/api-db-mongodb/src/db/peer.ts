@@ -31,6 +31,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
         themeFontColor: '#ffffff',
         callToActionURL: '',
         callToActionText: [],
+        callToActionString: '',
         callToActionImageID: '',
         callToActionImageURL: ''
       }
@@ -49,7 +50,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
           themeColor: input.themeColor,
           themeFontColor: input.themeFontColor,
           callToActionURL: input.callToActionURL,
-          callToActionText: input.callToActionText,
+          callToActionString: input.callToActionString,
           callToActionImageID: input.callToActionImageID,
           callToActionImageURL: input.callToActionImageURL
         }
