@@ -31,8 +31,6 @@ import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {styled} from '@wepublish/karma.run-react'
-import {BorderRadius} from '../atoms/helpers'
 
 export interface ArticleMetadataProperty {
   readonly key: string
