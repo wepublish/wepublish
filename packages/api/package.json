@@ -33,7 +33,7 @@
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy-license build",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
-    "test": "node -r dotenv/config ./node_modules/.bin/jest --runInBand"
+    "test": "node -r dotenv/config node_modules/jest/bin/jest.js --runInBand"
   },
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
@@ -48,6 +48,7 @@
     "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^5.0.0",
+    "jest": "^27.3.1",
     "jsonwebtoken": "^8.5.1",
     "mandrill-api": "^1.0.45",
     "node-fetch": "^2.6.0",
@@ -63,6 +64,7 @@
     "@graphql-codegen/typescript": "^1.17.9",
     "@graphql-codegen/typescript-document-nodes": "^1.17.8",
     "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@jest/transform": "^27.3.1",
     "@types/email-templates": "^8.0.3",
     "@types/express": "4.17.13",
     "@types/graphql": "^14.5.0",
