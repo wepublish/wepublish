@@ -293,10 +293,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
             <Panel header={t('images.panels.attribution')}>
               <Form fluid={true}>
                 <FormGroup>
-                  {/* Author to be replaced with source */}
                   <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
-                    // value={author}
                     value={source}
                     disabled={isDisabled}
                     onChange={value => setSource(value)}
