@@ -57,6 +57,8 @@
         "emptyPreTitle": "Leave empty to use original pre-title",
         "emptyTitle": "Leave empty to use original title",
         "enterTitle": "Please enter a title",
+        "enterSeoTitle": "Please enter a seo title",
+        "enterAuthors": "Please enter an auhthor",
         "general": "General",
         "hideAuthors": "Hide Authors",
         "image": "Image",

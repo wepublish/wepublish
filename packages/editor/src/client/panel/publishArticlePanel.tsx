@@ -64,14 +64,54 @@ export function PublishArticlePanel({
             {metadata.preTitle || '-'}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.title')}>
-            {metadata.title || '-'}
+            {!metadata.title ? (
+              <div
+                style={{
+                  borderRadius: '8px',
+                  padding: '6px',
+                  backgroundColor: '#FFEBCD'
+                }}>
+                {t('articleEditor.panels.enterTitle')}
+              </div>
+            ) : (
+              metadata.slug
+            )}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.lead')}>
             {metadata.lead || '-'}
           </DescriptionListItem>
+
           <DescriptionListItem label={t('articleEditor.panels.seoTitle')}>
-            {metadata.seoTitle || '-'}
+            {!metadata.seoTitle ? (
+              <div
+                style={{
+                  borderRadius: '8px',
+                  padding: '6px',
+                  backgroundColor: '#FFEBCD'
+                }}>
+                {t('articleEditor.panels.enterSeoTitle')}
+              </div>
+            ) : (
+              metadata.seoTitle
+            )}
           </DescriptionListItem>
+
+          <DescriptionListItem label={t('articleEditor.panels.authors')}>
+            {!metadata.authors ? (
+              <div
+                style={{
+                  borderRadius: '8px',
+                  padding: '6px',
+                  backgroundColor: '#FFEBCD'
+                }}>
+                {t('articleEditor.panels.enterAuthors')}
+              </div>
+            ) : (
+              // metadata.authors
+              'no author'
+            )}
+          </DescriptionListItem>
+
           <DescriptionListItem label={t('articleEditor.panels.slug')}>
             {metadata.slug || '-'}
           </DescriptionListItem>

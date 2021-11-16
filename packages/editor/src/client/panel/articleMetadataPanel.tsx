@@ -268,7 +268,7 @@ export function ArticleMetadataPanel({
                   value={title}
                   onChange={title => onChange?.({...value, title})}
                 />
-                {!title ? (
+                {/* {!title ? (
                   <HelpBlock
                     style={{
                       backgroundColor: '#ffebcd',
@@ -280,8 +280,8 @@ export function ArticleMetadataPanel({
                     {t('articleEditor.panels.enterTitle')}
                   </HelpBlock>
                 ) : (
-                  ''
-                )}
+                  '' */}
+                {/* )} */}
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
 
                 {value.title.length > titleMax && (
