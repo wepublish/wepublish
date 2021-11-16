@@ -140,11 +140,7 @@ Object {
     "updatePeerProfile": Object {
       "callToActionImage": null,
       "callToActionImageURL": null,
-      "callToActionText": Array [
-        Object {
-          "text": "rich text call to action",
-        },
-      ],
+      "callToActionText": null,
       "callToActionURL": "calltoactionurl.ch/",
       "hostURL": "https://fakeURL",
       "logo": null,
