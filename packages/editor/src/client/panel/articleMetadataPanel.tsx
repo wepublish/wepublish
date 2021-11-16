@@ -268,22 +268,7 @@ export function ArticleMetadataPanel({
                   value={title}
                   onChange={title => onChange?.({...value, title})}
                 />
-                {/* {!title ? (
-                  <HelpBlock
-                    style={{
-                      backgroundColor: '#ffebcd',
-                      height: '30px',
-                      padding: '5px',
-                      marginTop: '5px',
-                      borderRadius: '5px'
-                    }}>
-                    {t('articleEditor.panels.enterTitle')}
-                  </HelpBlock>
-                ) : (
-                  '' */}
-                {/* )} */}
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
-
                 {value.title.length > titleMax && (
                   <label style={{color: 'gold'}}>
                     {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}

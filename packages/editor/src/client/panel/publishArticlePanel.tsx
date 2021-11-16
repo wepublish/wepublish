@@ -7,7 +7,6 @@ import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DateTimePicker} from '../atoms/dateTimePicker'
-import {TypeNameMetaFieldDef} from 'graphql'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
