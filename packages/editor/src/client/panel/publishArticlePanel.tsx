@@ -70,10 +70,10 @@ export function PublishArticlePanel({
             {metadata.preTitle || '-'}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.title')}>
-            {!metadata.title ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterTitle')}</div>
+            {metadata.title ? (
+              metadata.title
             ) : (
-              metadata.slug
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterTitle')}</div>
             )}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.lead')}>
@@ -81,18 +81,18 @@ export function PublishArticlePanel({
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.seoTitle')}>
-            {!metadata.seoTitle ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSeoTitle')}</div>
-            ) : (
+            {metadata.seoTitle ? (
               metadata.seoTitle
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSeoTitle')}</div>
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.authors')}>
-            {!metadata.authors.join(', ') ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterAuthors')}</div>
-            ) : (
+            {metadata.authors.length ? (
               metadata.authors.map(e => e.name).join(', ')
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterAuthors')}</div>
             )}
           </DescriptionListItem>
 
@@ -101,18 +101,18 @@ export function PublishArticlePanel({
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.tags')}>
-            {!metadata.tags.join(', ') ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterTag')}</div>
-            ) : (
+            {metadata.tags.length ? (
               metadata.tags.join(', ')
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterTag')}</div>
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.image')}>
-            {!metadata.image ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterImage')}</div>
-            ) : (
+            {metadata.image ? (
               metadata.image.filename
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterImage')}</div>
             )}
           </DescriptionListItem>
 
@@ -127,37 +127,37 @@ export function PublishArticlePanel({
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.socialMediaTitle')}>
-            {!metadata.socialMediaTitle ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSocialMediaTitle')}</div>
-            ) : (
+            {metadata.socialMediaTitle ? (
               metadata.socialMediaTitle
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSocialMediaTitle')}</div>
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.socialMediaDescription')}>
-            {!metadata.socialMediaDescription ? (
+            {metadata.socialMediaDescription ? (
+              metadata.socialMediaDescription
+            ) : (
               <div style={missingInfoStyle}>
                 {t('articleEditor.panels.enterSocialMediaDescription')}
               </div>
-            ) : (
-              metadata.socialMediaDescription
             )}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.socialMediaAuthors')}>
-            {!metadata.socialMediaAuthors.join(', ') ? (
+            {metadata.socialMediaAuthors.length ? (
+              metadata.socialMediaAuthors.map(e => e.name).join(', ')
+            ) : (
               <div style={missingInfoStyle}>
                 {t('articleEditor.panels.enterSocialMediaAuthors')}
               </div>
-            ) : (
-              metadata.socialMediaAuthors.map(e => e.name).join(', ')
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.socialMediaImage')}>
-            {!metadata.socialMediaImage ? (
-              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSocialMediaImage')}</div>
-            ) : (
+            {metadata.socialMediaImage ? (
               metadata.socialMediaImage.filename
+            ) : (
+              <div style={missingInfoStyle}>{t('articleEditor.panels.enterSocialMediaImage')}</div>
             )}
           </DescriptionListItem>
         </DescriptionList>
