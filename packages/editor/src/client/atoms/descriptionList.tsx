@@ -20,9 +20,10 @@ export function DescriptionList({children}: DescriptionListItemProps) {
 export interface DescriptionListItemProps {
   label?: ReactNode
   children?: ReactNode
+  message?: ReactNode
 }
 
-export function DescriptionListItem({label, children}: DescriptionListItemProps) {
+export function DescriptionListItem({label, children, message}: DescriptionListItemProps) {
   return (
     <div
       style={{
@@ -44,7 +45,18 @@ export function DescriptionListItem({label, children}: DescriptionListItemProps)
         style={{
           marginLeft: 20
         }}>
-        {children}
+        {children ? (
+          children
+        ) : (
+          <div
+            style={{
+              borderRadius: '8px',
+              padding: '6px',
+              backgroundColor: '#FFEBCD'
+            }}>
+            {message}
+          </div>
+        )}
       </dd>
     </div>
   )
