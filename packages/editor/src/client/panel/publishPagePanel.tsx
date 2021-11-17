@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, HelpBlock, Message, Modal} from 'rsuite'
+import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
