@@ -45,9 +45,7 @@ export function DescriptionListItem({label, children, message}: DescriptionListI
         style={{
           marginLeft: 20
         }}>
-        {children ? (
-          children
-        ) : (
+        {children || (
           <div
             style={{
               borderRadius: '8px',
