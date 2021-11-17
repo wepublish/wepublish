@@ -73,17 +73,17 @@ export function PublishArticlePanel({
             {metadata.seoTitle || '-'}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.slug')}>
-            {!metadata.slug ? (
+            {metadata.slug ? (
+              metadata.slug
+            ) : (
               <div
                 style={{
                   borderRadius: '8px',
-                  padding: '12px',
+                  padding: '6px',
                   backgroundColor: '#fde9ef'
                 }}>
                 {t('articleEditor.panels.addSlug')}
               </div>
-            ) : (
-              metadata.slug
             )}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.tags')}>
