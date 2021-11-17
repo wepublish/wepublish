@@ -202,7 +202,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   async function resizeImage(file: File): Promise<File> {
     const imgMinSizeToCompress: number = getImgMinSizeToCompress()
     // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
-    // ATTENTION: Media server must be configured to accept the IMG_MIN_SIZE_TO_COMPRESS
+    // ATTENTION: The MAX_UPLOAD_SIZE of the Media server must allow images of this size
     if (!willImageResize(file, imgMinSizeToCompress)) {
       return file // do not resize
     }
