@@ -75,27 +75,36 @@ export function FlexTeaserBlock({
                 right: 0,
                 top: 0
               }}>
-              <IconButton
-                icon={<Icon icon="file" />}
-                onClick={onChoose}
-                style={{
-                  margin: 10
-                }}
-              />
-              <IconButton
-                icon={<Icon icon="pencil" />}
-                onClick={onEdit}
-                style={{
-                  margin: 10
-                }}
-              />
-              <IconButton
-                icon={<Icon icon="trash" />}
-                onClick={onRemove}
-                style={{
-                  margin: 10
-                }}
-              />
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <IconButtonTooltip caption="choose teaser">
+                <IconButton
+                  icon={<Icon icon="file" />}
+                  onClick={onChoose}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <IconButtonTooltip caption="edit teaser">
+                <IconButton
+                  icon={<Icon icon="pencil" />}
+                  onClick={onEdit}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <IconButtonTooltip caption="remove teaser">
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  onClick={onRemove}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
             </div>
           </div>
         )}
@@ -109,6 +118,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
 
   const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
 
@@ -119,8 +129,18 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
   }, [flexTeasers])
 
+  useEffect(() => {
+    if (isDragging) {
+      document.documentElement.style.cursor = 'grabbing'
+      document.body.style.pointerEvents = 'none'
+    } else {
+      document.documentElement.style.cursor = ''
+      document.body.style.pointerEvents = ''
+    }
+  }, [isDragging])
+
   // Teaser Block functions: add, remove, layout change, sort, pin
-  const handleAddTeaser = () => {
+  const handleAddTeaserBlock = () => {
     const newTeaser: FlexTeaser = {
       alignment: {
         i: nanoid(),
@@ -134,11 +154,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     setFlexTeasers(flexTeasers => [...flexTeasers, newTeaser])
   }
 
-  const handleRemoveTeaser = (index: string) => {
+  const handleRemoveTeaserBlock = (index: string) => {
     setFlexTeasers(flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index))
   }
 
-  // TODO: set grab pointer
   /*
   function handleSortStart() {
     document.documentElement.style.cursor = 'grabbing'
@@ -149,7 +168,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     document.documentElement.style.cursor = ''
     document.body.style.pointerEvents = ''
   }
-*/
+   */
+
   const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
     const newFlexTeasers = alignment.map(v => {
       return {
@@ -161,8 +181,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     setFlexTeasers(newFlexTeasers)
   }
 
-  // TODO not working properly
-  const handlePinTeaser = (index: string) => {
+  const handlePinTeaserBlock = (index: string) => {
     const newTeasers = flexTeasers.map(flexTeaser => {
       return flexTeaser.alignment.i !== index
         ? flexTeaser
@@ -181,7 +200,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     setFlexTeasers(newTeasers)
   }
 
-  // Teaser functions: change,
+  // Teaser functions: change, remove
   function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
     setFlexTeasers(
       flexTeasers.map(flexTeaser => {
@@ -191,27 +210,42 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       })
     )
   }
+
+  function handleRemoveTeaser(index: string) {
+    setFlexTeasers(
+      flexTeasers.map(flexTeaser => {
+        return flexTeaser.alignment.i === index
+          ? {alignment: flexTeaser.alignment, teaser: null}
+          : flexTeaser
+      })
+    )
+  }
+
   return (
     <>
-      <IconButtonTooltip caption="add">
-        <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaser} />
+      {/* eslint-disable-next-line i18next/no-literal-string */}
+      <IconButtonTooltip caption="add block">
+        <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaserBlock} />
       </IconButtonTooltip>
       <GridLayout
         className="layout"
-        // onDragStart={handleSortStart}
-        // onDragStop={handleSortEnd}
+        onDragStart={() => setIsDragging(true)}
+        onDragStop={() => setIsDragging(false)}
+        onDrop={() => setIsDragging(false)}
+        // onDrag={() => setIsDragging(true)}
         onLayoutChange={layout => handleLayoutChange(layout)}
         cols={12}
         rowHeight={30}
+        layout={flexTeasers.map(ft => ft.alignment)}
         width={1200}>
         {flexTeasers.map(flexTeaser => (
           <div
+            onMouseUp={() => setIsDragging(false)} // handle bug where dragging doesn't release on a double click
             data-grid={{
               x: flexTeaser.alignment.x,
               y: flexTeaser.alignment.y,
               w: flexTeaser.alignment.w,
-              h: flexTeaser.alignment.h,
-              static: flexTeaser.alignment.static
+              h: flexTeaser.alignment.h
             }}
             key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
@@ -225,26 +259,32 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
                 setEditIndex(flexTeaser.alignment.i)
                 setChooseModalOpen(true)
               }}
-              onRemove={() => console.log('remove')}
+              onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
             <ButtonToolbar style={{top: 0, position: 'absolute'}}>
-              <IconButton
-                block
-                appearance="subtle"
-                icon={<Icon icon="trash" />}
-                onClick={() => handleRemoveTeaser(flexTeaser.alignment.i)}
-              />
-              <IconButton
-                block
-                appearance="subtle"
-                icon={
-                  <Icon
-                    style={{color: flexTeaser.alignment.static ? 'red' : undefined}}
-                    icon="thumb-tack"
-                  />
-                }
-                onClick={() => handlePinTeaser(flexTeaser.alignment.i)}
-              />
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <IconButtonTooltip caption="delete block">
+                <IconButton
+                  block
+                  appearance="subtle"
+                  icon={<Icon icon="trash" />}
+                  onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
+                />
+              </IconButtonTooltip>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <IconButtonTooltip caption="pin block">
+                <IconButton
+                  block
+                  appearance="subtle"
+                  icon={
+                    <Icon
+                      style={{color: flexTeaser.alignment.static ? 'red' : undefined}}
+                      icon="thumb-tack"
+                    />
+                  }
+                  onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
+                />
+              </IconButtonTooltip>
             </ButtonToolbar>
           </div>
         ))}
