@@ -127,7 +127,6 @@ export class MemberContext implements MemberContext {
         ((paidUntil === null && periods.length > 0) ||
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
-        console.log('inside periods', periods)
         const period = periods[periods.length - 1]
         return await this.loaders.invoicesByID.load(period.id)
       }
