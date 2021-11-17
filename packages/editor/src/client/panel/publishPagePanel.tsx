@@ -66,18 +66,18 @@ export function PublishPagePanel({
 
         <DescriptionList>
           <DescriptionListItem label={t('pageEditor.panels.title')}>
-            {!metadata.title ? (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterTitle')}</div>
-            ) : (
+            {metadata.title ? (
               metadata.title
+            ) : (
+              <div style={missingInfoStyle}>{t('pageEditor.panels.enterTitle')}</div>
             )}
           </DescriptionListItem>
           <DescriptionListItem label={t('pageEditor.panels.description')}>
-            {!metadata.description ? (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterDescription')}</div>
-            ) : (
+            {metadata.description ? (
               metadata.description
-            )}{' '}
+            ) : (
+              <div style={missingInfoStyle}>{t('pageEditor.panels.enterDescription')}</div>
+            )}
           </DescriptionListItem>
           <DescriptionListItem label={t('pageEditor.panels.slug')}>
             {metadata.slug || '-'}
@@ -86,36 +86,36 @@ export function PublishPagePanel({
             {metadata.tags.join(', ') || '-'}
           </DescriptionListItem>
           <DescriptionListItem label={t('pageEditor.panels.image')}>
-            {!metadata.image ? (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterImage')}</div>
-            ) : (
+            {metadata.image ? (
               metadata.image.filename
+            ) : (
+              <div style={missingInfoStyle}>{t('pageEditor.panels.enterImage')}</div>
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('pageEditor.panels.socialMediaTitle')}>
-            {!metadata.socialMediaTitle ? (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaTitle')}</div>
-            ) : (
+            {metadata.socialMediaTitle ? (
               metadata.socialMediaTitle
+            ) : (
+              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaTitle')}</div>
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('pageEditor.panels.socialMediaDescription')}>
-            {!metadata.socialMediaDescription ? (
+            {metadata.socialMediaDescription ? (
+              metadata.socialMediaDescription
+            ) : (
               <div style={missingInfoStyle}>
                 {t('pageEditor.panels.enterSocialMediaDescription')}
               </div>
-            ) : (
-              metadata.socialMediaDescription
             )}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('pageEditor.panels.socialMediaImage')}>
-            {!metadata.socialMediaImage ? (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaImage')}</div>
-            ) : (
+            {metadata.socialMediaImage ? (
               metadata.socialMediaImage.filename
+            ) : (
+              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaImage')}</div>
             )}
           </DescriptionListItem>
         </DescriptionList>
