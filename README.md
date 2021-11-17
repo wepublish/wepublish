@@ -153,7 +153,7 @@ yarn run-p watch:api watch:api-example watch:editor
 ## Usage
 
 - **API:** [http://localhost:4000](http://localhost:4000)
-- **Media Server:** [http://localhost:4001](http://localhost:4001)
+- **Media Server:** [http://localhost:4100](http://localhost:4100)
 - **Editor:** [http://localhost:3000](http://localhost:3000)
 - **Webpack Dev Server:** [http://localhost:3001](http://localhost:3001)
 - **MongoDB:** [http://localhost:27017](http://localhost:27017)
