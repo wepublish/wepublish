@@ -153,6 +153,6 @@ export class Oauth2Server {
     routes(this.app, provider, this.wepublishDDAdapter)
     this.app.use(provider.callback)
     console.log('views_path', path.join(__dirname, 'views'))
-    this.app.listen(port ?? 4100, hostname ?? 'localhost')
+    this.app.listen(port ?? 4200, hostname ?? 'localhost')
   }
 }

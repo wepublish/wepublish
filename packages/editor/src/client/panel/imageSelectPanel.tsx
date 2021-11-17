@@ -98,7 +98,6 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
         <ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
-          <br />
         </ControlLabel>
 
         <Panel header={t('articleEditor.panels.images')}>
