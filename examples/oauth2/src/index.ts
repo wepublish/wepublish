@@ -10,7 +10,7 @@ async function asyncMain() {
     throw new Error('No OAUTH_MONGODB_URI defined in ENV')
   }
 
-  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4100
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4200
   const address = process.env.ADDRESS || 'localhost'
 
   if (!process.env.MONGO_URL) {
