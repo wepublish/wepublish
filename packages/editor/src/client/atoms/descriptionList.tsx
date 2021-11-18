@@ -55,6 +55,17 @@ export function DescriptionListItem({label, children, message}: DescriptionListI
             {message}
           </div>
         )}
+
+        {/* {message
+          ? (<div
+            style={{
+              borderRadius: '8px',
+              padding: '6px',
+              backgroundColor: '#FFEBCD'
+            }}>
+            {message}
+          </div>)
+          : (<span>{children}<span>} */}
       </dd>
     </div>
   )
