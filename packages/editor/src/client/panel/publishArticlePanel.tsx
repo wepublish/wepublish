@@ -65,7 +65,8 @@ export function PublishArticlePanel({
           </DescriptionListItem>
           <DescriptionListItem
             label={t('articleEditor.panels.title')}
-            message={t('articleEditor.panels.enterTitle')}>
+            message={t('articleEditor.panels.enterTitle')}
+            type={'warning'}>
             {metadata.title}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.lead')}>
@@ -74,13 +75,15 @@ export function PublishArticlePanel({
 
           <DescriptionListItem
             label={t('articleEditor.panels.seoTitle')}
-            message={t('articleEditor.panels.enterSeoTitle')}>
+            message={t('articleEditor.panels.enterSeoTitle')}
+            type={'warning'}>
             {metadata.seoTitle}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.authors')}
-            message={t('articleEditor.panels.enterAuthors')}>
+            message={t('articleEditor.panels.enterAuthors')}
+            type={'warning'}>
             {metadata.authors.map(e => e.name).join(', ')}
           </DescriptionListItem>
 
@@ -90,13 +93,15 @@ export function PublishArticlePanel({
 
           <DescriptionListItem
             label={t('articleEditor.panels.tags')}
-            message={t('articleEditor.panels.enterTag')}>
+            message={t('articleEditor.panels.enterTag')}
+            type={'warning'}>
             {metadata.tags.join(', ')}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.image')}
-            message={t('articleEditor.panels.enterImage')}>
+            message={t('articleEditor.panels.enterImage')}
+            type={'warning'}>
             {metadata.image?.filename}
           </DescriptionListItem>
 
@@ -112,25 +117,29 @@ export function PublishArticlePanel({
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaTitle')}
-            message={t('articleEditor.panels.enterSocialMediaTitle')}>
+            message={t('articleEditor.panels.enterSocialMediaTitle')}
+            type={'warning'}>
             {metadata.socialMediaTitle}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaDescription')}
-            message={t('articleEditor.panels.enterSocialMediaDescription')}>
+            message={t('articleEditor.panels.enterSocialMediaDescription')}
+            type={'warning'}>
             {metadata.socialMediaDescription}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaAuthors')}
-            message={t('articleEditor.panels.enterSocialMediaAuthors')}>
+            message={t('articleEditor.panels.enterSocialMediaAuthors')}
+            type={'warning'}>
             {metadata.socialMediaAuthors.map(e => e.name).join(', ')}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaImage')}
-            message={t('articleEditor.panels.enterSocialMediaDescription')}>
+            message={t('articleEditor.panels.enterSocialMediaDescription')}
+            type={'warning'}>
             {metadata.socialMediaImage?.filename}
           </DescriptionListItem>
         </DescriptionList>
