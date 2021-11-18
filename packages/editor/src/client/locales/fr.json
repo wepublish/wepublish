@@ -337,7 +337,6 @@
         "imageDimension": "{{imageWidth}} x {{imageHeight}}",
         "updated": "Mise à jour",
         "attribution": "Attribution",
-        "author": "Auteur/Autrice",
         "cancel": "Annuler",
         "chooseIMage": "Choisir une image",
         "close": "Fermer",
