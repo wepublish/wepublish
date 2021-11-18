@@ -364,7 +364,8 @@
         "upload": "Télécharger",
         "uploadImage": "Télécharger une image",
         "updatedAt": "{{updatedAt, ccc PP p}}",
-        "createdAt": "{{createdAt, ccc PP p}}"
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "resizedImage": "La taille de l'image est automatiquement réduite à environ {{sizeMB}} MB lors du téléchargement."
       },
       "overview": {
         "imageLibrary": "Bibliothèque d'images",
