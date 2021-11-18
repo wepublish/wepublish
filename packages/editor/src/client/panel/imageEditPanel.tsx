@@ -8,7 +8,7 @@ import {
   ImageRefFragment,
   ImageListDocument
 } from '../api'
-import {getOperationNameFromDocument} from '../utility'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 import {Link} from '../route'
 
@@ -27,6 +27,7 @@ import {
   Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import imageCompression from 'browser-image-compression'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -171,9 +172,10 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     }
 
     if (isUpload) {
+      const optimizedImage: File = await resizeImage(file!)
       const {data} = await uploadImage({
         variables: {
-          input: {file: file!, ...commonInput}
+          input: {file: optimizedImage!, ...commonInput}
         }
       })
 
@@ -191,6 +193,37 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         onSave?.(data.updateImage)
       }
     }
+  }
+
+  /**
+   * Resizes an image on client side, if larger than the IMG_MIN_SIZE_TO_COMPRESS env variable
+   * @param file
+   */
+  async function resizeImage(file: File): Promise<File> {
+    const imgMinSizeToCompress: number = getImgMinSizeToCompress()
+    // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
+    // ATTENTION: The MAX_UPLOAD_SIZE of the Media server must allow images of this size
+    if (!willImageResize(file, imgMinSizeToCompress)) {
+      return file // do not resize
+    }
+    const options = {
+      maxSizeMB: imgMinSizeToCompress // the max size in MB, defaults to 2MB
+    }
+    return imageCompression(file, options)
+  }
+
+  /**
+   * Decide whether an image will be automatically resized or not. The limit is given by the
+   * IMG_MIN_SIZE_TO_COMPRESS env variable
+   * @param file
+   * @param imgMinSizeToResize
+   */
+  function willImageResize(file: File, imgMinSizeToResize: number) {
+    const originalFileSize: number = file.size / (1024 * 1024)
+    if (originalFileSize > imgMinSizeToResize) {
+      return true
+    }
+    return false
   }
 
   return (

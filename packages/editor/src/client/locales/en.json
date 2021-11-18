@@ -419,7 +419,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },
     "linkPageBreakEditPanel": {
