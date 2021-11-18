@@ -4,29 +4,7 @@ import GridLayout from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-// import nanoid from 'nanoid'
-
-// import {PlaceholderInput} from '../atoms/placeholderInput'
-// import {PlaceholderImage} from '../atoms/placeholderImage'
-// import {BlockProps} from '../atoms/blockList'
-// import {Overlay} from '../atoms/overlay'
-// import {Typography} from '../atoms/typography'
-
-// import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
-
-// import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
-// import arrayMove from 'array-move'
-
-import {
-  FlexItemAlignment,
-  FlexTeaser,
-  Teaser,
-  TeaserFlexGridBlockValue
-  // Teaser,
-  // TeaserType,
-  // FlexTeaserPlacement,
-  // FlexGridItemLayout
-} from './types'
+import {FlexItemAlignment, FlexTeaser, Teaser, TeaserFlexGridBlockValue} from './types'
 import {BlockProps} from '../atoms/blockList'
 import nanoid from 'nanoid'
 import {ButtonToolbar, Drawer, Icon, IconButton, Panel} from 'rsuite'
@@ -35,10 +13,6 @@ import {contentForTeaser, TeaserBlockProps} from './teaserGridBlock'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-
-// import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-// import {TeaserEditPanel} from '../panel/teaserEditPanel'
-// import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 // import {useTranslation} from 'react-i18next'
 
@@ -139,7 +113,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     }
   }, [isDragging])
 
-  // Teaser Block functions: add, remove, layout change, sort, pin
+  // Teaser Block functions: add, remove, layout change, pin
   const handleAddTeaserBlock = () => {
     const newTeaser: FlexTeaser = {
       alignment: {
@@ -157,18 +131,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const handleRemoveTeaserBlock = (index: string) => {
     setFlexTeasers(flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index))
   }
-
-  /*
-  function handleSortStart() {
-    document.documentElement.style.cursor = 'grabbing'
-    document.body.style.pointerEvents = 'none'
-  }
-
-  function handleSortEnd() {
-    document.documentElement.style.cursor = ''
-    document.body.style.pointerEvents = ''
-  }
-   */
 
   const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
     const newFlexTeasers = alignment.map(v => {
@@ -221,6 +183,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     )
   }
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       {/* eslint-disable-next-line i18next/no-literal-string */}
@@ -229,10 +193,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </IconButtonTooltip>
       <GridLayout
         className="layout"
-        onDragStart={() => setIsDragging(true)}
         onDragStop={() => setIsDragging(false)}
-        onDrop={() => setIsDragging(false)}
-        // onDrag={() => setIsDragging(true)}
+        onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         onLayoutChange={layout => handleLayoutChange(layout)}
         cols={12}
         rowHeight={30}
@@ -240,17 +202,16 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         width={1200}>
         {flexTeasers.map(flexTeaser => (
           <div
-            onMouseUp={() => setIsDragging(false)} // handle bug where dragging doesn't release on a double click
             data-grid={{
               x: flexTeaser.alignment.x,
               y: flexTeaser.alignment.y,
               w: flexTeaser.alignment.w,
               h: flexTeaser.alignment.h
-            }}
+            }} // more efficient way to remove i?
             key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}
-              showGrabCursor={true}
+              showGrabCursor={!flexTeaser.alignment.static}
               onEdit={() => {
                 setEditIndex(flexTeaser.alignment.i)
                 setEditModalOpen(true)
@@ -291,15 +252,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </GridLayout>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-        <TeaserEditPanel
-          // TODO change teaser
-          initialTeaser={flexTeasers[0].teaser!}
-          onClose={() => setEditModalOpen(false)}
-          onConfirm={teaser => {
-            setEditModalOpen(false)
-            handleTeaserLinkChange(editIndex, teaser)
-          }}
-        />
+        {flexTeasers.find(ft => ft.alignment.i === editIndex)?.teaser && (
+          <TeaserEditPanel
+            // TODO: Fix ?
+            initialTeaser={flexTeasers.find(ft => ft.alignment.i === editIndex)?.teaser}
+            onClose={() => setEditModalOpen(false)}
+            onConfirm={teaser => {
+              setEditModalOpen(false)
+              handleTeaserLinkChange(editIndex, teaser)
+            }}
+          />
+        )}
       </Drawer>
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <TeaserSelectAndEditPanel
@@ -313,25 +276,3 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     </>
   )
 }
-
-/*
-}
-export interface TeaserContentProps {
-  style: TeaserStyle
-  preTitle?: string
-  title?: string
-  lead?: string
-  image?: ImageRefFragment
-  states?: string[]
-  peer?: PeerWithProfileFragment
-  layout: FlexTeaserSize[]
-}
-export interface FlexTeaserSize {
-  i: string
-  x: number
-  y: number
-  w: number
-  h: number
-}
-
-*/
