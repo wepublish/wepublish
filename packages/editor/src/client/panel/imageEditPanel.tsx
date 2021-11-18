@@ -290,7 +290,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
             <Panel header={t('images.panels.attribution')}>
               <Form fluid={true}>
                 <FormGroup>
-                  <ControlLabel>{t('images.panels.author')}</ControlLabel>
+                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
                     value={author}
                     disabled={isDisabled}
@@ -298,7 +298,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                   />
                 </FormGroup>
                 <FormGroup>
-                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                  <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
                     value={source}
                     disabled={isDisabled}

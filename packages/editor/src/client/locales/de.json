@@ -390,7 +390,6 @@
       },
       "panels": {
         "addTag": "Enter drücken, um Tag hinzuzufügen",
-        "author": "Quelle",
         "cancel": "Abbrechen",
         "chooseIMage": "Bild wählen",
         "close": "Schliessen",
@@ -409,7 +408,7 @@
         "link": "Link",
         "notFound": "Bild nicht gefunden!",
         "save": "Speichern",
-        "source": "Link",
+        "source": "Quelle",
         "sourceLink": "Link zur Original-Quelle des Bildes.",
         "tags": "Tags",
         "title": "Titel",
