@@ -156,7 +156,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           <Panel>
             <ControlLabel>{t('authors.panels.linkedUsers')}</ControlLabel>
             <TagGroup style={{marginTop: '0px'}}>
-              {users && users.length > 0 ? (
+              {users.length ? (
                 users.map(user => (
                   <Tag color="blue" key={user?.id}>
                     {user?.name}
