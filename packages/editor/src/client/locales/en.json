@@ -56,6 +56,15 @@
         "emptyLead": "Leave empty to use original lead.",
         "emptyPreTitle": "Leave empty to use original pre-title",
         "emptyTitle": "Leave empty to use original title",
+        "enterImage": "Please add an image",
+        "enterTitle": "Please enter a title",
+        "enterSeoTitle": "Please enter a seo title",
+        "enterSocialMediaDescription": "Please enter a description for social media",
+        "enterSocialMediaAuthors": "Please add an author for social media",
+        "enterSocialMediaTitle": "Please enter a title for social media",
+        "enterSocialMediaImage": "Please add an image for social media",
+        "enterAuthors": "Please add an author",
+        "enterTag": "Please enter a tag",
         "general": "General",
         "hideAuthors": "Hide Authors",
         "image": "Image",
@@ -391,7 +400,6 @@
       "panels": {
         "addTag": "Press enter to add tag",
         "attribution": "Attribution",
-        "author": "Author",
         "cancel": "Cancel",
         "chooseIMage": "Choose image",
         "close": "Close",
@@ -420,7 +428,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },
     "linkPageBreakEditPanel": {
