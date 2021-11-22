@@ -17,6 +17,8 @@ export interface PublishArticlePanelProps {
   onConfirm(publishDate: Date, updateDate: Date): void
 }
 
+import {InfoColor} from '../atoms/infoMessage'
+
 export function PublishArticlePanel({
   initialPublishDate,
   pendingPublishDate,
@@ -66,7 +68,7 @@ export function PublishArticlePanel({
           <DescriptionListItem
             label={t('articleEditor.panels.title')}
             message={t('articleEditor.panels.enterTitle')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.title}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.lead')}>
@@ -76,14 +78,14 @@ export function PublishArticlePanel({
           <DescriptionListItem
             label={t('articleEditor.panels.seoTitle')}
             message={t('articleEditor.panels.enterSeoTitle')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.seoTitle}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.authors')}
             message={t('articleEditor.panels.enterAuthors')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.authors.map(e => e.name).join(', ')}
           </DescriptionListItem>
 
@@ -94,14 +96,14 @@ export function PublishArticlePanel({
           <DescriptionListItem
             label={t('articleEditor.panels.tags')}
             message={t('articleEditor.panels.enterTag')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.tags.join(', ')}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.image')}
             message={t('articleEditor.panels.enterImage')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.image?.filename}
           </DescriptionListItem>
 
@@ -118,28 +120,28 @@ export function PublishArticlePanel({
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaTitle')}
             message={t('articleEditor.panels.enterSocialMediaTitle')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.socialMediaTitle}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaDescription')}
             message={t('articleEditor.panels.enterSocialMediaDescription')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.socialMediaDescription}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaAuthors')}
             message={t('articleEditor.panels.enterSocialMediaAuthors')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.socialMediaAuthors.map(e => e.name).join(', ')}
           </DescriptionListItem>
 
           <DescriptionListItem
             label={t('articleEditor.panels.socialMediaImage')}
             message={t('articleEditor.panels.enterSocialMediaDescription')}
-            type={'warning'}>
+            type={InfoColor.warning}>
             {metadata.socialMediaImage?.filename}
           </DescriptionListItem>
         </DescriptionList>
