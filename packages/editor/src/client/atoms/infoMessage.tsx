@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 
 export interface InfoMessageProps {
-  type?: InfoColor
+  messageType?: InfoColor
   message: ReactNode
 }
 
@@ -11,13 +11,13 @@ export enum InfoColor {
   white = '#ffffff'
 }
 
-export function InfoMessage({type, message}: InfoMessageProps) {
+export function InfoMessage({messageType = InfoColor.white, message}: InfoMessageProps) {
   return (
     <div
       style={{
         borderRadius: '8px',
         padding: '6px',
-        backgroundColor: `${type}`
+        backgroundColor: `${messageType}`
       }}>
       {' '}
       {message}
