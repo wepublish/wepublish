@@ -310,7 +310,8 @@ async function applyWebsite() {
 async function applyMediaServer() {
   const app = 'media'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-  const appPort = 8000
+  const appPort = 4100
+  const mediaImage = 'ghcr.io/wepublish/karma-media-server:latest'
 
   const pvc = {
     apiVersion: 'v1',
@@ -368,8 +369,7 @@ async function applyMediaServer() {
           containers: [
             {
               name: appName,
-              image: image,
-              command: ['node', './examples/media/dist/index.js'],
+              image: mediaImage,
               env: [
                 {
                   name: 'NODE_ENV',
@@ -962,6 +962,10 @@ async function applyEditor() {
                 {
                   name: 'PEER_BY_DEFAULT',
                   value: 'true'
+                },
+                {
+                  name: 'IMG_MIN_SIZE_TO_COMPRESS',
+                  value: '10'
                 }
               ],
               ports: [
