@@ -400,7 +400,6 @@
       "panels": {
         "addTag": "Press enter to add tag",
         "attribution": "Attribution",
-        "author": "Author",
         "cancel": "Cancel",
         "chooseIMage": "Choose image",
         "close": "Close",
@@ -429,7 +428,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },
     "linkPageBreakEditPanel": {

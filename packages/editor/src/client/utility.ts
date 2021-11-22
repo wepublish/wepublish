@@ -2,6 +2,8 @@ import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
+import {ClientSettings} from '../shared/types'
+import {ElementID} from '../shared/elementID'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -188,4 +190,14 @@ export function validateURL(url: string) {
     return pattern.test(url)
   }
   return false
+}
+
+/**
+ * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
+ */
+export function getImgMinSizeToCompress(): number {
+  const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  return imgMinSizeToCompress
 }
