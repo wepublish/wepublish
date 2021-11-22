@@ -84,13 +84,18 @@ export class StripePaymentProvider extends BasePaymentProvider {
   }
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    let paymentMethod: Stripe.PaymentMethod | undefined
+    let paymentMethod: Stripe.PaymentMethod | string | undefined
     if (props.customerID) {
-      const paymentMethods = await this.stripe.paymentMethods.list({
+      /* const paymentMethods = await this.stripe.paymentMethods.list({
         customer: props.customerID,
         type: 'card'
       })
-      paymentMethod = paymentMethods.data.length > 0 ? paymentMethods.data[0] : undefined
+      paymentMethod = paymentMethods.data.length > 0 ? paymentMethods.data[0] : undefined */
+      // TODO: take default paymentMethod!!!!
+      const customer = await this.stripe.customers.retrieve(props.customerID)
+      if (!customer.deleted && customer.invoice_settings.default_payment_method !== null) {
+        paymentMethod = customer.invoice_settings.default_payment_method
+      }
     }
 
     const intent = await this.stripe.paymentIntents.create({
@@ -103,7 +108,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
             confirm: true,
             customer: props.customerID,
             off_session: true,
-            payment_method: paymentMethod?.id,
+            payment_method: typeof paymentMethod === 'string' ? paymentMethod : paymentMethod?.id,
             payment_method_types: ['card']
           }
         : {}),
