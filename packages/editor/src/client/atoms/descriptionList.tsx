@@ -52,9 +52,7 @@ export function DescriptionListItem({
         style={{
           marginLeft: 20
         }}>
-        {children
-          ? children
-          : <InfoMessage messageType={messageType} message={message}></InfoMessage> || '-'}
+        {children || <InfoMessage messageType={messageType} message={message}></InfoMessage> || '-'}
       </dd>
     </div>
   )
