@@ -17,7 +17,9 @@ export enum ErrorCode {
   UserInputError = 'USER_INPUT_ERROR',
   DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
   CommentLengthError = 'COMMENT_LENGTH_ERROR',
-  PeerTokenInvalid = 'PEER_TOKEN_INVALID'
+  PeerTokenInvalid = 'PEER_TOKEN_INVALID',
+
+  UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -122,5 +124,15 @@ export class CommentLengthError extends ApolloError {
 export class PeerTokenInvalidError extends ApolloError {
   constructor(peerUrl: string) {
     super(`Token for peer ${peerUrl} is invalid`, ErrorCode.PeerTokenInvalid)
+  }
+}
+
+export class UserSubscriptionAlreadyDeactivated extends ApolloError {
+  constructor(deactivatedAt: Date) {
+    const msg =
+      deactivatedAt < new Date()
+        ? 'Subscription is already canceled'
+        : 'Subscription is already marked to be canceled'
+    super(msg, ErrorCode.UserSubscriptionAlreadyDeactivated)
   }
 }
