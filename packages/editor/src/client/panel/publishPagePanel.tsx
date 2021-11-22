@@ -8,6 +8,7 @@ import {PageMetadata} from './pageMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
+import {InfoColor} from '../atoms/infoMessage'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
@@ -34,12 +35,6 @@ export function PublishPagePanel({
 
   const {t} = useTranslation()
 
-  const missingInfoStyle = {
-    borderRadius: '8px',
-    padding: '6px',
-    backgroundColor: '#FFEBCD'
-  }
-
   return (
     <>
       <Modal.Header>
@@ -65,58 +60,54 @@ export function PublishPagePanel({
         />
 
         <DescriptionList>
-          <DescriptionListItem label={t('pageEditor.panels.title')}>
-            {metadata.title ? (
-              metadata.title
-            ) : (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterTitle')}</div>
-            )}
+          <DescriptionListItem
+            label={t('pageEditor.panels.title')}
+            message={t('pageEditor.panels.enterTitle')}
+            messageType={InfoColor.warning}>
+            {metadata.title}
           </DescriptionListItem>
-          <DescriptionListItem label={t('pageEditor.panels.description')}>
-            {metadata.description ? (
-              metadata.description
-            ) : (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterDescription')}</div>
-            )}
+
+          <DescriptionListItem
+            label={t('pageEditor.panels.description')}
+            message={t('pageEditor.panels.enterDescription')}
+            messageType={InfoColor.warning}>
+            {metadata.description}
           </DescriptionListItem>
+
           <DescriptionListItem label={t('pageEditor.panels.slug')}>
             {metadata.slug || '-'}
           </DescriptionListItem>
+
           <DescriptionListItem label={t('pageEditor.panels.tags')}>
             {metadata.tags.join(', ') || '-'}
           </DescriptionListItem>
-          <DescriptionListItem label={t('pageEditor.panels.image')}>
-            {metadata.image ? (
-              metadata.image.filename
-            ) : (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterImage')}</div>
-            )}
+
+          <DescriptionListItem
+            label={t('pageEditor.panels.image')}
+            message={t('pageEditor.panels.enterImage')}
+            messageType={InfoColor.warning}>
+            {metadata.image}
           </DescriptionListItem>
 
-          <DescriptionListItem label={t('pageEditor.panels.socialMediaTitle')}>
-            {metadata.socialMediaTitle ? (
-              metadata.socialMediaTitle
-            ) : (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaTitle')}</div>
-            )}
+          <DescriptionListItem
+            label={t('pageEditor.panels.socialMediaTitle')}
+            message={t('pageEditor.panels.enterSocialMediaTitle')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaTitle}
           </DescriptionListItem>
 
-          <DescriptionListItem label={t('pageEditor.panels.socialMediaDescription')}>
-            {metadata.socialMediaDescription ? (
-              metadata.socialMediaDescription
-            ) : (
-              <div style={missingInfoStyle}>
-                {t('pageEditor.panels.enterSocialMediaDescription')}
-              </div>
-            )}
+          <DescriptionListItem
+            label={t('pageEditor.panels.socialMediaDescription')}
+            message={t('pageEditor.panels.enterSocialMediaDescription')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaDescription}
           </DescriptionListItem>
 
-          <DescriptionListItem label={t('pageEditor.panels.socialMediaImage')}>
-            {metadata.socialMediaImage ? (
-              metadata.socialMediaImage.filename
-            ) : (
-              <div style={missingInfoStyle}>{t('pageEditor.panels.enterSocialMediaImage')}</div>
-            )}
+          <DescriptionListItem
+            label={t('pageEditor.panels.socialMediaImage')}
+            message={t('pageEditor.panels.enterSocialMediaDescription')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaImage?.filename}
           </DescriptionListItem>
         </DescriptionList>
       </Modal.Body>
