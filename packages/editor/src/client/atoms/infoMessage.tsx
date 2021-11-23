@@ -16,7 +16,7 @@ export function InfoMessage({messageType = InfoColor.white, message}: InfoMessag
     <div
       style={{
         borderRadius: '8px',
-        padding: '6px',
+        padding: '0px 5px',
         backgroundColor: `${messageType}`
       }}>
       {' '}
