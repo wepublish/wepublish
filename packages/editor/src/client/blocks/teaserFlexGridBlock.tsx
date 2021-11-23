@@ -88,7 +88,7 @@ export function FlexTeaserBlock({
 }
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
-  const [editIndex, setEditIndex] = useState('')
+  const [editItem, setEditItem] = useState<FlexTeaser>()
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -183,8 +183,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     )
   }
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
       {/* eslint-disable-next-line i18next/no-literal-string */}
@@ -213,11 +211,11 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               teaser={flexTeaser.teaser}
               showGrabCursor={!flexTeaser.alignment.static}
               onEdit={() => {
-                setEditIndex(flexTeaser.alignment.i)
+                setEditItem(flexTeaser)
                 setEditModalOpen(true)
               }}
               onChoose={() => {
-                setEditIndex(flexTeaser.alignment.i)
+                setEditItem(flexTeaser)
                 setChooseModalOpen(true)
               }}
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
@@ -252,14 +250,14 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </GridLayout>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-        {flexTeasers.find(ft => ft.alignment.i === editIndex)?.teaser && (
+        {editItem?.teaser && (
           <TeaserEditPanel
-            // TODO: Fix ?
-            initialTeaser={flexTeasers.find(ft => ft.alignment.i === editIndex)?.teaser}
+            key={editItem.alignment.i}
+            initialTeaser={editItem.teaser}
             onClose={() => setEditModalOpen(false)}
             onConfirm={teaser => {
               setEditModalOpen(false)
-              handleTeaserLinkChange(editIndex, teaser)
+              handleTeaserLinkChange(editItem.alignment.i, teaser)
             }}
           />
         )}
@@ -269,7 +267,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
             setChooseModalOpen(false)
-            handleTeaserLinkChange(editIndex, teaser)
+            if (editItem?.alignment.i) handleTeaserLinkChange(editItem.alignment.i, teaser)
           }}
         />
       </Drawer>
