@@ -88,19 +88,11 @@ export function PublishArticlePanel({
             {metadata.authors.map(e => e.name).join(', ')}
           </DescriptionListItem>
 
-          <DescriptionListItem label={t('articleEditor.panels.slug')}>
-            {metadata.slug ? (
-              metadata.slug
-            ) : (
-              <div
-                style={{
-                  borderRadius: '8px',
-                  padding: '6px',
-                  backgroundColor: '#fde9ef'
-                }}>
-                {t('articleEditor.panels.addSlug')}
-              </div>
-            )}
+          <DescriptionListItem
+            label={t('articleEditor.panels.slug')}
+            message={t('articleEditor.panels.addSlug')}
+            messageType={InfoColor.error}>
+            {metadata.slug}
           </DescriptionListItem>
 
           <DescriptionListItem
