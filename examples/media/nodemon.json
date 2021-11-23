@@ -1,5 +1,0 @@
-{
-  "watch": ["./lib/**/*.js"],
-  "delay": 250,
-  "ignoreRoot": [".git"]
-}

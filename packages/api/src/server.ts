@@ -80,7 +80,7 @@ export class WepublishServer {
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
-      playground: opts.playground ?? false,
+      playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
       context: ({req}) => contextFromRequest(req, opts)
@@ -88,14 +88,15 @@ export class WepublishServer {
 
     const publicServer = new ApolloServer({
       schema: GraphQLWepublishPublicSchema,
-      playground: opts.playground ?? false,
+      playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
       context: ({req}) => contextFromRequest(req, opts)
     })
 
     const corsOptions = {
-      origin: '*',
+      origin: true,
+      credentials: true,
       allowedHeaders: [
         'authorization',
         'content-type',

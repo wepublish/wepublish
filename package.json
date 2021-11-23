@@ -10,16 +10,17 @@
     "dev": "run-p start:docker watch",
     "clean": "run-p --print-label clean:**",
     "test": "run-p --print-label test:**",
-    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:oauth2-example",
+    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:oauth2-example",
     "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production",
-    "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production build:api-example build:media-example build:website-example build:oauth2-example",
+    "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production build:api-example build:website-example build:oauth2-example",
     "prerelease": "run-s clean build:production",
     "release": "node -r dotenv/config ./node_modules/.bin/lerna version --conventional-commits --no-changelog --force-git-tag --no-push",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
+    "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
     "watch": "run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
-    "start:docker": "docker-compose up mongo mongo-express",
+    "start:docker": "docker-compose up mongo mongo-express media",
     "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
@@ -55,11 +56,7 @@
     "build:api-example": "yarn workspace @wepublish/api-example build",
     "watch:api-example": "yarn workspace @wepublish/api-example watch",
     "start:api-example": "yarn workspace @wepublish/api-example start",
-    "setup:media-example": "yarn workspace @wepublish/media-example setup",
-    "clean:media-example": "yarn workspace @wepublish/media-example clean",
-    "build:media-example": "yarn workspace @wepublish/media-example build",
-    "watch:media-example": "yarn workspace @wepublish/media-example watch",
-    "start:media-example": "yarn workspace @wepublish/media-example start",
+    "clean:media": "docker-compose exec media rm -rf ./.media",
     "setup:oauth2-example": "yarn workspace @wepublish/oauth2-example setup",
     "clean:oauth2-example": "yarn workspace @wepublish/oauth2-example clean",
     "build:oauth2-example": "yarn workspace @wepublish/oauth2-example build",
@@ -68,7 +65,9 @@
     "clean:website-example": "yarn workspace @wepublish/website-example clean",
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\""
+    "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
+    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000"
   },
   "workspaces": [
     "packages/*",
@@ -78,6 +77,7 @@
     "@babel/eslint-plugin": "^7.11.5",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-config-standard": "^14.1.1",
@@ -92,7 +92,8 @@
     "lerna-changelog": "^1.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.1",
-    "pretty-quick": "^1.11.1"
+    "pretty-quick": "^1.11.1",
+    "testcafe": "^1.8.5"
   },
   "husky": {
     "hooks": {

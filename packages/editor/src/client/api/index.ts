@@ -211,7 +211,20 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
+<<<<<<< HEAD
 export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserFlexGridBlock;
+=======
+export type BildwurfAdBlock = {
+  __typename?: 'BildwurfAdBlock';
+  zoneID: Scalars['String'];
+};
+
+export type BildwurfAdBlockInput = {
+  zoneID: Scalars['String'];
+};
+
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+>>>>>>> master
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -228,6 +241,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
   polisConversation?: Maybe<PolisConversationBlockInput>;
+  bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
@@ -1210,6 +1224,12 @@ export type PaymentProvider = {
   name: Scalars['String'];
 };
 
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer';
+  paymentProviderID: Scalars['String'];
+  customerID: Scalars['String'];
+};
+
 export enum PaymentSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
@@ -1761,6 +1781,7 @@ export type User = {
   properties: Array<Properties>;
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
 };
 
 export type UserAddress = {
@@ -2154,6 +2175,9 @@ export type ArticleQuery = (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
       ) | (
+        { __typename?: 'BildwurfAdBlock' }
+        & FullBlock_BildwurfAdBlock_Fragment
+      ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
@@ -2470,6 +2494,11 @@ type FullBlock_PolisConversationBlock_Fragment = (
   & Pick<PolisConversationBlock, 'conversationID'>
 );
 
+type FullBlock_BildwurfAdBlock_Fragment = (
+  { __typename: 'BildwurfAdBlock' }
+  & Pick<BildwurfAdBlock, 'zoneID'>
+);
+
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
@@ -2509,6 +2538,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
+<<<<<<< HEAD
 type FullBlock_TeaserFlexGridBlock_Fragment = (
   { __typename: 'TeaserFlexGridBlock' }
   & { flexTeasers: Array<Maybe<(
@@ -2530,6 +2560,9 @@ type FullBlock_TeaserFlexGridBlock_Fragment = (
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserFlexGridBlock_Fragment;
+=======
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+>>>>>>> master
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -3125,6 +3158,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
+      ) | (
+        { __typename?: 'BildwurfAdBlock' }
+        & FullBlock_BildwurfAdBlock_Fragment
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
@@ -3941,6 +3977,9 @@ export const FullBlockFragmentDoc = gql`
   }
   ... on PolisConversationBlock {
     conversationID
+  }
+  ... on BildwurfAdBlock {
+    zoneID
   }
   ... on EmbedBlock {
     url

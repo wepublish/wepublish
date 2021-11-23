@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "2.10.0",
+  "version": "2.12.0",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -56,6 +56,7 @@
     "@wepublish/karma.run-react": "^0.2.0",
     "apollo-upload-client": "^16.0.0",
     "array-move": "^2.2.1",
+    "browser-image-compression": "^1.0.16",
     "core-js": "^3.4.8",
     "date-fns": "^2.24.0",
     "emoji-mart": "^3.0.0",

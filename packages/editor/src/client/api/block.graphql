@@ -146,6 +146,10 @@ fragment FullBlock on Block {
     conversationID
   }
 
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
   ... on EmbedBlock {
     url
     title

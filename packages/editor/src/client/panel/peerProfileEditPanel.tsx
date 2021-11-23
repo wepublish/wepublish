@@ -23,13 +23,14 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument} from '../utility'
+import {getOperationNameFromDocument, validateURL} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
+import {FormControlUrl} from '../atoms/formControlUrl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -49,8 +50,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
-  const [callToActionImageURL, setCallToActionImageURL] = useState<string | undefined>()
+  const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
+  const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -59,7 +61,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving
+  const isDisabled = isLoading || isSaving || validCallToActionURL
 
   const {t} = useTranslation()
 
@@ -84,6 +86,15 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     const error = fetchError?.message ?? saveError?.message
     if (error) Alert.error(error, 0)
   }, [fetchError, saveError])
+
+  useEffect(() => {
+    const checkCallToActionURL = async () => {
+      const isValidTextURL = validateURL(callToActionTextURL)
+      const isValidImageURL = validateURL(callToActionImageURL)
+      setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
+    }
+    checkCallToActionURL()
+  }, [callToActionTextURL, callToActionImageURL])
 
   async function handleSave() {
     await updateSettings({
@@ -167,11 +178,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
               </FormGroup>
               <FormGroup>
-                <FormControl
+                <FormControlUrl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
                   value={callToActionTextURL}
-                  onChange={url => setCallToActionTextURL(url)}
+                  onChange={setCallToActionTextURL}
                 />
               </FormGroup>
             </div>
@@ -204,11 +215,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 />
               </FormGroup>
               <FormGroup>
-                <FormControl
+                <FormControlUrl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
                   value={callToActionImageURL}
-                  onChange={url => setCallToActionImageURL(url)}
+                  onChange={setCallToActionImageURL}
                 />
                 <Message
                   style={{marginTop: '5px'}}
