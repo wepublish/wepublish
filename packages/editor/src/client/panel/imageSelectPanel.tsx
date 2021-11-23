@@ -14,11 +14,13 @@ import {
   Message,
   Loader,
   FlexboxGrid,
-  Notification
+  Notification,
+  ControlLabel
 } from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
+import {getImgMinSizeToCompress} from '../utility'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -93,6 +95,10 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
             onDrop={handleDrop}
           />
         </Panel>
+        <ControlLabel>
+          <br />
+          {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
+        </ControlLabel>
 
         <Panel header={t('articleEditor.panels.images')}>
           <InputGroup>
