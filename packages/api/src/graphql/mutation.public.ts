@@ -1,4 +1,11 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLList
+} from 'graphql'
 
 import {Issuer} from 'openid-client'
 import crypto from 'crypto'
@@ -19,11 +26,14 @@ import {
   NotAuthorisedError as NotAuthorizedError,
   NotAuthenticatedError,
   UserInputError,
-  CommentLengthError
+  CommentLengthError,
+  UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {
+  GraphQLPaymentProviderCustomer,
+  GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
   GraphQLPublicUserInput,
   GraphQLPublicUserSubscription,
@@ -366,10 +376,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
-      async resolve(root, {input}, {authenticateUser, dbAdapter, loaders}) {
+      async resolve(root, {input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
         const {user} = authenticateUser()
 
-        if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
+        if (!user.subscription) throw new NotFound('user.subscription', user.id)
 
         const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
 
@@ -406,7 +416,95 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
+        // Check if user has any unpaid Periods and delete them and their invoices if so
+        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
+
+        const openInvoice = invoices.find(
+          invoice => invoice?.paidAt === null && invoice?.canceledAt === null
+        )
+
+        if (
+          openInvoice ||
+          (updateSubscription.deactivatedAt !== null &&
+            updateSubscription.deactivatedAt <= new Date())
+        ) {
+          const periodToDelete = updateSubscription.periods.find(
+            period => period.invoiceID === openInvoice?.id
+          )
+          if (periodToDelete) {
+            await dbAdapter.user.deleteUserSubscriptionPeriod({
+              userID: user.id,
+              periodID: periodToDelete.id
+            })
+          }
+          if (openInvoice) await dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
+
+          const finalUpdatedUser = await dbAdapter.user.getUserByID(user.id)
+          if (!finalUpdatedUser || !finalUpdatedUser.subscription)
+            throw new Error('Error during updateSubscription')
+
+          // renew user subscription
+          await memberContext.renewSubscriptionForUser({
+            userID: finalUpdatedUser.id,
+            userSubscription: finalUpdatedUser.subscription,
+            userName: finalUpdatedUser.name,
+            userEmail: finalUpdatedUser.email
+          })
+
+          return finalUpdatedUser.subscription
+        }
+
         return updateSubscription
+      }
+    },
+
+    cancelUserSubscription: {
+      type: GraphQLPublicUserSubscription,
+      args: {},
+      description:
+        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
+      async resolve(root, {}, {authenticateUser, dbAdapter, loaders}) {
+        const {user} = authenticateUser()
+
+        if (!user.subscription) throw new NotFound('user.subscription', user.id)
+        if (user.subscription.deactivatedAt !== null)
+          throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivatedAt)
+
+        const now = new Date()
+        const deactivationDate =
+          user.subscription.paidUntil !== null && user.subscription.paidUntil > now
+            ? user.subscription.paidUntil
+            : now
+        const updateSubscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            ...user.subscription,
+            deactivatedAt: deactivationDate
+          }
+        })
+
+        if (!updateSubscription) throw new Error('Error during updateSubscription')
+        return updateSubscription
+      }
+    },
+
+    updatePaymentProviderCustomers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      args: {
+        input: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomerInput)))
+        }
+      },
+      description: 'This mutation allows to update the Payment Provider Customers',
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        const updateUser = await dbAdapter.user.updatePaymentProviderCustomers({
+          userID: user.id,
+          paymentProviderCustomers: input
+        })
+
+        if (!updateUser) throw new NotFound('User', user.id)
+        return updateUser.paymentProviderCustomers
       }
     },
 

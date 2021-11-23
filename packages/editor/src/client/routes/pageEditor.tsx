@@ -25,7 +25,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag} from 'rsuite'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag, Notification} from 'rsuite'
 import {StateColor} from '../utility'
 
 export interface PageEditorProps {
@@ -187,7 +187,11 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftSaved'),
+        duration: 2000
+      })
+      await refetch({id: pageID})
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -197,11 +201,12 @@ export function PageEditor({id}: PageEditorProps) {
           route: PageEditRoute.create({id: data?.createPage.id})
         })
       }
-
       setChanged(false)
-      Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
+      Notification.success({
+        title: t('pageEditor.overview.pageDraftCreated'),
+        duration: 2000
+      })
     }
-    await refetch({id: pageID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
@@ -228,7 +233,14 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    Alert.success(t('pageEditor.overview.pagePublished'), 2000)
+    Notification.success({
+      title: t(
+        publishDate <= new Date()
+          ? 'pageEditor.overview.pagePublished'
+          : 'pageEditor.overview.pagePending'
+      ),
+      duration: 2000
+    })
   }
 
   useEffect(() => {

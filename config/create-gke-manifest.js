@@ -1,19 +1,11 @@
 const fs = require('fs')
 const {spawn, exec} = require('child_process')
+const {slugify} = require('./utilities')
+
 try {
   require('dotenv').config()
 } catch (e) {}
 
-function slugify(text, separator = "-") {
-  return text
-    .toString()
-    .normalize('NFD')                   // split an accented letter in the base letter and the acent
-    .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
-    .replace(/\s+/g, separator);
-}
 
 const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
 
@@ -318,7 +310,8 @@ async function applyWebsite() {
 async function applyMediaServer() {
   const app = 'media'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-  const appPort = 8000
+  const appPort = 4100
+  const mediaImage = 'ghcr.io/wepublish/karma-media-server:latest'
 
   const pvc = {
     apiVersion: 'v1',
@@ -376,8 +369,7 @@ async function applyMediaServer() {
           containers: [
             {
               name: appName,
-              image: image,
-              command: ['node', './examples/media/dist/index.js'],
+              image: mediaImage,
               env: [
                 {
                   name: 'NODE_ENV',
@@ -970,6 +962,10 @@ async function applyEditor() {
                 {
                   name: 'PEER_BY_DEFAULT',
                   value: 'true'
+                },
+                {
+                  name: 'IMG_MIN_SIZE_TO_COMPRESS',
+                  value: '10'
                 }
               ],
               ports: [

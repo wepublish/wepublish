@@ -64,7 +64,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: input.properties,
         roleIDs: input.roleIDs,
         password: passwordHash,
-        paymentProviderCustomers: {}
+        paymentProviderCustomers: []
       })
 
       return this.getUserByID(id)

@@ -116,23 +116,25 @@ export class MemberContext implements MemberContext {
     userSubscription
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
-      const {periods = [], paidUntil} = userSubscription
+      const {periods = [], paidUntil, deactivatedAt} = userSubscription
       periods.sort((periodA, periodB) => {
         if (periodA.endsAt < periodB.endsAt) return -1
         if (periodA.endsAt > periodB.endsAt) return 1
         return 0
       })
       if (
-        periods.length > 0 &&
+        (periods.length > 0 || deactivatedAt === null) &&
         ((paidUntil === null && periods.length > 0) ||
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
         const period = periods[periods.length - 1]
         return await this.loaders.invoicesByID.load(period.id)
       }
-      // TODO: implement check if paidUntil is super long time ago
+
       const startDate = new Date(
-        paidUntil ? paidUntil.getTime() + 1 * ONE_DAY_IN_MILLISECONDS : new Date().getTime()
+        paidUntil && deactivatedAt === null
+          ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
+          : new Date().getTime()
       )
       const nextDate = getNextDateForPeriodicity(startDate, userSubscription.paymentPeriodicity)
       const amount = calculateAmountForPeriodicity(
@@ -281,7 +283,9 @@ export class MemberContext implements MemberContext {
         continue
       }
 
-      const customer = user.paymentProviderCustomers[paymentMethod.paymentProviderID]
+      const customer = user.paymentProviderCustomers.find(
+        ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
+      )
 
       if (!customer) {
         logger('memberContext').warn(
@@ -345,7 +349,7 @@ export class MemberContext implements MemberContext {
       paymentID: payment.id,
       invoice,
       saveCustomer: false,
-      customerID: customer.id
+      customerID: customer.customerID
     })
 
     await this.dbAdapter.payment.updatePayment({

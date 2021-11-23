@@ -2,6 +2,8 @@ import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
+import {ClientSettings} from '../shared/types'
+import {ElementID} from '../shared/elementID'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -172,4 +174,30 @@ export enum StateColor {
   published = '#e1f8de',
   draft = '#f8efde',
   none = 'white'
+}
+
+export function validateURL(url: string) {
+  if (url) {
+    const pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    )
+    return pattern.test(url)
+  }
+  return false
+}
+
+/**
+ * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
+ */
+export function getImgMinSizeToCompress(): number {
+  const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  return imgMinSizeToCompress
 }
