@@ -16,10 +16,10 @@ export function InfoMessage({messageType = InfoColor.white, message}: InfoMessag
     <div
       style={{
         borderRadius: '8px',
-        padding: '0px 5px',
+        padding: '0px 6px',
         backgroundColor: `${messageType}`
       }}>
-      {' '}
+      {/* {' '} */}
       {message}
     </div>
   )

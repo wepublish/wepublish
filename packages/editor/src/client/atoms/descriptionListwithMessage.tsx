@@ -1,5 +1,6 @@
 import React, {ReactNode} from 'react'
 import {InfoMessage, InfoColor} from './infoMessage'
+import {DescriptionListItem} from './descriptionList'
 
 export interface DescriptionListWithMessageItemProps {
   label?: ReactNode
@@ -15,28 +16,8 @@ export function DescriptionListItemWithMessage({
   messageType
 }: DescriptionListWithMessageItemProps) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        marginBottom: 10
-
-        /* ':last-child': {
-        marginBottom: 0
-      } */
-      }}>
-      <dt
-        style={{
-          color: 'gray',
-          flexGrow: 1
-        }}>
-        {label}
-      </dt>
-      <dd
-        style={{
-          marginLeft: 20
-        }}>
-        {children || <InfoMessage messageType={messageType} message={message}></InfoMessage> || '-'}
-      </dd>
-    </div>
+    <DescriptionListItem label={label}>
+      {children || <InfoMessage messageType={messageType} message={message}></InfoMessage>}
+    </DescriptionListItem>
   )
 }
