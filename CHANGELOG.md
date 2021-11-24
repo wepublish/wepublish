@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.13.0-alpha.0 (2021-11-11)
+## v2.13.0 (2021-11-24)
 
 #### :heart: New Feature
 * `api-db-mongodb`, `api`
@@ -32,6 +32,7 @@
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
 - [@lakeside763](https://github.com/lakeside763)
+
 
 
 ## v2.12.0 (2021-10-27)
