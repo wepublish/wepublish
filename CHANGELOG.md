@@ -1,5 +1,29 @@
 # Change Log
 
+## v2.14.0-alpha.0 (2021-11-24)
+
+#### :heart: New Feature
+* `api`
+  * [#306](https://github.com/wepublish/wepublish/pull/306) Public mutation to cancel membership ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#401](https://github.com/wepublish/wepublish/pull/401) BAJ-5_upload_size ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### :nail_care: Polish
+* `editor`
+  * [#422](https://github.com/wepublish/wepublish/pull/422) F/wpc 574 img library translation ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api`
+  * [#423](https://github.com/wepublish/wepublish/pull/423) Update of stripePaymentProvider ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+
 ## v2.13.0 (2021-11-24)
 
 #### :heart: New Feature
