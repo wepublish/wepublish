@@ -209,15 +209,6 @@ export type BaseNavigationLink = {
   label: Scalars['String']
 }
 
-export type BildwurfAdBlock = {
-  __typename?: 'BildwurfAdBlock'
-  zoneID: Scalars['String']
-}
-
-export type BildwurfAdBlockInput = {
-  zoneID: Scalars['String']
-}
-
 export type Block =
   | RichTextBlock
   | ImageBlock
@@ -231,7 +222,6 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
-  | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
   | TitleBlock
@@ -253,7 +243,6 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>
   polisConversation?: Maybe<PolisConversationBlockInput>
-  bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
@@ -1148,12 +1137,6 @@ export type PaymentProvider = {
   name: Scalars['String']
 }
 
-export type PaymentProviderCustomer = {
-  __typename?: 'PaymentProviderCustomer'
-  paymentProviderID: Scalars['String']
-  customerID: Scalars['String']
-}
-
 export enum PaymentSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
@@ -1278,7 +1261,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query'
-  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1315,11 +1297,6 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
-}
-
-export type QueryRemotePeerProfileArgs = {
-  hostURL: Scalars['String']
-  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
@@ -1665,7 +1642,6 @@ export type User = {
   properties: Array<Properties>
   roles: Array<UserRole>
   subscription?: Maybe<UserSubscription>
-  paymentProviderCustomers: Array<PaymentProviderCustomer>
 }
 
 export type UserAddress = {
@@ -1978,7 +1954,6 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
-              | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2139,8 +2114,6 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
-type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
-
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
@@ -2184,7 +2157,6 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
-  | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
@@ -2357,7 +2329,6 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
-          | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2474,7 +2445,6 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
-              | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
