@@ -76,6 +76,7 @@ const ArticleQuery = gql`
   ${flexGridBlockFrontDataGQLfragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
+  ${flexGridBlockFrontDataGQLfragment}
   ${instagramPostBlockDataFragment}
   ${facebookPostBlockDataFragment}
   ${twitterTweetBlockDataFragment}
@@ -143,6 +144,8 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
   const canonicalOwnURL = canonicalHost + path
   const canonicalPeerURL = canonicalUrl || canonicalHost + path
   console.log('blocks:', blocks)
+
+  console.log(blocks)
 
   return (
     <>
