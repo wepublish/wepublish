@@ -23,7 +23,8 @@ import {
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
   peerMetaDataFragment,
-  peerArticleMetaDataFragment
+  peerArticleMetaDataFragment,
+  flexGridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -65,12 +66,14 @@ const ArticleQuery = gql`
         ...QuoteBlockData
         ...TitleBlockData
         ...ArticleGridBlockData
+        ...ArticleFlexGridBlockData
       }
     }
   }
 
   ${articleMetaDataFragment}
   ${richTextBlockDataFragment}
+  ${flexGridBlockFrontDataGQLfragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
   ${instagramPostBlockDataFragment}
@@ -139,6 +142,7 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
   const path = ArticleRoute.reverse({id, slug})
   const canonicalOwnURL = canonicalHost + path
   const canonicalPeerURL = canonicalUrl || canonicalHost + path
+  console.log('blocks:', blocks)
 
   return (
     <>
