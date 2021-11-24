@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 
 export interface InfoMessageProps {
-  messageType?: InfoColor
+  messageType: InfoColor
   message: ReactNode
 }
 
