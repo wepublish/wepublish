@@ -1,5 +1,40 @@
 # Change Log
 
+## v2.13.0 (2021-11-24)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`
+  * [#402](https://github.com/wepublish/wepublish/pull/402) changed paymentProviderCustomer to an array ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#398](https://github.com/wepublish/wepublish/pull/398) new block for bildwurf ads ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#404](https://github.com/wepublish/wepublish/pull/404) date fixes on calendar picker ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#83](https://github.com/wepublish/wepublish/pull/83) Use E2E Tests for proper integration testing ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#396](https://github.com/wepublish/wepublish/pull/396) F/wpc 567 pending notification for future publications ([@camilleory](https://github.com/camilleory))
+  * [#397](https://github.com/wepublish/wepublish/pull/397) initialize calendar with last publication date ([@penk85](https://github.com/penk85))
+
+#### :house: Internal
+* `api-db-mongodb`, `api`
+  * [#408](https://github.com/wepublish/wepublish/pull/408) updated apollo-server-express to 2.25.3 ([@roosnic1](https://github.com/roosnic1))
+  * [#402](https://github.com/wepublish/wepublish/pull/402) changed paymentProviderCustomer to an array ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#83](https://github.com/wepublish/wepublish/pull/83) Use E2E Tests for proper integration testing ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Camille ([@camilleory](https://github.com/camilleory))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@lakeside763](https://github.com/lakeside763)
+
+
+
 ## v2.12.0 (2021-10-27)
 
 #### :bug: Bug Fix
