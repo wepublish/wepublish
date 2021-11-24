@@ -177,7 +177,8 @@ export enum BlockType {
   PeerPageBreak = 'linkPageBreak',
 
   // Layout
-  Grid = 'grid'
+  Grid = 'grid',
+  FlexGrid = 'flexGrid'
 }
 
 export type RichTextBlockValue = Node[]
