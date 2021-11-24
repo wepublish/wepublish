@@ -92,7 +92,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     saveCustomer,
     paymentID
   }: CreatePaymentIntentProps): Promise<Intent> {
-    let paymentMethod: Stripe.PaymentMethod | string | undefined
+    let paymentMethodID: string | null = null
     if (customerID) {
       // For an off_session payment the default_payment_method of the customer will be used.
       // If no user, deleted user or no default_payment_method the intent will be created without an customer.
@@ -102,9 +102,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
           'Provided customerID "%s" returns a deleted stripe customer',
           customerID
         )
-      }
-      if (!customer.deleted && customer.invoice_settings.default_payment_method !== null) {
-        paymentMethod = customer.invoice_settings.default_payment_method
+      } else if (customer.invoice_settings.default_payment_method !== null) {
+        paymentMethodID = customer.invoice_settings.default_payment_method as string
       } else {
         logger('stripePaymentProvider').warn(
           'Provided customerID "%s" has no default_payment_method',
@@ -118,12 +117,12 @@ export class StripePaymentProvider extends BasePaymentProvider {
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
         0
       ),
-      ...(customerID && paymentMethod // only add customer if we have customer and paymentMethod
+      ...(customerID && paymentMethodID
         ? {
             confirm: true,
             customer: customerID,
             off_session: true,
-            payment_method: typeof paymentMethod === 'string' ? paymentMethod : paymentMethod?.id,
+            payment_method: paymentMethodID,
             payment_method_types: ['card']
           }
         : {}),
