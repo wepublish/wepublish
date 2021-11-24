@@ -5,8 +5,8 @@ import {DescriptionListItem} from './descriptionList'
 export interface DescriptionListWithMessageItemProps {
   label?: ReactNode
   children?: ReactNode
-  message?: ReactNode
-  messageType?: InfoColor
+  message: ReactNode
+  messageType: InfoColor
 }
 
 export function DescriptionListItemWithMessage({
