@@ -1,5 +1,12 @@
 # Change Log
 
+## v2.14.0-alpha.1 (2021-11-25)
+
+#### :bug: Bug Fix
+* `api`
+  * [#428](https://github.com/wepublish/wepublish/pull/428) bug fix for updating user subscription ([@roosnic1](https://github.com/roosnic1))
+
+
 ## v2.14.0-alpha.0 (2021-11-24)
 
 #### :heart: New Feature
