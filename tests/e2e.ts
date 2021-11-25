@@ -89,9 +89,9 @@ test('Publish article', async t => {
   await t
     .click(Selector('a').withAttribute('href',`/article/edit/${articleID}`))
     .click(publishButton)
-    .click(confirmButton)
-    .expect(Selector('div.rs-alert-container').exists).ok()
-    .click(Selector('div.rs-alert-item-close'))
+    .expect(Selector('button').withAttribute('disabled').exists).ok()
+    .click(Selector('button').withText('Close'))
+           
 
   await t
     .click(metadataButton)
