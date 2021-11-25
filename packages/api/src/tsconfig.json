@@ -5,7 +5,6 @@
     "outDir": "../lib/",
     "module": "commonjs",
     "types": ["@types/node", "@types/jest"],
-    "lib": ["dom", "es2019"],
-    "resolveJsonModule": true
+    "lib": ["dom", "es2019"]
   }
 }
