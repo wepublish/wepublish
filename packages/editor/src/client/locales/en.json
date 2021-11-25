@@ -587,6 +587,7 @@
       },
       "panels": {
         "addTag": "Press enter to add tag",
+        "addSlug": "Please add a slug",
         "chooseImage": "Choose Image",
         "close": "Close",
         "confirm": "Confirm",
