@@ -380,9 +380,7 @@ export function ArticleMetadataPanel({
                   value={tags}
                   creatable={true}
                   data={tags.map(tag => ({label: tag, value: tag}))}
-                  onChange={tags => {
-                    onChange?.({...value, tags})
-                  }}
+                  onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
                 />
               </FormGroup>
               <FormGroup>
