@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 
 export interface InfoMessageProps {
-  messageType?: InfoColor
+  messageType: InfoColor
   message: ReactNode
 }
 
@@ -16,10 +16,9 @@ export function InfoMessage({messageType = InfoColor.white, message}: InfoMessag
     <div
       style={{
         borderRadius: '8px',
-        padding: '6px',
+        padding: '0px 6px',
         backgroundColor: `${messageType}`
       }}>
-      {' '}
       {message}
     </div>
   )

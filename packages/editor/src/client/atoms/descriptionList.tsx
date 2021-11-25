@@ -52,7 +52,7 @@ export function DescriptionListItem({
         style={{
           marginLeft: 20
         }}>
-        {children || <InfoMessage messageType={messageType} message={message}></InfoMessage> || '-'}
+        {children}
       </dd>
     </div>
   )
