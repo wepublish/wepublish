@@ -75,12 +75,9 @@ export function PublishPagePanel({
             {metadata.description}
           </DescriptionListItemWithMessage>
 
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.slug')}
-            message={t('pageEditor.panels.addSlug')}
-            messageType={InfoColor.error}>
-            {metadata.slug}
-          </DescriptionListItemWithMessage>
+          <DescriptionListItem label={t('pageEditor.panels.slug')}>
+            {metadata.slug || '-'}
+          </DescriptionListItem>
 
           <DescriptionListItem label={t('pageEditor.panels.tags')}>
             {metadata.tags.join(', ') || '-'}
