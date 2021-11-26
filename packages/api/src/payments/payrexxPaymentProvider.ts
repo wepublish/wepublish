@@ -111,18 +111,47 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
-    // TODO: fix this
-    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const signature = crypto.createHmac('sha256', this.instanceAPISecret).digest('base64')
+
+    const res = await fetch(
+      `https://api.payrexx.com/v1.0/Gateway/${intentID}/?instance=${this.instanceName}&ApiSignature=${signature}`,
+      {
+        method: 'GET'
+      }
+    )
+    if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
+
+    const payrexxResponse = await res.json()
+    const [gateway] = payrexxResponse.data
+    if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
+
+    console.log('ssstate', gateway)
+    const state = mapPayrexxEventToPaymentStatue(gateway.status)
+
+    if (!state) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unknown state %s',
+        gateway.id,
+        this.id,
+        gateway.status
+      )
+      throw new Error('unkown gateway state')
+    }
+
+    if (!gateway.referenceId) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with empty referenceId',
+        gateway.id,
+        this.id
+      )
+      throw new Error('empty referenceId')
+    }
 
     return {
-      successful: intent.status === 'succeeded',
-      open: intent.status === 'succeeded' || intent.status === 'canceled',
-      paymentData: JSON.stringify(intent)
-    } */
-    return {
-      state: PaymentState.Processing,
-      paymentID: 'aasd'
+      state,
+      paymentID: gateway.referenceId,
+      paymentData: JSON.stringify(gateway)
     }
   }
 }
