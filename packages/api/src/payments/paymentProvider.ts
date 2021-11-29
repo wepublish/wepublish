@@ -108,10 +108,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
     const payment = await context.loaders.paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
-    if (!payment) {
-      // TODO: handle missing payment
-      throw new Error('missing payment')
-    }
+    if (!payment) throw new Error(`Payment with ID ${intentState.paymentID} not found`)
 
     const updatedPayment = await context.dbAdapter.payment.updatePayment({
       id: payment.id,

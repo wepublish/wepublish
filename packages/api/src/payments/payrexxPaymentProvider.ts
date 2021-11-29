@@ -126,7 +126,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const [gateway] = payrexxResponse.data
     if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
 
-    console.log('ssstate', gateway)
     const state = mapPayrexxEventToPaymentStatue(gateway.status)
 
     if (!state) {
