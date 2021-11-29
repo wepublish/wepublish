@@ -299,7 +299,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
 
-        const token = generateJWT({id: user.id})
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: process.env.PUBLIC_JWT_EXPIRES_MIN || 5
+        })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
