@@ -315,9 +315,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new Error('User does not exist') // TODO: make this proper error
+        const expiresInMinutes = parseInt(process.env.USER_LIMIT || '')
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: process.env.PUBLIC_JWT_EXPIRES_MIN || 5
+          expiresInMinutes: Number.isInteger(expiresInMinutes) ? expiresInMinutes : 5
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
