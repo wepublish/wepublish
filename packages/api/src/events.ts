@@ -195,7 +195,7 @@ invoiceModelEvents.on('update', async (context, model) => {
           type: SendMailType.NewMemberSubscription,
           recipient: user.email,
           data: {
-            url: `${context.websiteURL}/login/jwt=${token}`,
+            url: context.urlAdapter.getLoginURL(token),
             user
           }
         })
