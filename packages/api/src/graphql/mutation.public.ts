@@ -297,7 +297,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
-      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext}) {
+      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
 
@@ -306,7 +306,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           type: SendMailType.LoginLink,
           recipient: user.email,
           data: {
-            url: `${process.env.WEBSITE_URL}?jwt=${token}`,
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })
