@@ -12,4 +12,5 @@ export interface URLAdapter {
   getArticlePreviewURL(token: string): string
   getPagePreviewURL(token: string): string
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string
+  getLoginURL(token: string): string
 }

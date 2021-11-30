@@ -72,6 +72,10 @@ class ExampleURLAdapter implements URLAdapter {
   getPagePreviewURL(token: string): string {
     return `${this.websiteURL}/${token}`
   }
+
+  getLoginURL(token: string): string {
+    return `${this.websiteURL}/login/jwt=${token}`
+  }
 }
 
 async function asyncMain() {
