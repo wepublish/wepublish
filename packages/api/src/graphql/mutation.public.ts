@@ -552,7 +552,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const {user} = authenticateUser()
 
         const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        const invoice = invoices.find(invoice => invoice !== null && invoice.id === id)
+        const invoice = invoices.find(invoice => invoice?.id === id)
         if (!invoice) throw new NotFound('Invoice', id)
 
         const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
@@ -561,13 +561,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         for (const payment of payments) {
           if (!payment || !payment.intentID) continue
 
-          const paymentMethod = paymentMethods.find(
-            pm => pm && payment && pm.id === payment.paymentMethodID
-          )
+          const paymentMethod = paymentMethods.find(pm => pm.id === payment.paymentMethodID)
           if (!paymentMethod) continue // TODO: what happens if we don't find a paymentMethod
 
           const paymentProvider = paymentProviders.find(
-            pp => pp && pp.id === paymentMethod.paymentProviderID
+            pp => pp.id === paymentMethod.paymentProviderID
           )
           if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
 

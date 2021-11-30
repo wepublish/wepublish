@@ -21,7 +21,7 @@ export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   vatRate: number
 }
 
-function mapPayrexxEventToPaymentStatue(event: string): PaymentState | null {
+function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'waiting':
       return PaymentState.Processing
@@ -58,7 +58,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const transaction = props.req.body.transaction
     if (!transaction) throw new Error('Can not handle webhook')
 
-    const state = mapPayrexxEventToPaymentStatue(transaction.status)
+    const state = mapPayrexxEventToPaymentStatus(transaction.status)
     if (state !== null) {
       intentStates.push({
         paymentID: transaction.referenceId,
@@ -126,7 +126,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const [gateway] = payrexxResponse.data
     if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
 
-    const state = mapPayrexxEventToPaymentStatue(gateway.status)
+    const state = mapPayrexxEventToPaymentStatus(gateway.status)
 
     if (!state) {
       logger('payrexxPaymentProvider').error(
