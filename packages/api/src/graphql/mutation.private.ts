@@ -314,13 +314,41 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await dbAdapter.user.getUser(email)
-        if (!user) throw new Error('User does not exist') // TODO: make this proper error
+        if (!user) throw new NotFound('User', email)
         const token = generateJWT({id: user.id})
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: email,
           data: {
             url: `${url}?jwt=${token}`,
+            user
+          }
+        })
+        return email
+      }
+    },
+
+    sendWebsiteLogin: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, dbAdapter, generateJWT, mailContext, urlAdapter}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanSendJWTLogin, roles)
+
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) throw new NotFound('User', email)
+        const token = generateJWT({id: user.id})
+        await mailContext.sendMail({
+          type: SendMailType.LoginLink,
+          recipient: email,
+          data: {
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })
