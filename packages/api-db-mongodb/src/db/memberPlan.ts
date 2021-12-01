@@ -82,6 +82,15 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     return ids.map(id => memberPlanMap[id] ?? null)
   }
 
+  async getMemberPlansBySlug(slugs: string[]): Promise<OptionalMemberPlan[]> {
+    const memberPlans = await this.memberPlans.find({slug: {$in: slugs}}).toArray()
+    const memberPlansMap = Object.fromEntries(
+      memberPlans.map(({_id: id, slug, ...memberPlan}) => [slug, {id, slug, ...memberPlan}])
+    )
+
+    return slugs.map(slug => memberPlansMap[slug] ?? null)
+  }
+
   async getMemberPlans({
     filter,
     sort,
