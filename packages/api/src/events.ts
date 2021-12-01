@@ -189,7 +189,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         // Send FirstTime Hello
         const token = context.generateJWT({
           id: user.id,
-          expiresInMinutes: 60 * 24
+          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
         await context.mailContext.sendMail({
           type: SendMailType.NewMemberSubscription,
