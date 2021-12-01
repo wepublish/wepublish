@@ -1,15 +1,26 @@
 import {MailchimpMailProvider} from '../../src'
 
-const mockSend = jest.fn()
+const mockSend = jest.fn().mockImplementationOnce(cb => cb())
+const mockSendTemplate = jest.fn().mockImplementationOnce(cb => cb())
 jest.mock('mandrill-api', () => {
   return {
     Mandrill: jest.fn().mockImplementation(() => {
       return {
         messages: {
-          send: mockSend
+          send: mockSend,
+          sendTemplate: mockSendTemplate
         }
       }
     })
+  }
+})
+
+jest.mock('../../src/server', () => {
+  const originalModule = jest.requireActual('../../src/server')
+  return {
+    __esModule: true,
+    ...originalModule,
+    logger: jest.fn(() => ({error: jest.fn()}))
   }
 })
 
@@ -39,10 +50,48 @@ describe('Mailchimp Mail Provider', () => {
     })
 
     expect(mockSend).toHaveBeenCalledTimes(1)
-    expect(mockSend).toHaveBeenCalledWith({
+    expect(mockSend).toHaveBeenCalledWith(
+      {
+        message: {
+          html: undefined,
+          text: 'hello Test',
+          subject: 'test subject',
+          from_email: 'dev@wepublish.ch',
+          to: [
+            {
+              email: 'test@test.com',
+              type: 'to'
+            }
+          ],
+          metadata: {
+            mail_log_id: 'fakeMailLogID'
+          }
+        }
+      },
+      expect.any(Function),
+      expect.any(Function)
+    )
+  })
+})
+
+test('sendMail with template should call mandrill sendTemplate', async () => {
+  await mailChimpMailProvider.sendMail({
+    subject: 'test subject',
+    recipient: 'test@test.com',
+    replyToAddress: 'dev@test.com',
+    mailLogID: 'fakeMailLogID',
+    template: 'test-mail',
+    templateData: {message: 'hello Test'}
+  })
+
+  expect(mockSendTemplate).toHaveBeenCalledTimes(1)
+  expect(mockSendTemplate).toHaveBeenCalledWith(
+    {
+      template_name: 'test-mail',
+      template_content: [],
       message: {
         html: undefined,
-        text: 'hello Test',
+        text: undefined,
         subject: 'test subject',
         from_email: 'dev@wepublish.ch',
         to: [
@@ -51,10 +100,23 @@ describe('Mailchimp Mail Provider', () => {
             type: 'to'
           }
         ],
+        merge_vars: [
+          {
+            rcpt: 'test@test.com',
+            vars: [
+              {
+                name: 'message',
+                content: 'hello Test'
+              }
+            ]
+          }
+        ],
         metadata: {
           mail_log_id: 'fakeMailLogID'
         }
       }
-    })
-  })
+    },
+    expect.any(Function),
+    expect.any(Function)
+  )
 })
