@@ -48,6 +48,7 @@ import {
 import {CommentAuthorType, CommentState} from '../db/comment'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
 import {SendMailType} from '../mails/mailContext'
+import {GraphQLSlug} from './slug'
 import {GraphQLPublicInvoice} from './invoice'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -190,7 +191,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         name: {type: GraphQLNonNull(GraphQLString)},
         preferredName: {type: GraphQLString},
         email: {type: GraphQLNonNull(GraphQLString)},
-        memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+        memberPlanID: {type: GraphQLID},
+        memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
@@ -207,6 +209,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           preferredName,
           email,
           memberPlanID,
+          memberPlanSlug,
           autoRenew,
           paymentPeriodicity,
           monthlyAmount,
@@ -220,8 +223,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
         */
 
-        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+        if (
+          (memberPlanID == null && memberPlanSlug == null) ||
+          (memberPlanID != null && memberPlanSlug != null)
+        ) {
+          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+        }
+
+        const memberPlan = memberPlanID
+          ? await loaders.activeMemberPlansByID.load(memberPlanID)
+          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
 
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
         if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)

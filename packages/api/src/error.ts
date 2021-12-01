@@ -72,7 +72,7 @@ export class NotActiveError extends ApolloError {
 
 export class NotFound extends ApolloError {
   constructor(model: string, id: string) {
-    super(`${model} with ID: ${id} not found`, ErrorCode.NotFound)
+    super(`${model} with ID or Slug: '${id}' not found`, ErrorCode.NotFound)
   }
 }
 
