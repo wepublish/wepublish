@@ -301,10 +301,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      description: 'This mutation sends a login link to the email if the user exists.',
+      description:
+        'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
         const user = await dbAdapter.user.getUser(email)
-        if (!user) return email // TODO: implement check to avoid bots
+        if (!user) return email
 
         const lastSendTimeStamp = user.properties.find(
           property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
@@ -315,7 +316,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
         ) {
           logger('mutation.public').warn(
-            'User with ID %s requested Login Link multiple times in 15 min time window'
+            'User with ID %s requested Login Link multiple times in 15 min time window',
+            user.id
           )
           return email
         }
@@ -342,14 +344,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           value: `${Date.now()}`
         })
 
-        await dbAdapter.user.updateUser({
-          id: user.id,
-          input: {
-            ...user,
-            properties
-          }
-        })
-
+        try {
+          await dbAdapter.user.updateUser({
+            id: user.id,
+            input: {
+              ...user,
+              properties
+            }
+          })
+        } catch (error) {
+          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+        }
         return email
       }
     },
