@@ -46,10 +46,16 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
-import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
+import {
+  countRichtextChars,
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  MAX_COMMENT_LENGTH,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
+} from '../utility'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicInvoice} from './invoice'
+import {logger} from '../server'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -316,16 +322,31 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    resetPassword: {
+    sendWebsiteLogin: {
       type: GraphQLNonNull(GraphQLString),
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
+        'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
         const user = await dbAdapter.user.getUser(email)
-        if (!user) return email // TODO: implement check to avoid bots
+        if (!user) return email
+
+        const lastSendTimeStamp = user.properties.find(
+          property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+
+        if (
+          lastSendTimeStamp &&
+          parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+        ) {
+          logger('mutation.public').warn(
+            'User with ID %s requested Login Link multiple times in 15 min time window',
+            user.id
+          )
+          return email
+        }
 
         const token = generateJWT({
           id: user.id,
@@ -340,6 +361,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
+        const properties = user.properties.filter(
+          property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+        properties.push({
+          key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
+          public: false,
+          value: `${Date.now()}`
+        })
+
+        try {
+          await dbAdapter.user.updateUser({
+            id: user.id,
+            input: {
+              ...user,
+              properties
+            }
+          })
+        } catch (error) {
+          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+        }
         return email
       }
     },
