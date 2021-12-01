@@ -365,7 +365,7 @@ export async function contextFromRequest(
         issuer: hostURL,
         audience: props.audience ?? websiteURL,
         algorithm: 'HS256',
-        expiresIn: `${props.expiresInMinutes ?? 5}m`
+        expiresIn: `${props.expiresInMinutes || 15}m`
       }
       return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
     },
