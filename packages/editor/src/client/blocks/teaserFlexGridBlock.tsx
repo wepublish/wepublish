@@ -194,10 +194,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         onDragStop={() => setIsDragging(false)}
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         onLayoutChange={layout => handleLayoutChange(layout)}
-        cols={12}
-        rowHeight={30}
+        cols={12} // TODO dynamic
+        rowHeight={30} // TODO dynamic
         layout={flexTeasers.map(ft => ft.alignment)}
-        width={1200}>
+        width={800}>
         {flexTeasers.map(flexTeaser => (
           <div
             data-grid={{
