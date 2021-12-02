@@ -131,7 +131,9 @@ export function Draggable({children, point, disabled, onChange}: DraggableProps)
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseup', handleMouseUp)
 
-        draggableRef.current!.removeEventListener('mousedown', handleMouseDown)
+        if (draggableRef.current !== null) {
+          draggableRef.current!.removeEventListener('mousedown', handleMouseDown)
+        }
       }
     }
   }, [containerRef, draggableRef, point, disabled])

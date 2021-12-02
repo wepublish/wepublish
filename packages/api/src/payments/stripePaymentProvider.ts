@@ -16,6 +16,10 @@ export interface StripePaymentProviderProps extends PaymentProviderProps {
   webhookEndpointSecret: string
 }
 
+interface CreateStripeCustomerProps {
+  intent: Stripe.PaymentIntent
+}
+
 function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
   switch (event) {
     case 'requires_payment_method':
@@ -45,6 +49,17 @@ export class StripePaymentProvider extends BasePaymentProvider {
     this.webhookEndpointSecret = props.webhookEndpointSecret
   }
 
+  async createStripeCustomer({intent}: CreateStripeCustomerProps): Promise<string> {
+    const customer = await this.stripe.customers.create({
+      email: intent.metadata.mail ?? '',
+      payment_method: intent.payment_method as string,
+      invoice_settings: {
+        default_payment_method: intent.payment_method as string
+      }
+    })
+    return customer.id
+  }
+
   getWebhookEvent(body: any, signature: string): Stripe.Event {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
@@ -67,11 +82,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
         intent.customer === null &&
         intent.payment_method !== null
       ) {
-        const customer = await this.stripe.customers.create({
-          email: intent.metadata.mail ?? '',
-          payment_method: intent.payment_method as string
-        })
-        customerID = customer.id
+        customerID = await this.createStripeCustomer({intent})
       }
       intentStates.push({
         paymentID: intent.metadata.paymentID,
@@ -83,36 +94,52 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return intentStates
   }
 
-  async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    let paymentMethod: Stripe.PaymentMethod | undefined
-    if (props.customerID) {
-      const paymentMethods = await this.stripe.paymentMethods.list({
-        customer: props.customerID,
-        type: 'card'
-      })
-      paymentMethod = paymentMethods.data.length > 0 ? paymentMethods.data[0] : undefined
+  async createIntent({
+    customerID,
+    invoice,
+    saveCustomer,
+    paymentID
+  }: CreatePaymentIntentProps): Promise<Intent> {
+    let paymentMethodID: string | null = null
+    if (customerID) {
+      // For an off_session payment the default_payment_method of the customer will be used.
+      // If no user, deleted user or no default_payment_method the intent will be created without an customer.
+      const customer = await this.stripe.customers.retrieve(customerID)
+      if (customer.deleted) {
+        logger('stripePaymentProvider').warn(
+          'Provided customerID "%s" returns a deleted stripe customer',
+          customerID
+        )
+      } else if (customer.invoice_settings.default_payment_method !== null) {
+        paymentMethodID = customer.invoice_settings.default_payment_method as string
+      } else {
+        logger('stripePaymentProvider').warn(
+          'Provided customerID "%s" has no default_payment_method',
+          customerID
+        )
+      }
     }
 
     const intent = await this.stripe.paymentIntents.create({
-      amount: props.invoice.items.reduce(
+      amount: invoice.items.reduce(
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
         0
       ),
-      ...(props.customerID
+      ...(customerID && paymentMethodID
         ? {
             confirm: true,
-            customer: props.customerID,
+            customer: customerID,
             off_session: true,
-            payment_method: paymentMethod?.id,
+            payment_method: paymentMethodID,
             payment_method_types: ['card']
           }
         : {}),
       currency: 'chf',
       // description: props.invoice.description, TODO: convert to text
-      ...(props.saveCustomer ? {setup_future_usage: 'off_session'} : {}),
+      ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
       metadata: {
-        paymentID: props.paymentID,
-        mail: props.invoice.mail
+        paymentID: paymentID,
+        mail: invoice.mail
       }
     })
 
@@ -131,18 +158,43 @@ export class StripePaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
-    // TODO: fix this
-    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const intent = await this.stripe.paymentIntents.retrieve(intentID)
+    const state = mapStripeEventToPaymentStatue(intent.status)
+
+    if (!state) {
+      logger('stripePaymentProvider').error(
+        'Stripe intent with ID: %s for paymentProvider %s returned with an unknown state %s',
+        intent.id,
+        this.id,
+        intent.status
+      )
+      throw new Error('unknown intent state')
+    }
+
+    if (!intent.metadata.paymentID) {
+      logger('stripePaymentProvider').error(
+        'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
+        intent.id,
+        this.id
+      )
+      throw new Error('empty paymentID')
+    }
+
+    let customerID
+    if (
+      intent.setup_future_usage === 'off_session' &&
+      intent.customer === null &&
+      intent.payment_method !== null
+    ) {
+      customerID = await this.createStripeCustomer({intent})
+    }
 
     return {
-      successful: intent.status === 'succeeded',
-      open: intent.status === 'succeeded' || intent.status === 'canceled',
-      paymentData: JSON.stringify(intent)
-    } */
-    return {
-      state: PaymentState.Processing,
-      paymentID: 'aasd'
+      state,
+      paymentID: intent.metadata.paymentID,
+      paymentData: JSON.stringify(intent),
+      customerID
     }
   }
 }
