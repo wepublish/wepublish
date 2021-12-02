@@ -794,6 +794,14 @@ async function  applyApiServer() {
                 {
                   name: 'GOOGLE_PROJECT',
                   value: PROJECT_ID
+                },
+                {
+                  name: 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+                  value: '1440'
+                },
+                {
+                  name: 'SEND_LOGIN_JWT_EXPIRES_MIN',
+                  value: '10080'
                 }
               ],
               ports: [

@@ -55,6 +55,10 @@ class ExampleURLAdapter implements URLAdapter {
     }
     return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
+
+  getLoginURL(token: string): string {
+    return `https://demo.wepublish.ch/login/${token}`
+  }
 }
 
 export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> {

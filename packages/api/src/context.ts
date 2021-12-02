@@ -72,7 +72,9 @@ export interface DataLoaderContext {
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 
   readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
+  readonly memberPlansBySlug: DataLoader<string, OptionalMemberPlan>
   readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
+  readonly activeMemberPlansBySlug: DataLoader<string, OptionalMemberPlan>
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly invoicesByID: DataLoader<string, OptionalInvoice>
@@ -267,8 +269,12 @@ export async function contextFromRequest(
     }),
 
     memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
+    memberPlansBySlug: new DataLoader(slugs => dbAdapter.memberPlan.getMemberPlansBySlug(slugs)),
     activeMemberPlansByID: new DataLoader(ids =>
       dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    ),
+    activeMemberPlansBySlug: new DataLoader(slugs =>
+      dbAdapter.memberPlan.getActiveMemberPlansBySlug(slugs)
     ),
     paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
     activePaymentMethodsByID: new DataLoader(ids =>
@@ -365,7 +371,7 @@ export async function contextFromRequest(
         issuer: hostURL,
         audience: props.audience ?? websiteURL,
         algorithm: 'HS256',
-        expiresIn: `${props.expiresInMinutes ?? 5}m`
+        expiresIn: `${props.expiresInMinutes || 15}m`
       }
       return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
     },
