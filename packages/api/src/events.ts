@@ -15,6 +15,8 @@ import {MemberPlan} from './db/memberPlan'
 import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
+import {USER_PROPERTY_ORG_EMAIL} from './utility'
+import {logger} from './server'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -179,11 +181,21 @@ invoiceModelEvents.on('update', async (context, model) => {
       })
 
       if (!user.active && user.lastLogin === null) {
+        const orgEmail = user.properties.find(prop => prop.key === USER_PROPERTY_ORG_EMAIL)
+        if (!orgEmail) {
+          logger('events').warn(
+            `Newly created User with ID ${user.id} does not have an orgEmail in the properties. Welcome mail will not be sent!`
+          )
+          return
+        }
+
         await context.dbAdapter.user.updateUser({
           id: user.id,
           input: {
             ...user,
-            active: true
+            email: orgEmail.value,
+            active: true,
+            properties: user.properties.filter(prop => prop.key !== USER_PROPERTY_ORG_EMAIL)
           }
         })
         // Send FirstTime Hello
