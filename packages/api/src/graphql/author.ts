@@ -18,6 +18,7 @@ import {GraphQLSlug} from './slug'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
+import {GraphQLUser} from './user'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -62,9 +63,9 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
       })
     },
     users: {
-      type: GraphQLList(GraphQLAuthorUsers),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUser))),
       resolve: createProxyingResolver(({id}, args, {dbAdapter}) => {
-        return id ? dbAdapter.user.getUsersByAuthorID(id) : null
+        return id ? dbAdapter.user.getUsersByAuthorID(id) : []
       })
     }
   }

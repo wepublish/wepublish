@@ -149,7 +149,7 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>;
   jobTitle?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
-  users?: Maybe<Array<Maybe<AuthorUsers>>>;
+  users: Array<AuthorUsers>;
 };
 
 export type AuthorConnection = {
@@ -1273,8 +1273,7 @@ export type PeerProfile = {
   themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
-  callToActionText?: Maybe<Scalars['RichText']>;
-  callToActionString: Scalars['String'];
+  callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImage?: Maybe<Image>;
@@ -1285,7 +1284,7 @@ export type PeerProfileInput = {
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
-  callToActionString: Scalars['String'];
+  callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImageID?: Maybe<Scalars['ID']>;
@@ -2263,10 +2262,10 @@ export type FullAuthorFragment = (
   & { links?: Maybe<Array<(
     { __typename?: 'AuthorLink' }
     & Pick<AuthorLink, 'title' | 'url'>
-  )>>, users?: Maybe<Array<Maybe<(
+  )>>, users: Array<(
     { __typename?: 'AuthorUsers' }
     & AuthorUsersRefFragment
-  )>>> }
+  )> }
   & AuthorRefFragment
 );
 
