@@ -1170,6 +1170,7 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  slug: Scalars['Slug'];
   description: Scalars['String'];
   paymentProvider: PaymentProvider;
   active: Scalars['Boolean'];
@@ -1177,6 +1178,7 @@ export type PaymentMethod = {
 
 export type PaymentMethodInput = {
   name: Scalars['String'];
+  slug: Scalars['Slug'];
   description: Scalars['String'];
   paymentProviderID: Scalars['String'];
   active: Scalars['Boolean'];
@@ -1529,6 +1531,7 @@ export type QueryPagePreviewLinkArgs = {
 
 export type QueryMemberPlanArgs = {
   id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['Slug']>;
 };
 
 
@@ -3123,7 +3126,7 @@ export type FullPaymentProviderFragment = (
 
 export type FullPaymentMethodFragment = (
   { __typename?: 'PaymentMethod' }
-  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
+  & Pick<PaymentMethod, 'id' | 'name' | 'slug' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
   & { paymentProvider: (
     { __typename?: 'PaymentProvider' }
     & FullPaymentProviderFragment
@@ -3967,6 +3970,7 @@ export const FullPaymentMethodFragmentDoc = gql`
     fragment FullPaymentMethod on PaymentMethod {
   id
   name
+  slug
   createdAt
   modifiedAt
   paymentProvider {

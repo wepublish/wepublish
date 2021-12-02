@@ -679,6 +679,7 @@
       "description": "Description",
       "editTitle": "Edit Payment Method",
       "name": "Name",
+      "slug": "Slug",
       "title": "Payment Methods"
     },
     "peerList": {

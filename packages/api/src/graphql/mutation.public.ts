@@ -204,7 +204,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+        paymentMethodID: {type: GraphQLID},
+        paymentMethodSlug: {type: GraphQLSlug},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -222,6 +223,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentPeriodicity,
           monthlyAmount,
           paymentMethodID,
+          paymentMethodSlug,
           successURL,
           failureURL
         },
@@ -234,13 +236,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
         }
 
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
         const memberPlan = memberPlanID
           ? await loaders.activeMemberPlansByID.load(memberPlanID)
           : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
         if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
 
-        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
@@ -249,7 +263,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             if (apm.forceAutoRenewal && !autoRenew) return false
             return (
               apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethodID)
+              apm.paymentMethodIDs.includes(paymentMethod.id)
             )
           })
         )
@@ -289,12 +303,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           userID: user.id,
           input: {
             startsAt: new Date(),
-            paymentMethodID,
+            paymentMethodID: paymentMethod.id,
             paymentPeriodicity,
             paidUntil: null,
             monthlyAmount,
             deactivatedAt: null,
-            memberPlanID,
+            memberPlanID: memberPlan.id,
             autoRenew
           }
         })
@@ -326,7 +340,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           successURL,
           failureURL
         })
@@ -601,10 +615,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {input},
-        {authenticateUser, createPaymentWithProvider, paymentProviders, dbAdapter}
+        {authenticateUser, createPaymentWithProvider, loaders, dbAdapter}
       ) {
         const {user} = authenticateUser()
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+        const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
+
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
         const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
@@ -612,7 +641,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!invoice) throw new NotFound('Invoice', invoiceID)
 
         return await createPaymentWithProvider({
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           invoice,
           saveCustomer: false,
           successURL,
