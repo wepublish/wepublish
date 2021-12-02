@@ -224,6 +224,14 @@
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g."
         }
       },
+      "flexTeaser": {
+        "chooseTeaser": "Choose Teaser",
+        "editTeaser": "Edit Teaser",
+        "removeTeaser": "Remove Teaser",
+        "addBlock": "Add Block",
+        "removeBlock": "Remove Block",
+        "pinBlock": "Pin Block"
+      },
       "image": {
         "label": "Image",
         "overview": {

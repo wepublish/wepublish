@@ -14,7 +14,7 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 
-// import {useTranslation} from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 
 export function FlexTeaserBlock({
   teaser,
@@ -23,6 +23,8 @@ export function FlexTeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
+  const {t} = useTranslation()
+
   return (
     <Panel
       bodyFill={true}
@@ -49,8 +51,7 @@ export function FlexTeaserBlock({
                 right: 0,
                 top: 0
               }}>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <IconButtonTooltip caption="choose teaser">
+              <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
                   icon={<Icon icon="file" />}
                   onClick={onChoose}
@@ -59,8 +60,7 @@ export function FlexTeaserBlock({
                   }}
                 />
               </IconButtonTooltip>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <IconButtonTooltip caption="edit teaser">
+              <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
                   icon={<Icon icon="pencil" />}
                   onClick={onEdit}
@@ -69,8 +69,7 @@ export function FlexTeaserBlock({
                   }}
                 />
               </IconButtonTooltip>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <IconButtonTooltip caption="remove teaser">
+              <IconButtonTooltip caption={t('blocks.flexTeaser.removeTeaser')}>
                 <IconButton
                   icon={<Icon icon="trash" />}
                   onClick={onRemove}
@@ -95,6 +94,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [isDragging, setIsDragging] = useState(false)
 
   const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     onChange({
@@ -185,8 +186,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   return (
     <>
-      {/* eslint-disable-next-line i18next/no-literal-string */}
-      <IconButtonTooltip caption="add block">
+      <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
         <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaserBlock} />
       </IconButtonTooltip>
       <GridLayout
@@ -194,8 +194,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         onDragStop={() => setIsDragging(false)}
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         onLayoutChange={layout => handleLayoutChange(layout)}
-        cols={12} // TODO dynamic
-        rowHeight={30} // TODO dynamic
+        cols={12} // TODO make dynamic?
+        rowHeight={30} // TODO make dynamic?
         layout={flexTeasers.map(ft => ft.alignment)}
         width={800}>
         {flexTeasers.map(flexTeaser => (
@@ -221,8 +221,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
             <ButtonToolbar style={{top: 0, position: 'absolute'}}>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <IconButtonTooltip caption="delete block">
+              <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
                 <IconButton
                   block
                   appearance="subtle"
@@ -230,8 +229,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
                   onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <IconButtonTooltip caption="pin block">
+              <IconButtonTooltip caption={t('blocks.flexTeaser.pinBlock')}>
                 <IconButton
                   block
                   appearance="subtle"
