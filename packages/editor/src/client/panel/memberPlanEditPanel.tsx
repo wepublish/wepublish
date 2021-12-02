@@ -212,7 +212,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.slug')}</ControlLabel>
-              <FormControl name={t('memberPlanList.name')} value={slug} plaintext={true} />
+              <FormControl name={t('memberPlanList.slug')} value={slug} plaintext={true} />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.active')}</ControlLabel>

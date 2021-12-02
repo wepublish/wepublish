@@ -77,6 +77,7 @@ export interface DataLoaderContext {
   readonly activeMemberPlansBySlug: DataLoader<string, OptionalMemberPlan>
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
+  readonly activePaymentMethodsBySlug: DataLoader<string, OptionalPaymentMethod>
   readonly invoicesByID: DataLoader<string, OptionalInvoice>
   readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
@@ -279,6 +280,9 @@ export async function contextFromRequest(
     paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
     activePaymentMethodsByID: new DataLoader(ids =>
       dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+    ),
+    activePaymentMethodsBySlug: new DataLoader(slugs =>
+      dbAdapter.paymentMethod.getActivePaymentMethodsBySlug(slugs)
     ),
     invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
