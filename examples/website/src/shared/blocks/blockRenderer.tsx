@@ -1,4 +1,4 @@
-import {Block, BlockType, PublishedArticle, TeaserStyle, Author, TeaserType} from '../types'
+import {Author, Block, BlockType, PublishedArticle, TeaserStyle, TeaserType} from '../types'
 import React, {ReactNode} from 'react'
 import {EmbedBlock} from './embedBlock'
 import {GalleryBlock} from './galleryBlock'
@@ -10,11 +10,12 @@ import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
 import {TextTeaser} from '../teasers/textTeaser'
-import {ArticleRoute, Route, PageRoute, PeerArticleRoute} from '../route/routeContext'
+import {ArticleRoute, PageRoute, PeerArticleRoute, Route} from '../route/routeContext'
 import {PageBreakBlock} from './peerPageBreak'
 import {ListicalBLock} from './listicalBlock'
 import {TitleBlock} from './titleBlock'
 import {TitleImageBlock} from './titleBlockImage'
+import {FlexGridBlock} from './flexGridBlock'
 
 export interface BlockRendererProps {
   blocks: Block[]
@@ -80,6 +81,9 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
         </GridBlock>
       )
 
+    case BlockType.FlexGrid:
+      return <FlexGridBlock flexTeasers={block.value.flexTeasers} opts={opts} />
+
     case BlockType.Quote:
       return <QuoteBlock author={block.value.author} text={block.value.text} />
 
@@ -142,7 +146,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   }
 }
 
-function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
+export function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
   function getTeaserTags(tags: string[], max: number): string[] {
     const result = []
     for (let i = 0; i < tags.length && i < max; i++) {

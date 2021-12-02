@@ -143,9 +143,6 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
   const path = ArticleRoute.reverse({id, slug})
   const canonicalOwnURL = canonicalHost + path
   const canonicalPeerURL = canonicalUrl || canonicalHost + path
-  console.log('blocks:', blocks)
-
-  console.log(blocks)
 
   return (
     <>

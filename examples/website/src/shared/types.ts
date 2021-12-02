@@ -335,6 +335,27 @@ export type GridBlock = BaseBlock<
   }
 >
 
+export interface FlexItemAlignment {
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
+  static?: boolean
+}
+
+export interface FlexTeaser {
+  alignment: FlexItemAlignment
+  blocks: Block[]
+}
+
+export type FlexGridBlock = BaseBlock<
+  BlockType.FlexGrid,
+  {
+    flexTeasers: FlexTeaser[]
+  }
+>
+
 // Block Unions
 // ------------
 
@@ -350,6 +371,7 @@ export type Block =
   | TitleImageBlock
   | GridBlock
   | TeaserBlock
+  | FlexGridBlock
 
 // Image
 export interface ImageRefData {
