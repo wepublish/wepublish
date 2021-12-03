@@ -6,6 +6,7 @@ fragment FullPaymentProvider on PaymentProvider {
 fragment FullPaymentMethod on PaymentMethod {
     id
     name
+    slug
     createdAt
     modifiedAt
     paymentProvider {

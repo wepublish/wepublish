@@ -211,6 +211,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               />
             </FormGroup>
             <FormGroup>
+              <ControlLabel>{t('memberPlanList.slug')}</ControlLabel>
+              <FormControl name={t('memberPlanList.slug')} value={slug} plaintext={true} />
+            </FormGroup>
+            <FormGroup>
               <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>

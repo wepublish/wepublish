@@ -103,26 +103,37 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
       session.id,
       this.id
     )
+
+    if (session.url === null) {
+      throw new Error('session url can not be null')
+    }
+
     return {
       intentID: session.id,
-      intentSecret: session.id,
+      intentSecret: session.url,
       intentData: JSON.stringify(session),
       state: PaymentState.Submitted
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
-    // TODO: fix this
-    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const session = await this.stripe.checkout.sessions.retrieve(intentID)
+    const state =
+      session.payment_status === 'paid' ? PaymentState.Paid : PaymentState.RequiresUserAction
+
+    if (!session.client_reference_id) {
+      logger('stripePaymentProvider').error(
+        'Stripe checkout session with ID: %s for paymentProvider %s returned with client_reference_id',
+        session.id,
+        this.id
+      )
+      throw new Error('empty paymentID')
+    }
 
     return {
-      successful: intent.status === 'succeeded',
-      open: intent.status === 'succeeded' || intent.status === 'canceled',
-      paymentData: JSON.stringify(intent)
-    } */
-    return {
-      state: PaymentState.Processing,
-      paymentID: 'aasd'
+      state,
+      paymentID: session.client_reference_id,
+      paymentData: JSON.stringify(session)
     }
   }
 }
