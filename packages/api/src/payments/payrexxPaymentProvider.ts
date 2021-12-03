@@ -79,6 +79,11 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
         0
       ),
+      fields: {
+        email: {
+          value: props.invoice.mail
+        }
+      },
       successRedirectUrl: props.successURL,
       failedRedirectUrl: props.failureURL,
       cancelRedirectUrl: props.failureURL,
