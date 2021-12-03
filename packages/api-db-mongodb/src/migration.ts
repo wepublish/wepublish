@@ -1,7 +1,8 @@
 import {Db} from 'mongodb'
-import {CollectionName, DBUser} from './db/schema'
+import {CollectionName, DBPaymentMethod, DBUser} from './db/schema'
 import {PaymentProviderCustomer} from '@wepublish/api'
 import {richTextToString} from './utility'
+import {slugify} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -644,8 +645,21 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  change rich text for callToAction to string
     version: 16,
+    async migrate(db, locale) {
+      const paymentMethods = await db.collection(CollectionName.PaymentMethods)
+
+      const allPaymentMethods: DBPaymentMethod[] = await paymentMethods.find({}).toArray()
+
+      for (const paymentMethod of allPaymentMethods) {
+        const slug = slugify(paymentMethod.name)
+        await paymentMethods.updateOne({_id: paymentMethod._id}, {$set: {slug}})
+      }
+    }
+  },
+  {
+    //  change rich text for callToAction to string
+    version: 17,
     async migrate(db, locale) {
       const peerProfile = await db.collection(CollectionName.PeerProfiles).findOne({
         callToActionText: {$exists: true}

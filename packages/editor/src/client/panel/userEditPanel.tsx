@@ -23,7 +23,8 @@ import {
   useUserQuery,
   useUserRoleListQuery,
   FullUserRoleFragment,
-  FullUserSubscriptionFragment
+  FullUserSubscriptionFragment,
+  useSendWebsiteLoginMutation
 } from '../api'
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
@@ -72,6 +73,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   const [createUser, {loading: isCreating, error: createError}] = useCreateUserMutation()
   const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
+
+  const [sendWebsiteLogin] = useSendWebsiteLoginMutation()
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
@@ -206,6 +209,23 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <FormGroup>
                 <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
                   {t('userList.panels.resetPassword')}
+                </Button>
+                <Button
+                  appearance="primary"
+                  style={{marginLeft: '20px'}}
+                  disabled={!email || !active}
+                  onClick={async () => {
+                    try {
+                      await sendWebsiteLogin({variables: {email}})
+                      Alert.success(
+                        t('userList.panels.sendWebsiteLoginSuccessMessage', {email}),
+                        2000
+                      )
+                    } catch (error) {
+                      Alert.error(t('userList.panel.sendWebsiteLoginFailureMessage', {error}), 0)
+                    }
+                  }}>
+                  {t('userList.panels.sendWebsiteLogin')}
                 </Button>
               </FormGroup>
             )}

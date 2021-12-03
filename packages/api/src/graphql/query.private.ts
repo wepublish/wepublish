@@ -869,12 +869,16 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     memberPlan: {
       type: GraphQLMemberPlan,
-      args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      resolve(root, {id, slug}, {authenticate, loaders}) {
         const {roles} = authenticate()
         authorise(CanGetMemberPlan, roles)
 
-        return loaders.memberPlansByID.load(id)
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
+
+        return id ? loaders.memberPlansByID.load(id) : loaders.memberPlansBySlug.load(slug)
       }
     },
 

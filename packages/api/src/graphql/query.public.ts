@@ -39,6 +39,7 @@ import {PageSort, PublicPage} from '../db/page'
 import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
+  GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
 import {MemberPlanSort} from '../db/memberPlan'
@@ -340,6 +341,21 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         const {user} = authenticateUser()
 
         return dbAdapter.invoice.getInvoicesByUserID(user.id)
+      }
+    },
+
+    memberPlan: {
+      type: GraphQLPublicMemberPlan,
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query returns a member plan.',
+      resolve(root, {id, slug}, {loaders}) {
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
+
+        return id
+          ? loaders.activeMemberPlansByID.load(id)
+          : loaders.activeMemberPlansBySlug.load(slug)
       }
     },
 

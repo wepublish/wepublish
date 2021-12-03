@@ -346,6 +346,7 @@ export interface DBPaymentMethod {
   modifiedAt: Date
 
   name: string
+  slug: string
   description: string
   paymentProviderID: string
   active: boolean
