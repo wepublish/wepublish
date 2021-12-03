@@ -49,7 +49,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLRichText},
+    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
     callToActionString: {type: GraphQLNonNull(GraphQLString)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},

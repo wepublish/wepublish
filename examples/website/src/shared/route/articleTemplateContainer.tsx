@@ -422,7 +422,7 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
         <div className={css(PeerProfileFiller)} />
       </div>
       <div className={css(PeerProfileCallToActionURL)}>
-        {peer?.callToActionString.length > 0 ? (
+        {peer?.callToActionString ? (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
             {peer.callToActionText}
           </a>
