@@ -1,5 +1,48 @@
 # Change Log
 
+## v2.15.0-alpha.0 (2021-12-03)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api`, `editor`
+  * [#436](https://github.com/wepublish/wepublish/pull/436) payment method with slugs ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#435](https://github.com/wepublish/wepublish/pull/435) rename resetPassword to sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#436](https://github.com/wepublish/wepublish/pull/436) payment method with slugs ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#435](https://github.com/wepublish/wepublish/pull/435) rename resetPassword to sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
+  * [#433](https://github.com/wepublish/wepublish/pull/433) Use mailproviders with templates ([@roosnic1](https://github.com/roosnic1))
+  * [#429](https://github.com/wepublish/wepublish/pull/429) manual checkIntentStatus for Stripe and Payrexx ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#432](https://github.com/wepublish/wepublish/pull/432) Send Login Links from the Editor ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `api`
+  * [#428](https://github.com/wepublish/wepublish/pull/428) bug fix for updating user subscription ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#426](https://github.com/wepublish/wepublish/pull/426) F/wpc 568 fix upload image error ([@lakeside763](https://github.com/lakeside763))
+
+#### :nail_care: Polish
+* `editor`
+  * [#418](https://github.com/wepublish/wepublish/pull/418) f/wpc-579 missing fields highlighted in orange in page publish panel ([@camilleory](https://github.com/camilleory))
+  * [#417](https://github.com/wepublish/wepublish/pull/417) F/wpc 578 highlight missing field article metadata ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api`
+  * [#440](https://github.com/wepublish/wepublish/pull/440) implemented a quick fix for failed registrations ([@roosnic1](https://github.com/roosnic1))
+  * [#434](https://github.com/wepublish/wepublish/pull/434) use SEND_LOGIN_JWT_EXPIRES_MIN for sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
+  * [#431](https://github.com/wepublish/wepublish/pull/431) Make public jwt expiry time ajustable ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- [@lakeside763](https://github.com/lakeside763)
+
+
+
 ## v2.14.0-alpha.1 (2021-11-25)
 
 #### :bug: Bug Fix
