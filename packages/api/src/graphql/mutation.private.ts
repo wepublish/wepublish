@@ -644,17 +644,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: GraphQLNonNull(GraphQLArticle),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        const {
-          user: {id},
-          roles
-        } = authenticateUser()
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
         authorise(CanCreateArticle, roles)
-        const user = await dbAdapter.user.getUserByID(id)
-        const authorIDs = Array.isArray(input.authorIDs) ? input.authorIDs : []
-        if (user?.authorID && authorIDs.length === 0) authorIDs.push(user?.authorID)
+
         return dbAdapter.article.createArticle({
-          input: {...input, authorIDs, blocks: input.blocks.map(mapBlockUnionMap)}
+          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
         })
       }
     },

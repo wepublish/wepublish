@@ -147,7 +147,7 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>
   jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
-  users?: Maybe<Array<Maybe<AuthorUsers>>>
+  users: Array<AuthorUsers>
 }
 
 export type AuthorConnection = {

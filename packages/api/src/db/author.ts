@@ -1,6 +1,6 @@
 import {ConnectionResult, SortOrder, InputCursor, Limit} from './common'
 import {RichTextNode} from '../graphql/richText'
-import {OptionalUser} from './user'
+import {AuthorUsers} from './user'
 
 export interface AuthorLink {
   title: string
@@ -17,7 +17,7 @@ export interface Author {
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]
-  users: OptionalUser[]
+  users: AuthorUsers[]
 }
 
 export interface AuthorInput {

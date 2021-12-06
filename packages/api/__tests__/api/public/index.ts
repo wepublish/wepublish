@@ -90,7 +90,7 @@ export type Author = {
   bio?: Maybe<Scalars['RichText']>
   jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
-  users?: Maybe<Array<Maybe<AuthorUsers>>>
+  users: Array<AuthorUsers>
 }
 
 export type AuthorConnection = {
@@ -414,6 +414,8 @@ export type Mutation = {
    * type UserSubscription and throws an error if the user doesn't already have a subscription.
    */
   updateUserSubscription?: Maybe<UserSubscription>
+  /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */
+  cancelUserSubscription?: Maybe<UserSubscription>
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */

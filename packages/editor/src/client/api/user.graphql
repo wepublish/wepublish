@@ -70,6 +70,12 @@ query User($id: ID!) {
     }
 }
 
+query GetMe {
+    me {
+        ...FullUser
+    }
+}
+
 mutation CreateUser($input: UserInput!, $password: String!) {
     createUser(input: $input, password: $password) {
         ...FullUser
@@ -101,3 +107,4 @@ mutation DeleteUser($id: ID!) {
 mutation DeleteUserSubscription($userID: ID!) {
     deleteUserSubscription(userID: $userID)
 }
+

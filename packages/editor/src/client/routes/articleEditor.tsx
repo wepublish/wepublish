@@ -19,7 +19,10 @@ import {
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
-  useUpdateArticleMutation
+  useUpdateArticleMutation,
+  useGetMeQuery,
+  FullUserFragment,
+  Maybe
 } from '../api'
 
 import {
@@ -79,6 +82,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
+  const [authorID, setAuthorID] = useState<Maybe<string>>()
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
@@ -128,6 +132,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setBlocks(blocks)
     setChanged(true)
   }, [])
+
+  const {data: userData} = useGetMeQuery()
+  useEffect(() => {
+    if (userData?.me?.authorID) {
+      setAuthorID(userData.me.authorID)
+    }
+  }, [userData?.me])
 
   useEffect(() => {
     if (articleData?.article) {
@@ -320,6 +331,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   async function handleSave() {
     const input = createInput()
+    const authorIDs = input.authorIDs.length > 0 ? input.authorIDs : []
+    console.log(authorID)
+    if (authorID && authorIDs.length === 0) {
+      authorIDs.push(authorID)
+    }
+    input.authorIDs = authorIDs
+
+    console.log(input)
 
     if (articleID) {
       await updateArticle({variables: {id: articleID, input}})
