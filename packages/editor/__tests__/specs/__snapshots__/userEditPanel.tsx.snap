@@ -6182,6 +6182,86 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                   </Button>
                                 </defaultProps(Button)>
                               </withStyleProps(defaultProps(Button))>
+                              <withStyleProps(defaultProps(Button))
+                                appearance="primary"
+                                classPrefix="rs-btn"
+                                componentClass="button"
+                                disabled={true}
+                                onClick={[Function]}
+                                ripple={true}
+                                style={
+                                  Object {
+                                    "marginLeft": "20px",
+                                  }
+                                }
+                              >
+                                <defaultProps(Button)
+                                  appearance="primary"
+                                  className=""
+                                  classPrefix="rs-btn"
+                                  componentClass="button"
+                                  disabled={true}
+                                  onClick={[Function]}
+                                  ripple={true}
+                                  style={
+                                    Object {
+                                      "marginLeft": "20px",
+                                    }
+                                  }
+                                >
+                                  <Button
+                                    appearance="primary"
+                                    className=""
+                                    classPrefix="rs-btn"
+                                    componentClass="button"
+                                    disabled={true}
+                                    onClick={[Function]}
+                                    ripple={true}
+                                    style={
+                                      Object {
+                                        "marginLeft": "20px",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      className="rs-btn rs-btn-primary rs-btn-disabled"
+                                      disabled={true}
+                                      onClick={[Function]}
+                                      style={
+                                        Object {
+                                          "marginLeft": "20px",
+                                        }
+                                      }
+                                      type="button"
+                                    >
+                                      userList.panels.sendWebsiteLogin
+                                      <defaultProps(Ripple)
+                                        classPrefix="rs-ripple"
+                                      >
+                                        <Ripple
+                                          classPrefix="rs-ripple"
+                                        >
+                                          <span
+                                            className="rs-ripple-pond"
+                                          >
+                                            <Transition
+                                              enteringClassName="rs-ripple-rippling"
+                                              in={false}
+                                              onEntered={[Function]}
+                                              timeout={1000}
+                                            >
+                                              <span
+                                                className="rs-ripple"
+                                                style={Object {}}
+                                              />
+                                            </Transition>
+                                          </span>
+                                        </Ripple>
+                                      </defaultProps(Ripple)>
+                                    </button>
+                                  </Button>
+                                </defaultProps(Button)>
+                              </withStyleProps(defaultProps(Button))>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>
@@ -12284,14 +12364,95 @@ exports[`User Edit Panel should render with ID 1`] = `
                                                   }
                                                 }
                                               />
-                                            </Overlay>
-                                          </Portal>
-                                        </Portal>
-                                      </OverlayTrigger>
-                                    </PickerToggleTrigger>
-                                  </CheckPicker>
-                                </defaultProps(CheckPicker)>
-                              </withLocale(defaultProps(CheckPicker))>
+
+                                            </Transition>
+                                          </span>
+                                        </Ripple>
+                                      </defaultProps(Ripple)>
+                                    </button>
+                                  </Button>
+                                </defaultProps(Button)>
+                              </withStyleProps(defaultProps(Button))>
+                              <withStyleProps(defaultProps(Button))
+                                appearance="primary"
+                                classPrefix="rs-btn"
+                                componentClass="button"
+                                disabled={true}
+                                onClick={[Function]}
+                                ripple={true}
+                                style={
+                                  Object {
+                                    "marginLeft": "20px",
+                                  }
+                                }
+                              >
+                                <defaultProps(Button)
+                                  appearance="primary"
+                                  className=""
+                                  classPrefix="rs-btn"
+                                  componentClass="button"
+                                  disabled={true}
+                                  onClick={[Function]}
+                                  ripple={true}
+                                  style={
+                                    Object {
+                                      "marginLeft": "20px",
+                                    }
+                                  }
+                                >
+                                  <Button
+                                    appearance="primary"
+                                    className=""
+                                    classPrefix="rs-btn"
+                                    componentClass="button"
+                                    disabled={true}
+                                    onClick={[Function]}
+                                    ripple={true}
+                                    style={
+                                      Object {
+                                        "marginLeft": "20px",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      className="rs-btn rs-btn-primary rs-btn-disabled"
+                                      disabled={true}
+                                      onClick={[Function]}
+                                      style={
+                                        Object {
+                                          "marginLeft": "20px",
+                                        }
+                                      }
+                                      type="button"
+                                    >
+                                      userList.panels.sendWebsiteLogin
+                                      <defaultProps(Ripple)
+                                        classPrefix="rs-ripple"
+                                      >
+                                        <Ripple
+                                          classPrefix="rs-ripple"
+                                        >
+                                          <span
+                                            className="rs-ripple-pond"
+                                          >
+                                            <Transition
+                                              enteringClassName="rs-ripple-rippling"
+                                              in={false}
+                                              onEntered={[Function]}
+                                              timeout={1000}
+                                            >
+                                              <span
+                                                className="rs-ripple"
+                                                style={Object {}}
+                                              />
+                                            </Transition>
+                                          </span>
+                                        </Ripple>
+                                      </defaultProps(Ripple)>
+                                    </button>
+                                  </Button>
+                                </defaultProps(Button)>
+                              </withStyleProps(defaultProps(Button))>
                             </div>
                           </FormGroup>
                         </defaultProps(FormGroup)>

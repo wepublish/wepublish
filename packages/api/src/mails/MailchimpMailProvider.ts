@@ -9,6 +9,7 @@ import {
   WebhookForSendMailProps
 } from './mailProvider'
 import {MailLogState} from '../db/mailLog'
+import {logger} from '../server'
 
 export interface MailchimpMailProviderProps extends MailProviderProps {
   readonly apiKey: string
@@ -91,22 +92,76 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    await this.mandrill.messages.send({
-      message: {
-        html: props.messageHtml,
-        text: props.message,
-        subject: props.subject,
-        from_email: this.fromAddress,
-        to: [
-          {
-            email: props.recipient,
-            type: 'to'
-          }
-        ],
-        metadata: {
-          mail_log_id: props.mailLogID
+    if (props.template) {
+      try {
+        const templateContent: any = []
+        for (const [key, value] of Object.entries(props.templateData || {})) {
+          templateContent.push({
+            name: key,
+            content: value
+          })
         }
+        await new Promise((resolve, reject) => {
+          this.mandrill.messages.sendTemplate(
+            {
+              template_name: props.template,
+              template_content: [],
+              message: {
+                text: props.message,
+                subject: props.subject,
+                from_email: this.fromAddress,
+                to: [
+                  {
+                    email: props.recipient,
+                    type: 'to'
+                  }
+                ],
+                merge_vars: [
+                  {
+                    rcpt: props.recipient,
+                    vars: templateContent
+                  }
+                ],
+                metadata: {
+                  mail_log_id: props.mailLogID
+                }
+              }
+            },
+            resolve,
+            reject
+          )
+        })
+      } catch (error) {
+        logger('mailchimpMailProvider').error(error, `sendTemplate returned NOK`)
       }
-    })
+    } else {
+      try {
+        await new Promise((resolve, reject) => {
+          this.mandrill.messages.send(
+            {
+              message: {
+                html: props.messageHtml,
+                text: props.message,
+                subject: props.subject,
+                from_email: this.fromAddress,
+                to: [
+                  {
+                    email: props.recipient,
+                    type: 'to'
+                  }
+                ],
+                metadata: {
+                  mail_log_id: props.mailLogID
+                }
+              }
+            },
+            resolve,
+            reject
+          )
+        })
+      } catch (error) {
+        logger('mailchimpMailProvider').error(error, `send returned NOK`)
+      }
+    }
   }
 }

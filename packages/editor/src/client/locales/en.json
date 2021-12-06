@@ -497,6 +497,7 @@
       "fixPriceDescription": "If false the price can be a price range",
       "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
       "name": "Name",
+      "slug": "Slug",
       "paymentMethods": "Possible Payment Methods",
       "paymentPeriodicities": "Possible Payment Periodicities",
       "paymentPeriodicity": {
@@ -680,6 +681,7 @@
       "description": "Description",
       "editTitle": "Edit Payment Method",
       "name": "Name",
+      "slug": "Slug",
       "title": "Payment Methods"
     },
     "peerList": {
@@ -796,6 +798,9 @@
         "preferredName": "Preferred Name",
         "remove": "Remove",
         "resetPassword": "Reset Password",
+        "sendWebsiteLogin": "Send Login Link for Website",
+        "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
+        "sendWebsiteLoginFailureMessage": "Sending Login Link failed. {{error}}",
         "resetPasswordFor": "Reset the password for {{userName}}",
         "save": "Save",
         "selectUserRole": "Select User Role",

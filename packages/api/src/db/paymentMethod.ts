@@ -3,6 +3,7 @@ export interface PaymentMethod {
   createdAt: Date
   modifiedAt: Date
   name: string
+  slug: string
   description: string
   paymentProviderID: string
   active: boolean
@@ -13,6 +14,7 @@ export type OptionalPaymentMethod = PaymentMethod | null
 
 export interface PaymentMethodInput {
   name: string
+  slug: string
   description: string
   paymentProviderID: string
   active: boolean
@@ -34,7 +36,9 @@ export interface DBPaymentMethodAdapter {
 
   getPaymentMethods(): Promise<PaymentMethod[]>
   getPaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]>
+  getPaymentMethodsBySlug(slugs: readonly string[]): Promise<OptionalPaymentMethod[]>
   getActivePaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]>
+  getActivePaymentMethodsBySlug(slugs: readonly string[]): Promise<OptionalPaymentMethod[]>
 
   getActivePaymentMethods(): Promise<PaymentMethod[]>
 }
