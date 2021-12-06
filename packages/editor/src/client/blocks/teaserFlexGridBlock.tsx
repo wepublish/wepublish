@@ -23,8 +23,6 @@ export function FlexTeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
-  const {t} = useTranslation()
-
   return (
     <Panel
       bodyFill={true}
@@ -51,33 +49,27 @@ export function FlexTeaserBlock({
                 right: 0,
                 top: 0
               }}>
-              <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
-                <IconButton
-                  icon={<Icon icon="file" />}
-                  onClick={onChoose}
-                  style={{
-                    margin: 10
-                  }}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
-                <IconButton
-                  icon={<Icon icon="pencil" />}
-                  onClick={onEdit}
-                  style={{
-                    margin: 10
-                  }}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip caption={t('blocks.flexTeaser.removeTeaser')}>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  onClick={onRemove}
-                  style={{
-                    margin: 10
-                  }}
-                />
-              </IconButtonTooltip>
+              <IconButton
+                icon={<Icon icon="file" />}
+                onClick={onChoose}
+                style={{
+                  margin: 10
+                }}
+              />
+              <IconButton
+                icon={<Icon icon="pencil" />}
+                onClick={onEdit}
+                style={{
+                  margin: 10
+                }}
+              />
+              <IconButton
+                icon={<Icon icon="trash" />}
+                onClick={onRemove}
+                style={{
+                  margin: 10
+                }}
+              />
             </div>
           </div>
         )}
