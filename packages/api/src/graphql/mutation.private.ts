@@ -324,13 +324,47 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await dbAdapter.user.getUser(email)
-        if (!user) throw new Error('User does not exist') // TODO: make this proper error
-        const token = generateJWT({id: user.id})
+        if (!user) throw new NotFound('User', email)
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: email,
           data: {
             url: `${url}?jwt=${token}`,
+            user
+          }
+        })
+        return email
+      }
+    },
+
+    sendWebsiteLogin: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, dbAdapter, generateJWT, mailContext, urlAdapter}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanSendJWTLogin, roles)
+
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) throw new NotFound('User', email)
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        })
+        await mailContext.sendMail({
+          type: SendMailType.LoginLink,
+          recipient: email,
+          data: {
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })

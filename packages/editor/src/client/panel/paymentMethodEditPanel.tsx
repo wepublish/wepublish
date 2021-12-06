@@ -24,6 +24,7 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {slugify} from '../utility'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -36,6 +37,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   const {t} = useTranslation()
 
   const [name, setName] = useState('')
+  const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [active, setActive] = useState<boolean>(true)
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
@@ -76,6 +78,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   useEffect(() => {
     if (data?.paymentMethod) {
       setName(data.paymentMethod.name)
+      setSlug(data.paymentMethod.slug)
       setDescription(data.paymentMethod.description)
       setActive(data.paymentMethod.active)
       setPaymentProvider(data.paymentMethod.paymentProvider)
@@ -108,6 +111,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
           id,
           input: {
             name,
+            slug,
             description,
             active,
             paymentProviderID: paymentProvider.id
@@ -121,6 +125,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
         variables: {
           input: {
             name,
+            slug,
             description,
             active,
             paymentProviderID: paymentProvider.id
@@ -151,8 +156,13 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 disabled={isDisabled}
                 onChange={value => {
                   setName(value)
+                  setSlug(slugify(value))
                 }}
               />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('paymentMethodList.slug')}</ControlLabel>
+              <FormControl name={t('paymentMethodList.slug')} value={slug} plaintext={true} />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.active')}</ControlLabel>

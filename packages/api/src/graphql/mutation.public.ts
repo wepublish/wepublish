@@ -4,7 +4,8 @@ import {
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
-  GraphQLList
+  GraphQLList,
+  GraphQLID
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
@@ -45,8 +46,16 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
-import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
+import {
+  countRichtextChars,
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  MAX_COMMENT_LENGTH,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
+} from '../utility'
 import {SendMailType} from '../mails/mailContext'
+import {GraphQLSlug} from './slug'
+import {GraphQLPublicInvoice} from './invoice'
+import {logger} from '../server'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -188,11 +197,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         name: {type: GraphQLNonNull(GraphQLString)},
         preferredName: {type: GraphQLString},
         email: {type: GraphQLNonNull(GraphQLString)},
-        memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+        memberPlanID: {type: GraphQLID},
+        memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+        paymentMethodID: {type: GraphQLID},
+        paymentMethodSlug: {type: GraphQLSlug},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -205,10 +216,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           preferredName,
           email,
           memberPlanID,
+          memberPlanSlug,
           autoRenew,
           paymentPeriodicity,
           monthlyAmount,
           paymentMethodID,
+          paymentMethodSlug,
           successURL,
           failureURL
         },
@@ -218,11 +231,32 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
         */
 
-        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+        if (
+          (memberPlanID == null && memberPlanSlug == null) ||
+          (memberPlanID != null && memberPlanSlug != null)
+        ) {
+          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+        }
 
-        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
+        const memberPlan = memberPlanID
+          ? await loaders.activeMemberPlansByID.load(memberPlanID)
+          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
@@ -231,7 +265,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             if (apm.forceAutoRenewal && !autoRenew) return false
             return (
               apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethodID)
+              apm.paymentMethodIDs.includes(paymentMethod.id)
             )
           })
         )
@@ -256,12 +290,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           userID: user.id,
           input: {
             startsAt: new Date(),
-            paymentMethodID,
+            paymentMethodID: paymentMethod.id,
             paymentPeriodicity,
             paidUntil: null,
             monthlyAmount,
             deactivatedAt: null,
-            memberPlanID,
+            memberPlanID: memberPlan.id,
             autoRenew
           }
         })
@@ -281,34 +315,72 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           successURL,
           failureURL
         })
       }
     },
 
-    resetPassword: {
+    sendWebsiteLogin: {
       type: GraphQLNonNull(GraphQLString),
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
-      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext}) {
+        'This mutation sends a login link to the email if the user exists. Method will always return email address',
+      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
         const user = await dbAdapter.user.getUser(email)
-        if (!user) return email // TODO: implement check to avoid bots
+        if (!user) return email
 
-        const token = generateJWT({id: user.id})
+        const lastSendTimeStamp = user.properties.find(
+          property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+
+        if (
+          lastSendTimeStamp &&
+          parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+        ) {
+          logger('mutation.public').warn(
+            'User with ID %s requested Login Link multiple times in 15 min time window',
+            user.id
+          )
+          return email
+        }
+
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+        })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
           data: {
-            url: `${process.env.WEBSITE_URL}?jwt=${token}`,
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })
 
+        const properties = user.properties.filter(
+          property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+        properties.push({
+          key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
+          public: false,
+          value: `${Date.now()}`
+        })
+
+        try {
+          await dbAdapter.user.updateUser({
+            id: user.id,
+            input: {
+              ...user,
+              properties
+            }
+          })
+        } catch (error) {
+          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+        }
         return email
       }
     },
@@ -389,7 +461,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
         if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
         if (
           !memberPlan.availablePaymentMethods.some(apm => {
@@ -518,10 +590,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {input},
-        {authenticateUser, createPaymentWithProvider, paymentProviders, dbAdapter}
+        {authenticateUser, createPaymentWithProvider, loaders, dbAdapter}
       ) {
         const {user} = authenticateUser()
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+        const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
+
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
         const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
@@ -529,12 +616,53 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!invoice) throw new NotFound('Invoice', invoiceID)
 
         return await createPaymentWithProvider({
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           invoice,
           saveCustomer: false,
           successURL,
           failureURL
         })
+      }
+    },
+
+    checkInvoiceStatus: {
+      type: GraphQLPublicInvoice,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      description:
+        'This mutation will check the invoice status and update with information from the paymentProvider',
+      async resolve(root, {id}, context) {
+        const {authenticateUser, dbAdapter, paymentProviders} = context
+        const {user} = authenticateUser()
+
+        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
+        const invoice = invoices.find(invoice => invoice?.id === id)
+        if (!invoice) throw new NotFound('Invoice', id)
+
+        const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
+        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
+
+        for (const payment of payments) {
+          if (!payment || !payment.intentID) continue
+
+          const paymentMethod = paymentMethods.find(pm => pm.id === payment.paymentMethodID)
+          if (!paymentMethod) continue // TODO: what happens if we don't find a paymentMethod
+
+          const paymentProvider = paymentProviders.find(
+            pp => pp.id === paymentMethod.paymentProviderID
+          )
+          if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
+
+          const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
+          await paymentProvider.updatePaymentWithIntentState({intentState, context})
+        }
+
+        // FIXME: We need to implement a way to wait for all the database
+        //  event hooks to finish before we return data. Will be solved in WPC-498
+        await new Promise(resolve => setTimeout(resolve, 100))
+        const updatedInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
+        return updatedInvoices.find(invoice => invoice !== null && invoice.id === id)
       }
     }
   }

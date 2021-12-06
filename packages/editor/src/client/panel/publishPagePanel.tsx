@@ -8,6 +8,8 @@ import {PageMetadata} from './pageMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
+import {InfoColor} from '../atoms/infoMessage'
+import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
@@ -59,18 +61,55 @@ export function PublishPagePanel({
         />
 
         <DescriptionList>
-          <DescriptionListItem label={t('pageEditor.panels.title')}>
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.title')}
+            message={t('pageEditor.panels.enterTitle')}
+            messageType={InfoColor.warning}>
             {metadata.title}
-          </DescriptionListItem>
-          <DescriptionListItem label={t('pageEditor.panels.description')}>
+          </DescriptionListItemWithMessage>
+
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.description')}
+            message={t('pageEditor.panels.enterDescription')}
+            messageType={InfoColor.warning}>
             {metadata.description}
-          </DescriptionListItem>
+          </DescriptionListItemWithMessage>
+
           <DescriptionListItem label={t('pageEditor.panels.slug')}>
-            {metadata.slug}
+            {metadata.slug || '-'}
           </DescriptionListItem>
+
           <DescriptionListItem label={t('pageEditor.panels.tags')}>
-            {metadata.tags.join(', ')}
+            {metadata.tags.join(', ') || '-'}
           </DescriptionListItem>
+
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.image')}
+            message={t('pageEditor.panels.enterImage')}
+            messageType={InfoColor.warning}>
+            {metadata.image?.filename}
+          </DescriptionListItemWithMessage>
+
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.socialMediaTitle')}
+            message={t('pageEditor.panels.enterSocialMediaTitle')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaTitle}
+          </DescriptionListItemWithMessage>
+
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.socialMediaDescription')}
+            message={t('pageEditor.panels.enterSocialMediaDescription')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaDescription}
+          </DescriptionListItemWithMessage>
+
+          <DescriptionListItemWithMessage
+            label={t('pageEditor.panels.socialMediaImage')}
+            message={t('pageEditor.panels.enterSocialMediaDescription')}
+            messageType={InfoColor.warning}>
+            {metadata.socialMediaImage?.filename}
+          </DescriptionListItemWithMessage>
         </DescriptionList>
       </Modal.Body>
 

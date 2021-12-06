@@ -46,21 +46,21 @@ jobs:
           cd ./config
           yarn install
           node ./notify.js
-  e2eTest:
-    needs: deployment
-    name: Runs e2e Test on Feature instance
-    runs-on: self-hosted
-    container:
-      image: testcafe/testcafe
-      options: --user root
-    env:
-      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Sleep for 60s
-        uses: juliangruber/sleep-action@v1
-        with:
-          time: 60s
-      - name: Run E2E tests
-        if: always()
-        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000
+#  e2eTest:
+#    needs: deployment
+#    name: Runs e2e Test on Feature instance
+#    runs-on: self-hosted
+#    container:
+#      image: testcafe/testcafe
+#      options: --user root
+#    env:
+#      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Sleep for 60s
+#        uses: juliangruber/sleep-action@v1
+#        with:
+#          time: 60s
+#      - name: Run E2E tests
+#        if: always()
+#        run: /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/e2e.ts --assertion-timeout 10000

@@ -11,6 +11,7 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {PaymentProvider} from '../payments/paymentProvider'
 import {createProxyingResolver} from '../utility'
+import {GraphQLSlug} from './slug'
 
 export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Context>({
   name: 'PaymentProvider',
@@ -29,6 +30,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
     description: {type: GraphQLNonNull(GraphQLString)},
     paymentProvider: {
       type: GraphQLNonNull(GraphQLPaymentProvider),
@@ -46,6 +48,7 @@ export const GraphQLPublicPaymentMethod = new GraphQLObjectType<PaymentMethod, C
     id: {type: GraphQLNonNull(GraphQLID)},
     paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
     description: {type: GraphQLNonNull(GraphQLString)}
   }
 })
@@ -54,6 +57,7 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
   name: 'PaymentMethodInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
     description: {type: GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
     active: {type: GraphQLNonNull(GraphQLBoolean)}

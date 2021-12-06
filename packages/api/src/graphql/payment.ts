@@ -15,6 +15,7 @@ import {GraphQLPageInfo} from './common'
 import {Payment, PaymentSort, PaymentState} from '../db/payment'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {GraphQLSlug} from './slug'
 
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',
@@ -102,7 +103,8 @@ export const GraphQLPaymentFromInvoiceInput = new GraphQLInputObjectType({
   name: 'PaymentFromInvoiceInput',
   fields: {
     invoiceID: {type: GraphQLNonNull(GraphQLString)},
-    paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+    paymentMethodID: {type: GraphQLID},
+    paymentMethodSlug: {type: GraphQLSlug},
     successURL: {type: GraphQLString},
     failureURL: {type: GraphQLString}
   }
