@@ -101,3 +101,7 @@ mutation DeleteUser($id: ID!) {
 mutation DeleteUserSubscription($userID: ID!) {
     deleteUserSubscription(userID: $userID)
 }
+
+mutation SendWebsiteLogin($email: String!) {
+    sendWebsiteLogin(email: $email)
+}
