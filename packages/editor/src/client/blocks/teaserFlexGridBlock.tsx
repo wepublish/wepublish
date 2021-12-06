@@ -205,7 +205,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               y: flexTeaser.alignment.y,
               w: flexTeaser.alignment.w,
               h: flexTeaser.alignment.h
-            }} // more efficient way to remove i?
+            }}
             key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}

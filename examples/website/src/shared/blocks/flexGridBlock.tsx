@@ -15,7 +15,7 @@ export interface FlexGridBlockProps {
 export function FlexGridBlock({flexTeasers, opts}: FlexGridBlockProps) {
   let numberOfRows = 1
   const rows = flexTeasers.map(ft => ft.alignment.h + ft.alignment.y)
-  numberOfRows = Math.max(...rows)
+  numberOfRows = Math.max(...rows) + 1
 
   return (
     <>
