@@ -17,7 +17,7 @@ export interface Author {
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]
-  users: AuthorUsers[]
+  users?: AuthorUsers[]
 }
 
 export interface AuthorInput {
