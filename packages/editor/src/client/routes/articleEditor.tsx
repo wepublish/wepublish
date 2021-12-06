@@ -21,7 +21,6 @@ import {
   usePublishArticleMutation,
   useUpdateArticleMutation,
   useGetMeQuery,
-  FullUserFragment,
   Maybe
 } from '../api'
 
