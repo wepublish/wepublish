@@ -73,7 +73,6 @@ const ArticleQuery = gql`
 
   ${articleMetaDataFragment}
   ${richTextBlockDataFragment}
-  ${flexGridBlockFrontDataGQLfragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
   ${flexGridBlockFrontDataGQLfragment}
@@ -91,7 +90,6 @@ const ArticleQuery = gql`
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
-  ${flexGridBlockFrontDataGQLfragment}
 `
 
 export interface ArticleTemplateContainerProps {
@@ -224,6 +222,7 @@ const PeerArticleQuery = gql`
         ...QuoteBlockData
         ...TitleBlockData
         ...ArticleGridBlockData
+        ...ArticleFlexGridBlockData
       }
     }
   }
