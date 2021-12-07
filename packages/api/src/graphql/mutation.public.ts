@@ -513,45 +513,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
-        // Check if user has any unpaid Periods and delete them and their invoices if so
-        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-
-        const openInvoice = invoices.find(
-          invoice => invoice?.paidAt === null && invoice?.canceledAt === null
-        )
-
-        if (
-          openInvoice ||
-          (updateSubscription.deactivatedAt !== null &&
-            updateSubscription.deactivatedAt <= new Date())
-        ) {
-          const periodToDelete = updateSubscription.periods.find(
-            period => period.invoiceID === openInvoice?.id
-          )
-          if (periodToDelete) {
-            await dbAdapter.user.deleteUserSubscriptionPeriod({
-              userID: user.id,
-              periodID: periodToDelete.id
-            })
-          }
-          if (openInvoice) await dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
-
-          const finalUpdatedUser = await dbAdapter.user.getUserByID(user.id)
-          if (!finalUpdatedUser || !finalUpdatedUser.subscription)
-            throw new Error('Error during updateSubscription')
-
-          // renew user subscription
-          await memberContext.renewSubscriptionForUser({
-            userID: finalUpdatedUser.id,
-            userSubscription: finalUpdatedUser.subscription,
-            userName: finalUpdatedUser.name,
-            userEmail: finalUpdatedUser.email
-          })
-
-          return finalUpdatedUser.subscription
-        }
-
-        return updateSubscription
+        return await memberContext.handleSubscriptionChange({
+          userID: user.id,
+          userSubscription: updateSubscription
+        })
       }
     },
 
