@@ -471,7 +471,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
       },
       description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
+        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivatedAt to null",
       async resolve(root, {input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
         const {user} = authenticateUser()
 
@@ -506,7 +506,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentPeriodicity,
             monthlyAmount,
             autoRenew,
-            paymentMethodID
+            paymentMethodID,
+            deactivatedAt: null
           }
         })
 
