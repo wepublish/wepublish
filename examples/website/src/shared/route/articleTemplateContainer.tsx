@@ -91,6 +91,7 @@ const ArticleQuery = gql`
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
+  ${flexGridBlockFrontDataGQLfragment}
 `
 
 export interface ArticleTemplateContainerProps {
@@ -244,6 +245,7 @@ const PeerArticleQuery = gql`
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
+  ${flexGridBlockFrontDataGQLfragment}
 `
 
 export interface PeerArticleTemplateContainerProps {
