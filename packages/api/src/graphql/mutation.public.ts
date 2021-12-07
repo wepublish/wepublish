@@ -56,7 +56,6 @@ import {
 } from '../utility'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSlug} from './slug'
-import {GraphQLPublicInvoice} from './invoice'
 import {logger} from '../server'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -647,47 +646,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL
         })
-      }
-    },
-
-    checkInvoiceStatus: {
-      type: GraphQLPublicInvoice,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      description:
-        'This mutation will check the invoice status and update with information from the paymentProvider',
-      async resolve(root, {id}, context) {
-        const {authenticateUser, dbAdapter, paymentProviders} = context
-        const {user} = authenticateUser()
-
-        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        const invoice = invoices.find(invoice => invoice?.id === id)
-        if (!invoice) throw new NotFound('Invoice', id)
-
-        const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
-        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
-
-        for (const payment of payments) {
-          if (!payment || !payment.intentID) continue
-
-          const paymentMethod = paymentMethods.find(pm => pm.id === payment.paymentMethodID)
-          if (!paymentMethod) continue // TODO: what happens if we don't find a paymentMethod
-
-          const paymentProvider = paymentProviders.find(
-            pp => pp.id === paymentMethod.paymentProviderID
-          )
-          if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
-
-          const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
-          await paymentProvider.updatePaymentWithIntentState({intentState, context})
-        }
-
-        // FIXME: We need to implement a way to wait for all the database
-        //  event hooks to finish before we return data. Will be solved in WPC-498
-        await new Promise(resolve => setTimeout(resolve, 100))
-        const updatedInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        return updatedInvoices.find(invoice => invoice !== null && invoice.id === id)
       }
     }
   }
