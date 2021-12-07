@@ -235,9 +235,6 @@
         }
       },
       "flexTeaser": {
-        "chooseTeaser": "Choose Teaser",
-        "editTeaser": "Edit Teaser",
-        "removeTeaser": "Remove Teaser",
         "addBlock": "Add Block",
         "removeBlock": "Remove Block",
         "pinBlock": "Pin Block"

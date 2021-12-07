@@ -212,15 +212,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               }}
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
-            <ButtonToolbar style={{top: 0, position: 'absolute'}}>
-              <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                <IconButton
-                  block
-                  appearance="subtle"
-                  icon={<Icon icon="trash" />}
-                  onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
-                />
-              </IconButtonTooltip>
+            <ButtonToolbar style={{top: 1, left: 1, position: 'absolute'}}>
+              {!flexTeaser.teaser && (
+                <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
+                  <IconButton
+                    block
+                    appearance="subtle"
+                    icon={<Icon icon="trash" />}
+                    onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
+                  />
+                </IconButtonTooltip>
+              )}
               <IconButtonTooltip caption={t('blocks.flexTeaser.pinBlock')}>
                 <IconButton
                   block
