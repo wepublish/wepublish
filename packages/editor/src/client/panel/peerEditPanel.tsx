@@ -203,15 +203,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 </div>
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionText')}>
-                {!!profile?.callToActionText && (
-                  <RichTextBlock
-                    disabled
-                    displayOnly
-                    // TODO: remove this
-                    onChange={console.log}
-                    value={profile?.callToActionText}
-                  />
-                )}
+                {profile?.callToActionString}
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
                 {profile?.callToActionURL}

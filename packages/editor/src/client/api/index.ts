@@ -1159,7 +1159,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String'];
-  paymentMethodID: Scalars['String'];
+  paymentMethodID?: Maybe<Scalars['ID']>;
+  paymentMethodSlug?: Maybe<Scalars['Slug']>;
   successURL?: Maybe<Scalars['String']>;
   failureURL?: Maybe<Scalars['String']>;
 };
@@ -1273,7 +1274,7 @@ export type PeerProfile = {
   themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
-  callToActionText?: Maybe<Scalars['RichText']>;
+  callToActionText: Scalars['RichText'];
   callToActionString: Scalars['String'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
@@ -3208,7 +3209,7 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionString' | 'callToActionURL' | 'callToActionImageURL'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionString' | 'callToActionURL' | 'callToActionImageURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3742,7 +3743,6 @@ export const FullPeerProfileFragmentDoc = gql`
   logo {
     ...ImageRef
   }
-  callToActionText
   callToActionString
   callToActionURL
   callToActionImage {
