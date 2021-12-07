@@ -245,5 +245,5 @@ export interface DBUserAdapter {
   ): Promise<OptionalUserSubscription>
 
   updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
-  getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]>
+  getUsersByAuthorID(authorID: string): Promise<OptionalUser[]>
 }

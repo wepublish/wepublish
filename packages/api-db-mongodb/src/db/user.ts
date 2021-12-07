@@ -24,8 +24,7 @@ import {
   User,
   UserOAuth2Account,
   UserOAuth2AccountArgs,
-  UserSort,
-  AuthorUsers
+  UserSort
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -176,13 +175,25 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     })
   }
 
-  async getUsersByAuthorID(authorID: string): Promise<AuthorUsers[]> {
+  async getUsersByAuthorID(authorID: string): Promise<OptionalUser[]> {
     const users = await this.users.find({authorID: authorID}).toArray()
     return users.map(user => {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
-        name: user.name
+        emailVerifiedAt: user.emailVerifiedAt,
+        oauth2Accounts: user.oauth2Accounts,
+        name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     })
   }

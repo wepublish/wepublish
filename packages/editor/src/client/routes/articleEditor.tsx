@@ -331,13 +331,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   async function handleSave() {
     const input = createInput()
     const authorIDs = input.authorIDs.length > 0 ? input.authorIDs : []
-    console.log(authorID)
     if (authorID && authorIDs.length === 0) {
       authorIDs.push(authorID)
     }
     input.authorIDs = authorIDs
-
-    console.log(input)
 
     if (articleID) {
       await updateArticle({variables: {id: articleID, input}})
