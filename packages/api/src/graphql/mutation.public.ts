@@ -559,8 +559,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicUserSubscription,
       args: {},
       description:
-        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
-      async resolve(root, {}, {authenticateUser, dbAdapter, loaders}) {
+        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now and autoRenew will be set to false.",
+      async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
         if (!user.subscription) throw new NotFound('user.subscription', user.id)
@@ -576,6 +576,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           userID: user.id,
           input: {
             ...user.subscription,
+            autoRenew: false,
             deactivatedAt: deactivationDate
           }
         })
