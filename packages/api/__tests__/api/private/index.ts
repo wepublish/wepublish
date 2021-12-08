@@ -668,6 +668,7 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']
   sessions: Array<Session>
   sendJWTLogin: Scalars['String']
+  sendWebsiteLogin: Scalars['String']
   createToken: CreatedToken
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
@@ -753,6 +754,10 @@ export type MutationRevokeSessionArgs = {
 
 export type MutationSendJwtLoginArgs = {
   url: Scalars['String']
+  email: Scalars['String']
+}
+
+export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String']
 }
 
@@ -1112,7 +1117,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String']
-  paymentMethodID: Scalars['String']
+  paymentMethodID?: Maybe<Scalars['ID']>
+  paymentMethodSlug?: Maybe<Scalars['Slug']>
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
@@ -1123,6 +1129,7 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
+  slug: Scalars['Slug']
   description: Scalars['String']
   paymentProvider: PaymentProvider
   active: Scalars['Boolean']
@@ -1130,6 +1137,7 @@ export type PaymentMethod = {
 
 export type PaymentMethodInput = {
   name: Scalars['String']
+  slug: Scalars['Slug']
   description: Scalars['String']
   paymentProviderID: Scalars['String']
   active: Scalars['Boolean']
@@ -1224,7 +1232,7 @@ export type PeerProfile = {
   themeFontColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
-  callToActionText?: Maybe<Scalars['RichText']>
+  callToActionText: Scalars['RichText']
   callToActionString: Scalars['String']
   callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
@@ -1461,6 +1469,7 @@ export type QueryPagePreviewLinkArgs = {
 
 export type QueryMemberPlanArgs = {
   id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }
 
 export type QueryMemberPlansArgs = {

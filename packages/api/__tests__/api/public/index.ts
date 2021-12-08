@@ -391,8 +391,8 @@ export type Mutation = {
   updateComment: Comment
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
   registerMemberAndReceivePayment: Payment
-  /** This mutation allows to reset the password by accepting the user's email and sending a login link to that email. */
-  resetPassword: Scalars['String']
+  /** This mutation sends a login link to the email if the user exists. Method will always return email address */
+  sendWebsiteLogin: Scalars['String']
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>
   /**
@@ -406,10 +406,14 @@ export type Mutation = {
    * type UserSubscription and throws an error if the user doesn't already have a subscription.
    */
   updateUserSubscription?: Maybe<UserSubscription>
+  /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */
+  cancelUserSubscription?: Maybe<UserSubscription>
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>
+  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  checkInvoiceStatus?: Maybe<Invoice>
 }
 
 export type MutationCreateSessionArgs = {
@@ -439,16 +443,18 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   email: Scalars['String']
-  memberPlanID: Scalars['String']
+  memberPlanID?: Maybe<Scalars['ID']>
+  memberPlanSlug?: Maybe<Scalars['Slug']>
   autoRenew: Scalars['Boolean']
   paymentPeriodicity: PaymentPeriodicity
   monthlyAmount: Scalars['Int']
-  paymentMethodID: Scalars['String']
+  paymentMethodID?: Maybe<Scalars['ID']>
+  paymentMethodSlug?: Maybe<Scalars['Slug']>
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
 
-export type MutationResetPasswordArgs = {
+export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String']
 }
 
@@ -471,6 +477,10 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationCreatePaymentFromInvoiceArgs = {
   input: PaymentFromInvoiceInput
+}
+
+export type MutationCheckInvoiceStatusArgs = {
+  id: Scalars['ID']
 }
 
 export type Navigation = {
@@ -542,7 +552,8 @@ export type Payment = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String']
-  paymentMethodID: Scalars['String']
+  paymentMethodID?: Maybe<Scalars['ID']>
+  paymentMethodSlug?: Maybe<Scalars['Slug']>
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
@@ -552,6 +563,7 @@ export type PaymentMethod = {
   id: Scalars['ID']
   paymentProviderID: Scalars['String']
   name: Scalars['String']
+  slug: Scalars['Slug']
   description: Scalars['String']
 }
 
@@ -614,7 +626,7 @@ export type PeerProfile = {
   themeFontColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
-  callToActionText?: Maybe<Scalars['RichText']>
+  callToActionText: Scalars['RichText']
   callToActionString: Scalars['String']
   callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
@@ -675,6 +687,8 @@ export type Query = {
   me?: Maybe<User>
   /** This query returns the invoices. */
   invoices: Array<Invoice>
+  /** This query returns a member plan. */
+  memberPlan?: Maybe<MemberPlan>
   /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
 }
@@ -744,6 +758,11 @@ export type QueryPagesArgs = {
 
 export type QueryAuthProvidersArgs = {
   redirectUri?: Maybe<Scalars['String']>
+}
+
+export type QueryMemberPlanArgs = {
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }
 
 export type QueryMemberPlansArgs = {
