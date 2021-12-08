@@ -169,8 +169,7 @@ describe('Peers', () => {
         themeColor: '#4287f5',
         themeFontColor: '#d67c15',
         callToActionString: 'rich text call to action',
-        callToActionURL: 'calltoactionurl.ch/',
-        callToActionText: []
+        callToActionURL: 'calltoactionurl.ch/'
       }
       const res = await mutate({
         mutation: UpdatePeerProfile,
