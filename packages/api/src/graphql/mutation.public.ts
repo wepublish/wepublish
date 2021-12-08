@@ -28,7 +28,8 @@ import {
   NotAuthenticatedError,
   UserInputError,
   CommentLengthError,
-  UserSubscriptionAlreadyDeactivated
+  UserSubscriptionAlreadyDeactivated,
+  InternalError
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -271,6 +272,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         )
           throw new PaymentConfigurationNotAllowed()
 
+        const userExists = await dbAdapter.user.getUser(email)
+        if (userExists) throw new EmailAlreadyInUseError()
+
         const user = await dbAdapter.user.createUser({
           input: {
             name,
@@ -284,8 +288,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           password: crypto.randomBytes(48).toString('hex')
         })
 
-        if (!user) throw new Error('Could not create user') // TODO: check if this is needed
-
+        if (!user) {
+          logger('mutation.public').error('Could not create new user for email "%s"', email)
+          throw new InternalError()
+        }
         const subscription = await dbAdapter.user.updateUserSubscription({
           userID: user.id,
           input: {
@@ -300,7 +306,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!subscription) throw new Error('Could not create subscription')
+        if (!subscription) {
+          logger('mutation.public').error(
+            'Could not create new subscription for userID "%s"',
+            user.id
+          )
+          throw new InternalError()
+        }
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
@@ -310,7 +322,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           userSubscription: subscription
         })
 
-        if (!invoice) throw new Error('Could not create invoice')
+        if (!invoice) {
+          logger('mutation.public').error(
+            'Could not create new invoice for subscription of userID "%s"',
+            user.id
+          )
+          throw new InternalError()
+        }
 
         return await createPaymentWithProvider({
           invoice,

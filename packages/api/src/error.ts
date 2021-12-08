@@ -18,7 +18,7 @@ export enum ErrorCode {
   DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
   CommentLengthError = 'COMMENT_LENGTH_ERROR',
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
-
+  InternalError = 'InternalError',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED'
 }
 
@@ -124,6 +124,12 @@ export class CommentLengthError extends ApolloError {
 export class PeerTokenInvalidError extends ApolloError {
   constructor(peerUrl: string) {
     super(`Token for peer ${peerUrl} is invalid`, ErrorCode.PeerTokenInvalid)
+  }
+}
+
+export class InternalError extends ApolloError {
+  constructor() {
+    super(`Internal Error`, ErrorCode.InternalError)
   }
 }
 
