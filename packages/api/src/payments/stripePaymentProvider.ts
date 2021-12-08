@@ -150,7 +150,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     } catch (error) {
       logger('stripePaymentProvider').error(
         error,
-        'Error while creating Stripe Intent %s for paymentProvider %s',
+        'Error while creating Stripe Intent for paymentProvider %s',
         this.id
       )
 
