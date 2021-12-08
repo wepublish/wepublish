@@ -301,7 +301,7 @@ export class MemberContext implements MemberContext {
             user,
             invoice,
             paymentProviderID: paymentMethod.paymentProviderID,
-            errorCode: 'cutomer_missing'
+            errorCode: 'customer_missing'
           }
         })
         continue
