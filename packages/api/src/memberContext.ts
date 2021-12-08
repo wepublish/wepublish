@@ -3,12 +3,21 @@ import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
 import {DataLoaderContext} from './context'
-import {ONE_DAY_IN_MILLISECONDS, ONE_HOUR_IN_MILLISECONDS} from './utility'
+import {
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_HOUR_IN_MILLISECONDS,
+  ONE_MONTH_IN_MILLISECONDS
+} from './utility'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {MailContext, SendMailType} from './mails/mailContext'
+
+export interface HandleSubscriptionChangeProps {
+  userID: string
+  userSubscription: UserSubscription
+}
 
 export interface RenewSubscriptionForUserProps {
   userID: string
@@ -46,6 +55,8 @@ export interface MemberContext {
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
+
+  handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<UserSubscription>
 
   renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
   renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
@@ -109,6 +120,50 @@ export class MemberContext implements MemberContext {
     this.mailContext = props.mailContext
   }
 
+  async handleSubscriptionChange({
+    userID,
+    userSubscription
+  }: HandleSubscriptionChangeProps): Promise<UserSubscription> {
+    // Check if user has any unpaid Periods and delete them and their invoices if so
+    const invoices = await this.dbAdapter.invoice.getInvoicesByUserID(userID)
+
+    const openInvoice = invoices.find(
+      invoice => invoice?.paidAt === null && invoice?.canceledAt === null
+    )
+
+    if (
+      openInvoice ||
+      userSubscription.paidUntil === null ||
+      userSubscription.paidUntil <= new Date()
+    ) {
+      const periodToDelete = userSubscription.periods.find(
+        period => period.invoiceID === openInvoice?.id
+      )
+      if (periodToDelete) {
+        await this.dbAdapter.user.deleteUserSubscriptionPeriod({
+          userID: userID,
+          periodID: periodToDelete.id
+        })
+      }
+      if (openInvoice) await this.dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
+
+      const finalUpdatedUser = await this.dbAdapter.user.getUserByID(userID)
+      if (!finalUpdatedUser || !finalUpdatedUser.subscription)
+        throw new Error('Error during updateSubscription')
+
+      // renew user subscription
+      await this.renewSubscriptionForUser({
+        userID: finalUpdatedUser.id,
+        userSubscription: finalUpdatedUser.subscription,
+        userName: finalUpdatedUser.name,
+        userEmail: finalUpdatedUser.email
+      })
+
+      return finalUpdatedUser.subscription
+    }
+    return userSubscription
+  }
+
   async renewSubscriptionForUser({
     userID,
     userEmail,
@@ -117,13 +172,22 @@ export class MemberContext implements MemberContext {
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
       const {periods = [], paidUntil, deactivatedAt} = userSubscription
+
+      if (deactivatedAt) {
+        logger('memberContext').info(
+          'Subscription for user %s is deactivated and will not be renewed',
+          userID
+        )
+        return null
+      }
+
       periods.sort((periodA, periodB) => {
         if (periodA.endsAt < periodB.endsAt) return -1
         if (periodA.endsAt > periodB.endsAt) return 1
         return 0
       })
       if (
-        (periods.length > 0 || deactivatedAt === null) &&
+        periods.length > 0 &&
         ((paidUntil === null && periods.length > 0) ||
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
@@ -132,7 +196,7 @@ export class MemberContext implements MemberContext {
       }
 
       const startDate = new Date(
-        paidUntil && deactivatedAt === null
+        paidUntil && paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
           ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
           : new Date().getTime()
       )
