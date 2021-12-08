@@ -168,4 +168,3 @@ export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
 export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000
 
 export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
-export const USER_PROPERTY_ORG_EMAIL = '_wepOrgEmail'

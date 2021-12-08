@@ -28,8 +28,7 @@ import {
   NotAuthenticatedError,
   UserInputError,
   CommentLengthError,
-  UserSubscriptionAlreadyDeactivated,
-  InternalError
+  UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -51,8 +50,7 @@ import {
   countRichtextChars,
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   MAX_COMMENT_LENGTH,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-  USER_PROPERTY_ORG_EMAIL
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
 } from '../utility'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSlug} from './slug'
@@ -227,8 +225,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL
         },
-        {dbAdapter, loaders, memberContext, createPaymentWithProvider}
+        {dbAdapter, loaders, authenticateUser, memberContext, createPaymentWithProvider}
       ) {
+        /* const userSession = authenticateUser()
+        if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
+        */
+
         if (
           (memberPlanID == null && memberPlanSlug == null) ||
           (memberPlanID != null && memberPlanSlug != null)
@@ -269,35 +271,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         )
           throw new PaymentConfigurationNotAllowed()
 
-        const userExists = await dbAdapter.user.getUser(email)
-        if (userExists) throw new EmailAlreadyInUseError()
-
-        // FIXME: tempEmail is need because the register could fail and the user might try
-        //  again with the same mail address. This will be fixed in WPC-595
-        const tempEmail = `temp_${Date.now()}_${email}`
         const user = await dbAdapter.user.createUser({
           input: {
             name,
             preferredName,
-            email: tempEmail,
+            email,
             emailVerifiedAt: null,
             active: false,
-            properties: [
-              {
-                public: false,
-                key: USER_PROPERTY_ORG_EMAIL,
-                value: email
-              }
-            ],
+            properties: [],
             roleIDs: []
           },
           password: crypto.randomBytes(48).toString('hex')
         })
 
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
-          throw new InternalError()
-        }
+        if (!user) throw new Error('Could not create user') // TODO: check if this is needed
 
         const subscription = await dbAdapter.user.updateUserSubscription({
           userID: user.id,
@@ -313,29 +300,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!subscription) {
-          logger('mutation.public').error(
-            'Could not create new subscription for userID "%s"',
-            user.id
-          )
-          throw new InternalError()
-        }
+        if (!subscription) throw new Error('Could not create subscription')
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
           userID: user.id,
-          userEmail: email,
+          userEmail: user.email,
           userName: user.name,
           userSubscription: subscription
         })
 
-        if (!invoice) {
-          logger('mutation.public').error(
-            'Could not create new invoice for subscription of userID "%s"',
-            user.id
-          )
-          throw new InternalError()
-        }
+        if (!invoice) throw new Error('Could not create invoice')
 
         return await createPaymentWithProvider({
           invoice,
