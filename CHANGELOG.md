@@ -75,21 +75,17 @@
 - [@lakeside763](https://github.com/lakeside763)
 
 
-
-## v2.14.0-alpha.1 (2021-11-25)
-
-#### :bug: Bug Fix
-* `api`
-  * [#428](https://github.com/wepublish/wepublish/pull/428) bug fix for updating user subscription ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.14.0-alpha.0 (2021-11-24)
+## v2.14.0 (2021-12-09)
 
 #### :heart: New Feature
 * `api`
   * [#306](https://github.com/wepublish/wepublish/pull/306) Public mutation to cancel membership ([@roosnic1](https://github.com/roosnic1))
 * `editor`
   * [#401](https://github.com/wepublish/wepublish/pull/401) BAJ-5_upload_size ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### :bug: Bug Fix
+* `api`
+  * [#428](https://github.com/wepublish/wepublish/pull/428) bug fix for updating user subscription ([@roosnic1](https://github.com/roosnic1))
 
 #### :nail_care: Polish
 * `editor`
