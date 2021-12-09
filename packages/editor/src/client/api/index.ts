@@ -1027,6 +1027,13 @@ export type NavigationLinkInput = {
   external?: Maybe<ExternalNavigationLinkInput>;
 };
 
+export type OAuth2Account = {
+  __typename?: 'OAuth2Account';
+  type: Scalars['String'];
+  provider: Scalars['String'];
+  scope: Scalars['String'];
+};
+
 export type Page = {
   __typename?: 'Page';
   id: Scalars['ID'];
@@ -1159,7 +1166,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String'];
-  paymentMethodID: Scalars['String'];
+  paymentMethodID?: Maybe<Scalars['ID']>;
+  paymentMethodSlug?: Maybe<Scalars['Slug']>;
   successURL?: Maybe<Scalars['String']>;
   failureURL?: Maybe<Scalars['String']>;
 };
@@ -1747,6 +1755,7 @@ export type User = {
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  oauth2Accounts: Array<OAuth2Account>;
 };
 
 export type UserAddress = {
