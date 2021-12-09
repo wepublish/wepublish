@@ -1,6 +1,7 @@
 import {Db} from 'mongodb'
-import {CollectionName, DBUser} from './db/schema'
+import {CollectionName, DBPaymentMethod, DBUser} from './db/schema'
 import {PaymentProviderCustomer} from '@wepublish/api'
+import {slugify} from './utility'
 
 export interface Migration {
   readonly version: number
@@ -639,6 +640,20 @@ export const Migrations: Migration[] = [
           {_id: user._id},
           {$set: {paymentProviderCustomers: paymentProvidersCustomersArray}}
         )
+      }
+    }
+  },
+  {
+    // add slug to existing paymentMethods
+    version: 16,
+    async migrate(db, locale) {
+      const paymentMethods = await db.collection(CollectionName.PaymentMethods)
+
+      const allPaymentMethods: DBPaymentMethod[] = await paymentMethods.find({}).toArray()
+
+      for (const paymentMethod of allPaymentMethods) {
+        const slug = slugify(paymentMethod.name)
+        await paymentMethods.updateOne({_id: paymentMethod._id}, {$set: {slug}})
       }
     }
   }

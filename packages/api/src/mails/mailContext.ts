@@ -13,7 +13,8 @@ export enum SendMailType {
   RenewedMemberSubscription,
   MemberSubscriptionOffSessionBefore,
   MemberSubscriptionOnSessionBefore,
-  MemberSubscriptionOnSessionAfter
+  MemberSubscriptionOnSessionAfter,
+  MemberSubscriptionOffSessionFailed
 }
 
 export interface SendEMailProps {

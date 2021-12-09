@@ -4,7 +4,8 @@ import {
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
-  GraphQLList
+  GraphQLList,
+  GraphQLID
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
@@ -27,7 +28,8 @@ import {
   NotAuthenticatedError,
   UserInputError,
   CommentLengthError,
-  UserSubscriptionAlreadyDeactivated
+  UserSubscriptionAlreadyDeactivated,
+  InternalError
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -45,8 +47,16 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
-import {countRichtextChars, MAX_COMMENT_LENGTH} from '../utility'
+import {
+  countRichtextChars,
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  MAX_COMMENT_LENGTH,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
+  USER_PROPERTY_ORG_EMAIL
+} from '../utility'
 import {SendMailType} from '../mails/mailContext'
+import {GraphQLSlug} from './slug'
+import {logger} from '../server'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -188,11 +198,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         name: {type: GraphQLNonNull(GraphQLString)},
         preferredName: {type: GraphQLString},
         email: {type: GraphQLNonNull(GraphQLString)},
-        memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+        memberPlanID: {type: GraphQLID},
+        memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+        paymentMethodID: {type: GraphQLID},
+        paymentMethodSlug: {type: GraphQLSlug},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -205,24 +217,43 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           preferredName,
           email,
           memberPlanID,
+          memberPlanSlug,
           autoRenew,
           paymentPeriodicity,
           monthlyAmount,
           paymentMethodID,
+          paymentMethodSlug,
           successURL,
           failureURL
         },
-        {dbAdapter, loaders, authenticateUser, memberContext, createPaymentWithProvider}
+        {dbAdapter, loaders, memberContext, createPaymentWithProvider}
       ) {
-        /* const userSession = authenticateUser()
-        if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
-        */
+        if (
+          (memberPlanID == null && memberPlanSlug == null) ||
+          (memberPlanID != null && memberPlanSlug != null)
+        ) {
+          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+        }
 
-        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
 
-        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+        const memberPlan = memberPlanID
+          ? await loaders.activeMemberPlansByID.load(memberPlanID)
+          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
@@ -231,84 +262,149 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             if (apm.forceAutoRenewal && !autoRenew) return false
             return (
               apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethodID)
+              apm.paymentMethodIDs.includes(paymentMethod.id)
             )
           })
         )
           throw new PaymentConfigurationNotAllowed()
 
+        const userExists = await dbAdapter.user.getUser(email)
+        if (userExists) throw new EmailAlreadyInUseError()
+
+        // FIXME: tempEmail is need because the register could fail and the user might try
+        //  again with the same mail address. This will be fixed in WPC-595
+        const tempEmail = `temp_${Date.now()}_${email}`
         const user = await dbAdapter.user.createUser({
           input: {
             name,
             preferredName,
-            email,
+            email: tempEmail,
             emailVerifiedAt: null,
             active: false,
-            properties: [],
+            properties: [
+              {
+                public: false,
+                key: USER_PROPERTY_ORG_EMAIL,
+                value: email
+              }
+            ],
             roleIDs: []
           },
           password: crypto.randomBytes(48).toString('hex')
         })
 
-        if (!user) throw new Error('Could not create user') // TODO: check if this is needed
+        if (!user) {
+          logger('mutation.public').error('Could not create new user for email "%s"', email)
+          throw new InternalError()
+        }
 
         const subscription = await dbAdapter.user.updateUserSubscription({
           userID: user.id,
           input: {
             startsAt: new Date(),
-            paymentMethodID,
+            paymentMethodID: paymentMethod.id,
             paymentPeriodicity,
             paidUntil: null,
             monthlyAmount,
             deactivatedAt: null,
-            memberPlanID,
+            memberPlanID: memberPlan.id,
             autoRenew
           }
         })
 
-        if (!subscription) throw new Error('Could not create subscription')
+        if (!subscription) {
+          logger('mutation.public').error(
+            'Could not create new subscription for userID "%s"',
+            user.id
+          )
+          throw new InternalError()
+        }
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
           userID: user.id,
-          userEmail: user.email,
+          userEmail: email,
           userName: user.name,
           userSubscription: subscription
         })
 
-        if (!invoice) throw new Error('Could not create invoice')
+        if (!invoice) {
+          logger('mutation.public').error(
+            'Could not create new invoice for subscription of userID "%s"',
+            user.id
+          )
+          throw new InternalError()
+        }
 
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           successURL,
           failureURL
         })
       }
     },
 
-    resetPassword: {
+    sendWebsiteLogin: {
       type: GraphQLNonNull(GraphQLString),
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
-      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext}) {
+        'This mutation sends a login link to the email if the user exists. Method will always return email address',
+      async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
         const user = await dbAdapter.user.getUser(email)
-        if (!user) return email // TODO: implement check to avoid bots
+        if (!user) return email
 
-        const token = generateJWT({id: user.id})
+        const lastSendTimeStamp = user.properties.find(
+          property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+
+        if (
+          lastSendTimeStamp &&
+          parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+        ) {
+          logger('mutation.public').warn(
+            'User with ID %s requested Login Link multiple times in 15 min time window',
+            user.id
+          )
+          return email
+        }
+
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+        })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
           data: {
-            url: `${process.env.WEBSITE_URL}?jwt=${token}`,
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })
 
+        const properties = user.properties.filter(
+          property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
+        )
+        properties.push({
+          key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
+          public: false,
+          value: `${Date.now()}`
+        })
+
+        try {
+          await dbAdapter.user.updateUser({
+            id: user.id,
+            input: {
+              ...user,
+              properties
+            }
+          })
+        } catch (error) {
+          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+        }
         return email
       }
     },
@@ -375,7 +471,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
       },
       description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
+        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivatedAt to null",
       async resolve(root, {input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
         const {user} = authenticateUser()
 
@@ -410,51 +506,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentPeriodicity,
             monthlyAmount,
             autoRenew,
-            paymentMethodID
+            paymentMethodID,
+            deactivatedAt: null
           }
         })
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
-        // Check if user has any unpaid Periods and delete them and their invoices if so
-        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-
-        const openInvoice = invoices.find(
-          invoice => invoice?.paidAt === null && invoice?.canceledAt === null
-        )
-
-        if (
-          openInvoice ||
-          (updateSubscription.deactivatedAt !== null &&
-            updateSubscription.deactivatedAt <= new Date())
-        ) {
-          const periodToDelete = updateSubscription.periods.find(
-            period => period.invoiceID === openInvoice?.id
-          )
-          if (periodToDelete) {
-            await dbAdapter.user.deleteUserSubscriptionPeriod({
-              userID: user.id,
-              periodID: periodToDelete.id
-            })
-          }
-          if (openInvoice) await dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
-
-          const finalUpdatedUser = await dbAdapter.user.getUserByID(user.id)
-          if (!finalUpdatedUser || !finalUpdatedUser.subscription)
-            throw new Error('Error during updateSubscription')
-
-          // renew user subscription
-          await memberContext.renewSubscriptionForUser({
-            userID: finalUpdatedUser.id,
-            userSubscription: finalUpdatedUser.subscription,
-            userName: finalUpdatedUser.name,
-            userEmail: finalUpdatedUser.email
-          })
-
-          return finalUpdatedUser.subscription
-        }
-
-        return updateSubscription
+        return await memberContext.handleSubscriptionChange({
+          userID: user.id,
+          userSubscription: updateSubscription
+        })
       }
     },
 
@@ -462,8 +524,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicUserSubscription,
       args: {},
       description:
-        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
-      async resolve(root, {}, {authenticateUser, dbAdapter, loaders}) {
+        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now and autoRenew will be set to false.",
+      async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
         if (!user.subscription) throw new NotFound('user.subscription', user.id)
@@ -479,6 +541,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           userID: user.id,
           input: {
             ...user.subscription,
+            autoRenew: false,
             deactivatedAt: deactivationDate
           }
         })
@@ -518,10 +581,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {input},
-        {authenticateUser, createPaymentWithProvider, paymentProviders, dbAdapter}
+        {authenticateUser, createPaymentWithProvider, loaders, dbAdapter}
       ) {
         const {user} = authenticateUser()
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+        const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
+
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
         const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
@@ -529,7 +607,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!invoice) throw new NotFound('Invoice', invoiceID)
 
         return await createPaymentWithProvider({
-          paymentMethodID,
+          paymentMethodID: paymentMethod.id,
           invoice,
           saveCustomer: false,
           successURL,

@@ -16,6 +16,10 @@ export interface StripePaymentProviderProps extends PaymentProviderProps {
   webhookEndpointSecret: string
 }
 
+interface CreateStripeCustomerProps {
+  intent: Stripe.PaymentIntent
+}
+
 function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
   switch (event) {
     case 'requires_payment_method':
@@ -45,6 +49,17 @@ export class StripePaymentProvider extends BasePaymentProvider {
     this.webhookEndpointSecret = props.webhookEndpointSecret
   }
 
+  async createStripeCustomer({intent}: CreateStripeCustomerProps): Promise<string> {
+    const customer = await this.stripe.customers.create({
+      email: intent.metadata.mail ?? '',
+      payment_method: intent.payment_method as string,
+      invoice_settings: {
+        default_payment_method: intent.payment_method as string
+      }
+    })
+    return customer.id
+  }
+
   getWebhookEvent(body: any, signature: string): Stripe.Event {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
@@ -67,14 +82,9 @@ export class StripePaymentProvider extends BasePaymentProvider {
         intent.customer === null &&
         intent.payment_method !== null
       ) {
-        const customer = await this.stripe.customers.create({
-          email: intent.metadata.mail ?? '',
-          payment_method: intent.payment_method as string,
-          invoice_settings: {
-            default_payment_method: intent.payment_method as string
-          }
-        })
-        customerID = customer.id
+        customerID = await this.createStripeCustomer({intent})
+      } else {
+        customerID = intent.customer as string
       }
       intentStates.push({
         paymentID: intent.metadata.paymentID,
@@ -111,29 +121,51 @@ export class StripePaymentProvider extends BasePaymentProvider {
         )
       }
     }
+    let intent
+    let errorCode
+    try {
+      intent = await this.stripe.paymentIntents.create({
+        amount: invoice.items.reduce(
+          (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
+          0
+        ),
+        ...(customerID && paymentMethodID
+          ? {
+              confirm: true,
+              customer: customerID,
+              off_session: true,
+              // payment_method: paymentMethodID,
+              payment_method: 'pm_card_chargeDeclinedExpiredCard',
+              payment_method_types: ['card']
+            }
+          : {}),
+        currency: 'chf',
+        // description: props.invoice.description, TODO: convert to text
+        ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
+        metadata: {
+          paymentID: paymentID,
+          mail: invoice.mail
+        }
+      })
+    } catch (error) {
+      logger('stripePaymentProvider').error(
+        error,
+        'Error while creating Stripe Intent for paymentProvider %s',
+        this.id
+      )
 
-    const intent = await this.stripe.paymentIntents.create({
-      amount: invoice.items.reduce(
-        (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-        0
-      ),
-      ...(customerID && paymentMethodID
-        ? {
-            confirm: true,
-            customer: customerID,
-            off_session: true,
-            payment_method: paymentMethodID,
-            payment_method_types: ['card']
-          }
-        : {}),
-      currency: 'chf',
-      // description: props.invoice.description, TODO: convert to text
-      ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
-      metadata: {
-        paymentID: paymentID,
-        mail: invoice.mail
+      if (error.type === 'StripeCardError') {
+        intent = error.raw.payment_intent
+        errorCode = error.raw.code
+      } else {
+        intent = {
+          id: 'unknown_error',
+          error,
+          state: PaymentState.RequiresUserAction
+        }
+        errorCode = 'unknown_error'
       }
-    })
+    }
 
     const state = mapStripeEventToPaymentStatue(intent.status)
     logger('stripePaymentProvider').info(
@@ -146,22 +178,50 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      state: state ?? PaymentState.Submitted
+      state: state ?? PaymentState.Submitted,
+      errorCode
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
-    // TODO: fix this
-    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const intent = await this.stripe.paymentIntents.retrieve(intentID)
+    const state = mapStripeEventToPaymentStatue(intent.status)
+
+    if (!state) {
+      logger('stripePaymentProvider').error(
+        'Stripe intent with ID: %s for paymentProvider %s returned with an unknown state %s',
+        intent.id,
+        this.id,
+        intent.status
+      )
+      throw new Error('unknown intent state')
+    }
+
+    if (!intent.metadata.paymentID) {
+      logger('stripePaymentProvider').error(
+        'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
+        intent.id,
+        this.id
+      )
+      throw new Error('empty paymentID')
+    }
+
+    let customerID
+    if (
+      intent.setup_future_usage === 'off_session' &&
+      intent.customer === null &&
+      intent.payment_method !== null
+    ) {
+      customerID = await this.createStripeCustomer({intent})
+    } else {
+      customerID = intent.customer as string
+    }
 
     return {
-      successful: intent.status === 'succeeded',
-      open: intent.status === 'succeeded' || intent.status === 'canceled',
-      paymentData: JSON.stringify(intent)
-    } */
-    return {
-      state: PaymentState.Processing,
-      paymentID: 'aasd'
+      state,
+      paymentID: intent.metadata.paymentID,
+      paymentData: JSON.stringify(intent),
+      customerID
     }
   }
 }

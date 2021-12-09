@@ -655,6 +655,7 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean'];
   sessions: Array<Session>;
   sendJWTLogin: Scalars['String'];
+  sendWebsiteLogin: Scalars['String'];
   createToken: CreatedToken;
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
@@ -749,6 +750,11 @@ export type MutationRevokeSessionArgs = {
 
 export type MutationSendJwtLoginArgs = {
   url: Scalars['String'];
+  email: Scalars['String'];
+};
+
+
+export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
 };
 
@@ -1021,6 +1027,13 @@ export type NavigationLinkInput = {
   external?: Maybe<ExternalNavigationLinkInput>;
 };
 
+export type OAuth2Account = {
+  __typename?: 'OAuth2Account';
+  type: Scalars['String'];
+  provider: Scalars['String'];
+  scope: Scalars['String'];
+};
+
 export type Page = {
   __typename?: 'Page';
   id: Scalars['ID'];
@@ -1153,7 +1166,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String'];
-  paymentMethodID: Scalars['String'];
+  paymentMethodID?: Maybe<Scalars['ID']>;
+  paymentMethodSlug?: Maybe<Scalars['Slug']>;
   successURL?: Maybe<Scalars['String']>;
   failureURL?: Maybe<Scalars['String']>;
 };
@@ -1164,6 +1178,7 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  slug: Scalars['Slug'];
   description: Scalars['String'];
   paymentProvider: PaymentProvider;
   active: Scalars['Boolean'];
@@ -1171,6 +1186,7 @@ export type PaymentMethod = {
 
 export type PaymentMethodInput = {
   name: Scalars['String'];
+  slug: Scalars['Slug'];
   description: Scalars['String'];
   paymentProviderID: Scalars['String'];
   active: Scalars['Boolean'];
@@ -1523,6 +1539,7 @@ export type QueryPagePreviewLinkArgs = {
 
 export type QueryMemberPlanArgs = {
   id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['Slug']>;
 };
 
 
@@ -1738,6 +1755,7 @@ export type User = {
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  oauth2Accounts: Array<OAuth2Account>;
 };
 
 export type UserAddress = {
@@ -3117,7 +3135,7 @@ export type FullPaymentProviderFragment = (
 
 export type FullPaymentMethodFragment = (
   { __typename?: 'PaymentMethod' }
-  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
+  & Pick<PaymentMethod, 'id' | 'name' | 'slug' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
   & { paymentProvider: (
     { __typename?: 'PaymentProvider' }
     & FullPaymentProviderFragment
@@ -3508,6 +3526,16 @@ export type DeleteUserSubscriptionMutationVariables = Exact<{
 export type DeleteUserSubscriptionMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteUserSubscription'>
+);
+
+export type SendWebsiteLoginMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendWebsiteLoginMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendWebsiteLogin'>
 );
 
 export type FullPermissionFragment = (
@@ -3951,6 +3979,7 @@ export const FullPaymentMethodFragmentDoc = gql`
     fragment FullPaymentMethod on PaymentMethod {
   id
   name
+  slug
   createdAt
   modifiedAt
   paymentProvider {
@@ -6800,6 +6829,37 @@ export function useDeleteUserSubscriptionMutation(baseOptions?: Apollo.MutationH
 export type DeleteUserSubscriptionMutationHookResult = ReturnType<typeof useDeleteUserSubscriptionMutation>;
 export type DeleteUserSubscriptionMutationResult = Apollo.MutationResult<DeleteUserSubscriptionMutation>;
 export type DeleteUserSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
+export const SendWebsiteLoginDocument = gql`
+    mutation SendWebsiteLogin($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+    `;
+export type SendWebsiteLoginMutationFn = Apollo.MutationFunction<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
+
+/**
+ * __useSendWebsiteLoginMutation__
+ *
+ * To run a mutation, you first call `useSendWebsiteLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendWebsiteLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendWebsiteLoginMutation, { data, loading, error }] = useSendWebsiteLoginMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendWebsiteLoginMutation(baseOptions?: Apollo.MutationHookOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>(SendWebsiteLoginDocument, options);
+      }
+export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsiteLoginMutation>;
+export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
+export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
 export const UserRoleListDocument = gql`
     query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {

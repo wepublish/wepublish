@@ -21,7 +21,7 @@ export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   vatRate: number
 }
 
-function mapPayrexxEventToPaymentStatue(event: string): PaymentState | null {
+function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'waiting':
       return PaymentState.Processing
@@ -58,7 +58,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const transaction = props.req.body.transaction
     if (!transaction) throw new Error('Can not handle webhook')
 
-    const state = mapPayrexxEventToPaymentStatue(transaction.status)
+    const state = mapPayrexxEventToPaymentStatus(transaction.status)
     if (state !== null) {
       intentStates.push({
         paymentID: transaction.referenceId,
@@ -79,6 +79,11 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
         0
       ),
+      fields: {
+        email: {
+          value: props.invoice.mail
+        }
+      },
       successRedirectUrl: props.successURL,
       failedRedirectUrl: props.failureURL,
       cancelRedirectUrl: props.failureURL,
@@ -111,18 +116,54 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
-    // TODO: fix this
-    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const signature = crypto.createHmac('sha256', this.instanceAPISecret).digest('base64')
+
+    const res = await fetch(
+      `https://api.payrexx.com/v1.0/Gateway/${intentID}/?instance=${this.instanceName}&ApiSignature=${signature}`,
+      {
+        method: 'GET'
+      }
+    )
+    if (res.status !== 200) {
+      logger('payrexxPaymentProvider').error(
+        res,
+        'Payrexx response for intent %s is NOK with status %s',
+        intentID,
+        res.status
+      )
+      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+    }
+
+    const payrexxResponse = await res.json()
+    const [gateway] = payrexxResponse.data
+    if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
+
+    const state = mapPayrexxEventToPaymentStatus(gateway.status)
+
+    if (!state) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unknown state %s',
+        gateway.id,
+        this.id,
+        gateway.status
+      )
+      throw new Error('unknown gateway state')
+    }
+
+    if (!gateway.referenceId) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with empty referenceId',
+        gateway.id,
+        this.id
+      )
+      throw new Error('empty referenceId')
+    }
 
     return {
-      successful: intent.status === 'succeeded',
-      open: intent.status === 'succeeded' || intent.status === 'canceled',
-      paymentData: JSON.stringify(intent)
-    } */
-    return {
-      state: PaymentState.Processing,
-      paymentID: 'aasd'
+      state,
+      paymentID: gateway.referenceId,
+      paymentData: JSON.stringify(gateway)
     }
   }
 }

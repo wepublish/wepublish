@@ -314,13 +314,47 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await dbAdapter.user.getUser(email)
-        if (!user) throw new Error('User does not exist') // TODO: make this proper error
-        const token = generateJWT({id: user.id})
+        if (!user) throw new NotFound('User', email)
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: email,
           data: {
             url: `${url}?jwt=${token}`,
+            user
+          }
+        })
+        return email
+      }
+    },
+
+    sendWebsiteLogin: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, dbAdapter, generateJWT, mailContext, urlAdapter}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanSendJWTLogin, roles)
+
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) throw new NotFound('User', email)
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        })
+        await mailContext.sendMail({
+          type: SendMailType.LoginLink,
+          recipient: email,
+          data: {
+            url: urlAdapter.getLoginURL(token),
             user
           }
         })
@@ -389,10 +423,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         userID: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
       },
-      resolve(root, {userID, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {userID, input}, {authenticate, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
-        return dbAdapter.user.updateUserSubscription({userID, input})
+
+        const updatedUserSubscription = await dbAdapter.user.updateUserSubscription({userID, input})
+        if (!updatedUserSubscription) throw new NotFound('userSubscription', userID)
+
+        return await memberContext.handleSubscriptionChange({
+          userID,
+          userSubscription: updatedUserSubscription
+        })
       }
     },
 
@@ -442,6 +483,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanDeleteUser, roles)
         await dbAdapter.user.deleteUserSubscription({userID})
+        // TODO: what else should be removed???
         return userID
       }
     },

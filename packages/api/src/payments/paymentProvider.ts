@@ -1,5 +1,5 @@
 import express, {Router} from 'express'
-import {contextFromRequest} from '../context'
+import {Context, contextFromRequest} from '../context'
 import {logger, WepublishServerOpts} from '../server'
 import {Payment, PaymentState} from '../db/payment'
 import {Invoice} from '../db/invoice'
@@ -34,6 +34,11 @@ export interface CheckIntentProps {
   intentID: string
 }
 
+export interface UpdatePaymentWithIntentStateProps {
+  intentState: IntentState
+  context: Context
+}
+
 export interface WebhookUpdatesProps {
   payment: Payment
   body: any
@@ -52,6 +57,7 @@ export interface Intent {
   paidAt?: Date
   intentData?: string
   paymentData?: string
+  errorCode?: string
 }
 
 export interface PaymentProvider {
@@ -66,6 +72,8 @@ export interface PaymentProvider {
   createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
   checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
+
+  updatePaymentWithIntentState(props: UpdatePaymentWithIntentStateProps): Promise<Payment>
 }
 
 export interface PaymentProviderProps {
@@ -94,6 +102,53 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
   abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
+
+  async updatePaymentWithIntentState({
+    intentState,
+    context
+  }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
+    const payment = await context.loaders.paymentsByID.load(intentState.paymentID)
+    // TODO: should we overwrite already paid/canceled payments
+    if (!payment) throw new Error(`Payment with ID ${intentState.paymentID} not found`)
+
+    const updatedPayment = await context.dbAdapter.payment.updatePayment({
+      id: payment.id,
+      input: {
+        state: intentState.state,
+        paymentData: intentState.paymentData,
+        intentData: payment.intentData,
+        intentSecret: payment.intentSecret,
+        intentID: payment.intentID,
+        invoiceID: payment.invoiceID,
+        paymentMethodID: payment.paymentMethodID
+      }
+    })
+
+    if (!updatedPayment) throw new Error('Error while updating Payment')
+
+    if (intentState.customerID && payment.invoiceID) {
+      const invoice = await context.loaders.invoicesByID.load(payment.invoiceID)
+      if (!invoice?.userID)
+        throw new Error(`Invoice with ID ${payment.invoiceID} does not have a userID`)
+
+      const user = await context.dbAdapter.user.getUserByID(invoice.userID)
+      if (!user) throw new Error(`User with ID ${invoice.userID} does not exist`)
+
+      // adding or updating paymentProvider customer ID for user
+      const paymentProviderCustomers = user.paymentProviderCustomers.filter(
+        ppc => ppc.paymentProviderID !== this.id
+      )
+      paymentProviderCustomers.push({
+        paymentProviderID: this.id,
+        customerID: intentState.customerID
+      })
+      await context.dbAdapter.user.updatePaymentProviderCustomers({
+        userID: user.id,
+        paymentProviderCustomers
+      })
+    }
+    return updatedPayment
+  }
 }
 
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
@@ -132,40 +187,11 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
           const context = await contextFromRequest(req, opts)
 
           for (const paymentStatus of paymentStatuses) {
-            const payment = await context.loaders.paymentsByID.load(paymentStatus.paymentID)
-            if (!payment) continue // TODO: handle missing payment
-            await context.dbAdapter.payment.updatePayment({
-              id: payment.id,
-              input: {
-                state: paymentStatus.state,
-                paymentData: paymentStatus.paymentData,
-                intentData: payment.intentData,
-                intentSecret: payment.intentSecret,
-                intentID: payment.intentID,
-                invoiceID: payment.invoiceID,
-                paymentMethodID: payment.paymentMethodID
-              }
+            // TODO: handle errors properly
+            await paymentProvider.updatePaymentWithIntentState({
+              intentState: paymentStatus,
+              context
             })
-
-            if (paymentStatus.customerID && payment.invoiceID) {
-              const invoice = await context.loaders.invoicesByID.load(payment.invoiceID)
-              if (!invoice?.userID) return // no userID
-              const user = await context.dbAdapter.user.getUserByID(invoice.userID)
-              if (!user) return // no user
-
-              // adding or updating paymentProvider customer ID for user
-              const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-                ppc => ppc.paymentProviderID !== paymentProvider.id
-              )
-              paymentProviderCustomers.push({
-                paymentProviderID: paymentProvider.id,
-                customerID: paymentStatus.customerID
-              })
-              await context.dbAdapter.user.updatePaymentProviderCustomers({
-                userID: user.id,
-                paymentProviderCustomers
-              })
-            }
           }
         } catch (error) {
           logger('paymentProvider').error(
