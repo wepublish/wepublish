@@ -125,7 +125,15 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         method: 'GET'
       }
     )
-    if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
+    if (res.status !== 200) {
+      logger('payrexxPaymentProvider').error(
+        res,
+        'Payrexx response for intent %s is NOK with status %s',
+        intentID,
+        res.status
+      )
+      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+    }
 
     const payrexxResponse = await res.json()
     const [gateway] = payrexxResponse.data
@@ -140,7 +148,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         this.id,
         gateway.status
       )
-      throw new Error('unkown gateway state')
+      throw new Error('unknown gateway state')
     }
 
     if (!gateway.referenceId) {
