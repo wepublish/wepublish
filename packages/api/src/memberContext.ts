@@ -1,4 +1,4 @@
-import {PaymentProviderCustomer, UserSort, UserSubscription} from './db/user'
+import {PaymentProviderCustomer, User, UserSort, UserSubscription} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
@@ -32,6 +32,7 @@ export interface RenewSubscriptionForUsersProps {
 }
 
 export interface ChargeInvoiceProps {
+  user: User
   invoice: Invoice
   paymentMethodID: string
   customer: PaymentProviderCustomer
@@ -357,11 +358,22 @@ export class MemberContext implements MemberContext {
           paymentMethod.paymentProviderID,
           user.id
         )
+        await this.mailContext.sendMail({
+          type: SendMailType.MemberSubscriptionOffSessionFailed,
+          recipient: invoice.mail,
+          data: {
+            user,
+            invoice,
+            paymentProviderID: paymentMethod.paymentProviderID,
+            errorCode: 'customer_missing'
+          }
+        })
         continue
       }
 
       if (offSessionPaymentProvidersID.includes(paymentMethod.paymentProviderID)) {
         await this.chargeInvoice({
+          user,
           invoice,
           paymentMethodID: paymentMethod.id,
           customer
@@ -370,7 +382,12 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async chargeInvoice({invoice, paymentMethodID, customer}: ChargeInvoiceProps): Promise<void> {
+  async chargeInvoice({
+    user,
+    invoice,
+    paymentMethodID,
+    customer
+  }: ChargeInvoiceProps): Promise<void> {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
     const paymentMethods = await this.dbAdapter.paymentMethod.getPaymentMethods()
     const paymentMethodIDs = paymentMethods
@@ -428,6 +445,19 @@ export class MemberContext implements MemberContext {
         invoiceID: payment.invoiceID
       }
     })
+
+    if (intent.state === PaymentState.RequiresUserAction) {
+      await this.mailContext.sendMail({
+        type: SendMailType.MemberSubscriptionOffSessionFailed,
+        recipient: invoice.mail,
+        data: {
+          user,
+          invoice,
+          paymentProviderID: paymentProvider.id,
+          errorCode: intent.errorCode
+        }
+      })
+    }
   }
 
   async sendReminderForInvoices({

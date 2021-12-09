@@ -57,6 +57,7 @@ export interface Intent {
   paidAt?: Date
   intentData?: string
   paymentData?: string
+  errorCode?: string
 }
 
 export interface PaymentProvider {
