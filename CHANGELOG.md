@@ -1,5 +1,38 @@
 # Change Log
 
+
+## v2.15.0-alpha.1 (2021-12-09)
+
+#### :boom: Breaking Change
+* `api`
+  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api`
+  * [#451](https://github.com/wepublish/wepublish/pull/451) catch stripe errors and send mail ([@roosnic1](https://github.com/roosnic1))
+  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#452](https://github.com/wepublish/wepublish/pull/452) added oauth2Accounts to the GraphQLUser ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `api`
+  * [#455](https://github.com/wepublish/wepublish/pull/455) make the mailgun from.submit use https ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `api`
+  * [#441](https://github.com/wepublish/wepublish/pull/441) Add invoice email to payrexx create gateway request ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :house: Internal
+* `api`
+  * [#458](https://github.com/wepublish/wepublish/pull/458) better logging ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#450](https://github.com/wepublish/wepublish/pull/450) Updated editor graphql codegen api ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 2
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+
 ## v2.15.0-alpha.0 (2021-12-03)
 
 #### :boom: Breaking Change
