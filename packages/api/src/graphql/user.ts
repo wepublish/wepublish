@@ -89,6 +89,15 @@ export const GraphQLPaymentProviderCustomer = new GraphQLObjectType({
   }
 })
 
+export const GraphQLOAuth2Account = new GraphQLObjectType({
+  name: 'OAuth2Account',
+  fields: {
+    type: {type: GraphQLNonNull(GraphQLString)},
+    provider: {type: GraphQLNonNull(GraphQLString)},
+    scope: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -119,6 +128,9 @@ export const GraphQLUser = new GraphQLObjectType({
     authorID: {type: GraphQLString},
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+    },
+    oauth2Accounts: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
     }
   }
 })
@@ -135,6 +147,9 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
     subscription: {type: GraphQLPublicUserSubscription},
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+    },
+    oauth2Accounts: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
     }
   }
 })
