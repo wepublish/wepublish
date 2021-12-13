@@ -90,10 +90,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const {t} = useTranslation()
 
   useEffect(() => {
-    onChange({
-      ...value,
-      flexTeasers: flexTeasers
-    })
+    onChange({...value, flexTeasers: flexTeasers})
   }, [flexTeasers])
 
   useEffect(() => {
@@ -108,6 +105,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   // Teaser Block functions: add, remove, layout change, pin
   const handleAddTeaserBlock = () => {
+    // onLayoutChange
     const newTeaser: FlexTeaser = {
       alignment: {
         i: nanoid(),
@@ -122,11 +120,13 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   }
 
   const handleRemoveTeaserBlock = (index: string) => {
+    // onLayoutChange
     setFlexTeasers(flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index))
   }
 
-  const handleLayoutChange = (alignment: FlexItemAlignment[]) => {
-    const newFlexTeasers = alignment.map(v => {
+  const handleLayoutChange = (layout: FlexItemAlignment[]) => {
+    //  if no layout change, return ?
+    const newFlexTeasers = layout.map(v => {
       return {
         teaser: flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i)?.teaser ?? null,
         alignment: v
@@ -137,20 +137,21 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   }
 
   const handlePinTeaserBlock = (index: string) => {
-    const newTeasers = flexTeasers.map(flexTeaser => {
-      return flexTeaser.alignment.i !== index
-        ? flexTeaser
-        : {
-            teaser: flexTeaser.teaser,
+    // onLayoutChange
+    const newTeasers = flexTeasers.map(({teaser, alignment}) => {
+      return alignment.i === index
+        ? {
+            teaser: teaser,
             alignment: {
-              i: flexTeaser.alignment.i,
-              x: flexTeaser.alignment.x,
-              y: flexTeaser.alignment.y,
-              w: flexTeaser.alignment.w,
-              h: flexTeaser.alignment.h,
-              static: !flexTeaser.alignment.static
+              i: alignment.i,
+              x: alignment.x,
+              y: alignment.y,
+              w: alignment.w,
+              h: alignment.h,
+              static: !alignment.static
             }
           }
+        : {teaser: teaser, alignment: alignment}
     })
     setFlexTeasers(newTeasers)
   }
@@ -158,20 +159,18 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   // Teaser functions: change, remove
   function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
     setFlexTeasers(
-      flexTeasers.map(flexTeaser => {
-        return flexTeaser.alignment.i === index
-          ? {alignment: flexTeaser.alignment, teaser: teaserLink}
-          : flexTeaser
+      flexTeasers.map(ft => {
+        return ft.alignment.i === index ? {alignment: ft.alignment, teaser: teaserLink} : ft
       })
     )
   }
 
   function handleRemoveTeaser(index: string) {
     setFlexTeasers(
-      flexTeasers.map(flexTeaser => {
-        return flexTeaser.alignment.i === index
-          ? {alignment: flexTeaser.alignment, teaser: null}
-          : flexTeaser
+      flexTeasers.map(({teaser, alignment}) => {
+        return alignment.i === index
+          ? {alignment: alignment, teaser: null}
+          : {teaser: teaser, alignment: alignment}
       })
     )
   }
@@ -179,7 +178,13 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   return (
     <>
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
-        <IconButton icon={<Icon icon="plus" />} circle size="sm" onClick={handleAddTeaserBlock} />
+        <IconButton
+          icon={<Icon icon="plus-square-o" />}
+          appearance="primary"
+          circle
+          size="md"
+          onClick={handleAddTeaserBlock}
+        />
       </IconButtonTooltip>
       <GridLayout
         className="layout"
@@ -192,12 +197,12 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         width={800}>
         {flexTeasers.map(flexTeaser => (
           <div
-            data-grid={{
-              x: flexTeaser.alignment.x,
-              y: flexTeaser.alignment.y,
-              w: flexTeaser.alignment.w,
-              h: flexTeaser.alignment.h
-            }}
+            // data-grid={{
+            //   x: flexTeaser.alignment.x,
+            //   y: flexTeaser.alignment.y,
+            //   w: flexTeaser.alignment.w,
+            //   h: flexTeaser.alignment.h
+            // }}
             key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}
@@ -216,6 +221,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               {!flexTeaser.teaser && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
                   <IconButton
+                    disabled={flexTeaser.alignment.static}
                     block
                     appearance="subtle"
                     icon={<Icon icon="trash" />}
@@ -227,12 +233,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
                 <IconButton
                   block
                   appearance="subtle"
-                  icon={
-                    <Icon
-                      style={{color: flexTeaser.alignment.static ? 'red' : undefined}}
-                      icon="thumb-tack"
-                    />
-                  }
+                  active={flexTeaser.alignment.static}
+                  icon={<Icon icon="thumb-tack" />}
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>
