@@ -36,23 +36,19 @@ import {
   IconButton,
   Drawer,
   Modal,
-  Button
+  Button,
+  Pagination
+  // Row
 } from 'rsuite'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
+// import { DEFAULT_TABLE_PAGE_SIZES } from '../utility'
 
-const ImagesPerPage = 24
+// const ImagesPerPage = 24
 
 export function ImageList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
-
-  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
-  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
-
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.ImageEdit ? current.params.id : null
-  )
   const [images, setImages] = useState<FullImageFragment[]>([])
 
   const [filter, setFilter] = useState('')
@@ -60,8 +56,24 @@ export function ImageList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
-  const listVariables = {filter: filter || undefined, first: ImagesPerPage}
-  const {data, /* fetchMore, */ loading: isLoading} = useImageListQuery({
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(3)
+
+  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
+  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
+
+  const [editID, setEditID] = useState<string | null>(
+    current?.type === RouteType.ImageEdit ? current.params.id : null
+  )
+
+  const listVariables = {
+    filter: filter || undefined,
+    first: limit,
+    // // check if skip is everywhere it's needed
+    skip: page - 1
+  }
+
+  const {data, refetch, /* fetchMore, */ loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -76,6 +88,11 @@ export function ImageList() {
     }
   }, [data?.images])
 
+  //fetch images when parameters change
+  useEffect(() => {
+    refetch(listVariables)
+  }, [filter, page, limit])
+
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
       setUploadModalOpen(true)
@@ -86,7 +103,7 @@ export function ImageList() {
       setEditID(current.params.id)
     }
   }, [current])
-
+  console.log('totel nr of images', data?.images.totalCount)
   /* function loadMore() {
     fetchMore({
       variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
@@ -102,6 +119,13 @@ export function ImageList() {
       }
     })
   } */
+
+  // const imageData = images.filter((v, i) => {
+  //   const start = limit * (page - 1);
+  //   const end = start + limit;
+  //   console.log('imgnbr', images, 'start,', start, 'end', end)
+  //   return i >= start && i < end;
+  // });
 
   return (
     <>
@@ -123,50 +147,74 @@ export function ImageList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-
       {images.length > 0 ? (
-        <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
-          {images.map((image, key) => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
-              <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
-                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
-                  <img
-                    src={image.mediumURL || ''}
-                    style={{height: '200', display: 'block', margin: '0 auto'}}
-                  />
-                  <Overlay
-                    style={{
-                      bottom: '0px',
-                      width: '100%',
-                      maxHeight: '60%',
-                      padding: '10px'
-                    }}>
-                    <Typography variant="subtitle1" color="gray" ellipsize>
-                      {`${image.filename || t('images.panels.untitled')}${image.extension}`}
-                    </Typography>
-                    <Typography variant="body2" color="white" ellipsize>
-                      {image.title || t('images.panels.Untitled')}
-                    </Typography>
-                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
-                  </Overlay>
-                  <IconButtonTooltip caption={t('images.overview.delete')}>
-                    <IconButton
-                      style={{position: 'absolute', top: '5px', right: '5px'}}
-                      icon={<Icon icon="trash" />}
-                      circle
-                      size="sm"
-                      onClick={event => {
-                        event.preventDefault()
-                        setCurrentImage(image)
-                        setConfirmationDialogOpen(true)
-                      }}
+        <div>
+          <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
+            {images.map((image, key) => (
+              <FlexboxGrid.Item
+                colspan={7}
+                style={{marginBottom: '20px', maxWidth: '300'}}
+                key={key}>
+                <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
+                  <Panel
+                    shaded
+                    bordered
+                    bodyFill
+                    style={{height: '200', width: 'calc(100% + 2px)'}}>
+                    <img
+                      src={image.mediumURL || ''}
+                      style={{height: '200', display: 'block', margin: '0 auto'}}
                     />
-                  </IconButtonTooltip>
-                </Panel>
-              </Link>
-            </FlexboxGrid.Item>
-          ))}
-        </FlexboxGrid>
+                    <Overlay
+                      style={{
+                        bottom: '0px',
+                        width: '100%',
+                        maxHeight: '60%',
+                        padding: '10px'
+                      }}>
+                      <Typography variant="subtitle1" color="gray" ellipsize>
+                        {`${image.filename || t('images.panels.untitled')}${image.extension}`}
+                      </Typography>
+                      <Typography variant="body2" color="white" ellipsize>
+                        {image.title || t('images.panels.Untitled')}
+                      </Typography>
+                      <Typography className="displayThreeLinesOnly">{image.description}</Typography>
+                    </Overlay>
+                    <IconButtonTooltip caption={t('images.overview.delete')}>
+                      <IconButton
+                        style={{position: 'absolute', top: '5px', right: '5px'}}
+                        icon={<Icon icon="trash" />}
+                        circle
+                        size="sm"
+                        onClick={event => {
+                          event.preventDefault()
+                          setCurrentImage(image)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </Panel>
+                </Link>
+              </FlexboxGrid.Item>
+            ))}
+          </FlexboxGrid>
+
+          <Pagination
+            showInfo={true}
+            total={data?.images.totalCount}
+            prev
+            next
+            first
+            last
+            {...console.log(images.length)}
+            //  limitOptions={[3, 20]}
+            limit={setLimit}
+            activePage={page}
+            //  onChangePage={setPage}
+            page={setPage}
+            //  onChangeLimit={setLimit}
+          />
+        </div>
       ) : (
         <p>{t('images.overview.noImagesFound')}</p>
       )}

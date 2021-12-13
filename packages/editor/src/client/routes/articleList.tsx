@@ -106,7 +106,7 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
-
+  console.log(data?.articles.totalCount)
   return (
     <>
       <FlexboxGrid>
