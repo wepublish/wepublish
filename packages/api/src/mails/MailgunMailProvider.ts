@@ -108,6 +108,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('v:mail_log_id', props.mailLogID)
       form.submit(
         {
+          protocol: 'https:',
           host: this.baseDomain,
           path: `/v3/${this.mailDomain}/messages`,
           method: 'POST',
