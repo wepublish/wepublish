@@ -344,6 +344,11 @@ async function asyncMain() {
           type: SendMailType.MemberSubscriptionOnSessionAfter,
           localTemplate: 'memberSubscriptionPayment/onSessionAfter',
           local: true
+        },
+        {
+          type: SendMailType.MemberSubscriptionOffSessionFailed,
+          localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
+          local: true
         }
       ],
       mailTemplatesPath:
