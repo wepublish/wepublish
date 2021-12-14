@@ -134,8 +134,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
               confirm: true,
               customer: customerID,
               off_session: true,
-              // payment_method: paymentMethodID,
-              payment_method: 'pm_card_chargeDeclinedExpiredCard',
+              payment_method: paymentMethodID,
               payment_method_types: ['card']
             }
           : {}),
