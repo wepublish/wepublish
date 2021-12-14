@@ -38,11 +38,10 @@ import {
   Modal,
   Button,
   Pagination
-  // Row
 } from 'rsuite'
+
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
-// import { DEFAULT_TABLE_PAGE_SIZES } from '../utility'
 
 // const ImagesPerPage = 24
 
@@ -56,8 +55,8 @@ export function ImageList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(3)
+  const [activePage, setActivePage] = React.useState(1)
+  const [limit, setLimit] = useState(5)
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
   const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
@@ -69,8 +68,7 @@ export function ImageList() {
   const listVariables = {
     filter: filter || undefined,
     first: limit,
-    // // check if skip is everywhere it's needed
-    skip: page - 1
+    skip: activePage - 1
   }
 
   const {data, refetch, /* fetchMore, */ loading: isLoading} = useImageListQuery({
@@ -91,7 +89,7 @@ export function ImageList() {
   //fetch images when parameters change
   useEffect(() => {
     refetch(listVariables)
-  }, [filter, page, limit])
+  }, [filter, activePage, limit])
 
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
@@ -103,7 +101,10 @@ export function ImageList() {
       setEditID(current.params.id)
     }
   }, [current])
-  console.log('totel nr of images', data?.images.totalCount)
+  console.log('total nr of images', data?.images.totalCount)
+
+  const limitOptions = [5, 10, 20]
+
   /* function loadMore() {
     fetchMore({
       variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
@@ -200,19 +201,21 @@ export function ImageList() {
           </FlexboxGrid>
 
           <Pagination
-            showInfo={true}
-            total={data?.images.totalCount}
+            layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+            {...console.log('image count:', data?.images.totalCount)}
+            {...console.log('page:', activePage)}
+            {...console.log('limit:', limit)}
             prev
             next
             first
             last
-            {...console.log(images.length)}
-            //  limitOptions={[3, 20]}
-            limit={setLimit}
-            activePage={page}
-            //  onChangePage={setPage}
-            page={setPage}
-            //  onChangeLimit={setLimit}
+            total={data?.images.totalCount}
+            // maxButtons={10}
+            limit={limit}
+            limitOptions={limitOptions}
+            onChangeLimit={setLimit}
+            activePage={activePage}
+            onChangePage={setActivePage}
           />
         </div>
       ) : (
