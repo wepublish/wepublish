@@ -56,7 +56,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
 })
 
 export const GraphQLPublicAuthor = new GraphQLObjectType<Author, Context>({
-  name: 'Author',
+  name: 'PublicAuthor',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
