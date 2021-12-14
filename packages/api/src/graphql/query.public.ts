@@ -12,7 +12,7 @@ import {GraphQLSlug} from './slug'
 import {UserInputError} from 'apollo-server-express'
 import {GraphQLPublicNavigation} from './navigation'
 import {
-  GraphQLAuthor,
+  GraphQLPublicAuthor,
   GraphQLAuthorConnection,
   GraphQLAuthorFilter,
   GraphQLAuthorSort
@@ -95,7 +95,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // ======
 
     author: {
-      type: GraphQLAuthor,
+      type: GraphQLPublicAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the author.',
       resolve(root, {id, slug}, {authenticateUser, loaders}) {
