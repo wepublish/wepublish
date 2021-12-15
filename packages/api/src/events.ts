@@ -172,13 +172,23 @@ invoiceModelEvents.on('update', async (context, model) => {
     const period = periods.find(period => period.invoiceID === model.id)
     if (!period) return
     if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil) {
-      await context.dbAdapter.user.updateUserSubscription({
+      const updatedUserSubscription = await context.dbAdapter.user.updateUserSubscription({
         userID: user.id,
         input: {
           ...user.subscription,
           paidUntil: period.endsAt
         }
       })
+
+      if (!updatedUserSubscription) {
+        logger('events').warn(`Could not update UserSubscription %s`, user.id)
+        return
+      }
+
+      user = {
+        ...user,
+        subscription: updatedUserSubscription
+      }
 
       if (!user.active && user.lastLogin === null) {
         const orgEmail = user.properties.find(prop => prop.key === USER_PROPERTY_ORG_EMAIL)
