@@ -85,7 +85,7 @@ export interface MemberContextProps {
 }
 
 function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
-  start = new Date(start) // create new Date object
+  start = new Date(start.getTime() - ONE_DAY_IN_MILLISECONDS) // create new Date object
   switch (periodicity) {
     case PaymentPeriodicity.Monthly:
       return new Date(start.setMonth(start.getMonth() + 1))
