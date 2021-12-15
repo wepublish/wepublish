@@ -166,7 +166,7 @@ userModelEvents.on('create', (context, model) => {
 invoiceModelEvents.on('update', async (context, model) => {
   // TODO: rethink this logic
   if (model.paidAt !== null && model.userID) {
-    const user = await context.dbAdapter.user.getUserByID(model.userID)
+    let user = await context.dbAdapter.user.getUserByID(model.userID)
     if (!user || !user.subscription) return
     const {periods} = user.subscription
     const period = periods.find(period => period.invoiceID === model.id)
@@ -189,7 +189,7 @@ invoiceModelEvents.on('update', async (context, model) => {
           return
         }
 
-        await context.dbAdapter.user.updateUser({
+        user = await context.dbAdapter.user.updateUser({
           id: user.id,
           input: {
             ...user,
@@ -198,6 +198,7 @@ invoiceModelEvents.on('update', async (context, model) => {
             properties: user.properties.filter(prop => prop.key !== USER_PROPERTY_ORG_EMAIL)
           }
         })
+        if (!user || !user.subscription) return
         // Send FirstTime Hello
         const token = context.generateJWT({
           id: user.id,
