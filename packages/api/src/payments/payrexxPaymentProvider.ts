@@ -95,10 +95,13 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       .update(qs.stringify(data))
       .digest('base64')
 
-    const res = await fetch(`https://api.payrexx.com/v1.0/Gateway/?instance=${this.instanceName}`, {
-      method: 'POST',
-      body: qs.stringify({...data, ApiSignature: signature})
-    })
+    const res = await fetch(
+      `https://api.payrexx.com/v1.0/Gateway/?instance=${encodeURIComponent(this.instanceName)}`,
+      {
+        method: 'POST',
+        body: qs.stringify({...data, ApiSignature: signature})
+      }
+    )
     if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
     const payrexxResponse = await res.json()
 
@@ -120,14 +123,17 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const signature = crypto.createHmac('sha256', this.instanceAPISecret).digest('base64')
 
     const res = await fetch(
-      `https://api.payrexx.com/v1.0/Gateway/${intentID}/?instance=${this.instanceName}&ApiSignature=${signature}`,
+      `https://api.payrexx.com/v1.0/Gateway/${encodeURIComponent(
+        intentID
+      )}/?instance=${encodeURIComponent(this.instanceName)}&ApiSignature=${encodeURIComponent(
+        signature
+      )}`,
       {
         method: 'GET'
       }
     )
     if (res.status !== 200) {
       logger('payrexxPaymentProvider').error(
-        res,
         'Payrexx response for intent %s is NOK with status %s',
         intentID,
         res.status
