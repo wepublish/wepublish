@@ -348,30 +348,30 @@ export class MemberContext implements MemberContext {
         continue
       }
 
-      const customer = user.paymentProviderCustomers.find(
-        ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
-      )
-
-      if (!customer) {
-        logger('memberContext').warn(
-          'PaymentCustomer %s on user %s not found',
-          paymentMethod.paymentProviderID,
-          user.id
-        )
-        await this.mailContext.sendMail({
-          type: SendMailType.MemberSubscriptionOffSessionFailed,
-          recipient: invoice.mail,
-          data: {
-            user,
-            invoice,
-            paymentProviderID: paymentMethod.paymentProviderID,
-            errorCode: 'customer_missing'
-          }
-        })
-        continue
-      }
-
       if (offSessionPaymentProvidersID.includes(paymentMethod.paymentProviderID)) {
+        const customer = user.paymentProviderCustomers.find(
+          ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
+        )
+
+        if (!customer) {
+          logger('memberContext').warn(
+            'PaymentCustomer %s on user %s not found',
+            paymentMethod.paymentProviderID,
+            user.id
+          )
+          await this.mailContext.sendMail({
+            type: SendMailType.MemberSubscriptionOffSessionFailed,
+            recipient: invoice.mail,
+            data: {
+              user,
+              invoice,
+              paymentProviderID: paymentMethod.paymentProviderID,
+              errorCode: 'customer_missing'
+            }
+          })
+          continue
+        }
+
         await this.chargeInvoice({
           user,
           invoice,
