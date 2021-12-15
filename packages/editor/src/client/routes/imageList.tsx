@@ -86,7 +86,7 @@ export function ImageList() {
     }
   }, [data?.images])
 
-  //fetch images when parameters change
+  // fetch images when parameters change
   useEffect(() => {
     refetch(listVariables)
   }, [filter, activePage, limit])
