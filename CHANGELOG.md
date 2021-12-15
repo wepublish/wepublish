@@ -1,5 +1,13 @@
 # Change Log
 
+## v2.15.0-alpha.5 (2021-12-15)
+
+#### :bug: Bug Fix
+* `api`
+  * [#468](https://github.com/wepublish/wepublish/pull/468) some bug fixes ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 
 ## v2.15.0-alpha.4 (2021-12-15)
 
