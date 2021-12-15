@@ -1,6 +1,22 @@
 # Change Log
 
 
+## v2.15.0-alpha.2 (2021-12-15)
+
+#### :bug: Bug Fix
+* `api`
+  * [#463](https://github.com/wepublish/wepublish/pull/463) only send custom_missing mail to offSession payments ([@roosnic1](https://github.com/roosnic1))
+  * [#462](https://github.com/wepublish/wepublish/pull/462)  encode all url parameters that are sent with node-fetch ([@roosnic1](https://github.com/roosnic1))
+
+#### :house: Internal
+* `api`
+  * [#464](https://github.com/wepublish/wepublish/pull/464) Stripe improvements ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 2
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+
 ## v2.15.0-alpha.1 (2021-12-09)
 
 #### :boom: Breaking Change
