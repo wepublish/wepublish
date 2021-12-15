@@ -18,6 +18,18 @@ export interface Author {
   bio: RichTextNode[]
 }
 
+export interface PublicAuthor {
+  id: string
+  createdAt: Date
+  modifiedAt: Date
+  name: string
+  slug: string
+  jobTitle?: string
+  imageID?: string
+  links: AuthorLink[]
+  bio: RichTextNode[]
+}
+
 export interface AuthorInput {
   name: string
   slug: string

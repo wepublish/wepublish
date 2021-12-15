@@ -101,7 +101,7 @@ export type ArticleRevision = {
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
-  authors: Array<Maybe<Author>>;
+  authors: Array<Maybe<PublicAuthor>>;
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -1281,8 +1281,7 @@ export type PeerProfile = {
   themeFontColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
-  callToActionText?: Maybe<Scalars['RichText']>;
-  callToActionString: Scalars['String'];
+  callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImage?: Maybe<Image>;
@@ -1293,7 +1292,7 @@ export type PeerProfileInput = {
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
-  callToActionString: Scalars['String'];
+  callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionImageID?: Maybe<Scalars['ID']>;
@@ -1332,6 +1331,20 @@ export type PropertiesInput = {
   key: Scalars['String'];
   value: Scalars['String'];
   public: Scalars['Boolean'];
+};
+
+export type PublicAuthor = {
+  __typename?: 'PublicAuthor';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
+  url: Scalars['String'];
+  links?: Maybe<Array<AuthorLink>>;
+  bio?: Maybe<Scalars['RichText']>;
+  jobTitle?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
 };
 
 export type Query = {
@@ -1921,8 +1934,8 @@ export type ArticleRefFragment = (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
-      { __typename?: 'Author' }
-      & Pick<Author, 'name'>
+      { __typename?: 'PublicAuthor' }
+      & Pick<PublicAuthor, 'name'>
     )>>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
@@ -2105,8 +2118,8 @@ export type ArticleQuery = (
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
       )>, authors: Array<Maybe<(
-        { __typename?: 'Author' }
-        & AuthorRefFragment
+        { __typename?: 'PublicAuthor' }
+        & PublicAuthorRefFragment
       )>>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
@@ -2260,6 +2273,15 @@ export type AuthorRefFragment = (
   )> }
 );
 
+export type PublicAuthorRefFragment = (
+  { __typename?: 'PublicAuthor' }
+  & Pick<PublicAuthor, 'id' | 'name' | 'jobTitle'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )> }
+);
+
 export type FullAuthorFragment = (
   { __typename?: 'Author' }
   & Pick<Author, 'slug' | 'bio' | 'createdAt'>
@@ -2268,6 +2290,16 @@ export type FullAuthorFragment = (
     & Pick<AuthorLink, 'title' | 'url'>
   )>> }
   & AuthorRefFragment
+);
+
+export type PublicFullAuthorFragment = (
+  { __typename?: 'PublicAuthor' }
+  & Pick<PublicAuthor, 'slug' | 'bio' | 'createdAt'>
+  & { links?: Maybe<Array<(
+    { __typename?: 'AuthorLink' }
+    & Pick<AuthorLink, 'title' | 'url'>
+  )>> }
+  & PublicAuthorRefFragment
 );
 
 export type AuthorListQueryVariables = Exact<{
@@ -3708,6 +3740,28 @@ export const FullAuthorFragmentDoc = gql`
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
+export const PublicAuthorRefFragmentDoc = gql`
+    fragment PublicAuthorRef on PublicAuthor {
+  id
+  name
+  jobTitle
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const PublicFullAuthorFragmentDoc = gql`
+    fragment PublicFullAuthor on PublicAuthor {
+  slug
+  links {
+    title
+    url
+  }
+  bio
+  createdAt
+  ...PublicAuthorRef
+}
+    ${PublicAuthorRefFragmentDoc}`;
 export const ArticleRefFragmentDoc = gql`
     fragment ArticleRef on Article {
   id
@@ -4550,7 +4604,7 @@ export const ArticleDocument = gql`
         public
       }
       authors {
-        ...AuthorRef
+        ...PublicAuthorRef
       }
       hideAuthor
       breaking
@@ -4569,6 +4623,7 @@ export const ArticleDocument = gql`
   }
 }
     ${ImageRefFragmentDoc}
+${PublicAuthorRefFragmentDoc}
 ${AuthorRefFragmentDoc}
 ${FullBlockFragmentDoc}`;
 

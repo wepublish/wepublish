@@ -15,7 +15,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 
 import {GraphQLImage} from './image'
-import {GraphQLAuthor} from './author'
+import {GraphQLPublicAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {
@@ -136,7 +136,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+      type: GraphQLNonNull(GraphQLList(GraphQLPublicAuthor)),
       resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
         return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
       })
@@ -147,7 +147,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicAuthor))),
       resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
         return Promise.all(
           socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
@@ -274,7 +274,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+      type: GraphQLNonNull(GraphQLList(GraphQLPublicAuthor)),
       resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
         if (hideAuthor) {
           return []

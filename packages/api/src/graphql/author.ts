@@ -9,7 +9,7 @@ import {
   GraphQLEnumType
 } from 'graphql'
 
-import {Author, AuthorSort} from '../db/author'
+import {Author, AuthorSort, PublicAuthor} from '../db/author'
 import {Context} from '../context'
 
 import {GraphQLPageInfo} from './common'
@@ -29,6 +29,34 @@ export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
 
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+    name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((author, {}, {urlAdapter}) => {
+        return urlAdapter.getAuthorURL(author)
+      })
+    },
+    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
+    bio: {type: GraphQLRichText},
+    jobTitle: {type: GraphQLString},
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    }
+  }
+})
+
+export const GraphQLPublicAuthor = new GraphQLObjectType<PublicAuthor, Context>({
+  name: 'PublicAuthor',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 

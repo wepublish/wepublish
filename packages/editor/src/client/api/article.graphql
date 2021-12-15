@@ -184,7 +184,7 @@ query Article($id: ID!) {
         public
       }
       authors {
-        ...AuthorRef
+        ...PublicAuthorRef
       }
       hideAuthor
 

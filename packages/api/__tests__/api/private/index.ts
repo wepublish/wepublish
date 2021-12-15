@@ -99,7 +99,7 @@ export type ArticleRevision = {
   properties: Array<Properties>
   canonicalUrl?: Maybe<Scalars['String']>
   image?: Maybe<Image>
-  authors: Array<Maybe<Author>>
+  authors: Array<Maybe<PublicAuthor>>
   breaking: Scalars['Boolean']
   socialMediaTitle?: Maybe<Scalars['String']>
   socialMediaDescription?: Maybe<Scalars['String']>
@@ -209,6 +209,15 @@ export type BaseNavigationLink = {
   label: Scalars['String']
 }
 
+export type BildwurfAdBlock = {
+  __typename?: 'BildwurfAdBlock'
+  zoneID: Scalars['String']
+}
+
+export type BildwurfAdBlockInput = {
+  zoneID: Scalars['String']
+}
+
 export type Block =
   | RichTextBlock
   | ImageBlock
@@ -222,6 +231,7 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
   | TitleBlock
@@ -243,6 +253,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>
   polisConversation?: Maybe<PolisConversationBlockInput>
+  bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
@@ -657,6 +668,7 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean']
   sessions: Array<Session>
   sendJWTLogin: Scalars['String']
+  sendWebsiteLogin: Scalars['String']
   createToken: CreatedToken
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
@@ -742,6 +754,10 @@ export type MutationRevokeSessionArgs = {
 
 export type MutationSendJwtLoginArgs = {
   url: Scalars['String']
+  email: Scalars['String']
+}
+
+export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String']
 }
 
@@ -969,6 +985,13 @@ export type NavigationLinkInput = {
   external?: Maybe<ExternalNavigationLinkInput>
 }
 
+export type OAuth2Account = {
+  __typename?: 'OAuth2Account'
+  type: Scalars['String']
+  provider: Scalars['String']
+  scope: Scalars['String']
+}
+
 export type Page = {
   __typename?: 'Page'
   id: Scalars['ID']
@@ -1101,7 +1124,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String']
-  paymentMethodID: Scalars['String']
+  paymentMethodID?: Maybe<Scalars['ID']>
+  paymentMethodSlug?: Maybe<Scalars['Slug']>
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
@@ -1112,6 +1136,7 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
+  slug: Scalars['Slug']
   description: Scalars['String']
   paymentProvider: PaymentProvider
   active: Scalars['Boolean']
@@ -1119,6 +1144,7 @@ export type PaymentMethod = {
 
 export type PaymentMethodInput = {
   name: Scalars['String']
+  slug: Scalars['Slug']
   description: Scalars['String']
   paymentProviderID: Scalars['String']
   active: Scalars['Boolean']
@@ -1135,6 +1161,12 @@ export type PaymentProvider = {
   __typename?: 'PaymentProvider'
   id: Scalars['ID']
   name: Scalars['String']
+}
+
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer'
+  paymentProviderID: Scalars['String']
+  customerID: Scalars['String']
 }
 
 export enum PaymentSort {
@@ -1259,8 +1291,23 @@ export type PropertiesInput = {
   public: Scalars['Boolean']
 }
 
+export type PublicAuthor = {
+  __typename?: 'PublicAuthor'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  slug: Scalars['Slug']
+  url: Scalars['String']
+  links?: Maybe<Array<AuthorLink>>
+  bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
+  image?: Maybe<Image>
+}
+
 export type Query = {
   __typename?: 'Query'
+  remotePeerProfile?: Maybe<PeerProfile>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1297,6 +1344,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+}
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String']
+  token: Scalars['String']
 }
 
 export type QueryPeerArgs = {
@@ -1437,6 +1489,7 @@ export type QueryPagePreviewLinkArgs = {
 
 export type QueryMemberPlanArgs = {
   id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }
 
 export type QueryMemberPlansArgs = {
@@ -1642,6 +1695,8 @@ export type User = {
   properties: Array<Properties>
   roles: Array<UserRole>
   subscription?: Maybe<UserSubscription>
+  paymentProviderCustomers: Array<PaymentProviderCustomer>
+  oauth2Accounts: Array<OAuth2Account>
 }
 
 export type UserAddress = {
@@ -1936,7 +1991,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
             properties: Array<
               {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
             >
-            authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+            authors: Array<Maybe<{__typename?: 'PublicAuthor'} & PublicAuthorRefFragment>>
             socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
             socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             blocks: Array<
@@ -1954,6 +2009,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -1969,9 +2025,21 @@ export type AuthorRefFragment = {__typename?: 'Author'} & Pick<Author, 'id' | 'n
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
   }
 
+export type PublicAuthorRefFragment = {__typename?: 'PublicAuthor'} & Pick<
+  PublicAuthor,
+  'id' | 'name'
+> & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+
 export type FullAuthorFragment = {__typename?: 'Author'} & Pick<Author, 'slug' | 'bio'> & {
     links?: Maybe<Array<{__typename?: 'AuthorLink'} & Pick<AuthorLink, 'title' | 'url'>>>
   } & AuthorRefFragment
+
+export type PublicFullAuthorFragment = {__typename?: 'PublicAuthor'} & Pick<
+  PublicAuthor,
+  'slug' | 'bio'
+> & {
+    links?: Maybe<Array<{__typename?: 'AuthorLink'} & Pick<AuthorLink, 'title' | 'url'>>>
+  } & PublicAuthorRefFragment
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
@@ -2114,6 +2182,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
+type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
+
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
@@ -2157,6 +2227,7 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
@@ -2329,6 +2400,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2445,6 +2517,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -2765,6 +2838,28 @@ export const FullAuthor = gql`
     ...AuthorRef
   }
   ${AuthorRef}
+`
+export const PublicAuthorRef = gql`
+  fragment PublicAuthorRef on PublicAuthor {
+    id
+    name
+    image {
+      ...ImageRef
+    }
+  }
+  ${ImageRef}
+`
+export const PublicFullAuthor = gql`
+  fragment PublicFullAuthor on PublicAuthor {
+    slug
+    links {
+      title
+      url
+    }
+    bio
+    ...PublicAuthorRef
+  }
+  ${PublicAuthorRef}
 `
 export const FullImage = gql`
   fragment FullImage on Image {
@@ -3229,7 +3324,7 @@ export const Article = gql`
           public
         }
         authors {
-          ...AuthorRef
+          ...PublicAuthorRef
         }
         hideAuthor
         breaking
@@ -3248,6 +3343,7 @@ export const Article = gql`
     }
   }
   ${ImageRef}
+  ${PublicAuthorRef}
   ${AuthorRef}
   ${FullBlock}
 `

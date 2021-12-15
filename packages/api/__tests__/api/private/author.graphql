@@ -6,6 +6,14 @@ fragment AuthorRef on Author {
   }
 }
 
+fragment PublicAuthorRef on PublicAuthor {
+  id
+  name
+  image {
+    ...ImageRef
+  }
+}
+
 fragment FullAuthor on Author {
   slug
   links {
@@ -14,6 +22,16 @@ fragment FullAuthor on Author {
   }
   bio
   ...AuthorRef
+}
+
+fragment PublicFullAuthor on PublicAuthor {
+  slug
+  links {
+    title
+    url
+  }
+  bio
+  ...PublicAuthorRef
 }
 
 query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
