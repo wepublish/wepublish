@@ -21,8 +21,8 @@ import {
   ImageRefFragment,
   ImageListQuery,
   ImageListDocument,
-  FullImageFragment,
-  ImageRefFragmentDoc
+  FullImageFragment
+  // ImageRefFragmentDoc
 } from '../api'
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -117,13 +117,6 @@ export function ImageList() {
     })
   } */
 
-  // const imageData = images.filter((v, i) => {
-  //   const start = limit * (page - 1);
-  //   const end = start + limit;
-  //   console.log('imgnbr', images, 'start,', start, 'end', end)
-  //   return i >= start && i < end;
-  // });
-
   return (
     <>
       <FlexboxGrid>
@@ -152,20 +145,20 @@ export function ImageList() {
           rowHeight={100}
           autoHeight={true}
           loading={isLoading}>
-          <Column width={210} align="left" resizable sortable>
+          <Column width={210} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) => (
                 <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
                   <img
-                    src={rowData.thumbURL}
+                    src={rowData.thumbURL || ''}
                     style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
                   />
                 </Link>
               )}
             </Cell>
           </Column>
-          <Column width={210} align="left" resizable sortable>
+          <Column width={210} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) =>
@@ -173,7 +166,7 @@ export function ImageList() {
               }
             </Cell>
           </Column>
-          <Column width={210} align="left" resizable sortable>
+          <Column width={210} align="left" resizable>
             <HeaderCell>{t('images.overview.description')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) =>
@@ -182,12 +175,12 @@ export function ImageList() {
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column width={210} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
             <Cell>{(rowData: ImageRefFragment) => (rowData.filename ? rowData.filename : '')}</Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column width={210} align="left" resizable>
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ImageRefFragment) => (
@@ -214,57 +207,6 @@ export function ImageList() {
             </Cell>
           </Column>
         </Table>
-
-        {/* <FlexboxGrid justify="space-around" style={{ marginTop: '20px' }}>
-            {images.map((image, key) => (
-              <FlexboxGrid.Item
-                colspan={7}
-                style={{ marginBottom: '20px', maxWidth: '300' }}
-                key={key}>
-                <Link route={ImageEditRoute.create({ id: image.id }, current ?? undefined)}>
-                  <Panel
-                    shaded
-                    bordered
-                    bodyFill
-                    style={{ height: '200', width: 'calc(100% + 2px)' }}>
-                    <img
-                      src={image.mediumURL || ''}
-                      style={{ height: '200', display: 'block', margin: '0 auto' }}
-                    />
-                    <Overlay
-                      style={{
-                        bottom: '0px',
-                        width: '100%',
-                        maxHeight: '60%',
-                        padding: '10px'
-                      }}>
-                      <Typography variant="subtitle1" color="gray" ellipsize>
-                        {`${image.filename || t('images.panels.untitled')}${image.extension}`}
-                      </Typography>
-                      <Typography variant="body2" color="white" ellipsize>
-                        {image.title || t('images.panels.Untitled')}
-                      </Typography>
-                      <Typography className="displayThreeLinesOnly">{image.description}</Typography>
-                    </Overlay>
-                    <IconButtonTooltip caption={t('images.overview.delete')}>
-                      <IconButton
-                        style={{ position: 'absolute', top: '5px', right: '5px' }}
-                        icon={<Icon icon="trash" />}
-                        circle
-                        size="sm"
-                        onClick={event => {
-                          event.preventDefault()
-                          setCurrentImage(image)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </Panel>
-                </Link>
-              </FlexboxGrid.Item>
-            ))}
-          </FlexboxGrid> */}
-
         <Pagination
           style={{height: '50px'}}
           lengthMenu={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
