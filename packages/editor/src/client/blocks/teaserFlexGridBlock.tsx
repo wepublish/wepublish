@@ -85,13 +85,9 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
 
-  const [flexTeasers, setFlexTeasers] = useState(value.flexTeasers)
+  const {flexTeasers} = value
 
   const {t} = useTranslation()
-
-  useEffect(() => {
-    onChange({...value, flexTeasers: flexTeasers})
-  }, [flexTeasers])
 
   useEffect(() => {
     if (isDragging) {
@@ -105,7 +101,6 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   // Teaser Block functions: add, remove, layout change, pin
   const handleAddTeaserBlock = () => {
-    // onLayoutChange
     const newTeaser: FlexTeaser = {
       alignment: {
         i: nanoid(),
@@ -116,28 +111,27 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       },
       teaser: null
     }
-    setFlexTeasers(flexTeasers => [...flexTeasers, newTeaser])
+    onChange({...value, flexTeasers: [...flexTeasers, newTeaser]})
   }
 
   const handleRemoveTeaserBlock = (index: string) => {
-    // onLayoutChange
-    setFlexTeasers(flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index))
+    onChange({
+      ...value,
+      flexTeasers: flexTeasers.filter(flexTeaser => flexTeaser.alignment.i !== index)
+    })
   }
 
   const handleLayoutChange = (layout: FlexItemAlignment[]) => {
-    //  if no layout change, return ?
     const newFlexTeasers = layout.map(v => {
       return {
         teaser: flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i)?.teaser ?? null,
         alignment: v
       }
     })
-
-    setFlexTeasers(newFlexTeasers)
+    onChange({...value, flexTeasers: newFlexTeasers})
   }
 
   const handlePinTeaserBlock = (index: string) => {
-    // onLayoutChange
     const newTeasers = flexTeasers.map(({teaser, alignment}) => {
       return alignment.i === index
         ? {
@@ -153,26 +147,28 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           }
         : {teaser: teaser, alignment: alignment}
     })
-    setFlexTeasers(newTeasers)
+    onChange({...value, flexTeasers: newTeasers})
   }
 
   // Teaser functions: change, remove
   function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
-    setFlexTeasers(
-      flexTeasers.map(ft => {
+    onChange({
+      ...value,
+      flexTeasers: flexTeasers.map(ft => {
         return ft.alignment.i === index ? {alignment: ft.alignment, teaser: teaserLink} : ft
       })
-    )
+    })
   }
 
   function handleRemoveTeaser(index: string) {
-    setFlexTeasers(
-      flexTeasers.map(({teaser, alignment}) => {
+    onChange({
+      ...value,
+      flexTeasers: flexTeasers.map(({teaser, alignment}) => {
         return alignment.i === index
           ? {alignment: alignment, teaser: null}
           : {teaser: teaser, alignment: alignment}
       })
-    )
+    })
   }
 
   return (
@@ -187,23 +183,20 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         />
       </IconButtonTooltip>
       <GridLayout
+        onResizeStop={layout => handleLayoutChange(layout)}
+        onDrop={layout => handleLayoutChange(layout)}
         className="layout"
-        onDragStop={() => setIsDragging(false)}
+        onDragStop={layout => {
+          setIsDragging(false)
+          handleLayoutChange(layout)
+        }}
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
-        onLayoutChange={layout => handleLayoutChange(layout)}
-        cols={12} // TODO make dynamic?
-        rowHeight={30} // TODO make dynamic?
+        cols={12}
+        rowHeight={30}
         layout={flexTeasers.map(ft => ft.alignment)}
         width={800}>
         {flexTeasers.map(flexTeaser => (
-          <div
-            // data-grid={{
-            //   x: flexTeaser.alignment.x,
-            //   y: flexTeaser.alignment.y,
-            //   w: flexTeaser.alignment.w,
-            //   h: flexTeaser.alignment.h
-            // }}
-            key={flexTeaser.alignment.i}>
+          <div key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
               teaser={flexTeaser.teaser}
               showGrabCursor={!flexTeaser.alignment.static}
