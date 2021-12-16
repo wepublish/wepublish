@@ -237,7 +237,8 @@
       "flexTeaser": {
         "addBlock": "Add Block",
         "removeBlock": "Remove Block",
-        "pinBlock": "Pin Block"
+        "pinBlock": "Pin Block",
+        "unpinBlock": "Unpin Block"
       },
       "image": {
         "label": "Image",

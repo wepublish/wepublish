@@ -222,7 +222,12 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
                   />
                 </IconButtonTooltip>
               )}
-              <IconButtonTooltip caption={t('blocks.flexTeaser.pinBlock')}>
+              <IconButtonTooltip
+                caption={
+                  !flexTeaser.alignment.static
+                    ? t('blocks.flexTeaser.pinBlock')
+                    : t('blocks.flexTeaser.unpinBlock')
+                }>
                 <IconButton
                   block
                   appearance="subtle"
