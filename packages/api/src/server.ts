@@ -146,6 +146,10 @@ export class WepublishServer {
     try {
       const context = await contextFromRequest(null, this.opts)
       await runJob(command, context, data)
+
+      // FIXME: Will be refactored in WPC-604
+      // Wait for all asynchronous events to finish. I know this is bad code.
+      await new Promise(resolve => setTimeout(resolve, 10000))
     } catch (error) {
       logger('server').error(error, 'Error while running job "%s"', command)
     }

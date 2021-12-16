@@ -327,7 +327,7 @@ async function asyncMain() {
         },
         {
           type: SendMailType.RenewedMemberSubscription,
-          localTemplate: 'newMemberSubscription',
+          localTemplate: 'renewedMemberSubscription',
           local: true
         },
         {
