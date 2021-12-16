@@ -391,12 +391,19 @@
     },
     "images": {
       "overview": {
+        "description": "Description",
+        "actions": "Actions",
         "delete": "Delete",
         "imageLibrary": "Image Library",
         "loadMore": "Load More",
         "noImagesFound": "No Images found",
         "search": "Search",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "image": "Image",
+        "filename": "Filename",
+        "title": "Title",
+        "untitled": "Untitled",
+        "noDescription": "No Description"
       },
       "panels": {
         "addTag": "Press enter to add tag",

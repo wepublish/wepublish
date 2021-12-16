@@ -21,7 +21,8 @@ import {
   ImageRefFragment,
   ImageListQuery,
   ImageListDocument,
-  FullImageFragment
+  FullImageFragment,
+  ImageRefFragmentDoc
 } from '../api'
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -32,18 +33,16 @@ import {
   Icon,
   Input,
   InputGroup,
-  Panel,
   IconButton,
   Drawer,
   Modal,
   Button,
-  Pagination
+  Table
 } from 'rsuite'
 
-import {Overlay} from '../atoms/overlay'
-import {Typography} from '../atoms/typography'
+const {Column, HeaderCell, Cell, Pagination} = Table
 
-// const ImagesPerPage = 24
+import {DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
 
 export function ImageList() {
   const {current} = useRoute()
@@ -101,9 +100,6 @@ export function ImageList() {
       setEditID(current.params.id)
     }
   }, [current])
-  console.log('total nr of images', data?.images.totalCount)
-
-  const limitOptions = [5, 10, 20]
 
   /* function loadMore() {
     fetchMore({
@@ -148,23 +144,92 @@ export function ImageList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-      {images.length > 0 ? (
-        <div>
-          <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
+      <div>
+        <Table
+          minHeight={600}
+          data={images}
+          {...console.log(images)}
+          rowHeight={100}
+          autoHeight={true}
+          loading={isLoading}>
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('images.overview.image')}</HeaderCell>
+            <Cell>
+              {(rowData: ImageRefFragment) => (
+                <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                  <img
+                    src={rowData.thumbURL}
+                    style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
+                  />
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('images.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: ImageRefFragment) =>
+                rowData.title ? rowData.title : t('images.overview.untitled')
+              }
+            </Cell>
+          </Column>
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('images.overview.description')}</HeaderCell>
+            <Cell>
+              {(rowData: ImageRefFragment) =>
+                rowData.description ? rowData.description : t('images.overview.noDescription')
+              }
+            </Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('images.overview.title')}</HeaderCell>
+            <Cell>{(rowData: ImageRefFragment) => (rowData.filename ? rowData.filename : '')}</Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('images.overview.actions')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: ImageRefFragment) => (
+                <>
+                  <IconButtonTooltip caption={t('images.overview.delete')}>
+                    <IconButton
+                      icon={<Icon icon="trash" />}
+                      circle
+                      size="sm"
+                      onClick={event => {
+                        event.preventDefault()
+                        setCurrentImage(rowData)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('images.overview.edit')}>
+                    <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                      <IconButton icon={<Icon icon="edit" />} circle size="sm" />
+                    </Link>
+                  </IconButtonTooltip>
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+
+        {/* <FlexboxGrid justify="space-around" style={{ marginTop: '20px' }}>
             {images.map((image, key) => (
               <FlexboxGrid.Item
                 colspan={7}
-                style={{marginBottom: '20px', maxWidth: '300'}}
+                style={{ marginBottom: '20px', maxWidth: '300' }}
                 key={key}>
-                <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
+                <Link route={ImageEditRoute.create({ id: image.id }, current ?? undefined)}>
                   <Panel
                     shaded
                     bordered
                     bodyFill
-                    style={{height: '200', width: 'calc(100% + 2px)'}}>
+                    style={{ height: '200', width: 'calc(100% + 2px)' }}>
                     <img
                       src={image.mediumURL || ''}
-                      style={{height: '200', display: 'block', margin: '0 auto'}}
+                      style={{ height: '200', display: 'block', margin: '0 auto' }}
                     />
                     <Overlay
                       style={{
@@ -183,7 +248,7 @@ export function ImageList() {
                     </Overlay>
                     <IconButtonTooltip caption={t('images.overview.delete')}>
                       <IconButton
-                        style={{position: 'absolute', top: '5px', right: '5px'}}
+                        style={{ position: 'absolute', top: '5px', right: '5px' }}
                         icon={<Icon icon="trash" />}
                         circle
                         size="sm"
@@ -198,29 +263,18 @@ export function ImageList() {
                 </Link>
               </FlexboxGrid.Item>
             ))}
-          </FlexboxGrid>
+          </FlexboxGrid> */}
 
-          <Pagination
-            layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-            {...console.log('image count:', data?.images.totalCount)}
-            {...console.log('page:', activePage)}
-            {...console.log('limit:', limit)}
-            prev
-            next
-            first
-            last
-            total={data?.images.totalCount}
-            // maxButtons={10}
-            limit={limit}
-            limitOptions={limitOptions}
-            onChangeLimit={setLimit}
-            activePage={activePage}
-            onChangePage={setActivePage}
-          />
-        </div>
-      ) : (
-        <p>{t('images.overview.noImagesFound')}</p>
-      )}
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
+          total={data?.images.totalCount}
+          displayLength={limit}
+          onChangeLength={limit => setLimit(limit)}
+          activePage={activePage}
+          onChangePage={setActivePage}
+        />
+      </div>
 
       <Drawer
         show={isUploadModalOpen}
