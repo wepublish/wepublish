@@ -432,6 +432,17 @@ async function asyncMain() {
         await server.runJob(JobType.DailyInvoiceCharger, {})
         process.exit(0)
       }
+    )
+    .command(
+      'checkdic',
+      'check open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceChecker, {})
+        process.exit(0)
+      }
     ).argv
 }
 

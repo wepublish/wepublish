@@ -413,7 +413,11 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
 
           const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
-          await paymentProvider.updatePaymentWithIntentState({intentState, context})
+          await paymentProvider.updatePaymentWithIntentState({
+            intentState,
+            dbAdapter: context.dbAdapter,
+            loaders: context.loaders
+          })
         }
 
         // FIXME: We need to implement a way to wait for all the database
