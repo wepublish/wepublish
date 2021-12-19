@@ -1,6 +1,16 @@
 # Change Log
 
 
+## v2.15.0-alpha.8 (2021-12-19)
+
+#### :heart: New Feature
+* `api`
+  * Last minute fix ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
 ## v2.15.0-alpha.7 (2021-12-19)
 
 #### :heart: New Feature
