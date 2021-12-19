@@ -1,6 +1,20 @@
 # Change Log
 
 
+## v2.15.0-alpha.7 (2021-12-19)
+
+#### :heart: New Feature
+* `api`
+  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
+
+#### :house: Internal
+* `api`
+  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
 ## v2.15.0-alpha.6 (2021-12-16)
 
 #### :bug: Bug Fix
