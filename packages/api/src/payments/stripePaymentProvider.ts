@@ -83,6 +83,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
         intent.payment_method !== null
       ) {
         customerID = await this.createStripeCustomer({intent})
+      } else {
+        customerID = intent.customer as string
       }
       intentStates.push({
         paymentID: intent.metadata.paymentID,
@@ -102,8 +104,9 @@ export class StripePaymentProvider extends BasePaymentProvider {
   }: CreatePaymentIntentProps): Promise<Intent> {
     let paymentMethodID: string | null = null
     if (customerID) {
-      // For an off_session payment the default_payment_method of the customer will be used.
-      // If no user, deleted user or no default_payment_method the intent will be created without an customer.
+      // For an off_session payment the default_payment_method or the default_source of the customer will be used.
+      // If both are available the default_payment_method will be used.
+      // If no user, deleted user, no default_payment_method or no default_source the intent will be created without an customer.
       const customer = await this.stripe.customers.retrieve(customerID)
       if (customer.deleted) {
         logger('stripePaymentProvider').warn(
@@ -112,36 +115,59 @@ export class StripePaymentProvider extends BasePaymentProvider {
         )
       } else if (customer.invoice_settings.default_payment_method !== null) {
         paymentMethodID = customer.invoice_settings.default_payment_method as string
+      } else if (customer.default_source !== null) {
+        paymentMethodID = customer.default_source as string
       } else {
         logger('stripePaymentProvider').warn(
-          'Provided customerID "%s" has no default_payment_method',
+          'Provided customerID "%s" has no default_payment_method or default_source',
           customerID
         )
       }
     }
+    let intent
+    let errorCode
+    try {
+      intent = await this.stripe.paymentIntents.create({
+        amount: invoice.items.reduce(
+          (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
+          0
+        ),
+        ...(customerID && paymentMethodID
+          ? {
+              confirm: true,
+              customer: customerID,
+              off_session: true,
+              payment_method: paymentMethodID,
+              payment_method_types: ['card']
+            }
+          : {}),
+        currency: 'chf',
+        // description: props.invoice.description, TODO: convert to text
+        ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
+        metadata: {
+          paymentID: paymentID,
+          mail: invoice.mail
+        }
+      })
+    } catch (error) {
+      logger('stripePaymentProvider').error(
+        error,
+        'Error while creating Stripe Intent for paymentProvider %s',
+        this.id
+      )
 
-    const intent = await this.stripe.paymentIntents.create({
-      amount: invoice.items.reduce(
-        (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-        0
-      ),
-      ...(customerID && paymentMethodID
-        ? {
-            confirm: true,
-            customer: customerID,
-            off_session: true,
-            payment_method: paymentMethodID,
-            payment_method_types: ['card']
-          }
-        : {}),
-      currency: 'chf',
-      // description: props.invoice.description, TODO: convert to text
-      ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
-      metadata: {
-        paymentID: paymentID,
-        mail: invoice.mail
+      if (error.type === 'StripeCardError') {
+        intent = error.raw.payment_intent
+        errorCode = error.raw.code
+      } else {
+        intent = {
+          id: 'unknown_error',
+          error,
+          state: PaymentState.RequiresUserAction
+        }
+        errorCode = 'unknown_error'
       }
-    })
+    }
 
     const state = mapStripeEventToPaymentStatue(intent.status)
     logger('stripePaymentProvider').info(
@@ -154,7 +180,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      state: state ?? PaymentState.Submitted
+      state: state ?? PaymentState.Submitted,
+      errorCode
     }
   }
 
@@ -188,6 +215,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intent.payment_method !== null
     ) {
       customerID = await this.createStripeCustomer({intent})
+    } else {
+      customerID = intent.customer as string
     }
 
     return {

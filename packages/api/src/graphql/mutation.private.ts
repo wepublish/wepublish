@@ -423,10 +423,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         userID: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
       },
-      resolve(root, {userID, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {userID, input}, {authenticate, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
-        return dbAdapter.user.updateUserSubscription({userID, input})
+
+        const updatedUserSubscription = await dbAdapter.user.updateUserSubscription({userID, input})
+        if (!updatedUserSubscription) throw new NotFound('userSubscription', userID)
+
+        return await memberContext.handleSubscriptionChange({
+          userID,
+          userSubscription: updatedUserSubscription
+        })
       }
     },
 
@@ -476,6 +483,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanDeleteUser, roles)
         await dbAdapter.user.deleteUserSubscription({userID})
+        // TODO: what else should be removed???
         return userID
       }
     },

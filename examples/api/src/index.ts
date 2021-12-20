@@ -327,7 +327,7 @@ async function asyncMain() {
         },
         {
           type: SendMailType.RenewedMemberSubscription,
-          localTemplate: 'newMemberSubscription',
+          localTemplate: 'renewedMemberSubscription',
           local: true
         },
         {
@@ -343,6 +343,11 @@ async function asyncMain() {
         {
           type: SendMailType.MemberSubscriptionOnSessionAfter,
           localTemplate: 'memberSubscriptionPayment/onSessionAfter',
+          local: true
+        },
+        {
+          type: SendMailType.MemberSubscriptionOffSessionFailed,
+          localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
           local: true
         }
       ],
@@ -425,6 +430,17 @@ async function asyncMain() {
       },
       async () => {
         await server.runJob(JobType.DailyInvoiceCharger, {})
+        process.exit(0)
+      }
+    )
+    .command(
+      'checkdic',
+      'check open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceChecker, {})
         process.exit(0)
       }
     ).argv

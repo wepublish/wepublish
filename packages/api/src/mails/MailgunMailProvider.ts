@@ -102,12 +102,17 @@ export class MailgunMailProvider extends BaseMailProvider {
       if (props.template) {
         form.append('template', props.template)
         for (const [key, value] of Object.entries(props.templateData || {})) {
-          form.append(`v:${key}`, JSON.stringify(value))
+          const serializedValue =
+            typeof value === 'string' || typeof value === 'number'
+              ? `${value}`
+              : JSON.stringify(value)
+          form.append(`v:${key}`, serializedValue)
         }
       }
       form.append('v:mail_log_id', props.mailLogID)
       form.submit(
         {
+          protocol: 'https:',
           host: this.baseDomain,
           path: `/v3/${this.mailDomain}/messages`,
           method: 'POST',
