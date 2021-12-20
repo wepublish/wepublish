@@ -166,19 +166,29 @@ userModelEvents.on('create', (context, model) => {
 invoiceModelEvents.on('update', async (context, model) => {
   // TODO: rethink this logic
   if (model.paidAt !== null && model.userID) {
-    const user = await context.dbAdapter.user.getUserByID(model.userID)
+    let user = await context.dbAdapter.user.getUserByID(model.userID)
     if (!user || !user.subscription) return
     const {periods} = user.subscription
     const period = periods.find(period => period.invoiceID === model.id)
     if (!period) return
     if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil) {
-      await context.dbAdapter.user.updateUserSubscription({
+      const updatedUserSubscription = await context.dbAdapter.user.updateUserSubscription({
         userID: user.id,
         input: {
           ...user.subscription,
           paidUntil: period.endsAt
         }
       })
+
+      if (!updatedUserSubscription) {
+        logger('events').warn(`Could not update UserSubscription %s`, user.id)
+        return
+      }
+
+      user = {
+        ...user,
+        subscription: updatedUserSubscription
+      }
 
       if (!user.active && user.lastLogin === null) {
         const orgEmail = user.properties.find(prop => prop.key === USER_PROPERTY_ORG_EMAIL)
@@ -189,7 +199,7 @@ invoiceModelEvents.on('update', async (context, model) => {
           return
         }
 
-        await context.dbAdapter.user.updateUser({
+        user = await context.dbAdapter.user.updateUser({
           id: user.id,
           input: {
             ...user,
@@ -198,6 +208,7 @@ invoiceModelEvents.on('update', async (context, model) => {
             properties: user.properties.filter(prop => prop.key !== USER_PROPERTY_ORG_EMAIL)
           }
         })
+        if (!user || !user.subscription) return
         // Send FirstTime Hello
         const token = context.generateJWT({
           id: user.id,

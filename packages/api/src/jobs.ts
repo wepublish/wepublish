@@ -4,6 +4,7 @@ import {SendMailType} from './mails/mailContext'
 
 export enum JobType {
   DailyMembershipRenewal = 'dailyMembershipRenewal',
+  DailyInvoiceChecker = 'dailyInvoiceChecker',
   DailyInvoiceCharger = 'dailyInvoiceCharger',
   DailyInvoiceReminder = 'dailyInvoiceReminder',
   SendTestMail = 'sendTestMail'
@@ -19,6 +20,12 @@ async function dailyMembershipRenewal(context: Context, data: any): Promise<void
     daysToLookAhead
   })
   logger('jobs').info('finishing dailyMembershipRenewal')
+}
+
+async function dailyInvoiceChecker(context: Context): Promise<void> {
+  logger('jobs').info('starting dailyInvoiceChecker')
+  await context.memberContext.checkOpenInvoices()
+  logger('jobs').info('finishing dailyInvoiceChecker')
 }
 
 async function dailyInvoiceCharger(context: Context): Promise<void> {
@@ -64,6 +71,9 @@ export async function runJob(command: JobType, context: Context, data: any): Pro
   switch (command) {
     case JobType.DailyMembershipRenewal:
       await dailyMembershipRenewal(context, data)
+      break
+    case JobType.DailyInvoiceChecker:
+      await dailyInvoiceChecker(context)
       break
     case JobType.SendTestMail:
       await sendTestMail(context, data)
