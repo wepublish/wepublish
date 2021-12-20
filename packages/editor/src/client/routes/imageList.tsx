@@ -22,7 +22,6 @@ import {
   ImageListQuery,
   ImageListDocument,
   FullImageFragment
-  // ImageRefFragmentDoc
 } from '../api'
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -40,9 +39,9 @@ import {
   Table
 } from 'rsuite'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
-
 import {DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 export function ImageList() {
   const {current} = useRoute()
@@ -85,7 +84,6 @@ export function ImageList() {
     }
   }, [data?.images])
 
-  // fetch images when parameters change
   useEffect(() => {
     refetch(listVariables)
   }, [filter, activePage, limit])
@@ -141,11 +139,11 @@ export function ImageList() {
         <Table
           minHeight={600}
           data={images}
-          {...console.log(images)}
           rowHeight={100}
           autoHeight={true}
-          loading={isLoading}>
-          <Column width={210} align="left" resizable>
+          loading={isLoading}
+          wordWrap>
+          <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) => (
@@ -158,7 +156,7 @@ export function ImageList() {
               )}
             </Cell>
           </Column>
-          <Column width={210} align="left" resizable>
+          <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) =>
@@ -166,7 +164,7 @@ export function ImageList() {
               }
             </Cell>
           </Column>
-          <Column width={210} align="left" resizable>
+          <Column width={340} align="left" resizable>
             <HeaderCell>{t('images.overview.description')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) =>
@@ -175,32 +173,38 @@ export function ImageList() {
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable>
-            <HeaderCell>{t('images.overview.title')}</HeaderCell>
+          <Column width={250} align="left" resizable>
+            <HeaderCell>{t('images.overview.filename')}</HeaderCell>
             <Cell>{(rowData: ImageRefFragment) => (rowData.filename ? rowData.filename : '')}</Cell>
           </Column>
 
-          <Column width={210} align="left" resizable>
+          <Column width={160} align="center" resizable>
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ImageRefFragment) => (
                 <>
+                  <IconButtonTooltip caption={t('images.overview.edit')}>
+                    <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                      <IconButton
+                        icon={<Icon icon="edit" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                      />
+                    </Link>
+                  </IconButtonTooltip>
                   <IconButtonTooltip caption={t('images.overview.delete')}>
                     <IconButton
                       icon={<Icon icon="trash" />}
                       circle
                       size="sm"
+                      style={{marginLeft: '5px'}}
                       onClick={event => {
                         event.preventDefault()
                         setCurrentImage(rowData)
                         setConfirmationDialogOpen(true)
                       }}
                     />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('images.overview.edit')}>
-                    <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
-                      <IconButton icon={<Icon icon="edit" />} circle size="sm" />
-                    </Link>
                   </IconButtonTooltip>
                 </>
               )}

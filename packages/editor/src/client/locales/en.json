@@ -403,7 +403,8 @@
         "filename": "Filename",
         "title": "Title",
         "untitled": "Untitled",
-        "noDescription": "No Description"
+        "noDescription": "No Description",
+        "edit": "Edit"
       },
       "panels": {
         "addTag": "Press enter to add tag",
