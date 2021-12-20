@@ -225,14 +225,14 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               <IconButtonTooltip
                 caption={
                   !flexTeaser.alignment.static
-                    ? t('blocks.flexTeaser.pinBlock')
-                    : t('blocks.flexTeaser.unpinBlock')
+                    ? t('blocks.flexTeaser.lockBlock')
+                    : t('blocks.flexTeaser.unlockBlock')
                 }>
                 <IconButton
                   block
                   appearance="subtle"
                   active={flexTeaser.alignment.static}
-                  icon={<Icon icon="thumb-tack" />}
+                  icon={<Icon icon={!flexTeaser.alignment.static ? 'unlock' : 'lock'} />}
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>
