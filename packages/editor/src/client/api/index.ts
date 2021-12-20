@@ -1166,7 +1166,6 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   invoiceID: Scalars['String'];
-  paymentMethodID: Scalars['String'];
   successURL?: Maybe<Scalars['String']>;
   failureURL?: Maybe<Scalars['String']>;
 };
@@ -1457,7 +1456,6 @@ export type QueryImagesArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
@@ -2633,7 +2631,6 @@ export type ImageListQueryVariables = Exact<{
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -2641,7 +2638,6 @@ export type ImageListQuery = (
   { __typename?: 'Query' }
   & { images: (
     { __typename?: 'ImageConnection' }
-    & Pick<ImageConnection, 'totalCount'>
     & { nodes: Array<(
       { __typename?: 'Image' }
       & ImageRefFragment
@@ -5094,8 +5090,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ImageListDocument = gql`
-    query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int) {
-  images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip) {
+    query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+  images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {
     nodes {
       ...ImageRef
     }
@@ -5105,7 +5101,6 @@ export const ImageListDocument = gql`
       hasNextPage
       hasPreviousPage
     }
-    totalCount
   }
 }
     ${ImageRefFragmentDoc}`;
@@ -5127,7 +5122,6 @@ export const ImageListDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
- *      skip: // value for 'skip'
  *   },
  * });
  */
