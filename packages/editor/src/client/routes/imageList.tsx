@@ -53,7 +53,7 @@ export function ImageList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
-  const [activePage, setActivePage] = React.useState(1)
+  const [activePage, setActivePage] = useState(1)
   const [limit, setLimit] = useState(5)
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
