@@ -9,7 +9,7 @@ import {BlockProps} from '../atoms/blockList'
 import nanoid from 'nanoid'
 import {ButtonToolbar, Drawer, Icon, IconButton, Panel} from 'rsuite'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {contentForTeaser, TeaserBlockProps} from './teaserGridBlock'
+import {contentForTeaser} from './teaserGridBlock'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
@@ -22,7 +22,7 @@ export function FlexTeaserBlock({
   onEdit,
   onChoose,
   onRemove
-}: TeaserBlockProps) {
+}: FlexTeaserBlockProps) {
   return (
     <Panel
       bodyFill={true}
@@ -265,4 +265,12 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </Drawer>
     </>
   )
+}
+
+interface FlexTeaserBlockProps {
+  teaser: Teaser | null
+  showGrabCursor: boolean
+  onEdit: () => void
+  onChoose: () => void
+  onRemove: () => void
 }

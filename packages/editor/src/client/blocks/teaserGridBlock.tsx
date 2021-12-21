@@ -131,7 +131,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
 export interface TeaserBlockProps {
   teaser: Teaser | null
   showGrabCursor: boolean
-  numColumns?: number
+  numColumns: number
   onEdit: () => void
   onChoose: () => void
   onRemove: () => void
