@@ -332,10 +332,22 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
   })
 })
 
+export const GraphQLFlexGridItemPublicAlignment = new GraphQLObjectType<FlexItemAlignment, Context>(
+  {
+    name: 'FlexItemAlignment',
+    fields: {
+      x: {type: GraphQLNonNull(GraphQLInt)},
+      y: {type: GraphQLNonNull(GraphQLInt)},
+      w: {type: GraphQLNonNull(GraphQLInt)},
+      h: {type: GraphQLNonNull(GraphQLInt)}
+    }
+  }
+)
+
 export const GraphQLPublicFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
   fields: {
-    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignment)},
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemPublicAlignment)},
     teaser: {type: GraphQLPublicTeaser}
   }
 })

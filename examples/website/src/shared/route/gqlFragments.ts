@@ -287,12 +287,10 @@ export const flexGridBlockFrontDataGQLfragment = gql`
   fragment ArticleFlexGridBlockData on TeaserFlexGridBlock {
     flexTeasers {
       alignment {
-        i
         x
         y
         w
         h
-        static
       }
       teaser {
         __typename
