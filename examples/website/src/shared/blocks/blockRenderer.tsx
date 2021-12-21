@@ -146,7 +146,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   }
 }
 
-export function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
+function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
   function getTeaserTags(tags: string[], max: number): string[] {
     const result = []
     for (let i = 0; i < tags.length && i < max; i++) {
