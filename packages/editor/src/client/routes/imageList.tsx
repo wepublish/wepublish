@@ -142,7 +142,8 @@ export function ImageList() {
           rowHeight={100}
           autoHeight={true}
           loading={isLoading}
-          wordWrap>
+          wordWrap
+          className={'displayThreeLinesOnly'}>
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
@@ -158,24 +159,34 @@ export function ImageList() {
           </Column>
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: ImageRefFragment) =>
-                rowData.title ? rowData.title : t('images.overview.untitled')
-              }
+            <Cell className="displayThreeLinesOnly">
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.title ? rowData.title : t('images.overview.untitled')}
+                </p>
+              )}
             </Cell>
           </Column>
           <Column width={340} align="left" resizable>
             <HeaderCell>{t('images.overview.description')}</HeaderCell>
-            <Cell>
-              {(rowData: ImageRefFragment) =>
-                rowData.description ? rowData.description : t('images.overview.noDescription')
-              }
+            <Cell className={'displayThreeLinesOnly'}>
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.description ? rowData.description : t('images.overview.noDescription')}
+                </p>
+              )}
             </Cell>
           </Column>
 
           <Column width={250} align="left" resizable>
             <HeaderCell>{t('images.overview.filename')}</HeaderCell>
-            <Cell>{(rowData: ImageRefFragment) => (rowData.filename ? rowData.filename : '')}</Cell>
+            <Cell>
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.filename ? rowData.filename : ''}
+                </p>
+              )}
+            </Cell>
           </Column>
 
           <Column width={160} align="center" resizable>
