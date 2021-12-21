@@ -106,7 +106,6 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
-
   return (
     <>
       <FlexboxGrid>
