@@ -1,5 +1,4 @@
 import React, {ReactNode} from 'react'
-import {Interface} from 'readline'
 import '../global.less'
 
 export interface DescriptionItemProps {
