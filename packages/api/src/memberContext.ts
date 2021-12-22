@@ -1,4 +1,10 @@
-import {PaymentProviderCustomer, User, UserSort, UserSubscription} from './db/user'
+import {
+  PaymentProviderCustomer,
+  SubscriptionDeactivationReason,
+  User,
+  UserSort,
+  UserSubscription
+} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
@@ -55,6 +61,12 @@ export interface CheckOpenInvoiceProps {
   invoice: Invoice
 }
 
+export interface DeactivateSubscriptionForUserProps {
+  userID: string
+  deactivationDate?: Date
+  deactivationReason?: SubscriptionDeactivationReason
+}
+
 export interface MemberContext {
   dbAdapter: DBAdapter
   loaders: DataLoaderContext
@@ -75,6 +87,8 @@ export interface MemberContext {
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
   sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
+
+  deactivateSubscriptionForUser(props: DeactivateSubscriptionForUserProps): Promise<void>
 }
 
 export interface MemberContextProps {
