@@ -1,4 +1,6 @@
 import React, {ReactNode} from 'react'
+import {Interface} from 'readline'
+import '../global.less'
 
 export interface DescriptionItemProps {
   children?: ReactNode
@@ -20,14 +22,16 @@ export function DescriptionList({children}: DescriptionListItemProps) {
 export interface DescriptionListItemProps {
   label?: ReactNode
   children?: ReactNode
+  style?: React.CSSProperties
 }
 
-export function DescriptionListItem({label, children}: DescriptionListItemProps) {
+export function DescriptionListItem({label, children, style}: DescriptionListItemProps) {
   return (
     <div
       style={{
         display: 'flex',
-        marginBottom: 10
+        marginBottom: 10,
+        ...style
 
         /* ':last-child': {
         marginBottom: 0
@@ -42,7 +46,9 @@ export function DescriptionListItem({label, children}: DescriptionListItemProps)
       </dt>
       <dd
         style={{
-          marginLeft: 20
+          marginLeft: 20,
+          // add this for image edit panel only - or ok so ?
+          lineHeight: 1
         }}>
         {children}
       </dd>

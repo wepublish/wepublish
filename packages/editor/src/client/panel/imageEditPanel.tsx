@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import prettyBytes from 'pretty-bytes'
+import '../global.less'
 
 import {
   useUploadImageMutation,
@@ -26,6 +27,7 @@ import {
   TagPicker,
   Alert
 } from 'rsuite'
+
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 
@@ -193,6 +195,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         onSave?.(data.updateImage)
       }
     }
+    onClose?.()
   }
 
   /**
@@ -237,7 +240,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       <Drawer.Body>
         {!isLoading && (
           <>
-            <Panel style={{backgroundColor: 'dark'}}>
+            <Panel style={{backgroundColor: 'dark'}} className={'noYPadding'}>
               {imageURL && imageWidth && imageHeight && (
                 <FocalPointInput
                   imageURL={imageURL}
@@ -249,26 +252,26 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 />
               )}
             </Panel>
-            <Panel header={t('images.panels.description')}>
+            <Panel header={t('images.panels.description')} className={'noTopPadding'}>
               <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')}>
+                <DescriptionListItem label={t('images.panels.filename')} style={{marginBottom: 0}}>
                   {filename || t('images.panels.untitled')}
                   {extension}
                 </DescriptionListItem>
-                <DescriptionListItem label={t('images.panels.dimension')}>
+                <DescriptionListItem label={t('images.panels.dimension')} style={{marginBottom: 0}}>
                   {t('images.panels.imageDimension', {imageWidth, imageHeight})}
                 </DescriptionListItem>
                 {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')}>
+                  <DescriptionListItem label={t('images.panels.created')} style={{marginBottom: 0}}>
                     {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
                   </DescriptionListItem>
                 )}
                 {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')}>
+                  <DescriptionListItem label={t('images.panels.updated')} style={{marginBottom: 0}}>
                     {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
                   </DescriptionListItem>
                 )}
-                <DescriptionListItem label={t('images.panels.fileSize')}>
+                <DescriptionListItem label={t('images.panels.fileSize')} style={{marginBottom: 0}}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
 
@@ -281,16 +284,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 )}
               </DescriptionList>
             </Panel>
-            <Panel header={t('images.panels.information')}>
+            <Panel header={t('images.panels.information')} className={'noTopPadding'}>
               <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.filename')}</ControlLabel>
-                  <FormControl
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={value => setFilename(value)}
-                  />
-                </FormGroup>
                 <FormGroup>
                   <ControlLabel>{t('images.panels.title')}</ControlLabel>
                   <FormControl
@@ -302,9 +297,20 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 <FormGroup>
                   <ControlLabel>{t('images.panels.description')}</ControlLabel>
                   <FormControl
+                    rows={5}
+                    name="textarea"
+                    componentClass="textarea"
                     value={description}
                     disabled={isDisabled}
                     onChange={value => setDescription(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.filename')}</ControlLabel>
+                  <FormControl
+                    value={filename}
+                    disabled={isDisabled}
+                    onChange={value => setFilename(value)}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -356,9 +362,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       <Drawer.Footer>
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {isUpload ? t('images.panels.upload') : t('images.panels.save')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
         </Button>
       </Drawer.Footer>
     </>
