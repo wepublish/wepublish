@@ -252,38 +252,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 />
               )}
             </Panel>
-            <Panel header={t('images.panels.description')} className={'noTopPadding'}>
-              <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')} style={{marginBottom: 0}}>
-                  {filename || t('images.panels.untitled')}
-                  {extension}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('images.panels.dimension')} style={{marginBottom: 0}}>
-                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-                </DescriptionListItem>
-                {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')} style={{marginBottom: 0}}>
-                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
-                  </DescriptionListItem>
-                )}
-                {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')} style={{marginBottom: 0}}>
-                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
-                  </DescriptionListItem>
-                )}
-                <DescriptionListItem label={t('images.panels.fileSize')} style={{marginBottom: 0}}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
 
-                {originalImageURL && (
-                  <DescriptionListItem label={t('images.panels.link')}>
-                    <Link href={originalImageURL} target="_blank">
-                      {originalImageURL}
-                    </Link>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </Panel>
             <Panel header={t('images.panels.information')} className={'noTopPadding'}>
               <Form fluid={true}>
                 <FormGroup>
@@ -325,6 +294,38 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                   />
                 </FormGroup>
               </Form>
+            </Panel>
+            <Panel header={t('images.panels.description')} className={'noTopPadding'}>
+              <DescriptionList>
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {filename || t('images.panels.untitled')}
+                  {extension}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('images.panels.dimension')}>
+                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                </DescriptionListItem>
+                {createdAt && (
+                  <DescriptionListItem label={t('images.panels.created')}>
+                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
+                  </DescriptionListItem>
+                )}
+                {updatedAt && (
+                  <DescriptionListItem label={t('images.panels.updated')}>
+                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
+                  </DescriptionListItem>
+                )}
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
+
+                {originalImageURL && (
+                  <DescriptionListItem label={t('images.panels.link')}>
+                    <Link href={originalImageURL} target="_blank">
+                      {originalImageURL}
+                    </Link>
+                  </DescriptionListItem>
+                )}
+              </DescriptionList>
             </Panel>
             <Panel header={t('images.panels.attribution')}>
               <Form fluid={true}>

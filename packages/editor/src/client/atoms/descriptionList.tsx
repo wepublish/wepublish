@@ -21,16 +21,16 @@ export function DescriptionList({children}: DescriptionListItemProps) {
 export interface DescriptionListItemProps {
   label?: ReactNode
   children?: ReactNode
-  style?: React.CSSProperties
+  // style?: React.CSSProperties
 }
 
-export function DescriptionListItem({label, children, style}: DescriptionListItemProps) {
+export function DescriptionListItem({label, children}: DescriptionListItemProps) {
   return (
     <div
       style={{
         display: 'flex',
-        marginBottom: 10,
-        ...style
+        marginBottom: 10
+        // ...style
 
         /* ':last-child': {
         marginBottom: 0
