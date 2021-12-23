@@ -240,7 +240,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       <Drawer.Body>
         {!isLoading && (
           <>
-            <Panel style={{backgroundColor: 'dark'}} className={'noYPadding'}>
+            <Panel style={{backgroundColor: 'dark'}}>
               {imageURL && imageWidth && imageHeight && (
                 <FocalPointInput
                   imageURL={imageURL}
@@ -253,7 +253,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
               )}
             </Panel>
 
-            <Panel header={t('images.panels.information')} className={'noTopPadding'}>
+            <Panel header={t('images.panels.information')}>
               <Form fluid={true}>
                 <FormGroup>
                   <ControlLabel>{t('images.panels.title')}</ControlLabel>
@@ -295,7 +295,36 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 </FormGroup>
               </Form>
             </Panel>
-            <Panel header={t('images.panels.description')} className={'noTopPadding'}>
+            <Panel header={t('images.panels.attribution')}>
+              <Form fluid={true}>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                  <FormControl
+                    value={author}
+                    disabled={isDisabled}
+                    onChange={value => setAuthor(value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.link')}</ControlLabel>
+                  <FormControl
+                    value={source}
+                    disabled={isDisabled}
+                    onChange={value => setSource(value)}
+                  />
+                  <p>{t('images.panels.sourceLink')}</p>
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                  <FormControl
+                    value={license}
+                    disabled={isDisabled}
+                    onChange={value => setLicense(value)}
+                  />
+                </FormGroup>
+              </Form>
+            </Panel>
+            <Panel header={t('images.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('images.panels.filename')}>
                   {filename || t('images.panels.untitled')}
@@ -326,35 +355,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                   </DescriptionListItem>
                 )}
               </DescriptionList>
-            </Panel>
-            <Panel header={t('images.panels.attribution')}>
-              <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
-                  <FormControl
-                    value={author}
-                    disabled={isDisabled}
-                    onChange={value => setAuthor(value)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.link')}</ControlLabel>
-                  <FormControl
-                    value={source}
-                    disabled={isDisabled}
-                    onChange={value => setSource(value)}
-                  />
-                  <p>{t('images.panels.sourceLink')}</p>
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.license')}</ControlLabel>
-                  <FormControl
-                    value={license}
-                    disabled={isDisabled}
-                    onChange={value => setLicense(value)}
-                  />
-                </FormGroup>
-              </Form>
             </Panel>
           </>
         )}
