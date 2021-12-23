@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import prettyBytes from 'pretty-bytes'
-import '../global.less'
 
 import {
   useUploadImageMutation,

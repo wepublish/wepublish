@@ -1,5 +1,4 @@
 import React, {ReactNode} from 'react'
-import '../global.less'
 
 export interface DescriptionItemProps {
   children?: ReactNode
