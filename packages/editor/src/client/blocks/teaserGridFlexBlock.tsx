@@ -15,6 +15,7 @@ import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 
 import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 
 export function FlexTeaserBlock({
   teaser,
@@ -49,27 +50,33 @@ export function FlexTeaserBlock({
                 right: 0,
                 top: 0
               }}>
-              <IconButton
-                icon={<Icon icon="file" />}
-                onClick={onChoose}
-                style={{
-                  margin: 10
-                }}
-              />
-              <IconButton
-                icon={<Icon icon="pencil" />}
-                onClick={onEdit}
-                style={{
-                  margin: 10
-                }}
-              />
-              <IconButton
-                icon={<Icon icon="trash" />}
-                onClick={onRemove}
-                style={{
-                  margin: 10
-                }}
-              />
+              <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
+                <IconButton
+                  icon={<Icon icon="file" />}
+                  onClick={onChoose}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
+              <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
+                <IconButton
+                  icon={<Icon icon="pencil" />}
+                  onClick={onEdit}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
+              <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.deleteTeaser')}>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  onClick={onRemove}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </IconButtonTooltip>
             </div>
           </div>
         )}

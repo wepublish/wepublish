@@ -238,7 +238,10 @@
         "addBlock": "Add Block",
         "removeBlock": "Remove Block",
         "lockBlock": "Lock",
-        "unlockBlock": "Unlock"
+        "unlockBlock": "Unlock",
+        "chooseTeaser": "Choose Teaser",
+        "editTeaser": "Edit Teaser",
+        "deleteTeaser": "Delete Teaser"
       },
       "image": {
         "label": "Image",
