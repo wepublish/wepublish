@@ -32,27 +32,20 @@ import {
   Icon,
   Input,
   InputGroup,
-  Panel,
   IconButton,
   Drawer,
   Modal,
-  Button
+  Button,
+  Table
 } from 'rsuite'
-import {Overlay} from '../atoms/overlay'
-import {Typography} from '../atoms/typography'
 
-const ImagesPerPage = 24
+import {DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 export function ImageList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
-
-  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
-  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
-
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.ImageEdit ? current.params.id : null
-  )
   const [images, setImages] = useState<FullImageFragment[]>([])
 
   const [filter, setFilter] = useState('')
@@ -60,8 +53,23 @@ export function ImageList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
-  const listVariables = {filter: filter || undefined, first: ImagesPerPage}
-  const {data, /* fetchMore, */ loading: isLoading} = useImageListQuery({
+  const [activePage, setActivePage] = useState(1)
+  const [limit, setLimit] = useState(5)
+
+  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
+  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
+
+  const [editID, setEditID] = useState<string | null>(
+    current?.type === RouteType.ImageEdit ? current.params.id : null
+  )
+
+  const listVariables = {
+    filter: filter || undefined,
+    first: limit,
+    skip: activePage - 1
+  }
+
+  const {data, refetch, /* fetchMore, */ loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -75,6 +83,10 @@ export function ImageList() {
       setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>)
     }
   }, [data?.images])
+
+  useEffect(() => {
+    refetch(listVariables)
+  }, [filter, activePage, limit])
 
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
@@ -123,53 +135,103 @@ export function ImageList() {
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-
-      {images.length > 0 ? (
-        <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
-          {images.map((image, key) => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
-              <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
-                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
+      <div>
+        <Table
+          minHeight={600}
+          data={images}
+          rowHeight={100}
+          autoHeight={true}
+          loading={isLoading}
+          wordWrap
+          className={'displayThreeLinesOnly'}>
+          <Column width={160} align="left" resizable>
+            <HeaderCell>{t('images.overview.image')}</HeaderCell>
+            <Cell>
+              {(rowData: ImageRefFragment) => (
+                <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
                   <img
-                    src={image.mediumURL || ''}
-                    style={{height: '200', display: 'block', margin: '0 auto'}}
+                    src={rowData.thumbURL || ''}
+                    style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
                   />
-                  <Overlay
-                    style={{
-                      bottom: '0px',
-                      width: '100%',
-                      maxHeight: '60%',
-                      padding: '10px'
-                    }}>
-                    <Typography variant="subtitle1" color="gray" ellipsize>
-                      {`${image.filename || t('images.panels.untitled')}${image.extension}`}
-                    </Typography>
-                    <Typography variant="body2" color="white" ellipsize>
-                      {image.title || t('images.panels.Untitled')}
-                    </Typography>
-                    <Typography className="displayThreeLinesOnly">{image.description}</Typography>
-                  </Overlay>
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={160} align="left" resizable>
+            <HeaderCell>{t('images.overview.title')}</HeaderCell>
+            <Cell className="displayThreeLinesOnly">
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.title ? rowData.title : t('images.overview.untitled')}
+                </p>
+              )}
+            </Cell>
+          </Column>
+          <Column width={340} align="left" resizable>
+            <HeaderCell>{t('images.overview.description')}</HeaderCell>
+            <Cell className={'displayThreeLinesOnly'}>
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.description ? rowData.description : t('images.overview.noDescription')}
+                </p>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={250} align="left" resizable>
+            <HeaderCell>{t('images.overview.filename')}</HeaderCell>
+            <Cell>
+              {(rowData: ImageRefFragment) => (
+                <p className={'displayThreeLinesOnly'}>
+                  {rowData.filename ? rowData.filename : ''}
+                </p>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={160} align="center" resizable>
+            <HeaderCell>{t('images.overview.actions')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: ImageRefFragment) => (
+                <>
+                  <IconButtonTooltip caption={t('images.overview.edit')}>
+                    <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                      <IconButton
+                        icon={<Icon icon="edit" />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                      />
+                    </Link>
+                  </IconButtonTooltip>
                   <IconButtonTooltip caption={t('images.overview.delete')}>
                     <IconButton
-                      style={{position: 'absolute', top: '5px', right: '5px'}}
                       icon={<Icon icon="trash" />}
                       circle
                       size="sm"
+                      style={{marginLeft: '5px'}}
                       onClick={event => {
                         event.preventDefault()
-                        setCurrentImage(image)
+                        setCurrentImage(rowData)
                         setConfirmationDialogOpen(true)
                       }}
                     />
                   </IconButtonTooltip>
-                </Panel>
-              </Link>
-            </FlexboxGrid.Item>
-          ))}
-        </FlexboxGrid>
-      ) : (
-        <p>{t('images.overview.noImagesFound')}</p>
-      )}
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
+          total={data?.images.totalCount}
+          displayLength={limit}
+          onChangeLength={limit => setLimit(limit)}
+          activePage={activePage}
+          onChangePage={setActivePage}
+        />
+      </div>
 
       <Drawer
         show={isUploadModalOpen}

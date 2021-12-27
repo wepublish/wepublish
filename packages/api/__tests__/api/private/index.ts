@@ -1404,6 +1404,7 @@ export type QueryImagesArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
   sort?: Maybe<ImageSort>
   order?: Maybe<SortOrder>
@@ -3356,6 +3357,7 @@ export const ImageList = gql`
         hasNextPage
         hasPreviousPage
       }
+      totalCount
     }
   }
   ${ImageRef}

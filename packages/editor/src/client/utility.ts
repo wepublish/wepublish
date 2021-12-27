@@ -162,6 +162,21 @@ export const DEFAULT_TABLE_PAGE_SIZES = [
   }
 ]
 
+export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [
+  {
+    value: 5,
+    label: 5
+  },
+  {
+    value: 10,
+    label: 10
+  },
+  {
+    value: 15,
+    label: 15
+  }
+]
+
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,
   PaymentPeriodicity.Quarterly,
