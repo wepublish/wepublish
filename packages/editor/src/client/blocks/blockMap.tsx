@@ -13,7 +13,7 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
-import {TeaserFlexGridBlock} from './teaserFlexGridBlock'
+import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -119,7 +119,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [BlockType.TeaserGridFlex]: {
-    field: props => <TeaserFlexGridBlock {...props} />,
+    field: props => <TeaserGridFlexBlock {...props} />,
     defaultValue: {
       flexTeasers: [
         {

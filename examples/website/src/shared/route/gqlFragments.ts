@@ -284,7 +284,7 @@ export const gridBlockFrontDataGQLfragment = gql`
 `
 
 export const flexGridBlockFrontDataGQLfragment = gql`
-  fragment ArticleFlexGridBlockData on TeaserFlexGridBlock {
+  fragment ArticleFlexGridBlockData on TeaserGridFlexBlock {
     flexTeasers {
       alignment {
         x

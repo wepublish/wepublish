@@ -335,17 +335,17 @@ export type GridBlock = BaseBlock<
   }
 >
 
-export interface FlexItemAlignment {
+interface FlexAlignment {
   i: string
   x: number
   y: number
   w: number
   h: number
-  static?: boolean
+  static: boolean
 }
 
 export interface FlexTeaser {
-  alignment: FlexItemAlignment
+  alignment: FlexAlignment
   blocks: Block[]
 }
 

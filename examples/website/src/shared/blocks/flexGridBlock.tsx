@@ -23,8 +23,8 @@ export function FlexGridBlock({flexTeasers, opts}: FlexGridBlockProps) {
         className="container"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)',
-          gridTemplateRows: `repeat(${numberOfRows}, 1fr)`,
+          gridTemplateColumns: 'repeat(12, 7.6vw)',
+          gridTemplateRows: `repeat(${numberOfRows}, 7.6vw)`,
           gridAutoFlow: 'column',
           gridGap: '4px'
         }}>

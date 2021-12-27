@@ -192,21 +192,21 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
-export interface FlexItemAlignment {
+export interface FlexAlignment {
   i: string
   x: number
   y: number
   w: number
   h: number
-  static?: boolean
+  static: boolean
 }
 
 export interface FlexTeaser {
-  alignment: FlexItemAlignment
+  alignment: FlexAlignment
   teaser: Teaser | null
 }
 
-export interface TeaserFlexGridBlock {
+export interface TeaserGridFlexBlock {
   type: BlockType.TeaserGridFlex
   flexTeasers: FlexTeaser[]
 }
@@ -228,7 +228,7 @@ export type ArticleBlock =
   | PolisConversationBlock
   | BildwurfAdBlock
   | TeaserGridBlock
-  | TeaserFlexGridBlock
+  | TeaserGridFlexBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

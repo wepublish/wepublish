@@ -4,7 +4,7 @@ import GridLayout from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-import {FlexItemAlignment, FlexTeaser, Teaser, TeaserFlexGridBlockValue} from './types'
+import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
 import {BlockProps} from '../atoms/blockList'
 import nanoid from 'nanoid'
 import {ButtonToolbar, Drawer, Icon, IconButton, Panel} from 'rsuite'
@@ -78,7 +78,7 @@ export function FlexTeaserBlock({
   )
 }
 
-export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
+export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlexBlockValue>) {
   const [editItem, setEditItem] = useState<FlexTeaser>()
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -107,7 +107,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
         x: 0,
         y: 0,
         w: 4,
-        h: 4
+        h: 4,
+        static: false
       },
       teaser: null
     }
@@ -121,7 +122,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
   }
 
-  const handleLayoutChange = (layout: FlexItemAlignment[]) => {
+  const handleLayoutChange = (layout: FlexAlignment[]) => {
     const newFlexTeasers = layout.map(v => {
       return {
         teaser: flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i)?.teaser ?? null,

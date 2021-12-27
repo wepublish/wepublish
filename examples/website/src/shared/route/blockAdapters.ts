@@ -82,7 +82,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
           }
         }
 
-      case 'TeaserFlexGridBlock':
+      case 'TeaserGridFlexBlock':
         return {
           type: BlockType.FlexGrid,
           key: index,

@@ -36,14 +36,14 @@ import {
   ImageCaptionEdge,
   ArticleTeaser,
   TeaserGridBlock,
-  TeaserFlexGridBlock,
+  TeaserGridFlexBlock,
   TeaserStyle,
   PeerArticleTeaser,
   PageTeaser,
   TeaserType,
   RichTextBlock,
   FacebookVideoBlock,
-  FlexItemAlignment,
+  FlexAlignment,
   FlexTeaser,
   BildwurfAdBlock
 } from '../db/block'
@@ -178,40 +178,40 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
   })
 })
 
-export const GraphQLFlexGridItemAlignment = new GraphQLObjectType<FlexItemAlignment, Context>({
-  name: 'FlexItemAlignment',
+export const GraphQLFlexGridAlignment = new GraphQLObjectType<FlexAlignment, Context>({
+  name: 'FlexAlignment',
   fields: {
     i: {type: GraphQLNonNull(GraphQLString)},
     x: {type: GraphQLNonNull(GraphQLInt)},
     y: {type: GraphQLNonNull(GraphQLInt)},
     w: {type: GraphQLNonNull(GraphQLInt)},
     h: {type: GraphQLNonNull(GraphQLInt)},
-    static: {type: GraphQLBoolean}
+    static: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
-export const GraphQLFlexGridItemAlignmentInput = new GraphQLInputObjectType({
-  name: 'FlexItemAlignmentInput',
+export const GraphQLFlexGridAlignmentInput = new GraphQLInputObjectType({
+  name: 'FlexAlignmentInput',
   fields: {
     i: {type: GraphQLNonNull(GraphQLString)},
     x: {type: GraphQLNonNull(GraphQLInt)},
     y: {type: GraphQLNonNull(GraphQLInt)},
     w: {type: GraphQLNonNull(GraphQLInt)},
     h: {type: GraphQLNonNull(GraphQLInt)},
-    static: {type: GraphQLBoolean}
+    static: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
 export const GraphQLFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
   fields: {
-    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignment)},
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridAlignment)},
     teaser: {type: GraphQLTeaser}
   }
 })
 
-export const GraphQLTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>({
-  name: 'TeaserFlexGridBlock',
+export const GraphQLTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>({
+  name: 'TeaserGridFlexBlock',
   fields: {
     flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaser))}
   },
@@ -332,29 +332,27 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
   })
 })
 
-export const GraphQLFlexGridItemPublicAlignment = new GraphQLObjectType<FlexItemAlignment, Context>(
-  {
-    name: 'FlexItemAlignment',
-    fields: {
-      x: {type: GraphQLNonNull(GraphQLInt)},
-      y: {type: GraphQLNonNull(GraphQLInt)},
-      w: {type: GraphQLNonNull(GraphQLInt)},
-      h: {type: GraphQLNonNull(GraphQLInt)}
-    }
+export const GraphQLPublicFlexAlignment = new GraphQLObjectType<FlexAlignment, Context>({
+  name: 'FlexAlignment',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
   }
-)
+})
 
 export const GraphQLPublicFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
   name: 'FlexTeaser',
   fields: {
-    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemPublicAlignment)},
+    alignment: {type: GraphQLNonNull(GraphQLPublicFlexAlignment)},
     teaser: {type: GraphQLPublicTeaser}
   }
 })
 
-export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>(
+export const GraphQLPublicTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>(
   {
-    name: 'TeaserFlexGridBlock',
+    name: 'TeaserGridFlexBlock',
     fields: {
       flexTeasers: {
         type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicFlexTeaser)))
@@ -802,14 +800,14 @@ export const GraphQLFlexTeaserInput = new GraphQLInputObjectType({
   name: 'FlexTeaserInput',
   fields: {
     teaser: {type: GraphQLTeaserInput},
-    alignment: {type: GraphQLNonNull(GraphQLFlexGridItemAlignmentInput)}
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridAlignmentInput)}
   }
 })
 
-export const GraphQLTeaserFlexGridBlockInput = new GraphQLInputObjectType({
-  name: 'TeaserFlexGridBlockInput',
+export const GraphQLTeaserGridFlexBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserGridFlexBlockInput',
   fields: {
-    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaserInput))}
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexTeaserInput)))}
   }
 })
 
@@ -834,7 +832,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
-    [BlockType.TeaserGridFlex]: {type: GraphQLTeaserFlexGridBlockInput}
+    [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
   })
 })
 
@@ -859,7 +857,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLTeaserGridBlock,
-    GraphQLTeaserFlexGridBlock
+    GraphQLTeaserGridFlexBlock
   ]
 })
 
@@ -883,6 +881,6 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLPublicTeaserGridBlock,
-    GraphQLPublicTeaserFlexGridBlock
+    GraphQLPublicTeaserGridFlexBlock
   ]
 })

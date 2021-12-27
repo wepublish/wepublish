@@ -165,7 +165,7 @@ fragment FullBlock on Block {
     numColumns
   }
 
-  ... on TeaserFlexGridBlock {
+  ... on TeaserGridFlexBlock {
     flexTeasers {
       alignment {
         i

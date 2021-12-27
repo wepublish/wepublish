@@ -210,7 +210,7 @@ export interface TeaserGridBlockValue {
   numColumns: number
 }
 
-export interface FlexItemAlignment {
+export interface FlexAlignment {
   i: string
   x: number
   y: number
@@ -220,11 +220,11 @@ export interface FlexItemAlignment {
 }
 
 export interface FlexTeaser {
-  alignment: FlexItemAlignment
+  alignment: FlexAlignment
   teaser: Teaser | null
 }
 
-export interface TeaserFlexGridBlockValue {
+export interface TeaserGridFlexBlockValue {
   flexTeasers: FlexTeaser[]
 }
 
@@ -247,9 +247,9 @@ export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, Te
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
 
-export type TeaserFlexGridBlockListValue = BlockListValue<
+export type TeaserGridFlexBlockListValue = BlockListValue<
   BlockType.TeaserGridFlex,
-  TeaserFlexGridBlockValue
+  TeaserGridFlexBlockValue
 >
 
 export type BlockValue =
@@ -263,7 +263,7 @@ export type BlockValue =
   | LinkPageBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
-  | TeaserFlexGridBlockListValue
+  | TeaserGridFlexBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -435,12 +435,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     }
                   },
                   alignment: {
-                    i: flexTeaser?.alignment.i ?? nanoid(),
-                    x: flexTeaser?.alignment.x ?? 1,
-                    y: flexTeaser?.alignment.y ?? 1,
-                    w: flexTeaser?.alignment.w ?? 1,
-                    h: flexTeaser?.alignment.h ?? 1,
-                    static: flexTeaser?.alignment.static ?? false
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
                   }
                 }
 
@@ -456,12 +456,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     articleID: flexTeaser.teaser.articleID
                   },
                   alignment: {
-                    i: flexTeaser?.alignment.i ?? nanoid(),
-                    x: flexTeaser?.alignment.x ?? 1,
-                    y: flexTeaser?.alignment.y ?? 1,
-                    w: flexTeaser?.alignment.w ?? 1,
-                    h: flexTeaser?.alignment.h ?? 1,
-                    static: flexTeaser?.alignment.static ?? false
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
                   }
                 }
 
@@ -476,12 +476,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     pageID: flexTeaser.teaser.page.id
                   },
                   alignment: {
-                    i: flexTeaser?.alignment.i ?? nanoid(),
-                    x: flexTeaser?.alignment.x ?? 1,
-                    y: flexTeaser?.alignment.y ?? 1,
-                    w: flexTeaser?.alignment.w ?? 1,
-                    h: flexTeaser?.alignment.h ?? 1,
-                    static: flexTeaser?.alignment.static ?? false
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
                   }
                 }
 
@@ -489,12 +489,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                 return {
                   teaser: null,
                   alignment: {
-                    i: flexTeaser?.alignment.i ?? nanoid(),
-                    x: flexTeaser?.alignment.x ?? 1,
-                    y: flexTeaser?.alignment.y ?? 1,
-                    w: flexTeaser?.alignment.w ?? 3,
-                    h: flexTeaser?.alignment.h ?? 4,
-                    static: flexTeaser?.alignment.static ?? false
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
                   }
                 }
             }
@@ -698,7 +698,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    case 'TeaserFlexGridBlock':
+    case 'TeaserGridFlexBlock':
       return {
         key,
         type: BlockType.TeaserGridFlex,
