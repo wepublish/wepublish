@@ -211,7 +211,7 @@ export function Login() {
                 className={'username'}
                 value={email}
                 autoComplete={'username'}
-                onChange={email => {console.log('em', email); setEmail(email)}}
+                onChange={(email: string) => setEmail(email)}
                 inputRef={(ref: HTMLInputElement): void => {
                   emailRef.current = ref
                 }}
@@ -224,7 +224,7 @@ export function Login() {
                 type="password"
                 value={password}
                 autoComplete={'currentPassword'}
-                onChange={password => {console.log('pas', password); setPassword(password)}}
+                onChange={(password: string)  => setPassword(password)}
                 inputRef={(ref: HTMLInputElement): void => {
                   passwordRef.current = ref
                 }}
