@@ -1,4 +1,4 @@
-import React, {useState, useContext, FormEvent, useEffect} from 'react'
+import React, {useState, useContext, FormEvent, useEffect, useRef} from 'react'
 import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
@@ -31,6 +31,8 @@ import {IconNames} from 'rsuite/lib/Icon/Icon'
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const {current} = useRoute()
 
@@ -166,6 +168,32 @@ export function Login() {
     }
   }
 
+  useEffect(() => {
+    if (emailRef.current) {
+      emailRef.current.focus();
+    }
+  }, []);
+
+  const listener = (e): void => {
+    const inputIsFocused = (document.activeElement === emailRef.current) || (document.activeElement === passwordRef.current)
+    if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+      if (inputIsFocused) {
+        login(e)
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (email || password) {
+      document.addEventListener('keydown', listener);
+    } else {
+      document.removeEventListener('keydown', listener);
+    }
+    return () => {
+      document.removeEventListener('keydown', listener);
+    };
+  }, [email, password]);
+
   return (
     <LoginTemplate backgroundChildren={<Background />}>
       {!loadingOAuth2 && (
@@ -183,7 +211,10 @@ export function Login() {
                 className={'username'}
                 value={email}
                 autoComplete={'username'}
-                onChange={email => setEmail(email)}
+                onChange={email => {console.log('em', email); setEmail(email)}}
+                inputRef={(ref: HTMLInputElement): void => {
+                  emailRef.current = ref
+                }}
               />
             </FormGroup>
             <FormGroup>
@@ -193,7 +224,10 @@ export function Login() {
                 type="password"
                 value={password}
                 autoComplete={'currentPassword'}
-                onChange={password => setPassword(password)}
+                onChange={password => {console.log('pas', password); setPassword(password)}}
+                inputRef={(ref: HTMLInputElement): void => {
+                  passwordRef.current = ref
+                }}
               />
             </FormGroup>
             <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
