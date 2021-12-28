@@ -8,7 +8,7 @@ import React, {
   ReactEventHandler
 } from 'react'
 
-import {Icon, Popover, PopoverProps, Whisper, Divider} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper, Divider, Panel} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -177,21 +177,17 @@ interface ControlsContainerProps {
 }
 
 export function ControlsContainer({children, dividerTop, dividerBottom}: ControlsContainerProps) {
-  // TODO find rsuite component
   return (
-    <div style={{width: '100%'}}>
+    <Panel style={{width: '100%'}}>
       {dividerTop && <Divider />}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          width: '100%'
-        }}>
+      <Panel
+        className='panel'
+        bodyFill
+        >
         {children}
-      </div>
+      </Panel>
       {dividerBottom && <Divider />}
-    </div>
+    </Panel>
   )
 }
 
