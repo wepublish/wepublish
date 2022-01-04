@@ -31,8 +31,8 @@ import {IconNames} from 'rsuite/lib/Icon/Icon'
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null)
+  const passwordRef = useRef<HTMLInputElement | null>(null)
 
   const {current} = useRoute()
 
@@ -170,29 +170,30 @@ export function Login() {
 
   useEffect(() => {
     if (emailRef.current) {
-      emailRef.current.focus();
+      emailRef.current.focus()
     }
-  }, []);
+  }, [])
 
   const listener = (e: KeyboardEvent): void => {
-    const inputIsFocused = (document.activeElement === emailRef.current) || (document.activeElement === passwordRef.current)
+    const inputIsFocused =
+      document.activeElement === emailRef.current || document.activeElement === passwordRef.current
     if (e.code === 'Enter' || e.code === 'NumpadEnter') {
       if (inputIsFocused) {
-        login(e)
+        login((e as unknown) as FormEvent)
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (email || password) {
-      document.addEventListener('keydown', listener);
+      document.addEventListener('keydown', listener)
     } else {
-      document.removeEventListener('keydown', listener);
+      document.removeEventListener('keydown', listener)
     }
     return () => {
-      document.removeEventListener('keydown', listener);
-    };
-  }, [email, password]);
+      document.removeEventListener('keydown', listener)
+    }
+  }, [email, password])
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
@@ -224,7 +225,7 @@ export function Login() {
                 type="password"
                 value={password}
                 autoComplete={'currentPassword'}
-                onChange={(password: string)  => setPassword(password)}
+                onChange={(password: string) => setPassword(password)}
                 inputRef={(ref: HTMLInputElement): void => {
                   passwordRef.current = ref
                 }}
