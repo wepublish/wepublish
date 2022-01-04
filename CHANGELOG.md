@@ -1,138 +1,14 @@
 # Change Log
 
 
-## v2.15.0-alpha.9 (2021-12-21)
-
-#### :bug: Bug Fix
-* `api`
-  * [#473](https://github.com/wepublish/wepublish/pull/473) bug fix for checking invoice states ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.8 (2021-12-19)
-
-#### :heart: New Feature
-* `api`
-  * Last minute fix ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.7 (2021-12-19)
-
-#### :heart: New Feature
-* `api`
-  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
-
-#### :house: Internal
-* `api`
-  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.6 (2021-12-16)
-
-#### :bug: Bug Fix
-* `api`
-  * [#468](https://github.com/wepublish/wepublish/pull/468) tiny fixes ([@roosnic1](https://github.com/roosnic1))
-
-#### :house: Internal
-* `api`
-  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.5 (2021-12-15)
-
-#### :bug: Bug Fix
-* `api`
-  * [#468](https://github.com/wepublish/wepublish/pull/468) some bug fixes ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-## v2.15.0-alpha.4 (2021-12-15)
-
-#### :bug: Bug Fix
-* `api`
-  * [#468](https://github.com/wepublish/wepublish/pull/468) some bug fixes ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.3 (2021-12-15)
-
-#### :bug: Bug Fix
-* `api`
-  * [#468](https://github.com/wepublish/wepublish/pull/468) some bug fixes ([@roosnic1](https://github.com/roosnic1))
-  
-#### Committers: 1
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-
-
-## v2.15.0-alpha.2 (2021-12-15)
-
-#### :bug: Bug Fix
-* `api`
-  * [#463](https://github.com/wepublish/wepublish/pull/463) only send custom_missing mail to offSession payments ([@roosnic1](https://github.com/roosnic1))
-  * [#462](https://github.com/wepublish/wepublish/pull/462)  encode all url parameters that are sent with node-fetch ([@roosnic1](https://github.com/roosnic1))
-
-#### :house: Internal
-* `api`
-  * [#464](https://github.com/wepublish/wepublish/pull/464) Stripe improvements ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 2
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
-
-
-## v2.15.0-alpha.1 (2021-12-09)
-
-#### :boom: Breaking Change
-* `api`
-  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
-
-#### :heart: New Feature
-* `api`
-  * [#451](https://github.com/wepublish/wepublish/pull/451) catch stripe errors and send mail ([@roosnic1](https://github.com/roosnic1))
-  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
-* `api`, `editor`
-  * [#452](https://github.com/wepublish/wepublish/pull/452) added oauth2Accounts to the GraphQLUser ([@roosnic1](https://github.com/roosnic1))
-
-#### :bug: Bug Fix
-* `api`
-  * [#455](https://github.com/wepublish/wepublish/pull/455) make the mailgun from.submit use https ([@roosnic1](https://github.com/roosnic1))
-
-#### :nail_care: Polish
-* `api`
-  * [#441](https://github.com/wepublish/wepublish/pull/441) Add invoice email to payrexx create gateway request ([@tomaszdurka](https://github.com/tomaszdurka))
-
-#### :house: Internal
-* `api`
-  * [#458](https://github.com/wepublish/wepublish/pull/458) better logging ([@roosnic1](https://github.com/roosnic1))
-* `editor`
-  * [#450](https://github.com/wepublish/wepublish/pull/450) Updated editor graphql codegen api ([@roosnic1](https://github.com/roosnic1))
-
-#### Committers: 2
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
-
-
-## v2.15.0-alpha.0 (2021-12-03)
+## v2.15.0 (2022-01-04)
 
 #### :boom: Breaking Change
 * `api-db-mongodb`, `api`, `editor`
   * [#436](https://github.com/wepublish/wepublish/pull/436) payment method with slugs ([@roosnic1](https://github.com/roosnic1))
 * `api`
   * [#435](https://github.com/wepublish/wepublish/pull/435) rename resetPassword to sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
+  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
 
 #### :heart: New Feature
 * `api-db-mongodb`, `api`, `editor`
@@ -141,12 +17,22 @@
   * [#435](https://github.com/wepublish/wepublish/pull/435) rename resetPassword to sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
   * [#433](https://github.com/wepublish/wepublish/pull/433) Use mailproviders with templates ([@roosnic1](https://github.com/roosnic1))
   * [#429](https://github.com/wepublish/wepublish/pull/429) manual checkIntentStatus for Stripe and Payrexx ([@roosnic1](https://github.com/roosnic1))
+  * [#451](https://github.com/wepublish/wepublish/pull/451) catch stripe errors and send mail ([@roosnic1](https://github.com/roosnic1))
+  * [#449](https://github.com/wepublish/wepublish/pull/449) Some subscription changes ([@roosnic1](https://github.com/roosnic1))
+  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
 * `api`, `editor`
   * [#432](https://github.com/wepublish/wepublish/pull/432) Send Login Links from the Editor ([@roosnic1](https://github.com/roosnic1))
+  * [#452](https://github.com/wepublish/wepublish/pull/452) added oauth2Accounts to the GraphQLUser ([@roosnic1](https://github.com/roosnic1))
+
 
 #### :bug: Bug Fix
 * `api`
   * [#428](https://github.com/wepublish/wepublish/pull/428) bug fix for updating user subscription ([@roosnic1](https://github.com/roosnic1))
+  * [#455](https://github.com/wepublish/wepublish/pull/455) make the mailgun from.submit use https ([@roosnic1](https://github.com/roosnic1))
+  * [#463](https://github.com/wepublish/wepublish/pull/463) only send custom_missing mail to offSession payments ([@roosnic1](https://github.com/roosnic1))
+  * [#462](https://github.com/wepublish/wepublish/pull/462) encode all url parameters that are sent with node-fetch ([@roosnic1](https://github.com/roosnic1))
+  * [#468](https://github.com/wepublish/wepublish/pull/468) tiny fixes ([@roosnic1](https://github.com/roosnic1))
+  * [#473](https://github.com/wepublish/wepublish/pull/473) bug fix for checking invoice states ([@roosnic1](https://github.com/roosnic1))
 * `editor`
   * [#426](https://github.com/wepublish/wepublish/pull/426) F/wpc 568 fix upload image error ([@lakeside763](https://github.com/lakeside763))
 
@@ -154,18 +40,26 @@
 * `editor`
   * [#418](https://github.com/wepublish/wepublish/pull/418) f/wpc-579 missing fields highlighted in orange in page publish panel ([@camilleory](https://github.com/camilleory))
   * [#417](https://github.com/wepublish/wepublish/pull/417) F/wpc 578 highlight missing field article metadata ([@camilleory](https://github.com/camilleory))
+* `api`
+  * [#441](https://github.com/wepublish/wepublish/pull/441) Add invoice email to payrexx create gateway request ([@tomaszdurka](https://github.com/tomaszdurka))
 
 #### :house: Internal
 * `api`
   * [#440](https://github.com/wepublish/wepublish/pull/440) implemented a quick fix for failed registrations ([@roosnic1](https://github.com/roosnic1))
   * [#434](https://github.com/wepublish/wepublish/pull/434) use SEND_LOGIN_JWT_EXPIRES_MIN for sendWebsiteLogin ([@roosnic1](https://github.com/roosnic1))
   * [#431](https://github.com/wepublish/wepublish/pull/431) Make public jwt expiry time ajustable ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#458](https://github.com/wepublish/wepublish/pull/458) better logging ([@roosnic1](https://github.com/roosnic1))
+  * [#464](https://github.com/wepublish/wepublish/pull/464) Stripe improvements ([@roosnic1](https://github.com/roosnic1))
+  * [#469](https://github.com/wepublish/wepublish/pull/469) Member context improvements ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#450](https://github.com/wepublish/wepublish/pull/450) Updated editor graphql codegen api ([@roosnic1](https://github.com/roosnic1))
 
 #### Committers: 4
 - Camille ([@camilleory](https://github.com/camilleory))
 - Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
 - Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 - [@lakeside763](https://github.com/lakeside763)
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
 
 
 ## v2.14.0 (2021-12-09)
