@@ -174,7 +174,7 @@ export function Login() {
     }
   }, []);
 
-  const listener = (e): void => {
+  const listener = (e: KeyboardEvent): void => {
     const inputIsFocused = (document.activeElement === emailRef.current) || (document.activeElement === passwordRef.current)
     if (e.code === 'Enter' || e.code === 'NumpadEnter') {
       if (inputIsFocused) {
