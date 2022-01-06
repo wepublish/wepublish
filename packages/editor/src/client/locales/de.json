@@ -783,7 +783,7 @@
         "save": "Speichern",
         "selectUserRole": "Userrolle wählen",
         "startedAt": "Gestartet",
-        "startedAdDate": "{{startedAtDate, ccc PP p}}",
+        "startedAtDate": "{{startedAtDate, ccc PP p}}",
         "subCreate": "Erstellen",
         "subEdit": "Bearbeiten",
         "subTitle": "Abonnement",
