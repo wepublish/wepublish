@@ -57,7 +57,6 @@ export interface SendReminderForInvoicesProps {
 }
 
 export interface CheckOpenInvoiceProps {
-  paymentMethodID: string
   invoice: Invoice
 }
 
@@ -351,49 +350,36 @@ export class MemberContext implements MemberContext {
         continue
       }
 
-      const paymentMethod = await this.loaders.paymentMethodsByID.load(
-        user.subscription.paymentMethodID
-      )
-      if (!paymentMethod) {
-        logger('memberContext').warn(
-          'paymentMethod %s not found',
-          user.subscription.paymentMethodID
-        )
-        continue
-      }
-
-      await this.checkOpenInvoice({
-        paymentMethodID: paymentMethod.id,
-        invoice
-      })
+      await this.checkOpenInvoice({invoice})
     }
   }
 
-  async checkOpenInvoice({paymentMethodID, invoice}: CheckOpenInvoiceProps): Promise<void> {
+  async checkOpenInvoice({invoice}: CheckOpenInvoiceProps): Promise<void> {
     const paymentMethods = await this.dbAdapter.paymentMethod.getPaymentMethods()
-    const paymentMethod = paymentMethods.find(method => method.id === paymentMethodID)
-    if (!paymentMethod) {
-      logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
-      return
-    }
-    const paymentProvider = this.paymentProviders.find(
-      provider => provider.id === paymentMethod.paymentProviderID
-    )
-    if (!paymentProvider) {
-      logger('memberContext').error(
-        'PaymentProvider %s does not exist',
-        paymentMethod.paymentProviderID
-      )
-      return
-    }
-
     const payments = await this.dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
 
     for (const payment of payments) {
       if (!payment || !payment.intentID) {
-        logger('memberContext').error('Payment %s does not have an intetID', payment?.id)
+        logger('memberContext').error('Payment %s does not have an intentID', payment?.id)
         continue
       }
+
+      const paymentMethod = paymentMethods.find(method => method.id === payment.paymentMethodID)
+      if (!paymentMethod) {
+        logger('memberContext').error('PaymentMethod %s does not exist', payment.paymentMethodID)
+        continue
+      }
+      const paymentProvider = this.paymentProviders.find(
+        provider => provider.id === paymentMethod.paymentProviderID
+      )
+      if (!paymentProvider) {
+        logger('memberContext').error(
+          'PaymentProvider %s does not exist',
+          paymentMethod.paymentProviderID
+        )
+        continue
+      }
+
       try {
         const intentState = await paymentProvider.checkIntentStatus({
           intentID: payment.intentID

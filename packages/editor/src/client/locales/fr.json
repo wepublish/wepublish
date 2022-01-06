@@ -460,7 +460,7 @@
         "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
         "selectUserRole": "Sélectionnez le rôle de l'utilisateur/utilisatrices",
         "startedAt": "Démarré",
-        "startedAdDate": "{{startedAtDate, ccc PP p}}",
+        "startedAtDate": "{{startedAtDate, ccc PP p}}",
         "subEdit": "Modifier",
         "subCreate": "Créer"
       },
