@@ -1,4 +1,4 @@
-import React, {useState, useContext, FormEvent, useEffect} from 'react'
+import React, {useState, useContext, FormEvent, useEffect, useRef} from 'react'
 import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
@@ -31,6 +31,7 @@ import {IconNames} from 'rsuite/lib/Icon/Icon'
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const emailRef = useRef<HTMLInputElement | null>(null)
 
   const {current} = useRoute()
 
