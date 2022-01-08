@@ -32,6 +32,7 @@ export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const emailRef = useRef<HTMLInputElement | null>(null)
+  const passwordRef = useRef<HTMLInputElement | null>(null)
 
   const {current} = useRoute()
 
