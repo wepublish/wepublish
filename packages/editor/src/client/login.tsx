@@ -1,4 +1,4 @@
-import React, {useState, useContext, FormEvent, useEffect, useRef} from 'react'
+import React, {useState, useContext, FormEvent, useEffect} from 'react'
 import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
@@ -31,8 +31,6 @@ import {IconNames} from 'rsuite/lib/Icon/Icon'
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const emailRef = useRef<HTMLInputElement | null>(null)
-  const passwordRef = useRef<HTMLInputElement | null>(null)
 
   const {current} = useRoute()
 
@@ -174,7 +172,7 @@ export function Login() {
     }
   }, [])
 
-  const listener = (e: KeyboardEvent): void => {
+  const loginOnEnter = (e: KeyboardEvent): void => {
     const inputIsFocused =
       document.activeElement === emailRef.current || document.activeElement === passwordRef.current
     if (e.code === 'Enter' || e.code === 'NumpadEnter') {
@@ -183,17 +181,6 @@ export function Login() {
       }
     }
   }
-
-  useEffect(() => {
-    if (email || password) {
-      document.addEventListener('keydown', listener)
-    } else {
-      document.removeEventListener('keydown', listener)
-    }
-    return () => {
-      document.removeEventListener('keydown', listener)
-    }
-  }, [email, password])
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
@@ -213,9 +200,7 @@ export function Login() {
                 value={email}
                 autoComplete={'username'}
                 onChange={(email: string) => setEmail(email)}
-                inputRef={(ref: HTMLInputElement): void => {
-                  emailRef.current = ref
-                }}
+                onKeyDown={(e: KeyboardEvent) => loginOnEnter(e)}
               />
             </FormGroup>
             <FormGroup>
@@ -226,9 +211,7 @@ export function Login() {
                 value={password}
                 autoComplete={'currentPassword'}
                 onChange={(password: string) => setPassword(password)}
-                inputRef={(ref: HTMLInputElement): void => {
-                  passwordRef.current = ref
-                }}
+                onKeyDown={(e: KeyboardEvent) => loginOnEnter(e)}
               />
             </FormGroup>
             <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
