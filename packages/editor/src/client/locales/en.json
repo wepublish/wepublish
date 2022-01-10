@@ -860,22 +860,22 @@
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
         "modalTitel": {
-          "deactivated": "Activate Membership?",
-          "activated": "Deactivate Membership?"
+          "deactivated": "Activate subscription?",
+          "activated": "Deactivate subscription?"
         },
         "modalMessage": {
-          "deactivated": "Do you want to re-activate the Membership of \"{{userName}}\" with the email address \"{{userEmail}}\"?",
-          "activated": "Do you want to deactivate the Membership of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
+          "deactivated": "Do you want to re-activate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?",
+          "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
         "title": {
-          "deactivated": "Reactivate Membership",
-          "activated": "Deactivate Membership"
+          "deactivated": "Reactivate subscription",
+          "activated": "Deactivate subscription"
         },
         "action": {
           "deactivated": "Reactivate",
           "activated": "Deactivates"
         },
-        "help": "Deactivated memberships can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
         "date": "Deactivation Date",
         "reason": "Deactivation Reason",
         "reasonNone": "None",
