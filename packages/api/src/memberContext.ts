@@ -53,7 +53,6 @@ export interface SendReminderForInvoiceProps {
 export interface SendReminderForInvoicesProps {
   userPaymentURL: string
   replyToAddress: string
-  sendEveryDays?: number // defaults to 3
 }
 
 export interface CheckOpenInvoiceProps {
@@ -134,12 +133,18 @@ export class MemberContext implements MemberContext {
 
   mailContext: MailContext
 
+  invoiceReminderFrequencyInDays: number
+  invoiceReminderMaxTries: number
+
   constructor(props: MemberContextProps) {
     this.dbAdapter = props.dbAdapter
     this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
 
     this.mailContext = props.mailContext
+
+    this.invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') ?? 3
+    this.invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') ?? 5
   }
 
   async handleSubscriptionChange({
@@ -411,6 +416,7 @@ export class MemberContext implements MemberContext {
   }
 
   async chargeOpenInvoices(): Promise<void> {
+    const today = new Date()
     const invoices = await this.dbAdapter.invoice.getInvoices({
       filter: {
         paidAt: {
@@ -434,6 +440,42 @@ export class MemberContext implements MemberContext {
       if (!invoice.userID) {
         logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
         continue
+      }
+
+      if (invoice.sentReminderAt) {
+        const SHOULD_SEND_REMINDER_AGAIN_DATE = new Date(
+          invoice.sentReminderAt.getTime() +
+            this.invoiceReminderFrequencyInDays * ONE_DAY_IN_MILLISECONDS -
+            ONE_HOUR_IN_MILLISECONDS
+        )
+
+        const SHOULD_DEACTIVATE_SUBSCRIPTION_DATE = new Date(
+          invoice.createdAt.getTime() +
+            this.invoiceReminderFrequencyInDays *
+              this.invoiceReminderMaxTries *
+              ONE_DAY_IN_MILLISECONDS -
+            ONE_HOUR_IN_MILLISECONDS
+        )
+
+        if (SHOULD_SEND_REMINDER_AGAIN_DATE > today) {
+          continue // skip reminder if not enough days passed
+        }
+
+        if (SHOULD_DEACTIVATE_SUBSCRIPTION_DATE < today) {
+          await this.dbAdapter.invoice.updateInvoice({
+            id: invoice.id,
+            input: {
+              ...invoice,
+              canceledAt: today
+            }
+          })
+          await this.deactivateSubscriptionForUser({
+            userID: invoice.userID,
+            deactivationDate: today,
+            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+          })
+          continue
+        }
       }
 
       const user = await this.dbAdapter.user.getUserByID(invoice.userID)
@@ -567,13 +609,20 @@ export class MemberContext implements MemberContext {
           errorCode: intent.errorCode
         }
       })
+
+      await this.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          sentReminderAt: new Date()
+        }
+      })
     }
   }
 
   async sendReminderForInvoices({
     replyToAddress,
-    userPaymentURL,
-    sendEveryDays = 3
+    userPaymentURL
   }: SendReminderForInvoicesProps): Promise<void> {
     const today = new Date()
 
@@ -599,22 +648,45 @@ export class MemberContext implements MemberContext {
     }
 
     for (const invoice of invoices.nodes) {
-      if (
-        invoice.sentReminderAt &&
-        new Date(
-          invoice.sentReminderAt.getTime() +
-            sendEveryDays * ONE_DAY_IN_MILLISECONDS -
-            ONE_HOUR_IN_MILLISECONDS
-        ) > today
-      ) {
-        continue // skip reminder if not enough days passed
-      }
-
-      // TODO: check if user is not active and if true skip.
-
       if (!invoice.userID) {
         logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
         continue
+      }
+
+      if (invoice.sentReminderAt) {
+        const SHOULD_SEND_REMINDER_AGAIN_DATE = new Date(
+          invoice.sentReminderAt.getTime() +
+            this.invoiceReminderFrequencyInDays * ONE_DAY_IN_MILLISECONDS -
+            ONE_HOUR_IN_MILLISECONDS
+        )
+
+        const SHOULD_DEACTIVATE_SUBSCRIPTION_DATE = new Date(
+          invoice.createdAt.getTime() +
+            this.invoiceReminderFrequencyInDays *
+              this.invoiceReminderMaxTries *
+              ONE_DAY_IN_MILLISECONDS -
+            ONE_HOUR_IN_MILLISECONDS
+        )
+
+        if (SHOULD_SEND_REMINDER_AGAIN_DATE > today) {
+          continue // skip reminder if not enough days passed
+        }
+
+        if (SHOULD_DEACTIVATE_SUBSCRIPTION_DATE < today) {
+          await this.dbAdapter.invoice.updateInvoice({
+            id: invoice.id,
+            input: {
+              ...invoice,
+              canceledAt: today
+            }
+          })
+          await this.deactivateSubscriptionForUser({
+            userID: invoice.userID,
+            deactivationDate: today,
+            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+          })
+          continue
+        }
       }
 
       const user = await this.dbAdapter.user.getUserByID(invoice.userID)
