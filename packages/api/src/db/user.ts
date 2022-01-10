@@ -91,7 +91,7 @@ export enum SubscriptionDeactivationReason {
 }
 
 export interface SubscriptionDeactivation {
-  deactivatedAt: Date
+  date: Date
   reason: SubscriptionDeactivationReason
 }
 
@@ -115,7 +115,7 @@ export interface UserSubscriptionInput {
   readonly startsAt: Date
   readonly paidUntil: Date | null
   readonly paymentMethodID: string
-  readonly deactivatedAt: Date | null
+  readonly deactivation: SubscriptionDeactivation | null
 }
 
 export interface UpdateUserSubscriptionArgs {

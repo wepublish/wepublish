@@ -1644,6 +1644,12 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
+export enum SubscriptionDeactivationReason {
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
+  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserGridBlock = {
@@ -1848,13 +1854,25 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
+  deactivation?: Maybe<UserSubscriptionDeactivation>;
+};
+
+export type UserSubscriptionDeactivation = {
+  __typename?: 'UserSubscriptionDeactivation';
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
+};
+
+export type UserSubscriptionDeactivationInput = {
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
 };
 
 export type UserSubscriptionFilter = {
   startsAt?: Maybe<DateFilter>;
   paidUntil?: Maybe<DateFilter>;
-  deactivatedAt?: Maybe<DateFilter>;
+  deactivationDate?: Maybe<DateFilter>;
+  deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
 };
 
@@ -1866,7 +1884,7 @@ export type UserSubscriptionInput = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
+  deactivation?: Maybe<UserSubscriptionDeactivationInput>;
 };
 
 export type VimeoVideoBlock = {
@@ -3387,14 +3405,17 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
   & { memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
   ), paymentMethod: (
     { __typename?: 'PaymentMethod' }
     & FullPaymentMethodFragment
-  ) }
+  ), deactivation?: Maybe<(
+    { __typename?: 'UserSubscriptionDeactivation' }
+    & Pick<UserSubscriptionDeactivation, 'date' | 'reason'>
+  )> }
 );
 
 export type FullUserFragment = (
@@ -4031,7 +4052,10 @@ export const FullUserSubscriptionFragmentDoc = gql`
   paymentMethod {
     ...FullPaymentMethod
   }
-  deactivatedAt
+  deactivation {
+    date
+    reason
+  }
 }
     ${FullMemberPlanFragmentDoc}
 ${FullPaymentMethodFragmentDoc}`;

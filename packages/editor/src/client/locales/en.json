@@ -856,6 +856,32 @@
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
+      "deactivation": {
+        "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
+        "modalTitel": {
+          "deactivated": "Activate Membership?",
+          "activated": "Deactivate Membership?"
+        },
+        "modalMessage": {
+          "deactivated": "Do you want to re-activate the Membership of \"{{userName}}\" with the email address \"{{userEmail}}\"?",
+          "activated": "Do you want to deactivate the Membership of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
+        },
+        "title": {
+          "deactivated": "Reactivate Membership",
+          "activated": "Deactivate Membership"
+        },
+        "action": {
+          "deactivated": "Reactivate",
+          "activated": "Deactivates"
+        },
+        "help": "Deactivated memberships can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "date": "Deactivation Date",
+        "reason": "Deactivation Reason",
+        "reasonNone": "None",
+        "reasonUserSelfDeactivated": "User wants to deactivate",
+        "reasonInvoiceNotPaid": "User did not pay invoices"
+      },
       "deactivatedAt": "Deactivated",
       "description": "Description",
       "editTitle": "Edit Subscription",

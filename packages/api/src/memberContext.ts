@@ -193,9 +193,9 @@ export class MemberContext implements MemberContext {
     userSubscription
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
-      const {periods = [], paidUntil, deactivatedAt} = userSubscription
+      const {periods = [], paidUntil, deactivation} = userSubscription
 
-      if (deactivatedAt) {
+      if (deactivation) {
         logger('memberContext').info(
           'Subscription for user %s is deactivated and will not be renewed',
           userID
@@ -698,6 +698,32 @@ export class MemberContext implements MemberContext {
       input: {
         ...invoice,
         sentReminderAt: today
+      }
+    })
+  }
+
+  async deactivateSubscriptionForUser({
+    userID,
+    deactivationDate,
+    deactivationReason
+  }: DeactivateSubscriptionForUserProps): Promise<void> {
+    const user = await this.dbAdapter.user.getUserByID(userID)
+    if (!user || !user.subscription) {
+      logger('memberContext').info(
+        'User with ID: "%s" does not exist or does not have a subscription for deactivation',
+        userID
+      )
+      return
+    }
+
+    await this.dbAdapter.user.updateUserSubscription({
+      userID,
+      input: {
+        ...user.subscription,
+        deactivation: {
+          date: deactivationDate ?? user.subscription.paidUntil ?? new Date(),
+          reason: deactivationReason ?? SubscriptionDeactivationReason.None
+        }
       }
     })
   }

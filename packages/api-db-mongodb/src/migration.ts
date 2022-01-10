@@ -1,6 +1,6 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBPaymentMethod, DBUser} from './db/schema'
-import {PaymentProviderCustomer} from '@wepublish/api'
+import {PaymentProviderCustomer, SubscriptionDeactivationReason} from '@wepublish/api'
 import {slugify} from './utility'
 
 export interface Migration {
@@ -654,6 +654,39 @@ export const Migrations: Migration[] = [
       for (const paymentMethod of allPaymentMethods) {
         const slug = slugify(paymentMethod.name)
         await paymentMethods.updateOne({_id: paymentMethod._id}, {$set: {slug}})
+      }
+    }
+  },
+  {
+    // migrate existing deactivated subscriptions
+    version: 17,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+
+      const deactivatedUserSubscriptions: DBUser[] = await users
+        .find({
+          'subscription.deactivatedAt': {$exists: true}
+        })
+        .toArray()
+
+      for (const user of deactivatedUserSubscriptions) {
+        await users.updateOne(
+          {
+            _id: user._id
+          },
+          {
+            $set: {
+              'subscription.deactivation': {
+                // @ts-ignore
+                date: user.subscription.deactivatedAt,
+                reason: SubscriptionDeactivationReason.None
+              }
+            },
+            $unset: {
+              'subscription.deactivatedAt': ''
+            }
+          }
+        )
       }
     }
   }

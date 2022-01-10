@@ -178,7 +178,8 @@
             "href",
             "fixed",
             "format",
-            "stack"
+            "stack",
+            "backdrop"
           ],
           "ignoreComponent": [
             "code"
