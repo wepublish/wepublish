@@ -665,7 +665,7 @@ export const Migrations: Migration[] = [
 
       const deactivatedUserSubscriptions: DBUser[] = await users
         .find({
-          'subscription.deactivatedAt': {$exists: true}
+          subscription: {$exists: true}
         })
         .toArray()
 
@@ -676,11 +676,15 @@ export const Migrations: Migration[] = [
           },
           {
             $set: {
-              'subscription.deactivation': {
-                // @ts-ignore
-                date: user.subscription.deactivatedAt,
-                reason: SubscriptionDeactivationReason.None
-              }
+              // @ts-ignore
+              'subscription.deactivation':
+                user.subscription?.deactivatedAt !== null
+                  ? {
+                      // @ts-ignore
+                      date: user.subscription.deactivatedAt,
+                      reason: SubscriptionDeactivationReason.None
+                    }
+                  : null
             },
             $unset: {
               'subscription.deactivatedAt': ''
