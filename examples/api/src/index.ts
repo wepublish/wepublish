@@ -416,7 +416,7 @@ async function asyncMain() {
       async () => {
         await server.runJob(JobType.DailyInvoiceReminder, {
           userPaymentURL: `${websiteURL}/user/invocies`,
-          replyToAddress: 'info@tsri.ch',
+          replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
           sendEveryDays: 3
         })
         process.exit(0)
