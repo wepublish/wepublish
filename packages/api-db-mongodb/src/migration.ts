@@ -676,8 +676,8 @@ export const Migrations: Migration[] = [
           },
           {
             $set: {
-              // @ts-ignore
               'subscription.deactivation':
+                // @ts-ignore
                 user.subscription?.deactivatedAt !== null
                   ? {
                       // @ts-ignore
