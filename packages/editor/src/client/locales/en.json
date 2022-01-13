@@ -588,6 +588,7 @@
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
+        "preview": "Preview",
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
