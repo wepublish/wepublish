@@ -1,8 +1,21 @@
 import React, {useEffect, useState} from 'react'
 
-import {Button, Drawer, Dropdown, Form, FormGroup, Icon, IconButton, Panel} from 'rsuite'
+import {
+  Button,
+  Divider,
+  Placeholder,
+  Drawer,
+  Dropdown,
+  Form,
+  FormGroup,
+  Icon,
+  IconButton,
+  Loader,
+  Panel,
+  Alert
+} from 'rsuite'
 
-import {DescriptionListItem} from '../atoms/descriptionList'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {BulkDataType, useUserAndSubscriptionBulkDataLazyQuery} from '../api'
 
@@ -15,16 +28,18 @@ export interface UserExportPanelProps {
 export function UserExportPanel({onClose}: UserExportPanelProps) {
   const {t} = useTranslation()
 
+  const {Paragraph} = Placeholder
+
   const [type, setType] = useState<BulkDataType>()
 
   const [
     getData,
-    {loading: isCreating, error: createError, data}
+    {loading: isLoading, error: exportError, data}
   ] = useUserAndSubscriptionBulkDataLazyQuery()
 
   useEffect(() => {
-    if (type) getData()
-  }, [type])
+    if (exportError?.message) Alert.error(exportError.message, 0)
+  }, [exportError])
 
   async function handleExport() {
     if (type) {
@@ -36,8 +51,6 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
     }
   }
 
-  console.log(isCreating, createError)
-
   return (
     <>
       <Drawer.Header>
@@ -46,42 +59,49 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
 
       <Drawer.Body>
         <Panel>
-          <Form fluid={true} style={{paddingBottom: 40}}>
+          <Form fluid={true}>
             <FormGroup>
-              <DescriptionListItem label={t('userList.panels.BulkDataType')}>
-                <Dropdown title={type || t('navbar.type')}>
-                  <Dropdown.Item onSelect={() => setType(BulkDataType.Csv)}>
-                    {BulkDataType.Csv}
-                  </Dropdown.Item>
-                  <Dropdown.Item onSelect={() => setType(BulkDataType.Json)}>
-                    {BulkDataType.Json}
-                  </Dropdown.Item>
-                </Dropdown>
-              </DescriptionListItem>
-              <Button
-                style={{marginBottom: 20}}
-                disabled={type === undefined}
-                appearance="primary"
-                onClick={() => handleExport()}>
-                {t('userList.panels.exportSubscription')}
-              </Button>
-              <DescriptionListItem label={t('userList.panels.result')}>
-                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                  <IconButton
-                    disabled={!data?.userAndSubscriptionBulkData}
-                    onClick={() =>
-                      navigator.clipboard.writeText(data!.userAndSubscriptionBulkData!)
-                    }
-                    className="collapse-nav-btn"
-                    appearance="primary"
-                    size="xs"
-                    icon={<Icon size="lg" icon={'copy'} />}
-                  />
-                </div>
-                <div style={{wordBreak: 'break-all'}}>{data?.userAndSubscriptionBulkData}</div>
-              </DescriptionListItem>
+              <DescriptionList>
+                <DescriptionListItem label={t('userList.panels.BulkDataType')}>
+                  <Dropdown title={type || t('navbar.type')}>
+                    <Dropdown.Item onSelect={() => setType(BulkDataType.Csv)}>
+                      {BulkDataType.Csv}
+                    </Dropdown.Item>
+                    <Dropdown.Item onSelect={() => setType(BulkDataType.Json)}>
+                      {BulkDataType.Json}
+                    </Dropdown.Item>
+                  </Dropdown>
+                </DescriptionListItem>
+              </DescriptionList>
+              <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button
+                  style={{marginBottom: 20, textAlign: 'right'}}
+                  disabled={type === undefined}
+                  appearance="primary"
+                  onClick={() => handleExport()}>
+                  {t('userList.panels.exportSubscription')}
+                </Button>
+              </div>
             </FormGroup>
           </Form>
+          <Divider>{t('userList.panels.result')}</Divider>
+          {isLoading ? (
+            <Paragraph rows={6}>
+              <Loader center content="Loading" />
+            </Paragraph>
+          ) : (
+            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+              <div style={{wordBreak: 'break-word'}}>{data?.userAndSubscriptionBulkData || ''}</div>
+              <IconButton
+                disabled={!data?.userAndSubscriptionBulkData}
+                onClick={() => navigator.clipboard.writeText(data!.userAndSubscriptionBulkData!)}
+                className="collapse-nav-btn"
+                appearance="primary"
+                size="xs"
+                icon={<Icon size="lg" icon={'copy'} />}
+              />
+            </div>
+          )}
         </Panel>
       </Drawer.Body>
 

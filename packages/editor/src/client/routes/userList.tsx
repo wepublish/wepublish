@@ -59,7 +59,9 @@ export function UserList() {
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
 
-  const [isExportModalOpen, setExportModalOpen] = useState(current?.type === RouteType.UserExport)
+  const [isExportModalOpen, setExportModalOpen] = useState(
+    current?.type === RouteType.UserExport || current?.type === RouteType.UserCreate
+  )
 
   const [editID, setEditID] = useState<string | undefined>(
     current?.type === RouteType.UserEdit ? current.params.id : undefined
@@ -111,6 +113,10 @@ export function UserList() {
     if (current?.type === RouteType.UserEdit) {
       setEditID(current.params.id)
       setEditModalOpen(true)
+    }
+
+    if (current?.type === RouteType.UserExport) {
+      setExportModalOpen(true)
     }
   }, [current])
 
