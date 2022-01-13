@@ -19,7 +19,8 @@ import {
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
-  useUpdateArticleMutation
+  useUpdateArticleMutation,
+  useArticlePreviewLinkQuery
 } from '../api'
 
 import {
@@ -42,8 +43,6 @@ import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
 
-import {useArticlePreviewLinkQuery} from '../api'
-
 export interface ArticlePreviewProps {
   id: string
 }
@@ -58,19 +57,13 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
-  const {data, /*loading: isLoading,*/ error: loadError /*refetch*/} = useArticlePreviewLinkQuery({
+  const {data, error: loadError} = useArticlePreviewLinkQuery({
     skip: id === undefined,
     variables: {
       id: id!,
       hours: 1
     }
   })
-  console.log(data?.articlePreviewLink)
-
-  // const getPreviewLink = async function () {
-  //   const newLink = await refetch({ id, hours: 1 })
-  //   console.log(newLink)
-  // }
 
   useEffect(() => {
     if (loadError?.message) {
@@ -515,7 +508,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   size={'lg'}
                   icon={<Icon icon="eye" />}
                   onClick={e => {
-                    // getPreviewLink()
                     window.open(data?.articlePreviewLink || '')
                   }}>
                   {t('articleEditor.overview.preview')}
