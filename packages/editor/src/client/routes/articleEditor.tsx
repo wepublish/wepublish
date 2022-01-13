@@ -42,6 +42,12 @@ import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
 
+import {useArticlePreviewLinkQuery} from '../api'
+
+export interface ArticlePreviewProps {
+  id: string
+}
+
 export interface ArticleEditorProps {
   readonly id?: string
 }
@@ -52,6 +58,26 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
+  const {data, /*loading: isLoading,*/ error: loadError /*refetch*/} = useArticlePreviewLinkQuery({
+    skip: id === undefined,
+    variables: {
+      id: id!,
+      hours: 1
+    }
+  })
+  console.log(data?.articlePreviewLink)
+
+  // const getPreviewLink = async function () {
+  //   const newLink = await refetch({ id, hours: 1 })
+  //   console.log(newLink)
+  // }
+
+  useEffect(() => {
+    if (loadError?.message) {
+      Alert.error(loadError.message, 0)
+    }
+  }, [loadError])
+
   const {t} = useTranslation()
 
   const {peerByDefault}: ClientSettings = JSON.parse(
@@ -481,6 +507,19 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                     </>
                   )}
                 </div>
+              }
+              rightChildren={
+                <IconButtonLink
+                  disabled={hasChanged || !id}
+                  style={{marginTop: '4px'}}
+                  size={'lg'}
+                  icon={<Icon icon="eye" />}
+                  onClick={e => {
+                    // getPreviewLink()
+                    window.open(data?.articlePreviewLink || '')
+                  }}>
+                  {t('articleEditor.overview.preview')}
+                </IconButtonLink>
               }
             />
           }>

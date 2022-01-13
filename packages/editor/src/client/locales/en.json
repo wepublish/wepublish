@@ -20,6 +20,7 @@
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
+        "preview": "Preview",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
