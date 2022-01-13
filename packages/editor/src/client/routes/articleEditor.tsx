@@ -43,10 +43,6 @@ import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
 
-export interface ArticlePreviewProps {
-  id: string
-}
-
 export interface ArticleEditorProps {
   readonly id?: string
 }

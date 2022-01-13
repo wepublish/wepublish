@@ -348,7 +348,7 @@ export function PageEditor({id}: PageEditorProps) {
                   onClick={e => {
                     window.open(data?.pagePreviewLink || '')
                   }}>
-                  {t('articleEditor.overview.preview')}
+                  {t('pageEditor.overview.preview')}
                 </IconButtonLink>
               }
             />
