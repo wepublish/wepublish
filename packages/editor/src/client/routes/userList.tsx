@@ -6,6 +6,7 @@ import {
   RouteType,
   UserCreateRoute,
   UserEditRoute,
+  UserExportRoute,
   UserListRoute,
   useRoute,
   useRouteDispatch
@@ -16,6 +17,8 @@ import {RouteActionType} from '@wepublish/karma.run-react'
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
+import {UserExportPanel} from '../panel/userExportPanel'
+
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
@@ -55,6 +58,8 @@ export function UserList() {
   const [isEditModalOpen, setEditModalOpen] = useState(
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
+
+  const [isExportModalOpen, setExportModalOpen] = useState(current?.type === RouteType.UserExport)
 
   const [editID, setEditID] = useState<string | undefined>(
     current?.type === RouteType.UserEdit ? current.params.id : undefined
@@ -125,7 +130,20 @@ export function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink appearance="primary" disabled={isLoading} route={UserCreateRoute.create({})}>
+          <ButtonLink appearance="primary" disabled={isLoading} route={UserExportRoute.create({})}>
+            {t('userList.overview.exportSubscription')}
+            <IconButton
+              className="collapse-nav-btn"
+              appearance="primary"
+              size="xs"
+              icon={<Icon size="lg" icon={'export'} />}
+            />
+          </ButtonLink>
+          <ButtonLink
+            style={{marginLeft: 5}}
+            appearance="primary"
+            disabled={isLoading}
+            route={UserCreateRoute.create({})}>
             {t('userList.overview.newUser')}
           </ButtonLink>
         </FlexboxGrid.Item>
@@ -255,6 +273,27 @@ export function UserList() {
           onSave={() => {
             setEditModalOpen(false)
             refetch()
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: UserListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
+      </Drawer>
+
+      <Drawer
+        show={isExportModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setExportModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <UserExportPanel
+          onClose={() => {
+            setExportModalOpen(false)
             dispatch({
               type: RouteActionType.PushRoute,
               route: UserListRoute.create({}, current ?? undefined)

@@ -516,6 +516,7 @@
       "title": "Member Plans"
     },
     "navbar": {
+      "type": "Type",
       "articles": "Articles",
       "authors": "Authors",
       "comments": "Comments",
@@ -777,6 +778,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newUser": "New User",
+        "exportSubscription": "Export",
         "noDescription": "No Description",
         "noUsersFound": "No Users found",
         "resetPassword": "Reset Password",
@@ -785,6 +787,9 @@
         "users": "Users"
       },
       "panels": {
+        "result": "Result",
+        "exportSubscription": "Export",
+        "BulkDataType": "Data Type",
         "active": "Active",
         "addUserRole": "Add User Role",
         "cancel": "Cancel",

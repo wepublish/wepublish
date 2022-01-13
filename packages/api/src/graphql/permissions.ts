@@ -441,6 +441,12 @@ export const CanLoginEditor: Permission = {
   deprecated: false
 }
 
+export const CanExportUserAndSubscription: Permission = {
+  id: 'CAN_EXPORT_USER_SUBSCRIPTION_DATA',
+  description: 'Allows to export user with subscription data',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -508,7 +514,8 @@ export const AllPermissions: Permission[] = [
   CanGetPayments,
   CanGetPaymentProviders,
   CanSendJWTLogin,
-  CanLoginEditor
+  CanLoginEditor,
+  CanExportUserAndSubscription
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -531,7 +538,8 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
-  CanLoginEditor
+  CanLoginEditor,
+  CanExportUserAndSubscription
 ]
 
 export const PeerPermissions: Permission[] = [

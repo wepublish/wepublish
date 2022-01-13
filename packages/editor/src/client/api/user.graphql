@@ -1,106 +1,125 @@
 fragment FullUserSubscription on UserSubscription {
-    memberPlan {
-        ...FullMemberPlan
-    }
-    paymentPeriodicity
-    monthlyAmount
-    autoRenew
-    startsAt
-    paidUntil
-    paymentMethod {
-        ...FullPaymentMethod
-    }
-    deactivatedAt
+  memberPlan {
+    ...FullMemberPlan
+  }
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+  deactivatedAt
 }
 
 fragment FullUser on User {
-    id
-    createdAt
-    modifiedAt
-    name
-    preferredName
-    address {
-        streetAddress
-        zipCode
-        city
-        country
-    }
-    active
-    lastLogin
-    properties {
-        key
-        value
-        public
-    }
-    email
-    emailVerifiedAt
+  id
+  createdAt
+  modifiedAt
+  name
+  preferredName
+  address {
+    streetAddress
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  emailVerifiedAt
 
-    roles {
-        ...FullUserRole
-    }
-    subscription {
-        ...FullUserSubscription
-    }
+  roles {
+    ...FullUserRole
+  }
+  subscription {
+    ...FullUserSubscription
+  }
 }
 
-
-
-
-query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-    users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            ...FullUser
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+query UserList(
+  $filter: String
+  $after: ID
+  $before: ID
+  $first: Int
+  $last: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: UserSort
+) {
+  users(
+    filter: {text: $filter}
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullUser
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 query User($id: ID!) {
-    user(id: $id) {
-        ...FullUser
-    }
+  user(id: $id) {
+    ...FullUser
+  }
+}
+
+query UserAndSubscriptionBulkData($type: BulkDataType!) {
+  userAndSubscriptionBulkData(type: $type)
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {
-    createUser(input: $input, password: $password) {
-        ...FullUser
-    }
+  createUser(input: $input, password: $password) {
+    ...FullUser
+  }
 }
 
 mutation UpdateUser($id: ID!, $input: UserInput!) {
-    updateUser(id: $id, input: $input) {
-        ...FullUser
-    }
+  updateUser(id: $id, input: $input) {
+    ...FullUser
+  }
 }
 
 mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
-    updateUserSubscription(userID: $userID, input: $input) {
-        ...FullUserSubscription
-    }
+  updateUserSubscription(userID: $userID, input: $input) {
+    ...FullUserSubscription
+  }
 }
 
 mutation ResetUserPassword($id: ID!, $password: String!) {
-    resetUserPassword(id: $id, password: $password) {
-        ...FullUser
-    }
+  resetUserPassword(id: $id, password: $password) {
+    ...FullUser
+  }
 }
 
 mutation DeleteUser($id: ID!) {
-    deleteUser(id: $id)
+  deleteUser(id: $id)
 }
 
 mutation DeleteUserSubscription($userID: ID!) {
-    deleteUserSubscription(userID: $userID)
+  deleteUserSubscription(userID: $userID)
 }
 
 mutation SendWebsiteLogin($email: String!) {
-    sendWebsiteLogin(email: $email)
+  sendWebsiteLogin(email: $email)
 }

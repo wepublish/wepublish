@@ -8,7 +8,7 @@ import {
   GraphQLString,
   GraphQLBoolean
 } from 'graphql'
-import {User, UserSort} from '../db/user'
+import {BulkDataTypes, User, UserSort} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -265,3 +265,51 @@ export const GraphQLPublicUserSubscriptionInput = new GraphQLInputObjectType({
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
+
+export const GraphQLBulkDataType = new GraphQLEnumType({
+  name: 'BulkDataType',
+  values: {
+    CSV: {value: BulkDataTypes.Csv},
+    JSON: {value: BulkDataTypes.Json}
+  }
+})
+
+// export const GraphQLUserAndSubscriptionBulkData = new GraphQLObjectType<any, Context>({
+//   name: 'UserAndSubscriptionBulkData',
+//   fields: {
+//     id: {type: GraphQLNonNull(GraphQLString)},
+
+//     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+//     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+//     name: {type: GraphQLNonNull(GraphQLString)},
+//     email: {type: GraphQLNonNull(GraphQLString)},
+
+//     address: {type: GraphQLUserAddress},
+
+//     active: {type: GraphQLNonNull(GraphQLBoolean)},
+
+//     company: {type: GraphQLString},
+//     streetAddress: {type: GraphQLNonNull(GraphQLString)},
+//     streetAddress2: {type: GraphQLString},
+//     zipCode: {type: GraphQLNonNull(GraphQLString)},
+//     city: {type: GraphQLNonNull(GraphQLString)},
+//     country: {type: GraphQLNonNull(GraphQLString)},
+
+//     memberPlanId: {type: GraphQLNonNull(GraphQLString)},
+
+//     paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+//     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+//     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+//     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+//     paidUntil: {type: GraphQLDateTime},
+//     paymentMethod: {
+//       type: GraphQLPaymentMethod,
+//       resolve({paymentMethodID}, args, {loaders}) {
+//         if (!paymentMethodID) return
+//         return loaders.paymentMethodsByID.load(paymentMethodID)
+//       }
+//     },
+//     deactivatedAt: {type: GraphQLDateTime}
+//   }
+// })

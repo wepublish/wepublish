@@ -18,6 +18,8 @@ import {
 
 import {UserInputError} from 'apollo-server-express'
 
+import {parse} from 'json2csv'
+
 import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
@@ -45,7 +47,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserSort} from '../db/user'
+import {BulkDataTypes, UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -96,9 +98,16 @@ import {
   CanGetPaymentProviders,
   CanGetArticlePreviewLink,
   CanGetPagePreviewLink,
-  CanCreatePeer
+  CanCreatePeer,
+  CanExportUserAndSubscription
 } from './permissions'
-import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
+import {
+  GraphQLUserConnection,
+  GraphQLUserFilter,
+  GraphQLUserSort,
+  GraphQLUser,
+  GraphQLBulkDataType
+} from './user'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -1024,6 +1033,31 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    userAndSubscriptionBulkData: {
+      // type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserAndSubscriptionBulkData))),
+      type: GraphQLString,
+      args: {
+        type: {type: GraphQLNonNull(GraphQLBulkDataType)}
+      },
+      async resolve(root, {type}, {dbAdapter, authenticate}) {
+        const {roles} = authenticate()
+
+        authorise(CanExportUserAndSubscription, roles)
+
+        const users = await dbAdapter.user.getUsersBulkData({
+          filter: {subscription: {}}
+        })
+
+        switch (type) {
+          case BulkDataTypes.Json:
+            return JSON.stringify(users)
+          case BulkDataTypes.Csv:
+          default:
+            return parse(users, {})
+        }
       }
     }
   }

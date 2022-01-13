@@ -72,6 +72,9 @@ export function contentForRoute(route: Route) {
     case RouteType.UserEdit:
       return <UserList />
 
+    case RouteType.UserExport:
+      return <UserList />
+
     case RouteType.UserRoleList:
     case RouteType.UserRoleCreate:
     case RouteType.UserRoleEdit:

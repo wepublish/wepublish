@@ -62,6 +62,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly db: Db
 
   readonly peer: MongoDBPeerAdapter
+  // @ts-ignore
   readonly user: MongoDBUserAdapter
   readonly userRole: MongoDBUserRoleAdapter
   readonly session: MongoDBSessionAdapter

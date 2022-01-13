@@ -53,6 +53,7 @@ export enum RouteType {
   UserList = 'userList',
   UserEdit = 'userEdit',
   UserCreate = 'userCreate',
+  UserExport = 'userExport',
 
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
@@ -129,6 +130,7 @@ export const TokenGenerateRoute = route(RouteType.TokenGenerate, routePath`/toke
 export const UserListRoute = route(RouteType.UserList, routePath`/users`)
 export const UserEditRoute = route(RouteType.UserEdit, routePath`/user/edit/${required('id')}`)
 export const UserCreateRoute = route(RouteType.UserCreate, routePath`/user/create`)
+export const UserExportRoute = route(RouteType.UserExport, routePath`/user/export`)
 
 export const UserRoleListRoute = route(RouteType.UserRoleList, routePath`/userroles`)
 export const UserRoleEditRoute = route(
@@ -190,6 +192,7 @@ export const routes = [
   UserListRoute,
   UserEditRoute,
   UserCreateRoute,
+  UserExportRoute,
   UserRoleListRoute,
   UserRoleEditRoute,
   UserRoleCreateRoute,

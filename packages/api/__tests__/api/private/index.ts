@@ -259,6 +259,11 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>
 }
 
+export enum BulkDataType {
+  Csv = 'CSV',
+  Json = 'JSON'
+}
+
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
@@ -1330,6 +1335,7 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+  userAndSubscriptionBulkData?: Maybe<Scalars['String']>
 }
 
 export type QueryRemotePeerProfileArgs = {
@@ -1519,6 +1525,10 @@ export type QueryPaymentsArgs = {
   filter?: Maybe<PaymentFilter>
   sort?: Maybe<PaymentSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryUserAndSubscriptionBulkDataArgs = {
+  type: BulkDataType
 }
 
 export type QuoteBlock = {
@@ -3357,7 +3367,6 @@ export const ImageList = gql`
         hasNextPage
         hasPreviousPage
       }
-      totalCount
     }
   }
   ${ImageRef}

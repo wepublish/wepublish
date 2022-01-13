@@ -387,6 +387,50 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
   }
 
+  // @ts-ignore
+  async getUsersBulkData({filter}: any): Promise<User> {
+    const textFilter: FilterQuery<any> = {}
+
+    if (filter?.subscription !== undefined) {
+      textFilter.$and?.push({subscription: {$exists: true}})
+    }
+
+    if (filter?.subscription?.startsAt !== undefined) {
+      const {comparison, date} = filter.subscription.startsAt
+      textFilter.$and?.push({
+        'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+    if (filter?.subscription?.paidUntil !== undefined) {
+      const {comparison, date} = filter.subscription.paidUntil
+      textFilter.$and?.push({
+        'subscription.paidUntil': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
+    if (filter?.subscription?.deactivatedAt !== undefined) {
+      const {comparison, date} = filter.subscription.deactivatedAt
+      textFilter.$and?.push({
+        'subscription.deactivatedAt': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.autoRenew !== undefined) {
+      textFilter.$and?.push({'subscription.autoRenew': {$eq: filter.subscription.autoRenew}})
+    }
+
+    const users = await this.users
+      .aggregate([], {collation: {locale: this.locale, strength: 2}})
+      .match(textFilter)
+      .toArray()
+
+    // @ts-ignore
+    return users.map(user => user)
+  }
+
   async updateUserSubscription({
     userID,
     input

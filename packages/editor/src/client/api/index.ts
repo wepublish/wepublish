@@ -243,6 +243,11 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>;
 };
 
+export enum BulkDataType {
+  Csv = 'CSV',
+  Json = 'JSON'
+}
+
 
 export type Comment = {
   __typename?: 'Comment';
@@ -1372,6 +1377,7 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  userAndSubscriptionBulkData?: Maybe<Scalars['String']>;
 };
 
 
@@ -1589,6 +1595,11 @@ export type QueryPaymentsArgs = {
   filter?: Maybe<PaymentFilter>;
   sort?: Maybe<PaymentSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryUserAndSubscriptionBulkDataArgs = {
+  type: BulkDataType;
 };
 
 export type QuoteBlock = {
@@ -3453,6 +3464,16 @@ export type UserQuery = (
     { __typename?: 'User' }
     & FullUserFragment
   )> }
+);
+
+export type UserAndSubscriptionBulkDataQueryVariables = Exact<{
+  type: BulkDataType;
+}>;
+
+
+export type UserAndSubscriptionBulkDataQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'userAndSubscriptionBulkData'>
 );
 
 export type CreateUserMutationVariables = Exact<{
@@ -6636,6 +6657,39 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export const UserAndSubscriptionBulkDataDocument = gql`
+    query UserAndSubscriptionBulkData($type: BulkDataType!) {
+  userAndSubscriptionBulkData(type: $type)
+}
+    `;
+
+/**
+ * __useUserAndSubscriptionBulkDataQuery__
+ *
+ * To run a query within a React component, call `useUserAndSubscriptionBulkDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAndSubscriptionBulkDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAndSubscriptionBulkDataQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useUserAndSubscriptionBulkDataQuery(baseOptions: Apollo.QueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>(UserAndSubscriptionBulkDataDocument, options);
+      }
+export function useUserAndSubscriptionBulkDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>(UserAndSubscriptionBulkDataDocument, options);
+        }
+export type UserAndSubscriptionBulkDataQueryHookResult = ReturnType<typeof useUserAndSubscriptionBulkDataQuery>;
+export type UserAndSubscriptionBulkDataLazyQueryHookResult = ReturnType<typeof useUserAndSubscriptionBulkDataLazyQuery>;
+export type UserAndSubscriptionBulkDataQueryResult = Apollo.QueryResult<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: UserInput!, $password: String!) {
   createUser(input: $input, password: $password) {
