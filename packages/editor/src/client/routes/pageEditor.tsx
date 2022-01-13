@@ -13,7 +13,8 @@ import {
   useCreatePageMutation,
   usePageQuery,
   usePublishPageMutation,
-  useUpdatePageMutation
+  useUpdatePageMutation,
+  usePagePreviewLinkQuery
 } from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
@@ -34,6 +35,20 @@ export interface PageEditorProps {
 
 export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
+
+  const {data, error: loadError} = usePagePreviewLinkQuery({
+    skip: id === undefined,
+    variables: {
+      id: id!,
+      hours: 1
+    }
+  })
+
+  useEffect(() => {
+    if (loadError?.message) {
+      Alert.error(loadError.message, 0)
+    }
+  }, [loadError])
 
   const [
     createPage,
@@ -323,6 +338,18 @@ export function PageEditor({id}: PageEditorProps) {
                     </>
                   )}
                 </div>
+              }
+              rightChildren={
+                <IconButtonLink
+                  disabled={hasChanged || !id}
+                  style={{marginTop: '4px'}}
+                  size={'lg'}
+                  icon={<Icon icon="eye" />}
+                  onClick={e => {
+                    window.open(data?.pagePreviewLink || '')
+                  }}>
+                  {t('articleEditor.overview.preview')}
+                </IconButtonLink>
               }
             />
           }>
