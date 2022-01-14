@@ -87,6 +87,7 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
           <Divider>{t('userList.panels.result')}</Divider>
           {isLoading ? (
             <Paragraph rows={6}>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
               <Loader center content="Loading" />
             </Paragraph>
           ) : (
