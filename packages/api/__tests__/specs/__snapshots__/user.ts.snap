@@ -429,6 +429,11 @@ Object {
                   "description": "Allows to login editor",
                   "id": "CAN_LOGIN_EDITOR",
                 },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to export user with subscription data",
+                  "id": "CAN_EXPORT_USER_SUBSCRIPTION_DATA",
+                },
               ],
               "systemRole": true,
             },
