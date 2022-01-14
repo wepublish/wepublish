@@ -187,6 +187,35 @@ export interface User {
   readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
+export interface UserWithSubscription {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+  readonly name: string
+  readonly email: string
+
+  readonly active: boolean
+
+  readonly company?: string
+  readonly streetAddress?: string
+  readonly streetAddress2?: string
+  readonly zipCode?: string
+  readonly city?: string
+  readonly country?: string
+
+  readonly memberPlanID: string
+  readonly paymentPeriodicity: PaymentPeriodicity
+  readonly monthlyAmount: number
+  readonly autoRenew: boolean
+  readonly startsAt: Date
+  readonly paidUntil: Date | null
+  // readonly periods: UserSubscriptionPeriod[]
+  readonly paymentMethodID: string
+  readonly deactivatedAt: Date | null
+
+  //  readonly paymentProviderCustomers: PaymentProviderCustomer[]
+}
+
 export interface UserInput {
   readonly name: string
   readonly preferredName?: string
@@ -218,7 +247,7 @@ export interface GetUsersArgs {
 }
 
 export interface DBUserAdapter {
-  getUsersBulkData(args: {filter: {subscription: any}}): Promise<User[]>
+  getUsersBulkData({filter}: any): Promise<UserWithSubscription[]>
   createUser(args: CreateUserArgs): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
   deleteUser(args: DeleteUserArgs): Promise<string | null>

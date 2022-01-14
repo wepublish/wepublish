@@ -24,7 +24,8 @@ import {
   User,
   UserOAuth2Account,
   UserOAuth2AccountArgs,
-  UserSort
+  UserSort,
+  UserWithSubscription
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -387,8 +388,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
   }
 
-  // @ts-ignore
-  async getUsersBulkData({filter}: any): Promise<User> {
+  async getUsersBulkData({filter}: any): Promise<UserWithSubscription[]> {
     const textFilter: FilterQuery<any> = {}
 
     if (filter?.subscription !== undefined) {
@@ -427,8 +427,47 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       .match(textFilter)
       .toArray()
 
-    // @ts-ignore
-    return users.map(user => user)
+    return users.map(user => {
+      const {address} = user
+
+      const {
+        deactivatedAt,
+        paymentMethodID,
+        autoRenew,
+        paymentPeriodicity,
+        memberPlanID,
+        monthlyAmount,
+        paidUntil,
+        startsAt
+      } = user.subscription || {}
+
+      return {
+        id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
+        name: user?.name,
+        email: user.email,
+
+        active: user?.active,
+
+        company: address?.company,
+        streetAddress: address?.streetAddress,
+        streetAddress2: address?.streetAddress2,
+        zipCode: address?.zipCode,
+        city: address?.city,
+        country: address?.country,
+
+        memberPlanID: memberPlanID!,
+        paymentPeriodicity: paymentPeriodicity!,
+        monthlyAmount: monthlyAmount!,
+        autoRenew: autoRenew!,
+        startsAt: startsAt!,
+        paidUntil: paidUntil!,
+        //  periods: UserSubscriptionPeriod[]
+        paymentMethodID: paymentMethodID!,
+        deactivatedAt: deactivatedAt!
+      }
+    })
   }
 
   async updateUserSubscription({
