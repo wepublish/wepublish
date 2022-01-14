@@ -811,7 +811,7 @@
         "save": "Save",
         "selectUserRole": "Select User Role",
         "startedAt": "Started",
-        "startedAdDate": "{{startedAtDate, ccc PP p}}",
+        "startedAtDate": "{{startedAtDate, ccc PP p}}",
         "subCreate": "Create",
         "subDisableDescription": "Subscription can only be added once the user has been created.",
         "subEdit": "Edit",
