@@ -53,19 +53,13 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
-  const {data, error: loadError} = useArticlePreviewLinkQuery({
+  const {data} = useArticlePreviewLinkQuery({
     skip: id === undefined,
     variables: {
       id: id!,
       hours: 1
     }
   })
-
-  useEffect(() => {
-    if (loadError?.message) {
-      Alert.error(loadError.message, 0)
-    }
-  }, [loadError])
 
   const {t} = useTranslation()
 
