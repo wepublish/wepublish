@@ -342,7 +342,7 @@ export function PageEditor({id}: PageEditorProps) {
                   onClick={async e => {
                     await previewLinkRefetch({id: id, hours: 1})
                     if (data?.pagePreviewLink) {
-                      window.open
+                      window.open(data?.pagePreviewLink)
                     }
                   }}>
                   {t('pageEditor.overview.preview')}

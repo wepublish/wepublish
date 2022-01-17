@@ -500,7 +500,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   onClick={async e => {
                     await previewLinkRefetch({id: id, hours: 1})
                     if (data?.articlePreviewLink) {
-                      window.open
+                      window.open(data?.articlePreviewLink)
                     }
                   }}>
                   {t('articleEditor.overview.preview')}
