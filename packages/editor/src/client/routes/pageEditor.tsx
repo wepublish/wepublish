@@ -341,7 +341,9 @@ export function PageEditor({id}: PageEditorProps) {
                   icon={<Icon icon="eye" />}
                   onClick={async e => {
                     await previewLinkRefetch({id: id, hours: 1})
-                    window.open(data?.pagePreviewLink || '')
+                    if (data?.pagePreviewLink) {
+                      window.open
+                    }
                   }}>
                   {t('pageEditor.overview.preview')}
                 </IconButtonLink>

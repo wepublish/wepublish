@@ -499,7 +499,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   icon={<Icon icon="eye" />}
                   onClick={async e => {
                     await previewLinkRefetch({id: id, hours: 1})
-                    window.open(data?.articlePreviewLink || '')
+                    if (data?.articlePreviewLink) {
+                      window.open
+                    }
                   }}>
                   {t('articleEditor.overview.preview')}
                 </IconButtonLink>
