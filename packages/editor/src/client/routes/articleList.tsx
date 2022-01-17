@@ -270,7 +270,7 @@ export function ArticleList() {
                     />
                   </IconButtonTooltip>
                   {rowData.draft && (
-                    <IconButtonTooltip caption={t('articleEditor.overview.publish')}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
                       <IconButton
                         icon={<Icon icon="eye" />}
                         circle
