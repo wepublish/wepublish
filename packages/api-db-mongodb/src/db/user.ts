@@ -24,8 +24,7 @@ import {
   User,
   UserOAuth2Account,
   UserOAuth2AccountArgs,
-  UserSort,
-  UserWithSubscription
+  UserSort
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -386,88 +385,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
       totalCount
     }
-  }
-
-  async getUsersBulkData({filter}: any): Promise<UserWithSubscription[]> {
-    const textFilter: FilterQuery<any> = {}
-
-    if (filter?.subscription !== undefined) {
-      textFilter.$and?.push({subscription: {$exists: true}})
-    }
-
-    if (filter?.subscription?.startsAt !== undefined) {
-      const {comparison, date} = filter.subscription.startsAt
-      textFilter.$and?.push({
-        'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
-      })
-    }
-    if (filter?.subscription?.paidUntil !== undefined) {
-      const {comparison, date} = filter.subscription.paidUntil
-      textFilter.$and?.push({
-        'subscription.paidUntil': {
-          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
-        }
-      })
-    }
-
-    if (filter?.subscription?.deactivatedAt !== undefined) {
-      const {comparison, date} = filter.subscription.deactivatedAt
-      textFilter.$and?.push({
-        'subscription.deactivatedAt': {
-          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
-        }
-      })
-    }
-    if (filter?.subscription?.autoRenew !== undefined) {
-      textFilter.$and?.push({'subscription.autoRenew': {$eq: filter.subscription.autoRenew}})
-    }
-
-    const users = await this.users
-      .aggregate([], {collation: {locale: this.locale, strength: 2}})
-      .match(textFilter)
-      .toArray()
-
-    return users.map(user => {
-      const {address} = user
-
-      const {
-        deactivatedAt,
-        paymentMethodID,
-        autoRenew,
-        paymentPeriodicity,
-        memberPlanID,
-        monthlyAmount,
-        paidUntil,
-        startsAt
-      } = user.subscription || {}
-
-      return {
-        id: user._id,
-        createdAt: user.createdAt,
-        modifiedAt: user.modifiedAt,
-        name: user?.name,
-        email: user.email,
-
-        active: user?.active,
-
-        company: address?.company,
-        streetAddress: address?.streetAddress,
-        streetAddress2: address?.streetAddress2,
-        zipCode: address?.zipCode,
-        city: address?.city,
-        country: address?.country,
-
-        memberPlanID: memberPlanID!,
-        paymentPeriodicity: paymentPeriodicity!,
-        monthlyAmount: monthlyAmount!,
-        autoRenew: autoRenew!,
-        startsAt: startsAt!,
-        paidUntil: paidUntil!,
-        //  periods: UserSubscriptionPeriod[]
-        paymentMethodID: paymentMethodID!,
-        deactivatedAt: deactivatedAt!
-      }
-    })
   }
 
   async updateUserSubscription({

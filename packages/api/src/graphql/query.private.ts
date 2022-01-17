@@ -47,7 +47,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {BulkDataTypes, UserSort} from '../db/user'
+import {UserSort, UserWithSubscription} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -101,13 +101,7 @@ import {
   CanCreatePeer,
   CanExportUserAndSubscription
 } from './permissions'
-import {
-  GraphQLUserConnection,
-  GraphQLUserFilter,
-  GraphQLUserSort,
-  GraphQLUser,
-  GraphQLBulkDataType
-} from './user'
+import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -296,6 +290,67 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
+      }
+    },
+
+    userAndSubscriptionBulkData: {
+      type: GraphQLString,
+      args: {},
+      async resolve(root, args, {dbAdapter, authenticate}) {
+        const {roles} = authenticate()
+
+        authorise(CanExportUserAndSubscription, roles)
+
+        const users = await dbAdapter.user.getUsers({
+          cursor: InputCursor(),
+          filter: {subscription: {}},
+          limit: Limit(1000),
+          sort: UserSort.ModifiedAt,
+          order: SortOrder.Descending
+        })
+
+        if (users?.nodes.length) {
+          const list: UserWithSubscription[] = users.nodes.map(
+            ({
+              id,
+              name,
+              email,
+              active,
+              address,
+              subscription,
+              createdAt,
+              modifiedAt
+            }): UserWithSubscription => {
+              return {
+                id,
+                createdAt,
+                modifiedAt,
+                name,
+                email,
+                active,
+
+                company: address?.company,
+                streetAddress: address?.streetAddress,
+                streetAddress2: address?.streetAddress2,
+                zipCode: address?.zipCode,
+                city: address?.city,
+                country: address?.country,
+
+                memberPlanID: subscription!.memberPlanID,
+                paymentPeriodicity: subscription!.paymentPeriodicity,
+                monthlyAmount: subscription!.monthlyAmount,
+                autoRenew: subscription!.autoRenew,
+                startsAt: subscription!.startsAt,
+                paidUntil: subscription!.paidUntil,
+                //  periods: UserSubscriptionPeriod[]
+                paymentMethodID: subscription!.paymentMethodID,
+                deactivatedAt: subscription!.deactivatedAt
+              }
+            }
+          )
+          return parse(list, {})
+        }
+        return ''
       }
     },
 
@@ -1033,31 +1088,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
-      }
-    },
-
-    userAndSubscriptionBulkData: {
-      // type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserAndSubscriptionBulkData))),
-      type: GraphQLString,
-      args: {
-        type: {type: GraphQLNonNull(GraphQLBulkDataType)}
-      },
-      async resolve(root, {type}, {dbAdapter, authenticate}) {
-        const {roles} = authenticate()
-
-        authorise(CanExportUserAndSubscription, roles)
-
-        const users = await dbAdapter.user.getUsersBulkData({
-          filter: {subscription: {}}
-        })
-
-        switch (type) {
-          case BulkDataTypes.Json:
-            return JSON.stringify(users)
-          case BulkDataTypes.Csv:
-          default:
-            return parse(users, {})
-        }
       }
     }
   }

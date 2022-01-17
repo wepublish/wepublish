@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 
 import {
   Button,
   Divider,
   Placeholder,
   Drawer,
-  Dropdown,
   Form,
   FormGroup,
   Icon,
@@ -15,9 +14,7 @@ import {
   Alert
 } from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {BulkDataType, useUserAndSubscriptionBulkDataLazyQuery} from '../api'
+import {useUserAndSubscriptionBulkDataLazyQuery} from '../api'
 
 import {useTranslation} from 'react-i18next'
 
@@ -30,25 +27,17 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
 
   const {Paragraph} = Placeholder
 
-  const [type, setType] = useState<BulkDataType>()
-
   const [
     getData,
     {loading: isLoading, error: exportError, data}
-  ] = useUserAndSubscriptionBulkDataLazyQuery()
+  ] = useUserAndSubscriptionBulkDataLazyQuery({fetchPolicy: 'no-cache'})
 
   useEffect(() => {
     if (exportError?.message) Alert.error(exportError.message, 0)
   }, [exportError])
 
   async function handleExport() {
-    if (type) {
-      await getData({
-        variables: {
-          type: type
-        }
-      })
-    }
+    await getData({})
   }
 
   return (
@@ -61,22 +50,9 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
         <Panel>
           <Form fluid={true}>
             <FormGroup>
-              <DescriptionList>
-                <DescriptionListItem label={t('userList.panels.BulkDataType')}>
-                  <Dropdown title={type || t('navbar.type')}>
-                    <Dropdown.Item onSelect={() => setType(BulkDataType.Csv)}>
-                      {BulkDataType.Csv}
-                    </Dropdown.Item>
-                    <Dropdown.Item onSelect={() => setType(BulkDataType.Json)}>
-                      {BulkDataType.Json}
-                    </Dropdown.Item>
-                  </Dropdown>
-                </DescriptionListItem>
-              </DescriptionList>
               <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button
                   style={{marginBottom: 20, textAlign: 'right'}}
-                  disabled={type === undefined}
                   appearance="primary"
                   onClick={() => handleExport()}>
                   {t('userList.panels.exportSubscription')}

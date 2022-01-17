@@ -243,11 +243,6 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>;
 };
 
-export enum BulkDataType {
-  Csv = 'CSV',
-  Json = 'JSON'
-}
-
 
 export type Comment = {
   __typename?: 'Comment';
@@ -1349,6 +1344,7 @@ export type Query = {
   authProviders: Array<AuthProvider>;
   user?: Maybe<User>;
   users: UserConnection;
+  userAndSubscriptionBulkData?: Maybe<Scalars['String']>;
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   permissions?: Maybe<Array<Permission>>;
@@ -1377,7 +1373,6 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
-  userAndSubscriptionBulkData?: Maybe<Scalars['String']>;
 };
 
 
@@ -1595,11 +1590,6 @@ export type QueryPaymentsArgs = {
   filter?: Maybe<PaymentFilter>;
   sort?: Maybe<PaymentSort>;
   order?: Maybe<SortOrder>;
-};
-
-
-export type QueryUserAndSubscriptionBulkDataArgs = {
-  type: BulkDataType;
 };
 
 export type QuoteBlock = {
@@ -3466,9 +3456,7 @@ export type UserQuery = (
   )> }
 );
 
-export type UserAndSubscriptionBulkDataQueryVariables = Exact<{
-  type: BulkDataType;
-}>;
+export type UserAndSubscriptionBulkDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserAndSubscriptionBulkDataQuery = (
@@ -6658,8 +6646,8 @@ export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserAndSubscriptionBulkDataDocument = gql`
-    query UserAndSubscriptionBulkData($type: BulkDataType!) {
-  userAndSubscriptionBulkData(type: $type)
+    query UserAndSubscriptionBulkData {
+  userAndSubscriptionBulkData
 }
     `;
 
@@ -6675,11 +6663,10 @@ export const UserAndSubscriptionBulkDataDocument = gql`
  * @example
  * const { data, loading, error } = useUserAndSubscriptionBulkDataQuery({
  *   variables: {
- *      type: // value for 'type'
  *   },
  * });
  */
-export function useUserAndSubscriptionBulkDataQuery(baseOptions: Apollo.QueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
+export function useUserAndSubscriptionBulkDataQuery(baseOptions?: Apollo.QueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>(UserAndSubscriptionBulkDataDocument, options);
       }

@@ -84,8 +84,8 @@ query User($id: ID!) {
   }
 }
 
-query UserAndSubscriptionBulkData($type: BulkDataType!) {
-  userAndSubscriptionBulkData(type: $type)
+query UserAndSubscriptionBulkData {
+  userAndSubscriptionBulkData
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {

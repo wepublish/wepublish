@@ -43,14 +43,6 @@ export enum UserSort {
   Name = 'name'
 }
 
-export enum BulkDataTypes {
-  Csv = 'csv',
-  Json = 'json'
-}
-export interface UserAndSubscriptionBulkDataArgs {
-  readonly type: BulkDataTypes
-}
-
 export interface UserSubscriptionFilter {
   readonly startsAt?: DateFilter
   readonly paidUntil?: DateFilter
@@ -247,7 +239,6 @@ export interface GetUsersArgs {
 }
 
 export interface DBUserAdapter {
-  getUsersBulkData({filter}: any): Promise<UserWithSubscription[]>
   createUser(args: CreateUserArgs): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
   deleteUser(args: DeleteUserArgs): Promise<string | null>
