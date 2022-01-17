@@ -328,7 +328,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       })
     }
     if (filter?.subscription?.autoRenew !== undefined) {
-      textFilter.$and?.push({'subscription.autoRenew': {$eq: true}})
+      textFilter.$and?.push({'subscription.autoRenew': {$eq: filter.subscription.autoRenew}})
     }
 
     const [totalCount, users] = await Promise.all([
