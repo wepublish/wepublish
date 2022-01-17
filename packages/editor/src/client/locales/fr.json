@@ -23,6 +23,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
+        "preview": "Aperçu",
         "delete": "Supprimer",
         "articlePending": "Article prévu"
       },
@@ -785,6 +786,7 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en cours",
         "duplicate": "Dupliquer",
+        "preview": "Aperçu",
         "delete": "Supprimer"
       },
       "panels": {
