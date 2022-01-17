@@ -516,7 +516,6 @@
       "title": "Member Plans"
     },
     "navbar": {
-      "type": "Type",
       "articles": "Articles",
       "authors": "Authors",
       "comments": "Comments",
@@ -789,7 +788,6 @@
       "panels": {
         "result": "Result",
         "exportSubscription": "Export",
-        "BulkDataType": "Data Type",
         "active": "Active",
         "addUserRole": "Add User Role",
         "cancel": "Cancel",

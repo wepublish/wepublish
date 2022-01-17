@@ -311,23 +311,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         if (users?.nodes.length) {
           const list: UserWithSubscription[] = users.nodes.map(
-            ({
-              id,
-              name,
-              email,
-              active,
-              address,
-              subscription,
-              createdAt,
-              modifiedAt
-            }): UserWithSubscription => {
+            ({address, subscription, ...user}) => {
               return {
-                id,
-                createdAt,
-                modifiedAt,
-                name,
-                email,
-                active,
+                id: user.id,
+                createdAt: user.createdAt,
+                modifiedAt: user.modifiedAt,
+                name: user.name,
+                email: user.email,
+                active: user.active,
 
                 company: address?.company,
                 streetAddress: address?.streetAddress,
@@ -342,7 +333,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
                 autoRenew: subscription!.autoRenew,
                 startsAt: subscription!.startsAt,
                 paidUntil: subscription!.paidUntil,
-                //  periods: UserSubscriptionPeriod[]
                 paymentMethodID: subscription!.paymentMethodID,
                 deactivatedAt: subscription!.deactivatedAt
               }

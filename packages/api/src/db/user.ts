@@ -201,11 +201,8 @@ export interface UserWithSubscription {
   readonly autoRenew: boolean
   readonly startsAt: Date
   readonly paidUntil: Date | null
-  // readonly periods: UserSubscriptionPeriod[]
   readonly paymentMethodID: string
   readonly deactivatedAt: Date | null
-
-  //  readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export interface UserInput {
