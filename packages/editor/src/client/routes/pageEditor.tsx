@@ -36,19 +36,13 @@ export interface PageEditorProps {
 export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
 
-  const {data, error: loadError} = usePagePreviewLinkQuery({
+  const {data, refetch: previewLinkRefetch} = usePagePreviewLinkQuery({
     skip: id === undefined,
     variables: {
       id: id!,
       hours: 1
     }
   })
-
-  useEffect(() => {
-    if (loadError?.message) {
-      Alert.error(loadError.message, 0)
-    }
-  }, [loadError])
 
   const [
     createPage,
@@ -345,7 +339,8 @@ export function PageEditor({id}: PageEditorProps) {
                   style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<Icon icon="eye" />}
-                  onClick={e => {
+                  onClick={async e => {
+                    await previewLinkRefetch({id: id, hours: 1})
                     window.open(data?.pagePreviewLink || '')
                   }}>
                   {t('pageEditor.overview.preview')}

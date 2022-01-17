@@ -53,7 +53,7 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
-  const {data} = useArticlePreviewLinkQuery({
+  const {data, refetch: previewLinkRefetch} = useArticlePreviewLinkQuery({
     skip: id === undefined,
     variables: {
       id: id!,
@@ -497,7 +497,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<Icon icon="eye" />}
-                  onClick={e => {
+                  onClick={async e => {
+                    await previewLinkRefetch({id: id, hours: 1})
                     window.open(data?.articlePreviewLink || '')
                   }}>
                   {t('articleEditor.overview.preview')}
