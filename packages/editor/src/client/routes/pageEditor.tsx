@@ -341,7 +341,7 @@ export function PageEditor({id}: PageEditorProps) {
                   style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<Icon icon="eye" />}
-                  onClick={async e => {
+                  onClick={e => {
                     previewLinkFetch({
                       variables: {
                         id: id!,
