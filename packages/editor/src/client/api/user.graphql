@@ -84,8 +84,8 @@ query User($id: ID!) {
   }
 }
 
-query UserAndSubscriptionBulkData {
-  userAndSubscriptionBulkData
+query SubscriptionAsCsv {
+  subscriptionAsCsv
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {

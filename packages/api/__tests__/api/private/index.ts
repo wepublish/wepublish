@@ -1302,7 +1302,7 @@ export type Query = {
   authProviders: Array<AuthProvider>
   user?: Maybe<User>
   users: UserConnection
-  userAndSubscriptionBulkData?: Maybe<Scalars['String']>
+  subscriptionAsCsv?: Maybe<Scalars['String']>
   userRole?: Maybe<UserRole>
   userRoles: UserRoleConnection
   permissions?: Maybe<Array<Permission>>

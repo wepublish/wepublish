@@ -98,8 +98,7 @@ import {
   CanGetPaymentProviders,
   CanGetArticlePreviewLink,
   CanGetPagePreviewLink,
-  CanCreatePeer,
-  CanExportUserAndSubscription
+  CanCreatePeer
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -293,13 +292,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    userAndSubscriptionBulkData: {
+    subscriptionAsCsv: {
       type: GraphQLString,
       args: {},
       async resolve(root, args, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
 
-        authorise(CanExportUserAndSubscription, roles)
+        authorise(CanGetUsers, roles)
 
         const users = await dbAdapter.user.getUsers({
           cursor: InputCursor(),

@@ -14,7 +14,7 @@ import {
   Alert
 } from 'rsuite'
 
-import {useUserAndSubscriptionBulkDataLazyQuery} from '../api'
+import {useSubscriptionAsCsvLazyQuery} from '../api'
 
 import {useTranslation} from 'react-i18next'
 
@@ -27,10 +27,9 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
 
   const {Paragraph} = Placeholder
 
-  const [
-    getData,
-    {loading: isLoading, error: exportError, data}
-  ] = useUserAndSubscriptionBulkDataLazyQuery({fetchPolicy: 'no-cache'})
+  const [getData, {loading: isLoading, error: exportError, data}] = useSubscriptionAsCsvLazyQuery({
+    fetchPolicy: 'no-cache'
+  })
 
   useEffect(() => {
     if (exportError?.message) Alert.error(exportError.message, 0)
@@ -68,10 +67,10 @@ export function UserExportPanel({onClose}: UserExportPanelProps) {
             </Paragraph>
           ) : (
             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-              <div style={{wordBreak: 'break-word'}}>{data?.userAndSubscriptionBulkData || ''}</div>
+              <div style={{wordBreak: 'break-word'}}>{data?.subscriptionAsCsv || ''}</div>
               <IconButton
-                disabled={!data?.userAndSubscriptionBulkData}
-                onClick={() => navigator.clipboard.writeText(data!.userAndSubscriptionBulkData!)}
+                disabled={!data?.subscriptionAsCsv}
+                onClick={() => navigator.clipboard.writeText(data!.subscriptionAsCsv!)}
                 className="collapse-nav-btn"
                 appearance="primary"
                 size="xs"

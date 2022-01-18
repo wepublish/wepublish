@@ -1344,7 +1344,7 @@ export type Query = {
   authProviders: Array<AuthProvider>;
   user?: Maybe<User>;
   users: UserConnection;
-  userAndSubscriptionBulkData?: Maybe<Scalars['String']>;
+  subscriptionAsCsv?: Maybe<Scalars['String']>;
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   permissions?: Maybe<Array<Permission>>;
@@ -3456,12 +3456,12 @@ export type UserQuery = (
   )> }
 );
 
-export type UserAndSubscriptionBulkDataQueryVariables = Exact<{ [key: string]: never; }>;
+export type SubscriptionAsCsvQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserAndSubscriptionBulkDataQuery = (
+export type SubscriptionAsCsvQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'userAndSubscriptionBulkData'>
+  & Pick<Query, 'subscriptionAsCsv'>
 );
 
 export type CreateUserMutationVariables = Exact<{
@@ -6645,38 +6645,38 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const UserAndSubscriptionBulkDataDocument = gql`
-    query UserAndSubscriptionBulkData {
-  userAndSubscriptionBulkData
+export const SubscriptionAsCsvDocument = gql`
+    query SubscriptionAsCsv {
+  subscriptionAsCsv
 }
     `;
 
 /**
- * __useUserAndSubscriptionBulkDataQuery__
+ * __useSubscriptionAsCsvQuery__
  *
- * To run a query within a React component, call `useUserAndSubscriptionBulkDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserAndSubscriptionBulkDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSubscriptionAsCsvQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionAsCsvQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserAndSubscriptionBulkDataQuery({
+ * const { data, loading, error } = useSubscriptionAsCsvQuery({
  *   variables: {
  *   },
  * });
  */
-export function useUserAndSubscriptionBulkDataQuery(baseOptions?: Apollo.QueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
+export function useSubscriptionAsCsvQuery(baseOptions?: Apollo.QueryHookOptions<SubscriptionAsCsvQuery, SubscriptionAsCsvQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>(UserAndSubscriptionBulkDataDocument, options);
+        return Apollo.useQuery<SubscriptionAsCsvQuery, SubscriptionAsCsvQueryVariables>(SubscriptionAsCsvDocument, options);
       }
-export function useUserAndSubscriptionBulkDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>) {
+export function useSubscriptionAsCsvLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionAsCsvQuery, SubscriptionAsCsvQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>(UserAndSubscriptionBulkDataDocument, options);
+          return Apollo.useLazyQuery<SubscriptionAsCsvQuery, SubscriptionAsCsvQueryVariables>(SubscriptionAsCsvDocument, options);
         }
-export type UserAndSubscriptionBulkDataQueryHookResult = ReturnType<typeof useUserAndSubscriptionBulkDataQuery>;
-export type UserAndSubscriptionBulkDataLazyQueryHookResult = ReturnType<typeof useUserAndSubscriptionBulkDataLazyQuery>;
-export type UserAndSubscriptionBulkDataQueryResult = Apollo.QueryResult<UserAndSubscriptionBulkDataQuery, UserAndSubscriptionBulkDataQueryVariables>;
+export type SubscriptionAsCsvQueryHookResult = ReturnType<typeof useSubscriptionAsCsvQuery>;
+export type SubscriptionAsCsvLazyQueryHookResult = ReturnType<typeof useSubscriptionAsCsvLazyQuery>;
+export type SubscriptionAsCsvQueryResult = Apollo.QueryResult<SubscriptionAsCsvQuery, SubscriptionAsCsvQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: UserInput!, $password: String!) {
   createUser(input: $input, password: $password) {
