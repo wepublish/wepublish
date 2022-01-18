@@ -6,7 +6,6 @@ import {
   RouteType,
   UserCreateRoute,
   UserEditRoute,
-  UserExportRoute,
   UserListRoute,
   useRoute,
   useRouteDispatch
@@ -14,16 +13,23 @@ import {
 
 import {RouteActionType} from '@wepublish/karma.run-react'
 
-import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {
+  FullUserFragment,
+  useDeleteUserMutation,
+  UserSort,
+  useSubscriptionAsCsvLazyQuery,
+  useUserListQuery
+} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
-import {UserExportPanel} from '../panel/userExportPanel'
 
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
 import {
+  Alert,
   Button,
+  Divider,
   Drawer,
   FlexboxGrid,
   Icon,
@@ -31,6 +37,7 @@ import {
   Input,
   InputGroup,
   Modal,
+  Placeholder,
   Table
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -55,13 +62,13 @@ export function UserList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
+  const {Paragraph} = Placeholder
+
   const [isEditModalOpen, setEditModalOpen] = useState(
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
 
-  const [isExportModalOpen, setExportModalOpen] = useState(
-    current?.type === RouteType.UserExport || current?.type === RouteType.UserCreate
-  )
+  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
 
   const [editID, setEditID] = useState<string | undefined>(
     current?.type === RouteType.UserEdit ? current.params.id : undefined
@@ -114,10 +121,6 @@ export function UserList() {
       setEditID(current.params.id)
       setEditModalOpen(true)
     }
-
-    if (current?.type === RouteType.UserExport) {
-      setExportModalOpen(true)
-    }
   }, [current])
 
   useEffect(() => {
@@ -129,6 +132,15 @@ export function UserList() {
     }
   }, [data?.users])
 
+  const [
+    getSubsCsv,
+    {loading: isSubsLoading, error: getSubsErr, data: subsCsvData}
+  ] = useSubscriptionAsCsvLazyQuery()
+
+  useEffect(() => {
+    if (getSubsErr?.message) Alert.error(getSubsErr.message, 0)
+  }, [getSubsErr])
+
   return (
     <>
       <FlexboxGrid>
@@ -136,7 +148,10 @@ export function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink appearance="primary" disabled={isLoading} route={UserExportRoute.create({})}>
+          <Button
+            appearance="primary"
+            disabled={isLoading}
+            onClick={() => setExportModalOpen(true)}>
             {t('userList.overview.exportSubscription')}
             <IconButton
               className="collapse-nav-btn"
@@ -144,7 +159,8 @@ export function UserList() {
               size="xs"
               icon={<Icon size="lg" icon={'export'} />}
             />
-          </ButtonLink>
+          </Button>
+
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -287,26 +303,37 @@ export function UserList() {
         />
       </Drawer>
 
-      <Drawer
-        show={isExportModalOpen}
-        size={'sm'}
-        onHide={() => {
-          setExportModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({}, current ?? undefined)
-          })
-        }}>
-        <UserExportPanel
-          onClose={() => {
-            setExportModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
+      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.exportSubscription')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <Button appearance="primary" onClick={() => getSubsCsv()}>
+              {t('userList.panels.exportSubscription')}
+            </Button>
+          </div>
+          <Divider>{t('userList.panels.result')}</Divider>
+          <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
+            <div style={{wordBreak: 'break-word', marginRight: 10}}>
+              {isSubsLoading ? <Paragraph rows={6} /> : subsCsvData?.subscriptionAsCsv}
+            </div>
+            <IconButton
+              appearance="primary"
+              icon={<Icon size="lg" icon="copy" />}
+              disabled={!subsCsvData?.subscriptionAsCsv}
+              onClick={() => navigator.clipboard.writeText(subsCsvData!.subscriptionAsCsv!)}
+            />
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={() => setExportModalOpen(false)} appearance="default">
+            {t('userList.panels.close')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
