@@ -18,8 +18,6 @@ import {
 
 import {UserInputError} from 'apollo-server-express'
 
-import {parse} from 'json2csv'
-
 import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
@@ -47,7 +45,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserSort, UserWithSubscription} from '../db/user'
+import {User, UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -58,7 +56,13 @@ import {PageSort} from '../db/page'
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
-import {delegateToPeerSchema, base64Encode, base64Decode, markResultAsProxied} from '../utility'
+import {
+  delegateToPeerSchema,
+  base64Encode,
+  base64Decode,
+  markResultAsProxied,
+  mapSubscriptionsAsCsv
+} from '../utility'
 
 import {
   authorise,
@@ -297,47 +301,30 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {},
       async resolve(root, args, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
-
         authorise(CanGetUsers, roles)
 
-        const users = await dbAdapter.user.getUsers({
-          cursor: InputCursor(),
-          filter: {subscription: {}},
-          limit: Limit(1000),
-          sort: UserSort.ModifiedAt,
-          order: SortOrder.Descending
-        })
+        const subscriptionsList: User[] = []
 
-        if (users?.nodes.length) {
-          const list: UserWithSubscription[] = users.nodes.map(
-            ({address, subscription, ...user}) => {
-              return {
-                id: user.id,
-                createdAt: user.createdAt,
-                modifiedAt: user.modifiedAt,
-                name: user.name,
-                email: user.email,
-                active: user.active,
+        const getAllUsersWithSubscriptions = async ({endCursor}: any = {}) => {
+          const listResult = await dbAdapter.user.getUsers({
+            cursor: InputCursor(endCursor),
+            filter: {subscription: {}},
+            limit: Limit(1),
+            sort: UserSort.ModifiedAt,
+            order: SortOrder.Descending
+          })
 
-                company: address?.company,
-                streetAddress: address?.streetAddress,
-                streetAddress2: address?.streetAddress2,
-                zipCode: address?.zipCode,
-                city: address?.city,
-                country: address?.country,
+          subscriptionsList.push(...listResult.nodes)
 
-                memberPlanID: subscription!.memberPlanID,
-                paymentPeriodicity: subscription!.paymentPeriodicity,
-                monthlyAmount: subscription!.monthlyAmount,
-                autoRenew: subscription!.autoRenew,
-                startsAt: subscription!.startsAt,
-                paidUntil: subscription!.paidUntil,
-                paymentMethodID: subscription!.paymentMethodID,
-                deactivatedAt: subscription!.deactivatedAt
-              }
-            }
-          )
-          return parse(list, {})
+          if (listResult.totalCount > subscriptionsList.length) {
+            await getAllUsersWithSubscriptions({endCursor: listResult.pageInfo.endCursor})
+          }
+        }
+
+        await getAllUsersWithSubscriptions()
+
+        if (subscriptionsList.length) {
+          return mapSubscriptionsAsCsv(subscriptionsList)
         }
         return ''
       }
