@@ -148,10 +148,7 @@ export function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Button
-            appearance="primary"
-            disabled={isLoading}
-            onClick={() => setExportModalOpen(true)}>
+          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
             {t('userList.overview.exportSubscription')}
             <IconButton
               className="collapse-nav-btn"
