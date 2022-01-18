@@ -3,10 +3,6 @@ import {FlexTeaser} from '../types'
 import {renderBlock, RenderBlockOptions} from './blockRenderer'
 import {Color} from '../style/colors'
 
-export interface GridStyleProps {
-  numColumns: number
-}
-
 export interface FlexGridBlockProps {
   flexTeasers: FlexTeaser[]
   opts: RenderBlockOptions
