@@ -20,7 +20,7 @@ import {
   useCreateArticleMutation,
   usePublishArticleMutation,
   useUpdateArticleMutation,
-  useArticlePreviewLinkQuery
+  useArticlePreviewLinkLazyQuery
 } from '../api'
 
 import {
@@ -53,13 +53,15 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
-  const {data, refetch: previewLinkRefetch} = useArticlePreviewLinkQuery({
-    skip: id === undefined,
-    variables: {
-      id: id!,
-      hours: 1
-    }
+  const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
+    fetchPolicy: 'no-cache'
   })
+
+  useEffect(() => {
+    if (data?.articlePreviewLink) {
+      window.open(data?.articlePreviewLink)
+    }
+  }, [data?.articlePreviewLink])
 
   const {t} = useTranslation()
 
@@ -498,10 +500,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   size={'lg'}
                   icon={<Icon icon="eye" />}
                   onClick={async e => {
-                    await previewLinkRefetch({id: id, hours: 1})
-                    if (data?.articlePreviewLink) {
-                      window.open(data?.articlePreviewLink)
-                    }
+                    previewLinkFetch({
+                      variables: {
+                        id: id!,
+                        hours: 1
+                      }
+                    })
                   }}>
                   {t('articleEditor.overview.preview')}
                 </IconButtonLink>
