@@ -505,6 +505,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
+          url={articleData?.article?.draft?.url || articleData?.article?.latest?.url}
           initialPublishDate={publishedAt}
           pendingPublishDate={pendingPublishDate}
           metadata={metadata}

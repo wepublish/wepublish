@@ -47,6 +47,7 @@ fragment ArticleRef on Article {
   }
 
   latest {
+    url
     publishedAt
     updatedAt
     revision
@@ -63,8 +64,26 @@ fragment ArticleRef on Article {
   }
 }
 
-query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+query ArticleList(
+  $filter: String
+  $after: ID
+  $before: ID
+  $first: Int
+  $last: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: {title: $filter}
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...ArticleRef
     }
@@ -138,7 +157,7 @@ mutation DeleteArticle($id: ID!) {
 
 mutation DuplicateArticle($id: ID!) {
   duplicateArticle(id: $id) {
-   ...MutationArticle
+    ...MutationArticle
   }
 }
 
@@ -152,14 +171,17 @@ query Article($id: ID!) {
     shared
 
     draft {
+      url
       publishAt
     }
 
     pending {
+      url
       publishAt
     }
 
     published {
+      url
       publishedAt
       updatedAt
     }
@@ -177,6 +199,7 @@ query Article($id: ID!) {
         ...ImageRef
       }
       tags
+      url
       canonicalUrl
       properties {
         key
@@ -194,7 +217,7 @@ query Article($id: ID!) {
       socialMediaAuthors {
         ...AuthorRef
       }
-      socialMediaImage{
+      socialMediaImage {
         ...ImageRef
       }
 

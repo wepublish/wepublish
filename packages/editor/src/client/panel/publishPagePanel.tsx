@@ -12,6 +12,7 @@ import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
 
 export interface PublishPagePanelProps {
+  url?: string | null
   initialPublishDate?: Date
   pendingPublishDate?: Date
   metadata: PageMetadata
@@ -21,6 +22,7 @@ export interface PublishPagePanelProps {
 }
 
 export function PublishPagePanel({
+  url,
   initialPublishDate,
   pendingPublishDate,
   metadata,
@@ -61,6 +63,15 @@ export function PublishPagePanel({
         />
 
         <DescriptionList>
+          <DescriptionListItem label={t('pageEditor.panels.url')}>
+            {url ? (
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                {url}
+              </a>
+            ) : (
+              '-'
+            )}
+          </DescriptionListItem>
           <DescriptionListItemWithMessage
             label={t('pageEditor.panels.title')}
             message={t('pageEditor.panels.enterTitle')}

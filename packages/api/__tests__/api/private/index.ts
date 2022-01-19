@@ -3357,7 +3357,6 @@ export const ImageList = gql`
         hasNextPage
         hasPreviousPage
       }
-      totalCount
     }
   }
   ${ImageRef}

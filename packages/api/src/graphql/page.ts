@@ -106,6 +106,8 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
 
+    url: {type: GraphQLNonNull(GraphQLString)},
+
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
@@ -135,14 +137,79 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    draft: {type: GraphQLPageRevision},
-    published: {type: GraphQLPageRevision},
-    pending: {type: GraphQLPageRevision},
+    draft: {
+      type: GraphQLPageRevision,
+      resolve: ({id, draft}, _, {urlAdapter}) => {
+        if (draft) {
+          return {
+            ...draft,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: draft.slug
+            })
+          }
+        } else return null
+      }
+    },
+
+    published: {
+      type: GraphQLPageRevision,
+      resolve: ({id, published}, _, {urlAdapter}) => {
+        if (published) {
+          return {
+            ...published,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: published.slug
+            })
+          }
+        } else return null
+      }
+    },
+
+    pending: {
+      type: GraphQLPageRevision,
+      resolve: ({id, pending}, _, {urlAdapter}) => {
+        if (pending) {
+          return {
+            ...pending,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: pending.slug
+            })
+          }
+        } else return null
+      }
+    },
 
     latest: {
       type: GraphQLNonNull(GraphQLPageRevision),
-      resolve: createProxyingResolver(({draft, pending, published}) => {
-        return draft ?? pending ?? published
+      resolve: createProxyingResolver(({id, draft, pending, published}, _, {urlAdapter}) => {
+        if (draft) {
+          return {
+            ...draft,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: draft.slug
+            })
+          }
+        } else if (pending) {
+          return {
+            ...pending,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: pending.slug
+            })
+          }
+        } else if (published) {
+          return {
+            ...published,
+            url: urlAdapter.getPublicPageURL({
+              id: id,
+              slug: published.slug
+            })
+          }
+        } else return null
       })
     }
 

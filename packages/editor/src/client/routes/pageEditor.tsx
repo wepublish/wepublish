@@ -347,6 +347,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
+          url={pageData?.page?.draft?.url || pageData?.page?.latest?.url}
           initialPublishDate={publishedAt}
           pendingPublishDate={pendingPublishDate}
           metadata={metadata}

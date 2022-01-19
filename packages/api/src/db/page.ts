@@ -58,6 +58,12 @@ export interface PublicPage extends PageData {
   readonly blocks: PageBlock[]
 }
 
+export interface PublicPageUrlArgs {
+  readonly id: string
+
+  readonly slug: string
+}
+
 export interface PageFilter {
   readonly title?: string
   readonly draft?: boolean
@@ -98,7 +104,7 @@ export interface GetPageHistoryArgs {
   readonly id: string
 }
 
-export interface PageInput extends PageData {}
+export type PageInput = PageData
 
 export interface CreatePageArgs {
   readonly input: PageInput

@@ -128,6 +128,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     canonicalUrl: {type: GraphQLString},
 
+    url: {type: GraphQLString},
+
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
@@ -176,17 +178,81 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    draft: {type: GraphQLArticleRevision},
-    published: {type: GraphQLArticleRevision},
-    pending: {type: GraphQLArticleRevision},
+    draft: {
+      type: GraphQLArticleRevision,
+      resolve: ({id, draft}, _, {urlAdapter}) => {
+        if (draft) {
+          return {
+            ...draft,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: draft.slug
+            })
+          }
+        } else return null
+      }
+    },
+
+    published: {
+      type: GraphQLArticleRevision,
+      resolve: ({id, published}, _, {urlAdapter}) => {
+        if (published) {
+          return {
+            ...published,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: published.slug
+            })
+          }
+        } else return null
+      }
+    },
+
+    pending: {
+      type: GraphQLArticleRevision,
+      resolve: ({id, pending}, _, {urlAdapter}) => {
+        if (pending) {
+          return {
+            ...pending,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: pending.slug
+            })
+          }
+        } else return null
+      }
+    },
 
     latest: {
       type: GraphQLNonNull(GraphQLArticleRevision),
-      resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
-        return draft ?? pending ?? published
+      resolve: createProxyingResolver(({id, draft, pending, published}, {}, {urlAdapter}, info) => {
+        if (draft) {
+          return {
+            ...draft,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: draft.slug
+            })
+          }
+        } else if (pending) {
+          return {
+            ...pending,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: pending.slug
+            })
+          }
+        } else if (published) {
+          return {
+            ...published,
+            url: urlAdapter.getPublicArticleURL({
+              id: id,
+              slug: published.slug
+            })
+          }
+        } else return null
       })
     }
-
     // TODO: Implement article history
     // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
