@@ -47,8 +47,8 @@ export function UserSubscriptionDeactivatePanel({
         <Modal.Title>
           {t(
             isDeactivated
-              ? 'userSubscriptionEdit.deactivation.modalTitel.deactivated'
-              : 'userSubscriptionEdit.deactivation.modalTitel.activated'
+              ? 'userSubscriptionEdit.deactivation.modalTitle.deactivated'
+              : 'userSubscriptionEdit.deactivation.modalTitle.activated'
           )}
         </Modal.Title>
       </Modal.Header>

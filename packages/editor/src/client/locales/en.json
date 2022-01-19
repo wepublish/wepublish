@@ -863,7 +863,7 @@
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
-        "modalTitel": {
+        "modalTitle": {
           "deactivated": "Activate subscription?",
           "activated": "Deactivate subscription?"
         },
@@ -877,7 +877,7 @@
         },
         "action": {
           "deactivated": "Reactivate",
-          "activated": "Deactivates"
+          "activated": "Deactivate"
         },
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
         "date": "Deactivation Date",
