@@ -259,7 +259,7 @@ export function PageList() {
                   </IconButtonTooltip>
 
                   {rowData.draft && (
-                    <IconButtonTooltip caption={t('pageEditor.overview.publish')}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
                       <IconButton
                         icon={<Icon icon="eye" />}
                         circle
