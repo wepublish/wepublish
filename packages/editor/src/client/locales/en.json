@@ -236,6 +236,15 @@
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g."
         }
       },
+      "flexTeaser": {
+        "addBlock": "Add Block",
+        "removeBlock": "Remove Block",
+        "lockBlock": "Lock",
+        "unlockBlock": "Unlock",
+        "chooseTeaser": "Choose Teaser",
+        "editTeaser": "Edit Teaser",
+        "deleteTeaser": "Delete Teaser"
+      },
       "image": {
         "label": "Image",
         "overview": {
@@ -319,6 +328,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserFlexGrid": {
+        "label": "Flex Grid Teasers"
       }
     },
     "cancel": "Cancel",

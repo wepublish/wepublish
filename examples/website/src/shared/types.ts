@@ -177,7 +177,8 @@ export enum BlockType {
   PeerPageBreak = 'linkPageBreak',
 
   // Layout
-  Grid = 'grid'
+  Grid = 'grid',
+  FlexGrid = 'flexGrid'
 }
 
 export type RichTextBlockValue = Node[]
@@ -334,6 +335,27 @@ export type GridBlock = BaseBlock<
   }
 >
 
+interface FlexAlignment {
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
+  static: boolean
+}
+
+export interface FlexTeaser {
+  alignment: FlexAlignment
+  blocks: Block[]
+}
+
+export type FlexGridBlock = BaseBlock<
+  BlockType.FlexGrid,
+  {
+    flexTeasers: FlexTeaser[]
+  }
+>
+
 // Block Unions
 // ------------
 
@@ -349,6 +371,7 @@ export type Block =
   | TitleImageBlock
   | GridBlock
   | TeaserBlock
+  | FlexGridBlock
 
 // Image
 export interface ImageRefData {

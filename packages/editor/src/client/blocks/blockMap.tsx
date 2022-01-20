@@ -13,6 +13,7 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
+import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -115,5 +116,31 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: 'blocks.teaserGrid6.label',
     icon: 'ellipsis-h'
+  },
+
+  [BlockType.TeaserGridFlex]: {
+    field: props => <TeaserGridFlexBlock {...props} />,
+    defaultValue: {
+      flexTeasers: [
+        {
+          alignment: {i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false},
+          teaser: null
+        }
+      ]
+    },
+    label: 'blocks.teaserFlexGrid.label',
+    icon: 'columns'
   }
 }

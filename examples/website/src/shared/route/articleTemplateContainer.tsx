@@ -23,7 +23,8 @@ import {
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
   peerMetaDataFragment,
-  peerArticleMetaDataFragment
+  peerArticleMetaDataFragment,
+  flexGridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -65,6 +66,7 @@ const ArticleQuery = gql`
         ...QuoteBlockData
         ...TitleBlockData
         ...ArticleGridBlockData
+        ...ArticleFlexGridBlockData
       }
     }
   }
@@ -73,6 +75,7 @@ const ArticleQuery = gql`
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
+  ${flexGridBlockFrontDataGQLfragment}
   ${instagramPostBlockDataFragment}
   ${facebookPostBlockDataFragment}
   ${twitterTweetBlockDataFragment}
@@ -219,6 +222,7 @@ const PeerArticleQuery = gql`
         ...QuoteBlockData
         ...TitleBlockData
         ...ArticleGridBlockData
+        ...ArticleFlexGridBlockData
       }
     }
   }
@@ -240,6 +244,7 @@ const PeerArticleQuery = gql`
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
+  ${flexGridBlockFrontDataGQLfragment}
 `
 
 export interface PeerArticleTemplateContainerProps {
