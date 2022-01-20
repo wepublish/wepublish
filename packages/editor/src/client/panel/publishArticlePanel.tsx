@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Message, Modal, Panel} from 'rsuite'
+import {Button, Message, Modal, Panel, Tree} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
@@ -70,8 +70,7 @@ export function PublishArticlePanel({
           changeDate={date => setUpdateDate(date)}
         />
 
-        {/* Add explanation what this date does */}
-        <Panel collapsible header=" ">
+        <Panel header="Advanced options" collapsible className="availableFromPublishPanel">
           <DateTimePicker
             dateTime={availableOnlineFrom}
             label={t('articleEditor.panels.availableOnlineFrom')}
