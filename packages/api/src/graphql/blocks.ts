@@ -36,12 +36,15 @@ import {
   ImageCaptionEdge,
   ArticleTeaser,
   TeaserGridBlock,
+  TeaserGridFlexBlock,
   TeaserStyle,
   PeerArticleTeaser,
   PageTeaser,
   TeaserType,
   RichTextBlock,
   FacebookVideoBlock,
+  FlexAlignment,
+  FlexTeaser,
   BildwurfAdBlock
 } from '../db/block'
 
@@ -49,6 +52,15 @@ import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
 import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerSchema} from '../utility'
+
+export const GraphQLTeaserStyle = new GraphQLEnumType({
+  name: 'TeaserStyle',
+  values: {
+    DEFAULT: {value: TeaserStyle.Default},
+    LIGHT: {value: TeaserStyle.Light},
+    TEXT: {value: TeaserStyle.Text}
+  }
+})
 
 export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
   name: 'RichTextBlock',
@@ -64,7 +76,6 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
   name: 'ArticleTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
-
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
@@ -151,15 +162,6 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Page)
 })
 
-export const GraphQLTeaserStyle = new GraphQLEnumType({
-  name: 'TeaserStyle',
-  values: {
-    DEFAULT: {value: TeaserStyle.Default},
-    LIGHT: {value: TeaserStyle.Light},
-    TEXT: {value: TeaserStyle.Text}
-  }
-})
-
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
   types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser]
@@ -173,6 +175,48 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
+  })
+})
+
+export const GraphQLFlexGridAlignment = new GraphQLObjectType<FlexAlignment, Context>({
+  name: 'FlexAlignment',
+  fields: {
+    i: {type: GraphQLNonNull(GraphQLString)},
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)},
+    static: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
+export const GraphQLFlexGridAlignmentInput = new GraphQLInputObjectType({
+  name: 'FlexAlignmentInput',
+  fields: {
+    i: {type: GraphQLNonNull(GraphQLString)},
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)},
+    static: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
+export const GraphQLFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
+  name: 'FlexTeaser',
+  fields: {
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridAlignment)},
+    teaser: {type: GraphQLTeaser}
+  }
+})
+
+export const GraphQLTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>({
+  name: 'TeaserGridFlexBlock',
+  fields: {
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLFlexTeaser))}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserGridFlex
   })
 })
 
@@ -287,6 +331,38 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
     return value.type === BlockType.TeaserGrid
   })
 })
+
+export const GraphQLPublicFlexAlignment = new GraphQLObjectType<FlexAlignment, Context>({
+  name: 'FlexAlignment',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLPublicFlexTeaser = new GraphQLObjectType<FlexTeaser, Context>({
+  name: 'FlexTeaser',
+  fields: {
+    alignment: {type: GraphQLNonNull(GraphQLPublicFlexAlignment)},
+    teaser: {type: GraphQLPublicTeaser}
+  }
+})
+
+export const GraphQLPublicTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBlock, Context>(
+  {
+    name: 'TeaserGridFlexBlock',
+    fields: {
+      flexTeasers: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicFlexTeaser)))
+      }
+    },
+    isTypeOf: createProxyingIsTypeOf(value => {
+      return value.type === BlockType.TeaserGridFlex
+    })
+  }
+)
 
 export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, Context>({
   name: 'GalleryImageEdge',
@@ -720,6 +796,21 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLFlexTeaserInput = new GraphQLInputObjectType({
+  name: 'FlexTeaserInput',
+  fields: {
+    teaser: {type: GraphQLTeaserInput},
+    alignment: {type: GraphQLNonNull(GraphQLFlexGridAlignmentInput)}
+  }
+})
+
+export const GraphQLTeaserGridFlexBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserGridFlexBlockInput',
+  fields: {
+    flexTeasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexTeaserInput)))}
+  }
+})
+
 export const GraphQLBlockInput = new GraphQLInputObjectType({
   name: 'BlockInput',
   fields: () => ({
@@ -740,7 +831,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
-    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
+    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
+    [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
   })
 })
 
@@ -764,7 +856,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLTeaserGridBlock
+    GraphQLTeaserGridBlock,
+    GraphQLTeaserGridFlexBlock
   ]
 })
 
@@ -787,6 +880,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLPublicTeaserGridBlock
+    GraphQLPublicTeaserGridBlock,
+    GraphQLPublicTeaserGridFlexBlock
   ]
 })
