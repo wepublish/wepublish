@@ -91,6 +91,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
+
+  const [updatedAt, setUpdatedAt] = useState<Date>()
+
+  const [publishAt, setPublishAt] = useState<Date>()
+
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
     preTitle: '',
@@ -142,7 +147,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, published, shared} = articleData.article
+      const {latest, shared, pending} = articleData.article
       const {
         slug,
         preTitle,
@@ -162,9 +167,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         socialMediaAuthors,
         socialMediaImage
       } = latest
-      const {publishedAt} = published ?? {}
 
+      const {publishedAt} = latest ?? {}
       if (publishedAt) setPublishedAt(new Date(publishedAt))
+
+      const {updatedAt} = latest ?? {}
+      if (updatedAt) setUpdatedAt(new Date(updatedAt))
+
+      const {publishAt} = pending ?? {}
+      if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({
         slug,
@@ -358,7 +369,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date) {
+  async function handlePublish(publishDate: Date, updateDate: Date, availableOnlineFrom: Date) {
     if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
@@ -373,14 +384,22 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            publishAt: publishDate.toISOString(),
+            publishAt: availableOnlineFrom.toISOString(),
             publishedAt: publishDate.toISOString(),
             updatedAt: updateDate.toISOString()
           }
         })
 
-        if (publishData?.publishArticle?.published?.publishedAt) {
-          setPublishedAt(new Date(publishData?.publishArticle?.published.publishedAt))
+        if (publishData?.publishArticle?.latest?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishArticle?.latest.publishedAt))
+        }
+        if (publishData?.publishArticle?.latest?.updatedAt) {
+          setUpdatedAt(new Date(publishData?.publishArticle?.latest.updatedAt))
+        }
+        if (publishData?.publishArticle?.pending?.publishAt) {
+          setPublishAt(new Date(publishData?.publishArticle?.pending.publishAt))
+        } else {
+          setPublishAt(new Date())
         }
       }
 
@@ -534,11 +553,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           initialPublishDate={publishedAt}
+          initialUpdateDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
+          availableFromDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishDate, updateDate) => {
-            handlePublish(publishDate, updateDate)
+          onConfirm={(publishDate, updateDate, availableOnlineFrom) => {
+            handlePublish(publishDate, updateDate, availableOnlineFrom)
             setPublishDialogOpen(false)
           }}
         />

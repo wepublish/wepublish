@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Message, Modal} from 'rsuite'
+import {Button, Message, Modal, Panel} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
@@ -13,15 +13,19 @@ import {InfoColor} from '../atoms/infoMessage'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
+  initialUpdateDate?: Date
+  availableFromDate?: Date
   pendingPublishDate?: Date
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishDate: Date, updateDate: Date): void
+  onConfirm(publishDate: Date, updateDate: Date, availableOnlineFrom: Date): void
 }
 
 export function PublishArticlePanel({
   initialPublishDate,
+  initialUpdateDate,
+  availableFromDate,
   pendingPublishDate,
   metadata,
   onClose,
@@ -29,10 +33,13 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(
-    pendingPublishDate ?? initialPublishDate ?? now
+  const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
+
+  const [availableOnlineFrom, setAvailableOnlineFrom] = useState<Date | undefined>(
+    availableFromDate ?? undefined
   )
-  const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
+
+  const [updateDate, setUpdateDate] = useState<Date | undefined>(initialUpdateDate ?? now)
 
   const {t} = useTranslation()
 
@@ -51,6 +58,7 @@ export function PublishArticlePanel({
             })}
           />
         )}
+
         <DateTimePicker
           dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
@@ -61,6 +69,15 @@ export function PublishArticlePanel({
           label={t('articleEditor.panels.updateDate')}
           changeDate={date => setUpdateDate(date)}
         />
+
+        {/* Add explanation what this date does */}
+        <Panel collapsible header=" ">
+          <DateTimePicker
+            dateTime={availableOnlineFrom}
+            label={t('articleEditor.panels.availableOnlineFrom')}
+            changeDate={date => setAvailableOnlineFrom(date)}
+          />
+        </Panel>
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
@@ -157,7 +174,7 @@ export function PublishArticlePanel({
         <Button
           appearance="primary"
           disabled={!publishDate || !updateDate || !metadata.slug}
-          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          onClick={() => onConfirm(publishDate!, updateDate!, availableOnlineFrom!)}>
           {t('articleEditor.panels.confirm')}
         </Button>
 

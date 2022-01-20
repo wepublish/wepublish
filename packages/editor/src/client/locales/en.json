@@ -39,6 +39,7 @@
         "articlePreviewLinkField": "Preview Link",
         "articlePreviewLinkHours": "Validity period of link",
         "authors": "Authors",
+        "availableOnlineFrom": "Available online from",
         "back": "Back",
         "breakingNews": "Breaking News",
         "charCountWarning": "The maximum number of characters should be {{charCountWarning}}",
