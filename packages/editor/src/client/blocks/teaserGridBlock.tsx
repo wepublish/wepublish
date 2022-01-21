@@ -200,7 +200,7 @@ export function TeaserBlock({
   )
 }
 
-export function contentForTeaser(teaser: Teaser, numColumns: number) {
+export function contentForTeaser(teaser: Teaser, numColumns?: number) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
@@ -276,7 +276,7 @@ export interface TeaserContentProps {
   image?: ImageRefFragment
   states?: string[]
   peer?: PeerWithProfileFragment
-  numColumns: number
+  numColumns?: number
 }
 
 function labelForTeaserStyle(style: TeaserStyle) {

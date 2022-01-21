@@ -21,6 +21,7 @@
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
+        "preview": "Preview",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
@@ -235,6 +236,15 @@
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g."
         }
       },
+      "flexTeaser": {
+        "addBlock": "Add Block",
+        "removeBlock": "Remove Block",
+        "lockBlock": "Lock",
+        "unlockBlock": "Unlock",
+        "chooseTeaser": "Choose Teaser",
+        "editTeaser": "Edit Teaser",
+        "deleteTeaser": "Delete Teaser"
+      },
       "image": {
         "label": "Image",
         "overview": {
@@ -318,6 +328,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserFlexGrid": {
+        "label": "Flex Grid Teasers"
       }
     },
     "cancel": "Cancel",
@@ -588,6 +601,7 @@
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
+        "preview": "Preview",
         "save": "Save",
         "unpublish": "Unpublish",
         "preview": "Preview",
