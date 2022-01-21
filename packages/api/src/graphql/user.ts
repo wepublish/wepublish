@@ -8,7 +8,7 @@ import {
   GraphQLString,
   GraphQLBoolean
 } from 'graphql'
-import {User, UserSort} from '../db/user'
+import {SubscriptionDeactivationReason, User, UserSort} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -20,6 +20,23 @@ import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+
+export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
+  name: 'SubscriptionDeactivationReason',
+  values: {
+    NONE: {value: SubscriptionDeactivationReason.None},
+    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.UserSelfDeactivated},
+    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.InvoiceNotPaid}
+  }
+})
+
+export const GraphQLUserSubscriptionDeactivation = new GraphQLObjectType({
+  name: 'UserSubscriptionDeactivation',
+  fields: {
+    date: {type: GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+  }
+})
 
 export const GraphQLUserSubscription = new GraphQLObjectType({
   name: 'UserSubscription',
@@ -41,7 +58,7 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
         return loaders.paymentMethodsByID.load(paymentMethodID)
       }
     },
-    deactivatedAt: {type: GraphQLDateTime}
+    deactivation: {type: GraphQLUserSubscriptionDeactivation}
   }
 })
 
@@ -65,7 +82,7 @@ export const GraphQLPublicUserSubscription = new GraphQLObjectType({
         return loaders.paymentMethodsByID.load(paymentMethodID)
       }
     },
-    deactivatedAt: {type: GraphQLDateTime}
+    deactivation: {type: GraphQLUserSubscriptionDeactivation}
   }
 })
 
@@ -158,7 +175,8 @@ export const GraphQLUserSubscriptionFilter = new GraphQLInputObjectType({
   fields: {
     startsAt: {type: GraphQLDateFilter},
     paidUntil: {type: GraphQLDateFilter},
-    deactivatedAt: {type: GraphQLDateFilter},
+    deactivationDate: {type: GraphQLDateFilter},
+    deactivationReason: {type: GraphQLSubscriptionDeactivationReason},
     autoRenew: {type: GraphQLBoolean}
   }
 })
@@ -222,6 +240,14 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLUserSubscriptionDeactivationInput = new GraphQLInputObjectType({
+  name: 'UserSubscriptionDeactivationInput',
+  fields: {
+    date: {type: GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+  }
+})
+
 export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
   name: 'UserSubscriptionInput',
   fields: {
@@ -232,7 +258,7 @@ export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
-    deactivatedAt: {type: GraphQLDateTime}
+    deactivation: {type: GraphQLUserSubscriptionDeactivationInput}
   }
 })
 

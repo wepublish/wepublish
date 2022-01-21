@@ -1,11 +1,11 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
   GraphQLInt,
   GraphQLList,
-  GraphQLID
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
@@ -15,21 +15,21 @@ import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
-  InvalidCredentialsError,
-  OAuth2ProviderNotFoundError,
-  InvalidOAuth2TokenError,
-  UserNotFoundError,
-  NotFound,
-  MonthlyAmountNotEnough,
-  PaymentConfigurationNotAllowed,
-  NotActiveError,
-  EmailAlreadyInUseError,
-  NotAuthorisedError as NotAuthorizedError,
-  NotAuthenticatedError,
-  UserInputError,
   CommentLengthError,
-  UserSubscriptionAlreadyDeactivated,
-  InternalError
+  EmailAlreadyInUseError,
+  InternalError,
+  InvalidCredentialsError,
+  InvalidOAuth2TokenError,
+  MonthlyAmountNotEnough,
+  NotActiveError,
+  NotAuthenticatedError,
+  NotAuthorisedError as NotAuthorizedError,
+  NotFound,
+  OAuth2ProviderNotFoundError,
+  PaymentConfigurationNotAllowed,
+  UserInputError,
+  UserNotFoundError,
+  UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -42,9 +42,9 @@ import {
   GraphQLPublicUserSubscriptionInput
 } from './user'
 import {
+  GraphQLPublicComment,
   GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput,
-  GraphQLPublicComment
+  GraphQLPublicCommentUpdateInput
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
 import {
@@ -57,6 +57,7 @@ import {
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSlug} from './slug'
 import {logger} from '../server'
+import {SubscriptionDeactivationReason} from '../db/user'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -306,7 +307,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentPeriodicity,
             paidUntil: null,
             monthlyAmount,
-            deactivatedAt: null,
+            deactivation: null,
             memberPlanID: memberPlan.id,
             autoRenew
           }
@@ -507,7 +508,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             monthlyAmount,
             autoRenew,
             paymentMethodID,
-            deactivatedAt: null
+            deactivation: null
           }
         })
 
@@ -524,30 +525,30 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicUserSubscription,
       args: {},
       description:
-        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now and autoRenew will be set to false.",
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
+      async resolve(root, {}, {authenticateUser, dbAdapter, memberContext}) {
         const {user} = authenticateUser()
 
         if (!user.subscription) throw new NotFound('user.subscription', user.id)
-        if (user.subscription.deactivatedAt !== null)
-          throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivatedAt)
+        if (user.subscription.deactivation !== null)
+          throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivation.date)
 
         const now = new Date()
         const deactivationDate =
           user.subscription.paidUntil !== null && user.subscription.paidUntil > now
             ? user.subscription.paidUntil
             : now
-        const updateSubscription = await dbAdapter.user.updateUserSubscription({
+
+        await memberContext.deactivateSubscriptionForUser({
           userID: user.id,
-          input: {
-            ...user.subscription,
-            autoRenew: false,
-            deactivatedAt: deactivationDate
-          }
+          deactivationDate,
+          deactivationReason: SubscriptionDeactivationReason.UserSelfDeactivated
         })
 
-        if (!updateSubscription) throw new Error('Error during updateSubscription')
-        return updateSubscription
+        const updatedUser = await dbAdapter.user.getUserByID(user.id)
+        if (!updatedUser || !updatedUser.subscription)
+          throw new Error('Error during updateSubscription')
+        return updatedUser.subscription
       }
     },
 
