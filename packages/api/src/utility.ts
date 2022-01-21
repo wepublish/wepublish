@@ -7,75 +7,57 @@ import {TeaserStyle} from './db/block'
 import {User} from './db/user'
 
 export function mapSubscriptionsAsCsv(items: User[]) {
-  const JsonFields = [
-    'id',
-    'name',
-    'email',
-    'active',
-    'createdAt',
-    'modifiedAt',
+  let csvStr =
+    [
+      'id',
+      'name',
+      'email',
+      'active',
+      'createdAt',
+      'modifiedAt',
 
-    'company',
-    'streetAddress',
-    'streetAddress2',
-    'zipCode',
-    'city',
-    'country',
+      'company',
+      'streetAddress',
+      'streetAddress2',
+      'zipCode',
+      'city',
+      'country',
 
-    'memberPlanID',
-    'paymentPeriodicity',
-    'monthlyAmount',
-    'autoRenew',
-    'startsAt',
-    'paidUntil',
-    'paymentMethodID',
-    'deactivatedAt'
-  ]
+      'memberPlanID',
+      'paymentPeriodicity',
+      'monthlyAmount',
+      'autoRenew',
+      'startsAt',
+      'paidUntil',
+      'paymentMethodID',
+      'deactivatedAt'
+    ].join(',') + '\n'
 
-  let csvStr = JsonFields.join(',') + '\n'
-
-  items.forEach(({address, subscription, ...user}: any) => {
+  items.forEach(({address, subscription, ...user}: User) => {
     csvStr +=
-      user.id +
-      ',' +
-      user.name +
-      ',' +
-      user.email +
-      ',' +
-      user.active +
-      ',' +
-      new Date(user.createdAt).toISOString() +
-      ',' +
-      new Date(user.modifiedAt).toISOString() +
-      ',' +
-      (address?.company || '') +
-      ',' +
-      (address?.streetAddress || '') +
-      ',' +
-      (address?.streetAddress2 || '') +
-      ',' +
-      (address?.zipCode || '') +
-      ',' +
-      (address?.city || '') +
-      ',' +
-      (address?.country || '') +
-      ',' +
-      subscription!.memberPlanID +
-      ',' +
-      subscription!.paymentPeriodicity +
-      ',' +
-      subscription!.monthlyAmount +
-      ',' +
-      subscription!.autoRenew +
-      ',' +
-      new Date(subscription!.startsAt).toISOString() +
-      ',' +
-      (subscription?.paidUntil || '') +
-      ',' +
-      subscription!.paymentMethodID +
-      ',' +
-      new Date(subscription!.deactivatedAt).toISOString() +
-      '\r\n'
+      [
+        user.id,
+        user.name,
+        user.email,
+        user.active,
+        new Date(user.createdAt).toISOString(),
+        new Date(user.modifiedAt).toISOString(),
+        new Date(user.modifiedAt).toISOString(),
+        address?.company,
+        address?.streetAddress,
+        address?.streetAddress2,
+        address?.zipCode,
+        address?.city,
+        address?.country,
+        subscription!.memberPlanID,
+        subscription!.paymentPeriodicity,
+        subscription!.monthlyAmount,
+        subscription!.autoRenew,
+        new Date(subscription!.startsAt).toISOString(),
+        subscription?.paidUntil,
+        subscription!.paymentMethodID,
+        new Date(subscription!.deactivatedAt!).toISOString()
+      ].join(',') + '\r\n'
   })
   return csvStr
 }

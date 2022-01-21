@@ -17,8 +17,8 @@ import {
   FullUserFragment,
   useDeleteUserMutation,
   UserSort,
-  useSubscriptionAsCsvLazyQuery,
-  useUserListQuery
+  useUserListQuery,
+  useSubscriptionsAsCsvLazyQuery
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
@@ -135,7 +135,9 @@ export function UserList() {
   const [
     getSubsCsv,
     {loading: isSubsLoading, error: getSubsErr, data: subsCsvData}
-  ] = useSubscriptionAsCsvLazyQuery()
+  ] = useSubscriptionsAsCsvLazyQuery({
+    fetchPolicy: 'network-only'
+  })
 
   useEffect(() => {
     if (getSubsErr?.message) Alert.error(getSubsErr.message, 0)
@@ -149,15 +151,14 @@ export function UserList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
-            {t('userList.overview.exportSubscription')}
+            {t('userList.overview.exportSubscriptionsCsv')}
             <IconButton
               className="collapse-nav-btn"
               appearance="primary"
               size="xs"
-              icon={<Icon size="lg" icon={'export'} />}
+              icon={<Icon icon={'export'} />}
             />
           </Button>
-
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -302,25 +303,29 @@ export function UserList() {
 
       <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.exportSubscription')}</Modal.Title>
+          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Button appearance="primary" onClick={() => getSubsCsv()}>
-              {t('userList.panels.exportSubscription')}
+              {t('userList.panels.exportSubscriptions')}
             </Button>
           </div>
-          <Divider>{t('userList.panels.result')}</Divider>
-          <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
-            <div style={{wordBreak: 'break-word', marginRight: 10}}>
-              {isSubsLoading ? <Paragraph rows={6} /> : subsCsvData?.subscriptionAsCsv}
-            </div>
+          <Divider>{t('userList.panels.csvData')}</Divider>
+          <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            {isSubsLoading ? (
+              <Paragraph rows={6} />
+            ) : subsCsvData?.csv === '' ? (
+              t('userList.panels.noUsersWithSubscriptions')
+            ) : (
+              <div style={{wordBreak: 'break-word', marginRight: 10}}>{subsCsvData?.csv}</div>
+            )}
             <IconButton
               appearance="primary"
               icon={<Icon size="lg" icon="copy" />}
-              disabled={!subsCsvData?.subscriptionAsCsv}
-              onClick={() => navigator.clipboard.writeText(subsCsvData!.subscriptionAsCsv!)}
+              disabled={!subsCsvData?.csv}
+              onClick={() => navigator.clipboard.writeText(subsCsvData!.csv!)}
             />
           </div>
         </Modal.Body>

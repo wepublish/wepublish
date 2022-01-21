@@ -296,35 +296,35 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    subscriptionAsCsv: {
+    subscriptionsAsCsv: {
       type: GraphQLString,
       args: {},
       async resolve(root, args, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetUsers, roles)
 
-        const subscriptionsList: User[] = []
+        const allSubscriptionsList: User[] = []
 
-        const getAllUsersWithSubscriptions = async ({endCursor}: any = {}) => {
+        const getAllUsersWithSubscriptions = async (after?: string | null) => {
           const listResult = await dbAdapter.user.getUsers({
-            cursor: InputCursor(endCursor),
+            cursor: InputCursor(after ?? undefined),
             filter: {subscription: {}},
-            limit: Limit(1),
+            limit: Limit(100),
             sort: UserSort.ModifiedAt,
             order: SortOrder.Descending
           })
 
-          subscriptionsList.push(...listResult.nodes)
+          allSubscriptionsList.push(...listResult.nodes)
 
-          if (listResult.totalCount > subscriptionsList.length) {
-            await getAllUsersWithSubscriptions({endCursor: listResult.pageInfo.endCursor})
+          if (listResult.pageInfo.hasNextPage) {
+            await getAllUsersWithSubscriptions(listResult.pageInfo.endCursor)
           }
         }
 
         await getAllUsersWithSubscriptions()
 
-        if (subscriptionsList.length) {
-          return mapSubscriptionsAsCsv(subscriptionsList)
+        if (allSubscriptionsList.length) {
+          return mapSubscriptionsAsCsv(allSubscriptionsList)
         }
         return ''
       }

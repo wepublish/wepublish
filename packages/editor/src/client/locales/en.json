@@ -793,7 +793,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newUser": "New User",
-        "exportSubscription": "Export",
+        "exportSubscriptionsCsv": "Export CSV",
         "noDescription": "No Description",
         "noUsersFound": "No Users found",
         "resetPassword": "Reset Password",
@@ -802,8 +802,9 @@
         "users": "Users"
       },
       "panels": {
-        "result": "Result",
-        "exportSubscription": "Export",
+        "csvData": "CSV Data",
+        "exportSubscriptions": "Export",
+        "noUsersWithSubscriptions": "Currently, No users have subscriptions",
         "active": "Active",
         "addUserRole": "Add User Role",
         "cancel": "Cancel",
