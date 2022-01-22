@@ -35,7 +35,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "mongodb": "^3.5.4",
-    "nanoid": "^2.1.11"
+    "nanoid": "^3.1.31"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
