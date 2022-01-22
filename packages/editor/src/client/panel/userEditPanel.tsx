@@ -52,7 +52,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
-  const [isUserSubscriptonEditOpen, setIsUserSubscriptonEditOpen] = useState(false)
+  const [isUserSubscriptionEditOpen, setIsUserSubscriptionEditOpen] = useState(false)
 
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
@@ -266,7 +266,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           <Button
             disabled={isDisabled || id === undefined}
             appearance="primary"
-            onClick={() => setIsUserSubscriptonEditOpen(true)}>
+            onClick={() => setIsUserSubscriptionEditOpen(true)}>
             {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
           </Button>
           {id === undefined && (
@@ -306,17 +306,16 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         </Modal.Footer>
       </Modal>
 
-      {id !== undefined && (
+      {id && data?.user && (
         <Drawer
-          show={isUserSubscriptonEditOpen}
+          show={isUserSubscriptionEditOpen}
           size={'sm'}
-          onHide={() => setIsUserSubscriptonEditOpen(false)}>
+          onHide={() => setIsUserSubscriptionEditOpen(false)}>
           <UserSubscriptionEditPanel
-            userID={id}
-            subscription={subscription}
-            onClose={() => setIsUserSubscriptonEditOpen(false)}
+            user={{...data.user, subscription}}
+            onClose={() => setIsUserSubscriptionEditOpen(false)}
             onSave={value => {
-              setIsUserSubscriptonEditOpen(false)
+              setIsUserSubscriptionEditOpen(false)
               setUserSubscription(value)
             }}
           />
