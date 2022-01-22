@@ -237,6 +237,7 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+  | TeaserGridFlexBlock
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>
@@ -257,6 +258,7 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
+  teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>
 }
 
 export type Comment = {
@@ -396,6 +398,36 @@ export type FacebookVideoBlock = {
 export type FacebookVideoBlockInput = {
   userID: Scalars['String']
   videoID: Scalars['String']
+}
+
+export type FlexAlignment = {
+  __typename?: 'FlexAlignment'
+  i: Scalars['String']
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
+  static: Scalars['Boolean']
+}
+
+export type FlexAlignmentInput = {
+  i: Scalars['String']
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
+  static: Scalars['Boolean']
+}
+
+export type FlexTeaser = {
+  __typename?: 'FlexTeaser'
+  alignment: FlexAlignment
+  teaser?: Maybe<Teaser>
+}
+
+export type FlexTeaserInput = {
+  teaser?: Maybe<TeaserInput>
+  alignment: FlexAlignmentInput
 }
 
 export type GalleryImageEdge = {
@@ -1302,7 +1334,7 @@ export type Query = {
   authProviders: Array<AuthProvider>
   user?: Maybe<User>
   users: UserConnection
-  subscriptionAsCsv?: Maybe<Scalars['String']>
+  subscriptionsAsCsv?: Maybe<Scalars['String']>
   userRole?: Maybe<UserRole>
   userRoles: UserRoleConnection
   permissions?: Maybe<Array<Permission>>
@@ -1584,6 +1616,15 @@ export type TeaserGridBlock = {
 export type TeaserGridBlockInput = {
   teasers: Array<Maybe<TeaserInput>>
   numColumns: Scalars['Int']
+}
+
+export type TeaserGridFlexBlock = {
+  __typename?: 'TeaserGridFlexBlock'
+  flexTeasers: Array<Maybe<FlexTeaser>>
+}
+
+export type TeaserGridFlexBlockInput = {
+  flexTeasers: Array<FlexTeaserInput>
 }
 
 export type TeaserInput = {
@@ -2003,6 +2044,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
               | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+              | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
             >
           }
       }
@@ -2190,6 +2232,8 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
     >
   }
 
+type FullBlock_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'}
+
 export type FullBlockFragment =
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_ImageBlock_Fragment
@@ -2209,6 +2253,7 @@ export type FullBlockFragment =
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserGridFlexBlock_Fragment
 
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
@@ -2382,6 +2427,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
         >
       }
   }
@@ -2499,6 +2545,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
               | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+              | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
             >
           }
       }
