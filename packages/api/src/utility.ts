@@ -30,7 +30,8 @@ export function mapSubscriptionsAsCsv(items: User[]) {
       'startsAt',
       'paidUntil',
       'paymentMethodID',
-      'deactivatedAt'
+      'deactivationDate',
+      'deactivationReason'
     ].join(',') + '\n'
 
   items.forEach(({address, subscription, ...user}: User) => {
@@ -41,7 +42,6 @@ export function mapSubscriptionsAsCsv(items: User[]) {
         user.email,
         user.active,
         new Date(user.createdAt).toISOString(),
-        new Date(user.modifiedAt).toISOString(),
         new Date(user.modifiedAt).toISOString(),
         address?.company,
         address?.streetAddress,
@@ -56,7 +56,10 @@ export function mapSubscriptionsAsCsv(items: User[]) {
         new Date(subscription!.startsAt).toISOString(),
         subscription?.paidUntil,
         subscription!.paymentMethodID,
-        new Date(subscription!.deactivatedAt!).toISOString()
+        subscription!.deactivation?.date
+          ? new Date(subscription!.deactivation.date).toISOString()
+          : undefined,
+        subscription!.deactivation?.reason
       ].join(',') + '\r\n'
   })
   return csvStr

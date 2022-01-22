@@ -1605,6 +1605,12 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String']
 }
 
+export enum SubscriptionDeactivationReason {
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
+  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserGridBlock = {
@@ -1817,13 +1823,25 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
   paymentMethod: PaymentMethod
-  deactivatedAt?: Maybe<Scalars['DateTime']>
+  deactivation?: Maybe<UserSubscriptionDeactivation>
+}
+
+export type UserSubscriptionDeactivation = {
+  __typename?: 'UserSubscriptionDeactivation'
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
+}
+
+export type UserSubscriptionDeactivationInput = {
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
 }
 
 export type UserSubscriptionFilter = {
   startsAt?: Maybe<DateFilter>
   paidUntil?: Maybe<DateFilter>
-  deactivatedAt?: Maybe<DateFilter>
+  deactivationDate?: Maybe<DateFilter>
+  deactivationReason?: Maybe<SubscriptionDeactivationReason>
   autoRenew?: Maybe<Scalars['Boolean']>
 }
 
@@ -1835,7 +1853,7 @@ export type UserSubscriptionInput = {
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
   paymentMethodID: Scalars['String']
-  deactivatedAt?: Maybe<Scalars['DateTime']>
+  deactivation?: Maybe<UserSubscriptionDeactivationInput>
 }
 
 export type VimeoVideoBlock = {

@@ -422,10 +422,7 @@ export type Mutation = {
    * subscription. Updating user subscriptions will set deactivatedAt to null
    */
   updateUserSubscription?: Maybe<UserSubscription>
-  /**
-   * This mutation allows to cancel the user's subscription. The deactivation date
-   * will be either paidUntil or now and autoRenew will be set to false.
-   */
+  /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<UserSubscription>
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
@@ -829,6 +826,12 @@ export type SoundCloudTrackBlock = {
   trackID: Scalars['String']
 }
 
+export enum SubscriptionDeactivationReason {
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
+  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserGridBlock = {
@@ -907,7 +910,13 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
   paymentMethod: PaymentMethod
-  deactivatedAt?: Maybe<Scalars['DateTime']>
+  deactivation?: Maybe<UserSubscriptionDeactivation>
+}
+
+export type UserSubscriptionDeactivation = {
+  __typename?: 'UserSubscriptionDeactivation'
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
 }
 
 export type UserSubscriptionInput = {
