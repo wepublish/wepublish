@@ -602,6 +602,7 @@
       },
       "panels": {
         "addTag": "Press enter to add tag",
+        "advancedOptions": "Advanced options",
         "chooseImage": "Choose Image",
         "close": "Close",
         "confirm": "Confirm",
@@ -628,7 +629,7 @@
         "propertiesInfo": "Properties can be set per page. Public properties are accessible through the public API.",
         "public": "Public",
         "publishDate": "Publish Date",
-        "publishPage": "Publish Page",
+        "publishAt": "Available online from",
         "removeImage": "Remove Image",
         "saveAndClose": "Save and close",
         "slug": "Slug",
