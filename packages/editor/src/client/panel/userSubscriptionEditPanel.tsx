@@ -12,14 +12,18 @@ import {
   HelpBlock,
   Panel,
   SelectPicker,
-  Toggle
+  Toggle,
+  Modal,
+  Message
 } from 'rsuite'
 
 import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
+  FullUserFragment,
   FullUserSubscriptionFragment,
   PaymentPeriodicity,
+  SubscriptionDeactivationReason,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
   useUpdateUserSubscriptionMutation
@@ -27,22 +31,23 @@ import {
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
+import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 
 export interface UserSubscriptionEditPanelProps {
-  userID: string
-  subscription?: FullUserSubscriptionFragment
+  user: FullUserFragment
 
   onClose?(): void
   onSave?(subscription: FullUserSubscriptionFragment): void
 }
 
-export function UserSubscriptionEditPanel({
-  userID,
-  subscription,
-  onClose,
-  onSave
-}: UserSubscriptionEditPanelProps) {
+export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscriptionEditPanelProps) {
   const {t} = useTranslation()
+
+  const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
+
+  const [subscription, setSubscription] = useState<null | FullUserSubscriptionFragment>(
+    user.subscription ?? null
+  )
 
   const [memberPlan, setMemberPlan] = useState(subscription?.memberPlan)
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
@@ -60,9 +65,6 @@ export function UserSubscriptionEditPanel({
   )
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
   const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod)
-  const [deactivatedAt, setDeactivatedAt] = useState(
-    subscription?.deactivatedAt ? new Date(subscription.deactivatedAt) : null
-  )
 
   const {
     data: memberPlanData,
@@ -87,6 +89,10 @@ export function UserSubscriptionEditPanel({
     updateUserSubscription,
     {loading: isUpdating, error: updateError}
   ] = useUpdateUserSubscriptionMutation()
+
+  const isDeactivated = subscription?.deactivation?.date
+    ? new Date(subscription.deactivation.date) < new Date()
+    : false
 
   const isDisabled =
     isMemberPlanLoading ||
@@ -122,7 +128,7 @@ export function UserSubscriptionEditPanel({
 
     const {data} = await updateUserSubscription({
       variables: {
-        userID,
+        userID: user.id,
         input: {
           memberPlanID: memberPlan.id,
           monthlyAmount,
@@ -131,12 +137,66 @@ export function UserSubscriptionEditPanel({
           startsAt: startsAt.toISOString(),
           paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
-          deactivatedAt: deactivatedAt ? deactivatedAt.toISOString() : null
+          deactivation: subscription?.deactivation
+            ? {
+                date: subscription.deactivation.date,
+                reason: subscription.deactivation.reason
+              }
+            : null
         }
       }
     })
 
     if (data?.updateUserSubscription) onSave?.(data.updateUserSubscription)
+  }
+
+  async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
+    if (!memberPlan || !paymentMethod) return
+    const {data} = await updateUserSubscription({
+      variables: {
+        userID: user.id,
+        input: {
+          memberPlanID: memberPlan.id,
+          monthlyAmount,
+          paymentPeriodicity,
+          autoRenew,
+          startsAt: startsAt.toISOString(),
+          paidUntil: paidUntil ? paidUntil.toISOString() : null,
+          paymentMethodID: paymentMethod.id,
+          deactivation: {
+            reason,
+            date: date.toISOString()
+          }
+        }
+      }
+    })
+
+    if (data?.updateUserSubscription) {
+      setSubscription(data.updateUserSubscription)
+    }
+  }
+
+  async function handleReactivation() {
+    if (!memberPlan || !paymentMethod) return
+    const {data} = await updateUserSubscription({
+      variables: {
+        userID: user.id,
+        input: {
+          memberPlanID: memberPlan.id,
+          monthlyAmount,
+          paymentPeriodicity,
+          autoRenew,
+          startsAt: startsAt.toISOString(),
+          paidUntil: paidUntil ? paidUntil.toISOString() : null,
+          paymentMethodID: paymentMethod.id,
+          deactivation: null
+        }
+      }
+    })
+
+    if (data?.updateUserSubscription) {
+      setSubscription(data.updateUserSubscription)
+    }
   }
 
   return (
@@ -150,13 +210,25 @@ export function UserSubscriptionEditPanel({
       </Drawer.Header>
 
       <Drawer.Body>
+        {subscription?.deactivation && (
+          <Message
+            showIcon
+            type="info"
+            description={t(
+              new Date(subscription.deactivation.date) < new Date()
+                ? 'userSubscriptionEdit.deactivation.isDeactivated'
+                : 'userSubscriptionEdit.deactivation.willBeDeactivated',
+              {date: new Date(subscription.deactivation.date)}
+            )}
+          />
+        )}
         <Panel>
           <Form fluid={true}>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
               <SelectPicker
                 block
-                disabled={isDisabled}
+                disabled={isDisabled || isDeactivated}
                 data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
                 value={subscription?.memberPlan.id}
                 onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
@@ -177,7 +249,7 @@ export function UserSubscriptionEditPanel({
                 name={t('userSubscriptionEdit.monthlyAmount')}
                 value={monthlyAmount}
                 type="number"
-                disabled={isDisabled || hasNoMemberPlanSelected}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => {
                   setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
                 }}
@@ -191,6 +263,7 @@ export function UserSubscriptionEditPanel({
                   value: pp,
                   label: t(`memberPlanList.paymentPeriodicity.${pp}`)
                 }))}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setPaymentPeriodicity(value)}
                 block
               />
@@ -199,7 +272,7 @@ export function UserSubscriptionEditPanel({
               <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
               <Toggle
                 checked={autoRenew}
-                disabled={isDisabled || hasNoMemberPlanSelected}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setAutoRenew(value)}
               />
               <HelpBlock>{t('userSubscriptionEdit.autoRenewDescription')}</HelpBlock>
@@ -209,7 +282,7 @@ export function UserSubscriptionEditPanel({
               <DatePicker
                 block
                 value={startsAt}
-                disabled={isDisabled || hasNoMemberPlanSelected}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value)}
               />
             </FormGroup>
@@ -225,37 +298,64 @@ export function UserSubscriptionEditPanel({
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
               <SelectPicker
                 block
-                disabled={isDisabled || hasNoMemberPlanSelected}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
                 value={subscription?.paymentMethod.id}
                 onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
               />
             </FormGroup>
-            {/* TODO Payment Method */}
-
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.deactivatedAt')}</ControlLabel>
-              <DatePicker
-                block
-                placement="auto"
-                value={deactivatedAt ?? undefined}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={value => setDeactivatedAt(value)}
-              />
-            </FormGroup>
           </Form>
-          {/* TODO: implement end subscription */}
         </Panel>
+        {subscription && subscription.paymentMethod && subscription.memberPlan && (
+          <Panel>
+            <Button
+              appearance={'primary'}
+              disabled={isDisabled}
+              onClick={() => setDeactivationPanelOpen(true)}>
+              {t(
+                subscription.deactivation
+                  ? 'userSubscriptionEdit.deactivation.title.deactivated'
+                  : 'userSubscriptionEdit.deactivation.title.activated'
+              )}
+            </Button>
+          </Panel>
+        )}
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+        <Button
+          appearance={'primary'}
+          disabled={isDisabled || isDeactivated}
+          onClick={() => handleSave()}>
           {subscription ? t('save') : t('create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('close')}
         </Button>
       </Drawer.Footer>
+
+      {subscription && (
+        <Modal
+          show={isDeactivationPanelOpen}
+          size={'sm'}
+          backdrop={'static'}
+          keyboard={false}
+          onHide={() => setDeactivationPanelOpen(false)}>
+          <UserSubscriptionDeactivatePanel
+            user={user}
+            isDeactivated={!!subscription.deactivation}
+            onDeactivate={async data => {
+              await handleDeactivation(data.date, data.reason)
+              setDeactivationPanelOpen(false)
+            }}
+            onReactivate={async () => {
+              await handleReactivation()
+              setDeactivationPanelOpen(false)
+            }}
+            onClose={() => setDeactivationPanelOpen(false)}
+          />
+        </Modal>
+      )}
     </>
   )
 }

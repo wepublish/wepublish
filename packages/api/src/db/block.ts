@@ -19,7 +19,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  TeaserGridFlex = 'teaserGridFlex'
 }
 
 export interface RichTextBlock {
@@ -191,6 +192,25 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+export interface FlexAlignment {
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
+  static: boolean
+}
+
+export interface FlexTeaser {
+  alignment: FlexAlignment
+  teaser: Teaser | null
+}
+
+export interface TeaserGridFlexBlock {
+  type: BlockType.TeaserGridFlex
+  flexTeasers: FlexTeaser[]
+}
+
 export type ArticleBlock =
   | RichTextBlock
   | ImageBlock
@@ -208,6 +228,7 @@ export type ArticleBlock =
   | PolisConversationBlock
   | BildwurfAdBlock
   | TeaserGridBlock
+  | TeaserGridFlexBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

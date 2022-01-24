@@ -220,7 +220,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -241,6 +241,7 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
+  teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
 };
 
 
@@ -382,6 +383,36 @@ export type FacebookVideoBlock = {
 export type FacebookVideoBlockInput = {
   userID: Scalars['String'];
   videoID: Scalars['String'];
+};
+
+export type FlexAlignment = {
+  __typename?: 'FlexAlignment';
+  i: Scalars['String'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+  static: Scalars['Boolean'];
+};
+
+export type FlexAlignmentInput = {
+  i: Scalars['String'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+  static: Scalars['Boolean'];
+};
+
+export type FlexTeaser = {
+  __typename?: 'FlexTeaser';
+  alignment: FlexAlignment;
+  teaser?: Maybe<Teaser>;
+};
+
+export type FlexTeaserInput = {
+  teaser?: Maybe<TeaserInput>;
+  alignment: FlexAlignmentInput;
 };
 
 export type GalleryImageEdge = {
@@ -1644,6 +1675,12 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
+export enum SubscriptionDeactivationReason {
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
+  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserGridBlock = {
@@ -1655,6 +1692,15 @@ export type TeaserGridBlock = {
 export type TeaserGridBlockInput = {
   teasers: Array<Maybe<TeaserInput>>;
   numColumns: Scalars['Int'];
+};
+
+export type TeaserGridFlexBlock = {
+  __typename?: 'TeaserGridFlexBlock';
+  flexTeasers: Array<Maybe<FlexTeaser>>;
+};
+
+export type TeaserGridFlexBlockInput = {
+  flexTeasers: Array<FlexTeaserInput>;
 };
 
 export type TeaserInput = {
@@ -1848,13 +1894,25 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
+  deactivation?: Maybe<UserSubscriptionDeactivation>;
+};
+
+export type UserSubscriptionDeactivation = {
+  __typename?: 'UserSubscriptionDeactivation';
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
+};
+
+export type UserSubscriptionDeactivationInput = {
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
 };
 
 export type UserSubscriptionFilter = {
   startsAt?: Maybe<DateFilter>;
   paidUntil?: Maybe<DateFilter>;
-  deactivatedAt?: Maybe<DateFilter>;
+  deactivationDate?: Maybe<DateFilter>;
+  deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
 };
 
@@ -1866,7 +1924,7 @@ export type UserSubscriptionInput = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
+  deactivation?: Maybe<UserSubscriptionDeactivationInput>;
 };
 
 export type VimeoVideoBlock = {
@@ -2167,6 +2225,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'TeaserGridFlexBlock' }
+        & FullBlock_TeaserGridFlexBlock_Fragment
       )> }
     ) }
   )> }
@@ -2510,7 +2571,27 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+type FullBlock_TeaserGridFlexBlock_Fragment = (
+  { __typename: 'TeaserGridFlexBlock' }
+  & { flexTeasers: Array<Maybe<(
+    { __typename?: 'FlexTeaser' }
+    & { alignment: (
+      { __typename?: 'FlexAlignment' }
+      & Pick<FlexAlignment, 'i' | 'x' | 'y' | 'w' | 'h' | 'static'>
+    ), teaser?: Maybe<(
+      { __typename?: 'ArticleTeaser' }
+      & FullTeaser_ArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PeerArticleTeaser' }
+      & FullTeaser_PeerArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PageTeaser' }
+      & FullTeaser_PageTeaser_Fragment
+    )> }
+  )>> }
+);
+
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -3126,6 +3207,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'TeaserGridFlexBlock' }
+        & FullBlock_TeaserGridFlexBlock_Fragment
       )> }
     ) }
   )> }
@@ -3387,14 +3471,17 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
   & { memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
   ), paymentMethod: (
     { __typename?: 'PaymentMethod' }
     & FullPaymentMethodFragment
-  ) }
+  ), deactivation?: Maybe<(
+    { __typename?: 'UserSubscriptionDeactivation' }
+    & Pick<UserSubscriptionDeactivation, 'date' | 'reason'>
+  )> }
 );
 
 export type FullUserFragment = (
@@ -3953,6 +4040,21 @@ export const FullBlockFragmentDoc = gql`
     }
     numColumns
   }
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      teaser {
+        ...FullTeaser
+      }
+    }
+  }
 }
     ${ImageRefFragmentDoc}
 ${FullTeaserFragmentDoc}`;
@@ -4033,7 +4135,10 @@ export const FullUserSubscriptionFragmentDoc = gql`
   paymentMethod {
     ...FullPaymentMethod
   }
-  deactivatedAt
+  deactivation {
+    date
+    reason
+  }
 }
     ${FullMemberPlanFragmentDoc}
 ${FullPaymentMethodFragmentDoc}`;
