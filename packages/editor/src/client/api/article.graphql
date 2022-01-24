@@ -15,12 +15,14 @@ fragment MutationArticle on Article {
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
@@ -117,7 +119,7 @@ mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
 
 mutation PublishArticle(
   $id: ID!
-  $publishAt: DateTime!
+  $publishAt: DateTime
   $publishedAt: DateTime!
   $updatedAt: DateTime!
 ) {

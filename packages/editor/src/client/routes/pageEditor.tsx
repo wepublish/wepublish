@@ -237,7 +237,7 @@ export function PageEditor({id}: PageEditorProps) {
         const {data: publishData} = await publishPage({
           variables: {
             id: pageID,
-            publishAt: publishAt.toISOString(),
+            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
             publishedAt: publishedAt.toISOString(),
             updatedAt: updatedAt.toISOString()
           }

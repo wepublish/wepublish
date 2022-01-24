@@ -384,7 +384,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            publishAt: publishAt.toISOString(),
+            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
             publishedAt: publishedAt.toISOString(),
             updatedAt: updatedAt.toISOString()
           }
@@ -396,8 +396,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         if (publishData?.publishArticle?.latest?.updatedAt) {
           setUpdatedAt(new Date(publishData?.publishArticle?.latest.updatedAt))
         }
-        if (publishData?.publishArticle?.pending?.publishAt) {
-          setPublishAt(new Date(publishData?.publishArticle?.pending.publishAt))
+        if (publishData?.publishArticle?.latest?.publishAt) {
+          setPublishAt(new Date(publishData?.publishArticle?.latest.publishAt))
         } else {
           setPublishAt(new Date())
         }
@@ -559,6 +559,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishedAt, updatedAt, publishAt) => {
             handlePublish(publishedAt, updatedAt, publishAt)
+            console.log('publishAt', publishAt)
             setPublishDialogOpen(false)
           }}
         />

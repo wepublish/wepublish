@@ -1898,10 +1898,10 @@ export type MutationArticleFragment = (
     & Pick<ArticleRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   ) }
 );
 
@@ -2015,7 +2015,7 @@ export type UpdateArticleMutation = (
 
 export type PublishArticleMutationVariables = Exact<{
   id: Scalars['ID'];
-  publishAt: Scalars['DateTime'];
+  publishAt?: Maybe<Scalars['DateTime']>;
   publishedAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 }>;
@@ -3655,11 +3655,13 @@ export const MutationArticleFragmentDoc = gql`
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
@@ -4351,7 +4353,7 @@ export type UpdateArticleMutationHookResult = ReturnType<typeof useUpdateArticle
 export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMutation>;
 export type UpdateArticleMutationOptions = Apollo.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
 export const PublishArticleDocument = gql`
-    mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
+    mutation PublishArticle($id: ID!, $publishAt: DateTime, $publishedAt: DateTime!, $updatedAt: DateTime!) {
   publishArticle(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
     ...MutationArticle
   }
