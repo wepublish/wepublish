@@ -18,10 +18,12 @@ export class MediaServerError extends Error {
 
 export class KarmaMediaAdapter implements MediaAdapter {
   readonly url: URL
+  readonly internalURL: URL
   readonly token: string
 
-  constructor(url: URL, token: string) {
+  constructor(url: URL, internalURL: URL, token: string) {
     this.url = url
+    this.internalURL = internalURL ?? url
     this.token = token
   }
 
@@ -31,7 +33,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false
 
-    const response = await fetch(this.url, {
+    const response = await fetch(this.internalURL, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form
@@ -81,7 +83,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
   }
 
   async deleteImage(id: string): Promise<boolean> {
-    const response = await fetch(`${this.url}${id}`, {
+    const response = await fetch(`${this.internalURL}${id}`, {
       method: 'DELETE',
       headers: {authorization: `Bearer ${this.token}`}
     })
