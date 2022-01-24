@@ -12,20 +12,20 @@ import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 
 export interface PublishArticlePanelProps {
-  initialPublishDate?: Date
-  initialUpdateDate?: Date
-  availableFromDate?: Date
+  publishedAtDate?: Date
+  updatedAtDate?: Date
+  publishAtDate?: Date
   pendingPublishDate?: Date
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishDate: Date, updateDate: Date, availableOnlineFrom: Date): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
 }
 
 export function PublishArticlePanel({
-  initialPublishDate,
-  initialUpdateDate,
-  availableFromDate,
+  publishedAtDate,
+  updatedAtDate,
+  publishAtDate,
   pendingPublishDate,
   metadata,
   onClose,
@@ -33,13 +33,11 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
+  const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
 
-  const [availableOnlineFrom, setAvailableOnlineFrom] = useState<Date | undefined>(
-    availableFromDate ?? undefined
-  )
+  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
 
-  const [updateDate, setUpdateDate] = useState<Date | undefined>(initialUpdateDate ?? now)
+  const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
   const {t} = useTranslation()
 
@@ -60,14 +58,14 @@ export function PublishArticlePanel({
         )}
 
         <DateTimePicker
-          dateTime={publishDate}
+          dateTime={publishedAt}
           label={t('articleEditor.panels.publishDate')}
-          changeDate={date => setPublishDate(date)}
+          changeDate={date => setPublishedAt(date)}
         />
         <DateTimePicker
-          dateTime={updateDate}
+          dateTime={updatedAt}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setUpdateDate(date)}
+          changeDate={date => setupdatedAt(date)}
         />
 
         <Panel
@@ -75,9 +73,9 @@ export function PublishArticlePanel({
           collapsible
           className="availableFromPublishPanel">
           <DateTimePicker
-            dateTime={availableOnlineFrom}
-            label={t('articleEditor.panels.availableOnlineFrom')}
-            changeDate={date => setAvailableOnlineFrom(date)}
+            dateTime={publishAt}
+            label={t('articleEditor.panels.publishAt')}
+            changeDate={date => setpublishAt(date)}
           />
         </Panel>
 
@@ -175,8 +173,8 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishDate || !updateDate || !metadata.slug}
-          onClick={() => onConfirm(publishDate!, updateDate!, availableOnlineFrom!)}>
+          disabled={!publishedAt || !updatedAt || !metadata.slug}
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
           {t('articleEditor.panels.confirm')}
         </Button>
 

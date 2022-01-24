@@ -369,7 +369,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date, availableOnlineFrom: Date) {
+  async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
     if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
@@ -384,9 +384,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            publishAt: availableOnlineFrom.toISOString(),
-            publishedAt: publishDate.toISOString(),
-            updatedAt: updateDate.toISOString()
+            publishAt: publishAt.toISOString(),
+            publishedAt: publishedAt.toISOString(),
+            updatedAt: updatedAt.toISOString()
           }
         })
 
@@ -402,11 +402,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           setPublishAt(new Date())
         }
       }
-
       setChanged(false)
       Notification.success({
         title: t(
-          publishDate <= new Date()
+          publishedAt <= new Date()
             ? 'articleEditor.overview.articlePublished'
             : 'articleEditor.overview.articlePending'
         ),
@@ -552,14 +551,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
-          initialPublishDate={publishedAt}
-          initialUpdateDate={updatedAt}
+          publishedAtDate={publishedAt}
+          updatedAtDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
-          availableFromDate={publishAt}
+          publishAtDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishDate, updateDate, availableOnlineFrom) => {
-            handlePublish(publishDate, updateDate, availableOnlineFrom)
+          onConfirm={(publishedAt, updatedAt, publishAt) => {
+            handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
           }}
         />
