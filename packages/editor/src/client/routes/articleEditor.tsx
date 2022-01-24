@@ -174,7 +174,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       const {updatedAt} = latest ?? {}
       if (updatedAt) setUpdatedAt(new Date(updatedAt))
 
-      const {publishAt} = pending ?? {}
+      const {publishAt} = pending ?? latest
       if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({

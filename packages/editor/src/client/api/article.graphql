@@ -162,11 +162,13 @@ query Article($id: ID!) {
     published {
       publishedAt
       updatedAt
+      publishAt
     }
 
     latest {
       publishedAt
       updatedAt
+      publishAt
       revision
       slug
       preTitle

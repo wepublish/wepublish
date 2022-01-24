@@ -35,7 +35,7 @@ export function PublishArticlePanel({
 
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
 
-  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
+  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? now)
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 

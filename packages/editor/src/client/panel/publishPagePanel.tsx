@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, Message, Modal} from 'rsuite'
+import {Button, Message, Modal, Panel} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -12,16 +12,20 @@ import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
 
 export interface PublishPagePanelProps {
-  initialPublishDate?: Date
+  publishedAtDate?: Date
+  updatedAtDate?: Date
+  publishAtDate?: Date
   pendingPublishDate?: Date
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishDate: Date, updateDate: Date): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
 }
 
 export function PublishPagePanel({
-  initialPublishDate,
+  publishedAtDate,
+  updatedAtDate,
+  publishAtDate,
   pendingPublishDate,
   metadata,
   onClose,
@@ -29,10 +33,11 @@ export function PublishPagePanel({
 }: PublishPagePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(
-    pendingPublishDate ?? initialPublishDate ?? now
-  )
-  const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
+  const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
+
+  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? now)
+
+  const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
   const {t} = useTranslation()
 
@@ -50,15 +55,26 @@ export function PublishPagePanel({
           />
         )}
         <DateTimePicker
-          dateTime={publishDate}
+          dateTime={publishedAt}
           label={t('articleEditor.panels.publishDate')}
-          changeDate={date => setPublishDate(date)}
+          changeDate={date => setPublishedAt(date)}
         />
         <DateTimePicker
-          dateTime={updateDate}
+          dateTime={updatedAt}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setUpdateDate(date)}
+          changeDate={date => setupdatedAt(date)}
         />
+
+        <Panel
+          header={t('articleEditor.panels.advancedOptions')}
+          collapsible
+          className="availableFromPublishPanel">
+          <DateTimePicker
+            dateTime={publishAt}
+            label={t('articleEditor.panels.publishAt')}
+            changeDate={date => setpublishAt(date)}
+          />
+        </Panel>
 
         <DescriptionList>
           <DescriptionListItemWithMessage
@@ -116,8 +132,11 @@ export function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishDate || !updateDate}
-          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          disabled={!publishedAt || !updatedAt}
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}
+          onMouseOver={() =>
+            console.log('publishAt', publishAt, 'updatedAt', updatedAt, 'publishedAt', publishedAt)
+          }>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>

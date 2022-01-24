@@ -128,11 +128,13 @@ query Page($id: ID!) {
     published {
       publishedAt
       updatedAt
+      publishAt
     }
 
     latest {
       publishedAt
       updatedAt
+      publishAt
       slug
       title
       description
