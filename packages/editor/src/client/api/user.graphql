@@ -10,7 +10,10 @@ fragment FullUserSubscription on UserSubscription {
     paymentMethod {
         ...FullPaymentMethod
     }
-    deactivatedAt
+    deactivation {
+        date
+        reason
+    }
 }
 
 fragment FullUser on User {

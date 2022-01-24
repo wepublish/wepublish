@@ -82,6 +82,20 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
           }
         }
 
+      case 'TeaserGridFlexBlock':
+        return {
+          type: BlockType.FlexGrid,
+          key: index,
+          value: {
+            flexTeasers: block.flexTeasers?.map(({alignment, teaser}: any) => {
+              return {
+                alignment,
+                blocks: articlesToTeasers([teaser])
+              }
+            })
+          }
+        }
+
       case 'ListicleBlock':
         return {
           type: BlockType.Listicle,
