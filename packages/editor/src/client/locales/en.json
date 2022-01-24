@@ -628,6 +628,7 @@
         "properties": "Properties",
         "propertiesInfo": "Properties can be set per page. Public properties are accessible through the public API.",
         "public": "Public",
+        "publishPage": "Publish Page",
         "publishDate": "Publish Date",
         "publishAt": "Available online from",
         "removeImage": "Remove Image",

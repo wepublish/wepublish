@@ -254,7 +254,6 @@ export function PageEditor({id}: PageEditorProps) {
         } else {
           setPublishAt(new Date())
         }
-        console.log(publishData)
       }
       await refetch({id: pageID})
     }

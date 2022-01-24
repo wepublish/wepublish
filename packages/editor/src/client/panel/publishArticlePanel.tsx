@@ -69,12 +69,12 @@ export function PublishArticlePanel({
         />
 
         <Panel
-          header={t('pageEditor.panels.advancedOptions')}
+          header={t('articleEditor.panels.advancedOptions')}
           collapsible
           className="availableFromPublishPanel">
           <DateTimePicker
             dateTime={publishAt}
-            label={t('pageEditor.panels.publishAt')}
+            label={t('articleEditor.panels.publishAt')}
             changeDate={date => setpublishAt(date)}
           />
         </Panel>

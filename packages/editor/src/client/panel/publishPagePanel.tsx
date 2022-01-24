@@ -56,22 +56,22 @@ export function PublishPagePanel({
         )}
         <DateTimePicker
           dateTime={publishedAt}
-          label={t('articleEditor.panels.publishDate')}
+          label={t('pageEditor.panels.publishDate')}
           changeDate={date => setPublishedAt(date)}
         />
         <DateTimePicker
           dateTime={updatedAt}
-          label={t('articleEditor.panels.updateDate')}
+          label={t('pageEditor.panels.updateDate')}
           changeDate={date => setupdatedAt(date)}
         />
 
         <Panel
-          header={t('articleEditor.panels.advancedOptions')}
+          header={t('pageEditor.panels.advancedOptions')}
           collapsible
           className="availableFromPublishPanel">
           <DateTimePicker
             dateTime={publishAt}
-            label={t('articleEditor.panels.publishAt')}
+            label={t('pageEditor.panels.publishAt')}
             changeDate={date => setpublishAt(date)}
           />
         </Panel>
@@ -133,10 +133,7 @@ export function PublishPagePanel({
         <Button
           appearance="primary"
           disabled={!publishedAt || !updatedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}
-          onMouseOver={() =>
-            console.log('publishAt', publishAt, 'updatedAt', updatedAt, 'publishedAt', publishedAt)
-          }>
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
