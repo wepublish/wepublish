@@ -12,7 +12,6 @@ import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 
 export interface PublishArticlePanelProps {
-  url?: string | null
   initialPublishDate?: Date
   pendingPublishDate?: Date
   metadata: ArticleMetadata
@@ -22,7 +21,6 @@ export interface PublishArticlePanelProps {
 }
 
 export function PublishArticlePanel({
-  url,
   initialPublishDate,
   pendingPublishDate,
   metadata,
@@ -66,9 +64,9 @@ export function PublishArticlePanel({
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.url')}>
-            {url ? (
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                {url}
+            {metadata?.url ? (
+              <a href={metadata.url} target="_blank" rel="noopener noreferrer">
+                {metadata.url}
               </a>
             ) : (
               '-'

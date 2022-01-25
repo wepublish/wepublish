@@ -128,7 +128,19 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     canonicalUrl: {type: GraphQLString},
 
-    url: {type: GraphQLString},
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(({slug}, args, {urlAdapter}, info) => {
+        const id = info.variableValues.id
+
+        if (!slug) return ''
+
+        return urlAdapter.getPublicArticleURL({
+          id,
+          slug
+        } as PublicArticle)
+      })
+    },
 
     image: {
       type: GraphQLImage,
@@ -179,78 +191,21 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     draft: {
-      type: GraphQLArticleRevision,
-      resolve: ({id, draft}, _, {urlAdapter}) => {
-        if (draft) {
-          return {
-            ...draft,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: draft.slug
-            })
-          }
-        } else return null
-      }
+      type: GraphQLArticleRevision
     },
 
     published: {
-      type: GraphQLArticleRevision,
-      resolve: ({id, published}, _, {urlAdapter}) => {
-        if (published) {
-          return {
-            ...published,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: published.slug
-            })
-          }
-        } else return null
-      }
+      type: GraphQLArticleRevision
     },
 
     pending: {
-      type: GraphQLArticleRevision,
-      resolve: ({id, pending}, _, {urlAdapter}) => {
-        if (pending) {
-          return {
-            ...pending,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: pending.slug
-            })
-          }
-        } else return null
-      }
+      type: GraphQLArticleRevision
     },
 
     latest: {
       type: GraphQLNonNull(GraphQLArticleRevision),
-      resolve: createProxyingResolver(({id, draft, pending, published}, {}, {urlAdapter}, info) => {
-        if (draft) {
-          return {
-            ...draft,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: draft.slug
-            })
-          }
-        } else if (pending) {
-          return {
-            ...pending,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: pending.slug
-            })
-          }
-        } else if (published) {
-          return {
-            ...published,
-            url: urlAdapter.getPublicArticleURL({
-              id: id,
-              slug: published.slug
-            })
-          }
-        } else return null
+      resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
+        return draft ?? pending ?? published
       })
     }
     // TODO: Implement article history

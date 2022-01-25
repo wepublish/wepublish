@@ -70,12 +70,6 @@ export interface PublicArticle extends ArticleData {
   readonly blocks: ArticleBlock[]
 }
 
-export interface PublicArticleUrlArgs {
-  readonly id: string
-
-  readonly slug: string
-}
-
 export interface ArticleFilter {
   readonly title?: string
   readonly draft?: boolean

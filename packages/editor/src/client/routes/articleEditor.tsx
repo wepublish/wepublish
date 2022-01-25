@@ -99,6 +99,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     seoTitle: '',
     authors: [],
     tags: [],
+    url: '',
     properties: [],
     canonicalUrl: '',
     shared: peerByDefault,
@@ -150,6 +151,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         seoTitle,
         lead,
         tags,
+        url,
         breaking,
         authors,
         image,
@@ -173,6 +175,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
         tags,
+        url,
         properties: properties.map(property => ({
           key: property.key,
           value: property.value,
@@ -533,7 +536,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
-          url={articleData?.article?.draft?.url || articleData?.article?.latest?.url}
           initialPublishDate={publishedAt}
           pendingPublishDate={pendingPublishDate}
           metadata={metadata}

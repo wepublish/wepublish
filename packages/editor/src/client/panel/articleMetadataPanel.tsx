@@ -46,6 +46,7 @@ export interface ArticleMetadata {
   readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
+  readonly url: string
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
   readonly image?: ImageRefFragment

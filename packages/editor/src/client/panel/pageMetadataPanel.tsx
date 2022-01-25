@@ -38,6 +38,7 @@ export interface PageMetadata {
   readonly title: string
   readonly description: string
   readonly tags: string[]
+  readonly url: string
   readonly properties: PageMetadataProperty[]
   readonly image?: ImageRefFragment
   readonly socialMediaTitle?: string

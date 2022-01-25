@@ -100,7 +100,7 @@ export type ArticleRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
