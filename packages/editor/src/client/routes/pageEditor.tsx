@@ -13,7 +13,8 @@ import {
   useCreatePageMutation,
   usePageQuery,
   usePublishPageMutation,
-  useUpdatePageMutation
+  useUpdatePageMutation,
+  usePagePreviewLinkLazyQuery
 } from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
@@ -34,6 +35,16 @@ export interface PageEditorProps {
 
 export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
+
+  const [previewLinkFetch, {data}] = usePagePreviewLinkLazyQuery({
+    fetchPolicy: 'no-cache'
+  })
+
+  useEffect(() => {
+    if (data?.pagePreviewLink) {
+      window.open(data?.pagePreviewLink)
+    }
+  }, [data?.pagePreviewLink])
 
   const [
     createPage,
@@ -323,6 +334,23 @@ export function PageEditor({id}: PageEditorProps) {
                     </>
                   )}
                 </div>
+              }
+              rightChildren={
+                <IconButtonLink
+                  disabled={hasChanged || !id}
+                  style={{marginTop: '4px'}}
+                  size={'lg'}
+                  icon={<Icon icon="eye" />}
+                  onClick={e => {
+                    previewLinkFetch({
+                      variables: {
+                        id: id!,
+                        hours: 1
+                      }
+                    })
+                  }}>
+                  {t('pageEditor.overview.preview')}
+                </IconButtonLink>
               }
             />
           }>

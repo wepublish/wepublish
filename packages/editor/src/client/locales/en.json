@@ -21,6 +21,7 @@
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
+        "preview": "Preview",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
@@ -236,6 +237,15 @@
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g."
         }
       },
+      "flexTeaser": {
+        "addBlock": "Add Block",
+        "removeBlock": "Remove Block",
+        "lockBlock": "Lock",
+        "unlockBlock": "Unlock",
+        "chooseTeaser": "Choose Teaser",
+        "editTeaser": "Edit Teaser",
+        "deleteTeaser": "Delete Teaser"
+      },
       "image": {
         "label": "Image",
         "overview": {
@@ -319,6 +329,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserFlexGrid": {
+        "label": "Flex Grid Teasers"
       }
     },
     "cancel": "Cancel",
@@ -589,6 +602,7 @@
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
+        "preview": "Preview",
         "save": "Save",
         "unpublish": "Unpublish",
         "preview": "Preview",
@@ -860,6 +874,32 @@
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
+      "deactivation": {
+        "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
+        "modalTitle": {
+          "deactivated": "Activate subscription?",
+          "activated": "Deactivate subscription?"
+        },
+        "modalMessage": {
+          "deactivated": "Do you want to re-activate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?",
+          "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
+        },
+        "title": {
+          "deactivated": "Reactivate subscription",
+          "activated": "Deactivate subscription"
+        },
+        "action": {
+          "deactivated": "Reactivate",
+          "activated": "Deactivate"
+        },
+        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "date": "Deactivation Date",
+        "reason": "Deactivation Reason",
+        "reasonNone": "None",
+        "reasonUserSelfDeactivated": "User wants to deactivate",
+        "reasonInvoiceNotPaid": "User did not pay invoices"
+      },
       "deactivatedAt": "Deactivated",
       "description": "Description",
       "editTitle": "Edit Subscription",

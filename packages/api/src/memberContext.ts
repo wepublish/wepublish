@@ -1,4 +1,10 @@
-import {PaymentProviderCustomer, User, UserSort, UserSubscription} from './db/user'
+import {
+  PaymentProviderCustomer,
+  SubscriptionDeactivationReason,
+  User,
+  UserSort,
+  UserSubscription
+} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
@@ -47,11 +53,16 @@ export interface SendReminderForInvoiceProps {
 export interface SendReminderForInvoicesProps {
   userPaymentURL: string
   replyToAddress: string
-  sendEveryDays?: number // defaults to 3
 }
 
 export interface CheckOpenInvoiceProps {
   invoice: Invoice
+}
+
+export interface DeactivateSubscriptionForUserProps {
+  userID: string
+  deactivationDate?: Date
+  deactivationReason?: SubscriptionDeactivationReason
 }
 
 export interface MemberContext {
@@ -74,6 +85,8 @@ export interface MemberContext {
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
   sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
+
+  deactivateSubscriptionForUser(props: DeactivateSubscriptionForUserProps): Promise<void>
 }
 
 export interface MemberContextProps {
@@ -110,6 +123,41 @@ function calculateAmountForPeriodicity(
       return monthlyAmount * 6
     case PaymentPeriodicity.Yearly:
       return monthlyAmount * 12
+  }
+}
+
+interface GetNextReminderAndDeactivationDateProps {
+  sentReminderAt: Date
+  createdAt: Date
+}
+
+interface ReminderAndDeactivationDate {
+  nextReminder: Date
+  deactivateSubscription: Date
+}
+
+function getNextReminderAndDeactivationDate({
+  sentReminderAt,
+  createdAt
+}: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
+  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') ?? 3
+  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') ?? 5
+
+  const nextReminder = new Date(
+    sentReminderAt.getTime() +
+      invoiceReminderFrequencyInDays * ONE_DAY_IN_MILLISECONDS -
+      ONE_HOUR_IN_MILLISECONDS
+  )
+
+  const deactivateSubscription = new Date(
+    createdAt.getTime() +
+      invoiceReminderFrequencyInDays * invoiceReminderMaxTries * ONE_DAY_IN_MILLISECONDS -
+      ONE_HOUR_IN_MILLISECONDS
+  )
+
+  return {
+    nextReminder,
+    deactivateSubscription
   }
 }
 
@@ -179,9 +227,9 @@ export class MemberContext implements MemberContext {
     userSubscription
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
-      const {periods = [], paidUntil, deactivatedAt} = userSubscription
+      const {periods = [], paidUntil, deactivation} = userSubscription
 
-      if (deactivatedAt) {
+      if (deactivation) {
         logger('memberContext').info(
           'Subscription for user %s is deactivated and will not be renewed',
           userID
@@ -397,6 +445,7 @@ export class MemberContext implements MemberContext {
   }
 
   async chargeOpenInvoices(): Promise<void> {
+    const today = new Date()
     const invoices = await this.dbAdapter.invoice.getInvoices({
       filter: {
         paidAt: {
@@ -420,6 +469,33 @@ export class MemberContext implements MemberContext {
       if (!invoice.userID) {
         logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
         continue
+      }
+
+      if (invoice.sentReminderAt) {
+        const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
+          sentReminderAt: invoice.sentReminderAt,
+          createdAt: invoice.createdAt
+        })
+
+        if (nextReminder > today) {
+          continue // skip reminder if not enough days passed
+        }
+
+        if (deactivateSubscription < today) {
+          await this.dbAdapter.invoice.updateInvoice({
+            id: invoice.id,
+            input: {
+              ...invoice,
+              canceledAt: today
+            }
+          })
+          await this.deactivateSubscriptionForUser({
+            userID: invoice.userID,
+            deactivationDate: today,
+            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+          })
+          continue
+        }
       }
 
       const user = await this.dbAdapter.user.getUserByID(invoice.userID)
@@ -553,13 +629,20 @@ export class MemberContext implements MemberContext {
           errorCode: intent.errorCode
         }
       })
+
+      await this.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          sentReminderAt: new Date()
+        }
+      })
     }
   }
 
   async sendReminderForInvoices({
     replyToAddress,
-    userPaymentURL,
-    sendEveryDays = 3
+    userPaymentURL
   }: SendReminderForInvoicesProps): Promise<void> {
     const today = new Date()
 
@@ -585,22 +668,36 @@ export class MemberContext implements MemberContext {
     }
 
     for (const invoice of invoices.nodes) {
-      if (
-        invoice.sentReminderAt &&
-        new Date(
-          invoice.sentReminderAt.getTime() +
-            sendEveryDays * ONE_DAY_IN_MILLISECONDS -
-            ONE_HOUR_IN_MILLISECONDS
-        ) > today
-      ) {
-        continue // skip reminder if not enough days passed
+      if (!invoice.userID) {
+        logger('memberContext').warn('invoice %s does not have a user ID', invoice.id)
+        continue
       }
 
-      // TODO: check if user is not active and if true skip.
+      if (invoice.sentReminderAt) {
+        const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
+          sentReminderAt: invoice.sentReminderAt,
+          createdAt: invoice.createdAt
+        })
 
-      if (!invoice.userID) {
-        logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
-        continue
+        if (nextReminder > today) {
+          continue // skip reminder if not enough days passed
+        }
+
+        if (deactivateSubscription < today) {
+          await this.dbAdapter.invoice.updateInvoice({
+            id: invoice.id,
+            input: {
+              ...invoice,
+              canceledAt: today
+            }
+          })
+          await this.deactivateSubscriptionForUser({
+            userID: invoice.userID,
+            deactivationDate: today,
+            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+          })
+          continue
+        }
       }
 
       const user = await this.dbAdapter.user.getUserByID(invoice.userID)
@@ -684,6 +781,32 @@ export class MemberContext implements MemberContext {
       input: {
         ...invoice,
         sentReminderAt: today
+      }
+    })
+  }
+
+  async deactivateSubscriptionForUser({
+    userID,
+    deactivationDate,
+    deactivationReason
+  }: DeactivateSubscriptionForUserProps): Promise<void> {
+    const user = await this.dbAdapter.user.getUserByID(userID)
+    if (!user || !user.subscription) {
+      logger('memberContext').info(
+        'User with ID: "%s" does not exist or does not have a subscription for deactivation',
+        userID
+      )
+      return
+    }
+
+    await this.dbAdapter.user.updateUserSubscription({
+      userID,
+      input: {
+        ...user.subscription,
+        deactivation: {
+          date: deactivationDate ?? user.subscription.paidUntil ?? new Date(),
+          reason: deactivationReason ?? SubscriptionDeactivationReason.None
+        }
       }
     })
   }

@@ -19,7 +19,8 @@ import {
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
-  useUpdateArticleMutation
+  useUpdateArticleMutation,
+  useArticlePreviewLinkLazyQuery
 } from '../api'
 
 import {
@@ -52,6 +53,16 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
+  const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
+    fetchPolicy: 'no-cache'
+  })
+
+  useEffect(() => {
+    if (data?.articlePreviewLink) {
+      window.open(data?.articlePreviewLink)
+    }
+  }, [data?.articlePreviewLink])
+
   const {t} = useTranslation()
 
   const {peerByDefault}: ClientSettings = JSON.parse(
@@ -481,6 +492,23 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                     </>
                   )}
                 </div>
+              }
+              rightChildren={
+                <IconButtonLink
+                  disabled={hasChanged || !id}
+                  style={{marginTop: '4px'}}
+                  size={'lg'}
+                  icon={<Icon icon="eye" />}
+                  onClick={e => {
+                    previewLinkFetch({
+                      variables: {
+                        id: id!,
+                        hours: 1
+                      }
+                    })
+                  }}>
+                  {t('articleEditor.overview.preview')}
+                </IconButtonLink>
               }
             />
           }>

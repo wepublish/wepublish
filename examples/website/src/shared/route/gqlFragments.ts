@@ -283,6 +283,80 @@ export const gridBlockFrontDataGQLfragment = gql`
   ${peerArticleMetaDataFragment}
 `
 
+export const flexGridBlockFrontDataGQLfragment = gql`
+  fragment ArticleFlexGridBlockData on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        x
+        y
+        w
+        h
+      }
+      teaser {
+        __typename
+
+        ... on ArticleTeaser {
+          style
+
+          image {
+            ...SimpleImageData
+          }
+
+          preTitle
+          title
+          lead
+
+          article {
+            ...ArticleMetaData
+          }
+        }
+
+        ... on PeerArticleTeaser {
+          style
+
+          image {
+            ...SimpleImageData
+          }
+
+          preTitle
+          title
+          lead
+
+          peer {
+            ...PeerMetaData
+          }
+
+          articleID
+          article {
+            ...PeerArticleMetaData
+          }
+        }
+
+        ... on PageTeaser {
+          style
+
+          image {
+            ...SimpleImageData
+          }
+
+          preTitle
+          title
+          lead
+
+          page {
+            ...PageMetaData
+          }
+        }
+      }
+    }
+  }
+  ${simpleImageDataFragment}
+  ${articleMetaDataFragment}
+  ${pageMetaDataFragment}
+  ${peerMetaDataFragment}
+  ${peerArticleMetaDataFragment}
+`
+
 // # transform(input: [{width: 1280, height: 400}])
 
 export const richTextBlockDataFragment = gql`

@@ -84,6 +84,17 @@ export interface DeleteUserSubscriptionPeriodArgs {
   readonly periodID: string
 }
 
+export enum SubscriptionDeactivationReason {
+  None,
+  UserSelfDeactivated,
+  InvoiceNotPaid
+}
+
+export interface SubscriptionDeactivation {
+  date: Date
+  reason: SubscriptionDeactivationReason
+}
+
 export interface UserSubscription {
   readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
@@ -93,7 +104,7 @@ export interface UserSubscription {
   readonly paidUntil: Date | null
   readonly periods: UserSubscriptionPeriod[]
   readonly paymentMethodID: string
-  readonly deactivatedAt: Date | null
+  readonly deactivation: SubscriptionDeactivation | null
 }
 
 export interface UserSubscriptionInput {
@@ -104,7 +115,7 @@ export interface UserSubscriptionInput {
   readonly startsAt: Date
   readonly paidUntil: Date | null
   readonly paymentMethodID: string
-  readonly deactivatedAt: Date | null
+  readonly deactivation: SubscriptionDeactivation | null
 }
 
 export interface UpdateUserSubscriptionArgs {
