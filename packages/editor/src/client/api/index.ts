@@ -1979,7 +1979,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'url' | 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
     & { authors: Array<Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
@@ -2148,13 +2148,13 @@ export type ArticleQuery = (
     & Pick<Article, 'id' | 'shared'>
     & { draft?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'url' | 'publishAt'>
+      & Pick<ArticleRevision, 'publishAt'>
     )>, pending?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'url' | 'publishAt'>
+      & Pick<ArticleRevision, 'publishAt'>
     )>, published?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'url' | 'publishedAt' | 'updatedAt'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
@@ -2999,7 +2999,7 @@ export type PageRefFragment = (
     & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'url' | 'publishedAt' | 'updatedAt' | 'revision' | 'title' | 'description'>
+    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'title' | 'description'>
     & { image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
@@ -3136,16 +3136,16 @@ export type PageQuery = (
     & Pick<Page, 'id'>
     & { draft?: Maybe<(
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'url' | 'publishAt'>
+      & Pick<PageRevision, 'publishAt'>
     )>, pending?: Maybe<(
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'url' | 'publishAt'>
+      & Pick<PageRevision, 'publishAt'>
     )>, published?: Maybe<(
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'url' | 'publishedAt' | 'updatedAt'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'url' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3817,7 +3817,6 @@ export const ArticleRefFragmentDoc = gql`
     revision
   }
   latest {
-    url
     publishedAt
     updatedAt
     revision
@@ -3889,7 +3888,6 @@ export const PageRefFragmentDoc = gql`
     revision
   }
   latest {
-    url
     publishedAt
     updatedAt
     revision
@@ -4632,15 +4630,12 @@ export const ArticleDocument = gql`
     id
     shared
     draft {
-      url
       publishAt
     }
     pending {
-      url
       publishAt
     }
     published {
-      url
       publishedAt
       updatedAt
     }
@@ -6027,15 +6022,12 @@ export const PageDocument = gql`
   page(id: $id) {
     id
     draft {
-      url
       publishAt
     }
     pending {
-      url
       publishAt
     }
     published {
-      url
       publishedAt
       updatedAt
     }
@@ -6044,12 +6036,12 @@ export const PageDocument = gql`
       updatedAt
       slug
       title
-      url
       description
       image {
         ...ImageRef
       }
       tags
+      url
       properties {
         key
         value

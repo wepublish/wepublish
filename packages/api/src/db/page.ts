@@ -98,7 +98,7 @@ export interface GetPageHistoryArgs {
   readonly id: string
 }
 
-export type PageInput = PageData
+export interface PageInput extends PageData {}
 
 export interface CreatePageArgs {
   readonly input: PageInput
