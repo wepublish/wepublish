@@ -161,7 +161,7 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
 
     latest: {
       type: GraphQLNonNull(GraphQLPageRevision),
-      resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
+      resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
     }
