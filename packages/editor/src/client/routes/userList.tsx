@@ -16,8 +16,8 @@ import {RouteActionType} from '@wepublish/karma.run-react'
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
-
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
+import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -33,7 +33,6 @@ import {
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
-import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
