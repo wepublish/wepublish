@@ -30,6 +30,7 @@ import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
 import path from 'path'
+import * as process from 'process'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -98,7 +99,10 @@ async function asyncMain() {
 
   const mediaAdapter = new KarmaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
-    process.env.MEDIA_SERVER_TOKEN
+    process.env.MEDIA_SERVER_TOKEN,
+    process.env.MEDIA_SERVER_INTERNAL_URL
+      ? new URL(process.env.MEDIA_SERVER_INTERNAL_URL)
+      : undefined
   )
 
   await MongoDBAdapter.initialize({

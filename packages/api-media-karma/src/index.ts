@@ -18,13 +18,13 @@ export class MediaServerError extends Error {
 
 export class KarmaMediaAdapter implements MediaAdapter {
   readonly url: URL
-  readonly internalURL: URL
   readonly token: string
+  readonly internalURL: URL
 
-  constructor(url: URL, internalURL: URL, token: string) {
+  constructor(url: URL, token: string, internalURL: URL = url) {
     this.url = url
-    this.internalURL = internalURL ?? url
     this.token = token
+    this.internalURL = internalURL
   }
 
   async _uploadImage(form: FormData): Promise<UploadImage> {
