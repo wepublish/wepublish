@@ -3,7 +3,16 @@ import React, {useState} from 'react'
 import './dateTimePicker.less'
 
 import DatePicker from 'react-datepicker'
-import {ControlLabel, Button, ButtonGroup, ButtonToolbar} from 'rsuite'
+import {
+  ControlLabel,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Icon,
+  IconButton,
+  Popover,
+  Whisper
+} from 'rsuite'
 
 import {useTranslation} from 'react-i18next'
 
@@ -19,6 +28,7 @@ export interface DateTimePickerProps {
 
   dateRanges?: DateTimePreset[]
   timeRanges?: DateTimePreset[]
+  helpInfo?: string
 }
 
 export function DateTimePicker({
@@ -26,7 +36,8 @@ export function DateTimePicker({
   label,
   changeDate,
   dateRanges,
-  timeRanges
+  timeRanges,
+  helpInfo
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
@@ -75,7 +86,24 @@ export function DateTimePicker({
   }
   return (
     <>
-      <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
+      {!helpInfo ? (
+        <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
+      ) : (
+        <div style={{marginTop: '5px'}}>
+          <ControlLabel style={{marginRight: '5px'}}>{label}</ControlLabel>
+          <Whisper
+            placement="right"
+            trigger="hover"
+            controlId="control-id-hover"
+            speaker={
+              <Popover>
+                <p>{helpInfo}</p>
+              </Popover>
+            }>
+            <IconButton icon={<Icon icon="info" />} circle size="xs" />
+          </Whisper>
+        </div>
+      )}
       <DatePicker
         isClearable
         showPopperArrow

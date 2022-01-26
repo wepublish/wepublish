@@ -78,30 +78,12 @@ export function PublishArticlePanel({
           header={t('articleEditor.panels.advancedOptions')}
           collapsible
           className="availableFromPublishPanel">
-          <div style={{display: 'flex', flexDirection: 'row'}}>
-            <div>
-              <DateTimePicker
-                dateTime={publishAt}
-                label={t('articleEditor.panels.publishAt')}
-                changeDate={date => setpublishAt(date)}
-              />
-            </div>
-            <Whisper
-              placement="right"
-              trigger="hover"
-              controlId="control-id-hover"
-              speaker={
-                <Popover>
-                  <p>{t('articleEditor.panels.dateExplanationPopOver')} </p>
-                </Popover>
-              }>
-              <IconButton
-                icon={<Icon icon="info" />}
-                circle
-                size="xs"
-                style={{marginTop: 35, marginLeft: 10}}></IconButton>
-            </Whisper>
-          </div>
+          <DateTimePicker
+            dateTime={publishAt}
+            label={t('articleEditor.panels.publishAt')}
+            changeDate={date => setpublishAt(date)}
+            helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
+          />
         </Panel>
 
         <DescriptionList>
