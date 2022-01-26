@@ -279,7 +279,21 @@ export function UserList() {
         />
       </Drawer>
 
-      <SubscriptionAsCsvModal onHide={() => setExportModalOpen(false)} isOpen={isExportModalOpen} />
+      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <SubscriptionAsCsvModal />
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={() => setExportModalOpen(false)} appearance="default">
+            {t('userList.panels.close')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
