@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Message, Modal, Panel} from 'rsuite'
+import {Button, Icon, IconButton, Message, Modal, Panel, Popover, Whisper} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
@@ -82,7 +82,7 @@ export function PublishArticlePanel({
         {updatedAt && publishedAt && updatedAt < publishedAt ? (
           <Message
             type="warning"
-            description={'The update date cannot be older than the publication date. '}></Message>
+            description={t('articleEditor.panels.updateDateWarning')}></Message>
         ) : (
           ''
         )}
@@ -90,11 +90,30 @@ export function PublishArticlePanel({
           header={t('articleEditor.panels.advancedOptions')}
           collapsible
           className="availableFromPublishPanel">
-          <DateTimePicker
-            dateTime={publishAt}
-            label={t('articleEditor.panels.publishAt')}
-            changeDate={date => setpublishAt(date)}
-          />
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            <div>
+              <DateTimePicker
+                dateTime={publishAt}
+                label={t('articleEditor.panels.publishAt')}
+                changeDate={date => setpublishAt(date)}
+              />
+            </div>
+            <Whisper
+              placement="right"
+              trigger="hover"
+              controlId="control-id-hover"
+              speaker={
+                <Popover>
+                  <p>{t('articleEditor.panels.dateExplanationPopOver')} </p>
+                </Popover>
+              }>
+              <IconButton
+                icon={<Icon icon="info" />}
+                circle
+                size="xs"
+                style={{marginTop: 35, marginLeft: 10}}></IconButton>
+            </Whisper>
+          </div>
         </Panel>
 
         <DescriptionList>
@@ -191,7 +210,7 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt || !metadata.slug}
+          disabled={!publishedAt || !updatedAt || !metadata.slug || updatedAt < publishedAt}
           onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
           {t('articleEditor.panels.confirm')}
         </Button>

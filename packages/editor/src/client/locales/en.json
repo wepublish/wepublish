@@ -50,6 +50,7 @@
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
+        "dateExplanationPopOver": "This message will explain precisely what the 'available online from' date does.",
         "default": "Default",
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published. <2>Slug Guide</2>",
@@ -134,6 +135,7 @@
         "untitled": "Untitled",
         "Untitled": "Untitled",
         "updateDate": "Update Date",
+        "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
         "value": "Value",
         "yes": "Yes",
@@ -653,6 +655,7 @@
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "updateDate": "Update Date",
+        "updateDateWarning": "The update date cannot be older than the publication date.",
         "value": "Value"
       }
     },

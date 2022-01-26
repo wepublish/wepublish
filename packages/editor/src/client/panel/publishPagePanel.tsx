@@ -64,6 +64,11 @@ export function PublishPagePanel({
           label={t('pageEditor.panels.updateDate')}
           changeDate={date => setupdatedAt(date)}
         />
+        {updatedAt && publishedAt && updatedAt < publishedAt ? (
+          <Message type="warning" description={t('pageEditor.panels.updateDateWarning')}></Message>
+        ) : (
+          ''
+        )}
 
         <Panel
           header={t('pageEditor.panels.advancedOptions')}
@@ -132,7 +137,7 @@ export function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt}
+          disabled={!publishedAt || !updatedAt || updatedAt < publishedAt}
           onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
           {t('pageEditor.panels.confirm')}
         </Button>
