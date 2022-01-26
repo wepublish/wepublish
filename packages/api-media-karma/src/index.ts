@@ -19,7 +19,7 @@ export class MediaServerError extends Error {
 export class KarmaMediaAdapter implements MediaAdapter {
   readonly url: URL
   readonly token: string
-  readonly internalURL: URL
+  readonly internalURL?: URL
 
   constructor(url: URL, token: string, internalURL: URL = url) {
     this.url = url
@@ -33,7 +33,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false
 
-    const response = await fetch(this.internalURL, {
+    const response = await fetch(this.internalURL ?? this.url, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form
