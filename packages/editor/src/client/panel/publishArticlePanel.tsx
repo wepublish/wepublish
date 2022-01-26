@@ -39,18 +39,6 @@ export function PublishArticlePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
-  // If updatedAt is older that publishedAt, set it to publishedAt
-  // If there is a date and the user doesn’t change it, leave it to what it was
-
-  // updatedAt can't be older than publishedAT
-  // should stay as initial value if user doens't change it
-
-  // useEffect(() => {
-  //   if (updatedAt && publishedAt && updatedAt < publishedAt)
-  //   console.log('updateAt cannot be older thant publication date')
-  //   // setupdatedAt(publishedAt)
-  // }, [publishedAt, updatedAt])
-
   const {t} = useTranslation()
 
   return (

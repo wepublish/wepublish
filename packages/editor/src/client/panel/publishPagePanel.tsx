@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, Message, Modal, Panel} from 'rsuite'
+import {Button, Icon, IconButton, Message, Modal, Panel, Popover, Whisper} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -79,6 +79,21 @@ export function PublishPagePanel({
             label={t('pageEditor.panels.publishAt')}
             changeDate={date => setpublishAt(date)}
           />
+          <Whisper
+            placement="right"
+            trigger="hover"
+            controlId="control-id-hover"
+            speaker={
+              <Popover>
+                <p>{t('pageEditor.panels.dateExplanationPopOver')} </p>
+              </Popover>
+            }>
+            <IconButton
+              icon={<Icon icon="info" />}
+              circle
+              size="xs"
+              style={{marginTop: 35, marginLeft: 10}}></IconButton>
+          </Whisper>
         </Panel>
 
         <DescriptionList>

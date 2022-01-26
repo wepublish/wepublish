@@ -621,6 +621,7 @@
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
+        "dateExplanationPopOver": "This message will explain precisely what the 'available online from' date does.",
         "description": "SEO Description",
         "descriptionHelpBlock": "Please use an SEO-optimised description",
         "editImage": "Edit Image",
