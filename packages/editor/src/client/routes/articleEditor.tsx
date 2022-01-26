@@ -405,7 +405,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setChanged(false)
       Notification.success({
         title: t(
-          publishedAt <= new Date()
+          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
             ? 'articleEditor.overview.articlePublished'
             : 'articleEditor.overview.articlePending'
         ),
@@ -559,7 +559,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishedAt, updatedAt, publishAt) => {
             handlePublish(publishedAt, updatedAt, publishAt)
-            console.log('publishAt', publishAt)
             setPublishDialogOpen(false)
           }}
         />

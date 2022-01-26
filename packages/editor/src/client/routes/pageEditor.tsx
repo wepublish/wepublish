@@ -261,7 +261,7 @@ export function PageEditor({id}: PageEditorProps) {
     setChanged(false)
     Notification.success({
       title: t(
-        publishedAt <= new Date()
+        publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
           ? 'pageEditor.overview.pagePublished'
           : 'pageEditor.overview.pagePending'
       ),
