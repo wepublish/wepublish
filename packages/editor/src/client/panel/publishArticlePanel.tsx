@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Icon, IconButton, Message, Modal, Panel, Popover, Whisper} from 'rsuite'
+import {Button, Message, Modal, Panel} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'

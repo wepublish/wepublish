@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, Icon, IconButton, Message, Modal, Panel, Popover, Whisper} from 'rsuite'
+import {Button, Message, Modal, Panel} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
