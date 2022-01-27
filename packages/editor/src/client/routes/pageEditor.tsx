@@ -249,8 +249,8 @@ export function PageEditor({id}: PageEditorProps) {
         if (publishData?.publishPage?.latest?.updatedAt) {
           setUpdatedAt(new Date(publishData?.publishPage?.latest.updatedAt))
         }
-        if (publishData?.publishPage?.pending?.publishAt) {
-          setPublishAt(new Date(publishData?.publishPage?.pending.publishAt))
+        if (publishData?.publishPage?.latest?.publishAt) {
+          setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
         } else {
           setPublishAt(new Date())
         }

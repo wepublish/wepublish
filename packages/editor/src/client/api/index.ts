@@ -2976,10 +2976,10 @@ export type MutationPageFragment = (
     & Pick<PageRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   )>, latest: (
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   ) }
 );
 
@@ -4273,11 +4273,13 @@ export const MutationPageFragmentDoc = gql`
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }

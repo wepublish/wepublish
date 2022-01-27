@@ -15,12 +15,14 @@ fragment MutationPage on Page {
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
