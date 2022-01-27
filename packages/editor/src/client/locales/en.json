@@ -34,7 +34,7 @@
         "advancedOptions": "Advanced options",
         "allowPeerPublishing": "Allow peers to publish this article.",
         "article": "Article",
-        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication. If you want to publish the article at a future date, you need to update the date available online from (in the advanced options).",
+        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication. If you want to change the publication date, you need to update the date available online from (in the advanced options).",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",
