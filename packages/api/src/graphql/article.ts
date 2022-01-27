@@ -130,14 +130,18 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver(({slug}, args, {urlAdapter}, info) => {
+      resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
         const id = info.variableValues.id
 
-        if (!slug) return ''
+        if (!id) return ''
 
         return urlAdapter.getPublicArticleURL({
+          ...articleRevision,
           id,
-          slug
+          shared: true,
+          updatedAt: new Date(),
+          publishAt: new Date(),
+          publishedAt: new Date()
         } as PublicArticle)
       })
     },
