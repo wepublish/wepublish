@@ -96,6 +96,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
     token: 'fake',
+    internalURL: new URL('https://internalurl.com'),
     getImageURL: jest.fn(),
 
     deleteImage: jest.fn(),
