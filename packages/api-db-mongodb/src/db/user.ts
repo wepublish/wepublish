@@ -399,7 +399,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       startsAt,
       paidUntil,
       paymentMethodID,
-      deactivatedAt
+      deactivation
     } = input
 
     const user = await this.getUserByID(userID)
@@ -419,7 +419,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           'subscription.periods': user.subscription?.periods ?? [],
           'subscription.paidUntil': paidUntil,
           'subscription.paymentMethodID': paymentMethodID,
-          'subscription.deactivatedAt': deactivatedAt
+          'subscription.deactivation': deactivation
         }
       },
       {returnOriginal: false}
