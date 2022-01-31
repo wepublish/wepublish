@@ -16,11 +16,11 @@ export interface PublishArticlePanelProps {
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
-  publishBehaviorDate?: Boolean
+  publishBehaviorDate?: boolean
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: Boolean): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: boolean): void
 }
 
 export function PublishArticlePanel({
@@ -41,15 +41,15 @@ export function PublishArticlePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
-  const [publishBehavior, setPublishBehavior] = useState<Boolean>(publishBehaviorDate ?? false)
+  const [publishBehavior, setPublishBehavior] = useState<boolean>(publishBehaviorDate ?? false)
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if ((!publishAtDate || publishAt === publishAt) && !publishBehavior) {
+    if (!publishBehavior) {
       setpublishAt(publishedAt)
     }
-  }, [publishBehavior, publishedAt])
+  }, [publishBehavior])
 
   return (
     <>

@@ -96,7 +96,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [publishAt, setPublishAt] = useState<Date>()
 
-  const [publishBehaviorDate, setPublishBehaviorDate] = useState<Boolean>()
+  const [publishBehaviorDate, setPublishBehaviorDate] = useState<boolean>()
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
@@ -371,7 +371,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function checkPublishBehavior(publishBehavior: Boolean) {
+  async function checkPublishBehavior(publishBehavior: boolean) {
     setPublishBehaviorDate(publishBehavior)
   }
 

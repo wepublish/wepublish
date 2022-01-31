@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
@@ -10,18 +10,17 @@ import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
-import {useEffect} from 'react'
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
-  publishBehaviorDate?: Boolean
+  publishBehaviorDate?: boolean
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: Boolean): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: boolean): void
 }
 
 export function PublishPagePanel({
@@ -42,15 +41,15 @@ export function PublishPagePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
-  const [publishBehavior, setPublishBehavior] = useState<Boolean>(publishBehaviorDate ?? false)
+  const [publishBehavior, setPublishBehavior] = useState<boolean>(publishBehaviorDate ?? false)
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if ((!publishAtDate || publishAt === publishAt) && !publishBehavior) {
+    if (!publishBehavior) {
       setpublishAt(publishedAt)
     }
-  }, [publishBehavior, publishedAt])
+  }, [publishBehavior])
 
   return (
     <>

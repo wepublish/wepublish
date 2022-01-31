@@ -68,7 +68,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
-  const [publishBehaviorDate, setPublishBehaviorDate] = useState<Boolean>()
+  const [publishBehaviorDate, setPublishBehaviorDate] = useState<boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -228,7 +228,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function checkPublishBehavior(publishBehavior: Boolean) {
+  async function checkPublishBehavior(publishBehavior: boolean) {
     setPublishBehaviorDate(publishBehavior)
   }
 
