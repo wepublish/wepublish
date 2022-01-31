@@ -116,7 +116,6 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
         return urlAdapter.getPublicPageURL({
           ...articleRevision,
           id,
-          shared: true,
           updatedAt: new Date(),
           publishedAt: new Date()
         } as PublicPage)
