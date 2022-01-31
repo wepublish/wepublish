@@ -46,10 +46,10 @@ export function PublishPagePanel({
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (!publishBehavior) {
+    if (!publishAt || !publishBehavior) {
       setpublishAt(publishedAt)
     }
-  }, [publishBehavior])
+  }, [publishBehavior, publishedAt])
 
   return (
     <>
