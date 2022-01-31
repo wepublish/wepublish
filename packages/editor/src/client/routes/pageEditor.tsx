@@ -68,6 +68,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
+  const [publishBehaviorDate, setPublishBehaviorDate] = useState<Boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -227,6 +228,10 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
+  async function checkPublishBehavior(publishBehavior: Boolean) {
+    setPublishBehaviorDate(publishBehavior)
+  }
+
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
     if (pageID) {
       const {data} = await updatePage({
@@ -342,7 +347,10 @@ export function PageEditor({id}: PageEditorProps) {
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
                           disabled={isDisabled}
-                          onClick={() => setPublishDialogOpen(true)}>
+                          onClick={() => {
+                            setPublishDialogOpen(true)
+                            // pass prop publishBehaviorDate to component
+                          }}>
                           {t('pageEditor.overview.publish')}
                         </IconButton>
                       </Badge>
@@ -394,11 +402,13 @@ export function PageEditor({id}: PageEditorProps) {
           updatedAtDate={updatedAt}
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
+          publishBehaviorDate={publishBehaviorDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt) => {
+          onConfirm={(publishedAt, updatedAt, publishAt, publishBehavior) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
+            checkPublishBehavior(publishBehavior)
           }}
         />
       </Modal>

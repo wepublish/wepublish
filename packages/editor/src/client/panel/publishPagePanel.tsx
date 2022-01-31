@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, Message, Modal, Panel} from 'rsuite'
+import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -10,16 +10,18 @@ import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
+import {useEffect} from 'react'
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
+  publishBehaviorDate?: Boolean
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: Boolean): void
 }
 
 export function PublishPagePanel({
@@ -27,6 +29,7 @@ export function PublishPagePanel({
   updatedAtDate,
   publishAtDate,
   pendingPublishDate,
+  publishBehaviorDate,
   metadata,
   onClose,
   onConfirm
@@ -39,7 +42,15 @@ export function PublishPagePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
+  const [publishBehavior, setPublishBehavior] = useState<Boolean>(publishBehaviorDate ?? false)
+
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if ((!publishAtDate || publishAt === publishAt) && !publishBehavior) {
+      setpublishAt(publishedAt)
+    }
+  }, [publishBehavior, publishedAt])
 
   return (
     <>
@@ -65,16 +76,22 @@ export function PublishPagePanel({
           changeDate={date => setupdatedAt(date)}
         />
 
-        <Panel
-          header={t('pageEditor.panels.advancedOptions')}
-          collapsible
-          className="availableFromPublishPanel">
-          <DateTimePicker
-            dateTime={publishAt}
-            label={t('pageEditor.panels.publishAt')}
-            changeDate={date => setpublishAt(date)}
-          />
-        </Panel>
+        <Checkbox
+          value={publishBehavior}
+          checked={publishBehavior === true}
+          onChange={publishBehavior => setPublishBehavior(!publishBehavior)}>
+          {' '}
+          {t('pageEditor.panels.publishAtDateCheckbox')}
+        </Checkbox>
+
+        <DateTimePicker
+          disabled={!publishBehavior}
+          dateTime={!publishBehavior ? undefined : publishAt}
+          label={t('pageEditor.panels.publishAt')}
+          changeDate={date => {
+            setpublishAt(date)
+          }}
+        />
 
         <DescriptionList>
           <DescriptionListItemWithMessage
@@ -133,7 +150,7 @@ export function PublishPagePanel({
         <Button
           appearance="primary"
           disabled={!publishedAt || !updatedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, publishBehavior!)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
