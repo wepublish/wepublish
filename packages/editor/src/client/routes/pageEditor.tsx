@@ -256,8 +256,6 @@ export function PageEditor({id}: PageEditorProps) {
         }
         if (publishData?.publishPage?.latest?.publishAt) {
           setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
-        } else {
-          setPublishAt(new Date())
         }
       }
       await refetch({id: pageID})
@@ -349,7 +347,6 @@ export function PageEditor({id}: PageEditorProps) {
                           disabled={isDisabled}
                           onClick={() => {
                             setPublishDialogOpen(true)
-                            // pass prop publishBehaviorDate to component
                           }}>
                           {t('pageEditor.overview.publish')}
                         </IconButton>

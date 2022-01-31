@@ -32,7 +32,7 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
-  const [dateSelection, setDateSelection] = useState<any>(dateTime /*?? new Date()*/)
+  const [dateSelection, setDateSelection] = useState<any>(dateTime)
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},

@@ -404,10 +404,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         }
         if (publishData?.publishArticle?.latest?.publishAt) {
           setPublishAt(new Date(publishData?.publishArticle?.latest.publishAt))
-        } else {
-          // setPublishAt(new Date())
         }
-        console.log(publishData)
       }
       setChanged(false)
       Notification.success({

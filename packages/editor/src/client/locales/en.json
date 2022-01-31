@@ -31,7 +31,6 @@
       "panels": {
         "addTag": "Press enter to add tag",
         "addSlug": "Please add a slug",
-        "advancedOptions": "Advanced options",
         "allowPeerPublishing": "Allow peers to publish this article.",
         "article": "Article",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication.",
@@ -104,6 +103,7 @@
         "public": "Public",
         "publishArticle": "Publish Article",
         "publishDate": "Publish Date",
+        "publishAtDateCheckbox": "Set another publication date - this will change the availability of the article online.",
         "published": "Published",
         "removeImage": "Remove Image",
         "removeTeaser": "Remove Teaser",
@@ -614,7 +614,6 @@
       },
       "panels": {
         "addTag": "Press enter to add tag",
-        "advancedOptions": "Advanced options",
         "chooseImage": "Choose Image",
         "close": "Close",
         "confirm": "Confirm",

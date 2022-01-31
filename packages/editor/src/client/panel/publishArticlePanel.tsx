@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Checkbox, Message, Modal, Panel} from 'rsuite'
+import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
@@ -83,7 +83,7 @@ export function PublishArticlePanel({
           checked={publishBehavior === true}
           onChange={publishBehavior => setPublishBehavior(!publishBehavior)}>
           {' '}
-          {t('pageEditor.panels.publishAtDateCheckbox')}
+          {t('articleEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
         <DateTimePicker
