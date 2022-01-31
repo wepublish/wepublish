@@ -68,6 +68,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
+  const [publishBehaviorDate, setPublishBehaviorDate] = useState<boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -227,6 +228,10 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
+  async function checkPublishBehavior(publishBehavior: boolean) {
+    setPublishBehaviorDate(publishBehavior)
+  }
+
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
     if (pageID) {
       const {data} = await updatePage({
@@ -249,10 +254,8 @@ export function PageEditor({id}: PageEditorProps) {
         if (publishData?.publishPage?.latest?.updatedAt) {
           setUpdatedAt(new Date(publishData?.publishPage?.latest.updatedAt))
         }
-        if (publishData?.publishPage?.pending?.publishAt) {
-          setPublishAt(new Date(publishData?.publishPage?.pending.publishAt))
-        } else {
-          setPublishAt(new Date())
+        if (publishData?.publishPage?.latest?.publishAt) {
+          setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
         }
       }
       await refetch({id: pageID})
@@ -342,7 +345,9 @@ export function PageEditor({id}: PageEditorProps) {
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
                           disabled={isDisabled}
-                          onClick={() => setPublishDialogOpen(true)}>
+                          onClick={() => {
+                            setPublishDialogOpen(true)
+                          }}>
                           {t('pageEditor.overview.publish')}
                         </IconButton>
                       </Badge>
@@ -394,11 +399,13 @@ export function PageEditor({id}: PageEditorProps) {
           updatedAtDate={updatedAt}
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
+          publishBehaviorDate={publishBehaviorDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt) => {
+          onConfirm={(publishedAt, updatedAt, publishAt, publishBehavior) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
+            checkPublishBehavior(publishBehavior)
           }}
         />
       </Modal>

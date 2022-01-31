@@ -29,6 +29,7 @@ export interface DateTimePickerProps {
   dateRanges?: DateTimePreset[]
   timeRanges?: DateTimePreset[]
   helpInfo?: string
+  disabled?: boolean
 }
 
 export function DateTimePicker({
@@ -37,11 +38,12 @@ export function DateTimePicker({
   changeDate,
   dateRanges,
   timeRanges,
-  helpInfo
+  helpInfo,
+  disabled
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
-  const [dateSelection, setDateSelection] = useState<any>(dateTime ?? new Date())
+  const [dateSelection, setDateSelection] = useState<any>(dateTime)
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},
@@ -105,6 +107,7 @@ export function DateTimePicker({
         </div>
       )}
       <DatePicker
+        disabled={disabled}
         isClearable
         showPopperArrow
         shouldCloseOnSelect={false}
