@@ -16,11 +16,11 @@ export interface PublishPagePanelProps {
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
-  publishBehaviorDate?: boolean
+  isPublishDateActiveDate?: boolean
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: boolean): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, isPublishDateActive: boolean): void
 }
 
 export function PublishPagePanel({
@@ -28,7 +28,7 @@ export function PublishPagePanel({
   updatedAtDate,
   publishAtDate,
   pendingPublishDate,
-  publishBehaviorDate,
+  isPublishDateActiveDate,
   metadata,
   onClose,
   onConfirm
@@ -41,15 +41,17 @@ export function PublishPagePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
-  const [publishBehavior, setPublishBehavior] = useState<boolean>(publishBehaviorDate ?? false)
+  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
+    isPublishDateActiveDate ?? false
+  )
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (!publishAt || !publishBehavior) {
+    if (!publishAt || !isPublishDateActive) {
       setpublishAt(publishedAt)
     }
-  }, [publishBehavior, publishedAt])
+  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -76,16 +78,16 @@ export function PublishPagePanel({
         />
 
         <Checkbox
-          value={publishBehavior}
-          checked={publishBehavior === true}
-          onChange={publishBehavior => setPublishBehavior(!publishBehavior)}>
+          value={isPublishDateActive}
+          checked={isPublishDateActive === true}
+          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
           {' '}
           {t('pageEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
         <DateTimePicker
-          disabled={!publishBehavior}
-          dateTime={!publishBehavior ? undefined : publishAt}
+          disabled={!isPublishDateActive}
+          dateTime={!isPublishDateActive ? undefined : publishAt}
           label={t('pageEditor.panels.publishAt')}
           changeDate={date => {
             setpublishAt(date)
@@ -149,7 +151,7 @@ export function PublishPagePanel({
         <Button
           appearance="primary"
           disabled={!publishedAt || !updatedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, publishBehavior!)}>
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, isPublishDateActive!)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>

@@ -68,7 +68,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
-  const [publishBehaviorDate, setPublishBehaviorDate] = useState<boolean>()
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -228,8 +228,8 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function checkPublishBehavior(publishBehavior: boolean) {
-    setPublishBehaviorDate(publishBehavior)
+  async function checkIsPublishDateActive(isPublishDateActive: boolean) {
+    setIsPublishDateActiveDate(isPublishDateActive)
   }
 
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
@@ -399,13 +399,13 @@ export function PageEditor({id}: PageEditorProps) {
           updatedAtDate={updatedAt}
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
-          publishBehaviorDate={publishBehaviorDate}
+          isPublishDateActiveDate={isPublishDateActiveDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt, publishBehavior) => {
+          onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
-            checkPublishBehavior(publishBehavior)
+            checkIsPublishDateActive(isPublishDateActive)
           }}
         />
       </Modal>

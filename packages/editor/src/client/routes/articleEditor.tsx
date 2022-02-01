@@ -96,7 +96,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [publishAt, setPublishAt] = useState<Date>()
 
-  const [publishBehaviorDate, setPublishBehaviorDate] = useState<boolean>()
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
@@ -371,8 +371,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function checkPublishBehavior(publishBehavior: boolean) {
-    setPublishBehaviorDate(publishBehavior)
+  async function checkIsPublishDateActive(isPublishDateActive: boolean) {
+    setIsPublishDateActiveDate(isPublishDateActive)
   }
 
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
@@ -559,13 +559,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           updatedAtDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
           publishAtDate={publishAt}
-          publishBehaviorDate={publishBehaviorDate}
+          isPublishDateActiveDate={isPublishDateActiveDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt, publishBehavior) => {
+          onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
-            checkPublishBehavior(publishBehavior)
+            checkIsPublishDateActive(isPublishDateActive)
           }}
         />
       </Modal>

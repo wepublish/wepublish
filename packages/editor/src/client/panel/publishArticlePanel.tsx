@@ -16,11 +16,11 @@ export interface PublishArticlePanelProps {
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
-  publishBehaviorDate?: boolean
+  isPublishDateActiveDate?: boolean
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, publishBehavior: boolean): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, isPublishDateActive: boolean): void
 }
 
 export function PublishArticlePanel({
@@ -28,7 +28,7 @@ export function PublishArticlePanel({
   updatedAtDate,
   publishAtDate,
   pendingPublishDate,
-  publishBehaviorDate,
+  isPublishDateActiveDate,
   metadata,
   onClose,
   onConfirm
@@ -41,15 +41,17 @@ export function PublishArticlePanel({
 
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
-  const [publishBehavior, setPublishBehavior] = useState<boolean>(publishBehaviorDate ?? false)
+  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
+    isPublishDateActiveDate ?? false
+  )
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (!publishAt || !publishBehavior) {
+    if (!publishAt || !isPublishDateActive) {
       setpublishAt(publishedAt)
     }
-  }, [publishBehavior, publishedAt])
+  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -79,16 +81,16 @@ export function PublishArticlePanel({
         />
 
         <Checkbox
-          value={publishBehavior}
-          checked={publishBehavior === true}
-          onChange={publishBehavior => setPublishBehavior(!publishBehavior)}>
+          value={isPublishDateActive}
+          checked={isPublishDateActive === true}
+          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
           {' '}
           {t('articleEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
         <DateTimePicker
-          disabled={!publishBehavior}
-          dateTime={!publishBehavior ? undefined : publishAt}
+          disabled={!isPublishDateActive}
+          dateTime={!isPublishDateActive ? undefined : publishAt}
           label={t('articleEditor.panels.publishAt')}
           changeDate={date => setpublishAt(date)}
         />
@@ -188,7 +190,7 @@ export function PublishArticlePanel({
         <Button
           appearance="primary"
           disabled={!publishedAt || !updatedAt || !metadata.slug}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, publishBehavior!)}>
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, isPublishDateActive!)}>
           {t('articleEditor.panels.confirm')}
         </Button>
 
