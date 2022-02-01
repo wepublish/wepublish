@@ -377,11 +377,9 @@ export class MongoDBPageAdapter implements DBPageAdapter {
   async getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublicPage[]> {
     await this.updatePendingPages()
 
-    const pages = await this.pages
-      .find({_id: {$in: ids}, $or: [{published: {$ne: null}}, {pending: {$ne: null}}]})
-      .toArray()
+    const pages = await this.pages.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
     const pageMap = Object.fromEntries(
-      pages.map(({_id: id, published, pending}) => [id, {id, ...(published || pending)!}])
+      pages.map(({_id: id, published: page}) => [id, {id, ...page!}])
     )
 
     return ids.map(id => (pageMap[id] as PublicPage) ?? null)
@@ -391,19 +389,11 @@ export class MongoDBPageAdapter implements DBPageAdapter {
     await this.updatePendingPages()
 
     const pages = await this.pages
-      .find({
-        $or: [
-          {published: {$ne: null}, 'published.slug': {$in: slugs}},
-          {pending: {$ne: null}, 'pending.slug': {$in: slugs}}
-        ]
-      })
+      .find({published: {$ne: null}, 'published.slug': {$in: slugs}})
       .toArray()
 
     const pageMap = Object.fromEntries(
-      pages.map(({_id: id, published, pending}) => [
-        (published?.slug || pending?.slug)!,
-        {id, ...(published || pending)!}
-      ])
+      pages.map(({_id: id, published: page}) => [page!.slug, {id, ...page!}])
     )
 
     return slugs.map(slug => (pageMap[slug] as PublicPage) ?? null)

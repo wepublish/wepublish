@@ -408,14 +408,9 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
   async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]> {
     await this.updatePendingArticles()
 
-    const articles = await this.articles
-      .find({_id: {$in: ids}, $or: [{published: {$ne: null}}, {pending: {$ne: null}}]})
-      .toArray()
+    const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
     const articleMap = Object.fromEntries(
-      articles.map(({_id: id, shared, published, pending}) => [
-        id,
-        {id, shared, ...(published || pending)!}
-      ])
+      articles.map(({_id: id, shared, published: article}) => [id, {id, shared, ...article!}])
     )
 
     return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
@@ -423,18 +418,13 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
   async getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle> {
     await this.updatePendingArticles()
-    const article = await this.articles.findOne({
-      $or: [
-        {published: {$ne: null}, 'published.slug': {$in: slug}},
-        {pending: {$ne: null}, 'pending.slug': {$in: slug}}
-      ]
-    })
+    const article = await this.articles.findOne({'published.slug': {$eq: slug}})
 
     return article?.published
       ? ({
           id: article._id,
           shared: article.shared,
-          ...(article.published || article.pending)
+          ...article.published
         } as PublicArticle)
       : null
   }
