@@ -88,7 +88,7 @@ export function DateTimePicker({
   }
   return (
     <>
-      <div style={{marginTop: '5px'}}>
+      <div style={{marginTop: '5px', marginBottom: '5px'}}>
         <ControlLabel style={{marginRight: '5px'}}>{label}</ControlLabel>
         {helpInfo ? (
           <Whisper
