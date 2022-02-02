@@ -82,7 +82,7 @@ export function PublishArticlePanel({
 
         <Checkbox
           value={isPublishDateActive}
-          checked={isPublishDateActive === true}
+          checked={isPublishDateActive}
           onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
           {' '}
           {t('articleEditor.panels.publishAtDateCheckbox')}

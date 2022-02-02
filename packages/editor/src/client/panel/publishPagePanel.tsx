@@ -79,7 +79,7 @@ export function PublishPagePanel({
 
         <Checkbox
           value={isPublishDateActive}
-          checked={isPublishDateActive === true}
+          checked={isPublishDateActive}
           onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
           {' '}
           {t('pageEditor.panels.publishAtDateCheckbox')}
