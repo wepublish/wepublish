@@ -96,7 +96,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [publishAt, setPublishAt] = useState<Date>()
 
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>(
+    publishAt === publishedAt ? false : true
+  )
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',

@@ -42,7 +42,7 @@ export function PublishPagePanel({
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    isPublishDateActiveDate ?? false
+    publishAt === publishedAt ? false : true
   )
 
   const {t} = useTranslation()
@@ -85,14 +85,18 @@ export function PublishPagePanel({
           {t('pageEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
-        <DateTimePicker
-          disabled={!isPublishDateActive}
-          dateTime={!isPublishDateActive ? undefined : publishAt}
-          label={t('pageEditor.panels.publishAt')}
-          changeDate={date => {
-            setpublishAt(date)
-          }}
-        />
+        {isPublishDateActive ? (
+          <DateTimePicker
+            disabled={!isPublishDateActive}
+            dateTime={!isPublishDateActive ? undefined : publishAt}
+            label={t('pageEditor.panels.publishAt')}
+            changeDate={date => {
+              setpublishAt(date)
+            }}
+          />
+        ) : (
+          ''
+        )}
 
         <DescriptionList>
           <DescriptionListItemWithMessage

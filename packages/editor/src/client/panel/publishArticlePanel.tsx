@@ -84,16 +84,18 @@ export function PublishArticlePanel({
           value={isPublishDateActive}
           checked={isPublishDateActive}
           onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
-          {' '}
           {t('articleEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
-        <DateTimePicker
-          disabled={!isPublishDateActive}
-          dateTime={!isPublishDateActive ? undefined : publishAt}
-          label={t('articleEditor.panels.publishAt')}
-          changeDate={date => setpublishAt(date)}
-        />
+        {isPublishDateActive ? (
+          <DateTimePicker
+            dateTime={!isPublishDateActive ? undefined : publishAt}
+            label={t('articleEditor.panels.publishAt')}
+            changeDate={date => setpublishAt(date)}
+          />
+        ) : (
+          ''
+        )}
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
