@@ -315,7 +315,7 @@ export class MemberContext implements MemberContext {
         subscription: {
           autoRenew: true,
           paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
-          deactivatedAt: {date: null, comparison: DateFilterComparison.Equal}
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
         }
       },
       limit: {type: LimitType.First, count: 200},
@@ -329,7 +329,7 @@ export class MemberContext implements MemberContext {
         subscription: {
           autoRenew: true,
           paidUntil: {date: null, comparison: DateFilterComparison.Equal},
-          deactivatedAt: {date: null, comparison: DateFilterComparison.Equal}
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
         }
       },
       limit: {type: LimitType.First, count: 200},
