@@ -88,11 +88,9 @@ export function DateTimePicker({
   }
   return (
     <>
-      {!helpInfo ? (
-        <ControlLabel style={{display: 'block', marginTop: '5px'}}>{label}</ControlLabel>
-      ) : (
-        <div style={{marginTop: '5px'}}>
-          <ControlLabel style={{marginRight: '5px'}}>{label}</ControlLabel>
+      <div style={{marginTop: '5px'}}>
+        <ControlLabel style={{marginRight: '5px'}}>{label}</ControlLabel>
+        {helpInfo ? (
           <Whisper
             placement="right"
             trigger="hover"
@@ -104,8 +102,10 @@ export function DateTimePicker({
             }>
             <IconButton icon={<Icon icon="info" />} circle size="xs" />
           </Whisper>
-        </div>
-      )}
+        ) : (
+          ''
+        )}
+      </div>
       <DatePicker
         disabled={disabled}
         isClearable
