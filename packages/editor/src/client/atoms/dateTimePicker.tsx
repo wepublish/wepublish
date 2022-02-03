@@ -96,7 +96,7 @@ export function DateTimePicker({
             trigger="hover"
             controlId="control-id-hover"
             speaker={
-              <Popover>
+              <Popover style={{maxWidth: 300}}>
                 <p>{helpInfo}</p>
               </Popover>
             }>
