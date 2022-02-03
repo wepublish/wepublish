@@ -559,9 +559,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         <PublishArticlePanel
           isPublishDateActiveDate={
             isPublishDateActiveDate ??
-            (publishedAt?.getTime() === publishAt?.getTime || publishAt === undefined
-              ? false
-              : true)
+            (publishedAt?.getTime() === publishAt?.getTime || !publishAt ? false : true)
           }
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}
