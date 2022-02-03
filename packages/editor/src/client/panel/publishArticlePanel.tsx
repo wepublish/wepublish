@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 
-import {useTranslation} from 'react-i18next'
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -10,6 +9,7 @@ import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessag
 
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
+import {useTranslation} from 'react-i18next'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date
