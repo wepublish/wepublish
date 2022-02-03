@@ -97,7 +97,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [publishAt, setPublishAt] = useState<Date>()
 
   const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>(
-    publishAt === publishedAt ? false : true
+    publishAt?.getTime() === publishedAt?.getTime() ? false : true
   )
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({

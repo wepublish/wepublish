@@ -42,7 +42,7 @@ export function PublishPagePanel({
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    publishAt === publishedAt ? false : true
+    isPublishDateActiveDate ?? false
   )
 
   const {t} = useTranslation()

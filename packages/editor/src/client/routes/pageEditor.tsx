@@ -68,7 +68,9 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>(
+    publishAt?.getTime() === publishedAt?.getTime() ? false : true
+  )
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
