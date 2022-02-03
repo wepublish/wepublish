@@ -558,7 +558,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           isPublishDateActiveDate={
-            isPublishDateActiveDate ?? (publishedAt?.getTime() !== publishAt?.getTime() || false)
+            isPublishDateActiveDate ??
+            !(publishedAt?.getTime() === publishAt?.getTime || !publishAt)
           }
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

@@ -400,7 +400,8 @@ export function PageEditor({id}: PageEditorProps) {
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
           isPublishDateActiveDate={
-            isPublishDateActiveDate ?? (publishedAt?.getTime() !== publishAt?.getTime() || false)
+            isPublishDateActiveDate ??
+            !(publishedAt?.getTime() === publishAt?.getTime || !publishAt)
           }
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
