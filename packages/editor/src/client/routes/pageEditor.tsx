@@ -68,9 +68,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>(
-    publishAt?.getTime() === publishedAt?.getTime() ? false : true
-  )
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -401,7 +399,12 @@ export function PageEditor({id}: PageEditorProps) {
           updatedAtDate={updatedAt}
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
-          isPublishDateActiveDate={isPublishDateActiveDate}
+          isPublishDateActiveDate={
+            isPublishDateActiveDate ??
+            (publishedAt?.getTime() === publishAt?.getTime || publishAt === undefined
+              ? false
+              : true)
+          }
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {

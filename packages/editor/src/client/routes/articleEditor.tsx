@@ -96,9 +96,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [publishAt, setPublishAt] = useState<Date>()
 
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>(
-    publishAt?.getTime() === publishedAt?.getTime() ? false : true
-  )
+  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
 
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
@@ -509,7 +507,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
                           disabled={isDisabled}
-                          onClick={() => setPublishDialogOpen(true)}>
+                          onClick={() => {
+                            setPublishDialogOpen(true)
+                          }}>
                           {t('articleEditor.overview.publish')}
                         </IconButton>
                       </Badge>
@@ -557,11 +557,16 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
+          isPublishDateActiveDate={
+            isPublishDateActiveDate ??
+            (publishedAt?.getTime() === publishAt?.getTime || publishAt === undefined
+              ? false
+              : true)
+          }
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
           publishAtDate={publishAt}
-          isPublishDateActiveDate={isPublishDateActiveDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {
