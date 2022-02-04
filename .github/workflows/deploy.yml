@@ -23,6 +23,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
+          TEMP_MONGO_URL_BEATRICE: ${{ secrets.TEMP_MONGO_URL_BEATRICE }}
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
