@@ -319,14 +319,28 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         }
       })
     }
-    if (filter?.subscription?.deactivatedAt !== undefined) {
-      const {comparison, date} = filter.subscription.deactivatedAt
+    if (filter?.subscription?.deactivationDate !== undefined) {
+      const {comparison, date} = filter.subscription.deactivationDate
+
+      if (date === null) {
+        textFilter.$and?.push({'subscription.deactivation': {$eq: null}})
+      } else {
+        textFilter.$and?.push({
+          'subscription.deactivation.date': {
+            [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+          }
+        })
+      }
+    }
+
+    if (filter?.subscription?.deactivationReason !== undefined) {
+      const reason = filter.subscription.deactivationReason
+
       textFilter.$and?.push({
-        'subscription.deactivatedAt': {
-          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
-        }
+        'subscription.deactivation.reason': reason
       })
     }
+
     if (filter?.subscription?.autoRenew !== undefined) {
       textFilter.$and?.push({'subscription.autoRenew': {$eq: filter.subscription.autoRenew}})
     }
