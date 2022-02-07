@@ -44,6 +44,7 @@ import {OptionalMailLog} from './db/mailLog'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
+import {User} from './db/user'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -297,11 +298,36 @@ export async function contextFromRequest(
     mailTemplatesPath: mailContextOptions.mailTemplatesPath
   })
 
+  const generateJWT = (props: GenerateJWTProps): string => {
+    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const jwtOptions: SignOptions = {
+      issuer: hostURL,
+      audience: props.audience ?? websiteURL,
+      algorithm: 'HS256',
+      expiresIn: `${props.expiresInMinutes || 15}m`
+    }
+    return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
+  }
+
+  const verifyJWT = (token: string): string => {
+    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+  }
+
   const memberContext = new MemberContext({
     loaders,
     dbAdapter,
     paymentProviders,
-    mailContext
+    mailContext,
+    getLoginUrlForUser(user: User): string {
+      const jwt = generateJWT({
+        id: user.id,
+        expiresInMinutes: 10080 // One week in minutes
+      })
+
+      return urlAdapter.getLoginURL(jwt)
+    }
   })
 
   return {
@@ -369,22 +395,9 @@ export async function contextFromRequest(
       return session
     },
 
-    generateJWT(props: GenerateJWTProps): string {
-      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-      const jwtOptions: SignOptions = {
-        issuer: hostURL,
-        audience: props.audience ?? websiteURL,
-        algorithm: 'HS256',
-        expiresIn: `${props.expiresInMinutes || 15}m`
-      }
-      return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
-    },
+    generateJWT,
 
-    verifyJWT(token: string): string {
-      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-      const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
-    },
+    verifyJWT,
 
     async createPaymentWithProvider({
       paymentMethodID,

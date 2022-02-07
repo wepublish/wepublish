@@ -46,12 +46,10 @@ export interface ChargeInvoiceProps {
 
 export interface SendReminderForInvoiceProps {
   invoice: Invoice
-  userPaymentURL: string
   replyToAddress: string
 }
 
 export interface SendReminderForInvoicesProps {
-  userPaymentURL: string
   replyToAddress: string
 }
 
@@ -71,6 +69,7 @@ export interface MemberContext {
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
+  getLoginUrlForUser(user: User): string
 
   handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<UserSubscription>
 
@@ -94,6 +93,7 @@ export interface MemberContextProps {
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
   readonly mailContext: MailContext
+  getLoginUrlForUser(user: User): string
 }
 
 function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -167,6 +167,7 @@ export class MemberContext implements MemberContext {
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
+  getLoginUrlForUser: (user: User) => string
 
   constructor(props: MemberContextProps) {
     this.dbAdapter = props.dbAdapter
@@ -174,6 +175,8 @@ export class MemberContext implements MemberContext {
     this.paymentProviders = props.paymentProviders
 
     this.mailContext = props.mailContext
+
+    this.getLoginUrlForUser = props.getLoginUrlForUser
   }
 
   async handleSubscriptionChange({
@@ -315,7 +318,7 @@ export class MemberContext implements MemberContext {
         subscription: {
           autoRenew: true,
           paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
-          deactivatedAt: {date: null, comparison: DateFilterComparison.Equal}
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
         }
       },
       limit: {type: LimitType.First, count: 200},
@@ -329,7 +332,7 @@ export class MemberContext implements MemberContext {
         subscription: {
           autoRenew: true,
           paidUntil: {date: null, comparison: DateFilterComparison.Equal},
-          deactivatedAt: {date: null, comparison: DateFilterComparison.Equal}
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
         }
       },
       limit: {type: LimitType.First, count: 200},
@@ -640,10 +643,7 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async sendReminderForInvoices({
-    replyToAddress,
-    userPaymentURL
-  }: SendReminderForInvoicesProps): Promise<void> {
+  async sendReminderForInvoices({replyToAddress}: SendReminderForInvoicesProps): Promise<void> {
     const today = new Date()
 
     const invoices = await this.dbAdapter.invoice.getInvoices({
@@ -714,8 +714,7 @@ export class MemberContext implements MemberContext {
       try {
         await this.sendReminderForInvoice({
           invoice,
-          replyToAddress,
-          userPaymentURL
+          replyToAddress
         })
       } catch (error) {
         logger('memberContext').error(error, 'Error while sending reminder')
@@ -725,8 +724,7 @@ export class MemberContext implements MemberContext {
 
   async sendReminderForInvoice({
     invoice,
-    replyToAddress,
-    userPaymentURL
+    replyToAddress
   }: SendReminderForInvoiceProps): Promise<void> {
     const today = new Date()
 
@@ -746,7 +744,7 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            userPaymentURL
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
           }
         })
       } else {
@@ -760,7 +758,7 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            userPaymentURL
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
           }
         })
       } else {
@@ -770,7 +768,7 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            userPaymentURL
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
           }
         })
       }

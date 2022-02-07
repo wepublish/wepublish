@@ -4,6 +4,66 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
+import {User} from './db/user'
+
+export function mapSubscriptionsAsCsv(items: User[]) {
+  let csvStr =
+    [
+      'id',
+      'name',
+      'email',
+      'active',
+      'createdAt',
+      'modifiedAt',
+
+      'company',
+      'streetAddress',
+      'streetAddress2',
+      'zipCode',
+      'city',
+      'country',
+
+      'memberPlanID',
+      'paymentPeriodicity',
+      'monthlyAmount',
+      'autoRenew',
+      'startsAt',
+      'paidUntil',
+      'paymentMethodID',
+      'deactivationDate',
+      'deactivationReason'
+    ].join(',') + '\n'
+
+  items.forEach(({address, subscription, ...user}: User) => {
+    csvStr +=
+      [
+        user.id,
+        user.name,
+        user.email,
+        user.active,
+        new Date(user.createdAt).toISOString(),
+        new Date(user.modifiedAt).toISOString(),
+        address?.company,
+        address?.streetAddress,
+        address?.streetAddress2,
+        address?.zipCode,
+        address?.city,
+        address?.country,
+        subscription!.memberPlanID,
+        subscription!.paymentPeriodicity,
+        subscription!.monthlyAmount,
+        subscription!.autoRenew,
+        new Date(subscription!.startsAt).toISOString(),
+        subscription?.paidUntil,
+        subscription!.paymentMethodID,
+        subscription!.deactivation?.date
+          ? new Date(subscription!.deactivation.date).toISOString()
+          : undefined,
+        subscription!.deactivation?.reason
+      ].join(',') + '\r\n'
+  })
+  return csvStr
+}
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
