@@ -663,35 +663,44 @@ export const Migrations: Migration[] = [
     async migrate(db, locale) {
       const users = await db.collection(CollectionName.Users)
 
-      const deactivatedUserSubscriptions: DBUser[] = await users
-        .find({
-          subscription: {$exists: true}
-        })
-        .toArray()
-
-      for (const user of deactivatedUserSubscriptions) {
-        await users.updateOne(
-          {
-            _id: user._id
-          },
+      await users.updateMany(
+        {
+          $and: [
+            {'subscription.deactivatedAt': {$exists: true}},
+            {'subscription.deactivatedAt': null}
+          ]
+        },
+        [
           {
             $set: {
-              'subscription.deactivation':
-                // @ts-ignore
-                user.subscription?.deactivatedAt !== null
-                  ? {
-                      // @ts-ignore
-                      date: user.subscription.deactivatedAt,
-                      reason: SubscriptionDeactivationReason.None
-                    }
-                  : null
-            },
-            $unset: {
-              'subscription.deactivatedAt': ''
+              'subscription.deactivation': null
             }
+          },
+          {
+            $unset: ['subscription.deactivatedAt']
           }
-        )
-      }
+        ]
+      )
+
+      await users.updateMany(
+        {
+          $and: [
+            {'subscription.deactivatedAt': {$exists: true}},
+            {'subscription.deactivatedAt': {$ne: null}}
+          ]
+        },
+        [
+          {
+            $set: {
+              'subscription.deactivation.date': '$subscription.deactivatedAt',
+              'subscription.deactivation.reason': SubscriptionDeactivationReason.None
+            }
+          },
+          {
+            $unset: ['subscription.deactivatedAt']
+          }
+        ]
+      )
     }
   }
 ]
