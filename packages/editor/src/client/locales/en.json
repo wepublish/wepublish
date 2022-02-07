@@ -645,7 +645,7 @@
         "publishPage": "Publish Page",
         "publishDate": "Publish Date",
         "publishAt": "Available online from",
-        "publishAtDateCheckbox": "Set another publication date - this will change the availability of the article online.",
+        "publishAtDateCheckbox": "Set a different date for online availibility",
         "removeImage": "Remove Image",
         "saveAndClose": "Save and close",
         "slug": "Slug",
