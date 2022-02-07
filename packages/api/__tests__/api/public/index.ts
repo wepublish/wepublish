@@ -155,6 +155,7 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+  | TeaserGridFlexBlock
 
 export type Comment = {
   __typename?: 'Comment'
@@ -213,6 +214,20 @@ export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock'
   userID: Scalars['String']
   postID: Scalars['String']
+}
+
+export type FlexAlignment = {
+  __typename?: 'FlexAlignment'
+  x: Scalars['Int']
+  y: Scalars['Int']
+  w: Scalars['Int']
+  h: Scalars['Int']
+}
+
+export type FlexTeaser = {
+  __typename?: 'FlexTeaser'
+  alignment: FlexAlignment
+  teaser?: Maybe<Teaser>
 }
 
 export type GalleryImageEdge = {
@@ -404,13 +419,10 @@ export type Mutation = {
   /**
    * This mutation allows to update the user's subscription by taking an input of
    * type UserSubscription and throws an error if the user doesn't already have a
-   * subscription. Updating user subscriptions will set deactivatedAt to null
+   * subscription. Updating user subscriptions will set deactivation to null
    */
   updateUserSubscription?: Maybe<UserSubscription>
-  /**
-   * This mutation allows to cancel the user's subscription. The deactivation date
-   * will be either paidUntil or now and autoRenew will be set to false.
-   */
+  /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<UserSubscription>
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
@@ -814,12 +826,23 @@ export type SoundCloudTrackBlock = {
   trackID: Scalars['String']
 }
 
+export enum SubscriptionDeactivationReason {
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
+  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
   teasers: Array<Maybe<Teaser>>
   numColumns: Scalars['Int']
+}
+
+export type TeaserGridFlexBlock = {
+  __typename?: 'TeaserGridFlexBlock'
+  flexTeasers: Array<FlexTeaser>
 }
 
 export enum TeaserStyle {
@@ -887,7 +910,13 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
   paymentMethod: PaymentMethod
-  deactivatedAt?: Maybe<Scalars['DateTime']>
+  deactivation?: Maybe<UserSubscriptionDeactivation>
+}
+
+export type UserSubscriptionDeactivation = {
+  __typename?: 'UserSubscriptionDeactivation'
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
 }
 
 export type UserSubscriptionInput = {
@@ -971,6 +1000,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
         >
       }
   >
@@ -1020,6 +1050,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
         >
       }
   >
@@ -1178,6 +1209,8 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
     >
   }
 
+type FullBlock_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'}
+
 export type FullBlockFragment =
   | FullBlock_RichTextBlock_Fragment
   | FullBlock_ImageBlock_Fragment
@@ -1196,6 +1229,7 @@ export type FullBlockFragment =
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserGridFlexBlock_Fragment
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
@@ -1296,6 +1330,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
           | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'TeaserGridFlexBlock'} & FullBlock_TeaserGridFlexBlock_Fragment)
         >
       }
   >
