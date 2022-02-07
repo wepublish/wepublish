@@ -46,7 +46,8 @@ export enum UserSort {
 export interface UserSubscriptionFilter {
   readonly startsAt?: DateFilter
   readonly paidUntil?: DateFilter
-  readonly deactivatedAt?: DateFilter
+  readonly deactivationDate?: DateFilter
+  readonly deactivationReason?: SubscriptionDeactivationReason
   readonly autoRenew?: boolean
 }
 
