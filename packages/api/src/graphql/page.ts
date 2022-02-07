@@ -108,14 +108,13 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
-        const id = info.variableValues.id
-
-        if (!id) return ''
-
+      resolve: createProxyingResolver((pageRevision, args, {urlAdapter}, info) => {
+        // The URLAdapter expects a public page to generate the public page URL.
+        // The URL should never be created with values from the updatedAt and
+        // publishedAt dates, but they are required by the method.
         return urlAdapter.getPublicPageURL({
-          ...articleRevision,
-          id,
+          ...pageRevision,
+          id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           updatedAt: new Date(),
           publishedAt: new Date()
         } as PublicPage)

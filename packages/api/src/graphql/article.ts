@@ -131,13 +131,12 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     url: {
       type: GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
-        const id = info.variableValues.id
-
-        if (!id) return ''
-
+        // The URLAdapter expects a public article to generate the public article URL.
+        // The URL should never be created with values from the updatedAt, publishAt
+        // and publishedAt dates, but they are required by the method.
         return urlAdapter.getPublicArticleURL({
           ...articleRevision,
-          id,
+          id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           shared: true,
           updatedAt: new Date(),
           publishAt: new Date(),
