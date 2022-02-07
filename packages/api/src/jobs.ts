@@ -37,19 +37,14 @@ async function dailyInvoiceCharger(context: Context): Promise<void> {
 async function dailyInvoiceReminder(context: Context, data: any): Promise<void> {
   logger('jobs').info('starting dailyInvoiceReminder')
 
-  const {userPaymentURL, replyToAddress} = data
+  const {replyToAddress} = data
 
   if (!replyToAddress) {
     throw new Error('No replyToAddress provided')
   }
 
-  if (!userPaymentURL) {
-    throw new Error('No userPaymentURL provided')
-  }
-
   await context.memberContext.sendReminderForInvoices({
-    replyToAddress,
-    userPaymentURL
+    replyToAddress
   })
   logger('jobs').info('finishing dailyInvoiceReminder')
 }

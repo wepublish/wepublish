@@ -45,7 +45,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserSort} from '../db/user'
+import {User, UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -56,7 +56,13 @@ import {PageSort} from '../db/page'
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
-import {delegateToPeerSchema, base64Encode, base64Decode, markResultAsProxied} from '../utility'
+import {
+  delegateToPeerSchema,
+  base64Encode,
+  base64Decode,
+  markResultAsProxied,
+  mapSubscriptionsAsCsv
+} from '../utility'
 
 import {
   authorise,
@@ -287,6 +293,40 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
+      }
+    },
+
+    subscriptionsAsCsv: {
+      type: GraphQLString,
+      args: {},
+      async resolve(root, args, {dbAdapter, authenticate}) {
+        const {roles} = authenticate()
+        authorise(CanGetUsers, roles)
+
+        const allSubscriptionsList: User[] = []
+
+        const getAllUsersWithSubscriptions = async (after?: string | null) => {
+          const listResult = await dbAdapter.user.getUsers({
+            cursor: InputCursor(after ?? undefined),
+            filter: {subscription: {}},
+            limit: Limit(100),
+            sort: UserSort.ModifiedAt,
+            order: SortOrder.Descending
+          })
+
+          allSubscriptionsList.push(...listResult.nodes)
+
+          if (listResult.pageInfo.hasNextPage) {
+            await getAllUsersWithSubscriptions(listResult.pageInfo.endCursor)
+          }
+        }
+
+        await getAllUsersWithSubscriptions()
+
+        if (allSubscriptionsList.length) {
+          return mapSubscriptionsAsCsv(allSubscriptionsList)
+        }
+        return ''
       }
     },
 
