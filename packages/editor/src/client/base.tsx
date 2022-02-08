@@ -18,10 +18,12 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
+  PeerArticleListRoute,
   LogoutRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
+import {PeerArticleList} from './routes/peerArticleList'
 
 export interface BaseProps {
   children?: ReactNode
@@ -179,6 +181,12 @@ export function Base({children}: BaseProps) {
                 </Dropdown>
 
                 <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
+                  <DropdownItemLink
+                    icon={<Icon icon="file-text-o" />}
+                    route={PeerArticleListRoute.create({})}
+                    active={current?.type === RouteType.PeerArticleList}>
+                    {t('navbar.peerArticle')}
+                  </DropdownItemLink>
                   <DropdownItemLink
                     active={current?.type === RouteType.PeerList}
                     icon={<Icon icon="share" />}

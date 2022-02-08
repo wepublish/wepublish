@@ -546,6 +546,7 @@
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
       "peers": "Peers",
+      "peerArticle": "Peered articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
