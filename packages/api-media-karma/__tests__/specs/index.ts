@@ -189,7 +189,7 @@ describe('Karma Media Adapter with Internal URL', () => {
     new URL(TEST_INTERNAL_URL)
   )
 
-  test('should accept UploadImage', async () => {
+  test('UploadImage should be called with internal URL', async () => {
     mockedFetch.mockResolvedValue(new Response(JSON.stringify(TEST_UPLOAD_IMAGE)))
     const uploadedImage = await karmaMediaAdapterInternalURL.uploadImage(fileUploadPromise)
 
@@ -198,5 +198,16 @@ describe('Karma Media Adapter with Internal URL', () => {
       expect.objectContaining({method: 'POST', body: expect.any(FormData)})
     )
     expect(uploadedImage.filename).toBe('test.jpg')
+  })
+
+  test('DeleteImage should be called with internal URL', async () => {
+    mockedFetch.mockResolvedValue(new Response(null, {status: 204}))
+    const result = await karmaMediaAdapterInternalURL.deleteImage('fakeId')
+
+    expect(fetch).toHaveBeenCalledWith(
+      `${new URL(TEST_INTERNAL_URL)}${'fakeId'}`,
+      expect.objectContaining({method: 'DELETE'})
+    )
+    expect(result).toBeTruthy()
   })
 })
