@@ -96,8 +96,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [publishAt, setPublishAt] = useState<Date>()
 
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
-
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
     preTitle: '',
@@ -371,10 +369,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function checkIsPublishDateActive(isPublishDateActive: boolean) {
-    setIsPublishDateActiveDate(isPublishDateActive)
-  }
-
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
     if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
@@ -404,6 +398,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         }
         if (publishData?.publishArticle?.latest?.publishAt) {
           setPublishAt(new Date(publishData?.publishArticle?.latest.publishAt))
+        } else if (
+          publishData?.publishArticle?.latest?.publishAt === null &&
+          publishData?.publishArticle?.latest?.publishedAt
+        ) {
+          setPublishAt(new Date(publishData?.publishArticle?.latest?.publishedAt))
         }
       }
       setChanged(false)
@@ -557,20 +556,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
-          isPublishDateActiveDate={
-            isPublishDateActiveDate ??
-            !(publishedAt?.getTime() === publishAt?.getTime || !publishAt)
-          }
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
           publishAtDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {
+          onConfirm={(publishedAt, updatedAt, publishAt) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
-            checkIsPublishDateActive(isPublishDateActive)
           }}
         />
       </Modal>

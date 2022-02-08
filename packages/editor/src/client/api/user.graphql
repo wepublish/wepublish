@@ -48,7 +48,6 @@ fragment FullUser on User {
 
 
 
-
 query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
     users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
         nodes {
@@ -70,6 +69,10 @@ query User($id: ID!) {
     user(id: $id) {
         ...FullUser
     }
+}
+
+query SubscriptionsAsCsv {
+  csv: subscriptionsAsCsv
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {

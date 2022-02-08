@@ -16,11 +16,10 @@ export interface PublishPagePanelProps {
   updatedAtDate?: Date
   publishAtDate?: Date
   pendingPublishDate?: Date
-  isPublishDateActiveDate?: boolean
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date, isPublishDateActive: boolean): void
+  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
 }
 
 export function PublishPagePanel({
@@ -28,7 +27,6 @@ export function PublishPagePanel({
   updatedAtDate,
   publishAtDate,
   pendingPublishDate,
-  isPublishDateActiveDate,
   metadata,
   onClose,
   onConfirm
@@ -42,7 +40,7 @@ export function PublishPagePanel({
   const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    isPublishDateActiveDate ?? false
+    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
   )
 
   const {t} = useTranslation()
@@ -161,7 +159,8 @@ export function PublishPagePanel({
         <Button
           appearance="primary"
           disabled={!publishedAt || !updatedAt || updatedAt < publishedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!, isPublishDateActive!)}>
+          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
+
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
