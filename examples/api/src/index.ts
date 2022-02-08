@@ -75,7 +75,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getLoginURL(token: string): string {
-    return `${this.websiteURL}/login/jwt=${token}`
+    return `${this.websiteURL}/login?jwt=${token}`
   }
 }
 
