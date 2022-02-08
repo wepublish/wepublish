@@ -210,4 +210,11 @@ describe('Karma Media Adapter with Internal URL', () => {
     )
     expect(result).toBeTruthy()
   })
+
+  test('GetImageURL should use public URL ', async () => {
+    const imageURL = new URL(await karmaMediaAdapterInternalURL.getImageURL(TEST_UPLOAD_IMAGE))
+
+    expect(imageURL.hostname).toEqual(new URL(TEST_URL).hostname)
+    expect(imageURL.hostname).not.toEqual(new URL(TEST_INTERNAL_URL).hostname)
+  })
 })
