@@ -68,7 +68,6 @@ export function PageEditor({id}: PageEditorProps) {
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [updatedAt, setUpdatedAt] = useState<Date>()
   const [publishAt, setPublishAt] = useState<Date>()
-  const [isPublishDateActiveDate, setIsPublishDateActiveDate] = useState<boolean>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -228,10 +227,6 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function checkIsPublishDateActive(isPublishDateActive: boolean) {
-    setIsPublishDateActiveDate(isPublishDateActive)
-  }
-
   async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
     if (pageID) {
       const {data} = await updatePage({
@@ -256,6 +251,11 @@ export function PageEditor({id}: PageEditorProps) {
         }
         if (publishData?.publishPage?.latest?.publishAt) {
           setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
+        } else if (
+          publishData?.publishPage?.latest?.publishAt === null &&
+          publishData?.publishPage?.latest?.publishedAt
+        ) {
+          setPublishAt(new Date(publishData?.publishPage?.latest?.publishedAt))
         }
       }
       await refetch({id: pageID})
@@ -399,16 +399,11 @@ export function PageEditor({id}: PageEditorProps) {
           updatedAtDate={updatedAt}
           publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
-          isPublishDateActiveDate={
-            isPublishDateActiveDate ??
-            !(publishedAt?.getTime() === publishAt?.getTime || !publishAt)
-          }
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt, isPublishDateActive) => {
+          onConfirm={(publishedAt, updatedAt, publishAt) => {
             handlePublish(publishedAt, updatedAt, publishAt)
             setPublishDialogOpen(false)
-            checkIsPublishDateActive(isPublishDateActive)
           }}
         />
       </Modal>
