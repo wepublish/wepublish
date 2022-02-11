@@ -5,8 +5,9 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {User} from './db/user'
+import {Subscription} from './db/subscription'
 
-export function mapSubscriptionsAsCsv(items: User[]) {
+export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription[]) {
   let csvStr =
     [
       'id',
@@ -34,7 +35,9 @@ export function mapSubscriptionsAsCsv(items: User[]) {
       'deactivationReason'
     ].join(',') + '\n'
 
-  items.forEach(({address, subscription, ...user}: User) => {
+  for (const subscription of subscriptions) {
+    const user = users.find(user => user.id === subscription.userID)
+    if (!user) continue
     csvStr +=
       [
         user.id,
@@ -43,25 +46,26 @@ export function mapSubscriptionsAsCsv(items: User[]) {
         user.active,
         new Date(user.createdAt).toISOString(),
         new Date(user.modifiedAt).toISOString(),
-        address?.company,
-        address?.streetAddress,
-        address?.streetAddress2,
-        address?.zipCode,
-        address?.city,
-        address?.country,
-        subscription!.memberPlanID,
-        subscription!.paymentPeriodicity,
-        subscription!.monthlyAmount,
-        subscription!.autoRenew,
-        new Date(subscription!.startsAt).toISOString(),
-        subscription?.paidUntil,
-        subscription!.paymentMethodID,
-        subscription!.deactivation?.date
-          ? new Date(subscription!.deactivation.date).toISOString()
-          : undefined,
-        subscription!.deactivation?.reason
+        user.address?.company ?? '',
+        user.address?.streetAddress ?? '',
+        user.address?.streetAddress2 ?? '',
+        user.address?.zipCode ?? '',
+        user.address?.city ?? '',
+        user.address?.country ?? '',
+        subscription.memberPlanID,
+        subscription.paymentPeriodicity,
+        subscription.monthlyAmount,
+        subscription.autoRenew,
+        new Date(subscription.startsAt).toISOString(),
+        subscription.paidUntil,
+        subscription.paymentMethodID,
+        subscription.deactivation?.date
+          ? new Date(subscription.deactivation.date).toISOString()
+          : '',
+        subscription.deactivation?.reason ?? ''
       ].join(',') + '\r\n'
-  })
+  }
+
   return csvStr
 }
 
@@ -229,4 +233,3 @@ export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000
 export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
 
 export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
-export const USER_PROPERTY_ORG_EMAIL = '_wepOrgEmail'

@@ -131,11 +131,14 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     if (intentState.customerID && payment.invoiceID) {
       const invoice = await loaders.invoicesByID.load(payment.invoiceID)
-      if (!invoice?.userID)
-        throw new Error(`Invoice with ID ${payment.invoiceID} does not have a userID`)
+      if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
 
-      const user = await dbAdapter.user.getUserByID(invoice.userID)
-      if (!user) throw new Error(`User with ID ${invoice.userID} does not exist`)
+      const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
+      if (!subscription)
+        throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+
+      const user = await dbAdapter.user.getUserByID(subscription.userID)
+      if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
 
       // adding or updating paymentProvider customer ID for user
       const paymentProviderCustomers = user.paymentProviderCustomers.filter(

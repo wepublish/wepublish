@@ -1,12 +1,4 @@
-import {
-  ConnectionResult,
-  DateFilter,
-  InputCursor,
-  Limit,
-  MetadataProperty,
-  SortOrder
-} from './common'
-import {PaymentPeriodicity} from './memberPlan'
+import {ConnectionResult, InputCursor, Limit, MetadataProperty, SortOrder} from './common'
 
 export interface CreateUserArgs {
   readonly input: UserInput
@@ -43,89 +35,10 @@ export enum UserSort {
   Name = 'name'
 }
 
-export interface UserSubscriptionFilter {
-  readonly startsAt?: DateFilter
-  readonly paidUntil?: DateFilter
-  readonly deactivationDate?: DateFilter
-  readonly deactivationReason?: SubscriptionDeactivationReason
-  readonly autoRenew?: boolean
-}
-
 export interface UserFilter {
   readonly name?: string
   readonly text?: string
-  readonly subscription?: UserSubscriptionFilter
-}
-
-export interface UserSubscriptionPeriod {
-  readonly id: string
-  readonly createdAt: Date
-  readonly startsAt: Date
-  readonly endsAt: Date
-  readonly paymentPeriodicity: PaymentPeriodicity
-  readonly amount: number
-  readonly invoiceID: string
-}
-
-export interface UserSubscriptionPeriodInput {
-  readonly startsAt: Date
-  readonly endsAt: Date
-  readonly paymentPeriodicity: PaymentPeriodicity
-  readonly amount: number
-  readonly invoiceID: string
-}
-
-export interface CreateUserSubscriptionPeriodArgs {
-  readonly userID: string
-  readonly input: UserSubscriptionPeriodInput
-}
-
-export interface DeleteUserSubscriptionPeriodArgs {
-  readonly userID: string
-  readonly periodID: string
-}
-
-export enum SubscriptionDeactivationReason {
-  None,
-  UserSelfDeactivated,
-  InvoiceNotPaid
-}
-
-export interface SubscriptionDeactivation {
-  date: Date
-  reason: SubscriptionDeactivationReason
-}
-
-export interface UserSubscription {
-  readonly memberPlanID: string
-  readonly paymentPeriodicity: PaymentPeriodicity
-  readonly monthlyAmount: number
-  readonly autoRenew: boolean
-  readonly startsAt: Date
-  readonly paidUntil: Date | null
-  readonly periods: UserSubscriptionPeriod[]
-  readonly paymentMethodID: string
-  readonly deactivation: SubscriptionDeactivation | null
-}
-
-export interface UserSubscriptionInput {
-  readonly memberPlanID: string
-  readonly paymentPeriodicity: PaymentPeriodicity
-  readonly monthlyAmount: number
-  readonly autoRenew: boolean
-  readonly startsAt: Date
-  readonly paidUntil: Date | null
-  readonly paymentMethodID: string
-  readonly deactivation: SubscriptionDeactivation | null
-}
-
-export interface UpdateUserSubscriptionArgs {
-  readonly userID: string
-  readonly input: UserSubscriptionInput
-}
-
-export interface DeleteUserSubscriptionArgs {
-  readonly userID: string
+  // readonly subscription?: UserSubscriptionFilter
 }
 
 export interface PaymentProviderCustomer {
@@ -187,7 +100,6 @@ export interface User {
 
   readonly roleIDs: string[]
 
-  readonly subscription?: UserSubscription
   readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
@@ -211,7 +123,6 @@ export interface UpdatePaymentProviderCustomerArgs {
 }
 
 export type OptionalUser = User | null
-export type OptionalUserSubscription = UserSubscription | null
 
 export interface GetUsersArgs {
   readonly cursor: InputCursor
@@ -238,15 +149,6 @@ export interface DBUserAdapter {
 
   addOAuth2Account(args: UserOAuth2AccountArgs): Promise<OptionalUser>
   deleteOAuth2Account(args: DeleteUserOAuth2AccountArgs): Promise<OptionalUser>
-
-  updateUserSubscription(args: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription>
-  deleteUserSubscription(args: DeleteUserSubscriptionArgs): Promise<string | null>
-  addUserSubscriptionPeriod(
-    args: CreateUserSubscriptionPeriodArgs
-  ): Promise<OptionalUserSubscription>
-  deleteUserSubscriptionPeriod(
-    args: DeleteUserSubscriptionPeriodArgs
-  ): Promise<OptionalUserSubscription>
 
   updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
 }

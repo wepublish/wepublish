@@ -48,6 +48,7 @@ import {GraphQLPublicInvoice} from './invoice'
 import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
 import {NotFound} from '../error'
+import {Invoice} from '../db/invoice'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -338,10 +339,24 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
       description: 'This query returns the invoices.',
-      resolve(root, {}, {authenticateUser, dbAdapter}) {
+      async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
-        return dbAdapter.invoice.getInvoicesByUserID(user.id)
+        const subscriptions = await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
+
+        const invoices: Invoice[] = []
+
+        for (const subscription of subscriptions) {
+          if (!subscription) continue
+          const subscriptionInvoices = await dbAdapter.invoice.getInvoicesBySubscriptionID(
+            subscription.id
+          )
+          for (const invoice of subscriptionInvoices) {
+            if (!invoice) continue
+            invoices.push(invoice)
+          }
+        }
+        return invoices
       }
     },
 
@@ -394,9 +409,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         const {authenticateUser, dbAdapter, paymentProviders} = context
         const {user} = authenticateUser()
 
-        const invoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        const invoice = invoices.find(invoice => invoice?.id === id)
+        const invoice = await dbAdapter.invoice.getInvoiceByID(id)
         if (!invoice) throw new NotFound('Invoice', id)
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(
+          invoice.subscriptionID
+        )
+        if (!subscription || subscription.userID !== user.id) throw new NotFound('Invoice', id)
 
         const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
         const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
@@ -423,8 +441,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         // FIXME: We need to implement a way to wait for all the database
         //  event hooks to finish before we return data. Will be solved in WPC-498
         await new Promise(resolve => setTimeout(resolve, 100))
-        const updatedInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        return updatedInvoices.find(invoice => invoice !== null && invoice.id === id)
+        return await dbAdapter.invoice.getInvoiceByID(id)
       }
     }
   }

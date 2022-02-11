@@ -441,6 +441,30 @@ export const CanLoginEditor: Permission = {
   deprecated: false
 }
 
+export const CanCreateSubscription: Permission = {
+  id: 'CAN_CREATE_SUBSCRIPTION',
+  description: 'Allows to create a subscription',
+  deprecated: false
+}
+
+export const CanGetSubscription: Permission = {
+  id: 'CAN_GET_SUBSCRIPTION',
+  description: 'Allows to get a subscription',
+  deprecated: false
+}
+
+export const CanGetSubscriptions: Permission = {
+  id: 'CAN_GET_SUBSCRIPTIONS',
+  description: 'Allows to get all subscriptions',
+  deprecated: false
+}
+
+export const CanDeleteSubscription: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION',
+  description: 'Allows to delete a subscription',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -508,7 +532,11 @@ export const AllPermissions: Permission[] = [
   CanGetPayments,
   CanGetPaymentProviders,
   CanSendJWTLogin,
-  CanLoginEditor
+  CanLoginEditor,
+  CanCreateSubscription,
+  CanGetSubscription,
+  CanGetSubscriptions,
+  CanDeleteSubscription
 ]
 
 export const EditorPermissions: Permission[] = [

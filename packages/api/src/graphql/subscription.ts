@@ -1,0 +1,155 @@
+import {
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLID
+} from 'graphql'
+import {UserSort} from '../db/user'
+import {GraphQLDateFilter, GraphQLPageInfo} from './common'
+import {Context} from '../context'
+import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
+import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {Subscription, SubscriptionDeactivationReason} from '../db/subscription'
+import {GraphQLUser} from './user'
+
+export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
+  name: 'SubscriptionDeactivationReason',
+  values: {
+    NONE: {value: SubscriptionDeactivationReason.None},
+    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.UserSelfDeactivated},
+    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.InvoiceNotPaid}
+  }
+})
+
+export const GraphQLUserSubscriptionDeactivation = new GraphQLObjectType({
+  name: 'UserSubscriptionDeactivation',
+  fields: {
+    date: {type: GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+  }
+})
+
+export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
+  name: 'Subscription',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    user: {
+      type: GraphQLNonNull(GraphQLUser),
+      resolve({userID}, args, {dbAdapter}) {
+        return dbAdapter.user.getUserByID(userID)
+      }
+    },
+    memberPlan: {
+      type: GraphQLNonNull(GraphQLMemberPlan),
+      resolve({memberPlanID}, args, {loaders}) {
+        return loaders.memberPlansByID.load(memberPlanID)
+      }
+    },
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethod: {
+      type: GraphQLNonNull(GraphQLPaymentMethod),
+      resolve({paymentMethodID}, args, {loaders}) {
+        return loaders.paymentMethodsByID.load(paymentMethodID)
+      }
+    },
+    deactivation: {type: GraphQLUserSubscriptionDeactivation}
+  }
+})
+
+export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Context>({
+  name: 'Subscription',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    memberPlan: {
+      type: GraphQLNonNull(GraphQLPublicMemberPlan),
+      resolve({memberPlanID}, args, {loaders}) {
+        return loaders.memberPlansByID.load(memberPlanID)
+      }
+    },
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethod: {
+      type: GraphQLNonNull(GraphQLPublicPaymentMethod),
+      resolve({paymentMethodID}, args, {loaders}) {
+        return loaders.paymentMethodsByID.load(paymentMethodID)
+      }
+    },
+    deactivation: {type: GraphQLUserSubscriptionDeactivation}
+  }
+})
+
+export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
+  name: 'UserSubscriptionFilter',
+  fields: {
+    startsAt: {type: GraphQLDateFilter},
+    paidUntil: {type: GraphQLDateFilter},
+    deactivationDate: {type: GraphQLDateFilter},
+    deactivationReason: {type: GraphQLSubscriptionDeactivationReason},
+    autoRenew: {type: GraphQLBoolean}
+  }
+})
+
+export const GraphQLSubscriptionSort = new GraphQLEnumType({
+  name: 'UserSort',
+  values: {
+    CREATED_AT: {value: UserSort.CreatedAt},
+    MODIFIED_AT: {value: UserSort.ModifiedAt}
+  }
+})
+
+export const GraphQLSubscriptionConnection = new GraphQLObjectType<any, Context>({
+  name: 'UserConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscription)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLUserSubscriptionDeactivationInput = new GraphQLInputObjectType({
+  name: 'UserSubscriptionDeactivationInput',
+  fields: {
+    date: {type: GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+  }
+})
+
+export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
+  name: 'SubscriptionInput',
+  fields: {
+    userID: {type: GraphQLNonNull(GraphQLID)},
+    memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+    deactivation: {type: GraphQLUserSubscriptionDeactivationInput}
+  }
+})
+
+export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
+  name: 'SubscriptionInput',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})

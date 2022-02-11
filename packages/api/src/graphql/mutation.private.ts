@@ -64,14 +64,11 @@ import {
   CanResetUserPassword,
   CanTakeActionOnComment,
   CanUpdatePeerProfile,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanCreateSubscription,
+  CanDeleteSubscription
 } from './permissions'
-import {
-  GraphQLUser,
-  GraphQLUserInput,
-  GraphQLUserSubscription,
-  GraphQLUserSubscriptionInput
-} from './user'
+import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
@@ -91,6 +88,7 @@ import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
+import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -427,26 +425,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    updateUserSubscription: {
-      type: GraphQLUserSubscription,
-      args: {
-        userID: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
-      },
-      async resolve(root, {userID, input}, {authenticate, dbAdapter, memberContext}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUser, roles)
-
-        const updatedUserSubscription = await dbAdapter.user.updateUserSubscription({userID, input})
-        if (!updatedUserSubscription) throw new NotFound('userSubscription', userID)
-
-        return await memberContext.handleSubscriptionChange({
-          userID,
-          userSubscription: updatedUserSubscription
-        })
-      }
-    },
-
     resetUserPassword: {
       type: GraphQLUser,
       args: {
@@ -484,17 +462,50 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    // Subscriptions
+    // ====
+
+    createSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateSubscription, roles)
+        return dbAdapter.subscription.createSubscription({input})
+      }
+    },
+
+    updateSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      async resolve(root, {id, input}, {authenticate, dbAdapter, memberContext}) {
+        const {roles} = authenticate()
+        authorise(CanCreateSubscription, roles)
+
+        const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
+        if (!updatedSubscription) throw new NotFound('subscription', id)
+
+        return await memberContext.handleSubscriptionChange({
+          subscription: updatedSubscription
+        })
+      }
+    },
+
     deleteUserSubscription: {
       type: GraphQLString,
       args: {
-        userID: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {userID}, {authenticate, dbAdapter}) {
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanDeleteUser, roles)
-        await dbAdapter.user.deleteUserSubscription({userID})
-        // TODO: what else should be removed???
-        return userID
+        authorise(CanDeleteSubscription, roles)
+        await dbAdapter.subscription.deleteSubscription({id})
+        return id
       }
     },
 

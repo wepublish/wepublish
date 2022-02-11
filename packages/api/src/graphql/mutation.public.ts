@@ -9,7 +9,6 @@ import {
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
-import crypto from 'crypto'
 
 import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
@@ -37,9 +36,7 @@ import {
   GraphQLPaymentProviderCustomer,
   GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
-  GraphQLPublicUserInput,
-  GraphQLPublicUserSubscription,
-  GraphQLPublicUserSubscriptionInput
+  GraphQLPublicUserInput
 } from './user'
 import {
   GraphQLPublicComment,
@@ -51,13 +48,13 @@ import {
   countRichtextChars,
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   MAX_COMMENT_LENGTH,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-  USER_PROPERTY_ORG_EMAIL
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
 } from '../utility'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSlug} from './slug'
 import {logger} from '../server'
-import {SubscriptionDeactivationReason} from '../db/user'
+import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
+import {SubscriptionDeactivationReason} from '../db/subscription'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -272,36 +269,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const userExists = await dbAdapter.user.getUser(email)
         if (userExists) throw new EmailAlreadyInUseError()
 
-        // FIXME: tempEmail is need because the register could fail and the user might try
-        //  again with the same mail address. This will be fixed in WPC-595
-        const tempEmail = `temp_${Date.now()}_${email}`
-        const user = await dbAdapter.user.createUser({
+        const tempUser = await dbAdapter.tempUser.createTempUser({
           input: {
             name,
             preferredName,
-            email: tempEmail,
-            emailVerifiedAt: null,
-            active: false,
-            properties: [
-              {
-                public: false,
-                key: USER_PROPERTY_ORG_EMAIL,
-                value: email
-              }
-            ],
-            roleIDs: []
-          },
-          password: crypto.randomBytes(48).toString('hex')
+            email
+          }
         })
 
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
+        if (!tempUser) {
+          logger('mutation.public').error('Could not create new temp user for email "%s"', email)
           throw new InternalError()
         }
 
-        const subscription = await dbAdapter.user.updateUserSubscription({
-          userID: user.id,
+        const subscription = await dbAdapter.subscription.createSubscription({
           input: {
+            userID: `__temp_${tempUser.id}`,
             startsAt: new Date(),
             paymentMethodID: paymentMethod.id,
             paymentPeriodicity,
@@ -316,23 +299,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!subscription) {
           logger('mutation.public').error(
             'Could not create new subscription for userID "%s"',
-            user.id
+            tempUser.id
           )
           throw new InternalError()
         }
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
-          userID: user.id,
-          userEmail: email,
-          userName: user.name,
-          userSubscription: subscription
+          subscription
         })
 
         if (!invoice) {
           logger('mutation.public').error(
-            'Could not create new invoice for subscription of userID "%s"',
-            user.id
+            'Could not create new invoice for subscription with ID "%s"',
+            subscription.id
           )
           throw new InternalError()
         }
@@ -467,16 +447,19 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     updateUserSubscription: {
-      type: GraphQLPublicUserSubscription,
+      type: GraphQLPublicSubscription,
       args: {
-        input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLPublicSubscriptionInput)}
       },
       description:
         "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
-      async resolve(root, {input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
+      async resolve(root, {id, input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
         const {user} = authenticateUser()
 
-        if (!user.subscription) throw new NotFound('user.subscription', user.id)
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+
+        if (!subscription) throw new NotFound('subscription', id)
 
         const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
 
@@ -499,10 +482,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         )
           throw new PaymentConfigurationNotAllowed()
 
-        const updateSubscription = await dbAdapter.user.updateUserSubscription({
-          userID: user.id,
+        const updateSubscription = await dbAdapter.subscription.updateSubscription({
+          id,
           input: {
-            ...user.subscription,
+            userID: user.id,
+            ...subscription,
             memberPlanID,
             paymentPeriodicity,
             monthlyAmount,
@@ -515,40 +499,44 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
         return await memberContext.handleSubscriptionChange({
-          userID: user.id,
-          userSubscription: updateSubscription
+          subscription: updateSubscription
         })
       }
     },
 
     cancelUserSubscription: {
-      type: GraphQLPublicUserSubscription,
-      args: {},
+      type: GraphQLPublicSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
       description:
         "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
-      async resolve(root, {}, {authenticateUser, dbAdapter, memberContext}) {
+      async resolve(root, {id}, {authenticateUser, dbAdapter, memberContext}) {
         const {user} = authenticateUser()
+        if (!user) throw new NotAuthenticatedError()
 
-        if (!user.subscription) throw new NotFound('user.subscription', user.id)
-        if (user.subscription.deactivation !== null)
-          throw new UserSubscriptionAlreadyDeactivated(user.subscription.deactivation.date)
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+
+        if (!subscription) throw new NotFound('subscription', id)
+
+        if (subscription.deactivation !== null)
+          throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
 
         const now = new Date()
         const deactivationDate =
-          user.subscription.paidUntil !== null && user.subscription.paidUntil > now
-            ? user.subscription.paidUntil
+          subscription.paidUntil !== null && subscription.paidUntil > now
+            ? subscription.paidUntil
             : now
 
         await memberContext.deactivateSubscriptionForUser({
-          userID: user.id,
+          subscriptionID: subscription.id,
           deactivationDate,
           deactivationReason: SubscriptionDeactivationReason.UserSelfDeactivated
         })
 
-        const updatedUser = await dbAdapter.user.getUserByID(user.id)
-        if (!updatedUser || !updatedUser.subscription)
-          throw new Error('Error during updateSubscription')
-        return updatedUser.subscription
+        const updatedSubscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        if (updatedSubscription) throw new Error('Error during updateSubscription')
+        return updatedSubscription
       }
     },
 
@@ -602,10 +590,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!paymentMethod)
           throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
-        const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
-        const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
-
+        const invoice = await dbAdapter.invoice.getInvoiceByID(invoiceID)
         if (!invoice) throw new NotFound('Invoice', invoiceID)
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(
+          invoice.subscriptionID
+        )
+        if (!subscription || subscription.userID !== user.id)
+          throw new NotFound('Invoice', invoiceID)
 
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
