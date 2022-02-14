@@ -114,7 +114,7 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
       return <PolisEmbed conversationID={value.conversationID} />
 
     case EmbedType.TikTokVideo:
-      return <TikTokVideoEmbed userID={value.userID} videoID={value.userID} />
+      return <TikTokVideoEmbed userID={value.userID} videoID={value.videoID} />
 
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed zoneID={value.zoneID} />

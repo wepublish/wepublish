@@ -2545,7 +2545,7 @@ type FullBlock_PolisConversationBlock_Fragment = (
 
 type FullBlock_TikTokVideoBlock_Fragment = (
   { __typename: 'TikTokVideoBlock' }
-  & Pick<TikTokVideoBlock, 'videoID' | 'userID'>
+  & Pick<TikTokVideoBlock, 'userID' | 'videoID'>
 );
 
 type FullBlock_BildwurfAdBlock_Fragment = (
@@ -4055,8 +4055,8 @@ export const FullBlockFragmentDoc = gql`
     conversationID
   }
   ... on TikTokVideoBlock {
-    videoID
     userID
+    videoID
   }
   ... on BildwurfAdBlock {
     zoneID

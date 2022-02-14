@@ -30,7 +30,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
     const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
     const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
-    const tikTokMatch = input.match(/tiktok\.com\/@([0-9a-zA-Z-_])+\/video\/([0-9]+)/)
+    const tikTokMatch = input.match(/tiktok\.com\/@([0-9a-zA-Z-_.])+\/video\/([0-9]+)/)
     const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/)
 
     if (facebookPostMatch) {
@@ -55,8 +55,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       const [, conversationID] = polisMatch
       setEmbed({type: EmbedType.PolisConversation, conversationID})
     } else if (tikTokMatch) {
-      const [, videoID, userID] = tikTokMatch
-      setEmbed({type: EmbedType.TikTokVideo, videoID, userID})
+      const [, userID, videoID] = tikTokMatch
+      setEmbed({type: EmbedType.TikTokVideo, userID, videoID})
     } else if (bildwurfAdMatch) {
       const [, zoneID] = bildwurfAdMatch
       setEmbed({type: EmbedType.BildwurfAd, zoneID})

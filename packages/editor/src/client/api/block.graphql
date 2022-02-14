@@ -147,8 +147,8 @@ fragment FullBlock on Block {
   }
 
   ... on TikTokVideoBlock {
-    videoID
     userID
+    videoID
   }
 
   ... on BildwurfAdBlock {

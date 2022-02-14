@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, ReactNode} from 'react'
+import React, {createContext, useContext, useEffect, ReactNode, useState} from 'react'
 import {useScript} from '../../utility'
 
 // Define some globals set by the SDKs.
@@ -30,24 +30,31 @@ export function TikTokProvider({children}: TikTokProviderProps) {
 }
 
 export interface TikTokVideoEmbedProps {
-  videoID: string
   userID: string
+  videoID: string
 }
 
-export function TikTokVideoEmbed({videoID, userID}: TikTokVideoEmbedProps) {
+export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedProps) {
   const context = useContext(TikTokContext)
   if (!context) {
     throw new Error(
       `Couldn't find TikTokContext, did you include TikTokProvider in the component tree?`
     )
   }
+  const [htmlContent, setHtmlContent] = useState('')
+
+  const tiktokData = async () => {
+    const response = await fetch(
+      `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}&format=json`
+    )
+    const data = await response.json()
+    setHtmlContent(data.html)
+  }
 
   const {isLoaded, isLoading, load} = context
 
-  console.log(window.tiktokEmbed)
-
   useEffect(() => {
-    console.log(window.tiktokEmbed)
+    // console.log(window.tiktokEmbed)
     if (isLoaded) {
       // window.tiktokEmbed
     } else if (!isLoading) {
@@ -56,35 +63,18 @@ export function TikTokVideoEmbed({videoID, userID}: TikTokVideoEmbedProps) {
   }, [isLoaded, isLoading])
 
   useEffect(() => {
-    fetch(
-      `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}&format=json`
-      // `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@scout2015/video/6718335390845095173`
-    ).then(data => console.log('data', data))
+    tiktokData()
   }, [])
 
   return (
     <div
+      dangerouslySetInnerHTML={{__html: htmlContent}}
       style={{
         display: 'flex',
         justifyContent: 'center',
         minHeight: 300,
         padding: 20
-      }}>
-      <blockquote
-        className="tiktok-embed"
-        cite={`https://www.tiktok.com/@${userID}/video/${videoID}`}
-        data-video-id={videoID}
-        style={{maxWidth: '605px', minWidth: '325px'}}>
-        <section>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            title={userID}
-            href={`https://www.tiktok.com/@${userID}`}>
-            @${userID}
-          </a>
-        </section>
-      </blockquote>
-    </div>
+      }}
+    />
   )
 }
