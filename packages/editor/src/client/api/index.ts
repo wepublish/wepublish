@@ -2074,7 +2074,7 @@ export type UpdateArticleMutation = (
 
 export type PublishArticleMutationVariables = Exact<{
   id: Scalars['ID'];
-  publishAt?: Maybe<Scalars['DateTime']>;
+  publishAt: Scalars['DateTime'];
   publishedAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 }>;
@@ -4469,7 +4469,7 @@ export type UpdateArticleMutationHookResult = ReturnType<typeof useUpdateArticle
 export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMutation>;
 export type UpdateArticleMutationOptions = Apollo.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
 export const PublishArticleDocument = gql`
-    mutation PublishArticle($id: ID!, $publishAt: DateTime, $publishedAt: DateTime!, $updatedAt: DateTime!) {
+    mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
   publishArticle(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
     ...MutationArticle
   }

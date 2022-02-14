@@ -119,7 +119,7 @@ mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
 
 mutation PublishArticle(
   $id: ID!
-  $publishAt: DateTime
+  $publishAt: DateTime!
   $publishedAt: DateTime!
   $updatedAt: DateTime!
 ) {
