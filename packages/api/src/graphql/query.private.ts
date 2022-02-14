@@ -632,6 +632,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    // copy filter and add field for peer
     peerArticles: {
       type: GraphQLNonNull(GraphQLPeerArticleConnection),
       args: {

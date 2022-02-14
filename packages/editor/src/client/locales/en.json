@@ -707,6 +707,17 @@
       "slug": "Slug",
       "title": "Payment Methods"
     },
+    "peerArticles": {
+      "peerArticles": "Peered Articles",
+      "title": "Title",
+      "lead": "Lead",
+      "peer": "Peer",
+      "publishedAt": "Publication date",
+      "publicationDate": "{{publicationDate, ccc PP p}}",
+      "authors": "Authors",
+      "articleImage": "Article image",
+      "originalArticle": "Original article"
+    },
     "peerList": {
       "overview": {
         "delete": "Delete",
