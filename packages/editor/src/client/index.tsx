@@ -18,6 +18,7 @@ import {TwitterProvider} from './blocks/embeds/twitter'
 import {InstagramProvider} from './blocks/embeds/instagram'
 import {FacebookProvider} from './blocks/embeds/facebook'
 import {HotApp} from './app'
+import {TikTokProvider} from './blocks/embeds/tikTok'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
@@ -118,7 +119,9 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <HotApp />
+                <TikTokProvider>
+                  <HotApp />
+                </TikTokProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>

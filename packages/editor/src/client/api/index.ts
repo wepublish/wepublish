@@ -220,7 +220,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -237,6 +237,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
   polisConversation?: Maybe<PolisConversationBlockInput>;
+  tikTokVideo?: Maybe<TikTokVideoBlockInput>;
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
@@ -1716,6 +1717,17 @@ export enum TeaserStyle {
   Text = 'TEXT'
 }
 
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock';
+  videoID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type TikTokVideoBlockInput = {
+  videoID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
 export type TitleBlock = {
   __typename?: 'TitleBlock';
   title?: Maybe<Scalars['String']>;
@@ -2209,6 +2221,9 @@ export type ArticleQuery = (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
       ) | (
+        { __typename?: 'TikTokVideoBlock' }
+        & FullBlock_TikTokVideoBlock_Fragment
+      ) | (
         { __typename?: 'BildwurfAdBlock' }
         & FullBlock_BildwurfAdBlock_Fragment
       ) | (
@@ -2528,6 +2543,11 @@ type FullBlock_PolisConversationBlock_Fragment = (
   & Pick<PolisConversationBlock, 'conversationID'>
 );
 
+type FullBlock_TikTokVideoBlock_Fragment = (
+  { __typename: 'TikTokVideoBlock' }
+  & Pick<TikTokVideoBlock, 'videoID' | 'userID'>
+);
+
 type FullBlock_BildwurfAdBlock_Fragment = (
   { __typename: 'BildwurfAdBlock' }
   & Pick<BildwurfAdBlock, 'zoneID'>
@@ -2592,7 +2612,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -3190,6 +3210,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'PolisConversationBlock' }
         & FullBlock_PolisConversationBlock_Fragment
+      ) | (
+        { __typename?: 'TikTokVideoBlock' }
+        & FullBlock_TikTokVideoBlock_Fragment
       ) | (
         { __typename?: 'BildwurfAdBlock' }
         & FullBlock_BildwurfAdBlock_Fragment
@@ -4030,6 +4053,10 @@ export const FullBlockFragmentDoc = gql`
   }
   ... on PolisConversationBlock {
     conversationID
+  }
+  ... on TikTokVideoBlock {
+    videoID
+    userID
   }
   ... on BildwurfAdBlock {
     zoneID
