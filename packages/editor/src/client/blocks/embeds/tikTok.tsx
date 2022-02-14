@@ -56,7 +56,7 @@ export function TikTokVideoEmbed({videoID, userID}: TikTokVideoEmbedProps) {
   }, [isLoaded, isLoading])
 
   useEffect(() => {
-    const res = fetch(
+    fetch(
       `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}&format=json`
       // `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@scout2015/video/6718335390845095173`
     ).then(data => console.log('data', data))
