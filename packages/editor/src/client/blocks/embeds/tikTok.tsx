@@ -49,7 +49,7 @@ export function TikTokVideoEmbed({videoID, userID}: TikTokVideoEmbedProps) {
   useEffect(() => {
     console.log(window.tiktokEmbed)
     if (isLoaded) {
-      window.tiktokEmbed
+      // window.tiktokEmbed
     } else if (!isLoading) {
       load()
     }
@@ -76,28 +76,14 @@ export function TikTokVideoEmbed({videoID, userID}: TikTokVideoEmbedProps) {
         data-video-id={videoID}
         style={{maxWidth: '605px', minWidth: '325px'}}>
         <section>
-          <a target="_blank" title={userID} href={`https://www.tiktok.com/@${userID}`}>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            title={userID}
+            href={`https://www.tiktok.com/@${userID}`}>
             @${userID}
           </a>
-          {/*<p>*/}
-          {/*  Scramble up ur name & I’ll try to guess it😍❤️*/}
-          {/*  <a title="foryoupage" target="_blank" href="https://www.tiktok.com/tag/foryoupage">*/}
-          {/*    #foryoupage*/}
-          {/*  </a>{' '}*/}
-          {/*  <a title="petsoftiktok" target="_blank" href="https://www.tiktok.com/tag/petsoftiktok\">*/}
-          {/*    #petsoftiktok*/}
-          {/*  </a>*/}
-          {/*  <a title="aesthetic" target="_blank" href="https://www.tiktok.com/tag/aesthetic">*/}
-          {/*    #aesthetic*/}
-          {/*  </a>*/}
-          {/*</p>{' '}*/}
-          {/*<a*/}
-          {/*  target="_blank"*/}
-          {/*  title="♬ original sound - 𝐇𝐚𝐰𝐚𝐢𝐢𓆉"*/}
-          {/*  href="https://www.tiktok.com/music/original-sound-6689804660171082501\">*/}
-          {/*  ♬ original sound - 𝐇𝐚𝐰𝐚𝐢𝐢𓆉*/}
-          {/*</a>*/}
-        </section>{' '}
+        </section>
       </blockquote>
     </div>
   )
