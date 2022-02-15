@@ -600,7 +600,7 @@ async function  applyApiServer() {
                 },
                 {
                   name: 'MEDIA_SERVER_INTERNAL_URL',
-                  value: `${mediaAppName}.${NAMESPACE}.pod.this-is-wrong.cluster.local`
+                  value: `http://${mediaAppName}.${NAMESPACE}.pod.this-is-wrong.cluster.local`
                 },
                 {
                   name: 'MEDIA_ADDRESS',
