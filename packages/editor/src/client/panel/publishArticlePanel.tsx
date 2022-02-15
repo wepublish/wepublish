@@ -96,6 +96,16 @@ export function PublishArticlePanel({
         )}
 
         <DescriptionList>
+          <DescriptionListItem label={t('articleEditor.panels.url')}>
+            {metadata?.url ? (
+              <a href={metadata.url} target="_blank" rel="noopener noreferrer">
+                {metadata.url}
+              </a>
+            ) : (
+              '-'
+            )}
+          </DescriptionListItem>
+
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
             {metadata.preTitle || '-'}
           </DescriptionListItem>

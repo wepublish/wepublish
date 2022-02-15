@@ -29,6 +29,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "url": "URL",
         "addTag": "Press enter to add tag",
         "addSlug": "Please add a slug",
         "allowPeerPublishing": "Allow peers to publish this article.",
@@ -613,6 +614,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}"
       },
       "panels": {
+        "url": "URL",
         "addTag": "Press enter to add tag",
         "chooseImage": "Choose Image",
         "close": "Close",

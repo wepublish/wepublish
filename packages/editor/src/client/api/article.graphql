@@ -181,6 +181,7 @@ query Article($id: ID!) {
         ...ImageRef
       }
       tags
+      url
       canonicalUrl
       properties {
         key

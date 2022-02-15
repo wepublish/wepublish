@@ -104,6 +104,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     seoTitle: '',
     authors: [],
     tags: [],
+    url: '',
     properties: [],
     canonicalUrl: '',
     shared: peerByDefault,
@@ -155,6 +156,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         seoTitle,
         lead,
         tags,
+        url,
         breaking,
         authors,
         image,
@@ -184,6 +186,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
         tags,
+        url,
         properties: properties.map(property => ({
           key: property.key,
           value: property.value,
