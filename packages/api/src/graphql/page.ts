@@ -106,6 +106,21 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
 
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((pageRevision, args, {urlAdapter}, info) => {
+        // The URLAdapter expects a public page to generate the public page URL.
+        // The URL should never be created with values from the updatedAt and
+        // publishedAt dates, but they are required by the method.
+        return urlAdapter.getPublicPageURL({
+          ...pageRevision,
+          id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
+          updatedAt: new Date(),
+          publishedAt: new Date()
+        } as PublicPage)
+      })
+    },
+
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
@@ -135,9 +150,17 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    draft: {type: GraphQLPageRevision},
-    published: {type: GraphQLPageRevision},
-    pending: {type: GraphQLPageRevision},
+    draft: {
+      type: GraphQLPageRevision
+    },
+
+    published: {
+      type: GraphQLPageRevision
+    },
+
+    pending: {
+      type: GraphQLPageRevision
+    },
 
     latest: {
       type: GraphQLNonNull(GraphQLPageRevision),
@@ -145,10 +168,9 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
         return draft ?? pending ?? published
       })
     }
-
-    // TODO: Implement page history
-    // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageRevision)))}
   }
+  // TODO: Implement page history
+  // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageRevision)))}
 })
 
 export const GraphQLPageConnection = new GraphQLObjectType({

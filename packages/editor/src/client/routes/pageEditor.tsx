@@ -71,6 +71,7 @@ export function PageEditor({id}: PageEditorProps) {
     title: '',
     description: '',
     tags: [],
+    url: '',
     properties: [],
     image: undefined,
     socialMediaTitle: undefined,
@@ -116,6 +117,7 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description,
         tags,
+        url,
         image,
         blocks,
         properties,
@@ -132,6 +134,7 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
+        url,
         properties: properties.map(property => ({
           key: property.key,
           value: property.value,
