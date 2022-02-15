@@ -40,7 +40,7 @@ export function ImageGalleryBlock({
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (autofocus) {
+    if (autofocus && !value.images[0].image) {
       setGalleryListEditModalOpen(true)
     }
   }, [])
