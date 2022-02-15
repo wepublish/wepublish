@@ -419,7 +419,7 @@ export type Mutation = {
   /**
    * This mutation allows to update the user's subscription by taking an input of
    * type UserSubscription and throws an error if the user doesn't already have a
-   * subscription. Updating user subscriptions will set deactivation to null
+   * subscription. Updating user subscriptions will set deactivatedAt to null
    */
   updateUserSubscription?: Maybe<UserSubscription>
   /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */

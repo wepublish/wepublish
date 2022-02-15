@@ -32,6 +32,7 @@ export function PeerArticleList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
+  // fetch peered articles
   const {
     data: peerArticleListData,
     refetch,
@@ -44,6 +45,13 @@ export function PeerArticleList() {
 
   // fetch all peers
   const {data: peerListData, error: peerListError} = usePeerListQuery({
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore'
+  })
+
+  // fetch peered articles with filter by peer option
+  // which query ? Create new query ?
+  const {data: filterByPeerPeerListData, error: peerListError} = usePeerArticleListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })
@@ -65,6 +73,7 @@ export function PeerArticleList() {
   // console.log('peerARticleListData:  ', peerArticleListData)
 
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
+
   const {Column, HeaderCell, Cell, Pagination} = Table
 
   useEffect(() => {
@@ -225,7 +234,7 @@ export function PeerArticleList() {
             <Cell>
               {(rowData: PeerArticle) => (
                 <Link href={rowData.peer.hostURL} target="blank">
-                  to original Article
+                  {t('peerArticles.toOriginalArticle')}
                 </Link>
               )}
             </Cell>

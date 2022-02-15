@@ -716,7 +716,8 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "authors": "Authors",
       "articleImage": "Article image",
-      "originalArticle": "Original article"
+      "originalArticle": "Original article",
+      "toOriginalArticle": "To original article"
     },
     "peerList": {
       "overview": {
