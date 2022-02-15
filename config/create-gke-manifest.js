@@ -38,6 +38,7 @@ const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-
 
 
 const mediaAppName = `${GITHUB_REF_SHORT}-media-${ENVIRONMENT_NAME}`
+const mediaPort = 4100
 
 main().catch(e => {
   process.stderr.write(e.toString())
@@ -313,7 +314,7 @@ async function applyWebsite() {
 async function applyMediaServer() {
   const app = 'media'
   const appName = mediaAppName
-  const appPort = 4100
+  const appPort = mediaPort
   const mediaImage = 'ghcr.io/wepublish/karma-media-server:latest'
 
   const pvc = {
@@ -600,7 +601,7 @@ async function  applyApiServer() {
                 },
                 {
                   name: 'MEDIA_SERVER_INTERNAL_URL',
-                  value: `http://${mediaAppName}.${NAMESPACE}.pod.cluster.local`
+                  value: `http://${mediaAppName}.${NAMESPACE}.svc.cluster.local:${mediaPort}`
                 },
                 {
                   name: 'MEDIA_ADDRESS',
