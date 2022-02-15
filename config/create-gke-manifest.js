@@ -36,6 +36,9 @@ const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/m
 
 const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
 
+
+const mediaAppName = `${GITHUB_REF_SHORT}-media-${ENVIRONMENT_NAME}`
+
 main().catch(e => {
   process.stderr.write(e.toString())
   process.exit(1)
@@ -309,7 +312,7 @@ async function applyWebsite() {
 
 async function applyMediaServer() {
   const app = 'media'
-  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
+  const appName = mediaAppName
   const appPort = 4100
   const mediaImage = 'ghcr.io/wepublish/karma-media-server:latest'
 
@@ -594,6 +597,10 @@ async function  applyApiServer() {
                 {
                   name: 'MEDIA_SERVER_URL',
                   value: `https://${domainMedia}`
+                },
+                {
+                  name: 'MEDIA_SERVER_INTERNAL_URL',
+                  value: `${mediaAppName}.${NAMESPACE}.pod.this-is-wrong.cluster.local`
                 },
                 {
                   name: 'MEDIA_ADDRESS',
