@@ -61,6 +61,15 @@ export function PublishPagePanel({
         />
 
         <DescriptionList>
+          <DescriptionListItem label={t('pageEditor.panels.url')}>
+            {metadata?.url ? (
+              <a href={metadata.url} target="_blank" rel="noopener noreferrer">
+                {metadata.url}
+              </a>
+            ) : (
+              '-'
+            )}
+          </DescriptionListItem>
           <DescriptionListItemWithMessage
             label={t('pageEditor.panels.title')}
             message={t('pageEditor.panels.enterTitle')}
