@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {PeerArticle, usePeerArticleListQuery, usePeerListQuery} from '../api'
+import {Peer, PeerArticle, usePeerArticleListQuery, usePeerListQuery} from '../api'
 
 import {
   Avatar,
@@ -21,6 +21,8 @@ export function PeerArticleList() {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState('')
+
+  const [allPeers, setAllPeers] = useState<Peer[]>([])
 
   const listVariables = {
     filter: filter || undefined,
@@ -46,28 +48,13 @@ export function PeerArticleList() {
     errorPolicy: 'ignore'
   })
 
-  let allPeers: [object]
-
   console.log('PeerListData', peerListData)
 
-  const peers = peerListData?.peers?.forEach(peer => {
-    // allPeers.push()
-    // peer.label = peer.name
-    // define array of object where name is label
-    // for each peer, get peer object and change name key to label
-  })
-
-  console.log('peers -->', peers)
-  // console.log('allPeers -->', allPeers)
-
-  // Structure of data is :
-  // PeerListData : {
-  //  peers: [
-  // peer 1 {
-  //  name: name
-  // }
-  // ]
-  // }
+  useEffect(() => {
+    if (peerListData?.peers) {
+      setAllPeers(peerListData?.peers)
+    }
+  }, [peerListData?.peers])
 
   const {t} = useTranslation()
 
@@ -121,7 +108,11 @@ export function PeerArticleList() {
 
       <SelectPicker
         label={'Peer'}
-        data={fakeData}
+        // data={fakeData}
+        data={allPeers.map(peer => ({
+          value: peer.id,
+          label: peer.profile?.name
+        }))}
         style={{width: 150, marginTop: 10}}
         placeholder={'Filter by peer'}
         searchable={false}></SelectPicker>
