@@ -128,6 +128,23 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     canonicalUrl: {type: GraphQLString},
 
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
+        // The URLAdapter expects a public article to generate the public article URL.
+        // The URL should never be created with values from the updatedAt, publishAt
+        // and publishedAt dates, but they are required by the method.
+        return urlAdapter.getPublicArticleURL({
+          ...articleRevision,
+          id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
+          shared: true,
+          updatedAt: new Date(),
+          publishAt: new Date(),
+          publishedAt: new Date()
+        } as PublicArticle)
+      })
+    },
+
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
@@ -186,7 +203,6 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
         return draft ?? pending ?? published
       })
     }
-
     // TODO: Implement article history
     // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }

@@ -100,6 +100,7 @@ export type ArticleRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -1136,6 +1137,7 @@ export type PageRevision = {
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
+  url: Scalars['String'];
   image?: Maybe<Image>;
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -2156,7 +2158,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3144,7 +3146,7 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -4659,6 +4661,7 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      url
       canonicalUrl
       properties {
         key
@@ -6047,6 +6050,7 @@ export const PageDocument = gql`
         ...ImageRef
       }
       tags
+      url
       properties {
         key
         value
