@@ -446,14 +446,16 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
 
               case TeaserType.PeerArticle:
                 return {
-                  peerArticle: {
-                    style: flexTeaser.teaser.style,
-                    imageID: flexTeaser.teaser.image?.id,
-                    preTitle: flexTeaser.teaser.preTitle || undefined,
-                    title: flexTeaser.teaser.title || undefined,
-                    lead: flexTeaser.teaser.lead || undefined,
-                    peerID: flexTeaser.teaser.peer.id,
-                    articleID: flexTeaser.teaser.articleID
+                  teaser: {
+                    peerArticle: {
+                      style: flexTeaser.teaser.style,
+                      imageID: flexTeaser.teaser.image?.id,
+                      preTitle: flexTeaser.teaser.preTitle || undefined,
+                      title: flexTeaser.teaser.title || undefined,
+                      lead: flexTeaser.teaser.lead || undefined,
+                      peerID: flexTeaser.teaser.peer.id,
+                      articleID: flexTeaser.teaser.articleID
+                    }
                   },
                   alignment: {
                     i: flexTeaser.alignment.i,
@@ -467,13 +469,15 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
 
               case TeaserType.Page:
                 return {
-                  page: {
-                    style: flexTeaser.teaser.style,
-                    imageID: flexTeaser.teaser.image?.id,
-                    preTitle: flexTeaser.teaser.preTitle || undefined,
-                    title: flexTeaser.teaser.title || undefined,
-                    lead: flexTeaser.teaser.lead || undefined,
-                    pageID: flexTeaser.teaser.page.id
+                  teaser: {
+                    page: {
+                      style: flexTeaser.teaser.style,
+                      imageID: flexTeaser.teaser.image?.id,
+                      preTitle: flexTeaser.teaser.preTitle || undefined,
+                      title: flexTeaser.teaser.title || undefined,
+                      lead: flexTeaser.teaser.lead || undefined,
+                      pageID: flexTeaser.teaser.page.id
+                    }
                   },
                   alignment: {
                     i: flexTeaser.alignment.i,
@@ -707,7 +711,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
             switch (flexTeaser?.teaser?.__typename) {
               case 'ArticleTeaser':
                 return {
-                  // teaser: flexTeaser?.teaser as ArticleTeaser,
                   teaser: flexTeaser?.teaser.article
                     ? {
                         type: TeaserType.Article,
