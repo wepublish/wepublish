@@ -19,7 +19,7 @@ export interface PublishArticlePanelProps {
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
+  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
 export function PublishArticlePanel({
@@ -35,9 +35,11 @@ export function PublishArticlePanel({
 
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
 
-  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
+  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
 
-  const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
+  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
+    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
+  )
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
     !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
@@ -47,7 +49,7 @@ export function PublishArticlePanel({
 
   useEffect(() => {
     if (!publishAt || !isPublishDateActive) {
-      setpublishAt(publishedAt)
+      setPublishAt(publishedAt)
     }
   }, [isPublishDateActive, publishedAt])
 
@@ -75,7 +77,7 @@ export function PublishArticlePanel({
         <DateTimePicker
           dateTime={updatedAt}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setupdatedAt(date)}
+          changeDate={date => setUpdatedAt(date)}
         />
 
         {updatedAt && publishedAt && updatedAt < publishedAt ? (
@@ -97,7 +99,7 @@ export function PublishArticlePanel({
           <DateTimePicker
             dateTime={publishAt}
             label={t('articleEditor.panels.publishAt')}
-            changeDate={date => setpublishAt(date)}
+            changeDate={date => setPublishAt(date)}
             helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
           />
         ) : (
@@ -208,9 +210,8 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt || !metadata.slug || updatedAt < publishedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
-
+          disabled={!publishedAt || !metadata.slug || (updatedAt && updatedAt < publishedAt)}
+          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('articleEditor.panels.confirm')}
         </Button>
 
