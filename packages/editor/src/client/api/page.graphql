@@ -140,6 +140,7 @@ query Page($id: ID!) {
         ...ImageRef
       }
       tags
+      url
       properties {
         key
         value
