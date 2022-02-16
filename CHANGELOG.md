@@ -1,6 +1,56 @@
 # Change Log
 
 
+## v3.0.0-alpha.0 (2022-02-16)
+
+#### :boom: Breaking Change
+* `api`
+  * [#500](https://github.com/wepublish/wepublish/pull/500) generate loginURL for mails ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`
+  * [#503](https://github.com/wepublish/wepublish/pull/503) bug fix for user.subscription.deactivation filters ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#490](https://github.com/wepublish/wepublish/pull/490) Article/Page public URL in editor page ([@bishoymelek](https://github.com/bishoymelek))
+  * [#484](https://github.com/wepublish/wepublish/pull/484) export csv for users with subscriptions ([@bishoymelek](https://github.com/bishoymelek))
+  * [#403](https://github.com/wepublish/wepublish/pull/403) flex teaser block ([@penk85](https://github.com/penk85))
+* `api`
+  * [#500](https://github.com/wepublish/wepublish/pull/500) generate loginURL for mails ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`, `editor`
+  * [#475](https://github.com/wepublish/wepublish/pull/475) more detailed deactivation ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#505](https://github.com/wepublish/wepublish/pull/505) Save flex teaser of page and peer ([@penk85](https://github.com/penk85))
+  * [#491](https://github.com/wepublish/wepublish/pull/491) resolve auto open gallery on save ([@penk85](https://github.com/penk85))
+* `api`
+  * [#494](https://github.com/wepublish/wepublish/pull/494) duplicate pending article/page ([@penk85](https://github.com/penk85))
+  * [#473](https://github.com/wepublish/wepublish/pull/473) bug fix for checking invoice states ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#493](https://github.com/wepublish/wepublish/pull/493) f/wpc-611-improve-publication-behavior ([@camilleory](https://github.com/camilleory))
+  * [#483](https://github.com/wepublish/wepublish/pull/483) f/wpc-600 preview link ([@camilleory](https://github.com/camilleory))
+  * [#481](https://github.com/wepublish/wepublish/pull/481) F/wpc 605 preview publish tooltip ([@camilleory](https://github.com/camilleory))
+* Other
+  * [#480](https://github.com/wepublish/wepublish/pull/480) Remove mail hardcoded mail ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api-db-mongodb`, `api`, `editor`
+  * [#460](https://github.com/wepublish/wepublish/pull/460) F/wpc-585-pagination-image-library ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `editor`
+  * [#478](https://github.com/wepublish/wepublish/pull/478) Fix typos in i18n ([@DamianNode](https://github.com/DamianNode))
+
+#### Committers: 7
+- Camille ([@camilleory](https://github.com/camilleory))
+- Damian Janus ([@DamianNode](https://github.com/DamianNode))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.15.0 (2022-01-04)
 
 #### :boom: Breaking Change
