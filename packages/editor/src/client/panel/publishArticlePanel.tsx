@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 
-import {useTranslation} from 'react-i18next'
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -10,6 +9,7 @@ import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessag
 
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
+import {useTranslation} from 'react-i18next'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date
@@ -78,6 +78,14 @@ export function PublishArticlePanel({
           changeDate={date => setupdatedAt(date)}
         />
 
+        {updatedAt && publishedAt && updatedAt < publishedAt ? (
+          <Message
+            type="warning"
+            description={t('articleEditor.panels.updateDateWarning')}></Message>
+        ) : (
+          ''
+        )}
+
         <Checkbox
           value={isPublishDateActive}
           checked={isPublishDateActive}
@@ -90,6 +98,7 @@ export function PublishArticlePanel({
             dateTime={publishAt}
             label={t('articleEditor.panels.publishAt')}
             changeDate={date => setpublishAt(date)}
+            helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
           />
         ) : (
           ''
@@ -199,8 +208,9 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt || !metadata.slug}
+          disabled={!publishedAt || !updatedAt || !metadata.slug || updatedAt < publishedAt}
           onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
+
           {t('articleEditor.panels.confirm')}
         </Button>
 

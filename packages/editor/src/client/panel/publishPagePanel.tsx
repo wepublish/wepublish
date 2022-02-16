@@ -74,6 +74,11 @@ export function PublishPagePanel({
           label={t('pageEditor.panels.updateDate')}
           changeDate={date => setupdatedAt(date)}
         />
+        {updatedAt && publishedAt && updatedAt < publishedAt ? (
+          <Message type="warning" description={t('pageEditor.panels.updateDateWarning')}></Message>
+        ) : (
+          ''
+        )}
 
         <Checkbox
           value={isPublishDateActive}
@@ -91,6 +96,7 @@ export function PublishPagePanel({
             changeDate={date => {
               setpublishAt(date)
             }}
+            helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
           />
         ) : (
           ''
@@ -161,8 +167,9 @@ export function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt}
+          disabled={!publishedAt || !updatedAt || updatedAt < publishedAt}
           onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
+
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
