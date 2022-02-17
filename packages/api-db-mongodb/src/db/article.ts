@@ -425,12 +425,12 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     await this.updatePendingArticles()
     const article = await this.articles.findOne({
       $or: [
-        {published: {$ne: null}, 'published.slug': {$in: slug}},
-        {pending: {$ne: null}, 'pending.slug': {$in: slug}}
+        {published: {$ne: null}, 'published.slug': {$eq: slug}},
+        {pending: {$ne: null}, 'pending.slug': {$eq: slug}}
       ]
     })
 
-    return article?.published
+    return article?.published || article?.pending
       ? ({
           id: article._id,
           shared: article.shared,

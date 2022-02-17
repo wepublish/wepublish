@@ -41,28 +41,26 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
     csvStr +=
       [
         user.id,
-        user.name,
-        user.email,
+        `"${user.name ?? ''}"`,
+        `"${user.email ?? ''}"`,
         user.active,
-        new Date(user.createdAt).toISOString(),
-        new Date(user.modifiedAt).toISOString(),
-        user.address?.company ?? '',
-        user.address?.streetAddress ?? '',
-        user.address?.streetAddress2 ?? '',
-        user.address?.zipCode ?? '',
-        user.address?.city ?? '',
-        user.address?.country ?? '',
-        subscription.memberPlanID,
-        subscription.paymentPeriodicity,
-        subscription.monthlyAmount,
-        subscription.autoRenew,
-        new Date(subscription.startsAt).toISOString(),
-        subscription.paidUntil,
-        subscription.paymentMethodID,
-        subscription.deactivation?.date
-          ? new Date(subscription.deactivation.date).toISOString()
-          : '',
-        subscription.deactivation?.reason ?? ''
+        user.createdAt.toLocaleDateString(),
+        user.modifiedAt.toLocaleDateString(),
+        `"${address?.company ?? ''}"`,
+        `"${address?.streetAddress ?? ''}"`,
+        `"${address?.streetAddress2 ?? ''}"`,
+        `"${address?.zipCode ?? ''}"`,
+        `"${address?.city ?? ''}"`,
+        `"${address?.country ?? ''}"`,
+        subscription?.memberPlanID ?? '',
+        subscription?.paymentPeriodicity ?? '',
+        subscription?.monthlyAmount ?? '',
+        subscription?.autoRenew ?? '',
+        subscription?.startsAt?.toLocaleDateString() ?? '',
+        subscription?.paidUntil?.toLocaleDateString() ?? 'no pay',
+        subscription?.paymentMethodID ?? '',
+        subscription?.deactivation?.date?.toLocaleDateString() ?? '',
+        subscription?.deactivation?.reason ?? ''
       ].join(',') + '\r\n'
   }
 
