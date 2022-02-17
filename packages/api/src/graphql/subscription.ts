@@ -10,7 +10,13 @@ import {
   GraphQLID
 } from 'graphql'
 import {UserSort} from '../db/user'
-import {GraphQLDateFilter, GraphQLPageInfo} from './common'
+import {
+  GraphQLDateFilter,
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyPublic,
+  GraphQLMetadataPropertyPublicInput,
+  GraphQLPageInfo
+} from './common'
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
@@ -62,6 +68,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
         return loaders.paymentMethodsByID.load(paymentMethodID)
       }
     },
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
     deactivation: {type: GraphQLUserSubscriptionDeactivation}
   }
 })
@@ -85,6 +92,12 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Con
       type: GraphQLNonNull(GraphQLPublicPaymentMethod),
       resolve({paymentMethodID}, args, {loaders}) {
         return loaders.paymentMethodsByID.load(paymentMethodID)
+      }
+    },
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) => {
+        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
       }
     },
     deactivation: {type: GraphQLUserSubscriptionDeactivation}
@@ -138,6 +151,9 @@ export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput)))
+    },
     deactivation: {type: GraphQLUserSubscriptionDeactivationInput}
   }
 })

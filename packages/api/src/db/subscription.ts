@@ -1,4 +1,11 @@
-import {ConnectionResult, DateFilter, InputCursor, Limit, SortOrder} from './common'
+import {
+  ConnectionResult,
+  DateFilter,
+  InputCursor,
+  Limit,
+  MetadataProperty,
+  SortOrder
+} from './common'
 import {PaymentPeriodicity} from './memberPlan'
 
 export enum SubscriptionDeactivationReason {
@@ -21,6 +28,7 @@ export interface SubscriptionInput {
   readonly startsAt: Date
   readonly paidUntil: Date | null
   readonly paymentMethodID: string
+  readonly properties: MetadataProperty[]
   readonly deactivation: SubscriptionDeactivation | null
 }
 
@@ -49,12 +57,6 @@ export interface SubscriptionFilter {
   readonly autoRenew?: boolean
 }
 
-export interface TemporaryUser {
-  readonly name: string
-  readonly preferredName: string
-  readonly email: string
-}
-
 export interface Subscription {
   readonly id: string
   readonly createdAt: Date
@@ -68,6 +70,7 @@ export interface Subscription {
   readonly paidUntil: Date | null
   readonly periods: SubscriptionPeriod[]
   readonly paymentMethodID: string
+  readonly properties: MetadataProperty[]
   readonly deactivation: SubscriptionDeactivation | null
 }
 
@@ -119,7 +122,7 @@ export interface DBSubscriptionAdapter {
 
   getSubscriptionByID(id: string): Promise<OptionalSubscription>
   getSubscriptionsByID(ids: readonly string[]): Promise<OptionalSubscription[]>
-  getSubscriptionsByUserID(id: string): Promise<OptionalSubscription[]>
+  getSubscriptionsByUserID(userID: string): Promise<OptionalSubscription[]>
 
   getSubscriptions(args: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>>
 }

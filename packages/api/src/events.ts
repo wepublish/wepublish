@@ -17,6 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import crypto from 'crypto'
+import {Subscription} from './db/subscription'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -60,6 +61,9 @@ export const paymentMethodModelEvents = new EventEmitter() as PaymentMethodModel
 export type PeerModelEventsEmitter = TypedEmitter<ModelEvents<Peer>>
 export const peerModelEvents = new EventEmitter() as PeerModelEventsEmitter
 
+export type SubscriptionModelEventsEmitter = TypedEmitter<ModelEvents<Subscription>>
+export const subscriptionModelEvents = new EventEmitter() as SubscriptionModelEventsEmitter
+
 export type UserModelEventsEmitter = TypedEmitter<ModelEvents<User>>
 export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 
@@ -78,6 +82,7 @@ export type EventsEmitter =
   | PaymentModelEventEmitter
   | PaymentMethodModelEventEmitter
   | PeerModelEventsEmitter
+  | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
 
@@ -147,6 +152,11 @@ export const methodsToProxy: MethodsToProxy[] = [
     eventEmitter: peerModelEvents
   },
   {
+    key: 'subscription',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: subscriptionModelEvents
+  },
+  {
     key: 'user',
     methods: ['create', 'update', 'delete'],
     eventEmitter: userModelEvents
@@ -208,6 +218,14 @@ invoiceModelEvents.on('update', async (context, model) => {
         if (!user) {
           // TODO: handle super error
           return
+        }
+
+        const deletedTempUser = await context.dbAdapter.tempUser.deleteTempUser({
+          id: tempUser.id
+        })
+
+        if (!deletedTempUser) {
+          // TODO: handle super error
         }
 
         const updatedSubscription = await context.dbAdapter.subscription.updateSubscription({

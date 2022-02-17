@@ -55,6 +55,7 @@ import {GraphQLSlug} from './slug'
 import {logger} from '../server'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {SubscriptionDeactivationReason} from '../db/subscription'
+import {GraphQLMetadataPropertyPublicInput} from './common'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -203,6 +204,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
         paymentMethodID: {type: GraphQLID},
         paymentMethodSlug: {type: GraphQLSlug},
+        subscriptionProperties: {
+          type: GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+        },
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -221,6 +225,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           monthlyAmount,
           paymentMethodID,
           paymentMethodSlug,
+          subscriptionProperties,
           successURL,
           failureURL
         },
@@ -282,6 +287,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new InternalError()
         }
 
+        const properties = Array.isArray(subscriptionProperties)
+          ? subscriptionProperties.map(property => {
+              return {
+                public: true,
+                key: property.key,
+                value: property.value
+              }
+            })
+          : []
+
         const subscription = await dbAdapter.subscription.createSubscription({
           input: {
             userID: `__temp_${tempUser.id}`,
@@ -292,6 +307,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             monthlyAmount,
             deactivation: null,
             memberPlanID: memberPlan.id,
+            properties,
             autoRenew
           }
         })

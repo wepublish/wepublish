@@ -3,24 +3,19 @@ import bcrypt from 'bcrypt'
 import {
   ConnectionResult,
   CreateUserArgs,
-  CreateUserSubscriptionPeriodArgs,
   DBUserAdapter,
   DeleteUserArgs,
   DeleteUserOAuth2AccountArgs,
-  DeleteUserSubscriptionArgs,
-  DeleteUserSubscriptionPeriodArgs,
   GetUserByOAuth2AccountArgs,
   GetUserForCredentialsArgs,
   GetUsersArgs,
   InputCursorType,
   LimitType,
   OptionalUser,
-  OptionalUserSubscription,
   ResetUserPasswordArgs,
   SortOrder,
   UpdatePaymentProviderCustomerArgs,
   UpdateUserArgs,
-  UpdateUserSubscriptionArgs,
   User,
   UserOAuth2Account,
   UserOAuth2AccountArgs,
@@ -33,8 +28,6 @@ import {CollectionName, DBUser} from './schema'
 import {escapeRegExp, MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
-import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
-import nanoid from 'nanoid'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -166,7 +159,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         lastLogin: user.lastLogin,
         properties: user.properties,
         roleIDs: user.roleIDs,
-        subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
       }
     })
@@ -190,7 +182,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         lastLogin: user.lastLogin,
         properties: user.properties,
         roleIDs: user.roleIDs,
-        subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
       }
     }
@@ -215,7 +206,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         lastLogin: user.lastLogin,
         properties: user.properties,
         roleIDs: user.roleIDs,
-        subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
@@ -245,7 +235,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         lastLogin: user.lastLogin,
         properties: user.properties,
         roleIDs: user.roleIDs,
-        subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
@@ -302,7 +291,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       })
     }
 
-    if (filter?.subscription !== undefined) {
+    // TODO: Move this to getSubscriptions()
+    /* if (filter?.subscription !== undefined) {
       textFilter.$and?.push({subscription: {$exists: true}})
     }
     if (filter?.subscription?.startsAt !== undefined) {
@@ -343,7 +333,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
     if (filter?.subscription?.autoRenew !== undefined) {
       textFilter.$and?.push({'subscription.autoRenew': {$eq: filter.subscription.autoRenew}})
-    }
+    } */
 
     const [totalCount, users] = await Promise.all([
       this.users.countDocuments(textFilter, {
@@ -401,7 +391,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
   }
 
-  async updateUserSubscription({
+  /* async updateUserSubscription({
     userID,
     input
   }: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription> {
@@ -440,9 +430,9 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?.subscription ? value.subscription : null
-  }
+  } */
 
-  async deleteUserSubscription({userID}: DeleteUserSubscriptionArgs): Promise<string | null> {
+  /* async deleteUserSubscription({userID}: DeleteUserSubscriptionArgs): Promise<string | null> {
     const {value} = await this.users.findOneAndUpdate(
       {_id: userID},
       {
@@ -456,9 +446,9 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?._id
-  }
+  } */
 
-  async addUserSubscriptionPeriod({
+  /* async addUserSubscriptionPeriod({
     userID,
     input
   }: CreateUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
@@ -512,7 +502,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?.subscription ? value.subscription : null
-  }
+  } */
 
   async updatePaymentProviderCustomers({
     userID,
