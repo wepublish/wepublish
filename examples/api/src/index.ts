@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {
+  articleModelEvents,
   Author,
   CommentItemType,
   JobType,
@@ -366,6 +367,12 @@ async function asyncMain() {
     introspection: true,
     tracing: true,
     logger
+  })
+
+  articleModelEvents.on('create', async (context, model) => {
+    console.log('New Article created with id', model.id)
+    // throw new Error('just a random error')
+    console.log('afterwards')
   })
 
   // eslint-disable-next-line no-unused-expressions
