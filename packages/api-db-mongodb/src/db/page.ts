@@ -401,7 +401,7 @@ export class MongoDBPageAdapter implements DBPageAdapter {
 
     const pageMap = Object.fromEntries(
       pages.map(({_id: id, published, pending}) => [
-        (published?.slug || pending?.slug)!,
+        (published?.slug ?? pending?.slug)!,
         {id, ...(published || pending)!}
       ])
     )

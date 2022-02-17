@@ -372,7 +372,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
+  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
     if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
@@ -389,7 +389,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             id: articleID,
             publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
             publishedAt: publishedAt.toISOString(),
-            updatedAt: updatedAt.toISOString()
+            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
           }
         })
 
@@ -565,8 +565,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           publishAtDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt) => {
-            handlePublish(publishedAt, updatedAt, publishAt)
+          onConfirm={(publishedAt, publishAt, updatedAt) => {
+            handlePublish(publishedAt, publishAt, updatedAt)
             setPublishDialogOpen(false)
           }}
         />
