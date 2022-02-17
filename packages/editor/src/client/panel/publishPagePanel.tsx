@@ -19,7 +19,7 @@ export interface PublishPagePanelProps {
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, updatedAt: Date, publishAt: Date): void
+  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
 export function PublishPagePanel({
@@ -35,9 +35,11 @@ export function PublishPagePanel({
 
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
 
-  const [publishAt, setpublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
+  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
 
-  const [updatedAt, setupdatedAt] = useState<Date | undefined>(updatedAtDate ?? now)
+  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
+    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
+  )
 
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
     !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
@@ -47,7 +49,7 @@ export function PublishPagePanel({
 
   useEffect(() => {
     if (!publishAt || !isPublishDateActive) {
-      setpublishAt(publishedAt)
+      setPublishAt(publishedAt)
     }
   }, [isPublishDateActive, publishedAt])
 
@@ -72,7 +74,7 @@ export function PublishPagePanel({
         <DateTimePicker
           dateTime={updatedAt}
           label={t('pageEditor.panels.updateDate')}
-          changeDate={date => setupdatedAt(date)}
+          changeDate={date => setUpdatedAt(date)}
         />
         {updatedAt && publishedAt && updatedAt < publishedAt ? (
           <Message type="warning" description={t('pageEditor.panels.updateDateWarning')}></Message>
@@ -94,7 +96,7 @@ export function PublishPagePanel({
             dateTime={!isPublishDateActive ? undefined : publishAt}
             label={t('pageEditor.panels.publishAt')}
             changeDate={date => {
-              setpublishAt(date)
+              setPublishAt(date)
             }}
             helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
           />
@@ -167,9 +169,8 @@ export function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || !updatedAt || updatedAt < publishedAt}
-          onClick={() => onConfirm(publishedAt!, updatedAt!, publishAt!)}>
-
+          disabled={!publishedAt || (updatedAt && updatedAt < publishedAt)}
+          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
