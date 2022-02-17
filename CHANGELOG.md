@@ -1,5 +1,15 @@
 # Change Log
 
+## v3.0.0-alpha.1 (2022-02-17)
+
+#### :house: Internal
+* `api-media-karma`, `api`
+  * [#497](https://github.com/wepublish/wepublish/pull/497) karma media additional url ([@penk85](https://github.com/penk85))
+
+#### Committers: 2
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
 
 ## v3.0.0-alpha.0 (2022-02-16)
 
