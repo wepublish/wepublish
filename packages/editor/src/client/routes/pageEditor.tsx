@@ -230,7 +230,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function handlePublish(publishedAt: Date, updatedAt: Date, publishAt: Date) {
+  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
     if (pageID) {
       const {data} = await updatePage({
         variables: {id: pageID, input: createInput()}
@@ -242,7 +242,7 @@ export function PageEditor({id}: PageEditorProps) {
             id: pageID,
             publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
             publishedAt: publishedAt.toISOString(),
-            updatedAt: updatedAt.toISOString()
+            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
           }
         })
 
@@ -404,8 +404,8 @@ export function PageEditor({id}: PageEditorProps) {
           pendingPublishDate={pendingPublishDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, updatedAt, publishAt) => {
-            handlePublish(publishedAt, updatedAt, publishAt)
+          onConfirm={(publishedAt, publishAt, updatedAt) => {
+            handlePublish(publishedAt, publishAt, updatedAt)
             setPublishDialogOpen(false)
           }}
         />
