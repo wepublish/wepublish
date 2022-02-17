@@ -15,12 +15,14 @@ fragment MutationPage on Page {
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
@@ -128,11 +130,13 @@ query Page($id: ID!) {
     published {
       publishedAt
       updatedAt
+      publishAt
     }
 
     latest {
       publishedAt
       updatedAt
+      publishAt
       slug
       title
       description
