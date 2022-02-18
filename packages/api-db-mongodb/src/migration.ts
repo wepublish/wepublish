@@ -736,7 +736,7 @@ export const Migrations: Migration[] = [
       const subscriptions = await db.createCollection(CollectionName.Subscriptions, {
         strict: true
       })
-      await subscriptions.insertMany(newSubscriptions)
+      if (newSubscriptions.length > 0) await subscriptions.insertMany(newSubscriptions)
 
       const invoices = await db.collection(CollectionName.Invoices)
 
@@ -771,7 +771,7 @@ export const Migrations: Migration[] = [
         strict: true
       })
 
-      await emptyInvoices.insertMany(newInvoices)
+      if (newInvoices.length > 0) await emptyInvoices.insertMany(newInvoices)
 
       await users.updateMany(
         {subscription: {$exists: true}},

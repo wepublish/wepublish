@@ -246,7 +246,10 @@ export class MemberContext implements MemberContext {
         subscription.paymentPeriodicity
       )
 
-      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
+      // FIXME: do we really need the user here??? and if we do make this code nice.
+      const user = subscription.userID.startsWith('__temp')
+        ? await this.dbAdapter.tempUser.getTempUserByID(subscription.userID.substr(7))
+        : await this.dbAdapter.user.getUserByID(subscription.userID)
 
       if (!user) {
         logger('memberContext').info('User with id "%s" not found', subscription.userID)
