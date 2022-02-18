@@ -55,4 +55,18 @@ export * from './mails/MailgunMailProvider'
 export * from './mails/MailchimpMailProvider'
 export * from './mails/mailContext'
 
-export {articleModelEvents, authorModelEvents} from './events'
+export {
+  articleModelEvents,
+  authorModelEvents,
+  imageModelEvents,
+  invoiceModelEvents,
+  mailLogModelEvents,
+  memberPlanModelEvents,
+  navigationModelEvents,
+  pageModelEvents,
+  paymentModelEvents,
+  paymentMethodModelEvents,
+  peerModelEvents,
+  userModelEvents,
+  userRoleModelEvents
+} from './events'
