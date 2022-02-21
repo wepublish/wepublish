@@ -496,7 +496,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    deleteUserSubscription: {
+    deleteSubscription: {
       type: GraphQLString,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}

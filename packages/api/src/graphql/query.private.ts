@@ -103,7 +103,8 @@ import {
   CanGetArticlePreviewLink,
   CanGetPagePreviewLink,
   CanCreatePeer,
-  CanGetSubscriptions
+  CanGetSubscriptions,
+  CanGetSubscription
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -141,6 +142,12 @@ import {
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
 import {Subscription, SubscriptionSort} from '../db/subscription'
+import {
+  GraphQLSubscription,
+  GraphQLSubscriptionConnection,
+  GraphQLSubscriptionFilter,
+  GraphQLSubscriptionSort
+} from './subscription'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -289,6 +296,48 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetUsers, roles)
 
         return await dbAdapter.user.getUsers({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last, skip)
+        })
+      }
+    },
+
+    // Subscriptions
+    // ==========
+    subscription: {
+      type: GraphQLSubscription,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetSubscription, roles)
+        return dbAdapter.subscription.getSubscriptionByID(id)
+      }
+    },
+
+    subscriptions: {
+      type: GraphQLNonNull(GraphQLSubscriptionConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
+        filter: {type: GraphQLSubscriptionFilter},
+        sort: {type: GraphQLSubscriptionSort, defaultValue: SubscriptionSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, skip, last},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanGetSubscriptions, roles)
+
+        return await dbAdapter.subscription.getSubscriptions({
           filter,
           sort,
           order,

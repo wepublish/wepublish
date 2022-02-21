@@ -33,8 +33,8 @@ export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   }
 })
 
-export const GraphQLUserSubscriptionDeactivation = new GraphQLObjectType({
-  name: 'UserSubscriptionDeactivation',
+export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
+  name: 'SubscriptionDeactivation',
   fields: {
     date: {type: GraphQLNonNull(GraphQLDateTime)},
     reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
@@ -69,7 +69,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
       }
     },
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
-    deactivation: {type: GraphQLUserSubscriptionDeactivation}
+    deactivation: {type: GraphQLSubscriptionDeactivation}
   }
 })
 
@@ -100,12 +100,12 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Con
         return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
       }
     },
-    deactivation: {type: GraphQLUserSubscriptionDeactivation}
+    deactivation: {type: GraphQLSubscriptionDeactivation}
   }
 })
 
 export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
-  name: 'UserSubscriptionFilter',
+  name: 'SubscriptionFilter',
   fields: {
     startsAt: {type: GraphQLDateFilter},
     paidUntil: {type: GraphQLDateFilter},
@@ -116,7 +116,7 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
 })
 
 export const GraphQLSubscriptionSort = new GraphQLEnumType({
-  name: 'UserSort',
+  name: 'SubscriptionSort',
   values: {
     CREATED_AT: {value: UserSort.CreatedAt},
     MODIFIED_AT: {value: UserSort.ModifiedAt}
@@ -124,7 +124,7 @@ export const GraphQLSubscriptionSort = new GraphQLEnumType({
 })
 
 export const GraphQLSubscriptionConnection = new GraphQLObjectType<any, Context>({
-  name: 'UserConnection',
+  name: 'SubscriptionConnection',
   fields: {
     nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscription)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
@@ -132,8 +132,8 @@ export const GraphQLSubscriptionConnection = new GraphQLObjectType<any, Context>
   }
 })
 
-export const GraphQLUserSubscriptionDeactivationInput = new GraphQLInputObjectType({
-  name: 'UserSubscriptionDeactivationInput',
+export const GraphQLSubscriptionDeactivationInput = new GraphQLInputObjectType({
+  name: 'SubscriptionDeactivationInput',
   fields: {
     date: {type: GraphQLNonNull(GraphQLDateTime)},
     reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
@@ -154,7 +154,7 @@ export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
     properties: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput)))
     },
-    deactivation: {type: GraphQLUserSubscriptionDeactivationInput}
+    deactivation: {type: GraphQLSubscriptionDeactivationInput}
   }
 })
 
