@@ -31,7 +31,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchMore: fetchMorePeerArticles,
     error: peerArticleListError
   } = usePeerArticleListQuery({
-    variables: listVariables,
+    // variables: listVariables,
     fetchPolicy: 'network-only'
   })
 
@@ -78,10 +78,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         if (!fetchMoreResult) return prev
 
         return {
-          peerArticles: {
-            ...fetchMoreResult.peerArticles,
-            nodes: [...prev.peerArticles.nodes, ...fetchMoreResult?.peerArticles.nodes]
-          }
+          // peerArticles: {
+          //   ...fetchMoreResult.peerArticles,
+          //   nodes: [...prev.peerArticles.nodes, ...fetchMoreResult?.peerArticles.nodes]
+          // }
         }
       }
     })

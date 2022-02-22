@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react'
-import {Peer, PeerArticle, usePeerArticleListQuery, usePeerListQuery} from '../api'
+import {
+  ArticleFilter,
+  ArticleSort,
+  Peer,
+  PeerArticle,
+  usePeerArticleListQuery,
+  usePeerListQuery
+} from '../api'
 
 import {
   Avatar,
@@ -8,8 +15,10 @@ import {
   Input,
   InputGroup,
   Notification,
+  Popover,
   SelectPicker,
-  Table
+  Table,
+  Whisper
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {Link} from '../route'
@@ -18,18 +27,38 @@ import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../u
 export function PeerArticleList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('modifiedAt')
+  const [sortField, setSortField] = useState('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
   const [allPeers, setAllPeers] = useState<Peer[]>([])
+
+  const [peerFilter, setPeerFilter] = useState<string>('Demo')
+
+  const [peerArticles, setPeerArticles] = useState<PeerArticle[]>()
 
   const listVariables = {
     filter: filter || undefined,
     first: limit,
     skip: page - 1,
-    // sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    sort: mapColumFieldToGraphQLField(sortField),
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    peerFilter: peerFilter
+  }
+
+  // console.log('filter', filter)
+
+  function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
+    switch (columnField) {
+      case 'publishedAt':
+        return ArticleSort.PublishedAt
+      case 'modifiedAt':
+        return ArticleSort.ModifiedAt
+      case 'publishAt':
+        return ArticleSort.PublishAt
+      default:
+        return null
+    }
   }
 
   // fetch peered articles
@@ -49,30 +78,32 @@ export function PeerArticleList() {
     errorPolicy: 'ignore'
   })
 
-  // fetch peered articles with filter by peer option
-  // which query ? Create new query ?
-  const {data: filterByPeerPeerListData, error: peerListError} = usePeerArticleListQuery({
-    fetchPolicy: 'network-only',
-    errorPolicy: 'ignore'
-  })
-
   console.log('PeerListData', peerListData)
+  console.log('PeerArticleListData', peerArticleListData)
 
   useEffect(() => {
     if (peerListData?.peers) {
-      setAllPeers(peerListData?.peers)
+      // should be an array
+      setAllPeers(peerListData.peers)
     }
   }, [peerListData?.peers])
+
+  useEffect(() => {
+    if (peerArticleListData?.peerArticles.nodes) {
+      setPeerArticles(peerArticleListData?.peerArticles.nodes)
+    }
+  }, [peerArticleListData?.peerArticles])
 
   const {t} = useTranslation()
 
   useEffect(() => {
     refetch(listVariables)
-  }, [filter, page, limit, sortOrder, sortField])
+    // console.log(filter)
+    console.log('peerFilter: ', peerFilter)
+  }, [filter, page, limit, sortOrder, sortField, peerFilter])
 
   // console.log('peerARticleListData:  ', peerArticleListData)
-
-  const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
+  // const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
 
   const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -87,9 +118,9 @@ export function PeerArticleList() {
 
   const fakeData = [
     {
-      value: 'bajour',
-      label: 'bajour',
-      blah: 'blah'
+      value: 'demo',
+      label: 'demo',
+      blah: 'demo'
     },
     {
       value: 'tsüri',
@@ -107,7 +138,7 @@ export function PeerArticleList() {
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
+            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
@@ -116,15 +147,16 @@ export function PeerArticleList() {
       </FlexboxGrid>
 
       <SelectPicker
-        label={'Peer'}
+        label={'peer'}
         // data={fakeData}
         data={allPeers.map(peer => ({
-          value: peer.id,
+          value: peer.name,
           label: peer.profile?.name
         }))}
         style={{width: 150, marginTop: 10}}
         placeholder={'Filter by peer'}
-        searchable={false}></SelectPicker>
+        searchable={false}
+        onChange={value => setPeerFilter(value)}></SelectPicker>
 
       <div
         style={{
@@ -133,6 +165,11 @@ export function PeerArticleList() {
           marginTop: '20px'
         }}>
         <Table
+          onSortColumn={(sortColumn, sortType) => {
+            console.log('sort', sortColumn, sortType)
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}
           minHeight={600}
           autoHeight={true}
           style={{flex: 1}}
@@ -141,13 +178,7 @@ export function PeerArticleList() {
           sortColumn={sortField}
           sortType={sortOrder}
           // rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
-          onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
-            setSortField(sortColumn)
-          }}
-          {...console.log(peerArticles)}>
-          {/* Show only published articles ? */}
-
+        >
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
             <Cell>
@@ -168,23 +199,27 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          <Column width={200} align="left" resizable>
+          {/* sort doesn't work */}
+
+          <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
-            <Cell>
-              {(rowData: PeerArticle) =>
-                rowData.article.published
-                  ? t('peerArticles.publicationDate', {
-                      publicationDate: new Date(rowData.article.latest.publishedAt)
-                    })
-                  : 'not published'
+            <Cell dataKey="publishedAt">
+              {
+                (rowData: PeerArticle) =>
+                  rowData.article.latest.publishedAt
+                    ? // latest publish instead of published
+                      t('peerArticles.publicationDate', {
+                        publicationDate: new Date(rowData.article.latest.publishedAt ?? '')
+                      })
+                    : 'not published'
+                // change for translation or state
               }
             </Cell>
           </Column>
 
-          {/* alignement */}
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
-            <Cell>
+            <Cell dataKey="peer" style={{display: 'flex'}}>
               {(rowData: PeerArticle) => (
                 <>
                   <Avatar
@@ -192,8 +227,10 @@ export function PeerArticleList() {
                     alt=""
                     circle
                     size="xs"
+                    style={{marginRight: 5}}
+                    className="peerArticleAvatar"
                   />
-                  {rowData.peer.profile?.name}
+                  <div>{rowData.peer.profile?.name}</div>
                 </>
               )}
             </Cell>
@@ -210,17 +247,31 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          {/* add hover */}
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
+
             <Cell>
               {(rowData: PeerArticle) =>
                 rowData.article.latest.image?.url ? (
-                  <img
-                    src={rowData.article.latest.image?.url || ''}
-                    alt=""
-                    style={{height: '25', width: 'auto'}}
-                  />
+                  <Whisper
+                    placement="left"
+                    trigger="hover"
+                    controlId="control-id-hover"
+                    speaker={
+                      <Popover>
+                        <img
+                          src={rowData.article.latest.image?.url || ''}
+                          alt=""
+                          style={{height: '175', width: 'auto'}}
+                        />
+                      </Popover>
+                    }>
+                    <img
+                      src={rowData.article.latest.image?.url || ''}
+                      alt=""
+                      style={{height: '25', width: 'auto'}}
+                    />
+                  </Whisper>
                 ) : (
                   ''
                 )
@@ -228,12 +279,14 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          {/* Build url depending on which peer ?  */}
+          {/* add canonical url when available */}
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
-                <Link href={rowData.peer.hostURL} target="blank">
+                <Link
+                  href={rowData.article.latest.canonicalUrl ?? 'https://google.ch'}
+                  target="blank">
                   {t('peerArticles.toOriginalArticle')}
                 </Link>
               )}
