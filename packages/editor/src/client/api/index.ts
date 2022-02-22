@@ -1962,10 +1962,10 @@ export type MutationArticleFragment = (
     & Pick<ArticleRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   ) }
 );
 
@@ -2163,10 +2163,11 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishAt'>
     )>, published?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -2987,10 +2988,10 @@ export type MutationPageFragment = (
     & Pick<PageRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   )>, latest: (
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
   ) }
 );
 
@@ -3151,10 +3152,11 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishAt'>
     )>, published?: Maybe<(
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
+
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3761,11 +3763,13 @@ export const MutationArticleFragmentDoc = gql`
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
@@ -4290,11 +4294,13 @@ export const MutationPageFragmentDoc = gql`
   published {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
   latest {
     publishedAt
     updatedAt
+    publishAt
     revision
   }
 }
@@ -4660,10 +4666,12 @@ export const ArticleDocument = gql`
     published {
       publishedAt
       updatedAt
+      publishAt
     }
     latest {
       publishedAt
       updatedAt
+      publishAt
       revision
       slug
       preTitle
@@ -6052,10 +6060,12 @@ export const PageDocument = gql`
     published {
       publishedAt
       updatedAt
+      publishAt
     }
     latest {
       publishedAt
       updatedAt
+      publishAt
       slug
       title
       description

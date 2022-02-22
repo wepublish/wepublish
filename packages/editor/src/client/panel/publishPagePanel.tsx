@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-import {Button, Message, Modal} from 'rsuite'
+import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -12,16 +12,20 @@ import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
 
 export interface PublishPagePanelProps {
-  initialPublishDate?: Date
+  publishedAtDate?: Date
+  updatedAtDate?: Date
+  publishAtDate?: Date
   pendingPublishDate?: Date
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishDate: Date, updateDate: Date): void
+  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
 export function PublishPagePanel({
-  initialPublishDate,
+  publishedAtDate,
+  updatedAtDate,
+  publishAtDate,
   pendingPublishDate,
   metadata,
   onClose,
@@ -29,12 +33,25 @@ export function PublishPagePanel({
 }: PublishPagePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(
-    pendingPublishDate ?? initialPublishDate ?? now
+  const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
+
+  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
+
+  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
+    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
   )
-  const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
+
+  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
+    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
+  )
 
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if (!publishAt || !isPublishDateActive) {
+      setPublishAt(publishedAt)
+    }
+  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -50,15 +67,42 @@ export function PublishPagePanel({
           />
         )}
         <DateTimePicker
-          dateTime={publishDate}
-          label={t('articleEditor.panels.publishDate')}
-          changeDate={date => setPublishDate(date)}
+          dateTime={publishedAt}
+          label={t('pageEditor.panels.publishDate')}
+          changeDate={date => setPublishedAt(date)}
         />
         <DateTimePicker
-          dateTime={updateDate}
-          label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setUpdateDate(date)}
+          dateTime={updatedAt}
+          label={t('pageEditor.panels.updateDate')}
+          changeDate={date => setUpdatedAt(date)}
         />
+        {updatedAt && publishedAt && updatedAt < publishedAt ? (
+          <Message type="warning" description={t('pageEditor.panels.updateDateWarning')}></Message>
+        ) : (
+          ''
+        )}
+
+        <Checkbox
+          value={isPublishDateActive}
+          checked={isPublishDateActive}
+          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
+          {' '}
+          {t('pageEditor.panels.publishAtDateCheckbox')}
+        </Checkbox>
+
+        {isPublishDateActive ? (
+          <DateTimePicker
+            disabled={!isPublishDateActive}
+            dateTime={!isPublishDateActive ? undefined : publishAt}
+            label={t('pageEditor.panels.publishAt')}
+            changeDate={date => {
+              setPublishAt(date)
+            }}
+            helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
+          />
+        ) : (
+          ''
+        )}
 
         <DescriptionList>
           <DescriptionListItem label={t('pageEditor.panels.url')}>
@@ -125,8 +169,8 @@ export function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishDate || !updateDate}
-          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          disabled={!publishedAt || (updatedAt && updatedAt < publishedAt)}
+          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>

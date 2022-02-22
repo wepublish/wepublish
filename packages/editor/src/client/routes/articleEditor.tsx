@@ -91,6 +91,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
+
+  const [updatedAt, setUpdatedAt] = useState<Date>()
+
+  const [publishAt, setPublishAt] = useState<Date>()
+
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
     preTitle: '',
@@ -143,7 +148,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, published, shared} = articleData.article
+      const {latest, shared, pending} = articleData.article
       const {
         slug,
         preTitle,
@@ -164,9 +169,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         socialMediaAuthors,
         socialMediaImage
       } = latest
-      const {publishedAt} = published ?? {}
 
+      const {publishedAt} = latest ?? {}
       if (publishedAt) setPublishedAt(new Date(publishedAt))
+
+      const {updatedAt} = latest ?? {}
+      if (updatedAt) setUpdatedAt(new Date(updatedAt))
+
+      const {publishAt} = pending ?? latest
+      if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({
         slug,
@@ -361,7 +372,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date) {
+  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
     if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
@@ -376,21 +387,31 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            publishAt: publishDate.toISOString(),
-            publishedAt: publishDate.toISOString(),
-            updatedAt: updateDate.toISOString()
+            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
+            publishedAt: publishedAt.toISOString(),
+            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
           }
         })
 
-        if (publishData?.publishArticle?.published?.publishedAt) {
-          setPublishedAt(new Date(publishData?.publishArticle?.published.publishedAt))
+        if (publishData?.publishArticle?.latest?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishArticle?.latest.publishedAt))
+        }
+        if (publishData?.publishArticle?.latest?.updatedAt) {
+          setUpdatedAt(new Date(publishData?.publishArticle?.latest.updatedAt))
+        }
+        if (publishData?.publishArticle?.latest?.publishAt) {
+          setPublishAt(new Date(publishData?.publishArticle?.latest.publishAt))
+        } else if (
+          publishData?.publishArticle?.latest?.publishAt === null &&
+          publishData?.publishArticle?.latest?.publishedAt
+        ) {
+          setPublishAt(new Date(publishData?.publishArticle?.latest?.publishedAt))
         }
       }
-
       setChanged(false)
       Notification.success({
         title: t(
-          publishDate <= new Date()
+          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
             ? 'articleEditor.overview.articlePublished'
             : 'articleEditor.overview.articlePending'
         ),
@@ -488,7 +509,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
                           disabled={isDisabled}
-                          onClick={() => setPublishDialogOpen(true)}>
+                          onClick={() => {
+                            setPublishDialogOpen(true)
+                          }}>
                           {t('articleEditor.overview.publish')}
                         </IconButton>
                       </Badge>
@@ -536,12 +559,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Drawer>
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
-          initialPublishDate={publishedAt}
+          publishedAtDate={publishedAt}
+          updatedAtDate={updatedAt}
           pendingPublishDate={pendingPublishDate}
+          publishAtDate={publishAt}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishDate, updateDate) => {
-            handlePublish(publishDate, updateDate)
+          onConfirm={(publishedAt, publishAt, updatedAt) => {
+            handlePublish(publishedAt, publishAt, updatedAt)
             setPublishDialogOpen(false)
           }}
         />
