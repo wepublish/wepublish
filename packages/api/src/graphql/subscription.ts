@@ -45,6 +45,8 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
   name: 'Subscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
       type: GraphQLNonNull(GraphQLUser),
       resolve({userID}, args, {dbAdapter}) {

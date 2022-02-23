@@ -10,61 +10,109 @@ import {
   FormControl,
   FormGroup,
   HelpBlock,
+  Message,
+  Modal,
   Panel,
   SelectPicker,
-  Toggle,
-  Modal,
-  Message
+  Toggle
 } from 'rsuite'
 
 import {
+  DeactivationFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
+  FullSubscriptionFragment,
   FullUserFragment,
-  FullUserSubscriptionFragment,
+  MetadataPropertyFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
+  useCreateSubscriptionMutation,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
-  useUpdateUserSubscriptionMutation
+  useSubscriptionQuery,
+  useUpdateSubscriptionMutation,
+  useUserListQuery
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 
-export interface UserSubscriptionEditPanelProps {
-  user: FullUserFragment
+export interface SubscriptionEditPanelProps {
+  id?: string
 
   onClose?(): void
-  onSave?(subscription: FullUserSubscriptionFragment): void
+  onSave?(subscription: FullSubscriptionFragment): void
 }
 
-export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscriptionEditPanelProps) {
+export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
   const {t} = useTranslation()
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
 
-  const [subscription, setSubscription] = useState<null | FullUserSubscriptionFragment>(
-    user.subscription ?? null
-  )
-
-  const [memberPlan, setMemberPlan] = useState(subscription?.memberPlan)
-  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
+  const [user, setUser] = useState<FullUserFragment>()
+  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
-    subscription?.paymentPeriodicity ?? PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly
   )
-  const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
-  const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
-  const [startsAt, setStartsAt] = useState<Date>(
-    subscription ? new Date(subscription.startsAt) : new Date()
-  )
+  const [monthlyAmount, setMonthlyAmount] = useState<number>(500)
+  const [autoRenew, setAutoRenew] = useState<boolean>(false)
+  const [startsAt, setStartsAt] = useState<Date>(new Date())
+  const [paidUntil, setPaidUntil] = useState<Date | null>()
+  const [paymentMethod, setPaymentMethod] = useState<FullPaymentMethodFragment>()
+  const [properties, setProperties] = useState<MetadataPropertyFragment[]>([])
+  const [deactivation, setDeactivation] = useState<DeactivationFragment | null>()
 
-  const [paidUntil /* setPaidUntil */] = useState(
-    subscription?.paidUntil ? new Date(subscription.paidUntil) : null
-  )
+  const [userSearch, setUserSearch] = useState<string>('')
+  const [users, setUsers] = useState<FullUserFragment[]>([])
+  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod)
+
+  const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
+    variables: {id: id!},
+    fetchPolicy: 'network-only',
+    skip: id === undefined
+  })
+
+  useEffect(() => {
+    if (data?.subscription) {
+      setUser(data.subscription.user)
+      setUsers([
+        ...users.filter(user => user.id !== data.subscription?.user.id),
+        data.subscription.user
+      ])
+      setMemberPlan(data.subscription.memberPlan)
+      setPaymentPeriodicity(data.subscription.paymentPeriodicity)
+      setMonthlyAmount(data.subscription.monthlyAmount)
+      setAutoRenew(data.subscription.autoRenew)
+      setStartsAt(new Date(data.subscription.startsAt))
+      setPaidUntil(data.subscription.paidUntil ? new Date(data.subscription.paidUntil) : null)
+      setPaymentMethod(data.subscription.paymentMethod)
+      setProperties(data.subscription.properties)
+      setDeactivation(data.subscription.deactivation)
+    }
+  }, [data?.subscription])
+
+  const {
+    data: userData,
+    loading: isUserLoading,
+    error: userLoadError,
+    refetch: refetchUsers
+  } = useUserListQuery({
+    variables: {
+      first: 100,
+      filter: userSearch
+    },
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    if (userData?.users) {
+      const userList = [...userData.users.nodes.filter(usr => usr.id !== user?.id)]
+      if (user) userList.push(user)
+      setUsers(userList)
+    }
+  }, [userData?.users])
 
   const {
     data: memberPlanData,
@@ -86,20 +134,29 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
   })
 
   const [
-    updateUserSubscription,
+    updateSubscription,
     {loading: isUpdating, error: updateError}
-  ] = useUpdateUserSubscriptionMutation()
+  ] = useUpdateSubscriptionMutation()
 
-  const isDeactivated = subscription?.deactivation?.date
-    ? new Date(subscription.deactivation.date) < new Date()
-    : false
+  const [
+    createSubscription,
+    {loading: isCreating, error: createError}
+  ] = useCreateSubscriptionMutation()
+
+  const isDeactivated = deactivation?.date ? new Date(deactivation.date) < new Date() : false
 
   const isDisabled =
+    isLoading ||
+    isCreating ||
     isMemberPlanLoading ||
     isUpdating ||
     isPaymentMethodLoading ||
+    isUserLoading ||
+    loadError !== undefined ||
+    createError !== undefined ||
     loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined
+    paymentMethodLoadError !== undefined ||
+    userLoadError !== undefined
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -117,45 +174,69 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
 
   useEffect(() => {
     const error =
-      loadMemberPlanError?.message ?? updateError?.message ?? paymentMethodLoadError?.message
+      loadError?.message ??
+      loadMemberPlanError?.message ??
+      updateError?.message ??
+      paymentMethodLoadError?.message ??
+      userLoadError?.message
     if (error) Alert.error(error, 0)
-  }, [updateError, loadMemberPlanError, paymentMethodLoadError])
+  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
   async function handleSave() {
     if (!memberPlan) return
     if (!paymentMethod) return
+    if (!user) return
     // TODO: show error
 
-    const {data} = await updateUserSubscription({
-      variables: {
-        userID: user.id,
-        input: {
-          memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
-          paymentMethodID: paymentMethod.id,
-          deactivation: subscription?.deactivation
-            ? {
-                date: subscription.deactivation.date,
-                reason: subscription.deactivation.reason
-              }
-            : null
+    if (id) {
+      const {data} = await updateSubscription({
+        variables: {
+          id,
+          input: {
+            userID: user?.id,
+            memberPlanID: memberPlan.id,
+            monthlyAmount,
+            paymentPeriodicity,
+            autoRenew,
+            startsAt: startsAt.toISOString(),
+            paidUntil: paidUntil ? paidUntil.toISOString() : null,
+            paymentMethodID: paymentMethod.id,
+            properties,
+            deactivation
+          }
         }
-      }
-    })
+      })
 
-    if (data?.updateUserSubscription) onSave?.(data.updateUserSubscription)
+      if (data?.updateSubscription) onSave?.(data.updateSubscription)
+    } else {
+      const {data} = await createSubscription({
+        variables: {
+          input: {
+            userID: user.id,
+            memberPlanID: memberPlan.id,
+            monthlyAmount,
+            paymentPeriodicity,
+            autoRenew,
+            startsAt: startsAt.toISOString(),
+            paidUntil: paidUntil ? paidUntil.toISOString() : null,
+            paymentMethodID: paymentMethod.id,
+            properties,
+            deactivation
+          }
+        }
+      })
+
+      if (data?.createSubscription) onSave?.(data.createSubscription)
+    }
   }
 
   async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
-    if (!memberPlan || !paymentMethod) return
-    const {data} = await updateUserSubscription({
+    if (!id || !memberPlan || !paymentMethod || !user?.id) return
+    const {data} = await updateSubscription({
       variables: {
-        userID: user.id,
+        id,
         input: {
+          userID: user.id,
           memberPlanID: memberPlan.id,
           monthlyAmount,
           paymentPeriodicity,
@@ -163,6 +244,7 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
           startsAt: startsAt.toISOString(),
           paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
+          properties,
           deactivation: {
             reason,
             date: date.toISOString()
@@ -171,17 +253,18 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
       }
     })
 
-    if (data?.updateUserSubscription) {
-      setSubscription(data.updateUserSubscription)
+    if (data?.updateSubscription) {
+      setDeactivation(data.updateSubscription.deactivation)
     }
   }
 
   async function handleReactivation() {
-    if (!memberPlan || !paymentMethod) return
-    const {data} = await updateUserSubscription({
+    if (!id || !memberPlan || !paymentMethod || !user?.id) return
+    const {data} = await updateSubscription({
       variables: {
-        userID: user.id,
+        id,
         input: {
+          userID: user.id,
           memberPlanID: memberPlan.id,
           monthlyAmount,
           paymentPeriodicity,
@@ -189,13 +272,14 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
           startsAt: startsAt.toISOString(),
           paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
+          properties,
           deactivation: null
         }
       }
     })
 
-    if (data?.updateUserSubscription) {
-      setSubscription(data.updateUserSubscription)
+    if (data?.updateSubscription) {
+      setDeactivation(data.updateSubscription.deactivation)
     }
   }
 
@@ -203,22 +287,20 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     <>
       <Drawer.Header>
         <Drawer.Title>
-          {subscription
-            ? t('userSubscriptionEdit.editTitle')
-            : t('userSubscriptionEdit.createTitle')}
+          {id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')}
         </Drawer.Title>
       </Drawer.Header>
 
       <Drawer.Body>
-        {subscription?.deactivation && (
+        {deactivation && (
           <Message
             showIcon
             type="info"
             description={t(
-              new Date(subscription.deactivation.date) < new Date()
+              new Date(deactivation.date) < new Date()
                 ? 'userSubscriptionEdit.deactivation.isDeactivated'
                 : 'userSubscriptionEdit.deactivation.willBeDeactivated',
-              {date: new Date(subscription.deactivation.date)}
+              {date: new Date(deactivation.date)}
             )}
           />
         )}
@@ -230,7 +312,7 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
                 block
                 disabled={isDisabled || isDeactivated}
                 data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
-                value={subscription?.memberPlan.id}
+                value={memberPlan?.id}
                 onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
               />
               {memberPlan && (
@@ -242,6 +324,20 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
                   </DescriptionList>
                 </HelpBlock>
               )}
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userSubscriptionEdit.selectUser')}</ControlLabel>
+              <SelectPicker
+                block
+                disabled={isDisabled || isDeactivated}
+                data={users.map(usr => ({value: usr.id, label: usr.name}))}
+                value={user?.id}
+                onChange={value => setUser(users.find(usr => usr.id === value))}
+                onSearch={searchString => {
+                  setUserSearch(searchString)
+                  refetchUsers()
+                }}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
@@ -300,20 +396,20 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
                 block
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                value={subscription?.paymentMethod.id}
+                value={paymentMethod?.id}
                 onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
               />
             </FormGroup>
           </Form>
         </Panel>
-        {subscription && subscription.paymentMethod && subscription.memberPlan && (
+        {paymentMethod && memberPlan && (
           <Panel>
             <Button
               appearance={'primary'}
               disabled={isDisabled}
               onClick={() => setDeactivationPanelOpen(true)}>
               {t(
-                subscription.deactivation
+                deactivation
                   ? 'userSubscriptionEdit.deactivation.title.deactivated'
                   : 'userSubscriptionEdit.deactivation.title.activated'
               )}
@@ -327,14 +423,14 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
           appearance={'primary'}
           disabled={isDisabled || isDeactivated}
           onClick={() => handleSave()}>
-          {subscription ? t('save') : t('create')}
+          {id ? t('save') : t('create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('close')}
         </Button>
       </Drawer.Footer>
 
-      {subscription && (
+      {id && user && (
         <Modal
           show={isDeactivationPanelOpen}
           size={'sm'}
@@ -342,8 +438,9 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
           keyboard={false}
           onHide={() => setDeactivationPanelOpen(false)}>
           <UserSubscriptionDeactivatePanel
-            user={user}
-            isDeactivated={!!subscription.deactivation}
+            displayName={user.preferredName || user.name || user.email}
+            paidUntil={paidUntil ?? undefined}
+            isDeactivated={!!deactivation}
             onDeactivate={async data => {
               await handleDeactivation(data.date, data.reason)
               setDeactivationPanelOpen(false)

@@ -18,7 +18,8 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
-  LogoutRoute
+  LogoutRoute,
+  SubscriptionListRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -161,6 +162,13 @@ export function Base({children}: BaseProps) {
                     icon={<Icon icon="character-authorize" />}
                     route={UserRoleListRoute.create({})}>
                     {t('navbar.userRoles')}
+                  </DropdownItemLink>
+
+                  <DropdownItemLink
+                    active={current?.type === RouteType.SubscriptionList}
+                    icon={<Icon icon="meh-o" />}
+                    route={SubscriptionListRoute.create({})}>
+                    {t('navbar.subscriptions')}
                   </DropdownItemLink>
 
                   <DropdownItemLink

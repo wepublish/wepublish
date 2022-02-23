@@ -553,6 +553,7 @@
       "peers": "Peers",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
+      "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Members"
@@ -792,6 +793,35 @@
       }
     },
     "untitled": "Untitled",
+    "subscriptionList": {
+      "overview": {
+        "action": "Action",
+        "createdAt": "Created",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "delete": "Delete",
+        "description": "Description",
+        "modifiedAt": "Last modified",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Name",
+        "newSubscription": "New Subscription",
+        "exportSubscriptionsCsv": "Export CSV",
+        "noDescription": "No Description",
+        "noUsersFound": "No Users found",
+        "resetPassword": "Reset Password",
+        "search": "Search",
+        "unknown": "Unknown",
+        "subscription": "Subscription"
+      },
+      "panels": {
+        "deleteSubscription": "Delete Subscription?",
+        "name": "Name",
+        "unknown": "Unknown",
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "create": "Create"
+      }
+    },
     "userList": {
       "overview": {
         "action": "Action",

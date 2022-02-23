@@ -1,0 +1,7 @@
+
+
+fragment MetadataProperty on Properties {
+    key
+    value
+    public
+}
