@@ -14,6 +14,7 @@ import {
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
   polisConversationBlockDataFragment,
+  tikTokVideoBlockDataFragment,
   bildwurfAdBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
@@ -59,6 +60,7 @@ const ArticleQuery = gql`
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
         ...PolisConversationBlockData
+        ...TikTokVideoBlockData
         ...BildwurfAdBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
@@ -83,6 +85,7 @@ const ArticleQuery = gql`
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
   ${polisConversationBlockDataFragment}
+  ${tikTokVideoBlockDataFragment}
   ${bildwurfAdBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
@@ -216,6 +219,7 @@ const PeerArticleQuery = gql`
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
         ...PolisConversationBlockData
+        ...TikTokVideoBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -238,6 +242,7 @@ const PeerArticleQuery = gql`
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
   ${polisConversationBlockDataFragment}
+  ${tikTokVideoBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}
