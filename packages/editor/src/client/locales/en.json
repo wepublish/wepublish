@@ -727,6 +727,7 @@
       "authors": "Authors",
       "articleImage": "Article image",
       "originalArticle": "Original article",
+      "notPublished": "Not yet published",
       "toOriginalArticle": "To original article"
     },
     "peerList": {

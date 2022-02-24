@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react'
 import {
   ArticleFilter,
   ArticleSort,
-  Peer,
   PeerArticle,
+  PeerWithProfileFragment,
   usePeerArticleListQuery,
   usePeerListQuery
 } from '../api'
@@ -30,12 +30,9 @@ export function PeerArticleList() {
   const [sortField, setSortField] = useState('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
-
-  const [allPeers, setAllPeers] = useState<Peer[]>([])
-
-  const [peerFilter, setPeerFilter] = useState<string>('Demo')
-
-  const [peerArticles, setPeerArticles] = useState<PeerArticle[]>()
+  const [allPeers, setAllPeers] = useState<PeerWithProfileFragment[]>([])
+  const [peerFilter, setPeerFilter] = useState<string>()
+  const [peerArticles, setPeerArticles] = useState<Object[]>([])
 
   const listVariables = {
     filter: filter || undefined,
@@ -45,8 +42,6 @@ export function PeerArticleList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     peerFilter: peerFilter
   }
-
-  // console.log('filter', filter)
 
   function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
     switch (columnField) {
@@ -73,7 +68,7 @@ export function PeerArticleList() {
   })
 
   // fetch all peers
-  const {data: peerListData, error: peerListError} = usePeerListQuery({
+  const {data: peerListData} = usePeerListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })
@@ -83,7 +78,6 @@ export function PeerArticleList() {
 
   useEffect(() => {
     if (peerListData?.peers) {
-      // should be an array
       setAllPeers(peerListData.peers)
     }
   }, [peerListData?.peers])
@@ -98,12 +92,8 @@ export function PeerArticleList() {
 
   useEffect(() => {
     refetch(listVariables)
-    // console.log(filter)
     console.log('peerFilter: ', peerFilter)
   }, [filter, page, limit, sortOrder, sortField, peerFilter])
-
-  // console.log('peerARticleListData:  ', peerArticleListData)
-  // const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
 
   const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -115,19 +105,6 @@ export function PeerArticleList() {
       })
     }
   }, [peerArticleListError])
-
-  const fakeData = [
-    {
-      value: 'demo',
-      label: 'demo',
-      blah: 'demo'
-    },
-    {
-      value: 'tsüri',
-      label: 'tsüri',
-      blah: 'bluh'
-    }
-  ]
 
   return (
     <>
@@ -148,15 +125,15 @@ export function PeerArticleList() {
 
       <SelectPicker
         label={'peer'}
-        // data={fakeData}
         data={allPeers.map(peer => ({
           value: peer.name,
           label: peer.profile?.name
         }))}
         style={{width: 150, marginTop: 10}}
         placeholder={'Filter by peer'}
-        searchable={false}
-        onChange={value => setPeerFilter(value)}></SelectPicker>
+        searchable={true}
+        onSelect={value => setPeerFilter(value)}
+        onClean={() => setPeerFilter('')}></SelectPicker>
 
       <div
         style={{
@@ -176,9 +153,7 @@ export function PeerArticleList() {
           loading={isLoading}
           data={peerArticles}
           sortColumn={sortField}
-          sortType={sortOrder}
-          // rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
-        >
+          sortType={sortOrder}>
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
             <Cell>
@@ -199,35 +174,30 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          {/* sort doesn't work */}
-
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {
-                (rowData: PeerArticle) =>
-                  rowData.article.latest.publishedAt
-                    ? // latest publish instead of published
-                      t('peerArticles.publicationDate', {
-                        publicationDate: new Date(rowData.article.latest.publishedAt ?? '')
-                      })
-                    : 'not published'
-                // change for translation or state
+              {(rowData: PeerArticle) =>
+                rowData.article.latest.publishedAt
+                  ? t('peerArticles.publicationDate', {
+                      publicationDate: new Date(rowData.article.latest.publishedAt)
+                    })
+                  : t('peerArticles.notPublished')
               }
             </Cell>
           </Column>
 
-          <Column width={120} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
             <Cell dataKey="peer" style={{display: 'flex'}}>
               {(rowData: PeerArticle) => (
                 <>
                   <Avatar
                     src={rowData.peer.profile?.logo?.url || undefined}
-                    alt=""
+                    alt={rowData.peer.profile?.name}
                     circle
                     size="xs"
-                    style={{marginRight: 5}}
+                    style={{marginRight: 5, minWidth: 20}}
                     className="peerArticleAvatar"
                   />
                   <div>{rowData.peer.profile?.name}</div>
@@ -279,14 +249,12 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          {/* add canonical url when available */}
+          {/* add canonical url when available - not available yet ?*/}
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
-                <Link
-                  href={rowData.article.latest.canonicalUrl ?? 'https://google.ch'}
-                  target="blank">
+                <Link href={rowData.article.latest?.url ?? rowData.peer.hostURL} target="blank">
                   {t('peerArticles.toOriginalArticle')}
                 </Link>
               )}
