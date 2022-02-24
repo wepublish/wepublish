@@ -2167,7 +2167,6 @@ export type ArticleQuery = (
     )>, latest: (
       { __typename?: 'ArticleRevision' }
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
-
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3156,7 +3155,6 @@ export type PageQuery = (
     )>, latest: (
       { __typename?: 'PageRevision' }
       & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
-
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment

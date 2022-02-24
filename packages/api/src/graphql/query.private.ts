@@ -645,7 +645,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         skip: {type: GraphQLInt}
       },
 
-      async resolve(root, {filter, sort, order, after, first, peerFilter}, context, info) {
+      async resolve(
+        root,
+        {filter, sort, order, after, first, peerFilter, last, skip},
+        context,
+        info
+      ) {
         const {authenticate, loaders, dbAdapter} = context
         const {roles} = authenticate()
 

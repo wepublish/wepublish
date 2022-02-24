@@ -124,13 +124,13 @@ export function PeerArticleList() {
       </FlexboxGrid>
 
       <SelectPicker
-        label={'peer'}
+        // label={'peer'}
         data={allPeers.map(peer => ({
           value: peer.name,
           label: peer.profile?.name
         }))}
         style={{width: 150, marginTop: 10}}
-        placeholder={'Filter by peer'}
+        placeholder={t('peerArticles.filterByPeer')}
         searchable={true}
         onSelect={value => setPeerFilter(value)}
         onClean={() => setPeerFilter('')}></SelectPicker>
@@ -249,7 +249,6 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          {/* add canonical url when available - not available yet ?*/}
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
             <Cell>

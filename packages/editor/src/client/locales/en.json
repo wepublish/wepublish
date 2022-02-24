@@ -728,7 +728,8 @@
       "articleImage": "Article image",
       "originalArticle": "Original article",
       "notPublished": "Not yet published",
-      "toOriginalArticle": "To original article"
+      "toOriginalArticle": "To original article",
+      "filterByPeer": "Filter by peer"
     },
     "peerList": {
       "overview": {
