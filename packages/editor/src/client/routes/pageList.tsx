@@ -217,8 +217,8 @@ export function PageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  {(rowData.published || rowData.pending) && (
-                    <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                  <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                    {rowData.published || rowData.pending ? (
                       <IconButton
                         icon={<Icon icon="btn-off" />}
                         circle
@@ -229,8 +229,20 @@ export function PageList() {
                           setConfirmationDialogOpen(true)
                         }}
                       />
-                    </IconButtonTooltip>
-                  )}
+                    ) : (
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        disabled
+                        onClick={e => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    )}
+                  </IconButtonTooltip>
                   <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                     <IconButton
                       icon={<Icon icon="trash" />}
@@ -258,20 +270,19 @@ export function PageList() {
                     />
                   </IconButtonTooltip>
 
-                  {rowData.draft && (
-                    <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
-                      <IconButton
-                        icon={<Icon icon="eye" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentPage(rowData)
-                          setPagePreviewLinkOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  )}
+                  <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      disabled={!rowData.draft}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentPage(rowData)
+                        setPagePreviewLinkOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>

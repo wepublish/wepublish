@@ -1540,9 +1540,6 @@ export type QueryPeerArticlesArgs = {
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
-  peerFilter?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
 };
 
 
