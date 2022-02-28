@@ -229,8 +229,8 @@ export function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  {(rowData.published || rowData.pending) && (
-                    <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
+                  <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
+                    {rowData.published || rowData.pending ? (
                       <IconButton
                         icon={<Icon icon="btn-off" />}
                         circle
@@ -241,8 +241,21 @@ export function ArticleList() {
                           setConfirmationDialogOpen(true)
                         }}
                       />
-                    </IconButtonTooltip>
-                  )}
+                    ) : (
+                      <IconButton
+                        icon={<Icon icon="btn-off" />}
+                        circle
+                        size="sm"
+                        disabled
+                        onClick={e => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    )}
+                  </IconButtonTooltip>
+
                   <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
                     <IconButton
                       icon={<Icon icon="trash" />}
@@ -269,20 +282,19 @@ export function ArticleList() {
                       }}
                     />
                   </IconButtonTooltip>
-                  {rowData.draft && (
-                    <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
-                      <IconButton
-                        icon={<Icon icon="eye" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentArticle(rowData)
-                          setArticlePreviewLinkOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  )}
+                  <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      disabled={!rowData.draft}
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setArticlePreviewLinkOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
             </Cell>
