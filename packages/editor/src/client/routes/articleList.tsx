@@ -233,7 +233,7 @@ export function ArticleList() {
                     <IconButton
                       icon={<Icon icon="btn-off" />}
                       circle
-                      disabled={rowData.published || rowData.pending ? false : true}
+                      disabled={!(rowData.published || rowData.pending)}
                       size="sm"
                       onClick={e => {
                         setCurrentArticle(rowData)
