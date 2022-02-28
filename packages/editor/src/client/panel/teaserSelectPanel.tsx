@@ -13,7 +13,9 @@ export interface TeaserSelectPanelProps {
 
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
+
   const [peerFilter, setPeerFilter] = useState<ArticleFilter>({title: ''})
+
   const [filter, setFilter] = useState('')
 
   const peerListVariables = {peerFilter: filter || undefined, first: 20}
