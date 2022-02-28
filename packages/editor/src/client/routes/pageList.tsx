@@ -218,30 +218,17 @@ export function PageList() {
               {(rowData: PageRefFragment) => (
                 <>
                   <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
-                    {rowData.published || rowData.pending ? (
-                      <IconButton
-                        icon={<Icon icon="btn-off" />}
-                        circle
-                        size="sm"
-                        onClick={e => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Unpublish)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    ) : (
-                      <IconButton
-                        icon={<Icon icon="btn-off" />}
-                        circle
-                        size="sm"
-                        disabled
-                        onClick={e => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Unpublish)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    )}
+                    <IconButton
+                      icon={<Icon icon="btn-off" />}
+                      circle
+                      disabled={rowData.published || rowData.pending ? false : true}
+                      size="sm"
+                      onClick={e => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                     <IconButton
