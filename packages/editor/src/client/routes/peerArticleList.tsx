@@ -119,19 +119,20 @@ export function PeerArticleList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <SelectPicker
-        // label={'peer'}
-        data={allPeers.map(peer => ({
-          value: peer.name,
-          label: peer.profile?.name
-        }))}
-        // disabled={allPeers.map(peer)}
-        style={{width: 150, marginTop: 10}}
-        placeholder={t('peerArticles.filterByPeer')}
-        searchable={true}
-        onSelect={value => setPeerFilter(value)}
-        onClean={() => setPeerFilter('')}></SelectPicker>
-
+      {allPeers.length >= 2 ? (
+        <SelectPicker
+          data={allPeers.map(peer => ({
+            value: peer.name,
+            label: peer.profile?.name
+          }))}
+          style={{width: 150, marginTop: 10}}
+          placeholder={t('peerArticles.filterByPeer')}
+          searchable={true}
+          onSelect={value => setPeerFilter(value)}
+          onClean={() => setPeerFilter('')}></SelectPicker>
+      ) : (
+        ''
+      )}
       <div
         style={{
           display: 'flex',

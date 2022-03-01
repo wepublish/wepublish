@@ -23,7 +23,6 @@ import {
 } from './route'
 
 import {useTranslation} from 'react-i18next'
-import {PeerArticleList} from './routes/peerArticleList'
 
 export interface BaseProps {
   children?: ReactNode
