@@ -109,6 +109,18 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     })
   }
 
+  function currentFilter() {
+    switch (type) {
+      case TeaserType.Article:
+        return <Input value={filter} onChange={value => setFilter(value)} />
+      case TeaserType.PeerArticle:
+        return (
+          <Input value={peerFilter.title || ''} onChange={value => setPeerFilter({title: value})} />
+        )
+      case TeaserType.Page:
+        return <Input value={filter} onChange={value => setFilter(value)} />
+    }
+  }
   function currentContent() {
     switch (type) {
       case TeaserType.Article:
@@ -265,11 +277,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         </Nav>
 
         <InputGroup style={{marginBottom: 20}}>
-          {/* this input is for articles and pages */}
-          <Input value={filter} onChange={value => setFilter(value)} />
-
-          {/* this input is for peered articles */}
-          <Input value={peerFilter.title || ''} onChange={value => setPeerFilter({title: value})} />
+          {currentFilter()}
           <InputGroup.Addon>
             <Icon icon="search" />
           </InputGroup.Addon>
