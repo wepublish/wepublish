@@ -38,8 +38,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  // console.log(peerArticleListData)
-
   const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
     variables: listVariables,
     fetchPolicy: 'no-cache'
@@ -267,13 +265,15 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         </Nav>
 
         <InputGroup style={{marginBottom: 20}}>
+          {/* this input is for articles and pages */}
+          <Input value={filter} onChange={value => setFilter(value)} />
+
+          {/* this input is for peered articles */}
           <Input value={peerFilter.title || ''} onChange={value => setPeerFilter({title: value})} />
           <InputGroup.Addon>
             <Icon icon="search" />
           </InputGroup.Addon>
         </InputGroup>
-        {/* move input field to switch function */}
-        <Input value={filter} onChange={value => setFilter(value)} />
 
         <List>{currentContent()}</List>
       </Drawer.Body>
