@@ -120,10 +120,12 @@ export function PeerArticleList() {
       </FlexboxGrid>
 
       <SelectPicker
+        // label={'peer'}
         data={allPeers.map(peer => ({
           value: peer.name,
           label: peer.profile?.name
         }))}
+        // disabled={allPeers.map(peer)}
         style={{width: 150, marginTop: 10}}
         placeholder={t('peerArticles.filterByPeer')}
         searchable={true}
