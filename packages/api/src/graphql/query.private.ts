@@ -659,7 +659,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         after = after ? JSON.parse(base64Decode(after)) : null
 
         const peers = await dbAdapter.peer.getPeers()
-        console.log('all peers', peers)
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
           loaders.peer.prime(peer.id, peer)
@@ -667,9 +666,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const articles = await Promise.all(
           peers
-            .filter(peer => (peerFilter ? peer.name === peerFilter : peer))
+            .filter(peer => (peerFilter ? peer.name === peerFilter : true))
             .map(peer => {
-              console.log('peer name', peer.name)
               try {
                 if (after && after[peer.id] == null) return null
 
@@ -775,7 +773,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         )
 
         const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
-          const peer = peers[index]
+          const peer = peers.filter(peer => (peerFilter ? peer.name === peerFilter : peer))[index]
+
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
 

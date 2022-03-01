@@ -32,7 +32,7 @@ export function PeerArticleList() {
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
   const [allPeers, setAllPeers] = useState<PeerWithProfileFragment[]>([])
   const [peerFilter, setPeerFilter] = useState<string>()
-  const [peerArticles, setPeerArticles] = useState<Object[]>([])
+  const [peerArticles, setPeerArticles] = useState<unknown[]>([])
 
   const listVariables = {
     filter: filter || undefined,
@@ -73,9 +73,6 @@ export function PeerArticleList() {
     errorPolicy: 'ignore'
   })
 
-  console.log('PeerListData', peerListData)
-  console.log('PeerArticleListData', peerArticleListData)
-
   useEffect(() => {
     if (peerListData?.peers) {
       setAllPeers(peerListData.peers)
@@ -92,7 +89,6 @@ export function PeerArticleList() {
 
   useEffect(() => {
     refetch(listVariables)
-    console.log('peerFilter: ', peerFilter)
   }, [filter, page, limit, sortOrder, sortField, peerFilter])
 
   const {Column, HeaderCell, Cell, Pagination} = Table
@@ -124,7 +120,6 @@ export function PeerArticleList() {
       </FlexboxGrid>
 
       <SelectPicker
-        // label={'peer'}
         data={allPeers.map(peer => ({
           value: peer.name,
           label: peer.profile?.name
@@ -143,7 +138,6 @@ export function PeerArticleList() {
         }}>
         <Table
           onSortColumn={(sortColumn, sortType) => {
-            console.log('sort', sortColumn, sortType)
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}

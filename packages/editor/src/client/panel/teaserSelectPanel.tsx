@@ -38,7 +38,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  console.log(peerArticleListData)
+  // console.log(peerArticleListData)
 
   const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
     variables: listVariables,
