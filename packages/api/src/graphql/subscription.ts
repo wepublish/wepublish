@@ -13,8 +13,8 @@ import {UserSort} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
   GraphQLMetadataPropertyPublic,
-  GraphQLMetadataPropertyPublicInput,
   GraphQLPageInfo
 } from './common'
 import {Context} from '../context'
@@ -154,7 +154,7 @@ export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
     paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
     properties: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))
     },
     deactivation: {type: GraphQLSubscriptionDeactivationInput}
   }
