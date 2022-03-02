@@ -773,7 +773,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         )
 
         const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
-          const peer = peers.filter(peer => (peerFilter ? peer.name === peerFilter : peer))[index]
+          const peer = peers.filter(peer => (peerFilter ? peer.name === peerFilter : true))[index]
 
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })

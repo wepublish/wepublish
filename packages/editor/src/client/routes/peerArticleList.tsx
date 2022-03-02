@@ -69,8 +69,7 @@ export function PeerArticleList() {
 
   // fetch all peers
   const {data: peerListData} = usePeerListQuery({
-    fetchPolicy: 'network-only',
-    errorPolicy: 'ignore'
+    fetchPolicy: 'network-only'
   })
 
   useEffect(() => {
@@ -97,7 +96,7 @@ export function PeerArticleList() {
     if (peerArticleListError) {
       Notification.error({
         title: peerArticleListError!.message,
-        duration: 5000
+        closable: true
       })
     }
   }, [peerArticleListError])
@@ -119,20 +118,17 @@ export function PeerArticleList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      {allPeers.length >= 2 ? (
-        <SelectPicker
-          data={allPeers.map(peer => ({
-            value: peer.name,
-            label: peer.profile?.name
-          }))}
-          style={{width: 150, marginTop: 10}}
-          placeholder={t('peerArticles.filterByPeer')}
-          searchable={true}
-          onSelect={value => setPeerFilter(value)}
-          onClean={() => setPeerFilter('')}></SelectPicker>
-      ) : (
-        ''
-      )}
+      <SelectPicker
+        data={allPeers.map(peer => ({
+          value: peer.name,
+          label: peer.profile?.name
+        }))}
+        style={{width: 150, marginTop: 10}}
+        placeholder={t('peerArticles.filterByPeer')}
+        searchable={true}
+        onSelect={value => setPeerFilter(value)}
+        onClean={() => setPeerFilter('')}></SelectPicker>
+
       <div
         style={{
           display: 'flex',
