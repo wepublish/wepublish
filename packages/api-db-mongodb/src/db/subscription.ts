@@ -108,7 +108,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       {
         $set: {
           modifiedAt: new Date(),
-          'subscription.periods': periods
+          periods: periods
         }
       },
       {returnOriginal: false}
@@ -134,7 +134,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       {
         $set: {
           modifiedAt: new Date(),
-          'subscription.periods': updatedPeriods
+          periods: updatedPeriods
         }
       },
       {returnOriginal: false}
