@@ -642,6 +642,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -664,6 +665,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -2789,7 +2791,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -4113,6 +4115,7 @@ export const MemberPlanRefFragmentDoc = gql`
   name
   slug
   active
+  tags
   image {
     ...ImageRef
   }

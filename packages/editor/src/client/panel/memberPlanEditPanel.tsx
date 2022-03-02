@@ -13,7 +13,8 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  CheckPicker
+  CheckPicker,
+  TagPicker
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -47,6 +48,7 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface MemberPlanEditPanelProps {
   id?: string
+  // tags?: string[]
 
   onClose?(): void
   onSave?(author: FullMemberPlanFragment): void
@@ -57,6 +59,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
+  const [tags, setTags] = useState([])
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [active, setActive] = useState<boolean>(true)
@@ -106,6 +109,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     if (data?.memberPlan) {
       setName(data.memberPlan.name)
       setSlug(data.memberPlan.slug)
+      setTags(data.memberPlan.tags)
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
@@ -150,6 +154,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           input: {
             name,
             slug,
+            tags,
             imageID: image?.id,
             description,
             active,
@@ -170,6 +175,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           input: {
             name,
             slug,
+            tags,
             imageID: image?.id,
             description,
             active,
@@ -214,6 +220,18 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <ControlLabel>{t('memberPlanList.slug')}</ControlLabel>
               <FormControl name={t('memberPlanList.slug')} value={slug} plaintext={true} />
             </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
+              <TagPicker
+                block
+                value={tags}
+                creatable={true}
+                data={tags.map(tag => ({label: tag, value: tag}))}
+                // onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                // onChange={tagsValue => setTags(tagsValue)}
+              />
+            </FormGroup>
+            value
             <FormGroup>
               <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />

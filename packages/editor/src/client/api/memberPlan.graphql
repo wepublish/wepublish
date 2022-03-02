@@ -3,6 +3,7 @@ fragment MemberPlanRef on MemberPlan {
     name
     slug
     active
+    tags
     image {
         ...ImageRef
     }
