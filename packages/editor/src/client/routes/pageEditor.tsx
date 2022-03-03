@@ -66,11 +66,14 @@ export function PageEditor({id}: PageEditorProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
+  const [updatedAt, setUpdatedAt] = useState<Date>()
+  const [publishAt, setPublishAt] = useState<Date>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
     description: '',
     tags: [],
+    url: '',
     properties: [],
     image: undefined,
     socialMediaTitle: undefined,
@@ -110,12 +113,13 @@ export function PageEditor({id}: PageEditorProps) {
 
   useEffect(() => {
     if (pageData?.page) {
-      const {latest, published} = pageData.page
+      const {latest, pending} = pageData.page
       const {
         slug,
         title,
         description,
         tags,
+        url,
         image,
         blocks,
         properties,
@@ -123,15 +127,21 @@ export function PageEditor({id}: PageEditorProps) {
         socialMediaDescription,
         socialMediaImage
       } = latest
-      const {publishedAt} = published ?? {}
-
+      const {publishedAt} = latest ?? {}
       if (publishedAt) setPublishedAt(new Date(publishedAt))
+
+      const {updatedAt} = latest ?? {}
+      if (updatedAt) setUpdatedAt(new Date(updatedAt))
+
+      const {publishAt} = pending ?? latest
+      if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({
         slug,
         title,
         description: description ?? '',
         tags,
+        url,
         properties: properties.map(property => ({
           key: property.key,
           value: property.value,
@@ -220,7 +230,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date) {
+  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
     if (pageID) {
       const {data} = await updatePage({
         variables: {id: pageID, input: createInput()}
@@ -230,14 +240,25 @@ export function PageEditor({id}: PageEditorProps) {
         const {data: publishData} = await publishPage({
           variables: {
             id: pageID,
-            publishAt: publishDate.toISOString(),
-            publishedAt: publishDate.toISOString(),
-            updatedAt: updateDate.toISOString()
+            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
+            publishedAt: publishedAt.toISOString(),
+            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
           }
         })
 
-        if (publishData?.publishPage?.published?.publishedAt) {
-          setPublishedAt(new Date(publishData?.publishPage?.published.publishedAt))
+        if (publishData?.publishPage?.latest?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishPage?.latest.publishedAt))
+        }
+        if (publishData?.publishPage?.latest?.updatedAt) {
+          setUpdatedAt(new Date(publishData?.publishPage?.latest.updatedAt))
+        }
+        if (publishData?.publishPage?.latest?.publishAt) {
+          setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
+        } else if (
+          publishData?.publishPage?.latest?.publishAt === null &&
+          publishData?.publishPage?.latest?.publishedAt
+        ) {
+          setPublishAt(new Date(publishData?.publishPage?.latest?.publishedAt))
         }
       }
       await refetch({id: pageID})
@@ -246,7 +267,7 @@ export function PageEditor({id}: PageEditorProps) {
     setChanged(false)
     Notification.success({
       title: t(
-        publishDate <= new Date()
+        publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
           ? 'pageEditor.overview.pagePublished'
           : 'pageEditor.overview.pagePending'
       ),
@@ -327,7 +348,9 @@ export function PageEditor({id}: PageEditorProps) {
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
                           disabled={isDisabled}
-                          onClick={() => setPublishDialogOpen(true)}>
+                          onClick={() => {
+                            setPublishDialogOpen(true)
+                          }}>
                           {t('pageEditor.overview.publish')}
                         </IconButton>
                       </Badge>
@@ -375,12 +398,14 @@ export function PageEditor({id}: PageEditorProps) {
 
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
-          initialPublishDate={publishedAt}
+          publishedAtDate={publishedAt}
+          updatedAtDate={updatedAt}
+          publishAtDate={publishAt}
           pendingPublishDate={pendingPublishDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishDate, updateDate) => {
-            handlePublish(publishDate, updateDate)
+          onConfirm={(publishedAt, publishAt, updatedAt) => {
+            handlePublish(publishedAt, publishAt, updatedAt)
             setPublishDialogOpen(false)
           }}
         />

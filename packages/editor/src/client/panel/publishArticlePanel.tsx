@@ -1,27 +1,31 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 
-import {useTranslation} from 'react-i18next'
-import {Button, Message, Modal} from 'rsuite'
+import {Button, Checkbox, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
 
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
+import {useTranslation} from 'react-i18next'
 
 export interface PublishArticlePanelProps {
-  initialPublishDate?: Date
+  publishedAtDate?: Date
+  updatedAtDate?: Date
+  publishAtDate?: Date
   pendingPublishDate?: Date
   metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(publishDate: Date, updateDate: Date): void
+  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
 export function PublishArticlePanel({
-  initialPublishDate,
+  publishedAtDate,
+  updatedAtDate,
+  publishAtDate,
   pendingPublishDate,
   metadata,
   onClose,
@@ -29,12 +33,25 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDate, setPublishDate] = useState<Date | undefined>(
-    pendingPublishDate ?? initialPublishDate ?? now
+  const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
+
+  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
+
+  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
+    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
   )
-  const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
+
+  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
+    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
+  )
 
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if (!publishAt || !isPublishDateActive) {
+      setPublishAt(publishedAt)
+    }
+  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -51,18 +68,55 @@ export function PublishArticlePanel({
             })}
           />
         )}
+
         <DateTimePicker
-          dateTime={publishDate}
+          dateTime={publishedAt}
           label={t('articleEditor.panels.publishDate')}
-          changeDate={date => setPublishDate(date)}
+          changeDate={date => setPublishedAt(date)}
         />
         <DateTimePicker
-          dateTime={updateDate}
+          dateTime={updatedAt}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setUpdateDate(date)}
+          changeDate={date => setUpdatedAt(date)}
         />
 
+        {updatedAt && publishedAt && updatedAt < publishedAt ? (
+          <Message
+            type="warning"
+            description={t('articleEditor.panels.updateDateWarning')}></Message>
+        ) : (
+          ''
+        )}
+
+        <Checkbox
+          value={isPublishDateActive}
+          checked={isPublishDateActive}
+          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
+          {t('articleEditor.panels.publishAtDateCheckbox')}
+        </Checkbox>
+
+        {isPublishDateActive ? (
+          <DateTimePicker
+            dateTime={publishAt}
+            label={t('articleEditor.panels.publishAt')}
+            changeDate={date => setPublishAt(date)}
+            helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
+          />
+        ) : (
+          ''
+        )}
+
         <DescriptionList>
+          <DescriptionListItem label={t('articleEditor.panels.url')}>
+            {metadata?.url ? (
+              <a href={metadata.url} target="_blank" rel="noopener noreferrer">
+                {metadata.url}
+              </a>
+            ) : (
+              '-'
+            )}
+          </DescriptionListItem>
+
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
             {metadata.preTitle || '-'}
           </DescriptionListItem>
@@ -156,8 +210,8 @@ export function PublishArticlePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishDate || !updateDate || !metadata.slug}
-          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          disabled={!publishedAt || !metadata.slug || (updatedAt && updatedAt < publishedAt)}
+          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('articleEditor.panels.confirm')}
         </Button>
 
