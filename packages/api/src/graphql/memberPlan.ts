@@ -125,7 +125,8 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
   fields: {
     name: {type: GraphQLString},
-    active: {type: GraphQLBoolean}
+    active: {type: GraphQLBoolean},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
 
@@ -173,7 +174,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     slug: {type: GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLID},
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {

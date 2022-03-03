@@ -658,6 +658,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>;
   active?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type MemberPlanInput = {
@@ -665,7 +666,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags: Array<Scalars['String']>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;

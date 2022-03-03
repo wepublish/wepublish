@@ -33,6 +33,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       modifiedAt: new Date(),
       name: input.name,
       slug: input.slug,
+      tags: input.tags,
       imageID: input.imageID,
       description: input.description,
       active: input.active,
@@ -52,6 +53,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
           modifiedAt: new Date(),
           name: input.name,
           slug: input.slug,
+          tags: input.tags,
           imageID: input.imageID,
           description: input.description,
           active: input.active,
@@ -134,6 +136,11 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
 
     if (filter?.active !== undefined) {
       textFilter.$and?.push({active: filter.active})
+    }
+
+    if (filter?.tags) {
+      // regex ?
+      textFilter.$and?.push({tags: filter.tags})
     }
 
     const [totalCount, memberPlans] = await Promise.all([
