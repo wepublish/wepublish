@@ -1,4 +1,4 @@
-import React, {useEffect, createContext, ReactNode, useContext, useState} from 'react'
+import React, {useEffect, createContext, ReactNode, useContext} from 'react'
 import {TikTokVideoEmbedData} from '../types'
 
 import {useScript} from '../utility'
@@ -6,11 +6,31 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem} from '../style/helpers'
 
-// Define some globals set by Instagram SDK.
+// Define some globals set by Tiktok SDK.
 declare global {
   interface Window {
     tiktokEmbed: any
   }
+}
+
+export const getTikTokBlock = (userID: string, vidID: string) => {
+  return (
+    <blockquote
+      className="tiktok-embed"
+      cite={`https://www.tiktok.com/@${userID}/video/${vidID}`}
+      data-video-id={vidID}
+      style={{maxWidth: '605px', minWidth: '325px'}}>
+      <section>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          title={`@${userID}`}
+          href={`https://www.tiktok.com/@${userID}`}>
+          @{userID}
+        </a>
+      </section>
+    </blockquote>
+  )
 }
 
 export interface TikTokContextState {
@@ -27,7 +47,10 @@ export interface TikTokProviderProps {
 }
 
 export function TikTokProvider({children}: TikTokProviderProps) {
-  const contextValue = useScript('//www.tiktok.com/embed.js', () => window.instgrm != null)
+  const contextValue = useScript(
+    '//www.tiktok.com/embed.js',
+    () => window?.tiktokEmbed !== undefined
+  )
   return <TikTokContext.Provider value={contextValue}>{children}</TikTokContext.Provider>
 }
 
@@ -45,16 +68,6 @@ export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedData) {
     )
   }
 
-  const [htmlContent, setHtmlContent] = useState('')
-
-  const tiktokData = async () => {
-    const response = await fetch(
-      `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}&format=json`
-    )
-    const data = await response.json()
-    setHtmlContent(data.html)
-  }
-
   const {isLoaded, isLoading, load} = context
 
   useEffect(() => {
@@ -63,16 +76,7 @@ export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedData) {
     }
   }, [isLoaded, isLoading])
 
-  useEffect(() => {
-    tiktokData()
-  }, [userID, videoID])
-
   const css = useStyle(isLoaded)
 
-  return (
-    <div className={css(TikTokVidStyle)}>
-      {/* <blockquote /> */}
-      <p>dfsg</p>
-    </div>
-  )
+  return <div className={css(TikTokVidStyle)}>{getTikTokBlock(userID, videoID)}</div>
 }

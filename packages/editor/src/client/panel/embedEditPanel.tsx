@@ -167,7 +167,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       return `https://pol.is/${embed.conversationID}`
 
     case EmbedType.TikTokVideo:
-      return `https:///www.tiktok.com/@${embed.userID}/video/${embed.videoID}`
+      return `https://www.tiktok.com/@${embed.userID}/video/${embed.videoID}`
 
     case EmbedType.BildwurfAd:
       return `<div id="bildwurf-injection-wrapper"><ins className="aso-zone" data-zone="${embed.zoneID}"></ins></div>`
