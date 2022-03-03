@@ -224,10 +224,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
               <TagPicker
                 block
-                value={tags}
+                value={tags ?? []}
                 creatable={true}
                 data={tags.map(tag => ({label: tag, value: tag}))}
-                onChange={tagsValue => setTags(tagsValue)}
+                onChange={tagsValue => setTags(tagsValue ?? [])}
               />
             </FormGroup>
 

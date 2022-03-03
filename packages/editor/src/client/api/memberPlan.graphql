@@ -22,6 +22,7 @@ fragment FullMemberPlan on MemberPlan {
     ...MemberPlanRef
 }
 
+
 query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
     memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
         nodes {

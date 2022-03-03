@@ -90,7 +90,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       })
     },
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
@@ -113,7 +113,7 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
       })
     },
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLString)},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicAvailablePaymentMethod)))
