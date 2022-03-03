@@ -88,7 +88,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       setStartsAt(new Date(data.subscription.startsAt))
       setPaidUntil(data.subscription.paidUntil ? new Date(data.subscription.paidUntil) : null)
       setPaymentMethod(data.subscription.paymentMethod)
-      setProperties(data.subscription.properties)
+      setProperties(
+        data.subscription.properties.map(({key, value, public: isPublic}) => ({
+          key,
+          value,
+          public: isPublic
+        }))
+      )
       setDeactivation(data.subscription.deactivation)
     }
   }, [data?.subscription])
@@ -201,11 +207,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             startsAt: startsAt.toISOString(),
             paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties: properties.map(({key, value, public: isPublic}) => ({
-              key,
-              value,
-              public: isPublic
-            })),
+            properties,
             deactivation
           }
         }
@@ -224,11 +226,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             startsAt: startsAt.toISOString(),
             paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties: properties.map(({key, value, public: isPublic}) => ({
-              key,
-              value,
-              public: isPublic
-            })),
+            properties,
             deactivation
           }
         }
