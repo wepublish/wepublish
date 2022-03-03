@@ -153,7 +153,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           input: {
             name,
             slug,
-            // map ?
             tags,
             imageID: image?.id,
             description,
@@ -175,7 +174,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           input: {
             name,
             slug,
-            // map ?
             tags,
             imageID: image?.id,
             description,
