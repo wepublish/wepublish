@@ -9,12 +9,12 @@ import {
 } from '../api'
 
 import {
+  Alert,
   Avatar,
   FlexboxGrid,
   Icon,
   Input,
   InputGroup,
-  Notification,
   Popover,
   SelectPicker,
   Table,
@@ -94,10 +94,7 @@ export function PeerArticleList() {
 
   useEffect(() => {
     if (peerArticleListError) {
-      Notification.error({
-        title: peerArticleListError!.message,
-        closable: true
-      })
+      Alert.error(peerArticleListError!.message, 0)
     }
   }, [peerArticleListError])
 
