@@ -659,107 +659,107 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         after = after ? JSON.parse(base64Decode(after)) : null
 
         const peers = await dbAdapter.peer.getPeers()
+        peers.filter(peer => (peerFilter ? peer.name === peerFilter : true))
+
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
           loaders.peer.prime(peer.id, peer)
         }
 
         const articles = await Promise.all(
-          peers
-            .filter(peer => (peerFilter ? peer.name === peerFilter : true))
-            .map(peer => {
-              try {
-                if (after && after[peer.id] == null) return null
+          peers.map(peer => {
+            try {
+              if (after && after[peer.id] == null) return null
 
-                return delegateToPeerSchema(peer.id, true, context, {
-                  info,
-                  fieldName: 'articles',
-                  args: {after: after ? after[peer.id] : undefined},
-                  transforms: [
-                    new ExtractField({
-                      from: ['articles', 'nodes', 'article'],
-                      to: ['articles', 'nodes']
+              return delegateToPeerSchema(peer.id, true, context, {
+                info,
+                fieldName: 'articles',
+                args: {after: after ? after[peer.id] : undefined},
+                transforms: [
+                  new ExtractField({
+                    from: ['articles', 'nodes', 'article'],
+                    to: ['articles', 'nodes']
+                  }),
+                  new WrapQuery(
+                    ['articles', 'nodes', 'article'],
+                    subtree => ({
+                      kind: Kind.SELECTION_SET,
+                      selections: [
+                        ...subtree.selections,
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'id'}
+                        },
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'latest'},
+                          selectionSet: {
+                            kind: Kind.SELECTION_SET,
+                            selections: [
+                              {
+                                kind: Kind.FIELD,
+                                name: {kind: Kind.NAME, value: 'updatedAt'}
+                              },
+                              {
+                                kind: Kind.FIELD,
+                                name: {kind: Kind.NAME, value: 'publishAt'}
+                              },
+                              {
+                                kind: Kind.FIELD,
+                                name: {kind: Kind.NAME, value: 'publishedAt'}
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'modifiedAt'}
+                        },
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'createdAt'}
+                        }
+                      ]
                     }),
-                    new WrapQuery(
-                      ['articles', 'nodes', 'article'],
-                      subtree => ({
-                        kind: Kind.SELECTION_SET,
-                        selections: [
-                          ...subtree.selections,
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'id'}
-                          },
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'latest'},
-                            selectionSet: {
-                              kind: Kind.SELECTION_SET,
-                              selections: [
-                                {
-                                  kind: Kind.FIELD,
-                                  name: {kind: Kind.NAME, value: 'updatedAt'}
-                                },
-                                {
-                                  kind: Kind.FIELD,
-                                  name: {kind: Kind.NAME, value: 'publishAt'}
-                                },
-                                {
-                                  kind: Kind.FIELD,
-                                  name: {kind: Kind.NAME, value: 'publishedAt'}
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'modifiedAt'}
-                          },
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'createdAt'}
+                    result => result
+                  ),
+                  new WrapQuery(
+                    ['articles'],
+                    subtree => ({
+                      kind: Kind.SELECTION_SET,
+                      selections: [
+                        ...subtree.selections,
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'pageInfo'},
+                          selectionSet: {
+                            kind: Kind.SELECTION_SET,
+                            selections: [
+                              {
+                                kind: Kind.FIELD,
+                                name: {kind: Kind.NAME, value: 'endCursor'}
+                              },
+                              {
+                                kind: Kind.FIELD,
+                                name: {kind: Kind.NAME, value: 'hasNextPage'}
+                              }
+                            ]
                           }
-                        ]
-                      }),
-                      result => result
-                    ),
-                    new WrapQuery(
-                      ['articles'],
-                      subtree => ({
-                        kind: Kind.SELECTION_SET,
-                        selections: [
-                          ...subtree.selections,
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'pageInfo'},
-                            selectionSet: {
-                              kind: Kind.SELECTION_SET,
-                              selections: [
-                                {
-                                  kind: Kind.FIELD,
-                                  name: {kind: Kind.NAME, value: 'endCursor'}
-                                },
-                                {
-                                  kind: Kind.FIELD,
-                                  name: {kind: Kind.NAME, value: 'hasNextPage'}
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            kind: Kind.FIELD,
-                            name: {kind: Kind.NAME, value: 'totalCount'}
-                          }
-                        ]
-                      }),
-                      result => result
-                    )
-                  ]
-                })
-              } catch (err) {
-                return null
-              }
-            })
+                        },
+                        {
+                          kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'totalCount'}
+                        }
+                      ]
+                    }),
+                    result => result
+                  )
+                ]
+              })
+            } catch (err) {
+              return null
+            }
+          })
         )
 
         const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
@@ -773,7 +773,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         )
 
         const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
-          const peer = peers.filter(peer => (peerFilter ? peer.name === peerFilter : true))[index]
+          const peer = peers[index]
 
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
