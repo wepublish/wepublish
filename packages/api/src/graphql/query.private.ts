@@ -658,7 +658,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
-        const peers = await (await dbAdapter.peer.getPeers()).filter(peer =>
+        const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
           peerFilter ? peer.name === peerFilter : true
         )
 
