@@ -239,7 +239,8 @@ export function PeerArticleList() {
             </Cell>
           </Column>
 
-          <Column width={200} align="left" resizable>
+          {/* This section will be uncommented when the hostURL is available. See this issue: https://wepublish.atlassian.net/browse/WPC-663}
+          {/* <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
@@ -248,7 +249,7 @@ export function PeerArticleList() {
                 </Link>
               )}
             </Cell>
-          </Column>
+          </Column> */}
         </Table>
 
         <Pagination
