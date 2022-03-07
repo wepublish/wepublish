@@ -658,8 +658,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
-        const peers = await dbAdapter.peer.getPeers()
-        peers.filter(peer => (peerFilter ? peer.name === peerFilter : true))
+        const peers = await (await dbAdapter.peer.getPeers()).filter(peer =>
+          peerFilter ? peer.name === peerFilter : true
+        )
 
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
