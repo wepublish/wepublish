@@ -140,8 +140,8 @@ function getNextReminderAndDeactivationDate({
   sentReminderAt,
   createdAt
 }: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
-  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') ?? 3
-  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') ?? 5
+  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') || 3
+  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') || 5
 
   const nextReminder = new Date(
     sentReminderAt.getTime() +
