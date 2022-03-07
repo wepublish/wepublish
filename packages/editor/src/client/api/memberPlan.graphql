@@ -11,6 +11,7 @@ fragment MemberPlanRef on MemberPlan {
 
 fragment FullMemberPlan on MemberPlan {
     description
+    tags
     amountPerMonthMin
     availablePaymentMethods {
         paymentMethods {
