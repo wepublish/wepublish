@@ -551,6 +551,7 @@
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
       "peers": "Peers",
+      "peerArticle": "Peered articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
@@ -715,6 +716,20 @@
       "name": "Name",
       "slug": "Slug",
       "title": "Payment Methods"
+    },
+    "peerArticles": {
+      "peerArticles": "Peered Articles",
+      "title": "Title",
+      "lead": "Lead",
+      "peer": "Peer",
+      "publishedAt": "Publication date",
+      "publicationDate": "{{publicationDate, ccc PP p}}",
+      "authors": "Authors",
+      "articleImage": "Article image",
+      "originalArticle": "Original article",
+      "notPublished": "Not yet published",
+      "toOriginalArticle": "To original article",
+      "filterByPeer": "Filter by peer"
     },
     "peerList": {
       "overview": {
