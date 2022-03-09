@@ -473,6 +473,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve(root, {input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
+
+        if (input.userID.startsWith('__temp'))
+          throw new Error('Can not update subscription with tempUser')
+
         return dbAdapter.subscription.createSubscription({input})
       }
     },
@@ -486,6 +490,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, input}, {authenticate, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
+
+        const user = await dbAdapter.user.getUserByID(input.userID)
+        if (!user) throw new Error('Can not update subscription without user')
 
         const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
         if (!updatedSubscription) throw new NotFound('subscription', id)
@@ -504,6 +511,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteSubscription, roles)
+
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+
+        if (subscription && subscription.userID.startsWith('__temp')) {
+          await dbAdapter.tempUser.deleteTempUser({id: subscription.userID.substr(7)})
+        }
+
         await dbAdapter.subscription.deleteSubscription({id})
         return id
       }

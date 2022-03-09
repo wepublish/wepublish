@@ -51,6 +51,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
 
   const [user, setUser] = useState<FullUserFragment>()
+  const [isTempUser, setIsTempUser] = useState<boolean>()
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
     PaymentPeriodicity.Yearly
@@ -77,6 +78,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   useEffect(() => {
     if (data?.subscription) {
       setUser(data.subscription.user)
+      setIsTempUser(data.subscription.user.id.startsWith('__temp'))
       setUsers([
         ...users.filter(user => user.id !== data.subscription?.user.id),
         data.subscription.user
@@ -120,6 +122,12 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }, [userData?.users])
 
+  useEffect(() => {
+    if (user) {
+      setIsTempUser(user.id.startsWith('__temp'))
+    }
+  }, [user])
+
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
@@ -162,7 +170,8 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
     paymentMethodLoadError !== undefined ||
-    userLoadError !== undefined
+    userLoadError !== undefined ||
+    isTempUser
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -308,6 +317,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 : 'userSubscriptionEdit.deactivation.willBeDeactivated',
               {date: new Date(deactivation.date)}
             )}
+          />
+        )}
+        {isTempUser && (
+          <Message
+            showIcon
+            type="warning"
+            description={t('userSubscriptionEdit.tempUser.disabledInfo')}
           />
         )}
         <Panel>

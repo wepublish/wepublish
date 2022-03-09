@@ -810,7 +810,8 @@
         "resetPassword": "Reset Password",
         "search": "Search",
         "unknown": "Unknown",
-        "subscription": "Subscription"
+        "subscription": "Subscription",
+        "tempUser": "(Temporary User) - "
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
@@ -819,7 +820,8 @@
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "Confirm",
-        "create": "Create"
+        "create": "Create",
+        "tempUserWarning": "This Subscription has a temporary user that has not finished the registration. If you delete the subscription the temporary user will be also deleted."
       }
     },
     "userList": {
@@ -916,6 +918,9 @@
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
+      "tempUser": {
+        "disabledInfo": "This subscription belongs to a temporary user that has not yet finished registration. You can not edit anything until the registration is finished."
+      },
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",

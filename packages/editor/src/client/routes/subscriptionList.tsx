@@ -30,6 +30,7 @@ import {
   IconButton,
   Input,
   InputGroup,
+  Message,
   Modal,
   Table
 } from 'rsuite'
@@ -180,19 +181,18 @@ export function SubscriptionList() {
               }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column width={400} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullSubscriptionFragment) => (
                 <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
+                  {rowData.user.id.startsWith('__temp') && (
+                    <span>{t('subscriptionList.overview.tempUser')}</span>
+                  )}
                   {rowData.user.name || t('subscriptionList.overview.unknown')}
                 </Link>
               )}
             </Cell>
-          </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
-            <Cell dataKey="email" />
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
@@ -206,8 +206,8 @@ export function SubscriptionList() {
                       size="sm"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
-                        // setConfirmationDialogOpen(true)
                         setCurrentSubscription(rowData)
+                        setConfirmationDialogOpen(true)
                       }}
                     />
                   </IconButtonTooltip>
@@ -264,6 +264,13 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
+          {currentSubscription?.user.id.startsWith('__temp') && (
+            <Message
+              showIcon
+              type="warning"
+              description={t('subscriptionList.panels.tempUserWarning')}
+            />
+          )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user.name || t('subscriptionList.panels.unknown')}

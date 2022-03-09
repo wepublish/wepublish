@@ -23,6 +23,7 @@ import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} f
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {Subscription, SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLUser} from './user'
+import {NotFound} from '../error'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
@@ -49,8 +50,28 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
       type: GraphQLNonNull(GraphQLUser),
-      resolve({userID}, args, {dbAdapter}) {
-        return dbAdapter.user.getUserByID(userID)
+      async resolve({userID}, args, {dbAdapter}) {
+        if (userID.startsWith('__temp')) {
+          const tempUser = await dbAdapter.tempUser.getTempUserByID(userID.substr(7))
+          if (!tempUser) throw new NotFound('TempUser', userID)
+          return {
+            id: userID,
+            name: tempUser.name,
+            email: tempUser.email,
+            preferredName: tempUser.preferredName,
+            createdAt: tempUser.createdAt,
+            modifiedAt: tempUser.modifiedAt,
+            active: false,
+            properties: [],
+            emailVerifiedAt: null,
+            lastLogin: null,
+            oauth2Accounts: [],
+            paymentProviderCustomers: [],
+            roleIDs: []
+          }
+        } else {
+          return dbAdapter.user.getUserByID(userID)
+        }
       }
     },
     memberPlan: {
