@@ -248,7 +248,6 @@ export class MemberContext implements MemberContext {
         subscription.paymentPeriodicity
       )
 
-      // FIXME: do we really need the user here??? and if we do make this code nice.
       const user = isTempUser(subscription.userID)
         ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
         : await this.dbAdapter.user.getUserByID(subscription.userID)
