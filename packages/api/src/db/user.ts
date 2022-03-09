@@ -38,7 +38,6 @@ export enum UserSort {
 export interface UserFilter {
   readonly name?: string
   readonly text?: string
-  // readonly subscription?: UserSubscriptionFilter
 }
 
 export interface PaymentProviderCustomer {
