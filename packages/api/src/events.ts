@@ -216,7 +216,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
 
         if (!user) {
-          // TODO: handle super error
+          logger('events').error(`Could not create user from tempUser %s`, tempUser.id)
           return
         }
 
@@ -225,7 +225,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
 
         if (!deletedTempUser) {
-          // TODO: handle super error
+          logger('events').error(`Could not delete tempUser %s`, tempUser.id)
         }
 
         const updatedSubscription = await context.dbAdapter.subscription.updateSubscription({
@@ -237,7 +237,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
 
         if (!updatedSubscription) {
-          // TODO: handle super error
+          logger('events').error(`Could not update subscription %s`, subscription.id)
           return
         }
 
@@ -255,7 +255,10 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
       } else {
         const user = await context.dbAdapter.user.getUserByID(subscription.userID)
-        if (!user) return
+        if (!user) {
+          logger('events').warn(`User not found %s`, subscription.userID)
+          return
+        }
 
         await context.mailContext.sendMail({
           type: SendMailType.RenewedMemberSubscription,
