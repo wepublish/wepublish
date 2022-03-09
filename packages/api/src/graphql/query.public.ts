@@ -49,6 +49,7 @@ import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
 import {NotFound} from '../error'
 import {Invoice} from '../db/invoice'
+import {GraphQLPublicSubscription} from './subscription'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -338,7 +339,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
-      description: 'This query returns the invoices.',
+      description: 'This query returns the invoices  of the authenticated user.',
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
@@ -357,6 +358,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           }
         }
         return invoices
+      }
+    },
+
+    subscriptions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicSubscription))),
+      description: 'This query returns the subscriptions of the authenticated user.',
+      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+
+        return await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
       }
     },
 
