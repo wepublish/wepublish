@@ -705,9 +705,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         first: {type: GraphQLInt},
         filter: {type: GraphQLArticleFilter},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
+        peerFilter: {type: GraphQLString},
+        last: {type: GraphQLInt},
+        skip: {type: GraphQLInt}
       },
-      async resolve(root, {filter, sort, order, after, first}, context, info) {
+
+      async resolve(
+        root,
+        {filter, sort, order, after, first, peerFilter, last, skip},
+        context,
+        info
+      ) {
         const {authenticate, loaders, dbAdapter} = context
         const {roles} = authenticate()
 
@@ -715,7 +724,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
-        const peers = await dbAdapter.peer.getPeers()
+        const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
+          peerFilter ? peer.name === peerFilter : true
+        )
 
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
@@ -830,6 +841,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
           const peer = peers[index]
+
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
 

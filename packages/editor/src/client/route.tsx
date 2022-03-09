@@ -70,7 +70,9 @@ export enum RouteType {
 
   PaymentMethodList = 'paymentMethodList',
   PaymentMethodEdit = 'paymentMethodEdit',
-  PaymentMethodCreate = 'paymentMethodCreate'
+  PaymentMethodCreate = 'paymentMethodCreate',
+
+  PeerArticleList = 'peerArticleList'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -171,6 +173,8 @@ export const PaymentMethodCreateRoute = route(
   routePath`/paymentmethod/create`
 )
 
+export const PeerArticleListRoute = route(RouteType.PeerArticleList, routePath`/peerarticles`)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
@@ -216,6 +220,7 @@ export const routes = [
   PaymentMethodListRoute,
   PaymentMethodEditRoute,
   PaymentMethodCreateRoute,
+  PeerArticleListRoute,
   NotFoundRoute
 ] as const
 
