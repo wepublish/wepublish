@@ -35,7 +35,7 @@ import {
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES} from '../utility'
+import {ALL_PAYMENT_PERIODICITIES, isTempUser as checkIsTempUser} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 
 export interface SubscriptionEditPanelProps {
@@ -78,7 +78,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   useEffect(() => {
     if (data?.subscription) {
       setUser(data.subscription.user)
-      setIsTempUser(data.subscription.user.id.startsWith('__temp'))
+      setIsTempUser(checkIsTempUser(data.subscription.user.id))
       setUsers([
         ...users.filter(user => user.id !== data.subscription?.user.id),
         data.subscription.user
@@ -124,7 +124,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
 
   useEffect(() => {
     if (user) {
-      setIsTempUser(user.id.startsWith('__temp'))
+      setIsTempUser(checkIsTempUser(user.id))
     }
   }, [user])
 

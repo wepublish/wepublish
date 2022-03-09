@@ -35,7 +35,7 @@ import {
   Table
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
@@ -191,7 +191,7 @@ export function SubscriptionList() {
             <Cell dataKey={'name'}>
               {(rowData: FullSubscriptionFragment) => (
                 <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
-                  {rowData.user.id.startsWith('__temp') && (
+                  {isTempUser(rowData.user.id) && (
                     <span>{t('subscriptionList.overview.tempUser')}</span>
                   )}
                   {rowData.user.name || t('subscriptionList.overview.unknown')}
@@ -285,7 +285,7 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
-          {currentSubscription?.user.id.startsWith('__temp') && (
+          {currentSubscription && isTempUser(currentSubscription.user.id) && (
             <Message
               showIcon
               type="warning"

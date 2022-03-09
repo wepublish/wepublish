@@ -9,6 +9,12 @@ export enum LocalStorageKey {
   SessionToken = 'sessionToken'
 }
 
+export const TEMP_USER_PREFIX = '__temp_'
+
+export function isTempUser(userID: string): boolean {
+  return userID.startsWith(TEMP_USER_PREFIX)
+}
+
 export function generateID(): string {
   return nanoid()
 }
