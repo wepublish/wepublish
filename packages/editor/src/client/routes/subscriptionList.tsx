@@ -37,6 +37,7 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -65,6 +66,7 @@ export function SubscriptionList() {
 
   const [filter, setFilter] = useState('')
 
+  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
 
@@ -127,6 +129,9 @@ export function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
+            {t('userList.overview.exportSubscriptionsCsv')}
+          </Button>
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -257,6 +262,22 @@ export function SubscriptionList() {
           }}
         />
       </Drawer>
+
+      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <SubscriptionAsCsvModal />
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={() => setExportModalOpen(false)} appearance="default">
+            {t('userList.panels.close')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
