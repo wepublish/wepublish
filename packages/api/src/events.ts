@@ -18,6 +18,7 @@ import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import crypto from 'crypto'
 import {Subscription} from './db/subscription'
+import {isTempUser} from './utility'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -197,7 +198,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         return
       }
 
-      if (subscription.userID.startsWith('__temp')) {
+      if (isTempUser(subscription.userID)) {
         const tempUser = await context.dbAdapter.tempUser.getTempUserByID(subscription.userID)
         if (!tempUser) return
 

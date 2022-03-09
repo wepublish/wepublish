@@ -48,6 +48,7 @@ import {
   countRichtextChars,
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   MAX_COMMENT_LENGTH,
+  TEMP_USER_PREFIX,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND
 } from '../utility'
 import {SendMailType} from '../mails/mailContext'
@@ -299,7 +300,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const subscription = await dbAdapter.subscription.createSubscription({
           input: {
-            userID: `__temp_${tempUser.id}`,
+            userID: `${TEMP_USER_PREFIX}${tempUser.id}`,
             startsAt: new Date(),
             paymentMethodID: paymentMethod.id,
             paymentPeriodicity,

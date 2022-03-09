@@ -24,6 +24,7 @@ import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {Subscription, SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLUser} from './user'
 import {NotFound} from '../error'
+import {isTempUser, removePrefixTempUser} from '../utility'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
@@ -51,8 +52,8 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     user: {
       type: GraphQLNonNull(GraphQLUser),
       async resolve({userID}, args, {dbAdapter}) {
-        if (userID.startsWith('__temp')) {
-          const tempUser = await dbAdapter.tempUser.getTempUserByID(userID.substr(7))
+        if (isTempUser(userID)) {
+          const tempUser = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(userID))
           if (!tempUser) throw new NotFound('TempUser', userID)
           return {
             id: userID,

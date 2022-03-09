@@ -4,9 +4,11 @@ import {DBAdapter} from './db/adapter'
 import {logger} from './server'
 import {DataLoaderContext} from './context'
 import {
+  isTempUser,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
-  ONE_MONTH_IN_MILLISECONDS
+  ONE_MONTH_IN_MILLISECONDS,
+  removePrefixTempUser
 } from './utility'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
@@ -247,8 +249,8 @@ export class MemberContext implements MemberContext {
       )
 
       // FIXME: do we really need the user here??? and if we do make this code nice.
-      const user = subscription.userID.startsWith('__temp')
-        ? await this.dbAdapter.tempUser.getTempUserByID(subscription.userID.substr(7))
+      const user = isTempUser(subscription.userID)
+        ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
         : await this.dbAdapter.user.getUserByID(subscription.userID)
 
       if (!user) {

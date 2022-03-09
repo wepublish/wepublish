@@ -31,7 +31,7 @@ import {
   GraphQLPeerArticleConnection
 } from './article'
 
-import {InputCursor, Limit, SortOrder} from '../db/common'
+import {ConnectionResult, InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
@@ -362,14 +362,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         let afterCursor
 
         while (hasMore) {
-          const listResult: any = await dbAdapter.subscription.getSubscriptions({
-            // FIXME: remove any
-            cursor: InputCursor(afterCursor),
-            filter: {},
-            limit: Limit(100),
-            sort: SubscriptionSort.ModifiedAt,
-            order: SortOrder.Descending
-          })
+          const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
+            {
+              cursor: InputCursor(afterCursor ?? undefined),
+              filter: {},
+              limit: Limit(100),
+              sort: SubscriptionSort.ModifiedAt,
+              order: SortOrder.Descending
+            }
+          )
           subscriptions.push(...listResult.nodes)
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
@@ -379,9 +380,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         afterCursor = undefined
 
         while (hasMore) {
-          const listResult: any = await dbAdapter.user.getUsers({
-            // FIXME: remove any
-            cursor: InputCursor(afterCursor),
+          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
+            cursor: InputCursor(afterCursor ?? undefined),
             filter: {},
             limit: Limit(100),
             sort: UserSort.ModifiedAt,
