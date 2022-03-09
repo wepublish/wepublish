@@ -121,7 +121,8 @@ export class WepublishServer {
     adminServer.applyMiddleware({
       app,
       path: '/admin',
-      cors: corsOptions
+      cors: corsOptions,
+      bodyParserConfig: {limit: '1mb'}
     })
 
     publicServer.applyMiddleware({
