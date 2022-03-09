@@ -128,6 +128,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     if (filter && JSON.stringify(filter) !== '{}') {
       textFilter.$and = []
     }
+    let metaFilters: FilterQuery<any> = []
 
     // TODO: Rename to search
     if (filter?.name !== undefined) {
@@ -139,8 +140,8 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     }
 
     if (filter?.tags) {
-      // regex ?
-      textFilter.$and?.push({tags: filter.tags})
+      // textFilter.$and?.push({tags: filter.tags})
+      metaFilters.push({tags: {$in: filter.tags}})
     }
 
     const [totalCount, memberPlans] = await Promise.all([
@@ -152,6 +153,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
         .match(textFilter)
         .match(cursorFilter)
+        .match(metaFilters.length ? {$and: metaFilters} : {})
         .sort({[sortField]: sortDirection, _id: sortDirection})
         .limit(limitCount + 1)
         .toArray()
