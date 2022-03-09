@@ -87,6 +87,7 @@ export enum EmbedType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
   Other = 'other'
 }
@@ -134,6 +135,12 @@ export interface PolisConversationEmbed {
   conversationID: string
 }
 
+export interface TikTokVideoEmbed {
+  type: EmbedType.TikTokVideo
+  videoID: string
+  userID: string
+}
+
 export interface BildwurfAdEmbed {
   type: EmbedType.BildwurfAd
   zoneID: string
@@ -157,6 +164,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed
 
@@ -393,6 +401,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             polisConversation: {
               conversationID: value.conversationID
+            }
+          }
+
+        case EmbedType.TikTokVideo:
+          return {
+            tikTokVideo: {
+              videoID: value.videoID,
+              userID: value.userID
             }
           }
 
@@ -679,6 +695,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
+      }
+
+    case 'TikTokVideoBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.TikTokVideo, videoID: block.videoID, userID: block.userID}
       }
 
     case 'BildwurfAdBlock':
