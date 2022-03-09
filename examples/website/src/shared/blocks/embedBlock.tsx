@@ -14,6 +14,7 @@ import {pxToRem, whenDesktop, whenTablet} from '../style/helpers'
 import {usePermanentVisibility} from '../utils/hooks'
 import {transformCssStringToObject} from '../utility'
 import {BildwurfAdEmbed} from '../atoms/bildwurfAdEmbed'
+import {TikTokVideoEmbed} from '../atoms/tikTokEmbed'
 
 export interface EmbedBlockProps {
   readonly data: EmbedData
@@ -64,6 +65,9 @@ function embedForData(data: EmbedData) {
 
     case EmbedType.PolisConversation:
       return <PolisEmbed {...data} />
+
+    case EmbedType.TikTokVideo:
+      return <TikTokVideoEmbed {...data} />
 
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed {...data} />
