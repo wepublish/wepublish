@@ -141,19 +141,25 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
 
     if (filter?.tags) {
       // textFilter.$and?.push({tags: filter.tags})
-      metaFilters.push({tags: {$in: filter.tags}})
+      metaFilters.$and?.push({tags: filter.tags})
     }
 
     const [totalCount, memberPlans] = await Promise.all([
-      this.memberPlans.countDocuments(textFilter, {
-        collation: {locale: this.locale, strength: 2}
-      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
+      this.memberPlans.countDocuments(
+        {$and: [metaFilters.length ? {$and: metaFilters} : {}, textFilter]} as any,
+        {collation: {locale: this.locale, strength: 2}} as MongoCountPreferences
+
+        //   textFilter, {
+        //   collation: {locale: this.locale, strength: 2}
+        // } as MongoCountPreferences
+      ),
+      // MongoCountPreferences doesn't include collation
 
       this.memberPlans
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .match(metaFilters.length ? {$and: metaFilters} : {})
         .match(textFilter)
         .match(cursorFilter)
-        .match(metaFilters.length ? {$and: metaFilters} : {})
         .sort({[sortField]: sortDirection, _id: sortDirection})
         .limit(limitCount + 1)
         .toArray()
