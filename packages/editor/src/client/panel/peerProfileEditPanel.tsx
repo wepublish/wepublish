@@ -25,7 +25,6 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
 import {getOperationNameFromDocument, validateURL} from '../utility'
 
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
