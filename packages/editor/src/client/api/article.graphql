@@ -82,8 +82,8 @@ query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: 
   }
 }
 
-query PeerArticleList($filter: String, $after: ID, $first: Int) {
-  peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+query PeerArticleList($filter: ArticleFilter, $after: ID, $first: Int, $peerFilter: String, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(first: $first, after: $after, filter: $filter, peerFilter: $peerFilter, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       peer {
         ...PeerWithProfile

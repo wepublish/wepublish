@@ -23,6 +23,7 @@ import {
 import {AuthProvider} from '../shared/authContext'
 import {fetch} from 'cross-fetch'
 import {setContext} from '@apollo/client/link/context'
+import {TikTokProvider} from '../shared/atoms/tikTokEmbed'
 
 export const HotApp = hot(App)
 
@@ -71,16 +72,18 @@ export async function hydrateApp(): Promise<void> {
                 <StyleProvider renderer={styleRenderer}>
                   <FacebookProvider sdkLanguage={'de_DE'}>
                     <InstagramProvider>
-                      <TwitterProvider>
-                        <RouteProvider
-                          initialRoute={matchRoute(location.href)}
-                          handleNextRoute={(route, dispatch) => {
-                            dispatch({type: RouteActionType.SetCurrentRoute, route})
-                            return () => {}
-                          }}>
-                          <HotApp />
-                        </RouteProvider>
-                      </TwitterProvider>
+                      <TikTokProvider>
+                        <TwitterProvider>
+                          <RouteProvider
+                            initialRoute={matchRoute(location.href)}
+                            handleNextRoute={(route, dispatch) => {
+                              dispatch({type: RouteActionType.SetCurrentRoute, route})
+                              return () => {}
+                            }}>
+                            <HotApp />
+                          </RouteProvider>
+                        </TwitterProvider>
+                      </TikTokProvider>
                     </InstagramProvider>
                   </FacebookProvider>
                 </StyleProvider>

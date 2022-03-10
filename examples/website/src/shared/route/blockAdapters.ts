@@ -230,6 +230,16 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
             conversationID: block.conversationID
           }
         }
+      case 'TikTokVideoBlock':
+        return {
+          type: BlockType.Embed,
+          key: index,
+          value: {
+            type: EmbedType.TikTokVideo,
+            userID: block.userID,
+            videoID: block.videoID
+          }
+        }
 
       case 'BildwurfAdBlock':
         return {
