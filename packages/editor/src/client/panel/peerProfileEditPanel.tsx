@@ -30,6 +30,7 @@ import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTex
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {FormControlUrl} from '../atoms/formControlUrl'
+import {useTranslation} from 'react-i18next'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
