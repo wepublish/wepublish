@@ -128,7 +128,6 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     if (filter && JSON.stringify(filter) !== '{}') {
       textFilter.$and = []
     }
-    let metaFilters: FilterQuery<any> = []
 
     // TODO: Rename to search
     if (filter?.name !== undefined) {
@@ -140,24 +139,17 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     }
 
     if (filter?.tags) {
-      // textFilter.$and?.push({tags: filter.tags})
-      metaFilters.$and?.push({tags: filter.tags})
+      textFilter.$and?.push({tags: {$in: filter.tags}})
     }
 
     const [totalCount, memberPlans] = await Promise.all([
-      this.memberPlans.countDocuments(
-        {$and: [metaFilters.length ? {$and: metaFilters} : {}, textFilter]} as any,
-        {collation: {locale: this.locale, strength: 2}} as MongoCountPreferences
-
-        //   textFilter, {
-        //   collation: {locale: this.locale, strength: 2}
-        // } as MongoCountPreferences
-      ),
+      this.memberPlans.countDocuments(textFilter, {
+        collation: {locale: this.locale, strength: 2}
+      } as MongoCountPreferences),
       // MongoCountPreferences doesn't include collation
 
       this.memberPlans
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
-        .match(metaFilters.length ? {$and: metaFilters} : {})
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
