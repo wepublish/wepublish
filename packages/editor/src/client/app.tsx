@@ -21,6 +21,7 @@ import {CommentList} from './routes/commentList'
 import {UserRoleList} from './routes/userRoleList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
+import {PeerArticleList} from './routes/peerArticleList'
 import {NavigationList} from './routes/navigationList'
 
 import './global.less'
@@ -91,6 +92,9 @@ export function contentForRoute(route: Route) {
     case RouteType.NavigationCreate:
     case RouteType.NavigationEdit:
       return <NavigationList />
+
+    case RouteType.PeerArticleList:
+      return <PeerArticleList />
 
     case RouteType.NotFound:
       return <ArticleList />
