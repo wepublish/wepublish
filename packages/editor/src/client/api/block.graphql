@@ -146,6 +146,11 @@ fragment FullBlock on Block {
     conversationID
   }
 
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+
   ... on BildwurfAdBlock {
     zoneID
   }
