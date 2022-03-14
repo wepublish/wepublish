@@ -551,7 +551,7 @@
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
       "peers": "Peers",
-      "peerArticle": "Peered articles",
+      "peerArticle": "Peerable articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
@@ -718,7 +718,7 @@
       "title": "Payment Methods"
     },
     "peerArticles": {
-      "peerArticles": "Peered Articles",
+      "peerArticles": "Peerable Articles",
       "title": "Title",
       "lead": "Lead",
       "peer": "Peer",
