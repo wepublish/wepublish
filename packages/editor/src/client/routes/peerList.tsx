@@ -176,9 +176,7 @@ export function PeerList() {
                   <a
                     href="https://wepublish.ch/peering-infos-preview/"
                     target="_blank"
-                    rel="noreferrer">
-                    more text
-                  </a>
+                    rel="noreferrer"></a>
                 </Trans>
               </HelpBlock>
             </div>
