@@ -748,6 +748,7 @@
         "callToActionImage": "Call To Action Image",
         "callToActionImageURL": "Call To Action Image URL",
         "callToActionURL": "Call To Action URL",
+        "checkOwnPeerProfileHelpBlock": "Preview your own peer profile: <2>Peering preview guide</2>",
         "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",
