@@ -1,4 +1,4 @@
-import express, {Application, NextFunction} from 'express'
+import express, {Application, NextFunction, Request, Response} from 'express'
 
 import {ApolloServer} from 'apollo-server-express'
 
@@ -6,7 +6,7 @@ import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
-import {capitalizeFirstLetter} from './utility'
+import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
 
 import {methodsToProxy} from './events'
 import {JobType, runJob} from './jobs'
@@ -122,7 +122,7 @@ export class WepublishServer {
       app,
       path: '/admin',
       cors: corsOptions,
-      bodyParserConfig: {limit: '1mb'}
+      bodyParserConfig: {limit: MAX_PAYLOAD_SIZE}
     })
 
     publicServer.applyMiddleware({
@@ -131,9 +131,13 @@ export class WepublishServer {
       cors: corsOptions
     })
 
-    app.use((err: any, req: Express.Request, res: Express.Response, next: NextFunction) => {
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       logger('server').error(err)
-      return next(err)
+
+      if (err.status === 413) {
+        res.status(413).send({error: `Payload cannot exceed ${MAX_PAYLOAD_SIZE}`})
+        return next(err)
+      }
     })
 
     this.app = app
