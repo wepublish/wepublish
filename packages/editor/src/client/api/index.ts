@@ -643,6 +643,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
+  tags: Array<Scalars['String']>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -658,6 +659,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>;
   active?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type MemberPlanInput = {
@@ -665,6 +667,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
+  tags: Array<Scalars['String']>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -2817,7 +2820,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2826,7 +2829,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -4148,6 +4151,7 @@ export const MemberPlanRefFragmentDoc = gql`
   name
   slug
   active
+  tags
   image {
     ...ImageRef
   }
@@ -4156,6 +4160,7 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
+  tags
   amountPerMonthMin
   availablePaymentMethods {
     paymentMethods {

@@ -28,6 +28,7 @@ export interface MemberPlan {
   readonly modifiedAt: Date
   readonly name: string
   readonly slug: string
+  readonly tags: string[]
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly active: boolean
@@ -38,6 +39,7 @@ export interface MemberPlan {
 export interface MemberPlanInput {
   readonly name: string
   readonly slug: string
+  readonly tags: string[]
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly active: boolean
@@ -68,6 +70,7 @@ export enum MemberPlanSort {
 export interface MemberPlanFilter {
   name?: string
   active?: boolean
+  tags?: string[]
 }
 
 export interface GetMemberPlansArgs {
