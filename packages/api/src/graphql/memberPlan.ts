@@ -90,7 +90,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       })
     },
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
