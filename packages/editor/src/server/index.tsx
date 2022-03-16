@@ -49,6 +49,7 @@ async function asyncMain() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
           <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
+          <title>WePublish Editor (v{process.env.npm_package_version})</title>
 
           <script
             type="application/json"
