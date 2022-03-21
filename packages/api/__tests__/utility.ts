@@ -117,18 +117,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     }
   }
 
-  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {
-    width: 200,
-    height: 200,
-    background: '#ffffff',
-    noise: 5,
-    minValue: 1,
-    maxValue: 10,
-    operandAmount: 1,
-    operandTypes: ['+', '-'],
-    mode: 'formula',
-    targetSymbol: '?'
-  })
+  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
 
   const apolloServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,

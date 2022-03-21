@@ -298,7 +298,7 @@ async function asyncMain() {
     level: 'debug'
   })
 
-  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {
+  const challenge = new AlgebraicCaptchaChallenge('changeMe', 600, {
     width: 200,
     height: 200,
     background: '#ffffff',
