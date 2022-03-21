@@ -6,6 +6,6 @@ export const GraphQLChallenge: GraphQLObjectType<Context> = new GraphQLObjectTyp
   fields: () => ({
     challenge: {type: GraphQLString},
     challengeID: {type: GraphQLString},
-    validUtil: {type: GraphQLString}
+    validUntil: {type: GraphQLString}
   })
 })

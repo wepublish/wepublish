@@ -439,7 +439,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         return {
           challenge: c.challenge,
           challengeID: c.challengeID,
-          validUtil: c.validUntil
+          validUntil: c.validUntil
         }
       }
     }
