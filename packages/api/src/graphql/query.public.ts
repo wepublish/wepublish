@@ -433,7 +433,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // =======
     challenge: {
       type: GraphQLNonNull(GraphQLChallenge),
-      description: 'This mutation allows to add a comment. The input is of type CommentInput.',
+      description:
+        'This query generates a challenge which can be used to access protected endpoints.',
       async resolve(_, {input}, {challenge}) {
         const c = await challenge.generateChallenge()
         return {
