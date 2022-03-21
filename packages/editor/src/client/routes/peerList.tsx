@@ -26,7 +26,7 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
-import {useTranslation} from 'react-i18next'
+import {Trans, useTranslation} from 'react-i18next'
 import {
   Drawer,
   FlexboxGrid,
@@ -37,7 +37,8 @@ import {
   Button,
   Divider,
   Modal,
-  Alert
+  Alert,
+  HelpBlock
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {NavigationBar} from '../atoms/navigationBar'
@@ -169,6 +170,16 @@ export function PeerList() {
               />
               <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
               <p>{peerInfoData?.peerProfile.hostURL}</p>
+              <HelpBlock>
+                <Trans i18nKey={'peerList.panels.checkOwnPeerProfileHelpBlock'}>
+                  text{' '}
+                  <a
+                    href="https://wepublish.ch/peering-infos-preview/"
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                </Trans>
+              </HelpBlock>
             </div>
           }
           rightChildren={
