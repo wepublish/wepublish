@@ -331,6 +331,7 @@ export interface DBMemberPlan {
 
   name: string
   slug: string
+  tags: string[]
   imageID?: string
   description: RichTextNode[]
   active: boolean
