@@ -70,7 +70,7 @@ export interface TakeActionOnCommentArgs {
 }
 
 export interface CommentInput {
-  readonly userID?: string
+  readonly userID: string
 
   readonly itemID: string
   readonly itemType: CommentItemType
