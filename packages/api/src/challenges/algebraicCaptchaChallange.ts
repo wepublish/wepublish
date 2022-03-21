@@ -13,10 +13,14 @@ type Store = {
 }
 
 export class AlgebraicCaptchaChallenge implements ChallengeProvider {
-  readonly challengeSecret: string
-  readonly challengeValidTime: number
+  // Hash list to prevent replay attacks
   private validHashes: Store
+  // counter to prevent reuse!
   private counter: number
+  // Random seed to make hash unpredictable
+  readonly challengeSecret: string
+  // Defines how long a challenge is valid
+  readonly challengeValidTime: number
   private captchaLib: AlgebraicCaptcha
 
   constructor(
@@ -26,9 +30,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   ) {
     this.challengeSecret = challengeSecret
     this.challengeValidTime = challengeValidTime * 1000
-    // Hash list to prevent replay attacks
     this.validHashes = {}
-    // counter to prevent reuse!
     this.counter = 0
     this.captchaLib = new AlgebraicCaptcha(algebraicCaptchaOptions)
   }
@@ -63,13 +65,14 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   }
 
   async validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn> {
+    // Decode challengeID
     const decoded = Buffer.from(props.challengeID, 'base64').toString('utf-8')
     const secret = decoded.split(';')
     const time = parseInt(secret[0])
     const hash = secret[1]
     const counter = (secret[2] as unknown) as number
 
-    // Prevent user from using challenge multiple times
+    // Protect against replay attacks
     if (!this.validHashes[hash]) {
       return {
         result: 'reuse',
@@ -79,7 +82,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     }
     delete this.validHashes[hash]
 
-    // Prevent user from solving challenges in advance
+    // Protection against solve in advance attacks
     if (new Date().getTime() > time + this.challengeValidTime)
       return {
         result: 'expired',
