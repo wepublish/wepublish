@@ -366,7 +366,9 @@ export function CommentList() {
                 {currentComment?.id}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.userName')}>
-                {currentComment?.user.name || t('comments.panels.untitled')}
+                {(currentComment?.user
+                  ? currentComment?.user.name
+                  : currentComment?.anonymousName) || t('comments.panels.untitled')}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.createdAt')}>
                 {currentComment?.createdAt &&
