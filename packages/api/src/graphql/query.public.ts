@@ -48,6 +48,7 @@ import {GraphQLPublicInvoice} from './invoice'
 import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
 import {NotFound} from '../error'
+import {GraphQLChallenge} from './challenge'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -425,6 +426,21 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         await new Promise(resolve => setTimeout(resolve, 100))
         const updatedInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
         return updatedInvoices.find(invoice => invoice !== null && invoice.id === id)
+      }
+    },
+
+    // Challenge
+    // =======
+    challenge: {
+      type: GraphQLNonNull(GraphQLChallenge),
+      description: 'This mutation allows to add a comment. The input is of type CommentInput.',
+      async resolve(_, {input}, {challenge}) {
+        const c = await challenge.generateChallenge()
+        return {
+          challenge: c.challenge,
+          challengeID: c.challengeID,
+          validUtil: c.validUntil
+        }
       }
     }
   }

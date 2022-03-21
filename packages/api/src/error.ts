@@ -19,7 +19,8 @@ export enum ErrorCode {
   CommentLengthError = 'COMMENT_LENGTH_ERROR',
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
   InternalError = 'InternalError',
-  UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED'
+  UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
+  InvalidCaptcha = 'InvalidCaptcha'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -118,6 +119,18 @@ export class CommentLengthError extends ApolloError {
       `Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`,
       ErrorCode.CommentLengthError
     )
+  }
+}
+
+export class CommentAuthenticationError extends ApolloError {
+  constructor(msg: string) {
+    super(`Challenge validation failed with following message: ${msg}`, ErrorCode.InvalidCaptcha)
+  }
+}
+
+export class AnonymousCommentError extends ApolloError {
+  constructor() {
+    super(`You need to give an anonymousname if your not authenticated`)
   }
 }
 

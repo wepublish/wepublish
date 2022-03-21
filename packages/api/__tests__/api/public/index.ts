@@ -161,7 +161,7 @@ export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
   parentID?: Maybe<Scalars['ID']>
-  user: User
+  user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType

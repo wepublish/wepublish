@@ -250,7 +250,8 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
-  user: User;
+  anonymousName?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
@@ -643,7 +644,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -2630,10 +2631,10 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
-  & { user: (
+  & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  ), revisions: Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
   )> }
@@ -2642,10 +2643,10 @@ export type FullParentCommentFragment = (
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
-  & { user: (
+  & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  ), revisions: Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
   )>, parentComment?: Maybe<(
