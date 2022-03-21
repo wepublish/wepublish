@@ -44,7 +44,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   }
 
   cleanupOldHashes() {
-    if (Math.floor(Math.random() * 20) !== 1) return
+    if (this.counter % 100 !== 0) return
     const cleanDate = new Date().getTime() - this.challengeValidTime
     for (const hash in this.validHashes) {
       if (this.validHashes[hash] < cleanDate) delete this.validHashes[hash]
