@@ -16,6 +16,7 @@ import {Context} from '../context'
 
 import {
   AnonymousCommentError,
+  AnonymousCommentsDisabledError,
   CommentAuthenticationError,
   CommentLengthError,
   EmailAlreadyInUseError,
@@ -156,6 +157,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Challenge
         if (!user) {
+          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
+            throw new AnonymousCommentsDisabledError()
+
           if (!input.anonymousName) throw new AnonymousCommentError()
           const captchaResult = await challenge.validateChallenge({
             challengeID: input.challengeID,

@@ -128,6 +128,12 @@ export class CommentAuthenticationError extends ApolloError {
   }
 }
 
+export class AnonymousCommentsDisabledError extends ApolloError {
+  constructor() {
+    super(`Anonymous comments are disabled!`)
+  }
+}
+
 export class AnonymousCommentError extends ApolloError {
   constructor() {
     super(`You need to give an anonymousname if your not authenticated`)
