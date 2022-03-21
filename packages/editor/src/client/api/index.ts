@@ -2630,7 +2630,7 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'anonymousName' | 'createdAt' | 'modifiedAt'>
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
@@ -2642,7 +2642,7 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'anonymousName' | 'createdAt' | 'modifiedAt'>
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
@@ -4233,6 +4233,7 @@ export const FullParentCommentFragmentDoc = gql`
   user {
     ...FullUser
   }
+  anonymousName
   revisions {
     text
     createdAt
@@ -4246,6 +4247,7 @@ export const FullCommentFragmentDoc = gql`
   id
   state
   rejectionReason
+  anonymousName
   user {
     ...FullUser
   }

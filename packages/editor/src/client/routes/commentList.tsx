@@ -183,6 +183,9 @@ export function CommentList() {
     })
   }
 
+  let printUsername = ` ${currentComment?.anonymousName} (anonymous)`
+  if (currentComment?.user) printUsername = `${currentComment?.user.name}`
+
   return (
     <>
       <FlexboxGrid>
@@ -250,7 +253,11 @@ export function CommentList() {
           </Column>
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
-            <Cell>{(rowData: FullCommentFragment) => <>{rowData.user?.name}</>}</Cell>
+            <Cell>
+              {(rowData: FullCommentFragment) => (
+                <>{rowData.user ? rowData.user?.name : rowData.anonymousName}</>
+              )}
+            </Cell>
           </Column>
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('comments.overview.state')}</HeaderCell>
@@ -366,9 +373,7 @@ export function CommentList() {
                 {currentComment?.id}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.userName')}>
-                {(currentComment?.user
-                  ? currentComment?.user.name
-                  : currentComment?.anonymousName) || t('comments.panels.untitled')}
+                {printUsername || t('comments.panels.untitled')}
               </DescriptionListItem>
               <DescriptionListItem label={t('comments.panels.createdAt')}>
                 {currentComment?.createdAt &&
@@ -395,7 +400,7 @@ export function CommentList() {
                             parentDate: new Date(currentComment.parentComment.createdAt)
                           })}
                         </div>
-                        <p>{currentComment.parentComment.user?.name}:</p>
+                        <p>{printUsername}:</p>
                         <RichTextBlock
                           displayOnly
                           displayOneLine
