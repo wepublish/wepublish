@@ -520,7 +520,7 @@
       "editTitle": "Edit Member Plan",
       "fixPrice": "Fix price",
       "fixPriceDescription": "If false the price can be a price range",
-      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
+      "minimumMonthlyAmount": "Minimum amount per Month in CHF",
       "name": "Name",
       "slug": "Slug",
       "paymentMethods": "Possible Payment Methods",

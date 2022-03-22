@@ -14,7 +14,8 @@ import {
   Toggle,
   HelpBlock,
   CheckPicker,
-  TagPicker
+  TagPicker,
+  InputNumber
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -66,6 +67,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
+
+  const [amountInFranken, setAmountInFranken] = useState<number | string>(5)
   const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -123,6 +126,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           : []
       )
       setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
+      setAmountInFranken(data.memberPlan.amountPerMonthMin / 100)
     }
   }, [data?.memberPlan])
 
@@ -199,7 +203,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
         </Drawer.Title>
       </Drawer.Header>
-
       <Drawer.Body>
         <Panel>
           <Form fluid={true}>
@@ -238,17 +241,28 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
-              <FormControl
+              <InputNumber
+                postfix="CHF"
+                value={parseFloat(amountInFranken as string).toFixed(2)}
+                step={0.5}
+                onChange={value => {
+                  // this one gets sent to DB
+                  setAmountPerMonthMin((value as number) * 100)
+                  // this one is only for displaying
+                  setAmountInFranken(parseFloat(value as string).toFixed(2))
+                }}></InputNumber>
+              {/* <FormControl
                 name={t('userSubscriptionEdit.minimumMonthlyAmount')}
                 value={amountPerMonthMin}
                 type="number"
                 disabled={isDisabled}
                 min={0}
-                steps={1}
+                steps={10}
+
                 onChange={value => {
                   setAmountPerMonthMin(parseInt(`${value}`))
                 }}
-              />
+              /> */}
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
