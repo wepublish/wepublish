@@ -527,7 +527,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       description:
-        "This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now",
+        'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
       async resolve(root, {id}, {authenticateUser, dbAdapter, memberContext}) {
         const {user} = authenticateUser()
         if (!user) throw new NotAuthenticatedError()
@@ -552,7 +552,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
 
         const updatedSubscription = await dbAdapter.subscription.getSubscriptionByID(id)
-        if (updatedSubscription) throw new Error('Error during updateSubscription')
+        if (!updatedSubscription) throw new NotFound('subscription', id)
         return updatedSubscription
       }
     },

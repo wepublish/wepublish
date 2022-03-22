@@ -89,7 +89,7 @@ export interface MemberContextProps {
   getLoginUrlForUser(user: User): string
 }
 
-function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
+export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
   start = new Date(start.getTime() - ONE_DAY_IN_MILLISECONDS) // create new Date object
   switch (periodicity) {
     case PaymentPeriodicity.Monthly:
@@ -103,7 +103,7 @@ function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity)
   }
 }
 
-function calculateAmountForPeriodicity(
+export function calculateAmountForPeriodicity(
   monthlyAmount: number,
   periodicity: PaymentPeriodicity
 ): number {
