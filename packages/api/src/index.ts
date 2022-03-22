@@ -56,4 +56,4 @@ export * from './mails/MailchimpMailProvider'
 export * from './mails/mailContext'
 
 export * from './challenges/challengeProvider'
-export * from './challenges/algebraicCaptchaChallange'
+export * from './challenges/algebraicCaptchaChallenge'
