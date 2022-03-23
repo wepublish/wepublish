@@ -20,7 +20,7 @@ export enum ErrorCode {
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
   InternalError = 'InternalError',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
-  InvalidCaptcha = 'InvalidCaptcha'
+  ChallengeFailed = 'ChallengeFailed'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -124,7 +124,7 @@ export class CommentLengthError extends ApolloError {
 
 export class CommentAuthenticationError extends ApolloError {
   constructor(msg: string) {
-    super(`Challenge validation failed with following message: ${msg}`, ErrorCode.InvalidCaptcha)
+    super(`Challenge validation failed with following message: ${msg}`, ErrorCode.ChallengeFailed)
   }
 }
 
