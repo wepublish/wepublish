@@ -18,11 +18,11 @@ type metaTagsMap = {
 }
 
 const DEFAULT_META_TAG_MAP: metaTagsMap = {
-  title: [],
-  description: ['ImageDescription', 'description.value'],
-  author: ['creator', 'Credit'],
+  title: ['Headline', 'title.value'],
+  description: ['ImageDescription', 'description.value', 'Caption'],
+  author: ['Artist', 'creator', 'Credit'],
   source: ['WebStatement'],
-  licence: ['Copyright', 'CopyrightNotice']
+  licence: ['Copyright', 'CopyrightNotice', 'rights.value']
 }
 
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
@@ -54,7 +54,6 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
 
   async function readPictureMetaData(data: File): Promise<ImageMetaData> {
     const tags = await exifr.parse(data, true)
-
     const fields: ImageMetaData = {
       title: '',
       description: '',
