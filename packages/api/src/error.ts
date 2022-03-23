@@ -140,6 +140,12 @@ export class AnonymousCommentError extends ApolloError {
   }
 }
 
+export class ChallengeMissingCommentError extends ApolloError {
+  constructor() {
+    super(`You need to give a challenge if you're not authenticated`)
+  }
+}
+
 export class PeerTokenInvalidError extends ApolloError {
   constructor(peerUrl: string) {
     super(`Token for peer ${peerUrl} is invalid`, ErrorCode.PeerTokenInvalid)

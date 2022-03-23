@@ -17,6 +17,7 @@ import {Context} from '../context'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
+  ChallengeMissingCommentError,
   CommentAuthenticationError,
   CommentLengthError,
   EmailAlreadyInUseError,
@@ -161,9 +162,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             throw new AnonymousCommentsDisabledError()
 
           if (!input.anonymousName) throw new AnonymousCommentError()
+          if (!input.challenge) throw new ChallengeMissingCommentError()
+
           const captchaResult = await challenge.validateChallenge({
-            challengeID: input.challengeID,
-            solve: input.challengeSolution
+            challengeID: input.challenge.challengeID,
+            solve: input.challenge.challengeSolution
           })
           if (!captchaResult.valid) throw new CommentAuthenticationError(captchaResult.msg)
         } else {

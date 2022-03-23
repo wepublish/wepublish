@@ -93,13 +93,26 @@ export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLChallengeInput = new GraphQLInputObjectType({
+  name: 'ChallengeInput',
+  fields: {
+    challengeID: {
+      type: GraphQLNonNull(GraphQLString)
+    },
+    challengeSolution: {
+      type: GraphQLNonNull(GraphQLString)
+    }
+  }
+})
+
 export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
     parentID: {type: GraphQLID},
     anonymousName: {type: GraphQLString},
-    challengeID: {type: GraphQLString},
-    challengeSolution: {type: GraphQLString},
+    challenge: {
+      type: GraphQLChallengeInput
+    },
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
