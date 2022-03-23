@@ -164,11 +164,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           if (!input.anonymousName) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
 
-          const captchaResult = await challenge.validateChallenge({
+          const challengeValidatonResult = await challenge.validateChallenge({
             challengeID: input.challenge.challengeID,
             solution: input.challenge.challengeSolution
           })
-          if (!captchaResult.valid) throw new CommentAuthenticationError(captchaResult.msg)
+          if (!challengeValidatonResult.valid)
+            throw new CommentAuthenticationError(challengeValidatonResult.msg)
         } else {
           input.anonymousName = ''
         }
