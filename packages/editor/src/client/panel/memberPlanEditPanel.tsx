@@ -251,18 +251,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                   // this one is only for displaying
                   setAmountInFranken(parseFloat(value as string).toFixed(2))
                 }}></InputNumber>
-              {/* <FormControl
-                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
-                value={amountPerMonthMin}
-                type="number"
-                disabled={isDisabled}
-                min={0}
-                steps={10}
-
-                onChange={value => {
-                  setAmountPerMonthMin(parseInt(`${value}`))
-                }}
-              /> */}
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
