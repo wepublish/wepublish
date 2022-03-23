@@ -91,7 +91,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
       }
 
     // Check if challenge has been solved correctly
-    const challengeSecret = this.composeHashSecret(props.solve, time, counter)
+    const challengeSecret = this.composeHashSecret(props.solution, time, counter)
     this.cleanupOldHashes()
     if (this.createHash(challengeSecret) === hash)
       return {

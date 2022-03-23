@@ -166,7 +166,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
           const captchaResult = await challenge.validateChallenge({
             challengeID: input.challenge.challengeID,
-            solve: input.challenge.challengeSolution
+            solution: input.challenge.challengeSolution
           })
           if (!captchaResult.valid) throw new CommentAuthenticationError(captchaResult.msg)
         } else {

@@ -5,7 +5,7 @@ export type Challenge = {
 }
 export type ChallengeValidationProps = {
   challengeID: string
-  solve: number
+  solution: number
 }
 
 export type ChallengeValidationReturn = {
