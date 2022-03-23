@@ -242,7 +242,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
               <InputNumber
-                postfix="CHF"
+                prefix="CHF"
                 value={parseFloat(amountInFranken as string).toFixed(2)}
                 step={0.5}
                 onChange={value => {
