@@ -7,6 +7,8 @@ import {NextHandleFunction} from 'connect'
 import bodyParser from 'body-parser'
 import {paymentModelEvents} from '../events'
 import {DBAdapter} from '../db/adapter'
+import {isTempUser, removePrefixTempUser} from '../utility'
+import {OptionalSubscription} from '..'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -129,31 +131,93 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     if (!updatedPayment) throw new Error('Error while updating Payment')
 
+    // get invoice and subscription joins out of the payment
+    const invoice = await loaders.invoicesByID.load(payment.invoiceID)
+    if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+
+    let subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
+    if (!subscription)
+      throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+
+    // eventually create user out of temp user and activate the related subscription
+    const userID = subscription.userID
+    if (isTempUser(userID)) {
+      subscription = await this.activateTempUserAndSubscription(dbAdapter, userID, subscription)
+    }
+
+    // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      const invoice = await loaders.invoicesByID.load(payment.invoiceID)
-      if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
-
-      const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
-      if (!subscription)
-        throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
-
-      const user = await dbAdapter.user.getUserByID(subscription.userID)
-      if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
-
-      // adding or updating paymentProvider customer ID for user
-      const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-        ppc => ppc.paymentProviderID !== this.id
-      )
-      paymentProviderCustomers.push({
-        paymentProviderID: this.id,
-        customerID: intentState.customerID
-      })
-      await dbAdapter.user.updatePaymentProviderCustomers({
-        userID: user.id,
-        paymentProviderCustomers
-      })
+      await this.updatePaymentProvider(dbAdapter, subscription, intentState.customerID)
     }
     return updatedPayment
+  }
+
+  /**
+   * adding or updating paymentProvider customer ID for user
+   * @param dbAdapter
+   * @param subscription
+   * @param customerID
+   * @private
+   */
+  private async updatePaymentProvider(
+    dbAdapter: DBAdapter,
+    subscription: OptionalSubscription,
+    customerID: string
+  ) {
+    if (!subscription) {
+      throw new Error('Empty subscription within updatePaymentProvider method.')
+    }
+    const user = await dbAdapter.user.getUserByID(subscription.userID)
+    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
+
+    const paymentProviderCustomers = user.paymentProviderCustomers.filter(
+      ppc => ppc.paymentProviderID !== this.id
+    )
+    paymentProviderCustomers.push({
+      paymentProviderID: this.id,
+      customerID
+    })
+    await dbAdapter.user.updatePaymentProviderCustomers({
+      userID: user.id,
+      paymentProviderCustomers
+    })
+  }
+
+  /**
+   * Create regular user out of temp user and activate subscription
+   * @param dbAdapter
+   * @param userID
+   * @param subscription
+   * @private
+   */
+  private async activateTempUserAndSubscription(
+    dbAdapter: DBAdapter,
+    userID: string,
+    subscription: OptionalSubscription
+  ): Promise<OptionalSubscription> {
+    // create non-temp user id
+    userID = removePrefixTempUser(userID)
+    const tempUser = await dbAdapter.tempUser.getTempUserByID(userID)
+    if (!tempUser) {
+      throw new Error('User not found while updating payment with intent state.')
+    }
+
+    // creating the new user out of the existing temp_user
+    const user = await dbAdapter.user.createUserFromTempUser(tempUser)
+
+    if (!user) {
+      throw new Error('User could not be created from temp user.')
+    }
+
+    if (!subscription) {
+      throw new Error('Subscription is empty within activateTempUserAndSubscription method.')
+    }
+    // update userID of subscription
+    subscription = await dbAdapter.subscription.updateUserID(subscription.id, user.id)
+    if (!subscription) {
+      throw new Error('Subscription could not be activated.')
+    }
+    return subscription
   }
 }
 

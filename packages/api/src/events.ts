@@ -16,7 +16,6 @@ import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
-import crypto from 'crypto'
 import {Subscription} from './db/subscription'
 import {isTempUser} from './utility'
 interface ModelEvents<T> {
@@ -202,19 +201,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         const tempUser = await context.dbAdapter.tempUser.getTempUserByID(subscription.userID)
         if (!tempUser) return
 
-        const user = await context.dbAdapter.user.createUser({
-          input: {
-            email: tempUser.email,
-            name: tempUser.name,
-            address: tempUser.address,
-            preferredName: tempUser.preferredName,
-            active: true,
-            roleIDs: [],
-            properties: [],
-            emailVerifiedAt: null
-          },
-          password: crypto.randomBytes(48).toString('hex')
-        })
+        const user = await context.dbAdapter.user.createUserFromTempUser(tempUser)
 
         if (!user) {
           logger('events').error(`Could not create user from tempUser %s`, tempUser.id)

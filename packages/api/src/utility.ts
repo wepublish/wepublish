@@ -18,6 +18,14 @@ export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestam
 
 export const TEMP_USER_PREFIX = '__temp_'
 
+export function isTempUser(userID: string): boolean {
+  return userID.startsWith(TEMP_USER_PREFIX)
+}
+
+export function removePrefixTempUser(userID: string): string {
+  return userID.replace(TEMP_USER_PREFIX, '')
+}
+
 export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription[]) {
   let csvStr =
     [
@@ -232,12 +240,4 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
     }
     return countRichtextChars(charLength, node.children)
   }, blocksCharLength)
-}
-
-export function isTempUser(userID: string): boolean {
-  return userID.startsWith(TEMP_USER_PREFIX)
-}
-
-export function removePrefixTempUser(userID: string): string {
-  return userID.replace(TEMP_USER_PREFIX, '')
 }

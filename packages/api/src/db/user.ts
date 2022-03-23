@@ -1,4 +1,5 @@
 import {ConnectionResult, InputCursor, Limit, MetadataProperty, SortOrder} from './common'
+import {TempUser} from './tempUser'
 
 export interface CreateUserArgs {
   readonly input: UserInput
@@ -133,6 +134,7 @@ export interface GetUsersArgs {
 
 export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<OptionalUser>
+  createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
   deleteUser(args: DeleteUserArgs): Promise<string | null>
 
