@@ -68,7 +68,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const [amountInFranken, setAmountInFranken] = useState<number | string>(5)
+  const [displayedCurrency, setDisplayedCurrency] = useState<number | string>(5)
   const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -126,7 +126,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           : []
       )
       setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
-      setAmountInFranken(data.memberPlan.amountPerMonthMin / 100)
+      setDisplayedCurrency(data.memberPlan.amountPerMonthMin / 100)
     }
   }, [data?.memberPlan])
 
@@ -243,13 +243,13 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
               <InputNumber
                 prefix="CHF"
-                value={parseFloat(amountInFranken as string).toFixed(2)}
+                value={parseFloat(displayedCurrency as string).toFixed(2)}
                 step={0.5}
                 onChange={value => {
                   // this one gets sent to DB
                   setAmountPerMonthMin((value as number) * 100)
                   // this one is only for displaying
-                  setAmountInFranken(parseFloat(value as string).toFixed(2))
+                  setDisplayedCurrency(parseFloat(value as string).toFixed(2))
                 }}></InputNumber>
             </FormGroup>
             <FormGroup>
