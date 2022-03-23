@@ -71,7 +71,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     const data = {
-      // purpose: ' Test Purpose',
       psp: this.psp,
       pm: this.pm,
       referenceId: props.paymentID,
@@ -110,6 +109,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       payrexxResponse.data?.[0].id,
       this.id
     )
+    // in case Payrexx throws an error
+    if (payrexxResponse.status === 'error') {
+      throw new Error(`Error from Payrexx: ${payrexxResponse.message}`)
+    }
 
     return {
       intentID: payrexxResponse.data?.[0].id,
