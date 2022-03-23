@@ -17,7 +17,11 @@ export type ImageMetaData = {
   licence: string
 }
 
-const DEFAULT_META_TAG_MAP = {
+type metaStore = {
+  [key: string]: string[] | string
+}
+
+const DEFAULT_META_TAG_MAP: metaStore = {
   title: [],
   description: ['ImageDescription', 'description.value'],
   author: ['creator', 'Credit'],
@@ -55,7 +59,7 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
   async function readPictureMetaData(data: File) {
     const tags = await exifr.parse(data, true)
 
-    const fields = {
+    const fields: metaStore = {
       title: '',
       description: '',
       author: '',
@@ -63,13 +67,9 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
       licence: ''
     }
     for (const field in DEFAULT_META_TAG_MAP) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       for (const tag of DEFAULT_META_TAG_MAP[field]) {
         const foundTag = findNestedMetaFields(tags, tag)
         if (foundTag) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           fields[field] = foundTag
           break
         }
