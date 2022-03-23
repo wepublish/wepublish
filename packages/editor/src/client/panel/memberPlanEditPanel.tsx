@@ -106,7 +106,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   useEffect(() => {
     if (data?.memberPlan) {
-      if (!data.memberPlan.tags) data.memberPlan.tags = ['']
       setName(data.memberPlan.name)
       setSlug(data.memberPlan.slug)
       setTags(data.memberPlan.tags)
