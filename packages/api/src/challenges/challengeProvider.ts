@@ -10,7 +10,7 @@ export type ChallengeValidationProps = {
 
 export type ChallengeValidationReturn = {
   result: string
-  msg: string
+  message: string
   valid: boolean
 }
 

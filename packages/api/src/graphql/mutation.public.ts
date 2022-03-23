@@ -169,7 +169,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             solution: input.challenge.challengeSolution
           })
           if (!challengeValidationResult.valid)
-            throw new CommentAuthenticationError(challengeValidationResult.msg)
+            throw new CommentAuthenticationError(challengeValidationResult.message)
         } else {
           input.anonymousName = ''
         }

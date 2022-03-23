@@ -76,7 +76,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     if (!this.validHashes[hash]) {
       return {
         result: 'reuse',
-        msg: 'Challenge has been reused!',
+        message: 'Challenge has been reused!',
         valid: false
       }
     }
@@ -86,7 +86,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     if (new Date().getTime() > time + this.challengeValidTime)
       return {
         result: 'expired',
-        msg: 'Challenge has expired!',
+        message: 'Challenge has expired!',
         valid: false
       }
 
@@ -96,12 +96,12 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     if (this.createHash(challengeSecret) === hash)
       return {
         result: 'valid',
-        msg: 'Challenge is valid.',
+        message: 'Challenge is valid.',
         valid: true
       }
     return {
       result: 'invalid',
-      msg: 'Challenge is not solved correctly!',
+      message: 'Challenge is not solved correctly!',
       valid: false
     }
   }
