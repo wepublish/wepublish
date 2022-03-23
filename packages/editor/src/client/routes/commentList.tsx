@@ -183,8 +183,9 @@ export function CommentList() {
     })
   }
 
-  let printUsername = ` ${currentComment?.anonymousName} (anonymous)`
-  if (currentComment?.user) printUsername = `${currentComment?.user.name}`
+  const printUsername = currentComment?.user
+    ? `${currentComment?.user.name}`
+    : ` ${currentComment?.anonymousName} ${t('comments.panels.unregisteredUser')}`
 
   return (
     <>

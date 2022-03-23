@@ -361,7 +361,8 @@
         "parent": "Elter",
         "parentDate": "{{parentDate,ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}"
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "unregisteredUser": "(Nicht registrierter Benutzer)"
       },
       "state": {
         "approved": "Angenommen",
