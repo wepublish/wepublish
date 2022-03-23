@@ -11,8 +11,8 @@ export enum LocalStorageKey {
 
 export const TEMP_USER_PREFIX = '__temp_'
 
-export function isTempUser(userID: string): boolean {
-  return userID.startsWith(TEMP_USER_PREFIX)
+export function isTempUser(userID: string | null): boolean {
+  return !!userID?.startsWith(TEMP_USER_PREFIX)
 }
 
 export function generateID(): string {
