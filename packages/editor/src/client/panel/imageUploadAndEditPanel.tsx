@@ -10,18 +10,14 @@ export interface ImageUploadAndEditPanelProps {
 }
 
 export type ImageMetaData = {
-  title: string
-  description: string
-  author: string
-  source: string
-  licence: string
+  [key: string]: string
 }
 
-type metaStore = {
-  [key: string]: string[] | string
+type metaTagsMap = {
+  [key: string]: string[]
 }
 
-const DEFAULT_META_TAG_MAP: metaStore = {
+const DEFAULT_META_TAG_MAP: metaTagsMap = {
   title: [],
   description: ['ImageDescription', 'description.value'],
   author: ['creator', 'Credit'],
@@ -56,10 +52,10 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
     return base
   }
 
-  async function readPictureMetaData(data: File) {
+  async function readPictureMetaData(data: File): Promise<ImageMetaData> {
     const tags = await exifr.parse(data, true)
 
-    const fields: metaStore = {
+    const fields: ImageMetaData = {
       title: '',
       description: '',
       author: '',
