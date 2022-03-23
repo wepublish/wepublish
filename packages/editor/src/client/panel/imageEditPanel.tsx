@@ -28,16 +28,18 @@ import {
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
+import {ImageMetaData} from './imageUploadAndEditPanel'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
+  readonly imageMetaData?: ImageMetaData
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -103,6 +105,15 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint({x: 0.5, y: 0.5})
+        setFocalPoint({x: 0.5, y: 0.5})
+
+        if (imageMetaData) {
+          setTitle(imageMetaData.title)
+          setDescription(imageMetaData.description)
+          setLicense(imageMetaData.licence)
+          setSource(imageMetaData.source)
+          setAuthor(imageMetaData.author)
+        }
 
         setLoading(false)
       }
@@ -140,7 +151,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint(image.focalPoint ?? undefined)
-
         setLoading(false)
       } else {
         Alert.error(t('images.panels.notFound'), 0)
