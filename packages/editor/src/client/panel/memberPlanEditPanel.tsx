@@ -229,7 +229,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 block
                 value={tags ?? []}
                 creatable={true}
-                data={tags.map(tag => ({label: tag, value: tag}))}
+                data={tags ? tags.map(tag => ({label: tag, value: tag})) : []}
                 onChange={tagsValue => setTags(tagsValue ?? [])}
               />
             </FormGroup>
