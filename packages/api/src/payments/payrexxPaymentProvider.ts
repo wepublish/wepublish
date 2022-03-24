@@ -21,6 +21,17 @@ export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   vatRate: number
 }
 
+interface PayrexxResponse {
+  status: string
+  message: string
+  data: PayrexxData[]
+}
+
+interface PayrexxData {
+  id: string
+  link: string
+}
+
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'waiting':
@@ -102,7 +113,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       }
     )
     if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
-    const payrexxResponse = await res.json()
+    const payrexxResponse = (await res.json()) as PayrexxResponse
 
     logger('payrexxPaymentProvider').info(
       'Created Payrexx intent with ID: %s for paymentProvider %s',
