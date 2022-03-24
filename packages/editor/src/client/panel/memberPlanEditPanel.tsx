@@ -14,8 +14,7 @@ import {
   Toggle,
   HelpBlock,
   CheckPicker,
-  TagPicker,
-  InputNumber
+  TagPicker
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -46,6 +45,7 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {CurrencyInput} from '../atoms/currencyInput'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -149,6 +149,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     setImage(image)
   }
 
+  function handleChangeCurrencyAmount(value: number | string) {
+    setDisplayedCurrency(parseFloat(value as string).toFixed(2))
+    setAmountPerMonthMin((value as number) * 100)
+  }
+
   async function handleSave() {
     if (id) {
       const {data} = await updateMemberPlan({
@@ -241,16 +246,13 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
-              <InputNumber
+
+              <CurrencyInput
                 prefix="CHF"
-                value={parseFloat(displayedCurrency as string).toFixed(2)}
-                step={0.5}
-                onChange={value => {
-                  // this one gets sent to DB
-                  setAmountPerMonthMin((value as number) * 100)
-                  // this one is only for displaying
-                  setDisplayedCurrency(parseFloat(value as string).toFixed(2))
-                }}></InputNumber>
+                value={displayedCurrency}
+                step={0.05}
+                changeCurrencyAmount={handleChangeCurrencyAmount}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>

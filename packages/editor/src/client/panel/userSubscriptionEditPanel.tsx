@@ -32,6 +32,7 @@ import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
+import {CurrencyInput} from '../atoms/currencyInput'
 
 export interface UserSubscriptionEditPanelProps {
   user: FullUserFragment
@@ -55,6 +56,7 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     subscription?.paymentPeriodicity ?? PaymentPeriodicity.Yearly
   )
   const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
+  const [displayedCurrency, setDisplayedCurrency] = useState<number>(0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
     subscription ? new Date(subscription.startsAt) : new Date()
@@ -149,7 +151,6 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
 
     if (data?.updateUserSubscription) onSave?.(data.updateUserSubscription)
   }
-
   async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
     if (!memberPlan || !paymentMethod) return
     const {data} = await updateUserSubscription({
@@ -199,6 +200,12 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     }
   }
 
+  function handleChangeCurrencyAmount(value: number) {
+    setDisplayedCurrency(value)
+    setMonthlyAmount(value * 100)
+    console.log(displayedCurrency, monthlyAmount)
+  }
+
   return (
     <>
       <Drawer.Header>
@@ -237,7 +244,7 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
                 <HelpBlock>
                   <DescriptionList>
                     <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.amountPerMonthMin}
+                      {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>
@@ -245,14 +252,12 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
-              <FormControl
-                name={t('userSubscriptionEdit.monthlyAmount')}
-                value={monthlyAmount}
-                type="number"
+              <CurrencyInput
+                prefix="CHF"
+                value={displayedCurrency}
+                step={0.05}
+                changeCurrencyAmount={handleChangeCurrencyAmount}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                onChange={value => {
-                  setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
-                }}
               />
             </FormGroup>
             <FormGroup>
