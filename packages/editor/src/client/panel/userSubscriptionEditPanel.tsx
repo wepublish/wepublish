@@ -7,7 +7,6 @@ import {
   DatePicker,
   Drawer,
   Form,
-  FormControl,
   FormGroup,
   HelpBlock,
   Panel,
