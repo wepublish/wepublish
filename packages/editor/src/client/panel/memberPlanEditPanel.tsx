@@ -245,7 +245,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 value={amountPerMonthMin}
                 step={0.05}
                 onChange={value => {
-                  console.log(value)
                   setAmountPerMonthMin(value)
                 }}
               />

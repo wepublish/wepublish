@@ -55,7 +55,6 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     subscription?.paymentPeriodicity ?? PaymentPeriodicity.Yearly
   )
   const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
-  const [displayedCurrency, setDisplayedCurrency] = useState<number>(0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
     subscription ? new Date(subscription.startsAt) : new Date()
@@ -199,12 +198,6 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     }
   }
 
-  function handleChangeCurrencyAmount(value: number) {
-    setDisplayedCurrency(value)
-    setMonthlyAmount(value * 100)
-    console.log(displayedCurrency, monthlyAmount)
-  }
-
   return (
     <>
       <Drawer.Header>
@@ -251,13 +244,15 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
-              {/* <CurrencyInput
+              <CurrencyInput
                 prefix="CHF"
-                value={displayedCurrency}
+                value={monthlyAmount}
                 step={0.05}
-                // changeCurrencyAmount={handleChangeCurrencyAmount}
+                onChange={value => {
+                  setMonthlyAmount(value)
+                }}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-              /> */}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>

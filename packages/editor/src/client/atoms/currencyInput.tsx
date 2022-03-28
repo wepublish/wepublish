@@ -1,5 +1,4 @@
-import React, {useState} from 'react'
-import {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import {InputNumber} from 'rsuite'
 
 export interface CurrencyInputProps {
@@ -11,7 +10,9 @@ export interface CurrencyInputProps {
 }
 
 export function CurrencyInput({prefix, value, step, disabled, onChange}: CurrencyInputProps) {
-  const [displayedCurrency, setDisplayedCurrency] = useState<number>((value as number) / 100)
+  const [displayedCurrency, setDisplayedCurrency] = useState<number | string>(
+    (value as number) / 100
+  )
 
   useEffect(() => {
     setDisplayedCurrency(value / 100)

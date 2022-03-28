@@ -643,7 +643,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
