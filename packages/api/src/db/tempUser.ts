@@ -34,10 +34,14 @@ export interface TempUser {
 
 export type OptionalTempUser = TempUser | null
 
+export type UserId = string
+export type UserIdWithTempPrefix = string
+export type GenericUserId = UserId | UserIdWithTempPrefix
+
 export interface DBTempUserAdapter {
   createTempUser(args: CreateTempUserArgs): Promise<OptionalTempUser>
   updateTempUser(args: UpdateTempUserArgs): Promise<OptionalTempUser>
   deleteTempUser(args: DeleteTempUserArgs): Promise<string | null>
 
-  getTempUserByID(id: string): Promise<OptionalTempUser>
+  getTempUserByID(id: UserId): Promise<OptionalTempUser>
 }

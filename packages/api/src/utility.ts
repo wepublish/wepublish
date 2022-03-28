@@ -6,6 +6,7 @@ import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {User} from './db/user'
 import {Subscription} from './db/subscription'
+import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
 
 export const MAX_COMMENT_LENGTH = 1000
 
@@ -18,11 +19,11 @@ export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestam
 
 export const TEMP_USER_PREFIX = '__temp_'
 
-export function isTempUser(userID: string): boolean {
+export function isTempUser(userID: GenericUserId): boolean {
   return userID.startsWith(TEMP_USER_PREFIX)
 }
 
-export function removePrefixTempUser(userID: string): string {
+export function removePrefixTempUser(userID: UserIdWithTempPrefix): UserId {
   return userID.replace(TEMP_USER_PREFIX, '')
 }
 

@@ -253,15 +253,37 @@ async function asyncMain() {
         offSessionPayments: false,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        psp: [0, 15, 17, 2, 3, 36],
+        psp: [15, 36],
         pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
+          // 'postfinance_card',
+          // 'postfinance_efinance',
+          'mastercard',
+          'visa',
+          // 'twint',
+          'invoice'
+          // 'paypal'
+        ],
+        vatRate: 7.7,
+        incomingRequestHandler: bodyParser.json()
+      })
+    )
+
+    paymentProviders.push(
+      new PayrexxPaymentProvider({
+        id: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: true,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        psp: [15, 36],
+        pm: [
+          // 'postfinance_card',
+          // 'postfinance_efinance',
+          'mastercard',
+          'visa',
+          // 'twint',
+          'invoice'
+          // 'paypal'
         ],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()

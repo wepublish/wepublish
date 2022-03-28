@@ -8,7 +8,13 @@ import bodyParser from 'body-parser'
 import {paymentModelEvents} from '../events'
 import {DBAdapter} from '../db/adapter'
 import {isTempUser, removePrefixTempUser} from '../utility'
-import {OptionalSubscription} from '..'
+import {
+  OptionalSubscription,
+  OptionalTempUser,
+  OptionalUser,
+  UserIdWithTempPrefix,
+  GenericUserId
+} from '..'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -140,7 +146,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
 
     // eventually create user out of temp user and activate the related subscription
-    const userID = subscription.userID
+    const userID: GenericUserId = subscription.userID
     if (isTempUser(userID)) {
       subscription = await this.activateTempUserAndSubscription(dbAdapter, userID, subscription)
     }
@@ -192,18 +198,18 @@ export abstract class BasePaymentProvider implements PaymentProvider {
    */
   private async activateTempUserAndSubscription(
     dbAdapter: DBAdapter,
-    userID: string,
+    userID: UserIdWithTempPrefix,
     subscription: OptionalSubscription
   ): Promise<OptionalSubscription> {
     // create non-temp user id
-    userID = removePrefixTempUser(userID)
-    const tempUser = await dbAdapter.tempUser.getTempUserByID(userID)
+    const tempUserId = removePrefixTempUser(userID)
+    const tempUser: OptionalTempUser = await dbAdapter.tempUser.getTempUserByID(tempUserId)
     if (!tempUser) {
       throw new Error('User not found while updating payment with intent state.')
     }
 
     // creating the new user out of the existing temp_user
-    const user = await dbAdapter.user.createUserFromTempUser(tempUser)
+    const user: OptionalUser = await dbAdapter.user.createUserFromTempUser(tempUser)
 
     if (!user) {
       throw new Error('User could not be created from temp user.')
