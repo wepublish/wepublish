@@ -84,7 +84,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: [],
         emailVerifiedAt: null
       },
-      password: crypto.randomBytes(48).toString('hex')
+      password: crypto.randomBytes(48).toString('base64')
     })
     return newUser
   }
