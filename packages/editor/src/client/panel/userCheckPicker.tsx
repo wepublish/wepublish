@@ -10,8 +10,6 @@ export interface UserCheckPickerProps {
 }
 
 export function UserCheckPicker({list, onChange}: UserCheckPickerProps) {
-  // const {t} = useTranslation()
-
   const [foundUsers, setFoundUsers] = useState<FullUserFragment[]>([])
   const [usersFilter, setUsersFilter] = useState('')
 
