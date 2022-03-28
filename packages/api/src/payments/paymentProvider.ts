@@ -146,9 +146,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
 
     // eventually create user out of temp user and activate the related subscription
-    const userID: GenericUserId = subscription.userID
-    if (isTempUser(userID)) {
-      subscription = await this.activateTempUserAndSubscription(dbAdapter, userID, subscription)
+    const subscriptionUserId: GenericUserId = subscription.userID
+    if (isTempUser(subscriptionUserId)) {
+      subscription = await this.activateTempUserAndSubscription(
+        dbAdapter,
+        subscriptionUserId,
+        subscription
+      )
     }
 
     // update payment provider
