@@ -35,7 +35,7 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
     licence: ''
   })
   async function handleUpload(file: File) {
-    setImageMetaData(await readPictureMetaData(file))
+    setImageMetaData(await readImageMetaData(file))
     setFile(file)
   }
 
@@ -52,7 +52,7 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
     return base
   }
 
-  async function readPictureMetaData(data: File): Promise<ImageMetaData> {
+  async function readImageMetaData(data: File): Promise<ImageMetaData> {
     const tags = await exifr.parse(data, true)
     const fields: ImageMetaData = {
       title: '',
