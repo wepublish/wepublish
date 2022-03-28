@@ -245,7 +245,7 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
               <CurrencyInput
-                prefix="CHF"
+                currency="CHF"
                 centAmount={monthlyAmount}
                 step={0.05}
                 onChange={value => {

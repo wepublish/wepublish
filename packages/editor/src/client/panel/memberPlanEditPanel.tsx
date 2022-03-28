@@ -241,7 +241,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
 
               <CurrencyInput
-                prefix="CHF"
+                currency="CHF"
                 centAmount={amountPerMonthMin}
                 step={0.05}
                 onChange={value => {

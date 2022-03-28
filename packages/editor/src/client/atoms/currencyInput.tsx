@@ -2,28 +2,34 @@ import React, {useState, useEffect} from 'react'
 import {InputNumber} from 'rsuite'
 
 export interface CurrencyInputProps {
-  prefix?: string
+  currency?: string
   centAmount: number
   step?: number
   onChange(value: number): void
   disabled?: boolean
 }
 
-export function CurrencyInput({prefix, centAmount, step, disabled, onChange}: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number>((centAmount as number) / 100)
+export function CurrencyInput({
+  currency,
+  centAmount,
+  step,
+  disabled,
+  onChange
+}: CurrencyInputProps) {
+  const [displayedCurrency, setDisplayedCurrency] = useState<number>((centAmount as number) / 100)
 
   useEffect(() => {
-    setAmount(centAmount / 100)
+    setDisplayedCurrency(centAmount / 100)
   }, [centAmount])
 
   return (
     <div>
       <InputNumber
-        prefix={prefix}
+        prefix={currency}
         step={step}
-        value={Number(amount).toFixed(2)}
+        value={Number(displayedCurrency).toFixed(2)}
         onChange={value => {
-          setAmount(value as number)
+          setDisplayedCurrency(value as number)
           onChange((value as number) * 100)
         }}
         disabled={disabled}></InputNumber>
