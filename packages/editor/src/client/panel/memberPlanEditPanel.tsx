@@ -244,8 +244,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 currency="CHF"
                 centAmount={amountPerMonthMin}
                 step={0.05}
-                onChange={amount => {
-                  setAmountPerMonthMin(amount)
+                onChange={centAmount => {
+                  setAmountPerMonthMin(centAmount)
                 }}
               />
             </FormGroup>

@@ -248,8 +248,8 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
                 currency="CHF"
                 centAmount={monthlyAmount}
                 step={0.05}
-                onChange={amount => {
-                  setMonthlyAmount(amount)
+                onChange={centAmount => {
+                  setMonthlyAmount(centAmount)
                 }}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />

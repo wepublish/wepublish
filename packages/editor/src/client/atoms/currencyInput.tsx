@@ -5,7 +5,7 @@ export interface CurrencyInputProps {
   currency?: string
   centAmount: number
   step?: number
-  onChange(value: number): void
+  onChange(centAmount: number): void
   disabled?: boolean
 }
 
@@ -28,9 +28,9 @@ export function CurrencyInput({
         prefix={currency}
         step={step}
         value={Number(amount).toFixed(2)}
-        onChange={value => {
-          setAmount(value as number)
-          onChange((value as number) * 100)
+        onChange={amount => {
+          setAmount(amount as number)
+          onChange((amount as number) * 100)
         }}
         disabled={disabled}></InputNumber>
     </div>
