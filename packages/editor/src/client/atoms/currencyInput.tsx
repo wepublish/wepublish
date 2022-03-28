@@ -16,10 +16,10 @@ export function CurrencyInput({
   disabled,
   onChange
 }: CurrencyInputProps) {
-  const [displayedCurrency, setDisplayedCurrency] = useState<number>((centAmount as number) / 100)
+  const [amount, setAmount] = useState<number>((centAmount as number) / 100)
 
   useEffect(() => {
-    setDisplayedCurrency(centAmount / 100)
+    setAmount(centAmount / 100)
   }, [centAmount])
 
   return (
@@ -27,9 +27,9 @@ export function CurrencyInput({
       <InputNumber
         prefix={currency}
         step={step}
-        value={Number(displayedCurrency).toFixed(2)}
+        value={Number(amount).toFixed(2)}
         onChange={value => {
-          setDisplayedCurrency(value as number)
+          setAmount(value as number)
           onChange((value as number) * 100)
         }}
         disabled={disabled}></InputNumber>
