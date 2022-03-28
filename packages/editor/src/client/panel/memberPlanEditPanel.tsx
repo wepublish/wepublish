@@ -68,7 +68,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const [displayedCurrency, setDisplayedCurrency] = useState<number | string>(5)
   const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -126,7 +125,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           : []
       )
       setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
-      setDisplayedCurrency(data.memberPlan.amountPerMonthMin / 100)
     }
   }, [data?.memberPlan])
 
@@ -147,11 +145,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   function handleImageChange(image: ImageRefFragment) {
     setImage(image)
-  }
-
-  function handleChangeCurrencyAmount(value: number | string) {
-    setDisplayedCurrency(parseFloat(value as string).toFixed(2))
-    setAmountPerMonthMin((value as number) * 100)
   }
 
   async function handleSave() {
@@ -249,9 +242,12 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
               <CurrencyInput
                 prefix="CHF"
-                value={displayedCurrency}
+                value={amountPerMonthMin}
                 step={0.05}
-                changeCurrencyAmount={handleChangeCurrencyAmount}
+                onChange={value => {
+                  console.log(value)
+                  setAmountPerMonthMin(value)
+                }}
               />
             </FormGroup>
             <FormGroup>

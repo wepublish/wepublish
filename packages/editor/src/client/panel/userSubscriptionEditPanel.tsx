@@ -251,13 +251,13 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
-              <CurrencyInput
+              {/* <CurrencyInput
                 prefix="CHF"
                 value={displayedCurrency}
                 step={0.05}
-                changeCurrencyAmount={handleChangeCurrencyAmount}
+                // changeCurrencyAmount={handleChangeCurrencyAmount}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-              />
+              /> */}
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
