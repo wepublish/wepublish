@@ -15,6 +15,7 @@ import {usePermanentVisibility} from '../utils/hooks'
 import {transformCssStringToObject} from '../utility'
 import {BildwurfAdEmbed} from '../atoms/bildwurfAdEmbed'
 import {TikTokVideoEmbed} from '../atoms/tikTokEmbed'
+import {SpotifyEmbed} from '../atoms/spotifyEmbed'
 
 export interface EmbedBlockProps {
   readonly data: EmbedData
@@ -71,6 +72,9 @@ function embedForData(data: EmbedData) {
 
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed {...data} />
+
+    case EmbedType.SpotifyTrack:
+      return <SpotifyEmbed {...data} />
 
     case EmbedType.IFrame:
       // TODO: Move into component

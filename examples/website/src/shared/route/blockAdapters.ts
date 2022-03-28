@@ -251,6 +251,17 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
           }
         }
 
+      case 'SpotifyTrackBlock':
+        return {
+          type: BlockType.Embed,
+          key: index,
+          value: {
+            type: EmbedType.SpotifyTrack,
+            categoryType: block.categoryType,
+            trackID: block.trackID
+          }
+        }
+
       case 'EmbedBlock':
         return {
           type: BlockType.Embed,

@@ -16,6 +16,7 @@ import {
   polisConversationBlockDataFragment,
   tikTokVideoBlockDataFragment,
   bildwurfAdBlockDataFragment,
+  spotifyTrackBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -62,6 +63,7 @@ const ArticleQuery = gql`
         ...PolisConversationBlockData
         ...TikTokVideoBlockData
         ...BildwurfAdBlockData
+        ...SpotifyTrackBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -87,6 +89,7 @@ const ArticleQuery = gql`
   ${polisConversationBlockDataFragment}
   ${tikTokVideoBlockDataFragment}
   ${bildwurfAdBlockDataFragment}
+  ${spotifyTrackBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}

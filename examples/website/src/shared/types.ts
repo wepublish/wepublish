@@ -258,6 +258,7 @@ export enum EmbedType {
   PolisConversation = 'polisConversation',
   TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
+  SpotifyTrack = 'spotifyTrack',
   IFrame = 'iframe'
 }
 
@@ -309,6 +310,12 @@ export interface BildwurfAdConversationEmbedData {
   zoneID: string
 }
 
+export interface SpotifyTrackEmbedData {
+  type: EmbedType.SpotifyTrack
+  collectionType: string
+  trackID: string
+}
+
 export interface IFrameEmbed {
   type: EmbedType.IFrame
   title?: string
@@ -328,6 +335,7 @@ export type EmbedData =
   | PolisConversationEmbedData
   | TikTokVideoEmbedData
   | BildwurfAdConversationEmbedData
+  | SpotifyTrackEmbedData
   | IFrameEmbed
 
 export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>

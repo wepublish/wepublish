@@ -14,6 +14,7 @@ export enum BlockTypes {
   PolisConversationBlock = 'PolisConversationBlock',
   TikTokVideoBlock = 'TikTokVideoBlock',
   BildwurfAdBlock = 'BildwurfAdBlock',
+  SpotifyTrackBlock = 'SpotifyTrackBlock',
   ListicleBlock = 'ListicleBlock',
   LinkPageBreakBlock = 'LinkPageBreakBlock'
 }
@@ -454,6 +455,14 @@ export const bildwurfAdBlockDataFragment = gql`
   fragment BildwurfAdBlockData on BildwurfAdBlock {
     __typename
     zoneID
+  }
+`
+
+export const spotifyTrackBlockDataFragment = gql`
+  fragment SpotifyTrackBlockData on SpotifyTrackBlock {
+    __typename
+    collectionType
+    trackID
   }
 `
 export const embedBlockDataFragment = gql`
