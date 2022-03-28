@@ -110,7 +110,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     if (data?.memberPlan) {
       setName(data.memberPlan.name)
       setSlug(data.memberPlan.slug)
-      setTags(data.memberPlan.tags)
+      setTags(data.memberPlan.tags ?? [])
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()

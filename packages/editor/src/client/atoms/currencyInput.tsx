@@ -10,9 +10,7 @@ export interface CurrencyInputProps {
 }
 
 export function CurrencyInput({prefix, value, step, disabled, onChange}: CurrencyInputProps) {
-  const [displayedCurrency, setDisplayedCurrency] = useState<number | string>(
-    (value as number) / 100
-  )
+  const [displayedCurrency, setDisplayedCurrency] = useState<number>((value as number) / 100)
 
   useEffect(() => {
     setDisplayedCurrency(value / 100)
@@ -23,7 +21,7 @@ export function CurrencyInput({prefix, value, step, disabled, onChange}: Currenc
       <InputNumber
         prefix={prefix}
         step={step}
-        value={displayedCurrency}
+        value={Number(displayedCurrency).toFixed(2)}
         onChange={value => {
           setDisplayedCurrency(value as number)
           onChange((value as number) * 100)
