@@ -87,6 +87,7 @@ Object {
             "title": null,
             "url": "https://www.youtube.com/embed/cPAbx5kgCJo",
             "width": null,
+            "sandbox": null
           },
           Object {
             "__typename": "LinkPageBreakBlock",

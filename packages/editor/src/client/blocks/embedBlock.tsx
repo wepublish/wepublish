@@ -127,6 +127,7 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
           width={value.width}
           height={value.height}
           styleCustom={value.styleCustom}
+          sandbox={value.sandbox}
         />
       ) : null
   }

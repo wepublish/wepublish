@@ -261,7 +261,8 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
             url: block.url,
             width: block.width,
             height: block.height,
-            styleCustom: block.styleCustom
+            styleCustom: block.styleCustom,
+            sandbox: block.sandbox
           }
         }
 

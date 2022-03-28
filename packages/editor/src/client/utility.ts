@@ -207,6 +207,14 @@ export function validateURL(url: string) {
   return false
 }
 
+export function flattenArray(array: unknown[] | DOMTokenList) {
+  let string = ''
+  for (const element of array) {
+    string = `${string} ${element}`
+  }
+  return string.substring(1)
+}
+
 /**
  * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
  */
