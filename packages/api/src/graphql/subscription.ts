@@ -50,7 +50,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
-      type: GraphQLNonNull(GraphQLUser),
+      type: GraphQLUser,
       async resolve({userID}, args, {dbAdapter}) {
         if (isTempUser(userID)) {
           const tempUser = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(userID))

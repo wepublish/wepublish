@@ -191,10 +191,10 @@ export function SubscriptionList() {
             <Cell dataKey={'name'}>
               {(rowData: FullSubscriptionFragment) => (
                 <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
-                  {isTempUser(rowData.user.id) && (
+                  {isTempUser(rowData.user?.id) && (
                     <span>{t('subscriptionList.overview.tempUser')}</span>
                   )}
-                  {rowData.user.name || t('subscriptionList.overview.unknown')}
+                  {rowData.user?.name || t('subscriptionList.overview.deleted')}
                 </Link>
               )}
             </Cell>

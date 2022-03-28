@@ -7,6 +7,7 @@ import {
   SortOrder
 } from './common'
 import {PaymentPeriodicity} from './memberPlan'
+import {GenericUserId} from './tempUser'
 
 export enum SubscriptionDeactivationReason {
   None,
@@ -61,7 +62,7 @@ export interface Subscription {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly userID: string
+  readonly userID: GenericUserId
   readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number
@@ -115,6 +116,7 @@ export interface GetSubscriptionArgs {
 export interface DBSubscriptionAdapter {
   createSubscription(args: CreateSubscriptionArgs): Promise<OptionalSubscription>
   updateSubscription(args: UpdateSubscriptionArgs): Promise<OptionalSubscription>
+  updateUserID(subscriptionID: string, userID: string): Promise<OptionalSubscription>
   deleteSubscription(args: DeleteSubscriptionArgs): Promise<string | null>
 
   addSubscriptionPeriod(args: CreateSubscriptionPeriodArgs): Promise<OptionalSubscription>

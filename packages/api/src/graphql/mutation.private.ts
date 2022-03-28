@@ -90,6 +90,7 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
+import {calculateAmountForPeriodicity, getNextDateForPeriodicity} from '../memberContext'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -471,13 +472,47 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve(root, {input}, {authenticate, dbAdapter}) {
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
 
         if (isTempUser(input.userID)) throw new Error('Can not update subscription with tempUser')
 
-        return dbAdapter.subscription.createSubscription({input})
+        const subscription = await dbAdapter.subscription.createSubscription({input})
+        if (!subscription) throw new Error('Subscription not created.')
+
+        // create invoice
+        const userId = subscription.userID
+        const startDate = subscription.startsAt
+        const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
+        const amount = calculateAmountForPeriodicity(
+          subscription.monthlyAmount,
+          subscription.paymentPeriodicity
+        )
+        const user = await dbAdapter.user.getUserByID(userId)
+        if (!user) throw new Error('User of subscription not found.')
+        await dbAdapter.invoice.createInvoice({
+          input: {
+            subscriptionID: subscription.id,
+            description: `Membership for ${user.name || user.email}`,
+            mail: user.email,
+            dueAt: startDate,
+            items: [
+              {
+                createdAt: new Date(),
+                modifiedAt: new Date(),
+                name: 'Membership',
+                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
+                amount,
+                quantity: 1
+              }
+            ],
+            paidAt: null,
+            canceledAt: null
+          }
+        })
+
+        return subscription
       }
     },
 
@@ -517,7 +552,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (subscription && isTempUser(subscription.userID)) {
           await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
         }
-
         await dbAdapter.subscription.deleteSubscription({id})
         return id
       }

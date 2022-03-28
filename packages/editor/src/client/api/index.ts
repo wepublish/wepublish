@@ -1372,11 +1372,6 @@ export type PropertiesInput = {
   public: Scalars['Boolean'];
 };
 
-export type PublicPropertiesInput = {
-  key: Scalars['String'];
-  value: Scalars['String'];
-};
-
 export type Query = {
   __typename?: 'Query';
   remotePeerProfile?: Maybe<PeerProfile>;
@@ -1769,7 +1764,7 @@ export type SubscriptionInput = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
-  properties: Array<PublicPropertiesInput>;
+  properties: Array<PropertiesInput>;
   deactivation?: Maybe<SubscriptionDeactivationInput>;
 };
 

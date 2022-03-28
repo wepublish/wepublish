@@ -14,6 +14,7 @@ import {
   OptionalUser,
   ResetUserPasswordArgs,
   SortOrder,
+  TempUser,
   UpdatePaymentProviderCustomerArgs,
   UpdateUserArgs,
   User,
@@ -28,6 +29,7 @@ import {CollectionName, DBUser} from './schema'
 import {escapeRegExp, MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import * as crypto from 'crypto'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -68,6 +70,23 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
       throw err
     }
+  }
+
+  public async createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser> {
+    const newUser = await this.createUser({
+      input: {
+        email: tempUser.email,
+        name: tempUser.name,
+        address: tempUser.address,
+        preferredName: tempUser.preferredName,
+        active: true,
+        roleIDs: [],
+        properties: [],
+        emailVerifiedAt: null
+      },
+      password: crypto.randomBytes(48).toString('hex')
+    })
+    return newUser
   }
 
   async getUser(email: string): Promise<OptionalUser> {

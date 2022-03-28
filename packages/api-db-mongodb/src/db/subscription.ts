@@ -80,6 +80,21 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     return {id: outID, ...data}
   }
 
+  async updateUserID(subscriptionID: string, userID: string): Promise<OptionalSubscription> {
+    const {value} = await this.subscriptions.findOneAndUpdate(
+      {_id: subscriptionID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          userID
+        }
+      }
+    )
+    if (!value) return null
+    const {_id: outID, ...data} = value
+    return {id: outID, ...data}
+  }
+
   async deleteSubscription({id}: DeleteSubscriptionArgs): Promise<string | null> {
     const {deletedCount} = await this.subscriptions.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
