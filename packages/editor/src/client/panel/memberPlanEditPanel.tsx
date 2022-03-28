@@ -242,7 +242,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
               <CurrencyInput
                 prefix="CHF"
-                value={amountPerMonthMin}
+                centAmount={amountPerMonthMin}
                 step={0.05}
                 onChange={value => {
                   setAmountPerMonthMin(value)
