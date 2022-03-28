@@ -48,10 +48,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
-  // const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
-  // const [isUserSubscriptionEditOpen, setIsUserSubscriptionEditOpen] = useState(false)
 
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
