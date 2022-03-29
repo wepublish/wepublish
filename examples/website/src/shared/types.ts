@@ -256,6 +256,7 @@ export enum EmbedType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
   IFrame = 'iframe'
 }
@@ -297,6 +298,12 @@ export interface PolisConversationEmbedData {
   conversationID: string
 }
 
+export interface TikTokVideoEmbedData {
+  type: EmbedType.TikTokVideo
+  userID: string
+  videoID: string
+}
+
 export interface BildwurfAdConversationEmbedData {
   type: EmbedType.BildwurfAd
   zoneID: string
@@ -309,6 +316,7 @@ export interface IFrameEmbed {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
 export type EmbedData =
@@ -319,6 +327,7 @@ export type EmbedData =
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
   | PolisConversationEmbedData
+  | TikTokVideoEmbedData
   | BildwurfAdConversationEmbedData
   | IFrameEmbed
 

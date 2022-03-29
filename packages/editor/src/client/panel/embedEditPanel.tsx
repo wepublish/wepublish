@@ -6,6 +6,7 @@ import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
+import {flattenDOMTokenList} from '../utility'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
@@ -30,6 +31,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
     const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
     const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
+    const tikTokMatch = input.match(/tiktok\.com\/@([0-9a-zA-Z-_.]+)\/video\/([0-9]+)/)
     const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/)
 
     if (facebookPostMatch) {
@@ -53,6 +55,9 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     } else if (polisMatch) {
       const [, conversationID] = polisMatch
       setEmbed({type: EmbedType.PolisConversation, conversationID})
+    } else if (tikTokMatch) {
+      const [, userID, videoID] = tikTokMatch
+      setEmbed({type: EmbedType.TikTokVideo, userID, videoID})
     } else if (bildwurfAdMatch) {
       const [, zoneID] = bildwurfAdMatch
       setEmbed({type: EmbedType.BildwurfAd, zoneID})
@@ -73,7 +78,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined,
-              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : ''
+              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
+              sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
             }
 
             setEmbed({
@@ -162,6 +168,9 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
     case EmbedType.PolisConversation:
       return `https://pol.is/${embed.conversationID}`
 
+    case EmbedType.TikTokVideo:
+      return `https://www.tiktok.com/@${embed.userID}/video/${embed.videoID}`
+
     case EmbedType.BildwurfAd:
       return `<div id="bildwurf-injection-wrapper"><ins className="aso-zone" data-zone="${embed.zoneID}"></ins></div>`
 
@@ -170,12 +179,13 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
       const hasStyles = !!embed.styleCustom
+      const hasSandbox = !!embed.sandbox
       return embed.url
         ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="${embed.styleCustom}"` : ''
-          }/>`
+          }${hasSandbox ? ` sandbox="${embed.sandbox}"` : ''} />`
         : ''
     }
   }

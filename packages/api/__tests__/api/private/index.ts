@@ -98,6 +98,7 @@ export type ArticleRevision = {
   tags: Array<Scalars['String']>
   properties: Array<Properties>
   canonicalUrl?: Maybe<Scalars['String']>
+  url: Scalars['String']
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
@@ -357,6 +358,7 @@ export type EmbedBlock = {
   width?: Maybe<Scalars['Int']>
   height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
+  sandbox?: Maybe<Scalars['String']>
 }
 
 export type EmbedBlockInput = {
@@ -365,6 +367,7 @@ export type EmbedBlockInput = {
   width?: Maybe<Scalars['Int']>
   height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
+  sandbox?: Maybe<Scalars['String']>
 }
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -1095,6 +1098,7 @@ export type PageRevision = {
   description?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<Properties>
+  url: Scalars['String']
   image?: Maybe<Image>
   socialMediaTitle?: Maybe<Scalars['String']>
   socialMediaDescription?: Maybe<Scalars['String']>
@@ -1350,6 +1354,7 @@ export type Query = {
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
   peerArticles: PeerArticleConnection
+  filterByPeerPeerArticles: PeerArticleConnection
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
@@ -1480,6 +1485,17 @@ export type QueryPeerArticlesArgs = {
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
+  last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+}
+
+export type QueryFilterByPeerPeerArticlesArgs = {
+  after?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  filter?: Maybe<ArticleFilter>
+  sort?: Maybe<ArticleSort>
+  order?: Maybe<SortOrder>
+  peer?: Maybe<Scalars['String']>
 }
 
 export type QueryArticlePreviewLinkArgs = {
@@ -2222,7 +2238,7 @@ type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
-  'url' | 'title' | 'width' | 'height' | 'styleCustom'
+  'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
@@ -3146,6 +3162,7 @@ export const FullBlock = gql`
       width
       height
       styleCustom
+      sandbox
     }
     ... on TeaserGridBlock {
       teasers {
