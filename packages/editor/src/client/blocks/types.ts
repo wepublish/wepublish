@@ -89,6 +89,7 @@ export enum EmbedType {
   PolisConversation = 'polisConversation',
   TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
+  SpotifyTrack = 'spotifyTrack',
   Other = 'other'
 }
 
@@ -146,6 +147,12 @@ export interface BildwurfAdEmbed {
   zoneID: string
 }
 
+export interface SpotifyTrackEmbed {
+  type: EmbedType.SpotifyTrack
+  collectionType: string
+  trackID: string
+}
+
 export interface OtherEmbed {
   type: EmbedType.Other
   url?: string
@@ -166,6 +173,7 @@ export type EmbedBlockValue =
   | PolisConversationEmbed
   | TikTokVideoEmbed
   | BildwurfAdEmbed
+  | SpotifyTrackEmbed
   | OtherEmbed
 
 export enum TeaserType {
@@ -416,6 +424,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             bildwurfAd: {
               zoneID: value.zoneID
+            }
+          }
+
+        case EmbedType.SpotifyTrack:
+          return {
+            spotifyTrack: {
+              collectionType: value.collectionType,
+              trackID: value.trackID
             }
           }
 
@@ -709,6 +725,17 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {type: EmbedType.BildwurfAd, zoneID: block.zoneID}
+      }
+
+    case 'SpotifyTrackBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {
+          type: EmbedType.SpotifyTrack,
+          collectionType: block.collectionType,
+          trackID: block.trackID
+        }
       }
 
     case 'EmbedBlock':

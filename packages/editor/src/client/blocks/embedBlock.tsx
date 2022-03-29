@@ -19,6 +19,7 @@ import {IframeEmbed} from './embeds/iframe'
 import {useTranslation} from 'react-i18next'
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
 import {TikTokVideoEmbed} from './embeds/tikTok'
+import {SpotifyEmbed} from './embeds/spotify'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
@@ -118,6 +119,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
 
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed zoneID={value.zoneID} />
+
+    case EmbedType.SpotifyTrack:
+      return <SpotifyEmbed collectionType={value.collectionType} trackID={value.trackID} />
 
     default:
       return value.url ? (

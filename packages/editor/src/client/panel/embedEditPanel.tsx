@@ -32,6 +32,9 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
     const tikTokMatch = input.match(/tiktok\.com\/@([0-9a-zA-Z-_.]+)\/video\/([0-9]+)/)
     const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/)
+    const spotifyMatch = input.match(
+      /open.spotify.com(?:\/embed|)\/(album|track|show|episode|playlist|artist)\/([0-9a-zA-Z-_]+)/
+    )
 
     if (facebookPostMatch) {
       const [, userID, postID] = facebookPostMatch
@@ -60,6 +63,9 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     } else if (bildwurfAdMatch) {
       const [, zoneID] = bildwurfAdMatch
       setEmbed({type: EmbedType.BildwurfAd, zoneID})
+    } else if (spotifyMatch) {
+      const [, collectionType, trackID] = spotifyMatch
+      setEmbed({type: EmbedType.SpotifyTrack, collectionType, trackID})
     } else {
       if (input) {
         const parser = new DOMParser()
@@ -171,6 +177,9 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
 
     case EmbedType.BildwurfAd:
       return `<div id="bildwurf-injection-wrapper"><ins className="aso-zone" data-zone="${embed.zoneID}"></ins></div>`
+
+    case EmbedType.SpotifyTrack:
+      return `https://open.spotify.com/embed/${embed.collectionType}/${embed.trackID}`
 
     case EmbedType.Other: {
       const hasTitle = !!embed.title

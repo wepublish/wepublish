@@ -155,6 +155,11 @@ fragment FullBlock on Block {
     zoneID
   }
 
+  ... on SpotifyTrackBlock {
+  collectionType
+    trackID
+  }
+
   ... on EmbedBlock {
     url
     title

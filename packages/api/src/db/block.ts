@@ -14,6 +14,7 @@ export enum BlockType {
   PolisConversation = 'polisConversation',
   TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
+  SpotifyTrack = 'spotifyTrack',
   Embed = 'embed',
   Quote = 'quote',
   Image = 'image',
@@ -97,6 +98,12 @@ export interface TikTokVideoBlock {
 export interface BildwurfAdBlock {
   type: BlockType.BildwurfAd
   zoneID: string
+}
+
+export interface SpotifyTrackBlock {
+  type: BlockType.SpotifyTrack
+  collectionType: string
+  trackID: string
 }
 
 export interface EmbedBlock {
@@ -235,6 +242,7 @@ export type ArticleBlock =
   | PolisConversationBlock
   | TikTokVideoBlock
   | BildwurfAdBlock
+  | SpotifyTrackBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
 

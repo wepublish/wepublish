@@ -46,7 +46,8 @@ import {
   FacebookVideoBlock,
   FlexAlignment,
   FlexTeaser,
-  BildwurfAdBlock
+  BildwurfAdBlock,
+  SpotifyTrackBlock
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
@@ -513,6 +514,17 @@ export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Con
   })
 })
 
+export const GraphQLSpotifyTrackBlock = new GraphQLObjectType<SpotifyTrackBlock, Context>({
+  name: 'SpotifyTrackBlock',
+  fields: {
+    collectionType: {type: GraphQLNonNull(GraphQLString)},
+    trackID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.SpotifyTrack
+  })
+})
+
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   name: 'EmbedBlock',
   fields: {
@@ -751,6 +763,14 @@ export const GraphQLBildwurfAdBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLSpotifyTrackBlockInput = new GraphQLInputObjectType({
+  name: 'SpotifyTrackBlockInput',
+  fields: {
+    collectionType: {type: GraphQLNonNull(GraphQLString)},
+    trackID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   name: 'EmbedBlockInput',
   fields: {
@@ -850,6 +870,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.PolisConversation]: {type: GraphQLPolisConversationBlockInput},
     [BlockType.TikTokVideo]: {type: GraphQLTikTokVideoBlockInput},
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
+    [BlockType.SpotifyTrack]: {type: GraphQLSpotifyTrackBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
@@ -874,6 +895,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLPolisConversationBlock,
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
+    GraphQLSpotifyTrackBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
@@ -899,6 +921,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLPolisConversationBlock,
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
+    GraphQLSpotifyTrackBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,

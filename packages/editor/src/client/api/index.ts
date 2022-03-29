@@ -221,7 +221,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | SpotifyTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -240,6 +240,7 @@ export type BlockInput = {
   polisConversation?: Maybe<PolisConversationBlockInput>;
   tikTokVideo?: Maybe<TikTokVideoBlockInput>;
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
+  spotifyTrack?: Maybe<SpotifyTrackBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
@@ -643,7 +644,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -1685,6 +1686,17 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
+export type SpotifyTrackBlock = {
+  __typename?: 'SpotifyTrackBlock';
+  collectionType: Scalars['String'];
+  trackID: Scalars['String'];
+};
+
+export type SpotifyTrackBlockInput = {
+  collectionType: Scalars['String'];
+  trackID: Scalars['String'];
+};
+
 export enum SubscriptionDeactivationReason {
   None = 'NONE',
   UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
@@ -2240,6 +2252,9 @@ export type ArticleQuery = (
         { __typename?: 'BildwurfAdBlock' }
         & FullBlock_BildwurfAdBlock_Fragment
       ) | (
+        { __typename?: 'SpotifyTrackBlock' }
+        & FullBlock_SpotifyTrackBlock_Fragment
+      ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
@@ -2566,6 +2581,11 @@ type FullBlock_BildwurfAdBlock_Fragment = (
   & Pick<BildwurfAdBlock, 'zoneID'>
 );
 
+type FullBlock_SpotifyTrackBlock_Fragment = (
+  { __typename: 'SpotifyTrackBlock' }
+  & Pick<SpotifyTrackBlock, 'collectionType' | 'trackID'>
+);
+
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
@@ -2625,7 +2645,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_SpotifyTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -3229,6 +3249,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'BildwurfAdBlock' }
         & FullBlock_BildwurfAdBlock_Fragment
+      ) | (
+        { __typename?: 'SpotifyTrackBlock' }
+        & FullBlock_SpotifyTrackBlock_Fragment
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
@@ -4075,6 +4098,10 @@ export const FullBlockFragmentDoc = gql`
   }
   ... on BildwurfAdBlock {
     zoneID
+  }
+  ... on SpotifyTrackBlock {
+    collectionType
+    trackID
   }
   ... on EmbedBlock {
     url
