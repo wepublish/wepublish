@@ -109,7 +109,7 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
     parentID: {type: GraphQLID},
-    anonymousName: {type: GraphQLString},
+    guestUsername: {type: GraphQLString},
     challenge: {
       type: GraphQLChallengeInput
     },
@@ -137,7 +137,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   name: 'Comment',
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
-    anonymousName: {type: GraphQLString},
+    guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLUser,
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
@@ -175,7 +175,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
-    anonymousName: {type: GraphQLString},
+    guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLPublicUser,
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {

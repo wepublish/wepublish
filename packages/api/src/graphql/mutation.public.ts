@@ -150,6 +150,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
         const user = optionalAuthenticateUser()
+        let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
 
         if (commentLength > MAX_COMMENT_LENGTH) {
@@ -158,10 +159,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Challenge
         if (!user) {
+          authorType = CommentAuthorType.GuestUser
           if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
             throw new AnonymousCommentsDisabledError()
 
-          if (!input.anonymousName) throw new AnonymousCommentError()
+          if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
 
           const challengeValidationResult = await challenge.validateChallenge({
@@ -171,7 +173,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           if (!challengeValidationResult.valid)
             throw new CommentAuthenticationError(challengeValidationResult.message)
         } else {
-          input.anonymousName = ''
+          input.guestUsername = ''
         }
 
         // Cleanup
@@ -182,7 +184,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           input: {
             ...input,
             userID: user?.user.id,
-            authorType: CommentAuthorType.VerifiedUser,
+            authorType,
             state: CommentState.PendingApproval
           }
         })

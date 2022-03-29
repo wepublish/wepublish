@@ -250,7 +250,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
-  anonymousName?: Maybe<Scalars['String']>;
+  guestUsername?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
@@ -2630,7 +2630,7 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'anonymousName' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
@@ -2642,7 +2642,7 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'anonymousName' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
@@ -4233,7 +4233,7 @@ export const FullParentCommentFragmentDoc = gql`
   user {
     ...FullUser
   }
-  anonymousName
+  guestUsername
   revisions {
     text
     createdAt
@@ -4247,7 +4247,7 @@ export const FullCommentFragmentDoc = gql`
   id
   state
   rejectionReason
-  anonymousName
+  guestUsername
   user {
     ...FullUser
   }

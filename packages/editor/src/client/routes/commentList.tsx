@@ -185,7 +185,7 @@ export function CommentList() {
 
   const printUsername = currentComment?.user
     ? `${currentComment?.user.name}`
-    : ` ${currentComment?.anonymousName} ${t('comments.panels.unregisteredUser')}`
+    : ` ${currentComment?.guestUsername} ${t('comments.panels.unregisteredUser')}`
 
   return (
     <>
@@ -256,7 +256,7 @@ export function CommentList() {
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>
               {(rowData: FullCommentFragment) => (
-                <>{rowData.user ? rowData.user?.name : rowData.anonymousName}</>
+                <>{rowData.user ? rowData.user?.name : rowData.guestUsername}</>
               )}
             </Cell>
           </Column>
