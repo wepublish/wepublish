@@ -39,7 +39,8 @@ import {
   GraphQLPublicUser,
   GraphQLPublicUserInput,
   GraphQLPublicUserSubscription,
-  GraphQLPublicUserSubscriptionInput
+  GraphQLPublicUserSubscriptionInput,
+  GraphQLUserAddressInput
 } from './user'
 import {
   GraphQLPublicComment,
@@ -199,6 +200,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         name: {type: GraphQLNonNull(GraphQLString)},
         preferredName: {type: GraphQLString},
         email: {type: GraphQLNonNull(GraphQLString)},
+        address: {type: GraphQLUserAddressInput},
         memberPlanID: {type: GraphQLID},
         memberPlanSlug: {type: GraphQLSlug},
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
@@ -217,6 +219,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           name,
           preferredName,
           email,
+          address,
           memberPlanID,
           memberPlanSlug,
           autoRenew,
@@ -281,6 +284,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             preferredName,
             email: tempEmail,
             emailVerifiedAt: null,
+            address: address,
             active: false,
             properties: [
               {
