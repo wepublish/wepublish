@@ -1,5 +1,38 @@
 # Change Log
 
+## v3.0.0-alpha.2 (2022-03-29)
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#523](https://github.com/wepublish/wepublish/pull/523) F/wpc 620 peered articles list ([@camilleory](https://github.com/camilleory))
+  * [#512](https://github.com/wepublish/wepublish/pull/512) Tiktok embed block ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#536](https://github.com/wepublish/wepublish/pull/536) bug fix in memberplans ([@camilleory](https://github.com/camilleory))
+* `api`
+  * [#518](https://github.com/wepublish/wepublish/pull/518) send next invoice reminder fix ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#547](https://github.com/wepublish/wepublish/pull/547) added sandbox property to iframe ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`
+  * [#541](https://github.com/wepublish/wepublish/pull/541) F/wpc 656 user details ([@camilleory](https://github.com/camilleory))
+* `editor`
+  * [#537](https://github.com/wepublish/wepublish/pull/537) F/wpc 620 translation fix ([@camilleory](https://github.com/camilleory))
+  * [#531](https://github.com/wepublish/wepublish/pull/531) translation fix in peerable articles list ([@camilleory](https://github.com/camilleory))
+  * [#530](https://github.com/wepublish/wepublish/pull/530) preview own peer profile ([@camilleory](https://github.com/camilleory))
+  * [#525](https://github.com/wepublish/wepublish/pull/525) display action buttons ([@camilleory](https://github.com/camilleory))
+* `api-db-mongodb`, `api`, `editor`
+  * [#526](https://github.com/wepublish/wepublish/pull/526) F/wpc 639 filter memberplans by tags ([@camilleory](https://github.com/camilleory))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
 ## v3.0.0-alpha.1 (2022-02-17)
 
 #### :house: Internal
