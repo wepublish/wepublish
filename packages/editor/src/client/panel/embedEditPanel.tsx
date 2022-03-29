@@ -6,6 +6,7 @@ import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
+import {flattenDOMTokenList} from '../utility'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
@@ -77,7 +78,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined,
-              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : ''
+              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
+              sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
             }
 
             setEmbed({
@@ -177,12 +179,13 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
       const hasStyles = !!embed.styleCustom
+      const hasSandbox = !!embed.sandbox
       return embed.url
         ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="${embed.styleCustom}"` : ''
-          }/>`
+          }${hasSandbox ? ` sandbox="${embed.sandbox}"` : ''} />`
         : ''
     }
   }
