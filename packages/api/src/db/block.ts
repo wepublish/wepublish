@@ -106,6 +106,7 @@ export interface EmbedBlock {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
 export interface ListicleItem {
