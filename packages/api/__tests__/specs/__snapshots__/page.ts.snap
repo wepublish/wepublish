@@ -83,6 +83,7 @@ Object {
           Object {
             "__typename": "EmbedBlock",
             "height": null,
+            "sandbox": null,
             "styleCustom": null,
             "title": null,
             "url": "https://www.youtube.com/embed/cPAbx5kgCJo",
