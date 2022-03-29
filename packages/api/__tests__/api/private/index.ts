@@ -232,6 +232,7 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
@@ -255,6 +256,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>
   polisConversation?: Maybe<PolisConversationBlockInput>
+  tikTokVideo?: Maybe<TikTokVideoBlockInput>
   bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
@@ -656,6 +658,7 @@ export type MemberPlan = {
   slug: Scalars['String']
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
+  tags?: Maybe<Array<Scalars['String']>>
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
@@ -671,6 +674,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>
   active?: Maybe<Scalars['Boolean']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type MemberPlanInput = {
@@ -678,6 +682,7 @@ export type MemberPlanInput = {
   slug: Scalars['String']
   imageID?: Maybe<Scalars['ID']>
   description?: Maybe<Scalars['RichText']>
+  tags: Array<Scalars['String']>
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
@@ -1352,7 +1357,6 @@ export type Query = {
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
   peerArticles: PeerArticleConnection
-  filterByPeerPeerArticles: PeerArticleConnection
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
@@ -1483,17 +1487,9 @@ export type QueryPeerArticlesArgs = {
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
+  peerFilter?: Maybe<Scalars['String']>
   last?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
-}
-
-export type QueryFilterByPeerPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  filter?: Maybe<ArticleFilter>
-  sort?: Maybe<ArticleSort>
-  order?: Maybe<SortOrder>
-  peer?: Maybe<Scalars['String']>
 }
 
 export type QueryArticlePreviewLinkArgs = {
@@ -1657,6 +1653,17 @@ export enum TeaserStyle {
   Default = 'DEFAULT',
   Light = 'LIGHT',
   Text = 'TEXT'
+}
+
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock'
+  videoID: Scalars['String']
+  userID: Scalars['String']
+}
+
+export type TikTokVideoBlockInput = {
+  videoID: Scalars['String']
+  userID: Scalars['String']
 }
 
 export type TitleBlock = {
@@ -2070,6 +2077,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -2232,6 +2240,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
+type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
 type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
@@ -2279,6 +2289,7 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -2453,6 +2464,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -2571,6 +2583,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)

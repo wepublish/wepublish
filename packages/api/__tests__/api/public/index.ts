@@ -149,6 +149,7 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
@@ -357,6 +358,7 @@ export type MemberPlan = {
   slug: Scalars['String']
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
+  tags?: Maybe<Array<Scalars['String']>>
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
 }
@@ -371,6 +373,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>
   active?: Maybe<Scalars['Boolean']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export enum MemberPlanSort {
@@ -457,6 +460,7 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   email: Scalars['String']
+  address?: Maybe<UserAddressInput>
   memberPlanID?: Maybe<Scalars['ID']>
   memberPlanSlug?: Maybe<Scalars['Slug']>
   autoRenew: Scalars['Boolean']
@@ -709,6 +713,8 @@ export type Query = {
   memberPlans: MemberPlanConnection
   /** This mutation will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>
+  /** This query returns basic system/application information */
+  getSystemInformation?: Maybe<SystemInformation>
 }
 
 export type QueryPeerArgs = {
@@ -832,6 +838,11 @@ export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'INVOICE_NOT_PAID'
 }
 
+export type SystemInformation = {
+  __typename?: 'SystemInformation'
+  version: Scalars['String']
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserGridBlock = {
@@ -849,6 +860,12 @@ export enum TeaserStyle {
   Default = 'DEFAULT',
   Light = 'LIGHT',
   Text = 'TEXT'
+}
+
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock'
+  videoID: Scalars['String']
+  userID: Scalars['String']
 }
 
 export type TitleBlock = {
@@ -994,6 +1011,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1044,6 +1062,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1177,6 +1196,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
+type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
 type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
@@ -1223,6 +1244,7 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -1324,6 +1346,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)

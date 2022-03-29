@@ -4,6 +4,8 @@ import crypto from 'crypto'
 import jwt, {SignOptions} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
+import {promises as fs} from 'fs'
+import path from 'path'
 
 import DataLoader from 'dataloader'
 
@@ -89,6 +91,10 @@ export interface OAuth2Clients {
   client: Client
 }
 
+export interface SystemInformation {
+  version: string
+}
+
 export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
@@ -116,6 +122,8 @@ export interface Context {
   verifyJWT(token: string): string
 
   createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
+
+  getSystemInformation(): Promise<SystemInformation>
 }
 
 export interface Oauth2Provider {
@@ -447,6 +455,14 @@ export async function contextFromRequest(
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
 
       return updatedPayment
+    },
+
+    async getSystemInformation(): Promise<SystemInformation> {
+      const packageContents = await fs.readFile(path.join(__dirname, '../package.json'))
+      const packageInformation = JSON.parse(packageContents.toString())
+      return {
+        version: packageInformation.version
+      }
     }
   }
 }

@@ -46,6 +46,7 @@ import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
 import {GraphQLAuthProvider} from './auth'
+import {GraphQLSystemInformation} from './system'
 import {logger} from '../server'
 import {NotFound} from '../error'
 
@@ -425,6 +426,14 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         await new Promise(resolve => setTimeout(resolve, 100))
         const updatedInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
         return updatedInvoices.find(invoice => invoice !== null && invoice.id === id)
+      }
+    },
+    getSystemInformation: {
+      type: GraphQLSystemInformation,
+      args: {},
+      description: 'This query returns basic system/application information',
+      async resolve(root, {}, {getSystemInformation}) {
+        return await getSystemInformation()
       }
     }
   }
