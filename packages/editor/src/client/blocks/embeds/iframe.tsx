@@ -11,7 +11,7 @@ export interface IframeEmbedProps {
 
 export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbedProps) {
   const ratio = width !== undefined && height !== undefined ? width / height : 0
-  const noRatio = !!styleCustom && ratio === 0
+  const noRatio = !!styleCustom || ratio === 0
   const styleCustomCss =
     noRatio && !!styleCustom && styleCustom !== ''
       ? transformCssStringToObject(styleCustom)
@@ -24,8 +24,7 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
     <div style={{width: '100%'}}>
       <div
         style={{
-          position: 'relative',
-          paddingTop: `${noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
+          paddingTop: `${noRatio || ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
           minHeight: '45px'
         }}>
         <iframe
@@ -40,6 +39,8 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
           scrolling="no"
           frameBorder="0"
           allowFullScreen
+          width="100%"
+          height={height}
         />
       </div>
     </div>
