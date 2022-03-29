@@ -27,7 +27,7 @@ export function CurrencyInput({
       <InputNumber
         prefix={currency}
         step={step}
-        value={Number(amount).toFixed(2)}
+        value={amount}
         onChange={amount => {
           setAmount(amount as number)
           onChange((amount as number) * 100)
