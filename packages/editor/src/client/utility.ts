@@ -207,9 +207,9 @@ export function validateURL(url: string) {
   return false
 }
 
-export function flattenArray(array: unknown[] | DOMTokenList) {
+export function flattenDOMTokenList(list: DOMTokenList) {
   let string = ''
-  for (const element of array) {
+  for (const element of list) {
     string = `${string} ${element}`
   }
   return string.substring(1)

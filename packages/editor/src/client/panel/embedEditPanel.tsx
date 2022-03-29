@@ -6,7 +6,7 @@ import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
-import {flattenArray} from '../utility'
+import {flattenDOMTokenList} from '../utility'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
@@ -79,7 +79,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined,
               styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
-              sandbox: iframe.sandbox ? flattenArray(iframe.sandbox) : undefined
+              sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
             }
 
             setEmbed({
