@@ -316,6 +316,7 @@ export interface IFrameEmbed {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
 export type EmbedData =

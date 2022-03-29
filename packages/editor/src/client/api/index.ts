@@ -345,6 +345,7 @@ export type EmbedBlock = {
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
   styleCustom?: Maybe<Scalars['String']>;
+  sandbox?: Maybe<Scalars['String']>;
 };
 
 export type EmbedBlockInput = {
@@ -353,6 +354,7 @@ export type EmbedBlockInput = {
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
   styleCustom?: Maybe<Scalars['String']>;
+  sandbox?: Maybe<Scalars['String']>;
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -2569,7 +2571,7 @@ type FullBlock_BildwurfAdBlock_Fragment = (
 
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
-  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
+  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
 );
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
@@ -4083,6 +4085,7 @@ export const FullBlockFragmentDoc = gql`
     width
     height
     styleCustom
+    sandbox
   }
   ... on TeaserGridBlock {
     teasers {
