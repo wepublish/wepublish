@@ -133,9 +133,11 @@ export class WepublishServer {
 
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       logger('server').error(err)
-
-      res.status(err.status)
-      res.send(JSON.stringify(err))
+      if (err.status) {
+        res.status(err.status)
+        res.send(JSON.stringify(err))
+      }
+      next(err)
     })
 
     this.app = app
