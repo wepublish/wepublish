@@ -15,6 +15,10 @@ import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
+  AnonymousCommentError,
+  AnonymousCommentsDisabledError,
+  ChallengeMissingCommentError,
+  CommentAuthenticationError,
   CommentLengthError,
   EmailAlreadyInUseError,
   InternalError,
@@ -145,19 +149,43 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+        const user = optionalAuthenticateUser()
+        let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
 
         if (commentLength > MAX_COMMENT_LENGTH) {
           throw new CommentLengthError()
         }
 
+        // Challenge
+        if (!user) {
+          authorType = CommentAuthorType.GuestUser
+          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
+            throw new AnonymousCommentsDisabledError()
+
+          if (!input.guestUsername) throw new AnonymousCommentError()
+          if (!input.challenge) throw new ChallengeMissingCommentError()
+
+          const challengeValidationResult = await challenge.validateChallenge({
+            challengeID: input.challenge.challengeID,
+            solution: input.challenge.challengeSolution
+          })
+          if (!challengeValidationResult.valid)
+            throw new CommentAuthenticationError(challengeValidationResult.message)
+        } else {
+          input.guestUsername = ''
+        }
+
+        // Cleanup
+        delete input.challenge
+        delete input.challengeSolution
+
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
-            userID: user.id,
-            authorType: CommentAuthorType.VerifiedUser,
+            userID: user?.user.id,
+            authorType,
             state: CommentState.PendingApproval
           }
         })

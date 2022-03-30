@@ -5,6 +5,7 @@ fragment FullParentComment on Comment {
   user {
     ...FullUser
   }
+  guestUsername
   revisions {
     text
     createdAt
@@ -18,7 +19,7 @@ fragment FullComment on Comment {
 
   state
   rejectionReason
-
+  guestUsername
   user {
     ...FullUser
   }

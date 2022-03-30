@@ -7,9 +7,10 @@ export interface IframeEmbedProps {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
-export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbedProps) {
+export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: IframeEmbedProps) {
   const ratio = width !== undefined && height !== undefined ? width / height : 0
   const noRatio = !!styleCustom && ratio === 0
   const styleCustomCss =
@@ -40,6 +41,7 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
           scrolling="no"
           frameBorder="0"
           allowFullScreen
+          sandbox={sandbox}
         />
       </div>
     </div>
