@@ -93,11 +93,26 @@ export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLChallengeInput = new GraphQLInputObjectType({
+  name: 'ChallengeInput',
+  fields: {
+    challengeID: {
+      type: GraphQLNonNull(GraphQLString)
+    },
+    challengeSolution: {
+      type: GraphQLNonNull(GraphQLString)
+    }
+  }
+})
+
 export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
     parentID: {type: GraphQLID},
-
+    guestUsername: {type: GraphQLString},
+    challenge: {
+      type: GraphQLChallengeInput
+    },
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
@@ -122,10 +137,12 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   name: 'Comment',
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
+    guestUsername: {type: GraphQLString},
     user: {
-      type: GraphQLNonNull(GraphQLUser),
+      type: GraphQLUser,
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        return dbAdapter.user.getUserByID(userID)
+        if (userID) return dbAdapter.user.getUserByID(userID)
+        return null
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
@@ -158,11 +175,12 @@ export const GraphQLPublicComment: GraphQLObjectType<
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
-
+    guestUsername: {type: GraphQLString},
     user: {
-      type: GraphQLNonNull(GraphQLPublicUser),
+      type: GraphQLPublicUser,
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        return dbAdapter.user.getUserByID(userID)
+        if (userID) return dbAdapter.user.getUserByID(userID)
+        return null
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},

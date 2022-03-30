@@ -17,6 +17,7 @@ import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
+import {AlgebraicCaptchaChallenge} from '../lib'
 
 export interface TestClient {
   dbAdapter: MongoDBAdapter
@@ -116,6 +117,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     }
   }
 
+  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
+
   const apolloServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     playground: false,
@@ -134,7 +137,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
-        paymentProviders: []
+        paymentProviders: [],
+        challenge
       })
   })
 
@@ -156,7 +160,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
-        paymentProviders: []
+        paymentProviders: [],
+        challenge
       })
   })
 
