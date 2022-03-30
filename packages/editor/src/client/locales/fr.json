@@ -212,7 +212,8 @@
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}"
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "unregisteredUser": "(Utilisateur non enregistré)"
       },
       "state": {
         "approved": "Approuvé",

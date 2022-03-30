@@ -265,7 +265,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
-  user: User
+  user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
