@@ -38,6 +38,7 @@
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
     "abort-controller": "^3.0.0",
+    "algebraic-captcha": "^1.0.1",
     "apollo-server-express": "2.25.3",
     "body-parser": "^1.19.0",
     "dataloader": "^2.0.0",

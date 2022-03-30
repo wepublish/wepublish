@@ -390,7 +390,8 @@
         "updatedAt": "Updated At",
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "{{modifiedAt, ccc PP p}}"
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "unregisteredUser": "(Not registered user)"
       },
       "state": {
         "approved": "Approved",
