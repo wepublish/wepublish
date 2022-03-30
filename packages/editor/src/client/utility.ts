@@ -125,16 +125,12 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
   return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      const index = key.indexOf('-')
-      if (index !== -1) {
-        let camelCaseKey = key.substring(index)
-        camelCaseKey = camelCaseKey.slice(1).replace(camelCaseKey[1], camelCaseKey[1].toUpperCase())
-
-        return Object.assign(previousValue, {
-          [(key.substring(0, index) + camelCaseKey).trim()]: value.trim()
-        })
-      }
-      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+      return Object.assign(previousValue, {
+        [key
+          .toLowerCase()
+          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
+          .trim()]: value.trim()
+      })
     }
     return previousValue
   }, {})
