@@ -285,7 +285,8 @@
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
         "text": "Text",
-        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen."
+        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
+        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
       },
       "richTextTable": {
         "label": "Rich text Tabelle",
