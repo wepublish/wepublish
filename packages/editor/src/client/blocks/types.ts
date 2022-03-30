@@ -87,6 +87,7 @@ export enum EmbedType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
+  TikTokVideo = 'tikTokVideo',
   BildwurfAd = 'bildwurfAd',
   Other = 'other'
 }
@@ -134,6 +135,12 @@ export interface PolisConversationEmbed {
   conversationID: string
 }
 
+export interface TikTokVideoEmbed {
+  type: EmbedType.TikTokVideo
+  videoID: string
+  userID: string
+}
+
 export interface BildwurfAdEmbed {
   type: EmbedType.BildwurfAd
   zoneID: string
@@ -146,6 +153,7 @@ export interface OtherEmbed {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
 export type EmbedBlockValue =
@@ -157,6 +165,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed
 
@@ -396,6 +405,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
 
+        case EmbedType.TikTokVideo:
+          return {
+            tikTokVideo: {
+              videoID: value.videoID,
+              userID: value.userID
+            }
+          }
+
         case EmbedType.BildwurfAd:
           return {
             bildwurfAd: {
@@ -410,7 +427,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               url: value.url,
               width: value.width,
               height: value.height,
-              styleCustom: value.styleCustom
+              styleCustom: value.styleCustom,
+              sandbox: value.sandbox
             }
           }
       }
@@ -681,6 +699,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
       }
 
+    case 'TikTokVideoBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.TikTokVideo, videoID: block.videoID, userID: block.userID}
+      }
+
     case 'BildwurfAdBlock':
       return {
         key,
@@ -698,7 +723,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           title: block.title ?? undefined,
           width: block.width ?? undefined,
           height: block.height ?? undefined,
-          styleCustom: block.styleCustom ?? undefined
+          styleCustom: block.styleCustom ?? undefined,
+          sandbox: block.sandbox ?? undefined
         }
       }
 

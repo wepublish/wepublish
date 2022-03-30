@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
+import {ArticleFilter, useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
@@ -13,10 +13,13 @@ export interface TeaserSelectPanelProps {
 
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
+
+  const [peerFilter, setPeerFilter] = useState<ArticleFilter>({title: ''})
+
   const [filter, setFilter] = useState('')
 
+  const peerListVariables = {peerFilter: filter || undefined, first: 20}
   const listVariables = {filter: filter || undefined, first: 20}
-
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
@@ -31,7 +34,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchMore: fetchMorePeerArticles,
     error: peerArticleListError
   } = usePeerArticleListQuery({
-    variables: listVariables,
+    variables: peerListVariables,
     fetchPolicy: 'network-only'
   })
 
@@ -73,7 +76,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   function loadMorePeerArticles() {
     fetchMorePeerArticles({
-      variables: {...listVariables, after: peerArticleListData?.peerArticles.pageInfo.endCursor},
+      variables: {
+        ...peerListVariables,
+        after: peerArticleListData?.peerArticles.pageInfo.endCursor
+      },
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
@@ -103,6 +109,18 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     })
   }
 
+  function currentFilter() {
+    switch (type) {
+      case TeaserType.Article:
+        return <Input value={filter} onChange={value => setFilter(value)} />
+      case TeaserType.PeerArticle:
+        return (
+          <Input value={peerFilter.title || ''} onChange={value => setPeerFilter({title: value})} />
+        )
+      case TeaserType.Page:
+        return <Input value={filter} onChange={value => setFilter(value)} />
+    }
+  }
   function currentContent() {
     switch (type) {
       case TeaserType.Article:
@@ -259,7 +277,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         </Nav>
 
         <InputGroup style={{marginBottom: 20}}>
-          <Input value={filter} onChange={value => setFilter(value)} />
+          {currentFilter()}
           <InputGroup.Addon>
             <Icon icon="search" />
           </InputGroup.Addon>

@@ -12,6 +12,7 @@ export enum BlockTypes {
   YouTubeVideoBlock = 'YouTubeVideoBlock',
   SoundCloudTrackBlock = 'SoundCloudTrackBlock',
   PolisConversationBlock = 'PolisConversationBlock',
+  TikTokVideoBlock = 'TikTokVideoBlock',
   BildwurfAdBlock = 'BildwurfAdBlock',
   ListicleBlock = 'ListicleBlock',
   LinkPageBreakBlock = 'LinkPageBreakBlock'
@@ -439,6 +440,14 @@ export const polisConversationBlockDataFragment = gql`
   fragment PolisConversationBlockData on PolisConversationBlock {
     __typename
     conversationID
+  }
+`
+
+export const tikTokVideoBlockDataFragment = gql`
+  fragment TikTokVideoBlockData on TikTokVideoBlock {
+    __typename
+    userID
+    videoID
   }
 `
 export const bildwurfAdBlockDataFragment = gql`

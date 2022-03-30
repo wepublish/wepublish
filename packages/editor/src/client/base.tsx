@@ -18,6 +18,7 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
+  PeerArticleListRoute,
   LogoutRoute
 } from './route'
 
@@ -108,6 +109,13 @@ export function Base({children}: BaseProps) {
                     current?.type === RouteType.ArticleList || current?.type === RouteType.Index
                   }>
                   {t('navbar.articles')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="file-text-o" />}
+                  route={PeerArticleListRoute.create({})}
+                  active={current?.type === RouteType.PeerArticleList}>
+                  {t('navbar.peerArticles')}
                 </NavItemLink>
 
                 <NavItemLink

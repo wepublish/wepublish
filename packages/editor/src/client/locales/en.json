@@ -238,7 +238,7 @@
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
           "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
           "invalidURL": "Invalid URL or iframe code",
-          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g."
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatted like e.g."
         }
       },
       "flexTeaser": {
@@ -306,6 +306,7 @@
         "charCount": "Characters count {{charCount}}",
         "insert": "Insert",
         "invalidLink": "Link input is invalid. Please check URL and try again.",
+        "invalidMail": "This mail address is invalid. Check mail and try again.",
         "link": "Link",
         "optionalDescription": "Optional description for the link",
         "remove": "Remove",
@@ -389,7 +390,8 @@
         "updatedAt": "Updated At",
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "{{modifiedAt, ccc PP p}}"
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "unregisteredUser": "(Not registered user)"
       },
       "state": {
         "approved": "Approved",
@@ -551,6 +553,7 @@
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
       "peers": "Peers",
+      "peerArticles": "Peerable articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "userRoles": "User Roles",
@@ -716,6 +719,20 @@
       "slug": "Slug",
       "title": "Payment Methods"
     },
+    "peerArticles": {
+      "peerArticles": "Peerable Articles",
+      "title": "Title",
+      "lead": "Lead",
+      "peer": "Peer",
+      "publishedAt": "Publication date",
+      "publicationDate": "{{publicationDate, ccc PP p}}",
+      "authors": "Authors",
+      "articleImage": "Article image",
+      "originalArticle": "Original article",
+      "notPublished": "Not yet published",
+      "toOriginalArticle": "To original article",
+      "filterByPeer": "Filter by peer"
+    },
     "peerList": {
       "overview": {
         "delete": "Delete",
@@ -733,6 +750,7 @@
         "callToActionImage": "Call To Action Image",
         "callToActionImageURL": "Call To Action Image URL",
         "callToActionURL": "Call To Action URL",
+        "checkOwnPeerProfileHelpBlock": "Preview your own peer profile: <2>Peering preview guide</2>",
         "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",

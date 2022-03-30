@@ -146,6 +146,11 @@ fragment FullBlock on Block {
     conversationID
   }
 
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+
   ... on BildwurfAdBlock {
     zoneID
   }
@@ -156,6 +161,7 @@ fragment FullBlock on Block {
     width
     height
     styleCustom
+    sandbox
   }
 
   ... on TeaserGridBlock {

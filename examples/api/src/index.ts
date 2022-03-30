@@ -15,7 +15,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer
+  WepublishServer,
+  AlgebraicCaptchaChallenge
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -298,6 +299,19 @@ async function asyncMain() {
     level: 'debug'
   })
 
+  const challenge = new AlgebraicCaptchaChallenge('changeMe', 600, {
+    width: 200,
+    height: 200,
+    background: '#ffffff',
+    noise: 5,
+    minValue: 1,
+    maxValue: 10,
+    operandAmount: 1,
+    operandTypes: ['+', '-'],
+    mode: 'formula',
+    targetSymbol: '?'
+  })
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
@@ -366,7 +380,8 @@ async function asyncMain() {
     playground: true,
     introspection: true,
     tracing: true,
-    logger
+    logger,
+    challenge
   })
 
   articleModelEvents.on('create', async (context, model) => {

@@ -18,6 +18,7 @@ import {IframeEmbed} from './embeds/iframe'
 
 import {useTranslation} from 'react-i18next'
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
+import {TikTokVideoEmbed} from './embeds/tikTok'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
@@ -112,6 +113,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
     case EmbedType.PolisConversation:
       return <PolisEmbed conversationID={value.conversationID} />
 
+    case EmbedType.TikTokVideo:
+      return <TikTokVideoEmbed userID={value.userID} videoID={value.videoID} />
+
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed zoneID={value.zoneID} />
 
@@ -123,6 +127,7 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
           width={value.width}
           height={value.height}
           styleCustom={value.styleCustom}
+          sandbox={value.sandbox}
         />
       ) : null
   }
