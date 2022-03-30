@@ -810,7 +810,11 @@ async function  applyApiServer() {
                 {
                   name: 'SEND_LOGIN_JWT_EXPIRES_MIN',
                   value: '10080'
-                }
+                },
+                {
+                  name: 'ENABLE_ANONYMOUS_COMMENTS',
+                  value: 'false'
+                },
               ],
               ports: [
                 {

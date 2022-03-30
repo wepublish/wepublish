@@ -306,6 +306,7 @@
         "charCount": "Characters count {{charCount}}",
         "insert": "Insert",
         "invalidLink": "Link input is invalid. Please check URL and try again.",
+        "invalidMail": "This mail address is invalid. Check mail and try again.",
         "link": "Link",
         "optionalDescription": "Optional description for the link",
         "remove": "Remove",
@@ -389,7 +390,8 @@
         "updatedAt": "Updated At",
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "{{modifiedAt, ccc PP p}}"
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "unregisteredUser": "(Not registered user)"
       },
       "state": {
         "approved": "Approved",
