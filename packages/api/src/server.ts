@@ -134,10 +134,8 @@ export class WepublishServer {
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       logger('server').error(err)
 
-      if (err.status === 413) {
-        res.status(413).send({error: `Payload cannot exceed ${MAX_PAYLOAD_SIZE}`})
-        return next(err)
-      }
+      res.status(err.status)
+      res.send(JSON.stringify(err))
     })
 
     this.app = app
