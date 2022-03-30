@@ -14,8 +14,7 @@ import {
   Toggle,
   HelpBlock,
   CheckPicker,
-  TagPicker,
-  InputNumber
+  TagPicker
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
