@@ -21,8 +21,8 @@ const DEFAULT_META_TAG_MAP: metaTagsMap = {
   title: ['Headline', 'title.value'],
   description: ['ImageDescription', 'description.value', 'Caption'],
   author: ['Artist', 'creator', 'Credit'],
-  source: ['WebStatement'],
-  licence: ['Copyright', 'CopyrightNotice', 'rights.value']
+  source: ['Copyright', 'CopyrightNotice', 'rights.value'],
+  licence: []
 }
 
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
