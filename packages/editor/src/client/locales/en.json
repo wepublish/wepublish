@@ -306,6 +306,7 @@
         "charCount": "Characters count {{charCount}}",
         "insert": "Insert",
         "invalidLink": "Link input is invalid. Please check URL and try again.",
+        "invalidMail": "This mail address is invalid. Check mail and try again.",
         "link": "Link",
         "optionalDescription": "Optional description for the link",
         "remove": "Remove",
