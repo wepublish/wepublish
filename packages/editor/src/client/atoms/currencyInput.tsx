@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import {InputNumber} from 'rsuite'
+import {Input, InputGroup} from 'rsuite'
 
 export interface CurrencyInputProps {
-  currency?: string
+  currency: string
   centAmount: number
   step?: number
   onChange(centAmount: number): void
@@ -16,23 +16,29 @@ export function CurrencyInput({
   disabled,
   onChange
 }: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number>((centAmount as number) / 100)
+  const [amount, setAmount] = useState<number | string>(centAmount / 100)
 
   useEffect(() => {
-    setAmount(centAmount / 100)
+    setAmount((centAmount / 100).toFixed(2))
   }, [centAmount])
 
   return (
     <div>
-      <InputNumber
-        prefix={currency}
-        step={step}
-        value={amount}
-        onChange={amount => {
-          setAmount(amount as number)
-          onChange((amount as number) * 100)
-        }}
-        disabled={disabled}></InputNumber>
+      <InputGroup>
+        <InputGroup.Addon>{currency}</InputGroup.Addon>
+        <Input
+          value={amount as string}
+          step={step}
+          type="number"
+          disabled={disabled}
+          onChange={amount => {
+            setAmount(parseFloat(amount))
+          }}
+          onBlur={() => {
+            onChange(Math.round(parseFloat(amount as string) * 100))
+          }}
+        />
+      </InputGroup>
     </div>
   )
 }

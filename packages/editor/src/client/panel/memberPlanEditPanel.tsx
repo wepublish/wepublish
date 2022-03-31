@@ -14,7 +14,8 @@ import {
   Toggle,
   HelpBlock,
   CheckPicker,
-  TagPicker
+  TagPicker,
+  InputGroup
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -237,9 +238,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
             </FormGroup>
+
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
-
               <CurrencyInput
                 currency="CHF"
                 centAmount={amountPerMonthMin}
