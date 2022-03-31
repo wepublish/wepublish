@@ -212,7 +212,8 @@
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}"
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "unregisteredUser": "(Utilisateur non enregistré)"
       },
       "state": {
         "approved": "Approuvé",
@@ -578,6 +579,7 @@
       "richText": {
         "label": "Texte enrichi",
         "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
+        "invalidMail": "Cette adresse e-mail n'est pas valide. Vérifier le mail et réessayer.",
         "apply": "Appliquer",
         "cancel": "Annuler",
         "charCount": "Nombre de caractères {{charCount}}",
