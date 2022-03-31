@@ -42,7 +42,7 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
           allowFullScreen
           width="100%"
           height={height}
-          sandbox={sandbox}
+          sandbox={sandbox?.length !== 0 ? sandbox : undefined}
         />
       </div>
     </div>
