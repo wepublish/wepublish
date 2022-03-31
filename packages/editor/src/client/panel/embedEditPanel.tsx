@@ -76,8 +76,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             // add iframe attributes if set in input
             const setEmbedOther = {
               title: iframe.title,
-              width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined,
+              width: iframe.width ? iframe.width : undefined,
+              height: iframe.height ? iframe.height : undefined,
               styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
               sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
             }

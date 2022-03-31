@@ -100,7 +100,7 @@ function embedForData(data: EmbedData) {
             allowFullScreen
             title={data.title}
             src={data.url}
-            width="100%"
+            width={data.width}
             height={data.height}
           />
         </div>

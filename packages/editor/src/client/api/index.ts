@@ -342,8 +342,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock';
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
 };
@@ -351,8 +351,8 @@ export type EmbedBlock = {
 export type EmbedBlockInput = {
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
 };
@@ -646,7 +646,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;

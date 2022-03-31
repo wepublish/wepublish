@@ -4,14 +4,14 @@ import {transformCssStringToObject} from '../../utility'
 export interface IframeEmbedProps {
   url?: string
   title?: string
-  width?: number
-  height?: number
+  width?: string
+  height?: string
   styleCustom?: string
   sandbox?: string
 }
 
 export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: IframeEmbedProps) {
-  const ratio = width !== undefined && height !== undefined ? width / height : 0
+  const ratio = width !== undefined && height !== undefined ? parseInt(width) / parseInt(height) : 0
   const noRatio = !!styleCustom || ratio === 0
   const styleCustomCss =
     noRatio && !!styleCustom && styleCustom !== ''
@@ -40,9 +40,9 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
           scrolling="no"
           frameBorder="0"
           allowFullScreen
-          width="100%"
+          width={width}
           height={height}
-          sandbox={sandbox?.length !== 0 ? sandbox : undefined}
+          sandbox={!!sandbox?.length ? sandbox : undefined}
         />
       </div>
     </div>
