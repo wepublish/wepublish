@@ -40,6 +40,21 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   }
 }
 
+function flattenObj(ob: any) {
+  const result: any = {}
+  for (const i in ob) {
+    if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
+      const temp = flattenObj(ob[i])
+      for (const j in temp) {
+        result[i + '.' + j] = temp[j]
+      }
+    } else {
+      result[i] = ob[i]
+    }
+  }
+  return result
+}
+
 export class MailchimpMailProvider extends BaseMailProvider {
   readonly mandrill: Mandrill
   readonly webhookEndpointSecret: string
@@ -95,7 +110,8 @@ export class MailchimpMailProvider extends BaseMailProvider {
     if (props.template) {
       try {
         const templateContent: any = []
-        for (const [key, value] of Object.entries(props.templateData || {})) {
+        const flattenedObject = flattenObj(props.templateData)
+        for (const [key, value] of Object.entries(flattenedObject || {})) {
           templateContent.push({
             name: key,
             content: value
