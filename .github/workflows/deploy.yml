@@ -4,9 +4,6 @@ on: [pull_request]
 
 jobs:
   deployment:
-    env:
-      GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +19,9 @@ jobs:
           password: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
       - name: Build and push
         uses: docker/build-push-action@v2
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
           tags: eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
       - uses: actions/setup-node@v2
