@@ -23,7 +23,7 @@ jobs:
           GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
-          tags: eu.gcr.io/wepublish-dev/wepublish/wepublish/main:foo
+          tags: eu.gcr.io/wepublish-dev/wepublish/wepublish/main:${GITHUB_SHA}
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
