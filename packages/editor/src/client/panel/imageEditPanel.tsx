@@ -105,7 +105,6 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint({x: 0.5, y: 0.5})
-        setFocalPoint({x: 0.5, y: 0.5})
 
         if (imageMetaData) {
           setTitle(imageMetaData.title)
