@@ -285,7 +285,8 @@
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
         "text": "Text",
-        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen."
+        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
+        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
       },
       "richTextTable": {
         "label": "Rich text Tabelle",
@@ -361,7 +362,8 @@
         "parent": "Elter",
         "parentDate": "{{parentDate,ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}"
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "unregisteredUser": "(Nicht registrierter Benutzer)"
       },
       "state": {
         "approved": "Angenommen",

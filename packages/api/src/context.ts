@@ -45,6 +45,7 @@ import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {User} from './db/user'
+import {ChallengeProvider} from './challenges/challengeProvider'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -105,12 +106,14 @@ export interface Context {
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
+  readonly challenge: ChallengeProvider
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
+  optionalAuthenticateUser(): UserSession | null
 
   generateJWT(props: GenerateJWTProps): string
   verifyJWT(token: string): string
@@ -139,6 +142,7 @@ export interface ContextOptions {
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
+  readonly challenge: ChallengeProvider
 }
 
 export interface SendMailFromProviderProps {
@@ -176,7 +180,8 @@ export async function contextFromRequest(
     hooks,
     mailProvider,
     mailContextOptions,
-    paymentProviders
+    paymentProviders,
+    challenge
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -375,6 +380,13 @@ export async function contextFromRequest(
       return session
     },
 
+    optionalAuthenticateUser() {
+      if (!session || session.type !== SessionType.User || !isSessionValid) {
+        return null
+      }
+      return session
+    },
+
     authenticateToken() {
       if (!session || session.type !== SessionType.Token) {
         throw new AuthenticationError('Invalid token session!')
@@ -447,7 +459,8 @@ export async function contextFromRequest(
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
 
       return updatedPayment
-    }
+    },
+    challenge
   }
 }
 
