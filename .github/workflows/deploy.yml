@@ -22,8 +22,8 @@ jobs:
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
-          push: true
-          tags: eu.gcr.io/${PROJECT_ID}/${{ github.repository }}/main:${{ github.sha }}
+#          push: true
+          tags: eu.gcr.io/wepublish-dev/${{ github.repository }}/main:${{ github.sha }}
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
