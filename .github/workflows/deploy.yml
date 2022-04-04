@@ -20,7 +20,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         env:
-          GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
+          GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
           tags: eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
