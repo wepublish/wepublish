@@ -40,19 +40,24 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   }
 }
 
+/*
+ * Function flattens an object for Mandrill template engine. Since the template engine does not support
+ * nested objects. Separator is "_"
+ */
+
 function flattenObj(ob: any) {
-  const result: any = {}
+  const nestedObject: any = {}
   for (const i in ob) {
     if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
-      const temp = flattenObj(ob[i])
-      for (const j in temp) {
-        result[i + '_' + j] = temp[j]
+      const returnedNestedObject = flattenObj(ob[i])
+      for (const j in returnedNestedObject) {
+        nestedObject[i + '_' + j] = returnedNestedObject[j]
       }
     } else {
-      result[i] = ob[i]
+      nestedObject[i] = ob[i]
     }
   }
-  return result
+  return nestedObject
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
