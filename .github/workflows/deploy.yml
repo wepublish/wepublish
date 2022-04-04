@@ -24,14 +24,10 @@ jobs:
           registry: gcr.io
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v2
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
           tags: eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
       - uses: actions/setup-node@v2
