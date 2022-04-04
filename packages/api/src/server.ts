@@ -135,9 +135,10 @@ export class WepublishServer {
       logger('server').error(err)
       if (err.status) {
         res.status(err.status)
-        res.send(JSON.stringify(err))
+        res.send({error: err.message})
+      } else {
+        res.status(500).end()
       }
-      next(err)
     })
 
     this.app = app
