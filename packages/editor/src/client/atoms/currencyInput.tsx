@@ -33,6 +33,7 @@ export function CurrencyInput({
           disabled={disabled}
           onChange={amount => {
             setAmount(parseFloat(amount))
+            console.log(amount.split('.'))
           }}
           onBlur={() => {
             onChange(Math.round(parseFloat(amount as string) * 100))
