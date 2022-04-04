@@ -20,8 +20,8 @@ type metaTagsMap = {
 const DEFAULT_META_TAG_MAP: metaTagsMap = {
   title: ['Headline', 'title.value'],
   description: ['ImageDescription', 'description.value', 'Caption'],
-  author: ['Artist', 'creator', 'Credit'],
   source: ['Copyright', 'CopyrightNotice', 'rights.value'],
+  link: ['WebStatement'],
   licence: []
 }
 
@@ -30,8 +30,8 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
   const [imageMetaData, setImageMetaData] = useState<ImageMetaData>({
     title: '',
     description: '',
-    author: '',
     source: '',
+    link: '',
     licence: ''
   })
   async function handleUpload(file: File) {
@@ -57,8 +57,8 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
     const fields: ImageMetaData = {
       title: '',
       description: '',
-      author: '',
       source: '',
+      link: '',
       licence: ''
     }
     for (const field in DEFAULT_META_TAG_MAP) {
@@ -73,8 +73,8 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
     return {
       title: fields.title,
       description: fields.description,
-      author: fields.author,
       source: fields.source,
+      link: fields.link,
       licence: fields.licence
     }
   }

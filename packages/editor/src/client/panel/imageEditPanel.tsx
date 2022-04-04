@@ -45,8 +45,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
 
-  const [author, setAuthor] = useState('')
   const [source, setSource] = useState('')
+  const [link, setLink] = useState('')
   const [license, setLicense] = useState('')
 
   const [fileSize, setFileSize] = useState(0)
@@ -111,8 +111,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
           setTitle(imageMetaData.title)
           setDescription(imageMetaData.description)
           setLicense(imageMetaData.licence)
+          setLink(imageMetaData.link)
           setSource(imageMetaData.source)
-          setAuthor(imageMetaData.author)
         }
 
         setLoading(false)
@@ -142,8 +142,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         setDescription(image.description ?? '')
         setTags(image.tags)
 
-        setAuthor(image.author ?? '')
         setSource(image.source ?? '')
+        setLink(image.link ?? '')
         setLicense(image.license ?? '')
 
         setOriginalImageURL(image.url ?? '')
@@ -174,8 +174,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
       description: description || undefined,
       tags,
 
-      author: author || undefined,
       source: source || undefined,
+      link: link || undefined,
       license: license || undefined,
 
       focalPoint
@@ -335,17 +335,17 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                 <FormGroup>
                   <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
-                    value={author}
+                    value={source}
                     disabled={isDisabled}
-                    onChange={value => setAuthor(value)}
+                    onChange={value => setSource(value)}
                   />
                 </FormGroup>
                 <FormGroup>
                   <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
-                    value={source}
+                    value={link}
                     disabled={isDisabled}
-                    onChange={value => setSource(value)}
+                    onChange={value => setLink(value)}
                   />
                   <p>{t('images.panels.sourceLink')}</p>
                 </FormGroup>
