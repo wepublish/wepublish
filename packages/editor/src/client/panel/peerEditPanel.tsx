@@ -185,7 +185,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                       padding: '5px',
                       marginLeft: '5px',
                       border: '1px solid #575757'
-                    }}></div>
+                    }}
+                  />
                 </div>
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
@@ -199,7 +200,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                       padding: '5px',
                       marginLeft: '5px',
                       border: '1px solid #575757'
-                    }}></div>
+                    }}
+                  />
                 </div>
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.callToActionText')}>
