@@ -4,6 +4,9 @@ on: [pull_request]
 
 jobs:
   deployment:
+    env:
+      GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +19,7 @@ jobs:
         uses: google-github-actions/auth@v0
         with:
           token_format: access_token
-          credentials_json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+          credentials_json: ${GCLOUD_AUTH}
       - name: Login to GCR
         uses: docker/login-action@v1
         with:
@@ -25,8 +28,6 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
       - name: Build and push
         uses: docker/build-push-action@v2
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         with:
           tags: eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
       - uses: actions/setup-node@v2
