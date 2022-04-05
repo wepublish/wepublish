@@ -173,6 +173,7 @@ export interface User {
   readonly createdAt: Date
   readonly modifiedAt: Date
   readonly name: string
+  readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
   readonly emailVerifiedAt: Date | null
@@ -193,6 +194,7 @@ export interface User {
 
 export interface UserInput {
   readonly name: string
+  readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
   readonly emailVerifiedAt: Date | null
