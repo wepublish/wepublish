@@ -12,6 +12,7 @@ import {RouteProvider, Route} from '../shared/route/routeContext'
 import {FacebookProvider} from '../shared/atoms/facebookEmbed'
 import {InstagramProvider} from '../shared/atoms/instagramEmbed'
 import {TwitterProvider} from '../shared/atoms/twitterEmbed'
+import {TikTokProvider} from '../shared/atoms/tikTokEmbed'
 
 import {ElementID} from '../shared/elementID'
 import {App} from '../shared/app'
@@ -55,13 +56,15 @@ export async function renderApp({
             <HelmetProvider context={helmetContext}>
               <StyleProvider renderer={styleRenderer}>
                 <FacebookProvider sdkLanguage={'de_DE'}>
-                  <InstagramProvider>
-                    <TwitterProvider>
-                      <RouteProvider initialRoute={initialRoute}>
-                        <App />
-                      </RouteProvider>
-                    </TwitterProvider>
-                  </InstagramProvider>
+                  <TikTokProvider>
+                    <InstagramProvider>
+                      <TwitterProvider>
+                        <RouteProvider initialRoute={initialRoute}>
+                          <App />
+                        </RouteProvider>
+                      </TwitterProvider>
+                    </InstagramProvider>
+                  </TikTokProvider>
                 </FacebookProvider>
               </StyleProvider>
             </HelmetProvider>

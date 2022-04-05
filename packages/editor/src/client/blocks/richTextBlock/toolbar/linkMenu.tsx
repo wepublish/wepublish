@@ -27,7 +27,7 @@ export function LinkMenu() {
   enum prefixType {
     http = 'http://',
     https = 'https://',
-    mailto = 'mailto://',
+    mailto = 'mailto:',
     other = 'other'
   }
 
@@ -36,12 +36,17 @@ export function LinkMenu() {
   const [selection, setSelection] = useState<Range | null>(null)
 
   const [isValidURL, setIsValidURL] = useState(false)
+  const [isValidMail, setIsValidMail] = useState(false)
   const isDisabled = !url || !title
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    validateURL(url).then(value => setIsValidURL(value))
+    if (prefix === prefixType.mailto) {
+      validateMail(url).then(value => setIsValidMail(value))
+    } else {
+      validateURL(url).then(value => setIsValidURL(value))
+    }
 
     if (url.startsWith(prefixType.https)) {
       setPrefix(prefixType.https)
@@ -104,7 +109,12 @@ export function LinkMenu() {
 
             <FormControl value={url} onChange={url => setURL(url)} />
           </InputGroup>
-          <HelpBlock>{url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}</HelpBlock>
+          {prefix !== prefixType.mailto && url && !isValidURL ? (
+            <HelpBlock> {t('blocks.richText.invalidLink')}</HelpBlock>
+          ) : undefined}
+          {prefix === prefixType.mailto && url && !isValidMail ? (
+            <HelpBlock> {t('blocks.richText.invalidMail')} </HelpBlock>
+          ) : undefined}
         </FormGroup>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
@@ -135,6 +145,14 @@ export function LinkMenu() {
       </Form>
     </>
   )
+}
+
+async function validateMail(mail: string) {
+  if (mail) {
+    const pattern = new RegExp('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$', 'i')
+    return pattern.test(mail)
+  }
+  return false
 }
 
 async function validateURL(url: string) {
