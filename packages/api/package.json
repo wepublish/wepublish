@@ -50,6 +50,7 @@
     "graphql-tools": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "mandrill-api": "^1.0.45",
+    "node-cache": "^5.1.2",
     "node-fetch": "^2.6.0",
     "openid-client": "^3.14.0",
     "pino": "^6.11.0",
