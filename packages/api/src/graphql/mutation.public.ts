@@ -364,7 +364,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
-      description: 'xxxx',
+      description: 'Allows authenticated users to create additional subscriptions',
       async resolve(
         root,
         {
