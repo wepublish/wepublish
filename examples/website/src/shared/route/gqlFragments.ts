@@ -75,6 +75,7 @@ export const commentsDataFragment = gql`
     user {
       id
       name
+      firstName
       preferredName
     }
   }

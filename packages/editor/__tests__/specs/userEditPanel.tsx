@@ -157,6 +157,7 @@ describe('User Edit Panel', () => {
           variables: {
             input: {
               name: user.name,
+              firstName: undefined,
               preferredName: undefined,
               email: user.email,
               active: user.active,
