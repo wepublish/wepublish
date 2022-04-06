@@ -50,6 +50,7 @@ import {logger} from '../server'
 import {NotFound} from '../error'
 import {Invoice} from '../db/invoice'
 import {GraphQLPublicSubscription} from './subscription'
+import {GraphQLChallenge} from './challenge'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -453,6 +454,22 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         //  event hooks to finish before we return data. Will be solved in WPC-498
         await new Promise(resolve => setTimeout(resolve, 100))
         return await dbAdapter.invoice.getInvoiceByID(id)
+      }
+    },
+
+    // Challenge
+    // =======
+    challenge: {
+      type: GraphQLNonNull(GraphQLChallenge),
+      description:
+        'This query generates a challenge which can be used to access protected endpoints.',
+      async resolve(_, {input}, {challenge}) {
+        const c = await challenge.generateChallenge()
+        return {
+          challenge: c.challenge,
+          challengeID: c.challengeID,
+          validUntil: c.validUntil
+        }
       }
     }
   }

@@ -116,7 +116,7 @@ export function Base({children}: BaseProps) {
                   icon={<Icon icon="file-text-o" />}
                   route={PeerArticleListRoute.create({})}
                   active={current?.type === RouteType.PeerArticleList}>
-                  {t('navbar.peerArticle')}
+                  {t('navbar.peerArticles')}
                 </NavItemLink>
 
                 <NavItemLink

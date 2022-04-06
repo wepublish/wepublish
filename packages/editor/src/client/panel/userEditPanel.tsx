@@ -41,6 +41,7 @@ export interface UserEditPanelProps {
 
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState<string | undefined>()
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
@@ -82,6 +83,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     if (data?.user) {
       setName(data.user.name)
       setPreferredName(data.user.preferredName ?? undefined)
+      setFirstName(data.user.firstName ?? undefined)
       setEmail(data.user.email)
       setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
@@ -115,6 +117,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           id,
           input: {
             name,
+            firstName,
             preferredName,
             email,
             emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
@@ -135,6 +138,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         variables: {
           input: {
             name,
+            firstName,
             preferredName,
             email,
             emailVerifiedAt: null,
@@ -160,6 +164,15 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       <Drawer.Body>
         <Panel>
           <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.firstName')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.firstName')}
+                value={firstName}
+                disabled={isDisabled}
+                onChange={value => setFirstName(value)}
+              />
+            </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userList.panels.name')}</ControlLabel>
               <FormControl

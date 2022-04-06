@@ -3,6 +3,7 @@ fragment FullUser on User {
     createdAt
     modifiedAt
     name
+    firstName
     preferredName
     address {
         streetAddress

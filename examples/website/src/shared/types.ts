@@ -316,6 +316,7 @@ export interface IFrameEmbed {
   width?: number
   height?: number
   styleCustom?: string
+  sandbox?: string
 }
 
 export type EmbedData =
@@ -439,6 +440,7 @@ export interface User {
   readonly createdAt: Date
   readonly modifiedAt: Date
   readonly name: string
+  readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
 

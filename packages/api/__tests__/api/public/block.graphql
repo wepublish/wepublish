@@ -134,6 +134,7 @@ fragment FullBlock on Block {
     width
     height
     styleCustom
+    sandbox
   }
 
   ... on TeaserGridBlock {

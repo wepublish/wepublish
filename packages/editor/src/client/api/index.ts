@@ -250,7 +250,8 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
-  user: User;
+  guestUsername?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
@@ -344,6 +345,7 @@ export type EmbedBlock = {
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
   styleCustom?: Maybe<Scalars['String']>;
+  sandbox?: Maybe<Scalars['String']>;
 };
 
 export type EmbedBlockInput = {
@@ -352,6 +354,7 @@ export type EmbedBlockInput = {
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
   styleCustom?: Maybe<Scalars['String']>;
+  sandbox?: Maybe<Scalars['String']>;
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -642,6 +645,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -657,6 +661,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>;
   active?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type MemberPlanInput = {
@@ -664,6 +669,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
+  tags: Array<Scalars['String']>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -1711,7 +1717,7 @@ export type Subscription = {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
-  user: User;
+  user?: Maybe<User>;
   memberPlan: MemberPlan;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: Scalars['Int'];
@@ -1895,6 +1901,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
@@ -1940,6 +1947,7 @@ export type UserFilter = {
 
 export type UserInput = {
   name: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
@@ -2606,7 +2614,7 @@ type FullBlock_BildwurfAdBlock_Fragment = (
 
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
-  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
+  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
 );
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
@@ -2667,11 +2675,11 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
-  & { user: (
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
+  & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  ), revisions: Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
   )> }
@@ -2679,11 +2687,11 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
-  & { user: (
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
+  & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  ), revisions: Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
   )>, parentComment?: Maybe<(
@@ -2863,7 +2871,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2872,7 +2880,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -3513,10 +3521,10 @@ export type DeletePeerMutation = (
 export type FullSubscriptionFragment = (
   { __typename?: 'Subscription' }
   & Pick<Subscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
-  & { user: (
+  & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  ), memberPlan: (
+  )>, memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
   ), properties: Array<(
@@ -3662,7 +3670,7 @@ export type DeleteTokenMutation = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'firstName' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
@@ -4186,6 +4194,7 @@ export const FullBlockFragmentDoc = gql`
     width
     height
     styleCustom
+    sandbox
   }
   ... on TeaserGridBlock {
     teasers {
@@ -4235,6 +4244,7 @@ export const FullUserFragmentDoc = gql`
   createdAt
   modifiedAt
   name
+  firstName
   preferredName
   address {
     streetAddress
@@ -4264,6 +4274,7 @@ export const FullParentCommentFragmentDoc = gql`
   user {
     ...FullUser
   }
+  guestUsername
   revisions {
     text
     createdAt
@@ -4277,6 +4288,7 @@ export const FullCommentFragmentDoc = gql`
   id
   state
   rejectionReason
+  guestUsername
   user {
     ...FullUser
   }
@@ -4393,6 +4405,7 @@ export const MemberPlanRefFragmentDoc = gql`
   name
   slug
   active
+  tags
   image {
     ...ImageRef
   }
@@ -4401,6 +4414,7 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
+  tags
   amountPerMonthMin
   availablePaymentMethods {
     paymentMethods {

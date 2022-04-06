@@ -52,6 +52,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: null,
         oauth2Accounts: [],
         name: input.name,
+        firstName: input.firstName,
         preferredName: input.preferredName,
         address: input.address,
         active: input.active,
@@ -77,6 +78,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       input: {
         email: tempUser.email,
         name: tempUser.name,
+        firstName: tempUser.firstName,
         address: tempUser.address,
         preferredName: tempUser.preferredName,
         active: true,
@@ -100,6 +102,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: user.emailVerifiedAt,
         oauth2Accounts: user.oauth2Accounts,
         name: user.name,
+        firstName: user.firstName,
         preferredName: user.preferredName,
         address: user.address,
         active: user.active,
@@ -120,6 +123,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         $set: {
           modifiedAt: new Date(),
           name: input.name,
+          firstName: input.firstName,
           preferredName: input.preferredName,
           address: input.address,
           active: input.active,
@@ -172,6 +176,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: user.emailVerifiedAt,
         oauth2Accounts: user.oauth2Accounts,
         name: user.name,
+        firstName: user.firstName,
         preferredName: user.preferredName,
         address: user.address,
         active: user.active,
@@ -195,6 +200,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: user.emailVerifiedAt,
         oauth2Accounts: user.oauth2Accounts,
         name: user.name,
+        firstName: user.firstName,
         preferredName: user.preferredName,
         address: user.address,
         active: user.active,
@@ -219,6 +225,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: user.emailVerifiedAt,
         oauth2Accounts: user.oauth2Accounts,
         name: user.name,
+        firstName: user.firstName,
         preferredName: user.preferredName,
         address: user.address,
         active: user.active,
@@ -248,6 +255,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         emailVerifiedAt: user.emailVerifiedAt,
         oauth2Accounts: user.oauth2Accounts,
         name: user.name,
+        firstName: user.firstName,
         preferredName: user.preferredName,
         address: user.address,
         active: user.active,
@@ -305,6 +313,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       textFilter.$and?.push({
         $or: [
           {name: {$regex: escapeRegExp(filter.text), $options: 'im'}},
+          {firstName: {$regex: escapeRegExp(filter.text), $options: 'im'}},
           {email: {$regex: escapeRegExp(filter.text), $options: 'im'}}
         ]
       })

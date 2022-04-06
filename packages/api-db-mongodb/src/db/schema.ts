@@ -108,6 +108,7 @@ export interface DBUser {
   email: string
   emailVerifiedAt: Date | null
   name: string
+  firstName?: string
   preferredName?: string
   address?: UserAddress
   password: string
@@ -163,6 +164,7 @@ export interface DBTempUser {
   modifiedAt: Date
 
   name: string
+  firstName?: string
   preferredName?: string
   email: string
 
@@ -366,6 +368,7 @@ export interface DBMemberPlan {
 
   name: string
   slug: string
+  tags: string[]
   imageID?: string
   description: RichTextNode[]
   active: boolean

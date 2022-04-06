@@ -43,6 +43,8 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.ModifiedAt
     case 'name':
       return UserSort.Name
+    case 'firstName':
+      return UserSort.FirstName
     default:
       return null
   }
@@ -175,6 +177,16 @@ export function UserList() {
               {({modifiedAt}: FullUserFragment) =>
                 t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
               }
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
+            <Cell dataKey={'firstName'}>
+              {(rowData: FullUserFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.id})}>
+                  {rowData.firstName || ''}
+                </Link>
+              )}
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>

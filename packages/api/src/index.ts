@@ -56,3 +56,6 @@ export * from './mails/mailProvider'
 export * from './mails/MailgunMailProvider'
 export * from './mails/MailchimpMailProvider'
 export * from './mails/mailContext'
+
+export * from './challenges/challengeProvider'
+export * from './challenges/algebraicCaptchaChallenge'

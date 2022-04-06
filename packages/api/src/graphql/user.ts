@@ -52,6 +52,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
+    firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
 
@@ -84,6 +85,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
     id: {type: GraphQLNonNull(GraphQLString)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
+    firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
@@ -138,6 +140,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
 
@@ -156,6 +159,7 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
 
     preferredName: {type: GraphQLString},

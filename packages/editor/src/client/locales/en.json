@@ -306,6 +306,7 @@
         "charCount": "Characters count {{charCount}}",
         "insert": "Insert",
         "invalidLink": "Link input is invalid. Please check URL and try again.",
+        "invalidMail": "This mail address is invalid. Check mail and try again.",
         "link": "Link",
         "optionalDescription": "Optional description for the link",
         "remove": "Remove",
@@ -389,7 +390,8 @@
         "updatedAt": "Updated At",
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "{{modifiedAt, ccc PP p}}"
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "unregisteredUser": "(Not registered user)"
       },
       "state": {
         "approved": "Approved",
@@ -551,7 +553,7 @@
       "paymentMethods": "Payment Methods",
       "peering": "Peering",
       "peers": "Peers",
-      "peerArticle": "Peered articles",
+      "peerArticles": "Peerable articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
       "subscriptions": "Subscriptions",
@@ -719,7 +721,7 @@
       "title": "Payment Methods"
     },
     "peerArticles": {
-      "peerArticles": "Peered Articles",
+      "peerArticles": "Peerable Articles",
       "title": "Title",
       "lead": "Lead",
       "peer": "Peer",
@@ -749,6 +751,7 @@
         "callToActionImage": "Call To Action Image",
         "callToActionImageURL": "Call To Action Image URL",
         "callToActionURL": "Call To Action URL",
+        "checkOwnPeerProfileHelpBlock": "Preview your own peer profile: <2>Peering preview guide</2>",
         "ctaImageInfo": "Recommended call to action image size: 728x90",
         "text": "Text",
         "image": "Image",
@@ -843,6 +846,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newUser": "New User",
+        "firstName": "First Name",
         "exportSubscriptionsCsv": "Export CSV",
         "noDescription": "No Description",
         "noUsersFound": "No Users found",
@@ -872,6 +876,7 @@
         "payedUntil": "Payed Until",
         "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
         "preferredName": "Preferred Name",
+        "firstName": "First Name",
         "remove": "Remove",
         "resetPassword": "Reset Password",
         "sendWebsiteLogin": "Send Login Link for Website",

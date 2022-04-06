@@ -15,6 +15,7 @@ export interface DeleteTempUserArgs {
 
 export interface TempUserInput {
   readonly name: string
+  readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
 
@@ -26,6 +27,7 @@ export interface TempUser {
   readonly createdAt: Date
   readonly modifiedAt: Date
   readonly name: string
+  readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
 

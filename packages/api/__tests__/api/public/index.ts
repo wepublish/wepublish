@@ -161,7 +161,7 @@ export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
   parentID?: Maybe<Scalars['ID']>
-  user: User
+  user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
@@ -202,6 +202,7 @@ export type EmbedBlock = {
   width?: Maybe<Scalars['Int']>
   height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
+  sandbox?: Maybe<Scalars['String']>
 }
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -455,6 +456,7 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   email: Scalars['String']
   memberPlanID?: Maybe<Scalars['ID']>
@@ -868,6 +870,7 @@ export type User = {
   id: Scalars['String']
   name: Scalars['String']
   email: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   subscription?: Maybe<UserSubscription>
@@ -897,6 +900,7 @@ export type UserAddressInput = {
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
 }
@@ -1181,7 +1185,7 @@ type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
-  'url' | 'title' | 'width' | 'height' | 'styleCustom'
+  'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
@@ -1605,6 +1609,7 @@ export const FullBlock = gql`
       width
       height
       styleCustom
+      sandbox
     }
     ... on TeaserGridBlock {
       teasers {

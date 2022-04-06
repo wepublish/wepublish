@@ -22,6 +22,7 @@ export class MongoDBTempUserAdapter implements DBTempUserAdapter {
       createdAt: new Date(),
       modifiedAt: new Date(),
       name: input.name,
+      firstName: input.firstName,
       preferredName: input.preferredName,
       email: input.email,
       address: input.address
@@ -38,6 +39,7 @@ export class MongoDBTempUserAdapter implements DBTempUserAdapter {
         $set: {
           modifiedAt: new Date(),
           name: input.name,
+          firstName: input.firstName,
           preferredName: input.preferredName,
           email: input.email,
           address: input.address
