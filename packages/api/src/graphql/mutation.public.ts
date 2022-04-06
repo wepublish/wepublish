@@ -226,6 +226,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicPayment),
       args: {
         name: {type: GraphQLNonNull(GraphQLString)},
+        firstName: {type: GraphQLString},
         preferredName: {type: GraphQLString},
         email: {type: GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
@@ -245,6 +246,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         root,
         {
           name,
+          firstName,
           preferredName,
           email,
           address,
@@ -309,6 +311,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const user = await dbAdapter.user.createUser({
           input: {
             name,
+            firstName,
             preferredName,
             email: tempEmail,
             emailVerifiedAt: null,
@@ -452,7 +455,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
-        const {name, email, preferredName, address} = input
+        const {name, email, firstName, preferredName, address} = input
         // TODO: implement new email check
 
         if (user.email !== email) {
@@ -465,6 +468,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           input: {
             ...user,
             name,
+            firstName,
             preferredName,
             address
           }
