@@ -285,7 +285,7 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
-          {currentSubscription && isTempUser(currentSubscription.user.id) && (
+          {currentSubscription && isTempUser(currentSubscription.user?.id) && (
             <Message
               showIcon
               type="warning"
@@ -294,7 +294,7 @@ export function SubscriptionList() {
           )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
-              {currentSubscription?.user.name || t('subscriptionList.panels.unknown')}
+              {currentSubscription?.user?.name || t('subscriptionList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>

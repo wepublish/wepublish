@@ -4,6 +4,7 @@ import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
+import Maybe from 'graphql/tsutils/Maybe'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -11,7 +12,7 @@ export enum LocalStorageKey {
 
 export const TEMP_USER_PREFIX = '__temp_'
 
-export function isTempUser(userID: string | null): boolean {
+export function isTempUser(userID: string | null | Maybe<string>): boolean {
   return !!userID?.startsWith(TEMP_USER_PREFIX)
 }
 

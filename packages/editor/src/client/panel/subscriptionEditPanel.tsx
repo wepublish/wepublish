@@ -50,7 +50,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
 
-  const [user, setUser] = useState<FullUserFragment>()
+  const [user, setUser] = useState<FullUserFragment | null>()
   const [isTempUser, setIsTempUser] = useState<boolean>()
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
@@ -65,7 +65,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [deactivation, setDeactivation] = useState<DeactivationFragment | null>()
 
   const [userSearch, setUserSearch] = useState<string>('')
-  const [users, setUsers] = useState<FullUserFragment[]>([])
+  const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>([])
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
@@ -78,9 +78,9 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   useEffect(() => {
     if (data?.subscription) {
       setUser(data.subscription.user)
-      setIsTempUser(checkIsTempUser(data.subscription.user.id))
+      setIsTempUser(checkIsTempUser(data.subscription.user?.id))
       setUsers([
-        ...users.filter(user => user.id !== data.subscription?.user.id),
+        ...users.filter(user => user?.id !== data.subscription?.user?.id),
         data.subscription.user
       ])
       setMemberPlan(data.subscription.memberPlan)
@@ -352,9 +352,9 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <SelectPicker
                 block
                 disabled={isDisabled || isDeactivated}
-                data={users.map(usr => ({value: usr.id, label: usr.name}))}
+                data={users.map(usr => ({value: usr?.id, label: usr?.name}))}
                 value={user?.id}
-                onChange={value => setUser(users.find(usr => usr.id === value))}
+                onChange={value => setUser(users.find(usr => usr?.id === value))}
                 onSearch={searchString => {
                   setUserSearch(searchString)
                   refetchUsers()
