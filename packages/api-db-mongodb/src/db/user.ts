@@ -458,6 +458,9 @@ function userSortFieldForSort(sort: UserSort) {
 
     case UserSort.Name:
       return 'name'
+
+    case UserSort.FirstName:
+      return 'firstName'
   }
 }
 
@@ -470,6 +473,9 @@ function userDateForSort(user: DBUser, sort: UserSort): Date {
       return user.modifiedAt
 
     case UserSort.Name:
+      return user.createdAt
+
+    case UserSort.FirstName:
       return user.createdAt
   }
 }
