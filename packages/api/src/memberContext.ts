@@ -10,12 +10,14 @@ import {
   ONE_MONTH_IN_MILLISECONDS,
   removePrefixTempUser
 } from './utility'
-import {PaymentPeriodicity} from './db/memberPlan'
+import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {MailContext, SendMailType} from './mails/mailContext'
 import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from './db/subscription'
+import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
+import {PaymentMethod} from './db/paymentMethod'
 
 export interface HandleSubscriptionChangeProps {
   subscription: Subscription
@@ -786,5 +788,120 @@ export class MemberContext implements MemberContext {
         }
       }
     })
+  }
+
+  /**
+   * Function used to
+   * @param memberPlanID
+   * @param memberPlanSlug
+   * @param paymentMethodID
+   * @param paymentMethodSlug
+   */
+
+  async validateInputParamsCreateSubscription(
+    memberPlanID: string | null,
+    memberPlanSlug: string | null,
+    paymentMethodID: string | null,
+    paymentMethodSlug: string | null
+  ) {
+    if (
+      (memberPlanID == null && memberPlanSlug == null) ||
+      (memberPlanID != null && memberPlanSlug != null)
+    ) {
+      throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+    }
+
+    if (
+      (paymentMethodID == null && paymentMethodSlug == null) ||
+      (paymentMethodID != null && paymentMethodSlug != null)
+    ) {
+      throw new UserInputError('You must provide either `paymentMethodID` or `paymentMethodSlug`.')
+    }
+  }
+
+  async getMemberPlanByIDOrSlug(
+    loaders: DataLoaderContext,
+    memberPlanSlug: string,
+    memberPlanID: string
+  ) {
+    const memberPlan = memberPlanID
+      ? await loaders.activeMemberPlansByID.load(memberPlanID)
+      : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+    if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+    return memberPlan
+  }
+
+  async getPaymentMethodByIDOrSlug(
+    loaders: DataLoaderContext,
+    paymentMethodSlug: string,
+    paymentMethodID: string
+  ) {
+    const paymentMethod = paymentMethodID
+      ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+    if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+    return paymentMethod
+  }
+
+  async checkSubscriptionValidPaymentConfiguration(
+    memberPlan: MemberPlan,
+    autoRenew: boolean,
+    paymentPeriodicity: PaymentPeriodicity,
+    paymentMethod: PaymentMethod
+  ) {
+    if (
+      !memberPlan.availablePaymentMethods.some(apm => {
+        if (apm.forceAutoRenewal && !autoRenew) return false
+        return (
+          apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+          apm.paymentMethodIDs.includes(paymentMethod.id)
+        )
+      })
+    )
+      throw new PaymentConfigurationNotAllowed()
+  }
+
+  async processSubscriptionProperties(subscriptionProperties: any) {
+    return Array.isArray(subscriptionProperties)
+      ? subscriptionProperties.map(property => {
+          return {
+            public: true,
+            key: property.key,
+            value: property.value
+          }
+        })
+      : []
+  }
+
+  async createSubscription(
+    dbAdapter: DBAdapter,
+    userID: string,
+    paymentMethod: PaymentMethod,
+    paymentPeriodicity: PaymentPeriodicity,
+    monthlyAmount: number,
+    memberPlan: MemberPlan,
+    properties: any,
+    autoRenew: boolean
+  ) {
+    const subscription = await dbAdapter.subscription.createSubscription({
+      input: {
+        userID,
+        startsAt: new Date(),
+        paymentMethodID: paymentMethod.id,
+        paymentPeriodicity,
+        paidUntil: null,
+        monthlyAmount,
+        deactivation: null,
+        memberPlanID: memberPlan.id,
+        properties,
+        autoRenew
+      }
+    })
+
+    if (!subscription) {
+      logger('mutation.public').error('Could not create new subscription for userID "%s"', userID)
+      throw new InternalError()
+    }
+    return subscription
   }
 }

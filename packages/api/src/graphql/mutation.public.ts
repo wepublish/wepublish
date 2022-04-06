@@ -265,45 +265,34 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {dbAdapter, loaders, memberContext, createPaymentWithProvider}
       ) {
-        if (
-          (memberPlanID == null && memberPlanSlug == null) ||
-          (memberPlanID != null && memberPlanSlug != null)
-        ) {
-          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
-        }
+        await memberContext.validateInputParamsCreateSubscription(
+          memberPlanID,
+          memberPlanSlug,
+          paymentMethodID,
+          paymentMethodSlug
+        )
 
-        if (
-          (paymentMethodID == null && paymentMethodSlug == null) ||
-          (paymentMethodID != null && paymentMethodSlug != null)
-        ) {
-          throw new UserInputError(
-            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
-          )
-        }
+        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
+          loaders,
+          memberPlanSlug,
+          memberPlanID
+        )
 
-        const memberPlan = memberPlanID
-          ? await loaders.activeMemberPlansByID.load(memberPlanID)
-          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+          loaders,
+          paymentMethodSlug,
+          paymentMethodID
+        )
 
-        const paymentMethod = paymentMethodID
-          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-        if (!paymentMethod)
-          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
-
+        // Check that monthly amount not
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
-        if (
-          !memberPlan.availablePaymentMethods.some(apm => {
-            if (apm.forceAutoRenewal && !autoRenew) return false
-            return (
-              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethod.id)
-            )
-          })
+        await memberContext.checkSubscriptionValidPaymentConfiguration(
+          memberPlan,
+          autoRenew,
+          paymentPeriodicity,
+          paymentMethod
         )
-          throw new PaymentConfigurationNotAllowed()
 
         const userExists = await dbAdapter.user.getUser(email)
         if (userExists) throw new EmailAlreadyInUseError()
@@ -323,38 +312,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new InternalError()
         }
 
-        const properties = Array.isArray(subscriptionProperties)
-          ? subscriptionProperties.map(property => {
-              return {
-                public: true,
-                key: property.key,
-                value: property.value
-              }
-            })
-          : []
+        const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await dbAdapter.subscription.createSubscription({
-          input: {
-            userID: `${TEMP_USER_PREFIX}${tempUser.id}`,
-            startsAt: new Date(),
-            paymentMethodID: paymentMethod.id,
-            paymentPeriodicity,
-            paidUntil: null,
-            monthlyAmount,
-            deactivation: null,
-            memberPlanID: memberPlan.id,
-            properties,
-            autoRenew
-          }
-        })
-
-        if (!subscription) {
-          logger('mutation.public').error(
-            'Could not create new subscription for userID "%s"',
-            tempUser.id
-          )
-          throw new InternalError()
-        }
+        const subscription = await memberContext.createSubscription(
+          dbAdapter,
+          `${TEMP_USER_PREFIX}${tempUser.id}`,
+          paymentMethod,
+          paymentPeriodicity,
+          monthlyAmount,
+          memberPlan,
+          properties,
+          autoRenew
+        )
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
@@ -415,78 +384,45 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // authenticate user
         const {user} = authenticateUser()
 
-        if (
-          (memberPlanID == null && memberPlanSlug == null) ||
-          (memberPlanID != null && memberPlanSlug != null)
-        ) {
-          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
-        }
+        await memberContext.validateInputParamsCreateSubscription(
+          memberPlanID,
+          memberPlanSlug,
+          paymentMethodID,
+          paymentMethodSlug
+        )
 
-        if (
-          (paymentMethodID == null && paymentMethodSlug == null) ||
-          (paymentMethodID != null && paymentMethodSlug != null)
-        ) {
-          throw new UserInputError(
-            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
-          )
-        }
-
-        const memberPlan = memberPlanID
-          ? await loaders.activeMemberPlansByID.load(memberPlanID)
-          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
-
-        const paymentMethod = paymentMethodID
-          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-        if (!paymentMethod)
-          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
+          loaders,
+          memberPlanSlug,
+          memberPlanID
+        )
+        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+          loaders,
+          paymentMethodSlug,
+          paymentMethodID
+        )
 
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
-        if (
-          !memberPlan.availablePaymentMethods.some(apm => {
-            if (apm.forceAutoRenewal && !autoRenew) return false
-            return (
-              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethod.id)
-            )
-          })
+        await memberContext.checkSubscriptionValidPaymentConfiguration(
+          memberPlan,
+          autoRenew,
+          paymentPeriodicity,
+          paymentMethod
         )
-          throw new PaymentConfigurationNotAllowed()
 
-        const properties = Array.isArray(subscriptionProperties)
-          ? subscriptionProperties.map(property => {
-              return {
-                public: true,
-                key: property.key,
-                value: property.value
-              }
-            })
-          : []
+        const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await dbAdapter.subscription.createSubscription({
-          input: {
-            userID: user.id,
-            startsAt: new Date(),
-            paymentMethodID: paymentMethod.id,
-            paymentPeriodicity,
-            paidUntil: null,
-            monthlyAmount,
-            deactivation: null,
-            memberPlanID: memberPlan.id,
-            properties,
-            autoRenew
-          }
-        })
-
-        if (!subscription) {
-          logger('mutation.public').error(
-            'Could not create new subscription for userID "%s"',
-            user.id
-          )
-          throw new InternalError()
-        }
+        const subscription = await memberContext.createSubscription(
+          dbAdapter,
+          user.id,
+          paymentMethod,
+          paymentPeriodicity,
+          monthlyAmount,
+          memberPlan,
+          properties,
+          autoRenew
+        )
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
