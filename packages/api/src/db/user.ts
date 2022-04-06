@@ -33,7 +33,8 @@ export interface GetUserByOAuth2AccountArgs {
 export enum UserSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
-  Name = 'name'
+  Name = 'name',
+  FirstName = 'firstName'
 }
 
 export interface UserFilter {

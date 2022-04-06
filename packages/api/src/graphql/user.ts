@@ -111,7 +111,8 @@ export const GraphQLUserSort = new GraphQLEnumType({
   values: {
     CREATED_AT: {value: UserSort.CreatedAt},
     MODIFIED_AT: {value: UserSort.ModifiedAt},
-    NAME: {value: UserSort.Name}
+    NAME: {value: UserSort.Name},
+    FIRST_NAME: {value: UserSort.FirstName}
   }
 })
 
