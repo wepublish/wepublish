@@ -379,6 +379,138 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createSubscription: {
+      type: GraphQLNonNull(GraphQLPublicPayment),
+      args: {
+        memberPlanID: {type: GraphQLID},
+        memberPlanSlug: {type: GraphQLSlug},
+        autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        paymentMethodID: {type: GraphQLID},
+        paymentMethodSlug: {type: GraphQLSlug},
+        subscriptionProperties: {
+          type: GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+        },
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
+      },
+      description: 'xxxx',
+      async resolve(
+        root,
+        {
+          memberPlanID,
+          memberPlanSlug,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID,
+          paymentMethodSlug,
+          subscriptionProperties,
+          successURL,
+          failureURL
+        },
+        {dbAdapter, loaders, memberContext, createPaymentWithProvider, authenticateUser}
+      ) {
+        // authenticate user
+        const {user} = authenticateUser()
+
+        if (
+          (memberPlanID == null && memberPlanSlug == null) ||
+          (memberPlanID != null && memberPlanSlug != null)
+        ) {
+          throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+        }
+
+        if (
+          (paymentMethodID == null && paymentMethodSlug == null) ||
+          (paymentMethodID != null && paymentMethodSlug != null)
+        ) {
+          throw new UserInputError(
+            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
+          )
+        }
+
+        const memberPlan = memberPlanID
+          ? await loaders.activeMemberPlansByID.load(memberPlanID)
+          : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+
+        const paymentMethod = paymentMethodID
+          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+        if (!paymentMethod)
+          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+
+        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+        if (
+          !memberPlan.availablePaymentMethods.some(apm => {
+            if (apm.forceAutoRenewal && !autoRenew) return false
+            return (
+              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+              apm.paymentMethodIDs.includes(paymentMethod.id)
+            )
+          })
+        )
+          throw new PaymentConfigurationNotAllowed()
+
+        const properties = Array.isArray(subscriptionProperties)
+          ? subscriptionProperties.map(property => {
+              return {
+                public: true,
+                key: property.key,
+                value: property.value
+              }
+            })
+          : []
+
+        const subscription = await dbAdapter.subscription.createSubscription({
+          input: {
+            userID: user.id,
+            startsAt: new Date(),
+            paymentMethodID: paymentMethod.id,
+            paymentPeriodicity,
+            paidUntil: null,
+            monthlyAmount,
+            deactivation: null,
+            memberPlanID: memberPlan.id,
+            properties,
+            autoRenew
+          }
+        })
+
+        if (!subscription) {
+          logger('mutation.public').error(
+            'Could not create new subscription for userID "%s"',
+            user.id
+          )
+          throw new InternalError()
+        }
+
+        // Create Periods, Invoices and Payment
+        const invoice = await memberContext.renewSubscriptionForUser({
+          subscription
+        })
+
+        if (!invoice) {
+          logger('mutation.public').error(
+            'Could not create new invoice for subscription with ID "%s"',
+            subscription.id
+          )
+          throw new InternalError()
+        }
+
+        return await createPaymentWithProvider({
+          invoice,
+          saveCustomer: true,
+          paymentMethodID: paymentMethod.id,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
     sendWebsiteLogin: {
       type: GraphQLNonNull(GraphQLString),
       args: {
