@@ -3,7 +3,6 @@ import {
   Author,
   CommentItemType,
   JobType,
-  MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
   Peer,
@@ -15,7 +14,8 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  AlgebraicCaptchaChallenge
+  AlgebraicCaptchaChallenge,
+  MailchimpMailProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -180,7 +180,7 @@ async function asyncMain() {
   }
 
   let mailProvider
-  if (
+  /* if (
     process.env.MAILGUN_API_KEY &&
     process.env.MAILGUN_BASE_DOMAIN &&
     process.env.MAILGUN_MAIL_DOMAIN &&
@@ -196,19 +196,19 @@ async function asyncMain() {
       apiKey: process.env.MAILGUN_API_KEY,
       incomingRequestHandler: bodyParser.json()
     })
-  }
+  } */
   // left here intentionally for testing
-  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+  if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
     mailProvider = new MailchimpMailProvider({
       id: 'mailchimp',
       name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
+      fromAddress: 'dev@bajour.ch',
       webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
       apiKey: process.env.MAILCHIMP_API_KEY,
       baseURL: '',
       incomingRequestHandler: bodyParser.urlencoded({extended: true})
     })
-  } */
+  }
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
@@ -254,16 +254,8 @@ async function asyncMain() {
         offSessionPayments: false,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        psp: [0, 15, 17, 2, 3, 36],
-        pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
-        ],
+        psp: [15, 36],
+        pm: ['mastercard', 'visa', 'invoice'],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
       })
@@ -382,6 +374,17 @@ async function asyncMain() {
     logger,
     challenge
   })
+
+  await server.runJob(JobType.DailyMembershipRenewal, {
+    startDate: new Date()
+  })
+  await server.runJob(JobType.DailyInvoiceReminder, {
+    userPaymentURL: `${websiteURL}/user/invocies`,
+    replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@bajour.ch',
+    sendEveryDays: 3
+  })
+  await server.runJob(JobType.DailyInvoiceCharger, {})
+  await server.runJob(JobType.DailyInvoiceChecker, {})
 
   // eslint-disable-next-line no-unused-expressions
   yargs(hideBin(process.argv))

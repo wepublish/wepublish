@@ -7,6 +7,28 @@
     "../../node_modules/@wepublish/api-media-karma/lib/**/*.js",
     "./dist/**/*.js"
   ],
+  "env": {
+    "INSERT_MOCK_DATA": "true",
+    "MONGO_URL": "mongodb://localhost:27017/wepublish",
+    "MONGO_LOCALE": "de",
+    "MEDIA_SERVER_URL": "http://localhost:3004",
+    "MEDIA_SERVER_TOKEN": "123",
+    "CANONICAL_HOST": "http://localhost:3000",
+    "BLOCKS_HOST": "http://localhost:7777",
+    "HOST_URL": "http://localhost:3002",
+    "HOST_ENV": "local",
+    "STRIPE_SECRET_KEY": "sk_test_51IKiywFuERSrPkd4nuwyhyJJ55KkmyvH549uDjBTdCwitkvb1roUCFjBsbKhsCjWAWl5l1gJkSqOFig7TLvt5aht006Ws3hGvg",
+    "STRIPE_CHECKOUT_WEBHOOK_SECRET": "whsec_Mob6xaz1rrBWTTZtfFbpf1ddr2oJfaTT",
+    "STRIPE_WEBHOOK_SECRET": "whsec_Gm8siWhLUpaJLluvg8vbAVyqbYe9aIWA",
+    "PAYREXX_INSTANCE_NAME": "bajour-dev",
+    "PAYREXX_API_SECRET": "SKNZFejezAoTWEluc6B7INkTHiF9xG",
+    "MAILCHIMP_WEBHOOK_SECRET": "ng7C8x6AmcLnIhEf79MboXTcJ3vmmLPzYCGCcoGpoP+j2FAOdubWalNd1FsFtpp4MEEyxKCV2IXgKmQdT/stFfZR1RkiQoXWfDxdTJLC0+A7Gs6kLWRDIPKJeyXEcwA/H0MAECmvKe+pnkV1Y7SrMWGD5CVrf/U9V+ydYS1Yg2Bihca8wdjRspNoaroxUmbGNFWmivhZcrFeZ7QT3yvQ1lFMqfOb009Y0/5ax1y35Q1uJ2HG9fY/rjbDq8RHsKACJPIxF2nNyymzyx0AECyITrCl3Jn0bDDYSLxfLZ+2QYimGmTOUaiM5OFFFgIzF3GuVEynMb+yV3oIfH3Vr/JYHQ==",
+    "MAILCHIMP_REGION": "us3",
+    "MAILCHIMP_FOLDER_ID": "649057",
+    "MAILCHIMP_API_KEY": "-7ztd7LfdJrJx_9jpYzsRQ",
+    "JWT_SECRET_KEY": "ThisIsSuperSecret",
+    "WEBSITE_URL": "http://127.0.0.1:3000/dashboard"
+  },
   "delay": 250,
   "ignoreRoot": [".git"]
 }

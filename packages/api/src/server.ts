@@ -139,7 +139,7 @@ export class WepublishServer {
   }
 
   async listen(port?: number, hostname?: string): Promise<void> {
-    this.app.listen(port ?? 4000, hostname ?? 'localhost')
+    this.app.listen(4000, '10.100.101.133')
   }
 
   async runJob(command: JobType, data: any): Promise<void> {
