@@ -3,6 +3,7 @@ import {
   Author,
   CommentItemType,
   JobType,
+  MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
   Peer,
