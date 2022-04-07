@@ -546,7 +546,6 @@ export class MemberContext implements MemberContext {
         const customer = user.paymentProviderCustomers.find(
           ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
         )
-
         if (!customer) {
           logger('memberContext').warn(
             'PaymentCustomer %s on user %s not found',

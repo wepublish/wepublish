@@ -208,7 +208,8 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
         id: invoice.id,
         input: {
           ...invoice,
-          paidAt: new Date()
+          paidAt: new Date(),
+          canceledAt: null
         }
       })
     }

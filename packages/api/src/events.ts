@@ -191,7 +191,8 @@ invoiceModelEvents.on('update', async (context, model) => {
       id: subscription.id,
       input: {
         ...subscription,
-        paidUntil: period.endsAt
+        paidUntil: period.endsAt,
+        deactivation: null
       }
     })
     if (!subscription) {
