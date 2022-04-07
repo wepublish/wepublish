@@ -843,7 +843,7 @@ export class MemberContext implements MemberContext {
     return paymentMethod
   }
 
-  async checkSubscriptionValidPaymentConfiguration(
+  async validateSubscriptionPaymentConfiguration(
     memberPlan: MemberPlan,
     autoRenew: boolean,
     paymentPeriodicity: PaymentPeriodicity,

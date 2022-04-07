@@ -287,7 +287,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Check that monthly amount not
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
-        await memberContext.checkSubscriptionValidPaymentConfiguration(
+        await memberContext.validateSubscriptionPaymentConfiguration(
           memberPlan,
           autoRenew,
           paymentPeriodicity,
@@ -404,7 +404,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
-        await memberContext.checkSubscriptionValidPaymentConfiguration(
+        await memberContext.validateSubscriptionPaymentConfiguration(
           memberPlan,
           autoRenew,
           paymentPeriodicity,
