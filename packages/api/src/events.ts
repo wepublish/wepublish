@@ -238,7 +238,8 @@ invoiceModelEvents.on('update', async (context, model) => {
           recipient: user.email,
           data: {
             url: context.urlAdapter.getLoginURL(token),
-            user
+            user,
+            subscription: updatedSubscription
           }
         })
       } else {
@@ -252,7 +253,8 @@ invoiceModelEvents.on('update', async (context, model) => {
           type: SendMailType.RenewedMemberSubscription,
           recipient: user.email,
           data: {
-            user
+            user,
+            subscription
           }
         })
       }

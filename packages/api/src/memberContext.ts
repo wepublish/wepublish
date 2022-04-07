@@ -517,7 +517,8 @@ export class MemberContext implements MemberContext {
               user,
               invoice,
               paymentProviderID: paymentMethod.paymentProviderID,
-              errorCode: 'customer_missing'
+              errorCode: 'customer_missing',
+              subscription
             }
           })
           continue
@@ -728,7 +729,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       } else {
@@ -742,7 +744,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       } else {
@@ -752,7 +755,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       }
