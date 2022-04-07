@@ -16,7 +16,7 @@ export function CurrencyInput({
   disabled,
   onChange
 }: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number | string>(centAmount / 100)
+  const [amount, setAmount] = useState<number | string | any>(centAmount / 100)
 
   useEffect(() => {
     setAmount((centAmount / 100).toFixed(2))
@@ -31,14 +31,30 @@ export function CurrencyInput({
           step={step}
           type="number"
           disabled={disabled}
+          lang="en"
           onChange={amount => {
             setAmount(parseFloat(amount))
-            console.log(amount.split('.'))
+            console.log(amount.replace(',', '.'))
           }}
           onBlur={() => {
             onChange(Math.round(parseFloat(amount as string) * 100))
           }}
         />
+
+        {/* <input
+          value={amount}
+          step={step}
+          type="number"
+          disabled={disabled}
+          lang='en'
+          onChange={amount => {
+            setAmount(parseFloat(amount))
+            console.log(amount)
+          }}
+          onBlur={() => {
+            onChange(Math.round(parseFloat(amount) * 100))
+          }}> */}
+        {/* </input> */}
       </InputGroup>
     </div>
   )

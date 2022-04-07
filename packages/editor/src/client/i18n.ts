@@ -39,7 +39,10 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
 })
 
 // TODO: how to handle other date amd time formats
-registerLocale('de', deLocale)
-setDefaultLocale('de')
+// registerLocale('de', deLocale)
+// setDefaultLocale('de')
+
+registerLocale('en', enLocale)
+setDefaultLocale('en')
 
 export default i18n

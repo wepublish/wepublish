@@ -31,6 +31,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const {
     data: peerArticleListData,
+    // refetch,
     fetchMore: fetchMorePeerArticles,
     error: peerArticleListError
   } = usePeerArticleListQuery({
@@ -38,10 +39,33 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
+  // const [peeredArticles, setPeeredArticles] = useState<any>([])
+
+  // useEffect(()=> {
+  //   console.log(peerArticles)
+  //   if (peerArticleListData){
+  //     setPeeredArticles(peerArticleListData?.peerArticles)
+  //     console.log(peeredArticles)
+  //   }
+  // },[peerArticleListData])
+
+  // useEffect(() => {
+  //   refetch(peerListVariables)
+  // }, [filter, peerFilter])
+
+  // const [articleData, setArticleData] = useState<any>([])
+  // const [pageData, setPageData] = useState<any>([])
+
   const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
     variables: listVariables,
     fetchPolicy: 'no-cache'
   })
+
+  // useEffect(() => {
+  //   setArticleData(articleListData)
+  //   setPageData(pageListData)
+  //   setPeeredArticles(peerArticleListData)
+  // }, [articleListData, pageListData, peerArticleListData])
 
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
@@ -59,6 +83,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }, [articleListError ?? pageListError ?? peerArticleListError])
 
   function loadMoreArticles() {
+    // if (articleData)
     fetchMoreArticles({
       variables: {...listVariables, after: articleListData?.articles.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -75,6 +100,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   function loadMorePeerArticles() {
+    // if(peerArticleListData)
     fetchMorePeerArticles({
       variables: {
         ...peerListVariables,
@@ -94,6 +120,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   function loadMorePages() {
+    // if (pageListData)
     fetchMorePages({
       variables: {...listVariables, after: pageListData?.pages.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -110,6 +137,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   function currentFilter() {
+    console.log('peer :', peerArticleListData, 'articles :', articleListData)
+
     switch (type) {
       case TeaserType.Article:
         return <Input value={filter} onChange={value => setFilter(value)} />
@@ -122,6 +151,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     }
   }
   function currentContent() {
+    console.log('endCursor', articleListData?.articles.pageInfo)
+
     switch (type) {
       case TeaserType.Article:
         return (
@@ -165,6 +196,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         )
 
       case TeaserType.PeerArticle:
+        console.log(peerArticleListData?.peerArticles)
         return (
           <>
             {peerArticles.map(({peer, article, peeredArticleURL}) => {
