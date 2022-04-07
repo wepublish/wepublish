@@ -90,7 +90,6 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
-import {calculateAmountForPeriodicity, getNextDateForPeriodicity} from '../memberContext'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -472,7 +471,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
+      async resolve(root, {input}, {authenticate, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
 
@@ -483,35 +482,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         // create invoice
         const userId = subscription.userID
-        const startDate = subscription.startsAt
-        const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
-        const amount = calculateAmountForPeriodicity(
-          subscription.monthlyAmount,
-          subscription.paymentPeriodicity
-        )
         const user = await dbAdapter.user.getUserByID(userId)
         if (!user) throw new Error('User of subscription not found.')
-        await dbAdapter.invoice.createInvoice({
-          input: {
-            subscriptionID: subscription.id,
-            description: `Membership for ${user.name || user.email}`,
-            mail: user.email,
-            dueAt: startDate,
-            items: [
-              {
-                createdAt: new Date(),
-                modifiedAt: new Date(),
-                name: 'Membership',
-                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
-                amount,
-                quantity: 1
-              }
-            ],
-            paidAt: null,
-            canceledAt: null
-          }
-        })
 
+        // instantly create a new invoice fo the user
+        await memberContext.renewSubscriptionForUser({subscription})
         return subscription
       }
     },
