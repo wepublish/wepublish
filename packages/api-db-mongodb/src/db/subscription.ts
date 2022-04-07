@@ -91,8 +91,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       }
     )
     if (!value) return null
-    const {_id: outID, ...data} = value
-    return {id: outID, ...data}
+    return await this.subscriptions.findOne({_id: subscriptionID})
   }
 
   async deleteSubscription({id}: DeleteSubscriptionArgs): Promise<string | null> {
