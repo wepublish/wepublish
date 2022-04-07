@@ -17,7 +17,8 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
-import {isTempUser} from './utility'
+import {isTempUser, removePrefixTempUser} from './utility'
+
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -174,90 +175,75 @@ userModelEvents.on('create', (context, model) => {
 })
 
 invoiceModelEvents.on('update', async (context, model) => {
-  // TODO: rethink this logic
-  if (model.paidAt !== null && model.subscriptionID) {
-    const subscription = await context.dbAdapter.subscription.getSubscriptionByID(
-      model.subscriptionID
-    )
-    if (!subscription) return
-    const {periods} = subscription
-    const period = periods.find(period => period.invoiceID === model.id)
-    if (!period) return
-    if (subscription.paidUntil === null || period.endsAt > subscription.paidUntil) {
-      const updatedSubscription = await context.dbAdapter.subscription.updateSubscription({
-        id: subscription.id,
-        input: {
-          ...subscription,
-          paidUntil: period.endsAt
-        }
-      })
+  // only activate subscription, if invoice has a paidAt and subscriptionID
+  if (!model.paidAt || !model.subscriptionID) {
+    return
+  }
+  let mailTypeToSend = SendMailType.NewMemberSubscription
+  let subscription = await context.dbAdapter.subscription.getSubscriptionByID(model.subscriptionID)
+  if (!subscription) return
+  const {periods} = subscription
+  const period = periods.find(period => period.invoiceID === model.id)
+  if (!period) return
 
-      if (!updatedSubscription) {
-        logger('events').warn(`Could not update Subscription %s`, subscription.id)
+  if (subscription.paidUntil === null || period.endsAt > subscription.paidUntil) {
+    subscription = await context.dbAdapter.subscription.updateSubscription({
+      id: subscription.id,
+      input: {
+        ...subscription,
+        paidUntil: period.endsAt
+      }
+    })
+    if (!subscription) {
+      logger('events').warn(`Could not update Subscription.`)
+      return
+    }
+
+    // eventually activate temp user and send mails for new users
+    if (isTempUser(subscription.userID)) {
+      const tempUser = await context.dbAdapter.tempUser.getTempUserByID(
+        removePrefixTempUser(subscription.userID)
+      )
+      if (!tempUser) {
+        logger('events').warn(`Could not find temp user with id ${subscription.userID}`)
         return
       }
-
-      if (isTempUser(subscription.userID)) {
-        const tempUser = await context.dbAdapter.tempUser.getTempUserByID(subscription.userID)
-        if (!tempUser) return
-
-        const user = await context.dbAdapter.user.createUserFromTempUser(tempUser)
-
-        if (!user) {
-          logger('events').error(`Could not create user from tempUser %s`, tempUser.id)
-          return
-        }
-
-        const deletedTempUser = await context.dbAdapter.tempUser.deleteTempUser({
-          id: tempUser.id
-        })
-
-        if (!deletedTempUser) {
-          logger('events').error(`Could not delete tempUser %s`, tempUser.id)
-        }
-
-        const updatedSubscription = await context.dbAdapter.subscription.updateSubscription({
-          id: subscription.id,
-          input: {
-            ...subscription,
-            userID: user.id
-          }
-        })
-
-        if (!updatedSubscription) {
-          logger('events').error(`Could not update subscription %s`, subscription.id)
-          return
-        }
-
-        const token = context.generateJWT({
-          id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
-        })
-        await context.mailContext.sendMail({
-          type: SendMailType.NewMemberSubscription,
-          recipient: user.email,
-          data: {
-            url: context.urlAdapter.getLoginURL(token),
-            user,
-            subscription: updatedSubscription
-          }
-        })
-      } else {
-        const user = await context.dbAdapter.user.getUserByID(subscription.userID)
-        if (!user) {
-          logger('events').warn(`User not found %s`, subscription.userID)
-          return
-        }
-
-        await context.mailContext.sendMail({
-          type: SendMailType.RenewedMemberSubscription,
-          recipient: user.email,
-          data: {
-            user,
-            subscription
-          }
-        })
+      subscription = await context.memberContext.activateTempUser(
+        context.dbAdapter,
+        tempUser.id,
+        subscription
+      )
+      if (!subscription) {
+        logger('events').warn(
+          `Subscription of temp user with ID ${tempUser.id} after activate temp user not found.`
+        )
+        return
       }
     }
+
+    // in case of multiple periods we need to send a renewal member subscription instead of the default new memeber subscription mail
+    if (periods.length > 1) {
+      mailTypeToSend = SendMailType.RenewedMemberSubscription
+    }
+
+    // mail sending depending
+    const user = await context.dbAdapter.user.getUserByID(subscription.userID)
+    if (!user) {
+      logger('events').warn(`User not found %s`, subscription.userID)
+      return
+    }
+    const token = context.generateJWT({
+      id: user.id,
+      expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+    })
+    await context.mailContext.sendMail({
+      type: mailTypeToSend,
+      recipient: user.email,
+      data: {
+        url: context.urlAdapter.getLoginURL(token),
+        user,
+        subscription
+      }
+    })
   }
 })

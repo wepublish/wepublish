@@ -118,6 +118,7 @@ export interface UserInput {
 
   readonly properties: MetadataProperty[]
   readonly roleIDs: string[]
+  readonly paymentProviderCustomers?: PaymentProviderCustomer[]
 }
 
 export interface UpdatePaymentProviderCustomerArgs {

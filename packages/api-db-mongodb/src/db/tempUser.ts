@@ -3,6 +3,7 @@ import {
   DBTempUserAdapter,
   DeleteTempUserArgs,
   OptionalTempUser,
+  UpdatePaymentProviderCustomerArgs,
   UpdateTempUserArgs
 } from '@wepublish/api'
 
@@ -25,11 +26,33 @@ export class MongoDBTempUserAdapter implements DBTempUserAdapter {
       firstName: input.firstName,
       preferredName: input.preferredName,
       email: input.email,
-      address: input.address
+      address: input.address,
+      paymentProviderCustomers: []
     })
 
     const {_id: id, ...data} = ops[0]
     return {id, ...data}
+  }
+
+  public async updatePaymentProviderCustomers({
+    userID,
+    paymentProviderCustomers
+  }: UpdatePaymentProviderCustomerArgs): Promise<OptionalTempUser> {
+    const {value} = await this.tempUsers.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          paymentProviderCustomers: paymentProviderCustomers
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getTempUserByID(outID)
   }
 
   async updateTempUser({id, input}: UpdateTempUserArgs): Promise<OptionalTempUser> {

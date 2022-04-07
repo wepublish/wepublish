@@ -1,4 +1,4 @@
-import {UserAddress} from './user'
+import {PaymentProviderCustomer, UpdatePaymentProviderCustomerArgs, UserAddress} from './user'
 
 export interface CreateTempUserArgs {
   readonly input: TempUserInput
@@ -30,8 +30,8 @@ export interface TempUser {
   readonly firstName?: string
   readonly preferredName?: string
   readonly email: string
-
   readonly address?: UserAddress
+  readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export type OptionalTempUser = TempUser | null
@@ -46,4 +46,8 @@ export interface DBTempUserAdapter {
   deleteTempUser(args: DeleteTempUserArgs): Promise<string | null>
 
   getTempUserByID(id: UserId): Promise<OptionalTempUser>
+  updatePaymentProviderCustomers({
+    userID,
+    paymentProviderCustomers
+  }: UpdatePaymentProviderCustomerArgs): Promise<OptionalTempUser>
 }

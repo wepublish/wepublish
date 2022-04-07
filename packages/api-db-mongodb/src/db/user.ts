@@ -60,7 +60,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         properties: input.properties,
         roleIDs: input.roleIDs,
         password: passwordHash,
-        paymentProviderCustomers: []
+        paymentProviderCustomers: input.paymentProviderCustomers || []
       })
 
       return this.getUserByID(id)
@@ -84,7 +84,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         active: true,
         roleIDs: [],
         properties: [],
-        emailVerifiedAt: null
+        emailVerifiedAt: null,
+        paymentProviderCustomers: tempUser.paymentProviderCustomers
       },
       password: crypto.randomBytes(48).toString('base64')
     })

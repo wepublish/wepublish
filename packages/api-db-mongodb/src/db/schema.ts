@@ -169,6 +169,7 @@ export interface DBTempUser {
   email: string
 
   address?: UserAddress
+  paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export interface DBSession {
