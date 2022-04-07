@@ -73,6 +73,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
   }
 
+  /**
+   * For now, a user will be confirmed by a valid payment. When a user has a valid payment, the previously temporary
+   * user is converted to a permanent user.
+   * @param tempUser
+   */
   public async createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser> {
     const newUser = await this.createUser({
       input: {

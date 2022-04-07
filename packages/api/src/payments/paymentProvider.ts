@@ -147,7 +147,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }
 
   /**
-   * adding or updating paymentProvider customer ID for user
+   * adding or updating paymentProvider customer ID for user or tempUser
    * @param dbAdapter
    * @param subscription
    * @param customerID
