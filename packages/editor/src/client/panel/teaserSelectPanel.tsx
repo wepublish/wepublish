@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react'
 
-import {ArticleFilter, useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
+import {
+  ArticleFilter,
+  ArticleSort,
+  SortOrder,
+  useArticleListQuery,
+  usePageListQuery,
+  usePeerArticleListQuery
+} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
@@ -18,7 +25,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const [filter, setFilter] = useState('')
 
-  const peerListVariables = {peerFilter: filter || undefined, first: 20}
+  // peer variables
+  const peerListVariables = {
+    peerFilter: filter || undefined,
+    first: 20,
+    order: SortOrder.Descending,
+    sort: ArticleSort.PublishedAt
+  }
+  // article variables
   const listVariables = {filter: filter || undefined, first: 20}
   const {
     data: articleListData,
