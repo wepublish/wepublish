@@ -446,7 +446,9 @@
         "unknown": "Inconnu",
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
-        "tempUser": "(Utilisateur temporaire) - "
+        "tempUser": "(Utilisateur temporaire) - ",
+        "email": "Email",
+        "memberPlan": "plan de membre"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
@@ -736,7 +738,8 @@
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Choisissez un plan de membre",
       "startsAt": "Début de l'abonnement",
-      "selectUser": "Choisir l'utilisateur"
+      "selectUser": "Choisir l'utilisateur",
+      "tempUserTitle": "Utilisateur temporaire"
     },
     "navbar": {
       "languageSwitch": {

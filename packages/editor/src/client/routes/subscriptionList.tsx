@@ -7,6 +7,7 @@ import {
   SubscriptionCreateRoute,
   SubscriptionEditRoute,
   SubscriptionListRoute,
+  UserEditRoute,
   useRoute,
   useRouteDispatch
 } from '../route'
@@ -186,11 +187,23 @@ export function SubscriptionList() {
               }
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable sortable>
+          {/* subscription */}
+          <Column width={200}>
+            <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
+            <Cell dataKey={'subscription'}>
+              {(rowData: FullSubscriptionFragment) => (
+                <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
+                  {rowData.memberPlan.name}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          {/* name */}
+          <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullSubscriptionFragment) => (
-                <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
+                <Link route={UserEditRoute.create({id: rowData.user!.id})}>
                   {isTempUser(rowData.user?.id) && (
                     <span>{t('subscriptionList.overview.tempUser')}</span>
                   )}
@@ -199,6 +212,14 @@ export function SubscriptionList() {
               )}
             </Cell>
           </Column>
+          {/* email */}
+          <Column width={250}>
+            <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
+            <Cell dataKey={'email'}>
+              {(rowData: FullSubscriptionFragment) => <div>{rowData.user?.email}</div>}
+            </Cell>
+          </Column>
+          {/* action */}
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>

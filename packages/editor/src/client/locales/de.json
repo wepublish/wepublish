@@ -758,7 +758,9 @@
         "unknown": "Unbekannt",
         "deleted": "Gelöschte:r Benutzer:in",
         "subscription": "Subscription",
-        "tempUser": "(Temporäre:r Benutzer:in) - "
+        "tempUser": "(Temporäre:r Benutzer:in) - ",
+        "email": "Email",
+        "memberPlan": "Member-Plan"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",
@@ -868,7 +870,8 @@
       "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
       "adapter": "Zahlungs-Adapter",
-      "selectUser": "Benutzer:in wählen"
+      "selectUser": "Benutzer:in wählen",
+      "tempUserTitle": "Temporäre:r Benutzer:in"
     }
   }
 }

@@ -322,10 +322,28 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         {isTempUser && (
           <Message
             showIcon
-            type="warning"
-            description={t('userSubscriptionEdit.tempUser.disabledInfo')}
+            type="info"
+            description={
+              <div>
+                <p>{t('userSubscriptionEdit.tempUser.disabledInfo')}</p>
+                <br />
+                <p>
+                  <b>{t('userSubscriptionEdit.tempUserTitle')}</b>
+                </p>
+                <p>
+                  {user?.firstName} {user?.name}
+                </p>
+                <p>{user?.address?.streetAddress}</p>
+                <p>
+                  {user?.address?.zipCode} {user?.address?.city}
+                </p>
+                <p>{user?.address?.country}</p>
+                <p>{user?.email}</p>
+              </div>
+            }
           />
         )}
+
         <Panel>
           <Form fluid={true}>
             <FormGroup>
