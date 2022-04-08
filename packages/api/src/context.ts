@@ -47,10 +47,12 @@ import {MailContext, MailContextOptions} from './mails/mailContext'
 import {User} from './db/user'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import NodeCache from 'node-cache'
+import {logger} from './server'
 
 /**
  * Peered article cache configuration and setup
  */
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
 const peerCache = new NodeCache({
   stdTTL: 1800,
   checkperiod: 60,
@@ -59,13 +61,12 @@ const peerCache = new NodeCache({
 })
 peerCache.on('expired', async function (key: string, value: peerCacheValue) {
   // Refresh cache only if last use of cached entry is less than 24h ago
-  if (value.queryParams.lastQueried > new Date().getTime() - 24 * 60 * 60 * 1000) {
+  if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
     await loadFreshData(value.queryParams)
   } else {
     peerCache.del(key)
   }
 })
-
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -512,7 +513,6 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
  * Function that generate the key for the cache
  * @param params
  */
-
 function generateCacheKey(params: peerQueryParams) {
   return (
     crypto
@@ -528,7 +528,7 @@ function generateCacheKey(params: peerQueryParams) {
 }
 
 /**
- * Function to that refreshes and initializes entries in the cache
+ * Function that refreshes and initializes entries in the cache
  * @param params
  */
 
@@ -550,7 +550,7 @@ async function loadFreshData(params: peerQueryParams) {
       signal: abortController.signal
     })
     const res = await fetchResult.json()
-    if (fetchResult?.status != 200) {
+    if (fetchResult?.status !== 200) {
       return {
         errors: [new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)]
       }
@@ -563,11 +563,11 @@ async function loadFreshData(params: peerQueryParams) {
     peerCache.set(params.cacheKey, cacheValue)
     return res
   } catch (err) {
+    let errorMessage = err
     if (err.type === 'aborted') {
-      err = new Error(`Connection to peer (${params.hostURL}) timed out.`)
+      errorMessage = new Error(`Connection to peer (${params.hostURL}) timed out.`)
     }
-
-    console.error(err)
+    logger('context').error(`${errorMessage}`)
     return {errors: [err]}
   }
 }
