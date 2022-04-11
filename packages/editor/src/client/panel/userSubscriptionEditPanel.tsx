@@ -247,7 +247,6 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
               <CurrencyInput
                 currency="CHF"
                 centAmount={monthlyAmount}
-                step={0.05}
                 onChange={centAmount => {
                   setMonthlyAmount(centAmount)
                 }}

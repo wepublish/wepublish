@@ -5,18 +5,11 @@ import {useTranslation} from 'react-i18next'
 export interface CurrencyInputProps {
   currency: string
   centAmount: number
-  step?: number
   onChange(centAmount: number): void
   disabled?: boolean
 }
 
-export function CurrencyInput({
-  currency,
-  centAmount,
-  step,
-  disabled,
-  onChange
-}: CurrencyInputProps) {
+export function CurrencyInput({currency, centAmount, disabled, onChange}: CurrencyInputProps) {
   const [amount, setAmount] = useState<number | string | any>(centAmount / 100)
   const [message, setMessage] = useState(false)
 
@@ -38,7 +31,6 @@ export function CurrencyInput({
         <InputGroup.Addon>{currency}</InputGroup.Addon>
         <Input
           value={amount as string}
-          step={step}
           disabled={disabled}
           onChange={amount => {
             amount = toFloat(amount)
