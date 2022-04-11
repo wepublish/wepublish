@@ -104,6 +104,7 @@ export interface DBUser {
   email: string
   emailVerifiedAt: Date | null
   name: string
+  firstName?: string
   preferredName?: string
   address?: UserAddress
   password: string
