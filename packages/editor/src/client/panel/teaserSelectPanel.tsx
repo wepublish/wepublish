@@ -110,7 +110,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   function currentFilter() {
-    console.log(peerArticleListData)
     switch (type) {
       case TeaserType.Article:
         return <Input value={filter} onChange={value => setFilter(value)} />
