@@ -11,7 +11,7 @@ export interface IframeEmbedProps {
 }
 
 export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: IframeEmbedProps) {
-  const ratio = width !== undefined && height !== undefined ? parseInt(width) / parseInt(height) : 0
+  const ratio = width && height ? parseInt(width) / parseInt(height) : 0
   const noRatio = !!styleCustom || ratio === 0
   const styleCustomCss =
     noRatio && !!styleCustom && styleCustom !== ''

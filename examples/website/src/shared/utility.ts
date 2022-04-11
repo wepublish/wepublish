@@ -119,6 +119,7 @@ export function createStyleRenderer() {
   })
 }
 
+// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): object {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
