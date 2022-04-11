@@ -1,6 +1,6 @@
-import {text} from 'express'
 import React, {useState, useEffect} from 'react'
 import {Input, InputGroup, Message} from 'rsuite'
+import {useTranslation} from 'react-i18next'
 
 export interface CurrencyInputProps {
   currency: string
@@ -24,7 +24,13 @@ export function CurrencyInput({
     setAmount((centAmount / 100).toFixed(2))
   }, [centAmount])
 
-  const toFloat = (text: String) => text.replace(/[^0-9,\.?]/gm, '').replace(',', '.')
+  const toFloat = (text: string) =>
+    text
+      .match(/[\d]*[.,]?[0-9]{0,2}/)![0]
+      .replace(',', '.')
+      .replace(/^\./, '')
+
+  const {t} = useTranslation()
 
   return (
     <div>
@@ -33,26 +39,24 @@ export function CurrencyInput({
         <Input
           value={amount as string}
           step={step}
-          pattern={/[+-]?([0-9]*[.]{0,1})?[0-9]+/}
           disabled={disabled}
-          lang="en"
           onChange={amount => {
-            if (!amount || !toFloat(amount).match(/[+-]?([0-9]*[.]{0,1})?[0-9]+/)) {
+            amount = toFloat(amount)
+            if (!amount) {
               setMessage(true)
-              setAmount('')
             } else {
               setMessage(false)
-              setAmount(toFloat(amount))
             }
+            setAmount(amount)
           }}
           onBlur={() => {
             if (amount) {
-              onChange(Math.round(parseFloat(amount as string) * 100))
+              onChange(parseFloat(amount as string) * 100)
             }
           }}
         />
       </InputGroup>
-      {message ? <Message type="error" description=" Please enter a number" /> : ''}
+      {message ? <Message type="error" description={t('memberPlanList.errorMessage')} /> : ''}
     </div>
   )
 }

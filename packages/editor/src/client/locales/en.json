@@ -519,6 +519,7 @@
       "delete": "Delete",
       "deleteModalTitle": "Delete Member Plan",
       "description": "Description",
+      "errorMessage": "Please enter a number",
       "editTitle": "Edit Member Plan",
       "fixPrice": "Fix price",
       "fixPriceDescription": "If false the price can be a price range",
