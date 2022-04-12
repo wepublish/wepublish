@@ -29,10 +29,10 @@ jobs:
         name: "Publish next npms"
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: yarn run publish:next
+        run: yarn run publish:next --yes
 
       - if: "!contains(github.ref, 'alpha')"
         name: "Publish latest npms"
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: yarn run publish
+        run: yarn run publish --yes
