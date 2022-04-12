@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0-experimental-multiple-subscription-v5",
+  "version": "3.1.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
