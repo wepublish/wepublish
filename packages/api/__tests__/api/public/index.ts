@@ -161,7 +161,7 @@ export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
   parentID?: Maybe<Scalars['ID']>
-  user: User
+  user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
@@ -456,6 +456,7 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   email: Scalars['String']
   memberPlanID?: Maybe<Scalars['ID']>
@@ -869,6 +870,7 @@ export type User = {
   id: Scalars['String']
   name: Scalars['String']
   email: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   subscription?: Maybe<UserSubscription>
@@ -898,6 +900,7 @@ export type UserAddressInput = {
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
 }

@@ -265,7 +265,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
-  user: User
+  user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
@@ -1739,6 +1739,7 @@ export type User = {
   name: Scalars['String']
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
@@ -1786,6 +1787,7 @@ export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
+  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']

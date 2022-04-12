@@ -285,7 +285,8 @@
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
         "text": "Text",
-        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen."
+        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
+        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
       },
       "richTextTable": {
         "label": "Rich text Tabelle",
@@ -361,7 +362,8 @@
         "parent": "Elter",
         "parentDate": "{{parentDate,ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}"
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "unregisteredUser": "(Nicht registrierter Benutzer)"
       },
       "state": {
         "approved": "Angenommen",
@@ -743,6 +745,32 @@
       }
     },
     "untitled": "Kein Titel",
+    "subscriptionList": {
+      "overview": {
+        "createdAt": "Erstellt",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "delete": "Löschen",
+        "modifiedAt": "Zuletzt bearbeitet",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Name",
+        "newSubscription": "Neue Subscription",
+        "exportSubscriptionsCsv": "CSV exportieren",
+        "unknown": "Unbekannt",
+        "deleted": "Gelöschte:r Benutzer:in",
+        "subscription": "Subscription",
+        "tempUser": "(Temporäre:r Benutzer:in) - ",
+        "email": "Email",
+        "memberPlan": "Member-Plan"
+      },
+      "panels": {
+        "deleteSubscription": "Subscription löschen?",
+        "name": "Name",
+        "unknown": "Unbekannt",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "tempUserWarning": "Diese Subscription hat eine:n temporäre:n Benutzer:in, welche seine/ihre Registration nicht abgeschlossen hat. Wenn du die Subscription löscht, wird der/die temporäre:r Benutzer:in ebenfalls gelöscht."
+      }
+    },
     "userList": {
       "overview": {
         "action": "Aktion",
@@ -753,6 +781,7 @@
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
+        "firstName": "Vorname",
         "newUser": "Neuer User",
         "noDescription": "Keine Beschreibung",
         "noUsersFound": "Keine User gefunden",
@@ -779,6 +808,7 @@
         "payedUntil": "Bezahlt bis",
         "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
         "preferredName": "Bevorzugter Name",
+        "firstName": "Vorname",
         "remove": "Entfernen",
         "resetPassword": "Passwort zurücksetzen",
         "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -839,7 +869,9 @@
       "selectMemberPlan": "Memberplan wählen",
       "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
-      "adapter": "Zahlungs-Adapter"
+      "adapter": "Zahlungs-Adapter",
+      "selectUser": "Benutzer:in wählen",
+      "tempUserTitle": "Temporäre:r Benutzer:in"
     }
   }
 }

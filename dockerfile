@@ -1,4 +1,4 @@
-FROM roosnic1/wepublish-node-docker-base:latest
+FROM ghcr.io/wepublish/node:latest
 
 RUN apk update
 

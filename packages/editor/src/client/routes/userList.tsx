@@ -17,7 +17,6 @@ import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} fro
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
-import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -44,6 +43,8 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.ModifiedAt
     case 'name':
       return UserSort.Name
+    case 'firstName':
+      return UserSort.FirstName
     default:
       return null
   }
@@ -56,8 +57,6 @@ export function UserList() {
   const [isEditModalOpen, setEditModalOpen] = useState(
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
-
-  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
 
   const [editID, setEditID] = useState<string | undefined>(
     current?.type === RouteType.UserEdit ? current.params.id : undefined
@@ -128,15 +127,6 @@ export function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
-            {t('userList.overview.exportSubscriptionsCsv')}
-            <IconButton
-              className="collapse-nav-btn"
-              appearance="primary"
-              size="xs"
-              icon={<Icon icon={'export'} />}
-            />
-          </Button>
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -187,6 +177,16 @@ export function UserList() {
               {({modifiedAt}: FullUserFragment) =>
                 t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
               }
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
+            <Cell dataKey={'firstName'}>
+              {(rowData: FullUserFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.id})}>
+                  {rowData.firstName || ''}
+                </Link>
+              )}
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
@@ -278,22 +278,6 @@ export function UserList() {
           }}
         />
       </Drawer>
-
-      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <SubscriptionAsCsvModal />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={() => setExportModalOpen(false)} appearance="default">
-            {t('userList.panels.close')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>

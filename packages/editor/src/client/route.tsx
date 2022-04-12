@@ -54,6 +54,10 @@ export enum RouteType {
   UserEdit = 'userEdit',
   UserCreate = 'userCreate',
 
+  SubscriptionList = 'subscriptionList',
+  SubscriptionEdit = 'subscriptionEdit',
+  SubscriptionCreate = 'subscriptionCreate',
+
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
   UserRoleCreate = 'userRoleCreate',
@@ -132,6 +136,16 @@ export const UserListRoute = route(RouteType.UserList, routePath`/users`)
 export const UserEditRoute = route(RouteType.UserEdit, routePath`/user/edit/${required('id')}`)
 export const UserCreateRoute = route(RouteType.UserCreate, routePath`/user/create`)
 
+export const SubscriptionListRoute = route(RouteType.SubscriptionList, routePath`/subscriptions`)
+export const SubscriptionEditRoute = route(
+  RouteType.SubscriptionEdit,
+  routePath`/subscription/edit/${required('id')}`
+)
+export const SubscriptionCreateRoute = route(
+  RouteType.SubscriptionCreate,
+  routePath`/subscription/create`
+)
+
 export const UserRoleListRoute = route(RouteType.UserRoleList, routePath`/userroles`)
 export const UserRoleEditRoute = route(
   RouteType.UserRoleEdit,
@@ -194,6 +208,9 @@ export const routes = [
   UserListRoute,
   UserEditRoute,
   UserCreateRoute,
+  SubscriptionListRoute,
+  SubscriptionEditRoute,
+  SubscriptionCreateRoute,
   UserRoleListRoute,
   UserRoleEditRoute,
   UserRoleCreateRoute,
