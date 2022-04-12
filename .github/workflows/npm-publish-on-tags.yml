@@ -19,9 +19,10 @@ jobs:
         with:
           node-version: '12'
 
-      - name: "Setup npm"
+      - name: "Setup yarn/npm"
         run: |
-          npm set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}"
+          yarn config set registry 'https://registry.npmjs.org'
+          npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
 
       - name: "Yarn install"
         run: |
