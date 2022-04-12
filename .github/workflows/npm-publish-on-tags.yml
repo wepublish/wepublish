@@ -20,7 +20,10 @@ jobs:
           node-version: '12'
 
       - name: "Yarn install"
-        run: yarn install
+        run: |
+          yarn install
+          git diff
+          git reset --hard
 
       - if: "contains(github.ref, 'alpha')"
         name: "Publish next npms"
