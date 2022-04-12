@@ -53,3 +53,11 @@
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
 
+
+## 3.0.0-alpha.5 (2022-04-12)
+
+#### :bug: Bug Fix
+* [#563](https://github.com/wepublish/wepublish/pull/563) Fix npm release on tags ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 1
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
