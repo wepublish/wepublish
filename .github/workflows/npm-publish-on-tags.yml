@@ -1,7 +1,9 @@
 name: Publish on tags
 
 on:
-  pull_request:
+  create:
+    tags:
+      - v*
 
 jobs:
   publish:
@@ -21,11 +23,15 @@ jobs:
         run: |
           yarn config set registry 'https://registry.npmjs.org'
           npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
-          yarn config list
 
       - name: "Yarn install"
         run: |
           yarn install --pure-lockfile
 
-      - name: "Publish next npms"
+      - if: "contains(github.ref, 'alpha')"
+        name: "Publish next npms"
         run: yarn run publish:next --yes
+
+      - if: "!contains(github.ref, 'alpha')"
+        name: "Publish latest npms"
+        run: yarn run publish --yes
