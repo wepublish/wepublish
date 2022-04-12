@@ -745,6 +745,32 @@
       }
     },
     "untitled": "Kein Titel",
+    "subscriptionList": {
+      "overview": {
+        "createdAt": "Erstellt",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "delete": "Löschen",
+        "modifiedAt": "Zuletzt bearbeitet",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Name",
+        "newSubscription": "Neue Subscription",
+        "exportSubscriptionsCsv": "CSV exportieren",
+        "unknown": "Unbekannt",
+        "deleted": "Gelöschte:r Benutzer:in",
+        "subscription": "Subscription",
+        "tempUser": "(Temporäre:r Benutzer:in) - ",
+        "email": "Email",
+        "memberPlan": "Member-Plan"
+      },
+      "panels": {
+        "deleteSubscription": "Subscription löschen?",
+        "name": "Name",
+        "unknown": "Unbekannt",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "tempUserWarning": "Diese Subscription hat eine:n temporäre:n Benutzer:in, welche seine/ihre Registration nicht abgeschlossen hat. Wenn du die Subscription löscht, wird der/die temporäre:r Benutzer:in ebenfalls gelöscht."
+      }
+    },
     "userList": {
       "overview": {
         "action": "Aktion",
@@ -843,7 +869,9 @@
       "selectMemberPlan": "Memberplan wählen",
       "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
-      "adapter": "Zahlungs-Adapter"
+      "adapter": "Zahlungs-Adapter",
+      "selectUser": "Benutzer:in wählen",
+      "tempUserTitle": "Temporäre:r Benutzer:in"
     }
   }
 }

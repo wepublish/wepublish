@@ -5,8 +5,30 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {User} from './db/user'
+import {Subscription} from './db/subscription'
+import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
 
-export function mapSubscriptionsAsCsv(items: User[]) {
+export const MAX_COMMENT_LENGTH = 1000
+export const MAX_PAYLOAD_SIZE = '1MB'
+
+export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
+export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
+export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000
+export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
+
+export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
+
+export const TEMP_USER_PREFIX = '__temp_'
+
+export function isTempUser(userID: GenericUserId): boolean {
+  return userID.startsWith(TEMP_USER_PREFIX)
+}
+
+export function removePrefixTempUser(userID: UserIdWithTempPrefix): UserId {
+  return userID.replace(TEMP_USER_PREFIX, '')
+}
+
+export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription[]) {
   let csvStr =
     [
       'id',
@@ -34,7 +56,9 @@ export function mapSubscriptionsAsCsv(items: User[]) {
       'deactivationReason'
     ].join(',') + '\n'
 
-  items.forEach(({address, subscription, ...user}: User) => {
+  for (const subscription of subscriptions) {
+    const user = users.find(user => user.id === subscription.userID)
+    if (!user) continue
     csvStr +=
       [
         user.id,
@@ -43,12 +67,12 @@ export function mapSubscriptionsAsCsv(items: User[]) {
         user.active,
         user.createdAt.toLocaleDateString(),
         user.modifiedAt.toLocaleDateString(),
-        `"${address?.company ?? ''}"`,
-        `"${address?.streetAddress ?? ''}"`,
-        `"${address?.streetAddress2 ?? ''}"`,
-        `"${address?.zipCode ?? ''}"`,
-        `"${address?.city ?? ''}"`,
-        `"${address?.country ?? ''}"`,
+        `"${user.address?.company ?? ''}"`,
+        `"${user.address?.streetAddress ?? ''}"`,
+        `"${user.address?.streetAddress2 ?? ''}"`,
+        `"${user.address?.zipCode ?? ''}"`,
+        `"${user.address?.city ?? ''}"`,
+        `"${user.address?.country ?? ''}"`,
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
@@ -59,7 +83,8 @@ export function mapSubscriptionsAsCsv(items: User[]) {
         subscription?.deactivation?.date?.toLocaleDateString() ?? '',
         subscription?.deactivation?.reason ?? ''
       ].join(',') + '\r\n'
-  })
+  }
+
   return csvStr
 }
 
@@ -218,14 +243,3 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
     return countRichtextChars(charLength, node.children)
   }, blocksCharLength)
 }
-
-export const MAX_COMMENT_LENGTH = 1000
-export const MAX_PAYLOAD_SIZE = '1MB'
-
-export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
-export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
-export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000
-export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
-
-export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
-export const USER_PROPERTY_ORG_EMAIL = '_wepOrgEmail'

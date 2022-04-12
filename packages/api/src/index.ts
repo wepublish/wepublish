@@ -36,6 +36,8 @@ export * from './db/memberPlan'
 export * from './db/invoice'
 export * from './db/payment'
 export * from './db/mailLog'
+export * from './db/subscription'
+export * from './db/tempUser'
 
 export * from './mediaAdapter'
 export * from './urlAdapter'

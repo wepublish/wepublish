@@ -172,6 +172,9 @@ A good place to start is with an issue that has the label [good first issue](htt
 4. Push to the Branch (`git push origin f/AmazingFeature`)
 5. Open a Pull Request
 
+## Docs
+All code documentation lives here: [DOCUMENTATION][documentation-url]
+
 
 ## Code of Conduct
 We.publish is dedicated to building a welcoming, diverse, safe community. 
@@ -231,3 +234,4 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [package-json-url]: package.json
 [faq-md-url]: FAQ.md
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
+[documentation-url]: DOCUMENTATION.md
