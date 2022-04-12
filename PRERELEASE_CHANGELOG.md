@@ -52,3 +52,4 @@
 - Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
