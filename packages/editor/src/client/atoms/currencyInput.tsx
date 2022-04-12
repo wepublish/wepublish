@@ -19,7 +19,7 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
 
   const toFloat = (text: string) =>
     text
-      .match(/[\d]*[.,]?[0-9]{0,2}/)![0]
+      .match(/[\d]*[.,]?[\d]{0,2}/)![0]
       .replace(',', '.')
       .replace(/^\./, '')
 
@@ -34,11 +34,7 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
           disabled={disabled}
           onChange={amount => {
             amount = toFloat(amount)
-            if (!amount) {
-              setMessage(true)
-            } else {
-              setMessage(false)
-            }
+            setMessage(!amount)
             setAmount(amount)
           }}
           onBlur={() => {
