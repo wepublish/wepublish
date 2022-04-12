@@ -14,8 +14,6 @@ import {
   Toggle
 } from 'rsuite'
 
-// import {DescriptionListItem, DescriptionList} from '../atoms/descriptionList'
-
 import {
   useCreateUserMutation,
   FullUserFragment,
@@ -27,10 +25,8 @@ import {
 } from '../api'
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
-// import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
-// import {Typography} from '../atoms/typography'
 
 export interface UserEditPanelProps {
   id?: string
@@ -87,7 +83,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       setEmail(data.user.email)
       setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
-      // setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
         // TODO: fix this
         setRoles(data.user.roles as FullUserRoleFragment[])
@@ -253,38 +248,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             </FormGroup>
           </Form>
         </Panel>
-        {/* <Panel header={t('userList.panels.subTitle')}>
-          {subscription && (
-            <DescriptionList>
-              <DescriptionListItem label={t('userList.panels.startedAt')}>
-                {t('userList.panels.startedAtDate', {
-                  startedAtDate: new Date(subscription.startsAt)
-                })}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('userList.panels.payedUntil')}>
-                {subscription.paidUntil
-                  ? t('userList.panels.paidUntilDate', {
-                      paidUntilDate: new Date(subscription.paidUntil)
-                    })
-                  : ''}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('userList.panels.memberPlan')}>
-                {subscription.memberPlan.name}
-              </DescriptionListItem>
-            </DescriptionList>
-          )}
-          <Button
-            disabled={isDisabled || id === undefined}
-            appearance="primary"
-            onClick={() => setIsUserSubscriptionEditOpen(true)}>
-            {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
-          </Button>
-          {id === undefined && (
-            <div>
-              <Typography variant="body1">{t('userList.panels.subDisableDescription')}</Typography>
-            </div>
-          )}
-        </Panel> */}
       </Drawer.Body>
 
       <Drawer.Footer>
@@ -315,22 +278,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* id && data?.user && (
-        <Drawer
-          show={isUserSubscriptionEditOpen}
-          size={'sm'}
-          onHide={() => setIsUserSubscriptionEditOpen(false)}>
-          <UserSubscriptionEditPanel
-            user={{...data.user, subscription}}
-            onClose={() => setIsUserSubscriptionEditOpen(false)}
-            onSave={value => {
-              setIsUserSubscriptionEditOpen(false)
-              setUserSubscription(value)
-            }}
-          />
-        </Drawer>
-      ) */}
     </>
   )
 }
