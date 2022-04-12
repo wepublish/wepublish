@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   deployment:
+    if: ${{ github.event.pull_request.base.repo.url == github.event.pull_request.head.repo.url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,19 +17,19 @@ jobs:
         with:
           registry: eu.gcr.io
           username: _json_key
-          password: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
+          password: ${{ secrets.GCLOUD_AUTH_KEY }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: eu.gcr.io/${{ secrets.GCP_PROJECT_ID_WEP_DEV }}/${{ github.repository }}/main:${{ github.sha }}
+          tags: eu.gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/${{ github.repository }}/main:${{ github.sha }}
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
       - name: Create manifest
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
+          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
@@ -37,8 +38,8 @@ jobs:
         with:
           cluster_name: funiciello-dev-cluster
           location: europe-west6
-          project_id: wepublish-dev
-          credentials: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          credentials: ${{ secrets.GCLOUD_AUTH_KEY }}
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
@@ -46,7 +47,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
+          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
         run: |
           cd ./config
