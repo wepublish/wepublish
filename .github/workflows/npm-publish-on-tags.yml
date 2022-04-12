@@ -1,0 +1,31 @@
+name: Publish on tags
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Use NodeJS 12"
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: "Yarn install"
+        run: yarn install
+
+      - if: "contains(github.ref, 'alpha')"
+        name: "Publish next npm"
+        run: yarn publish:next
+
+      - if: "!contains(github.ref, 'alpha')"
+        name: "Publish latest npm"
+        run: yarn publish
