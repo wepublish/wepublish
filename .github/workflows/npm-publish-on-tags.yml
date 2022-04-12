@@ -23,9 +23,13 @@ jobs:
         run: yarn install
 
       - if: "contains(github.ref, 'alpha')"
-        name: "Publish next npm"
-        run: yarn publish:next
+        name: "Publish next npms"
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: yarn run publish:next
 
       - if: "!contains(github.ref, 'alpha')"
-        name: "Publish latest npm"
-        run: yarn publish
+        name: "Publish latest npms"
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: yarn run publish
