@@ -1816,6 +1816,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
@@ -1863,6 +1864,7 @@ export type UserFilter = {
 
 export type UserInput = {
   name: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
@@ -1906,7 +1908,8 @@ export enum UserRoleSort {
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  FirstName = 'FIRST_NAME'
 }
 
 export type UserSubscription = {
@@ -3526,7 +3529,7 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'firstName' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
@@ -4203,6 +4206,7 @@ export const FullUserFragmentDoc = gql`
   createdAt
   modifiedAt
   name
+  firstName
   preferredName
   address {
     streetAddress

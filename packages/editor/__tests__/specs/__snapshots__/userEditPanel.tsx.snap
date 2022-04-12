@@ -116,6 +116,153 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
+                                    userList.panels.firstName
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                disabled={true}
+                                name="userList.panels.firstName"
+                                onChange={[Function]}
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  disabled={true}
+                                  name="userList.panels.firstName"
+                                  onChange={[Function]}
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    disabled={true}
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="userList.panels.firstName"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        disabled={true}
+                                        name="userList.panels.firstName"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          disabled={true}
+                                          name="userList.panels.firstName"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            disabled={true}
+                                            name="userList.panels.firstName"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              disabled={true}
+                                              name="userList.panels.firstName"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
                                     userList.panels.name
                                   </label>
                                 </ControlLabel>
@@ -1944,6 +2091,153 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       className="rs-form rs-form-vertical rs-form-fluid"
                       onSubmit={[Function]}
                     >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.firstName
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                disabled={false}
+                                name="userList.panels.firstName"
+                                onChange={[Function]}
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  disabled={false}
+                                  name="userList.panels.firstName"
+                                  onChange={[Function]}
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    disabled={false}
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="userList.panels.firstName"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        disabled={false}
+                                        name="userList.panels.firstName"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          disabled={false}
+                                          name="userList.panels.firstName"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            disabled={false}
+                                            name="userList.panels.firstName"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              disabled={false}
+                                              name="userList.panels.firstName"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                       <withStyleProps(defaultProps(FormGroup))
                         classPrefix="rs-form-group"
                       >
@@ -4668,6 +4962,153 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                       className="rs-form rs-form-vertical rs-form-fluid"
                       onSubmit={[Function]}
                     >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.firstName
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                disabled={false}
+                                name="userList.panels.firstName"
+                                onChange={[Function]}
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  disabled={false}
+                                  name="userList.panels.firstName"
+                                  onChange={[Function]}
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    disabled={false}
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="userList.panels.firstName"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        disabled={false}
+                                        name="userList.panels.firstName"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          disabled={false}
+                                          name="userList.panels.firstName"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            disabled={false}
+                                            name="userList.panels.firstName"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              disabled={false}
+                                              name="userList.panels.firstName"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                       <withStyleProps(defaultProps(FormGroup))
                         classPrefix="rs-form-group"
                       >
@@ -7732,6 +8173,153 @@ exports[`User Edit Panel should render 1`] = `
                                   <label
                                     className="rs-control-label"
                                   >
+                                    userList.panels.firstName
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                disabled={false}
+                                name="userList.panels.firstName"
+                                onChange={[Function]}
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  disabled={false}
+                                  name="userList.panels.firstName"
+                                  onChange={[Function]}
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    disabled={false}
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="userList.panels.firstName"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        disabled={false}
+                                        name="userList.panels.firstName"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          disabled={false}
+                                          name="userList.panels.firstName"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            disabled={false}
+                                            name="userList.panels.firstName"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              disabled={false}
+                                              name="userList.panels.firstName"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
                                     userList.panels.name
                                   </label>
                                 </ControlLabel>
@@ -9395,6 +9983,153 @@ exports[`User Edit Panel should render with ID 1`] = `
                       className="rs-form rs-form-vertical rs-form-fluid"
                       onSubmit={[Function]}
                     >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    userList.panels.firstName
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                disabled={false}
+                                name="userList.panels.firstName"
+                                onChange={[Function]}
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  disabled={false}
+                                  name="userList.panels.firstName"
+                                  onChange={[Function]}
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    disabled={false}
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="userList.panels.firstName"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        disabled={false}
+                                        name="userList.panels.firstName"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          disabled={false}
+                                          name="userList.panels.firstName"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            disabled={false}
+                                            name="userList.panels.firstName"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              disabled={false}
+                                              name="userList.panels.firstName"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
                       <withStyleProps(defaultProps(FormGroup))
                         classPrefix="rs-form-group"
                       >
