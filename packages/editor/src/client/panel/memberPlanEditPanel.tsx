@@ -73,7 +73,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const {data, loading: isLoading, error: loadError} = useMemberPlanQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useMemberPlanQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -93,10 +97,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     }
   )
 
-  const [
-    updateMemberPlan,
-    {loading: isUpdating, error: updateError}
-  ] = useUpdateMemberPlanMutation()
+  const [updateMemberPlan, {loading: isUpdating, error: updateError}] =
+    useUpdateMemberPlanMutation()
 
   const isDisabled =
     isLoading ||

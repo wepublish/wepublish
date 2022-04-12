@@ -85,10 +85,8 @@ export function UserSubscriptionEditPanel({user, onClose, onSave}: UserSubscript
     fetchPolicy: 'network-only'
   })
 
-  const [
-    updateUserSubscription,
-    {loading: isUpdating, error: updateError}
-  ] = useUpdateUserSubscriptionMutation()
+  const [updateUserSubscription, {loading: isUpdating, error: updateError}] =
+    useUpdateUserSubscriptionMutation()
 
   const isDeactivated = subscription?.deactivation?.date
     ? new Date(subscription.deactivation.date) < new Date()
