@@ -25,7 +25,7 @@ jobs:
 
       - name: "Yarn install"
         run: |
-          yarn install --frozen-lockfile
+          yarn install --pure-lockfile
 
       - name: "Publish next npms"
         run: yarn run publish:next --yes
