@@ -7,7 +7,6 @@ import {
   DatePicker,
   Drawer,
   Form,
-  FormControl,
   FormGroup,
   HelpBlock,
   Message,
@@ -37,6 +36,7 @@ import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES, isTempUser as checkIsTempUser} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
+import {CurrencyInput} from '../atoms/currencyInput'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -69,7 +69,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useSubscriptionQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -147,15 +151,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     fetchPolicy: 'network-only'
   })
 
-  const [
-    updateSubscription,
-    {loading: isUpdating, error: updateError}
-  ] = useUpdateSubscriptionMutation()
+  const [updateSubscription, {loading: isUpdating, error: updateError}] =
+    useUpdateSubscriptionMutation()
 
-  const [
-    createSubscription,
-    {loading: isCreating, error: createError}
-  ] = useCreateSubscriptionMutation()
+  const [createSubscription, {loading: isCreating, error: createError}] =
+    useCreateSubscriptionMutation()
 
   const isDeactivated = deactivation?.date ? new Date(deactivation.date) < new Date() : false
 
@@ -244,7 +244,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       if (data?.createSubscription) onSave?.(data.createSubscription)
     }
   }
-
   async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return
     const {data} = await updateSubscription({
@@ -359,7 +358,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 <HelpBlock>
                   <DescriptionList>
                     <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.amountPerMonthMin}
+                      {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>
@@ -381,14 +380,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
-              <FormControl
-                name={t('userSubscriptionEdit.monthlyAmount')}
-                value={monthlyAmount}
-                type="number"
-                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                onChange={value => {
-                  setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
+              <CurrencyInput
+                currency="CHF"
+                centAmount={monthlyAmount}
+                onChange={centAmount => {
+                  setMonthlyAmount(centAmount)
                 }}
+                disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />
             </FormGroup>
             <FormGroup>

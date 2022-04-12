@@ -9,6 +9,7 @@ import {Subscription} from './db/subscription'
 import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
 
 export const MAX_COMMENT_LENGTH = 1000
+export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
