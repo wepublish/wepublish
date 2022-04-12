@@ -536,8 +536,12 @@ async function loadFreshData(params: peerQueryParams) {
   try {
     const abortController = new AbortController()
 
+    const peerTimeOUT = process.env.PEERING_TIMEOUT_IN_MS
+      ? process.env.PEERING_TIMEOUT_IN_MS
+      : '3000'
+
     // Since we use auto refresh cache we can safely set the timeout to 3sec
-    setTimeout(() => abortController.abort(), 3000)
+    setTimeout(() => abortController.abort(), parseInt(peerTimeOUT))
 
     const fetchResult = await fetch(params.hostURL, {
       method: 'POST',
