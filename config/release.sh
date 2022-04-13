@@ -22,10 +22,10 @@ if [ "$CURRENT_BRANCH" != "$BRANCH" ]; then
   git checkout $BRANCH || git -b checkout $BRANCH
 fi
 
-lerna-changelog --next-version ${NEXT} >>PRERELEASE_CHANGELOG.md
+yarn run lerna-changelog --next-version ${NEXT} >>PRERELEASE_CHANGELOG.md
 git add PRERELEASE_CHANGELOG.md
 git commit -m "chore(release): publish ${NEXT}"
-lerna version --conventional-commits --no-changelog --allow-branch $BRANCH --force-git-tag --amend --no-push $NEXT --yes
+yarn run lerna version --conventional-commits --no-changelog --allow-branch $BRANCH --force-git-tag --amend --no-push $NEXT --yes
 git push --set-upstream origin $BRANCH
 git push --tags --force
 if ! gh pr view; then
