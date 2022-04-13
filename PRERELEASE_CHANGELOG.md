@@ -76,3 +76,5 @@ $ /Users/tomasz/projects/wepublish/wepublish/node_modules/.bin/lerna-changelog -
 #### Committers: 2
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+$ /Users/tomasz/projects/wepublish/wepublish/node_modules/.bin/lerna-changelog --next-version 3.0.0-alpha.11
+
