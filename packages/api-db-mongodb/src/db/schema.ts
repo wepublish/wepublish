@@ -13,11 +13,13 @@ import {
   PaymentProviderCustomer,
   RichTextNode,
   CommentRevision,
-  UserSubscription,
   MailLogState,
   PaymentState,
   UserAddress,
-  UserOAuth2Account
+  UserOAuth2Account,
+  PaymentPeriodicity,
+  SubscriptionPeriod,
+  SubscriptionDeactivation
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -27,6 +29,8 @@ export enum CollectionName {
   Peers = 'peers',
   Users = 'users',
   UserRoles = 'users.roles',
+  TempUsers = 'temp.users',
+  Subscriptions = 'subscriptions',
 
   Sessions = 'sessions',
   Tokens = 'tokens',
@@ -104,6 +108,7 @@ export interface DBUser {
   email: string
   emailVerifiedAt: Date | null
   name: string
+  firstName?: string
   preferredName?: string
   address?: UserAddress
   password: string
@@ -117,7 +122,6 @@ export interface DBUser {
 
   roleIDs: string[]
 
-  subscription?: UserSubscription
   paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
@@ -132,6 +136,40 @@ export interface DBUserRole {
   systemRole: boolean
 
   permissionIDs: string[]
+}
+
+export interface DBSubscription {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  userID: string
+  memberPlanID: string
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: number
+  autoRenew: boolean
+  startsAt: Date
+  paidUntil: Date | null
+  periods: SubscriptionPeriod[]
+  paymentMethodID: string
+  properties: MetadataProperty[]
+  deactivation: SubscriptionDeactivation | null
+}
+
+export interface DBTempUser {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  firstName?: string
+  preferredName?: string
+  email: string
+
+  address?: UserAddress
+  paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export interface DBSession {
@@ -360,8 +398,7 @@ export interface DBInvoice {
 
   mail: string
   dueAt: Date
-
-  userID?: string
+  subscriptionID: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null

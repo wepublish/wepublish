@@ -11,16 +11,17 @@ import {
   SelectPicker
 } from 'rsuite'
 
-import {FullUserFragment, SubscriptionDeactivationReason} from '../api'
+import {SubscriptionDeactivationReason} from '../api'
 
 export interface DeactivateSubscription {
   date: Date
   reason: SubscriptionDeactivationReason
 }
 
-export interface UserSubscriptionDeactivatePanelProps {
+export interface SubscriptionDeactivatePanelProps {
   isDeactivated: boolean
-  user: FullUserFragment
+  displayName: string
+  paidUntil?: Date
 
   onDeactivate(data: DeactivateSubscription): void
   onReactivate(): void
@@ -29,15 +30,16 @@ export interface UserSubscriptionDeactivatePanelProps {
 
 export function UserSubscriptionDeactivatePanel({
   isDeactivated,
-  user,
+  displayName,
+  paidUntil,
   onDeactivate,
   onReactivate,
   onClose
-}: UserSubscriptionDeactivatePanelProps) {
+}: SubscriptionDeactivatePanelProps) {
   const {t} = useTranslation()
 
   const [deactivationDate, setDeactivationDate] = useState(
-    user.subscription?.paidUntil ? new Date(user.subscription?.paidUntil) : new Date()
+    paidUntil ? new Date(paidUntil) : new Date()
   )
   const [deactivationReason, setDeactivationReason] = useState(null)
 
@@ -59,7 +61,7 @@ export function UserSubscriptionDeactivatePanel({
             isDeactivated
               ? 'userSubscriptionEdit.deactivation.modalMessage.deactivated'
               : 'userSubscriptionEdit.deactivation.modalMessage.activated',
-            {userName: user.preferredName ?? user.name, userEmail: user.email}
+            {userName: displayName}
           )}
         </p>
         {!isDeactivated && (

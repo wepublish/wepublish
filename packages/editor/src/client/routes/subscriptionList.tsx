@@ -4,19 +4,23 @@ import {
   ButtonLink,
   Link,
   RouteType,
-  UserCreateRoute,
+  SubscriptionCreateRoute,
+  SubscriptionEditRoute,
+  SubscriptionListRoute,
   UserEditRoute,
-  UserListRoute,
   useRoute,
   useRouteDispatch
 } from '../route'
 
 import {RouteActionType} from '@wepublish/karma.run-react'
 
-import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {
+  FullSubscriptionFragment,
+  SubscriptionSort,
+  useDeleteSubscriptionMutation,
+  useSubscriptionListQuery
+} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {UserEditPanel} from '../panel/userEditPanel'
-import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -27,60 +31,59 @@ import {
   IconButton,
   Input,
   InputGroup,
+  Message,
   Modal,
   Table
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
+import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
-function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
+function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
     case 'createdAt':
-      return UserSort.CreatedAt
+      return SubscriptionSort.CreatedAt
     case 'modifiedAt':
-      return UserSort.ModifiedAt
-    case 'name':
-      return UserSort.Name
-    case 'firstName':
-      return UserSort.FirstName
+      return SubscriptionSort.ModifiedAt
     default:
       return null
   }
 }
 
-export function UserList() {
+export function SubscriptionList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
   const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
+    current?.type === RouteType.SubscriptionEdit || current?.type === RouteType.SubscriptionCreate
   )
 
   const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserEdit ? current.params.id : undefined
+    current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
 
-  const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
+  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentUser, setCurrentUser] = useState<FullUserFragment>()
+  const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [users, setUsers] = useState<FullUserFragment[]>([])
+  const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
   const {
     data,
     refetch,
     loading: isLoading
-  } = useUserListQuery({
+  } = useSubscriptionListQuery({
     variables: {
-      filter: filter || undefined,
+      filter: {},
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -91,7 +94,7 @@ export function UserList() {
 
   useEffect(() => {
     refetch({
-      filter: filter || undefined,
+      filter: {},
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -99,44 +102,47 @@ export function UserList() {
     })
   }, [filter, page, limit, sortOrder, sortField])
 
-  const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
+  const [deleteSubscription, {loading: isDeleting}] = useDeleteSubscriptionMutation()
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current?.type === RouteType.UserCreate) {
+    if (current?.type === RouteType.SubscriptionCreate) {
       setEditID(undefined)
       setEditModalOpen(true)
     }
 
-    if (current?.type === RouteType.UserEdit) {
+    if (current?.type === RouteType.SubscriptionEdit) {
       setEditID(current.params.id)
       setEditModalOpen(true)
     }
   }, [current])
 
   useEffect(() => {
-    if (data?.users?.nodes) {
-      setUsers(data.users.nodes)
-      if (data.users.totalCount + 9 < page * limit) {
+    if (data?.subscriptions?.nodes) {
+      setSubscriptions(data.subscriptions.nodes)
+      if (data.subscriptions.totalCount + 9 < page * limit) {
         setPage(1)
       }
     }
-  }, [data?.users])
+  }, [data?.subscriptions])
 
   return (
     <>
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
-          <h2>{t('userList.overview.users')}</h2>
+          <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
+            {t('userList.overview.exportSubscriptionsCsv')}
+          </Button>
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
             disabled={isLoading}
-            route={UserCreateRoute.create({})}>
-            {t('userList.overview.newUser')}
+            route={SubscriptionCreateRoute.create({})}>
+            {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
@@ -160,7 +166,7 @@ export function UserList() {
           autoHeight={true}
           style={{flex: 1}}
           loading={isLoading}
-          data={users}
+          data={subscriptions}
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
@@ -168,71 +174,70 @@ export function UserList() {
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
+            <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullUserFragment) =>
-                t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
+              {({createdAt}: FullSubscriptionFragment) =>
+                t('subscriptionList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
               }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullUserFragment) =>
-                t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              {({modifiedAt}: FullSubscriptionFragment) =>
+                t('subscriptionList.overview.modifiedAtDate', {
+                  modifiedAtDate: new Date(modifiedAt)
+                })
               }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
-            <Cell dataKey={'firstName'}>
-              {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
-                  {rowData.firstName || ''}
+          {/* subscription */}
+          <Column width={200}>
+            <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
+            <Cell dataKey={'subscription'}>
+              {(rowData: FullSubscriptionFragment) => (
+                <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
+                  {rowData.memberPlan.name}
                 </Link>
               )}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
+          {/* name */}
+          <Column width={300} align="left" resizable sortable>
+            <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
-              {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
-                  {rowData.name || t('userList.overview.unknown')}
+              {(rowData: FullSubscriptionFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.user!.id})}>
+                  {isTempUser(rowData.user?.id) && (
+                    <span>{t('subscriptionList.overview.tempUser')}</span>
+                  )}
+                  {rowData.user?.name || t('subscriptionList.overview.deleted')}
                 </Link>
               )}
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
-            <Cell dataKey="email" />
+          {/* email */}
+          <Column width={250}>
+            <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
+            <Cell dataKey={'email'}>
+              {(rowData: FullSubscriptionFragment) => <div>{rowData.user?.email}</div>}
+            </Cell>
           </Column>
+          {/* action */}
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullUserFragment) => (
+              {(rowData: FullSubscriptionFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
-                    <IconButton
-                      icon={<Icon icon="lock" />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={e => {
-                        setCurrentUser(rowData)
-                        setIsResetUserPasswordOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('userList.overview.delete')}>
+                  <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
                     <IconButton
                       icon={<Icon icon="trash" />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
+                        setCurrentSubscription(rowData)
                         setConfirmationDialogOpen(true)
-                        setCurrentUser(rowData)
                       }}
                     />
                   </IconButtonTooltip>
@@ -247,7 +252,7 @@ export function UserList() {
           lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
           activePage={page}
           displayLength={limit}
-          total={data?.users.totalCount}
+          total={data?.subscriptions.totalCount}
           onChangePage={page => setPage(page)}
           onChangeLength={limit => setLimit(limit)}
         />
@@ -260,16 +265,16 @@ export function UserList() {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
-            route: UserListRoute.create({}, current ?? undefined)
+            route: SubscriptionListRoute.create({}, current ?? undefined)
           })
         }}>
-        <UserEditPanel
+        <SubscriptionEditPanel
           id={editID!}
           onClose={() => {
             setEditModalOpen(false)
             dispatch({
               type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
+              route: SubscriptionListRoute.create({}, current ?? undefined)
             })
           }}
           onSave={() => {
@@ -277,41 +282,44 @@ export function UserList() {
             refetch()
             dispatch({
               type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
+              route: SubscriptionListRoute.create({}, current ?? undefined)
             })
           }}
         />
       </Drawer>
 
-      <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
+      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <ResetUserPasswordPanel
-            userID={currentUser?.id}
-            userName={currentUser?.name}
-            onClose={() => setIsResetUserPasswordOpen(false)}
-          />
+          <SubscriptionAsCsvModal />
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+          <Button onClick={() => setExportModalOpen(false)} appearance="default">
+            {t('userList.panels.close')}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
+          <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
+          {currentSubscription && isTempUser(currentSubscription.user?.id) && (
+            <Message
+              showIcon
+              type="warning"
+              description={t('subscriptionList.panels.tempUserWarning')}
+            />
+          )}
           <DescriptionList>
-            <DescriptionListItem label={t('userList.panels.name')}>
-              {currentUser?.name || t('userList.panels.Unknown')}
+            <DescriptionListItem label={t('subscriptionList.panels.name')}>
+              {currentSubscription?.user?.name || t('subscriptionList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
@@ -320,20 +328,20 @@ export function UserList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentUser) return
+              if (!currentSubscription) return
 
-              await deleteUser({
-                variables: {id: currentUser.id}
+              await deleteSubscription({
+                variables: {id: currentSubscription.id}
               })
 
               setConfirmationDialogOpen(false)
               refetch()
             }}
             color="red">
-            {t('userList.panels.confirm')}
+            {t('subscriptionList.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+            {t('subscriptionList.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

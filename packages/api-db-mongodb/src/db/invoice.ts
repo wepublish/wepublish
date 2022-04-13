@@ -36,7 +36,7 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       modifiedAt: new Date(),
       mail: input.mail,
       dueAt: input.dueAt,
-      userID: input.userID,
+      subscriptionID: input.subscriptionID,
       description: input.description,
       paidAt: input.paidAt,
       canceledAt: input.canceledAt,
@@ -56,7 +56,7 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
           modifiedAt: new Date(),
           mail: input.mail,
           dueAt: input.dueAt,
-          userID: input.userID,
+          subscriptionID: input.subscriptionID,
           description: input.description,
           paidAt: input.paidAt,
           canceledAt: input.canceledAt,
@@ -78,6 +78,11 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
     return deletedCount !== 0 ? id : null
   }
 
+  async getInvoiceByID(id: string): Promise<OptionalInvoice> {
+    const invoice = await this.invoices.findOne({_id: id})
+    return invoice ? {id: invoice._id, ...invoice} : null
+  }
+
   async getInvoicesByID(ids: readonly string[]): Promise<OptionalInvoice[]> {
     const invoices = await this.invoices.find({_id: {$in: ids}}).toArray()
     const invoiceMap = Object.fromEntries(
@@ -87,8 +92,8 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
     return ids.map(id => invoiceMap[id] ?? null)
   }
 
-  async getInvoicesByUserID(userID: string): Promise<OptionalInvoice[]> {
-    const invoices = await this.invoices.find({userID}).toArray()
+  async getInvoicesBySubscriptionID(subscriptionID: string): Promise<OptionalInvoice[]> {
+    const invoices = await this.invoices.find({subscriptionID}).toArray()
 
     return invoices.map(({_id: id, ...invoice}) => ({id, ...invoice}))
   }

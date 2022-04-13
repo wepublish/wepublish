@@ -429,6 +429,26 @@ Object {
                   "description": "Allows to login editor",
                   "id": "CAN_LOGIN_EDITOR",
                 },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to create a subscription",
+                  "id": "CAN_CREATE_SUBSCRIPTION",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to get a subscription",
+                  "id": "CAN_GET_SUBSCRIPTION",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to get all subscriptions",
+                  "id": "CAN_GET_SUBSCRIPTIONS",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to delete a subscription",
+                  "id": "CAN_DELETE_SUBSCRIPTION",
+                },
               ],
               "systemRole": true,
             },

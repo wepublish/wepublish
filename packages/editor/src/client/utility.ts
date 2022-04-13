@@ -4,9 +4,16 @@ import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
+import Maybe from 'graphql/tsutils/Maybe'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
+}
+
+export const TEMP_USER_PREFIX = '__temp_'
+
+export function isTempUser(userID: string | null | Maybe<string>): boolean {
+  return !!userID?.startsWith(TEMP_USER_PREFIX)
 }
 
 export function generateID(): string {
@@ -195,10 +202,10 @@ export function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )
