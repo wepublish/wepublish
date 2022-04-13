@@ -445,32 +445,14 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             bodyFill={true}
                             classPrefix="rs-panel"
                             header=""
-                            style={
-                              Object {
-                                "height": 450,
-                                "marginBottom": 10,
-                              }
-                            }
                           >
                             <Panel
                               bodyFill={true}
                               classPrefix="rs-panel"
                               header=""
-                              style={
-                                Object {
-                                  "height": 450,
-                                  "marginBottom": 10,
-                                }
-                              }
                             >
                               <div
                                 className="rs-panel rs-panel-default"
-                                style={
-                                  Object {
-                                    "height": 450,
-                                    "marginBottom": 10,
-                                  }
-                                }
                               >
                                 <div
                                   className="rs-panel-body rs-panel-body-fill"
@@ -487,6 +469,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           "flexDirection": "column",
                                           "height": "100%",
                                           "justifyContent": "center",
+                                          "maxHeight": 450,
                                           "width": "100%",
                                         }
                                       }
@@ -3427,32 +3410,14 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             bodyFill={true}
                             classPrefix="rs-panel"
                             header=""
-                            style={
-                              Object {
-                                "height": 450,
-                                "marginBottom": 10,
-                              }
-                            }
                           >
                             <Panel
                               bodyFill={true}
                               classPrefix="rs-panel"
                               header=""
-                              style={
-                                Object {
-                                  "height": 450,
-                                  "marginBottom": 10,
-                                }
-                              }
                             >
                               <div
                                 className="rs-panel rs-panel-default"
-                                style={
-                                  Object {
-                                    "height": 450,
-                                    "marginBottom": 10,
-                                  }
-                                }
                               >
                                 <div
                                   className="rs-panel-body rs-panel-body-fill"
@@ -3469,6 +3434,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                           "flexDirection": "column",
                                           "height": "100%",
                                           "justifyContent": "center",
+                                          "maxHeight": 450,
                                           "width": "100%",
                                         }
                                       }
@@ -6399,32 +6365,14 @@ exports[`Author Edit Panel should render 1`] = `
                             bodyFill={true}
                             classPrefix="rs-panel"
                             header=""
-                            style={
-                              Object {
-                                "height": 450,
-                                "marginBottom": 10,
-                              }
-                            }
                           >
                             <Panel
                               bodyFill={true}
                               classPrefix="rs-panel"
                               header=""
-                              style={
-                                Object {
-                                  "height": 450,
-                                  "marginBottom": 10,
-                                }
-                              }
                             >
                               <div
                                 className="rs-panel rs-panel-default"
-                                style={
-                                  Object {
-                                    "height": 450,
-                                    "marginBottom": 10,
-                                  }
-                                }
                               >
                                 <div
                                   className="rs-panel-body rs-panel-body-fill"
@@ -6441,6 +6389,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           "flexDirection": "column",
                                           "height": "100%",
                                           "justifyContent": "center",
+                                          "maxHeight": 450,
                                           "width": "100%",
                                         }
                                       }
@@ -9373,32 +9322,14 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             bodyFill={true}
                             classPrefix="rs-panel"
                             header=""
-                            style={
-                              Object {
-                                "height": 450,
-                                "marginBottom": 10,
-                              }
-                            }
                           >
                             <Panel
                               bodyFill={true}
                               classPrefix="rs-panel"
                               header=""
-                              style={
-                                Object {
-                                  "height": 450,
-                                  "marginBottom": 10,
-                                }
-                              }
                             >
                               <div
                                 className="rs-panel rs-panel-default"
-                                style={
-                                  Object {
-                                    "height": 450,
-                                    "marginBottom": 10,
-                                  }
-                                }
                               >
                                 <div
                                   className="rs-panel-body rs-panel-body-fill"
@@ -9415,6 +9346,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           "flexDirection": "column",
                                           "height": "100%",
                                           "justifyContent": "center",
+                                          "maxHeight": 450,
                                           "width": "100%",
                                         }
                                       }
