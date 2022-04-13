@@ -65,3 +65,14 @@
 
 
 
+$ /Users/tomasz/projects/wepublish/wepublish/node_modules/.bin/lerna-changelog --next-version 3.0.0-alpha.10
+
+## 3.0.0-alpha.10 (2022-04-13)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#555](https://github.com/wepublish/wepublish/pull/555) adjust choose image panel image size ([@penk85](https://github.com/penk85))
+
+#### Committers: 2
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
