@@ -14,7 +14,7 @@
     "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production build:api-example build:website-example build:oauth2-example",
     "prerelease": "run-s clean build:production",
-    "release": "node -r dotenv/config ./node_modules/.bin/lerna version --conventional-commits --no-changelog --force-git-tag --no-push",
+    "release": "config/release.sh",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
     "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
