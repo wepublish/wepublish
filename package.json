@@ -16,6 +16,7 @@
     "prerelease": "run-s clean build:production",
     "release": "config/release.sh",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
+    "prepublish": "run-s clean build:production",
     "publish": "lerna publish from-package --ignore-scripts",
     "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
     "watch": "run-p --print-label watch:*",
