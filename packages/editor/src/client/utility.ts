@@ -1,13 +1,19 @@
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {DocumentNode, OperationDefinitionNode, SchemaDefinitionNode} from 'graphql'
+import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
-import {Schema} from 'rsuite'
+import Maybe from 'graphql/tsutils/Maybe'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
+}
+
+export const TEMP_USER_PREFIX = '__temp_'
+
+export function isTempUser(userID: string | null | Maybe<string>): boolean {
+  return !!userID?.startsWith(TEMP_USER_PREFIX)
 }
 
 export function generateID(): string {

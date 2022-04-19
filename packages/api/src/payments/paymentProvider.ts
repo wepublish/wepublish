@@ -7,6 +7,8 @@ import {NextHandleFunction} from 'connect'
 import bodyParser from 'body-parser'
 import {paymentModelEvents} from '../events'
 import {DBAdapter} from '../db/adapter'
+import {OptionalSubscription} from '../db/subscription'
+import {isTempUser, removePrefixTempUser} from '../utility'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -129,28 +131,65 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     if (!updatedPayment) throw new Error('Error while updating Payment')
 
+    // get invoice and subscription joins out of the payment
+    const invoice = await loaders.invoicesByID.load(payment.invoiceID)
+    if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+
+    const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
+    if (!subscription)
+      throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+
+    // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      const invoice = await loaders.invoicesByID.load(payment.invoiceID)
-      if (!invoice?.userID)
-        throw new Error(`Invoice with ID ${payment.invoiceID} does not have a userID`)
+      await this.updatePaymentProvider(dbAdapter, subscription, intentState.customerID)
+    }
+    return updatedPayment
+  }
 
-      const user = await dbAdapter.user.getUserByID(invoice.userID)
-      if (!user) throw new Error(`User with ID ${invoice.userID} does not exist`)
+  /**
+   * adding or updating paymentProvider customer ID for user or tempUser
+   * @param dbAdapter
+   * @param subscription
+   * @param customerID
+   * @private
+   */
+  private async updatePaymentProvider(
+    dbAdapter: DBAdapter,
+    subscription: OptionalSubscription,
+    customerID: string
+  ) {
+    if (!subscription) {
+      throw new Error('Empty subscription within updatePaymentProvider method.')
+    }
 
-      // adding or updating paymentProvider customer ID for user
-      const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-        ppc => ppc.paymentProviderID !== this.id
-      )
-      paymentProviderCustomers.push({
-        paymentProviderID: this.id,
-        customerID: intentState.customerID
+    let user
+    const tempUser = isTempUser(subscription.userID)
+    if (tempUser) {
+      user = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
+    } else {
+      user = await dbAdapter.user.getUserByID(subscription.userID)
+    }
+    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
+
+    const paymentProviderCustomers = user.paymentProviderCustomers.filter(
+      ppc => ppc.paymentProviderID !== this.id
+    )
+    paymentProviderCustomers.push({
+      paymentProviderID: this.id,
+      customerID
+    })
+
+    if (tempUser) {
+      await dbAdapter.tempUser.updatePaymentProviderCustomers({
+        userID: user.id,
+        paymentProviderCustomers
       })
+    } else {
       await dbAdapter.user.updatePaymentProviderCustomers({
         userID: user.id,
         paymentProviderCustomers
       })
     }
-    return updatedPayment
   }
 }
 
@@ -169,7 +208,8 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
         id: invoice.id,
         input: {
           ...invoice,
-          paidAt: new Date()
+          paidAt: new Date(),
+          canceledAt: null
         }
       })
     }

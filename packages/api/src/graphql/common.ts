@@ -62,6 +62,14 @@ export const GraphQLMetadataPropertyInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLMetadataPropertyPublicInput = new GraphQLInputObjectType({
+  name: 'PublicPropertiesInput',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    value: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLDateFilterComparison = new GraphQLEnumType({
   name: 'DateFilterComparison',
   values: {

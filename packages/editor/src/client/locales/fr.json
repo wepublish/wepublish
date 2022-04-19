@@ -433,6 +433,32 @@
       },
       "title": "Paramètres"
     },
+    "subscriptionList": {
+      "overview": {
+        "createdAt": "Créé",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "delete": "Annuler",
+        "modifiedAt": "Dernière modification",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Nom",
+        "newSubscription": "Nouvel abonnement",
+        "exportSubscriptionsCsv": "Exportation CSV",
+        "unknown": "Inconnu",
+        "deleted": "Utilisateur supprimé",
+        "subscription": "Abonnement",
+        "tempUser": "(Utilisateur temporaire) - ",
+        "email": "Email",
+        "memberPlan": "plan de membre"
+      },
+      "panels": {
+        "deleteSubscription": "Supprimer l'abonnement ?",
+        "name": "Nom",
+        "unknown": "Inconnu",
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "tempUserWarning": "Cet abonnement a un(e) utilisateur(trice) temporaire qui n'a pas terminé son enregistrement. Si tu supprimes l'abonnement, l'utilisateur(trice) temporaire sera également supprimé(e)."
+      }
+    },
     "userList": {
       "panels": {
         "remove": "Supprimer",
@@ -711,7 +737,9 @@
       "payedUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Choisissez un plan de membre",
-      "startsAt": "Début de l'abonnement"
+      "startsAt": "Début de l'abonnement",
+      "selectUser": "Choisir l'utilisateur",
+      "tempUserTitle": "Utilisateur temporaire"
     },
     "navbar": {
       "languageSwitch": {

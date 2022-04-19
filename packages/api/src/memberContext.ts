@@ -1,35 +1,36 @@
-import {
-  PaymentProviderCustomer,
-  SubscriptionDeactivationReason,
-  User,
-  UserSort,
-  UserSubscription
-} from './db/user'
+import {OptionalUser, PaymentProviderCustomer, User} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
 import {DataLoaderContext} from './context'
 import {
+  isTempUser,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
-  ONE_MONTH_IN_MILLISECONDS
+  ONE_MONTH_IN_MILLISECONDS,
+  removePrefixTempUser
 } from './utility'
-import {PaymentPeriodicity} from './db/memberPlan'
+import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {MailContext, SendMailType} from './mails/mailContext'
+import {
+  Subscription,
+  SubscriptionDeactivationReason,
+  SubscriptionSort,
+  OptionalSubscription
+} from './db/subscription'
+import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
+import {PaymentMethod} from './db/paymentMethod'
+import {OptionalTempUser, UserIdWithTempPrefix} from './db/tempUser'
 
 export interface HandleSubscriptionChangeProps {
-  userID: string
-  userSubscription: UserSubscription
+  subscription: Subscription
 }
 
 export interface RenewSubscriptionForUserProps {
-  userID: string
-  userEmail: string
-  userName: string
-  userSubscription: UserSubscription
+  subscription: Subscription
 }
 
 export interface RenewSubscriptionForUsersProps {
@@ -58,7 +59,7 @@ export interface CheckOpenInvoiceProps {
 }
 
 export interface DeactivateSubscriptionForUserProps {
-  userID: string
+  subscriptionID: string
   deactivationDate?: Date
   deactivationReason?: SubscriptionDeactivationReason
 }
@@ -71,7 +72,7 @@ export interface MemberContext {
   mailContext: MailContext
   getLoginUrlForUser(user: User): string
 
-  handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<UserSubscription>
+  handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<Subscription>
 
   renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
   renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
@@ -96,7 +97,7 @@ export interface MemberContextProps {
   getLoginUrlForUser(user: User): string
 }
 
-function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
+export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
   start = new Date(start.getTime() - ONE_DAY_IN_MILLISECONDS) // create new Date object
   switch (periodicity) {
     case PaymentPeriodicity.Monthly:
@@ -110,7 +111,7 @@ function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity)
   }
 }
 
-function calculateAmountForPeriodicity(
+export function calculateAmountForPeriodicity(
   monthlyAmount: number,
   periodicity: PaymentPeriodicity
 ): number {
@@ -180,62 +181,52 @@ export class MemberContext implements MemberContext {
   }
 
   async handleSubscriptionChange({
-    userID,
-    userSubscription
-  }: HandleSubscriptionChangeProps): Promise<UserSubscription> {
+    subscription
+  }: HandleSubscriptionChangeProps): Promise<Subscription> {
     // Check if user has any unpaid Periods and delete them and their invoices if so
-    const invoices = await this.dbAdapter.invoice.getInvoicesByUserID(userID)
+    const invoices = await this.dbAdapter.invoice.getInvoicesBySubscriptionID(subscription.id)
 
     const openInvoice = invoices.find(
       invoice => invoice?.paidAt === null && invoice?.canceledAt === null
     )
 
-    if (
-      openInvoice ||
-      userSubscription.paidUntil === null ||
-      userSubscription.paidUntil <= new Date()
-    ) {
-      const periodToDelete = userSubscription.periods.find(
+    if (openInvoice || subscription.paidUntil === null || subscription.paidUntil <= new Date()) {
+      const periodToDelete = subscription.periods.find(
         period => period.invoiceID === openInvoice?.id
       )
       if (periodToDelete) {
-        await this.dbAdapter.user.deleteUserSubscriptionPeriod({
-          userID: userID,
+        await this.dbAdapter.subscription.deleteSubscriptionPeriod({
+          subscriptionID: subscription.id,
           periodID: periodToDelete.id
         })
       }
       if (openInvoice) await this.dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
 
-      const finalUpdatedUser = await this.dbAdapter.user.getUserByID(userID)
-      if (!finalUpdatedUser || !finalUpdatedUser.subscription)
-        throw new Error('Error during updateSubscription')
+      const finalUpdatedSubscription = await this.dbAdapter.subscription.getSubscriptionByID(
+        subscription.id
+      )
+      if (!finalUpdatedSubscription) throw new Error('Error during updateSubscription')
 
       // renew user subscription
       await this.renewSubscriptionForUser({
-        userID: finalUpdatedUser.id,
-        userSubscription: finalUpdatedUser.subscription,
-        userName: finalUpdatedUser.name,
-        userEmail: finalUpdatedUser.email
+        subscription: finalUpdatedSubscription
       })
 
-      return finalUpdatedUser.subscription
+      return finalUpdatedSubscription
     }
-    return userSubscription
+    return subscription
   }
 
   async renewSubscriptionForUser({
-    userID,
-    userEmail,
-    userName,
-    userSubscription
+    subscription
   }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
-      const {periods = [], paidUntil, deactivation} = userSubscription
+      const {periods = [], paidUntil, deactivation} = subscription
 
       if (deactivation) {
         logger('memberContext').info(
-          'Subscription for user %s is deactivated and will not be renewed',
-          userID
+          'Subscription with id %s is deactivated and will not be renewed',
+          subscription.id
         )
         return null
       }
@@ -259,17 +250,26 @@ export class MemberContext implements MemberContext {
           ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
           : new Date().getTime()
       )
-      const nextDate = getNextDateForPeriodicity(startDate, userSubscription.paymentPeriodicity)
+      const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
       const amount = calculateAmountForPeriodicity(
-        userSubscription.monthlyAmount,
-        userSubscription.paymentPeriodicity
+        subscription.monthlyAmount,
+        subscription.paymentPeriodicity
       )
+
+      const user = isTempUser(subscription.userID)
+        ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
+        : await this.dbAdapter.user.getUserByID(subscription.userID)
+
+      if (!user) {
+        logger('memberContext').info('User with id "%s" not found', subscription.userID)
+        return null
+      }
 
       const newInvoice = await this.dbAdapter.invoice.createInvoice({
         input: {
-          userID: userID,
-          description: `Membership from ${startDate.toISOString()} for ${userName || userEmail}`,
-          mail: userEmail,
+          subscriptionID: subscription.id,
+          description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
+          mail: user.email,
           dueAt: startDate,
           items: [
             {
@@ -285,21 +285,24 @@ export class MemberContext implements MemberContext {
           canceledAt: null
         }
       })
-
-      await this.dbAdapter.user.addUserSubscriptionPeriod({
-        userID: userID,
+      await this.dbAdapter.subscription.addSubscriptionPeriod({
+        subscriptionID: subscription.id,
         input: {
           amount,
-          paymentPeriodicity: userSubscription.paymentPeriodicity,
+          paymentPeriodicity: subscription.paymentPeriodicity,
           startsAt: startDate,
           endsAt: nextDate,
           invoiceID: newInvoice.id
         }
       })
-      logger('memberContext').info('Renewed subscription for user %s', userID)
+      logger('memberContext').info('Renewed subscription with id %s', subscription.id)
       return newInvoice
     } catch (error) {
-      logger('memberContext').error(error, 'Error while renewing subscription for user %s', userID)
+      logger('memberContext').error(
+        error,
+        'Error while renewing subscription with id %s',
+        subscription.id
+      )
     }
     return null
   }
@@ -313,47 +316,32 @@ export class MemberContext implements MemberContext {
     }
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
-    const usersPaidUntil = await this.dbAdapter.user.getUsers({
+    const subscriptionsPaidUntil = await this.dbAdapter.subscription.getSubscriptions({
       filter: {
-        subscription: {
-          autoRenew: true,
-          paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
-          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-        }
+        autoRenew: true,
+        paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
+        deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
       },
-      limit: {type: LimitType.First, count: 200},
+      limit: {type: LimitType.First, count: 100},
       order: SortOrder.Ascending,
-      sort: UserSort.CreatedAt,
+      sort: SubscriptionSort.CreatedAt,
       cursor: InputCursor()
     })
 
-    const usersPaidNull = await this.dbAdapter.user.getUsers({
+    const subscriptionPaidNull = await this.dbAdapter.subscription.getSubscriptions({
       filter: {
-        subscription: {
-          autoRenew: true,
-          paidUntil: {date: null, comparison: DateFilterComparison.Equal},
-          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-        }
+        autoRenew: true,
+        paidUntil: {date: null, comparison: DateFilterComparison.Equal},
+        deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
       },
       limit: {type: LimitType.First, count: 200},
       order: SortOrder.Ascending,
-      sort: UserSort.CreatedAt,
+      sort: SubscriptionSort.CreatedAt,
       cursor: InputCursor()
     })
 
-    // TODO: Better checking if users need new subscription
-
-    for (const user of [...usersPaidUntil.nodes, ...usersPaidNull.nodes]) {
-      if (!user.subscription) {
-        logger('memberContext').warn('User %s does not have a subscription')
-        continue
-      }
-      await this.renewSubscriptionForUser({
-        userID: user.id,
-        userSubscription: user.subscription,
-        userName: user.name,
-        userEmail: user.email
-      })
+    for (const subscription of [...subscriptionsPaidUntil.nodes, ...subscriptionPaidNull.nodes]) {
+      await this.renewSubscriptionForUser({subscription})
     }
   }
 
@@ -376,14 +364,11 @@ export class MemberContext implements MemberContext {
     })
 
     for (const invoice of invoices.nodes) {
-      if (!invoice.userID) {
-        logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
-        continue
-      }
-
-      const user = await this.dbAdapter.user.getUserByID(invoice.userID)
-      if (!user || !user.subscription) {
-        logger('memberContext').warn('user or subscription %s not found', invoice.userID)
+      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
+        invoice.subscriptionID
+      )
+      if (!subscription) {
+        logger('memberContext').warn('subscription "%s" not found', invoice.subscriptionID)
         continue
       }
 
@@ -447,6 +432,43 @@ export class MemberContext implements MemberContext {
       .map(provider => provider.id)
   }
 
+  /**
+   * Create regular user out of temp user and activate subscription
+   * @param dbAdapter
+   * @param userID
+   * @param subscription
+   * @private
+   */
+  public async activateTempUser(
+    dbAdapter: DBAdapter,
+    userID: UserIdWithTempPrefix,
+    subscription: OptionalSubscription
+  ): Promise<OptionalSubscription> {
+    // create non-temp user id
+    const tempUserId = removePrefixTempUser(userID)
+    const tempUser: OptionalTempUser = await dbAdapter.tempUser.getTempUserByID(tempUserId)
+    if (!tempUser) {
+      throw new Error('User not found while updating payment with intent state.')
+    }
+
+    // creating the new user out of the existing temp_user
+    const user: OptionalUser = await dbAdapter.user.createUserFromTempUser(tempUser)
+
+    if (!user) {
+      throw new Error('User could not be created from temp user.')
+    }
+
+    if (!subscription) {
+      throw new Error('Subscription is empty within activateTempUser method.')
+    }
+    // update userID of subscription
+    subscription = await dbAdapter.subscription.updateUserID(subscription.id, user.id)
+    if (!subscription) {
+      throw new Error('Subscription could not be activated.')
+    }
+    return subscription
+  }
+
   async chargeOpenInvoices(): Promise<void> {
     const today = new Date()
     const invoices = await this.dbAdapter.invoice.getInvoices({
@@ -469,8 +491,11 @@ export class MemberContext implements MemberContext {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
 
     for (const invoice of invoices.nodes) {
-      if (!invoice.userID) {
-        logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
+      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
+        invoice.subscriptionID
+      )
+      if (!subscription) {
+        logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
         continue
       }
 
@@ -493,17 +518,16 @@ export class MemberContext implements MemberContext {
             }
           })
           await this.deactivateSubscriptionForUser({
-            userID: invoice.userID,
+            subscriptionID: subscription.id,
             deactivationDate: today,
             deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
           })
           continue
         }
       }
-
-      const user = await this.dbAdapter.user.getUserByID(invoice.userID)
-      if (!user || !user.subscription) {
-        logger('memberContext').warn('user or subscription %s not found', invoice.userID)
+      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
+      if (!user) {
+        logger('memberContext').warn('user %s not found', subscription.userID)
         continue
       }
 
@@ -512,14 +536,9 @@ export class MemberContext implements MemberContext {
         continue
       }
 
-      const paymentMethod = await this.loaders.paymentMethodsByID.load(
-        user.subscription.paymentMethodID
-      )
+      const paymentMethod = await this.loaders.paymentMethodsByID.load(subscription.paymentMethodID)
       if (!paymentMethod) {
-        logger('memberContext').warn(
-          'paymentMethod %s not found',
-          user.subscription.paymentMethodID
-        )
+        logger('memberContext').warn('paymentMethod %s not found', subscription.paymentMethodID)
         continue
       }
 
@@ -527,7 +546,6 @@ export class MemberContext implements MemberContext {
         const customer = user.paymentProviderCustomers.find(
           ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
         )
-
         if (!customer) {
           logger('memberContext').warn(
             'PaymentCustomer %s on user %s not found',
@@ -541,7 +559,8 @@ export class MemberContext implements MemberContext {
               user,
               invoice,
               paymentProviderID: paymentMethod.paymentProviderID,
-              errorCode: 'customer_missing'
+              errorCode: 'customer_missing',
+              subscription
             }
           })
           continue
@@ -668,8 +687,11 @@ export class MemberContext implements MemberContext {
     }
 
     for (const invoice of invoices.nodes) {
-      if (!invoice.userID) {
-        logger('memberContext').warn('invoice %s does not have a user ID', invoice.id)
+      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
+        invoice.subscriptionID
+      )
+      if (!subscription) {
+        logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
         continue
       }
 
@@ -692,7 +714,7 @@ export class MemberContext implements MemberContext {
             }
           })
           await this.deactivateSubscriptionForUser({
-            userID: invoice.userID,
+            subscriptionID: subscription.id,
             deactivationDate: today,
             deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
           })
@@ -700,9 +722,9 @@ export class MemberContext implements MemberContext {
         }
       }
 
-      const user = await this.dbAdapter.user.getUserByID(invoice.userID)
-      if (!user || !user.subscription) {
-        logger('memberContext').warn('user or subscription %s not found', invoice.userID)
+      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
+      if (!user) {
+        logger('memberContext').warn('user %s not found', subscription.userID)
         continue
       }
 
@@ -728,9 +750,14 @@ export class MemberContext implements MemberContext {
   }: SendReminderForInvoiceProps): Promise<void> {
     const today = new Date()
 
-    const user = invoice.userID ? await this.dbAdapter.user.getUserByID(invoice.userID) : null
-    const paymentMethod = user?.subscription
-      ? await this.loaders.paymentMethodsByID.load(user.subscription.paymentMethodID)
+    const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
+      invoice.subscriptionID
+    )
+    const user = subscription?.userID
+      ? await this.dbAdapter.user.getUserByID(subscription?.userID)
+      : null
+    const paymentMethod = subscription
+      ? await this.loaders.paymentMethodsByID.load(subscription.paymentMethodID)
       : null
     const paymentProvider = paymentMethod?.paymentProviderID
       ? this.paymentProviders.find(provider => provider.id === paymentMethod.paymentProviderID)
@@ -744,7 +771,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       } else {
@@ -758,7 +786,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       } else {
@@ -768,7 +797,8 @@ export class MemberContext implements MemberContext {
           data: {
             invoice,
             user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {})
+            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+            subscription
           }
         })
       }
@@ -784,28 +814,140 @@ export class MemberContext implements MemberContext {
   }
 
   async deactivateSubscriptionForUser({
-    userID,
+    subscriptionID,
     deactivationDate,
     deactivationReason
   }: DeactivateSubscriptionForUserProps): Promise<void> {
-    const user = await this.dbAdapter.user.getUserByID(userID)
-    if (!user || !user.subscription) {
-      logger('memberContext').info(
-        'User with ID: "%s" does not exist or does not have a subscription for deactivation',
-        userID
-      )
+    const subscription = await this.dbAdapter.subscription.getSubscriptionByID(subscriptionID)
+    if (!subscription) {
+      logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
     }
 
-    await this.dbAdapter.user.updateUserSubscription({
-      userID,
+    await this.dbAdapter.subscription.updateSubscription({
+      id: subscriptionID,
       input: {
-        ...user.subscription,
+        ...subscription,
         deactivation: {
-          date: deactivationDate ?? user.subscription.paidUntil ?? new Date(),
+          date: deactivationDate ?? subscription.paidUntil ?? new Date(),
           reason: deactivationReason ?? SubscriptionDeactivationReason.None
         }
       }
     })
+  }
+
+  /**
+   * Function used to
+   * @param memberPlanID
+   * @param memberPlanSlug
+   * @param paymentMethodID
+   * @param paymentMethodSlug
+   */
+
+  async validateInputParamsCreateSubscription(
+    memberPlanID: string | null,
+    memberPlanSlug: string | null,
+    paymentMethodID: string | null,
+    paymentMethodSlug: string | null
+  ) {
+    if (
+      (memberPlanID == null && memberPlanSlug == null) ||
+      (memberPlanID != null && memberPlanSlug != null)
+    ) {
+      throw new UserInputError('You must provide either `memberPlanID` or `memberPlanSlug`.')
+    }
+
+    if (
+      (paymentMethodID == null && paymentMethodSlug == null) ||
+      (paymentMethodID != null && paymentMethodSlug != null)
+    ) {
+      throw new UserInputError('You must provide either `paymentMethodID` or `paymentMethodSlug`.')
+    }
+  }
+
+  async getMemberPlanByIDOrSlug(
+    loaders: DataLoaderContext,
+    memberPlanSlug: string,
+    memberPlanID: string
+  ) {
+    const memberPlan = memberPlanID
+      ? await loaders.activeMemberPlansByID.load(memberPlanID)
+      : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+    if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+    return memberPlan
+  }
+
+  async getPaymentMethodByIDOrSlug(
+    loaders: DataLoaderContext,
+    paymentMethodSlug: string,
+    paymentMethodID: string
+  ) {
+    const paymentMethod = paymentMethodID
+      ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
+    if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+    return paymentMethod
+  }
+
+  async validateSubscriptionPaymentConfiguration(
+    memberPlan: MemberPlan,
+    autoRenew: boolean,
+    paymentPeriodicity: PaymentPeriodicity,
+    paymentMethod: PaymentMethod
+  ) {
+    if (
+      !memberPlan.availablePaymentMethods.some(apm => {
+        if (apm.forceAutoRenewal && !autoRenew) return false
+        return (
+          apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+          apm.paymentMethodIDs.includes(paymentMethod.id)
+        )
+      })
+    )
+      throw new PaymentConfigurationNotAllowed()
+  }
+
+  async processSubscriptionProperties(subscriptionProperties: any) {
+    return Array.isArray(subscriptionProperties)
+      ? subscriptionProperties.map(property => {
+          return {
+            public: true,
+            key: property.key,
+            value: property.value
+          }
+        })
+      : []
+  }
+
+  async createSubscription(
+    dbAdapter: DBAdapter,
+    userID: string,
+    paymentMethod: PaymentMethod,
+    paymentPeriodicity: PaymentPeriodicity,
+    monthlyAmount: number,
+    memberPlan: MemberPlan,
+    properties: any,
+    autoRenew: boolean
+  ) {
+    const subscription = await dbAdapter.subscription.createSubscription({
+      input: {
+        userID,
+        startsAt: new Date(),
+        paymentMethodID: paymentMethod.id,
+        paymentPeriodicity,
+        paidUntil: null,
+        monthlyAmount,
+        deactivation: null,
+        memberPlanID: memberPlan.id,
+        properties,
+        autoRenew
+      }
+    })
+
+    if (!subscription) {
+      logger('mutation.public').error('Could not create new subscription for userID "%s"', userID)
+      throw new InternalError()
+    }
+    return subscription
   }
 }

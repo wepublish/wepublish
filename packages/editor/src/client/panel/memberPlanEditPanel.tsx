@@ -45,6 +45,7 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {CurrencyInput} from '../atoms/currencyInput'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -66,6 +67,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
+
   const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -108,7 +110,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     if (data?.memberPlan) {
       setName(data.memberPlan.name)
       setSlug(data.memberPlan.slug)
-      setTags(data.memberPlan.tags)
+      setTags(data.memberPlan.tags ?? [])
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
@@ -199,7 +201,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
         </Drawer.Title>
       </Drawer.Header>
-
       <Drawer.Body>
         <Panel>
           <Form fluid={true}>
@@ -236,17 +237,15 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
             </FormGroup>
+
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
-              <FormControl
-                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
-                value={amountPerMonthMin}
-                type="number"
+              <CurrencyInput
+                currency="CHF"
+                centAmount={amountPerMonthMin}
                 disabled={isDisabled}
-                min={0}
-                steps={1}
-                onChange={value => {
-                  setAmountPerMonthMin(parseInt(`${value}`))
+                onChange={centAmount => {
+                  setAmountPerMonthMin(centAmount)
                 }}
               />
             </FormGroup>
