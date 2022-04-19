@@ -168,7 +168,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <Panel>
           <Form fluid={true}>
             <FormGroup>
-              <ControlLabel>{t('userList.panels.firstName')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.firstName') + '*'}</ControlLabel>
               <FormControl
                 name={t('userList.panels.firstName')}
                 value={firstName}
@@ -177,7 +177,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userList.panels.name')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.name') + '*'}</ControlLabel>
               <FormControl
                 name={t('userList.panels.name')}
                 value={name}
@@ -195,7 +195,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userList.panels.email')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.email') + '*'}</ControlLabel>
               <FormControl
                 name={t('userList.panels.email')}
                 value={email}
@@ -209,7 +209,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             </FormGroup>
             {!id ? (
               <FormGroup>
-                <ControlLabel>{t('userList.panels.password')}</ControlLabel>
+                <ControlLabel>{t('userList.panels.password') + '*'}</ControlLabel>
                 <FormControl
                   type="password"
                   name={t('userList.panels.password')}

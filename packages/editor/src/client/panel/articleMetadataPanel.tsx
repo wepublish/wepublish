@@ -5,6 +5,7 @@ import {
   ControlLabel,
   Drawer,
   Form,
+  Schema,
   FormControl,
   FormGroup,
   TagPicker,
@@ -145,6 +146,16 @@ export function ArticleMetadataPanel({
   const socialMediaTitleMax = 100
   const socialMediaDescriptionMax = 140
 
+  // Defines field requirements
+  const {StringType} = Schema.Types
+  const model = Schema.Model({
+    canonicalUrl: StringType().isURL('please enter a valid url')
+  })
+
+  const checkResult = model.check({
+    canonicalUrl: canonicalUrl
+  })
+
   function currentContent() {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
@@ -231,7 +242,7 @@ export function ArticleMetadataPanel({
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid={true} model={model}>
               <div style={{paddingBottom: '20px'}}>
                 {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
               </div>
@@ -392,11 +403,13 @@ export function ArticleMetadataPanel({
                   onChange={breaking => onChange?.({...value, breaking})}
                 />
               </FormGroup>
-              <FormGroup>
+              <FormGroup model={model}>
                 <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
                 <FormControl
                   className="canonicalUrl"
+                  placeholder={'https://canonical-url.com'}
                   value={canonicalUrl}
+                  errorMessage={checkResult.canonicalUrl.errorMessage}
                   onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
                 />
                 <HelpBlock>
@@ -518,7 +531,10 @@ export function ArticleMetadataPanel({
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} onClick={() => onClose?.()}>
+        <Button
+          appearance={'primary'}
+          disabled={checkResult.canonicalUrl.hasError}
+          onClick={() => onClose?.()}>
           {t('articleEditor.panels.saveAndClose')}
         </Button>
       </Drawer.Footer>

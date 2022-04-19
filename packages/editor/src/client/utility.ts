@@ -1,9 +1,10 @@
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {DocumentNode, OperationDefinitionNode, SchemaDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
+import {Schema} from 'rsuite'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'

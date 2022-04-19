@@ -12,7 +12,8 @@ import {
   InputGroup,
   Icon,
   ControlLabel,
-  FormGroup
+  FormGroup,
+  Schema
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -139,6 +140,19 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     }
   }
 
+  // Defines field requirements
+  const {StringType} = Schema.Types
+  const model = Schema.Model({
+    name: StringType().isRequired('please enter a name')
+  })
+
+  const checkResult = model.check({
+    name: name
+  })
+
+  // Show error
+  const [errorVisible, setErrorVisible] = React.useState(false)
+
   return (
     <>
       <Drawer.Header>
@@ -152,11 +166,12 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           <Panel>
             <Form fluid={true}>
               <FormGroup>
-                <ControlLabel>{t('authors.panels.name')}</ControlLabel>
+                <ControlLabel>{t('authors.panels.name') + '*'}</ControlLabel>
                 <FormControl
                   name={t('authors.panels.name')}
                   value={name}
                   disabled={isDisabled}
+                  errorMessage={errorVisible ? checkResult.name.errorMessage : ''}
                   onChange={value => {
                     setName(value)
                     setSlug(slugify(value))
@@ -230,7 +245,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+        <Button
+          appearance={'primary'}
+          disabled={isDisabled}
+          onClick={() => {
+            checkResult.name.errorMessage ? setErrorVisible(true) : handleSave()
+
+            // handleSave()
+          }}>
           {id ? t('authors.panels.save') : t('authors.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

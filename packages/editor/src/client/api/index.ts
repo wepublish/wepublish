@@ -646,7 +646,7 @@ export type MemberPlan = {
   slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -1908,8 +1908,7 @@ export enum UserRoleSort {
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME',
-  FirstName = 'FIRST_NAME'
+  Name = 'NAME'
 }
 
 export type UserSubscription = {
