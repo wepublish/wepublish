@@ -9,7 +9,8 @@ import {
   ControlLabel,
   FormControl,
   Alert,
-  Message
+  Message,
+  Schema
 } from 'rsuite'
 
 import {
@@ -115,6 +116,32 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
+  const {StringType, ObjectType} = Schema.Types
+
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('please enter a name'),
+    logoImage: ObjectType().isRequired('please add an image'),
+    callToActionText: StringType().isRequired('please enter a call to action text'),
+    callToActionTextURL: StringType()
+      .isURL('please enter a valid url')
+      .isRequired('please enter a url'),
+    callToActionImage: ObjectType().isRequired('please add a call to action image'),
+    callToActionImageURL: StringType()
+      .isURL('please enter a valid url')
+      .isRequired('please enter a url')
+  })
+
+  const checkResult = validationModel.check({
+    name: name,
+    logoImage: logoImage,
+    callToActionText: callToActionText,
+    callToActionTextURL: callToActionTextURL,
+    callToActionImage: callToActionImage,
+    callToActionImageURL: callToActionImageURL
+  })
+
+  console.log(logoImage)
+
   return (
     <>
       <Drawer.Header>
@@ -139,12 +166,22 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             }}
             removeImage={() => setLogoImage(undefined)}
           />
+          {checkResult.logoImage.hasError ? (
+            <Message type="error" description={checkResult.logoImage.errorMessage}></Message>
+          ) : (
+            ''
+          )}
         </Panel>
         <Panel header={t('peerList.panels.information')}>
-          <Form fluid={true}>
+          <Form fluid={true} model={validationModel}>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
-              <FormControl name="name" value={name} onChange={value => setName(value)} />
+              <FormControl
+                name="name"
+                value={name}
+                onChange={value => setName(value)}
+                errorMessage={checkResult.name.errorMessage}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
@@ -213,6 +250,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   }}
                   removeImage={() => setCallToActionImage(undefined)}
                 />
+
+                {checkResult.callToActionImage.hasError ? (
+                  <Message
+                    type="error"
+                    description={checkResult.callToActionImage.errorMessage}></Message>
+                ) : (
+                  ''
+                )}
               </FormGroup>
               <FormGroup>
                 <FormControlUrl

@@ -24,7 +24,8 @@ import {
   FormGroup,
   Panel,
   TagPicker,
-  Alert
+  Alert,
+  Schema
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
@@ -195,6 +196,15 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     }
   }
 
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    source: StringType().isURL('please enter a valid url')
+  })
+
+  const checkResult = validationModel.check({
+    source: source
+  })
+
   /**
    * Resizes an image on client side, if larger than the IMG_MIN_SIZE_TO_COMPRESS env variable
    * @param file
@@ -330,10 +340,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                     onChange={value => setAuthor(value)}
                   />
                 </FormGroup>
-                <FormGroup>
+                <FormGroup model={validationModel}>
                   <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
                     value={source}
+                    errorMessage={checkResult.source.errorMessage}
                     disabled={isDisabled}
                     onChange={value => setSource(value)}
                   />
@@ -354,7 +365,10 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+        <Button
+          appearance={'primary'}
+          disabled={isDisabled || checkResult.source.hasError}
+          onClick={() => handleSave()}>
           {isUpload ? t('images.panels.upload') : t('images.panels.save')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

@@ -8,7 +8,8 @@ import {
   Drawer,
   Form,
   FormControl,
-  FormGroup
+  FormGroup,
+  Schema
 } from 'rsuite'
 
 import {
@@ -116,6 +117,15 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     }
   }
 
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('please enter a name')
+  })
+
+  const checkResult = validationModel.check({
+    name: name
+  })
+
   return (
     <>
       <Drawer.Header>
@@ -125,14 +135,17 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
+        <Form fluid={true} model={validationModel}>
           <FormGroup>
-            <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
+            <ControlLabel>{t('userRoles.panels.name') + '*'}</ControlLabel>
             <FormControl
               name={t('userRoles.panels.name')}
               value={name}
               disabled={isDisabled}
-              onChange={value => setName(value)}
+              onChange={value => {
+                setName(value)
+              }}
+              errorMessage={checkResult.name.errorMessage}
             />
           </FormGroup>
           <FormGroup>
@@ -165,7 +178,10 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+        <Button
+          appearance={'primary'}
+          disabled={isDisabled || checkResult.name.hasError}
+          onClick={() => handleSave()}>
           {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

@@ -32,7 +32,7 @@ import {
   AuthorListDocument
 } from '../api'
 
-import {slugify, generateID, getOperationNameFromDocument} from '../utility'
+import {slugify, generateID, getOperationNameFromDocument, validateURL} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
@@ -142,16 +142,19 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   // Defines field requirements
   const {StringType} = Schema.Types
-  const model = Schema.Model({
-    name: StringType().isRequired('please enter a name')
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('please enter a name'),
+    links: StringType().isURL('please enter a valid url')
   })
 
-  const checkResult = model.check({
-    name: name
+  const checkResult = validationModel.check({
+    name: name,
+    links: links[0].value.url
   })
 
-  // Show error
-  const [errorVisible, setErrorVisible] = React.useState(false)
+  // const checkResult2 = validationModel2.check({
+  //   links: data?.author?.links
+  // })
 
   return (
     <>
@@ -164,17 +167,28 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <Form fluid={true}>
+            <Form fluid={true} model={validationModel}>
               <FormGroup>
                 <ControlLabel>{t('authors.panels.name') + '*'}</ControlLabel>
                 <FormControl
                   name={t('authors.panels.name')}
                   value={name}
                   disabled={isDisabled}
-                  errorMessage={errorVisible ? checkResult.name.errorMessage : ''}
+                  errorMessage={checkResult.name.errorMessage}
                   onChange={value => {
                     setName(value)
                     setSlug(slugify(value))
+                  }}
+                />
+
+                {/* test */}
+                <FormControl
+                  name={t('authors.panels.name')}
+                  value={links}
+                  disabled={isDisabled}
+                  errorMessage={checkResult.links.errorMessage}
+                  onChange={value => {
+                    console.log('value', value, 'link', links[0].value.url, 'link', links)
                   }}
                 />
               </FormGroup>
@@ -204,9 +218,28 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             />
           </Panel>
           <Panel header={t('authors.panels.links')}>
+            {/* test */}
+            <Form>
+              <FormGroup>
+                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+
+                <FormControl
+                  name={t('authors.panels.name')}
+                  value={links}
+                  disabled={isDisabled}
+                  errorMessage={checkResult.links.errorMessage}
+                  onChange={value => {
+                    console.log('value', value, 'link', links[0].value.url, 'link', links)
+                  }}
+                />
+              </FormGroup>
+            </Form>
+
             <ListInput
               value={links}
-              onChange={links => setLinks(links)}
+              onChange={links => {
+                setLinks(links)
+              }}
               defaultValue={{title: '', url: ''}}>
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -230,6 +263,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                       }}
                       value={value.url}
                       onChange={url => onChange({...value, url})}
+                      {...console.log(value)}
                     />
                   </InputGroup>
                 </div>
@@ -247,12 +281,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Footer>
         <Button
           appearance={'primary'}
-          disabled={isDisabled}
-          onClick={() => {
-            checkResult.name.errorMessage ? setErrorVisible(true) : handleSave()
-
-            // handleSave()
-          }}>
+          disabled={isDisabled || checkResult.name.hasError}
+          onClick={() => handleSave()}>
           {id ? t('authors.panels.save') : t('authors.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
