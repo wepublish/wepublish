@@ -203,7 +203,12 @@ export function SubscriptionList() {
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullSubscriptionFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.user!.id})}>
+                <Link
+                  route={
+                    rowData.user
+                      ? UserEditRoute.create({id: rowData.user.id})
+                      : SubscriptionEditRoute.create({id: rowData.id})
+                  }>
                   {isTempUser(rowData.user?.id) && (
                     <span>{t('subscriptionList.overview.tempUser')}</span>
                   )}
@@ -216,7 +221,9 @@ export function SubscriptionList() {
           <Column width={250}>
             <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
             <Cell dataKey={'email'}>
-              {(rowData: FullSubscriptionFragment) => <div>{rowData.user?.email}</div>}
+              {(rowData: FullSubscriptionFragment) => (
+                <div>{rowData.user?.email || t('subscriptionList.overview.deleted')}</div>
+              )}
             </Cell>
           </Column>
           {/* action */}
