@@ -77,7 +77,11 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
-  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useSubscriptionListQuery({
     variables: {
       filter: {},
       first: limit,

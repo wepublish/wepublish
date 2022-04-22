@@ -48,7 +48,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
 
-  const {data, loading: isLoading, error: loadError} = useUserQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useUserQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined

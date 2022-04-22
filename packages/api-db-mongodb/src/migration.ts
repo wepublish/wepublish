@@ -704,8 +704,17 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    // migrate existing deactivated subscriptions
+    // rename image => source to link and author to source; This should make code and data consistent
     version: 18,
+    async migrate(db, locale) {
+      const images = await db.collection(CollectionName.Images)
+      await images.updateMany({}, {$rename: {source: 'link'}})
+      await images.updateMany({}, {$rename: {author: 'source'}})
+    }
+  },
+  {
+    // migrate existing deactivated subscriptions
+    version: 19,
     async migrate(db, locale) {
       const users = await db.collection(CollectionName.Users)
 
