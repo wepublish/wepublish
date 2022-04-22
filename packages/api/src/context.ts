@@ -59,7 +59,7 @@ const peerCache = new NodeCache({
   deleteOnExpire: false,
   useClones: false
 })
-peerCache.on('expired', async function (key: string, value: peerCacheValue) {
+peerCache.on('expired', async function (key: string, value: PeerCacheValue) {
   // Refresh cache only if last use of cached entry is less than 24h ago
   if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
     await loadFreshData(value.queryParams)
@@ -151,7 +151,7 @@ export interface Oauth2Provider {
   readonly redirectUri: string[]
 }
 
-interface peerQueryParams {
+interface PeerQueryParams {
   cacheKey: string
   lastQueried: number
   readonly hostURL: string
@@ -161,8 +161,8 @@ interface peerQueryParams {
   readonly token: string
 }
 
-interface peerCacheValue {
-  queryParams: peerQueryParams
+interface PeerCacheValue {
+  queryParams: PeerQueryParams
   data: any
 }
 
@@ -513,7 +513,7 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
  * Function that generate the key for the cache
  * @param params
  */
-function generateCacheKey(params: peerQueryParams) {
+function generateCacheKey(params: PeerQueryParams) {
   return (
     crypto
       // Hash function doesn't have to be crypto safe, just fast!
@@ -532,7 +532,7 @@ function generateCacheKey(params: peerQueryParams) {
  * @param params
  */
 
-async function loadFreshData(params: peerQueryParams) {
+async function loadFreshData(params: PeerQueryParams) {
   try {
     const abortController = new AbortController()
 
@@ -560,7 +560,7 @@ async function loadFreshData(params: peerQueryParams) {
       }
     }
     params.lastQueried = params.lastQueried ? params.lastQueried : new Date().getTime()
-    const cacheValue: peerCacheValue = {
+    const cacheValue: PeerCacheValue = {
       data: res,
       queryParams: params
     }
@@ -585,7 +585,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
     const results = await Promise.all(
       queries.map(async ({query, variables, operationName}) => {
         // Initialize and prepare caching
-        const fetchParams: peerQueryParams = {
+        const fetchParams: PeerQueryParams = {
           hostURL,
           variables,
           query,
@@ -595,7 +595,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
           lastQueried: 0
         }
         fetchParams.cacheKey = generateCacheKey(fetchParams)
-        const cachedData: peerCacheValue | undefined = peerCache.get(fetchParams.cacheKey)
+        const cachedData: PeerCacheValue | undefined = peerCache.get(fetchParams.cacheKey)
 
         // On initial query add data to cache queue
         if (!cachedData) {
