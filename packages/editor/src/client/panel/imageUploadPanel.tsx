@@ -14,6 +14,7 @@ export interface ImageUploadPanelProps {
 
 export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
   const {t} = useTranslation()
+
   async function handleDrop(files: File[]) {
     if (files.length === 0) return
 

@@ -362,14 +362,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         let afterCursor
 
         while (hasMore) {
-          const listResult: ConnectionResult<Subscription> =
-            await dbAdapter.subscription.getSubscriptions({
+          const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
+            {
               cursor: InputCursor(afterCursor ?? undefined),
               filter: {},
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               order: SortOrder.Descending
-            })
+            }
+          )
           subscriptions.push(...listResult.nodes)
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
