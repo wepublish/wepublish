@@ -135,7 +135,10 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     paidUntil: {type: GraphQLDateFilter},
     deactivationDate: {type: GraphQLDateFilter},
     deactivationReason: {type: GraphQLSubscriptionDeactivationReason},
-    autoRenew: {type: GraphQLBoolean}
+    autoRenew: {type: GraphQLBoolean},
+    paymentMethodID: {type: GraphQLString},
+    memberPlanID: {type: GraphQLString},
+    paymentPeriodicity: {type: GraphQLPaymentPeriodicity}
   }
 })
 

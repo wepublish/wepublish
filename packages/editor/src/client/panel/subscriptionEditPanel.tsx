@@ -69,11 +69,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const {
-    data,
-    loading: isLoading,
-    error: loadError
-  } = useSubscriptionQuery({
+  const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -151,11 +147,15 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     fetchPolicy: 'network-only'
   })
 
-  const [updateSubscription, {loading: isUpdating, error: updateError}] =
-    useUpdateSubscriptionMutation()
+  const [
+    updateSubscription,
+    {loading: isUpdating, error: updateError}
+  ] = useUpdateSubscriptionMutation()
 
-  const [createSubscription, {loading: isCreating, error: createError}] =
-    useCreateSubscriptionMutation()
+  const [
+    createSubscription,
+    {loading: isCreating, error: createError}
+  ] = useCreateSubscriptionMutation()
 
   const isDeactivated = deactivation?.date ? new Date(deactivation.date) < new Date() : false
 
