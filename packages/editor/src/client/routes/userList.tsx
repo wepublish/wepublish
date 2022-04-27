@@ -74,11 +74,7 @@ export function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [users, setUsers] = useState<FullUserFragment[]>([])
 
-  const {
-    data,
-    refetch,
-    loading: isLoading
-  } = useUserListQuery({
+  const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
       first: limit,

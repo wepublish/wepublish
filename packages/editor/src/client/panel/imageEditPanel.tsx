@@ -28,25 +28,23 @@ import {
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
-import {ImageMetaData} from './imageUploadAndEditPanel'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
-  readonly imageMetaData?: ImageMetaData
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
 
+  const [author, setAuthor] = useState('')
   const [source, setSource] = useState('')
-  const [link, setLink] = useState('')
   const [license, setLicense] = useState('')
 
   const [fileSize, setFileSize] = useState(0)
@@ -106,14 +104,6 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         setImageHeight(image.height)
         setFocalPoint({x: 0.5, y: 0.5})
 
-        if (imageMetaData) {
-          setTitle(imageMetaData.title)
-          setDescription(imageMetaData.description)
-          setLicense(imageMetaData.licence)
-          setLink(imageMetaData.link)
-          setSource(imageMetaData.source)
-        }
-
         setLoading(false)
       }
 
@@ -141,8 +131,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         setDescription(image.description ?? '')
         setTags(image.tags)
 
+        setAuthor(image.author ?? '')
         setSource(image.source ?? '')
-        setLink(image.link ?? '')
         setLicense(image.license ?? '')
 
         setOriginalImageURL(image.url ?? '')
@@ -150,6 +140,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint(image.focalPoint ?? undefined)
+
         setLoading(false)
       } else {
         Alert.error(t('images.panels.notFound'), 0)
@@ -173,8 +164,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
       description: description || undefined,
       tags,
 
+      author: author || undefined,
       source: source || undefined,
-      link: link || undefined,
       license: license || undefined,
 
       focalPoint
@@ -334,17 +325,17 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                 <FormGroup>
                   <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
-                    value={source}
+                    value={author}
                     disabled={isDisabled}
-                    onChange={value => setSource(value)}
+                    onChange={value => setAuthor(value)}
                   />
                 </FormGroup>
                 <FormGroup>
                   <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
-                    value={link}
+                    value={source}
                     disabled={isDisabled}
-                    onChange={value => setLink(value)}
+                    onChange={value => setSource(value)}
                   />
                   <p>{t('images.panels.sourceLink')}</p>
                 </FormGroup>
