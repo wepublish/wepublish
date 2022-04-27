@@ -24,7 +24,7 @@ export const simpleImageDataFragment = gql`
     title
     description
     author
-    link
+    source
     url
     width
     height
