@@ -665,17 +665,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateImage, roles)
 
-        const {
-          file,
-          filename,
-          title,
-          description,
-          tags,
-          author,
-          source,
-          license,
-          focalPoint
-        } = input
+        const {file, filename, title, description, tags, source, link, license, focalPoint} = input
 
         const {id, ...image} = await mediaAdapter.uploadImage(file)
 
@@ -689,8 +679,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             description,
             tags,
 
-            author,
             source,
+            link,
             license,
 
             focalPoint
