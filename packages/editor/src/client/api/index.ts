@@ -3674,7 +3674,7 @@ export type FullUserFragment = (
   & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'firstName' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
-    & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
+    & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -4248,7 +4248,9 @@ export const FullUserFragmentDoc = gql`
   firstName
   preferredName
   address {
+    company
     streetAddress
+    streetAddress2
     zipCode
     city
     country

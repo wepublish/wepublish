@@ -821,7 +821,13 @@
         "subTitle": "Abonnement",
         "Unknown": "Unbekannt",
         "userRoles": "Userrollen",
-        "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist."
+        "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist.",
+        "company": "Firma",
+        "streetAddress": "Strasse",
+        "streetAddress2": "Strasse 2",
+        "zipCode": "PLZ",
+        "city": "Stadt",
+        "country": "Land"
       }
     },
     "userRoles": {

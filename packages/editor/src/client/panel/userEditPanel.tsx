@@ -21,7 +21,8 @@ import {
   useUserQuery,
   useUserRoleListQuery,
   FullUserRoleFragment,
-  useSendWebsiteLoginMutation
+  useSendWebsiteLoginMutation,
+  UserAddress
 } from '../api'
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
@@ -35,6 +36,35 @@ export interface UserEditPanelProps {
   onSave?(user: FullUserFragment): void
 }
 
+/**
+ * Function to update address object
+ * @param address
+ * @param setAddress
+ * @param key
+ * @param value
+ */
+
+function updateAddressObject(
+  address: UserAddress | null,
+  setAddress: React.Dispatch<React.SetStateAction<UserAddress | null>>,
+  key: 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country',
+  value: string | null
+) {
+  let addressCopy = Object.assign({}, address)
+  if (!address) {
+    addressCopy = {
+      company: '',
+      streetAddress: '',
+      streetAddress2: '',
+      zipCode: '',
+      city: '',
+      country: ''
+    }
+  }
+  addressCopy[key] = value || ''
+  setAddress(addressCopy)
+}
+
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined>()
@@ -45,6 +75,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const [address, setAddress] = useState<UserAddress | null>(null)
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
 
@@ -87,6 +118,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       setEmail(data.user.email)
       setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
+      setAddress(data.user.address ? data.user.address : null)
       if (data.user.roles) {
         // TODO: fix this
         setRoles(data.user.roles as FullUserRoleFragment[])
@@ -126,7 +158,15 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               key,
               public: publicValue
             })),
-            roleIDs: roles.map(role => role.id)
+            roleIDs: roles.map(role => role.id),
+            address: {
+              company: address?.company ? address.company : '',
+              streetAddress: address?.streetAddress ? address.streetAddress : '',
+              streetAddress2: address?.streetAddress2 ? address.streetAddress2 : '',
+              zipCode: address?.zipCode ? address.zipCode : '',
+              city: address?.city ? address.city : '',
+              country: address?.country ? address.country : ''
+            }
           }
         }
       })
@@ -143,7 +183,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             emailVerifiedAt: null,
             active,
             properties: [],
-            roleIDs: roles.map(role => role.id)
+            roleIDs: roles.map(role => role.id),
+            address
           },
           password
         }
@@ -197,6 +238,62 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 value={email}
                 disabled={isDisabled}
                 onChange={value => setEmail(value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.company')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.company')}
+                value={address?.company}
+                disabled={isDisabled}
+                onChange={value => updateAddressObject(address, setAddress, 'company', value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.streetAddress')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.streetAddress')}
+                value={address?.streetAddress}
+                disabled={isDisabled}
+                onChange={value => updateAddressObject(address, setAddress, 'streetAddress', value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.streetAddress2')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.streetAddress2')}
+                value={address?.streetAddress2}
+                disabled={isDisabled}
+                onChange={value =>
+                  updateAddressObject(address, setAddress, 'streetAddress2', value)
+                }
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.zipCode')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.zipCode')}
+                value={address?.zipCode}
+                disabled={isDisabled}
+                onChange={value => updateAddressObject(address, setAddress, 'zipCode', value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.city')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.city')}
+                value={address?.city}
+                disabled={isDisabled}
+                onChange={value => updateAddressObject(address, setAddress, 'city', value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.country')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.country')}
+                value={address?.country}
+                disabled={isDisabled}
+                onChange={value => updateAddressObject(address, setAddress, 'country', value)}
               />
             </FormGroup>
             <FormGroup>
