@@ -72,5 +72,6 @@ export {
   paymentMethodModelEvents,
   peerModelEvents,
   userModelEvents,
-  userRoleModelEvents
+  userRoleModelEvents,
+  subscriptionModelEvents
 } from './events'
