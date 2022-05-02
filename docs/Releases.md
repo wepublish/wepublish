@@ -38,7 +38,7 @@ Above command will:
 
 ### Finalizing release
 
-Once work via pre-releases is done and you want to release actual non-alpha release you need to merge release pull-request into the master branch.
+Once your work via pre-releases is done and you want to release the actual non-alpha release you need to merge the release pull-request into the master branch.
 Above merge will trigger action that will:
 
 1. Add release notes to CHANGELOG.md
