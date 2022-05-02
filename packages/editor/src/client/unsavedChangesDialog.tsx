@@ -27,7 +27,7 @@ export function useUnsavedChangesDialog(hasChanges: boolean) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
-  })
+  }, [hasChanges])
 
   return () => {
     return !hasChanges || window.confirm(UnsavedChangesDialogMessage)
