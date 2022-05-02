@@ -2,7 +2,7 @@
 
 ## Versioning
 
-We use semantic versioning to indicate changes within our public API. 
+We use [semantic versioning]((https://semver.org/)) to indicate changes within our public API.
 Major, minor changes within internal private APIs and Editor will be considered as minor or patch.
 We assume all components are used with the same version.
 
