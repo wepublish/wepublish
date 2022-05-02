@@ -23,7 +23,7 @@ Above command will:
 5. Create pull-request for the release
 6. Every published tag will trigger npm publish
 
-### Alpha release bump
+### Alpha pre-release bump
 
 ```
 git checkout r/release-3.0.0
