@@ -37,3 +37,4 @@
 
 * [Setup Commenting](commenting.md)
 * [Email Templates](emailtemplates.md)
+* [Releases](Releases.md)
