@@ -1,10 +1,17 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBPaymentMethod, DBUser} from './db/schema'
-import {PaymentProviderCustomer, SubscriptionDeactivationReason} from '@wepublish/api'
+import {
+  ArticleBlock,
+  BlockType,
+  PageBlock,
+  PaymentProviderCustomer,
+  SubscriptionDeactivationReason
+} from '@wepublish/api'
 import {slugify} from './utility'
 
 export interface Migration {
   readonly version: number
+
   migrate(adapter: Db, locale: string): Promise<void>
 }
 
@@ -701,6 +708,73 @@ export const Migrations: Migration[] = [
           }
         ]
       )
+    }
+  },
+  {
+    // change embed block properties width and height from number to string
+    version: 18,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.blocks.map((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.published) {
+          article.published.blocks.map((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.pending) {
+          article.pending.blocks.map((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Articles)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.blocks.map((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.published) {
+          page.published.blocks.map((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.pending) {
+          page.pending.blocks.map((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
     }
   }
 ]
