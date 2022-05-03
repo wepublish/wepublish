@@ -88,3 +88,5 @@ $ /home/elias/gitroot/wepublish/wepublish/node_modules/.bin/lerna-changelog --ne
 
 #### Committers: 1
 - Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+$ /home/elias/gitroot/wepublish/wepublish/node_modules/.bin/lerna-changelog --next-version 3.0.0-alpha.13
+
