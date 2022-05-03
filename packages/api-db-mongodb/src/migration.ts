@@ -807,7 +807,7 @@ export const Migrations: Migration[] = [
 
       for (const article of migrationArticles) {
         if (article.draft) {
-          article.draft.blocks.map((block: ArticleBlock) => {
+          article.draft.blocks.forEach((block: ArticleBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -815,7 +815,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.published) {
-          article.published.blocks.map((block: ArticleBlock) => {
+          article.published.blocks.forEach((block: ArticleBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -823,7 +823,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.pending) {
-          article.pending.blocks.map((block: ArticleBlock) => {
+          article.pending.blocks.forEach((block: ArticleBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -838,7 +838,7 @@ export const Migrations: Migration[] = [
 
       for (const page of migrationPages) {
         if (page.draft) {
-          page.draft.blocks.map((block: PageBlock) => {
+          page.draft.blocks.forEach((block: PageBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -846,7 +846,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.published) {
-          page.published.blocks.map((block: PageBlock) => {
+          page.published.blocks.forEach((block: PageBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -854,7 +854,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.pending) {
-          page.pending.blocks.map((block: PageBlock) => {
+          page.pending.blocks.forEach((block: PageBlock) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
