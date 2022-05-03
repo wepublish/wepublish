@@ -1,49 +1,42 @@
-import React, {useState, useEffect} from 'react'
-
 import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  PeerListRoute,
-  PeerCreateRoute,
-  PeerEditRoute,
-  routeLink,
-  PeerInfoEditRoute,
-  IconButtonLink
-} from '../route'
-
-import {
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useDeletePeerMutation,
-  PeerListDocument,
-  PeerListQuery
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {PeerEditPanel} from '../panel/peerEditPanel'
-
+import React, {ComponentType, useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
-  Drawer,
-  FlexboxGrid,
-  List,
+  Alert,
   Avatar,
-  Icon,
-  IconButton,
   Button,
   Divider,
-  Modal,
-  Alert,
-  HelpBlock
+  Drawer,
+  FlexboxGrid,
+  HelpBlock,
+  Icon,
+  IconButton,
+  List,
+  Modal
 } from 'rsuite'
+import {
+  PeerListDocument,
+  PeerListQuery,
+  useDeletePeerMutation,
+  usePeerListQuery,
+  usePeerProfileQuery
+} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
+import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
-import {ComponentType} from 'react'
+import {
+  IconButtonLink,
+  PeerCreateRoute,
+  PeerEditRoute,
+  PeerInfoEditRoute,
+  PeerListRoute,
+  routeLink,
+  RouteType,
+  useRoute,
+  useRouteDispatch
+} from '../route'
 
 const ListItemLink = routeLink(List.Item as ComponentType<LinkHOCCompatibleProps>)
 const ButtonLink = routeLink(Button)

@@ -1,31 +1,27 @@
-import React, {ReactNode, useEffect, useState} from 'react'
-
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton} from 'rsuite'
-
+import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
+import React, {ComponentType, ReactNode, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Container, Dropdown, Icon, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
 import {
   ArticleListRoute,
-  CommentListRoute,
-  useRoute,
-  RouteType,
-  PageListRoute,
-  routeLink,
   AuthorListRoute,
+  CommentListRoute,
   ImageListRoute,
-  UserListRoute,
-  UserRoleListRoute,
-  PeerListRoute,
-  TokenListRoute,
+  LogoutRoute,
   MemberPlanListRoute,
-  PaymentMethodListRoute,
   NavigationListRoute,
+  PageListRoute,
+  PaymentMethodListRoute,
   PeerArticleListRoute,
+  PeerListRoute,
+  routeLink,
+  RouteType,
   SubscriptionListRoute,
-  LogoutRoute
+  TokenListRoute,
+  UserListRoute,
+  useRoute,
+  UserRoleListRoute
 } from './route'
-
-import {useTranslation} from 'react-i18next'
-import {ComponentType} from 'react'
-import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
 
 export interface BaseProps {
   children?: ReactNode

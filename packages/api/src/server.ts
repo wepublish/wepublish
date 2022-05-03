@@ -13,7 +13,6 @@ import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import TypedEmitter from 'typed-emitter'
-import {DBAdapters} from './db/adapter'
 
 let serverLogger: pino.Logger
 
@@ -43,7 +42,7 @@ export class WepublishServer {
       if (mtp.key in dbAdapter) {
         const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
-          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, any>
+          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, Function | any>
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
 
           if (methodName in adapter) {
