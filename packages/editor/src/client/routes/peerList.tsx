@@ -12,6 +12,7 @@ import {
   Icon,
   IconButton,
   List,
+  ListProps,
   Modal
 } from 'rsuite'
 import {
@@ -38,7 +39,7 @@ import {
   useRouteDispatch
 } from '../route'
 
-const ListItemLink = routeLink(List.Item as ComponentType<LinkHOCCompatibleProps>)
+const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
