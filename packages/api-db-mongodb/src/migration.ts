@@ -1,16 +1,13 @@
 import {Db} from 'mongodb'
-import {CollectionName, DBPaymentMethod, DBUser} from './db/schema'
+import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {
   ArticleBlock,
   BlockType,
   PageBlock,
   PaymentProviderCustomer,
-  SubscriptionDeactivationReason,
-  PaymentProviderCustomer, 
-  Subscription, 
+  Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
-import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {slugify} from './utility'
 
 export interface Migration {
@@ -715,7 +712,6 @@ export const Migrations: Migration[] = [
     }
   },
   {
- 
     // migrate existing deactivated subscriptions
     version: 18,
     async migrate(db, locale) {
@@ -800,8 +796,10 @@ export const Migrations: Migration[] = [
       const images = await db.collection(CollectionName.Images)
       await images.updateMany({}, {$rename: {source: 'link'}})
       await images.updateMany({}, {$rename: {author: 'source'}})
-    },
-       // change embed block properties width and height from number to string
+    }
+  },
+  {
+    // change embed block properties width and height from number to string
     version: 20,
     async migrate(db) {
       const articles = db.collection(CollectionName.Articles)
@@ -835,7 +833,7 @@ export const Migrations: Migration[] = [
         await articles.findOneAndReplace({_id: article._id}, article)
       }
 
-      const pages = db.collection(CollectionName.Articles)
+      const pages = db.collection(CollectionName.Pages)
       const migrationPages = await pages.find().toArray()
 
       for (const page of migrationPages) {
@@ -865,6 +863,7 @@ export const Migrations: Migration[] = [
         }
         await pages.findOneAndReplace({_id: page._id}, page)
       }
+    }
   }
 ]
 
