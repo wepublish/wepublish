@@ -1,7 +1,18 @@
 import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
 import React, {ComponentType, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Container, Dropdown, Icon, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {
+  Container,
+  Dropdown,
+  DropdownProps,
+  Icon,
+  IconButton,
+  Nav,
+  Navbar,
+  NavProps,
+  Sidebar,
+  Sidenav
+} from 'rsuite'
 import {
   ArticleListRoute,
   AuthorListRoute,
@@ -39,8 +50,10 @@ const iconStyles = {
   lineHeight: '56px',
   textAlign: 'center' as const
 }
-const NavItemLink = routeLink(Nav.Item as ComponentType<LinkHOCCompatibleProps>)
-const DropdownItemLink = routeLink(Dropdown.Item as ComponentType<LinkHOCCompatibleProps>)
+const NavItemLink = routeLink(Nav.Item as ComponentType<NavProps & LinkHOCCompatibleProps>)
+const DropdownItemLink = routeLink(
+  Dropdown.Item as ComponentType<DropdownProps & LinkHOCCompatibleProps>
+)
 
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
