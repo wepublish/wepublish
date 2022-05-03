@@ -486,8 +486,11 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
           try {
             const abortController = new AbortController()
 
-            // TODO: Make timeout configurable.
-            setTimeout(() => abortController.abort(), 1000)
+            const peerTimeOUT = process.env.PEERING_TIMEOUT_IN_MS
+              ? process.env.PEERING_TIMEOUT_IN_MS
+              : '1000'
+
+            setTimeout(() => abortController.abort(), parseInt(peerTimeOUT))
 
             const fetchResult = await fetch(hostURL, {
               method: 'POST',
@@ -496,7 +499,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
               signal: abortController.signal
             })
 
-            if (fetchResult?.status != 200) {
+            if (fetchResult?.status !== 200) {
               return {
                 errors: [
                   new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)
