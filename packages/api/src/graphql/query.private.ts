@@ -31,7 +31,7 @@ import {
   GraphQLPeerArticleConnection
 } from './article'
 
-import {InputCursor, Limit, SortOrder} from '../db/common'
+import {ConnectionResult, InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
@@ -102,7 +102,9 @@ import {
   CanGetPaymentProviders,
   CanGetArticlePreviewLink,
   CanGetPagePreviewLink,
-  CanCreatePeer
+  CanCreatePeer,
+  CanGetSubscriptions,
+  CanGetSubscription
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -139,6 +141,13 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
+import {Subscription, SubscriptionSort} from '../db/subscription'
+import {
+  GraphQLSubscription,
+  GraphQLSubscriptionConnection,
+  GraphQLSubscriptionFilter,
+  GraphQLSubscriptionSort
+} from './subscription'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -296,37 +305,93 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    // Subscriptions
+    // ==========
+    subscription: {
+      type: GraphQLSubscription,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetSubscription, roles)
+        return dbAdapter.subscription.getSubscriptionByID(id)
+      }
+    },
+
+    subscriptions: {
+      type: GraphQLNonNull(GraphQLSubscriptionConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
+        filter: {type: GraphQLSubscriptionFilter},
+        sort: {type: GraphQLSubscriptionSort, defaultValue: SubscriptionSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, skip, last},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanGetSubscriptions, roles)
+
+        return await dbAdapter.subscription.getSubscriptions({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last, skip)
+        })
+      }
+    },
+
     subscriptionsAsCsv: {
       type: GraphQLString,
       args: {},
       async resolve(root, args, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
+        authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
 
-        const allSubscriptionsList: User[] = []
+        const subscriptions: Subscription[] = []
+        const users: User[] = []
 
-        const getAllUsersWithSubscriptions = async (after?: string | null) => {
-          const listResult = await dbAdapter.user.getUsers({
-            cursor: InputCursor(after ?? undefined),
-            filter: {subscription: {}},
+        let hasMore = true
+        let afterCursor
+
+        while (hasMore) {
+          const listResult: ConnectionResult<Subscription> =
+            await dbAdapter.subscription.getSubscriptions({
+              cursor: InputCursor(afterCursor ?? undefined),
+              filter: {},
+              limit: Limit(100),
+              sort: SubscriptionSort.ModifiedAt,
+              order: SortOrder.Descending
+            })
+          subscriptions.push(...listResult.nodes)
+          hasMore = listResult.pageInfo.hasNextPage
+          afterCursor = listResult.pageInfo.endCursor
+        }
+
+        hasMore = true
+        afterCursor = undefined
+
+        while (hasMore) {
+          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
+            cursor: InputCursor(afterCursor ?? undefined),
+            filter: {},
             limit: Limit(100),
             sort: UserSort.ModifiedAt,
             order: SortOrder.Descending
           })
-
-          allSubscriptionsList.push(...listResult.nodes)
-
-          if (listResult.pageInfo.hasNextPage) {
-            await getAllUsersWithSubscriptions(listResult.pageInfo.endCursor)
-          }
+          users.push(...listResult.nodes)
+          hasMore = listResult.pageInfo.hasNextPage
+          afterCursor = listResult.pageInfo.endCursor
         }
 
-        await getAllUsersWithSubscriptions()
-
-        if (allSubscriptionsList.length) {
-          return mapSubscriptionsAsCsv(allSubscriptionsList)
-        }
-        return ''
+        return mapSubscriptionsAsCsv(users, subscriptions)
       }
     },
 

@@ -15,7 +15,7 @@ export interface Invoice {
   modifiedAt: Date
   mail: string
   dueAt: Date
-  userID?: string
+  subscriptionID: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null
@@ -28,7 +28,7 @@ export type OptionalInvoice = Invoice | null
 export interface InvoiceInput {
   mail: string
   dueAt: Date
-  userID?: string
+  subscriptionID: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null
@@ -75,8 +75,9 @@ export interface DBInvoiceAdapter {
   updateInvoice(args: UpdateInvoiceArgs): Promise<OptionalInvoice>
   deleteInvoice(args: DeleteInvoiceArgs): Promise<string | null>
 
+  getInvoiceByID(id: string): Promise<OptionalInvoice>
   getInvoicesByID(ids: readonly string[]): Promise<OptionalInvoice[]>
-  getInvoicesByUserID(userID: string): Promise<OptionalInvoice[]>
+  getInvoicesBySubscriptionID(subscriptionID: string): Promise<OptionalInvoice[]>
 
   getInvoices(args: GetInvoicesArgs): Promise<ConnectionResult<Invoice>>
 }

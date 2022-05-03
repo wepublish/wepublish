@@ -5,8 +5,12 @@ import {
   BlockType,
   PageBlock,
   PaymentProviderCustomer,
+  SubscriptionDeactivationReason,
+  PaymentProviderCustomer, 
+  Subscription, 
   SubscriptionDeactivationReason
 } from '@wepublish/api'
+import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {slugify} from './utility'
 
 export interface Migration {
@@ -711,8 +715,94 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    // change embed block properties width and height from number to string
+ 
+    // migrate existing deactivated subscriptions
     version: 18,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+
+      const userWithSubscriptions = await users.find({subscription: {$exists: true}}).toArray()
+
+      const newSubscriptions: Omit<Subscription, 'id'>[] = []
+
+      for (const user of userWithSubscriptions) {
+        if (!user.subscription) continue
+
+        newSubscriptions.push({
+          userID: user._id,
+          createdAt: user.createdAt,
+          modifiedAt: user.modifiedAt,
+          memberPlanID: user.subscription.memberPlanID,
+          paymentPeriodicity: user.subscription.paymentPeriodicity,
+          monthlyAmount: user.subscription.monthlyAmount,
+          autoRenew: user.subscription.autoRenew,
+          startsAt: user.subscription.startsAt,
+          paidUntil: user.subscription.paidUntil,
+          periods: user.subscription.periods,
+          paymentMethodID: user.subscription.paymentMethodID,
+          properties: [],
+          deactivation: user.subscription.deactivation
+        })
+      }
+
+      const subscriptions = await db.createCollection(CollectionName.Subscriptions, {
+        strict: true
+      })
+      if (newSubscriptions.length > 0) await subscriptions.insertMany(newSubscriptions)
+
+      const invoices = await db.collection(CollectionName.Invoices)
+
+      const allInvoices = await invoices.find({}).toArray()
+      const allSubscriptions = await subscriptions.find({}).toArray()
+
+      const newInvoices: DBInvoice[] = []
+
+      for (const invoice of allInvoices) {
+        const userID = invoice.userID
+        const subscription = allSubscriptions.find(subscription => subscription.userID === userID)
+
+        newInvoices.push({
+          _id: invoice._id,
+          createdAt: invoice.createdAt,
+          modifiedAt: invoice.modifiedAt,
+          subscriptionID: subscription?._id ?? '__subscriptionNotFoundDuringMigration',
+          description: invoice.description,
+          canceledAt: invoice.canceledAt,
+          dueAt: invoice.dueAt,
+          items: invoice.items,
+          mail: invoice.mail,
+          paidAt: invoice.paidAt,
+          sentReminderAt: invoice.sentReminderAt
+        })
+      }
+
+      // inform We.Publish operators to remove this manually
+      await invoices.rename('invoices.bak')
+
+      const emptyInvoices = await db.createCollection(CollectionName.Invoices, {
+        strict: true
+      })
+
+      if (newInvoices.length > 0) await emptyInvoices.insertMany(newInvoices)
+
+      await users.updateMany(
+        {subscription: {$exists: true}},
+        {
+          $unset: {subscription: ''}
+        }
+      )
+    }
+  },
+  {
+    // rename image => source to link and author to source; This should make code and data consistent
+    version: 19,
+    async migrate(db, locale) {
+      const images = await db.collection(CollectionName.Images)
+      await images.updateMany({}, {$rename: {source: 'link'}})
+      await images.updateMany({}, {$rename: {author: 'source'}})
+    },
+       // change embed block properties width and height from number to string
+    version: 20,
     async migrate(db) {
       const articles = db.collection(CollectionName.Articles)
       const migrationArticles = await articles.find().toArray()
@@ -775,7 +865,6 @@ export const Migrations: Migration[] = [
         }
         await pages.findOneAndReplace({_id: page._id}, page)
       }
-    }
   }
 ]
 

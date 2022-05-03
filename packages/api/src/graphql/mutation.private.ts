@@ -64,14 +64,11 @@ import {
   CanResetUserPassword,
   CanTakeActionOnComment,
   CanUpdatePeerProfile,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanCreateSubscription,
+  CanDeleteSubscription
 } from './permissions'
-import {
-  GraphQLUser,
-  GraphQLUserInput,
-  GraphQLUserSubscription,
-  GraphQLUserSubscriptionInput
-} from './user'
+import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
@@ -91,6 +88,8 @@ import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
+import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
+import {isTempUser, removePrefixTempUser} from '../utility'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -427,26 +426,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    updateUserSubscription: {
-      type: GraphQLUserSubscription,
-      args: {
-        userID: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
-      },
-      async resolve(root, {userID, input}, {authenticate, dbAdapter, memberContext}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUser, roles)
-
-        const updatedUserSubscription = await dbAdapter.user.updateUserSubscription({userID, input})
-        if (!updatedUserSubscription) throw new NotFound('userSubscription', userID)
-
-        return await memberContext.handleSubscriptionChange({
-          userID,
-          userSubscription: updatedUserSubscription
-        })
-      }
-    },
-
     resetUserPassword: {
       type: GraphQLUser,
       args: {
@@ -484,17 +463,72 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    deleteUserSubscription: {
+    // Subscriptions
+    // ====
+
+    createSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      async resolve(root, {input}, {authenticate, dbAdapter, memberContext}) {
+        const {roles} = authenticate()
+        authorise(CanCreateSubscription, roles)
+
+        if (isTempUser(input.userID)) throw new Error('Can not update subscription with tempUser')
+
+        const subscription = await dbAdapter.subscription.createSubscription({input})
+        if (!subscription) throw new Error('Subscription not created.')
+
+        // create invoice
+        const userId = subscription.userID
+        const user = await dbAdapter.user.getUserByID(userId)
+        if (!user) throw new Error('User of subscription not found.')
+
+        // instantly create a new invoice fo the user
+        await memberContext.renewSubscriptionForUser({subscription})
+        return subscription
+      }
+    },
+
+    updateSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      async resolve(root, {id, input}, {authenticate, dbAdapter, memberContext}) {
+        const {roles} = authenticate()
+        authorise(CanCreateSubscription, roles)
+
+        const user = await dbAdapter.user.getUserByID(input.userID)
+        if (!user) throw new Error('Can not update subscription without user')
+
+        const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
+        if (!updatedSubscription) throw new NotFound('subscription', id)
+
+        return await memberContext.handleSubscriptionChange({
+          subscription: updatedSubscription
+        })
+      }
+    },
+
+    deleteSubscription: {
       type: GraphQLString,
       args: {
-        userID: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {userID}, {authenticate, dbAdapter}) {
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanDeleteUser, roles)
-        await dbAdapter.user.deleteUserSubscription({userID})
-        // TODO: what else should be removed???
-        return userID
+        authorise(CanDeleteSubscription, roles)
+
+        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+
+        if (subscription && isTempUser(subscription.userID)) {
+          await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
+        }
+        await dbAdapter.subscription.deleteSubscription({id})
+        return id
       }
     },
 
@@ -631,17 +665,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateImage, roles)
 
-        const {
-          file,
-          filename,
-          title,
-          description,
-          tags,
-          author,
-          source,
-          license,
-          focalPoint
-        } = input
+        const {file, filename, title, description, tags, source, link, license, focalPoint} = input
 
         const {id, ...image} = await mediaAdapter.uploadImage(file)
 
@@ -655,8 +679,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             description,
             tags,
 
-            author,
             source,
+            link,
             license,
 
             focalPoint

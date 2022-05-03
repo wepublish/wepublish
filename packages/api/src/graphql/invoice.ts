@@ -11,7 +11,6 @@ import {
   GraphQLEnumType
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLUser} from './user'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 
@@ -42,12 +41,6 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     mail: {type: GraphQLNonNull(GraphQLString)},
-    user: {
-      type: GraphQLUser,
-      resolve: createProxyingResolver(({userID}, {}, {dbAdapter}) => {
-        return userID ? dbAdapter.user.getUserByID(userID) : undefined
-      })
-    },
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
@@ -75,6 +68,7 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
+    subscriptionID: {type: GraphQLNonNull(GraphQLID)},
     total: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {

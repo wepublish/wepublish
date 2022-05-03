@@ -1,21 +1,3 @@
-fragment FullUserSubscription on UserSubscription {
-    memberPlan {
-        ...FullMemberPlan
-    }
-    paymentPeriodicity
-    monthlyAmount
-    autoRenew
-    startsAt
-    paidUntil
-    paymentMethod {
-        ...FullPaymentMethod
-    }
-    deactivation {
-        date
-        reason
-    }
-}
-
 fragment FullUser on User {
     id
     createdAt
@@ -24,7 +6,9 @@ fragment FullUser on User {
     firstName
     preferredName
     address {
+        company
         streetAddress
+        streetAddress2
         zipCode
         city
         country
@@ -41,9 +25,6 @@ fragment FullUser on User {
 
     roles {
         ...FullUserRole
-    }
-    subscription {
-        ...FullUserSubscription
     }
 }
 
@@ -72,9 +53,6 @@ query User($id: ID!) {
     }
 }
 
-query SubscriptionsAsCsv {
-  csv: subscriptionsAsCsv
-}
 
 mutation CreateUser($input: UserInput!, $password: String!) {
     createUser(input: $input, password: $password) {
@@ -88,12 +66,6 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
     }
 }
 
-mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
-    updateUserSubscription(userID: $userID, input: $input) {
-        ...FullUserSubscription
-    }
-}
-
 mutation ResetUserPassword($id: ID!, $password: String!) {
     resetUserPassword(id: $id, password: $password) {
         ...FullUser
@@ -104,9 +76,6 @@ mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
 }
 
-mutation DeleteUserSubscription($userID: ID!) {
-    deleteUserSubscription(userID: $userID)
-}
 
 mutation SendWebsiteLogin($email: String!) {
     sendWebsiteLogin(email: $email)

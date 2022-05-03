@@ -28,6 +28,7 @@ export function PlaceholderInput({children, onAddClick}: PlaceholderInputProps) 
         display: 'flex',
         width: '100%',
         height: '100%',
+        maxHeight: 450,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

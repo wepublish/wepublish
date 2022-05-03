@@ -519,10 +519,11 @@
       "delete": "Delete",
       "deleteModalTitle": "Delete Member Plan",
       "description": "Description",
+      "errorMessage": "Please enter a number",
       "editTitle": "Edit Member Plan",
       "fixPrice": "Fix price",
       "fixPriceDescription": "If false the price can be a price range",
-      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
+      "minimumMonthlyAmount": "Minimum amount per Month in CHF",
       "name": "Name",
       "slug": "Slug",
       "paymentMethods": "Possible Payment Methods",
@@ -556,6 +557,7 @@
       "peerArticles": "Peerable articles",
       "myPeerInfo": "My Peer Info",
       "tokens": "Tokens",
+      "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Members"
@@ -810,6 +812,32 @@
       }
     },
     "untitled": "Untitled",
+    "subscriptionList": {
+      "overview": {
+        "createdAt": "Created",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "delete": "Delete",
+        "modifiedAt": "Last modified",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Name",
+        "newSubscription": "New Subscription",
+        "exportSubscriptionsCsv": "Export CSV",
+        "unknown": "Unknown",
+        "deleted": "Deleted user",
+        "subscription": "Subscription",
+        "tempUser": "(Temporary User) - ",
+        "email": "Email",
+        "memberPlan": "Member Plan"
+      },
+      "panels": {
+        "deleteSubscription": "Delete Subscription?",
+        "name": "Name",
+        "unknown": "Unknown",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "tempUserWarning": "This Subscription has a temporary user that has not finished the registration. If you delete the subscription the temporary user will be also deleted."
+      }
+    },
     "userList": {
       "overview": {
         "action": "Action",
@@ -867,7 +895,13 @@
         "subEdit": "Edit",
         "subTitle": "Subscription",
         "Unknown": "Unknown",
-        "userRoles": "User Roles"
+        "userRoles": "User Roles",
+        "company": "Company",
+        "streetAddress": "Street",
+        "streetAddress2": "Street 2",
+        "zipCode": "ZIP",
+        "city": "City",
+        "country": "Country"
       }
     },
     "userRoles": {
@@ -906,6 +940,10 @@
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
+      "tempUser": {
+        "disabledInfo": "This subscription belongs to a temporary user that has not yet finished registration. You can not edit anything until the registration is finished."
+      },
+      "tempUserTitle": "Temporary User",
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
@@ -941,7 +979,8 @@
       "payedUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "selectMemberPlan": "Choose a Member Plan",
-      "startsAt": "Subscription Start"
+      "startsAt": "Subscription Start",
+      "selectUser": "Select User"
     }
   }
 }
