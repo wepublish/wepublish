@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {RouteActionType} from '@wepublish/karma.run-react'
+import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
 
 import {
   RouteType,
@@ -43,10 +43,9 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {NavigationBar} from '../atoms/navigationBar'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {ComponentType} from 'react'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const ListItemLink = routeLink(List.Item)
+const ListItemLink = routeLink(List.Item as ComponentType<LinkHOCCompatibleProps>)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]

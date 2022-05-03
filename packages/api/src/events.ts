@@ -25,10 +25,11 @@ interface ModelEvents<T> {
   delete: (context: Context, id: string) => void
 }
 
-interface PublishableModelEvents<T> extends ModelEvents<T> {
+export interface PublishableModelEvents<T> extends ModelEvents<T> {
   publish: (context: Context, model: T) => void
   unpublish: (context: Context, model: T) => void
 }
+
 export type ArticleModelEventEmitter = TypedEmitter<PublishableModelEvents<Article>>
 export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 

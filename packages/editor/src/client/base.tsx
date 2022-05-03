@@ -24,6 +24,8 @@ import {
 } from './route'
 
 import {useTranslation} from 'react-i18next'
+import {ComponentType} from 'react'
+import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
 
 export interface BaseProps {
   children?: ReactNode
@@ -41,12 +43,8 @@ const iconStyles = {
   lineHeight: '56px',
   textAlign: 'center' as const
 }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const NavItemLink = routeLink(Nav.Item)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const DropdownItemLink = routeLink(Dropdown.Item)
+const NavItemLink = routeLink(Nav.Item as ComponentType<LinkHOCCompatibleProps>)
+const DropdownItemLink = routeLink(Dropdown.Item as ComponentType<LinkHOCCompatibleProps>)
 
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
