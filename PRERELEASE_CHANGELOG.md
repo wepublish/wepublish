@@ -78,3 +78,13 @@ $ /Users/tomasz/projects/wepublish/wepublish/node_modules/.bin/lerna-changelog -
 - Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
 $ /Users/tomasz/projects/wepublish/wepublish/node_modules/.bin/lerna-changelog --next-version 3.0.0-alpha.11
 
+$ /home/elias/gitroot/wepublish/wepublish/node_modules/.bin/lerna-changelog --next-version 3.0.0-alpha.12
+
+## 3.0.0-alpha.12 (2022-05-03)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#567](https://github.com/wepublish/wepublish/pull/567) If user with a subscription gets deleted, the subscription list breaks ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 1
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
