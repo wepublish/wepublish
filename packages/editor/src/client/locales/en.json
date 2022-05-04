@@ -895,7 +895,13 @@
         "subEdit": "Edit",
         "subTitle": "Subscription",
         "Unknown": "Unknown",
-        "userRoles": "User Roles"
+        "userRoles": "User Roles",
+        "company": "Company",
+        "streetAddress": "Street",
+        "streetAddress2": "Street 2",
+        "zipCode": "ZIP",
+        "city": "City",
+        "country": "Country"
       }
     },
     "userRoles": {

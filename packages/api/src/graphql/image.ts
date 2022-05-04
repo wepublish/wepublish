@@ -75,8 +75,8 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
     description: {type: GraphQLString},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
 
+    link: {type: GraphQLString},
     source: {type: GraphQLString},
-    author: {type: GraphQLString},
     license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}
@@ -92,8 +92,8 @@ export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
     description: {type: GraphQLString},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
 
+    link: {type: GraphQLString},
     source: {type: GraphQLString},
-    author: {type: GraphQLString},
     license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}
@@ -129,8 +129,8 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
+    link: {type: GraphQLString},
     source: {type: GraphQLString},
-    author: {type: GraphQLString},
     license: {type: GraphQLString},
 
     fileSize: {type: GraphQLNonNull(GraphQLInt)},

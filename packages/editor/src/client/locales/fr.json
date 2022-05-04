@@ -491,7 +491,13 @@
         "startedAt": "Démarré",
         "startedAtDate": "{{startedAtDate, ccc PP p}}",
         "subEdit": "Modifier",
-        "subCreate": "Créer"
+        "subCreate": "Créer",
+        "company": "Entreprise",
+        "streetAddress": "Rue",
+        "streetAddress2": "Rue 2",
+        "zipCode": "Code Postal",
+        "city": "Ville",
+        "country": "Pays"
       },
       "overview": {
         "action": "Actions",
