@@ -13,7 +13,7 @@ export interface ImageData {
   height: number
   description?: string
   caption?: string
-  author?: string
+  source?: string
   focusPoint?: {x: number; y: number}
   format: string
 

@@ -29,23 +29,25 @@ import {
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
+import {ImageMetaData} from './imageUploadAndEditPanel'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
+  readonly imageMetaData?: ImageMetaData
 
   onClose?(): void
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
 
-  const [author, setAuthor] = useState('')
   const [source, setSource] = useState('')
+  const [link, setLink] = useState('')
   const [license, setLicense] = useState('')
 
   const [fileSize, setFileSize] = useState(0)
@@ -105,6 +107,14 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setImageHeight(image.height)
         setFocalPoint({x: 0.5, y: 0.5})
 
+        if (imageMetaData) {
+          setTitle(imageMetaData.title)
+          setDescription(imageMetaData.description)
+          setLicense(imageMetaData.licence)
+          setLink(imageMetaData.link)
+          setSource(imageMetaData.source)
+        }
+
         setLoading(false)
       }
 
@@ -132,8 +142,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setDescription(image.description ?? '')
         setTags(image.tags)
 
-        setAuthor(image.author ?? '')
         setSource(image.source ?? '')
+        setLink(image.link ?? '')
         setLicense(image.license ?? '')
 
         setOriginalImageURL(image.url ?? '')
@@ -141,7 +151,6 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint(image.focalPoint ?? undefined)
-
         setLoading(false)
       } else {
         Alert.error(t('images.panels.notFound'), 0)
@@ -165,8 +174,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       description: description || undefined,
       tags,
 
-      author: author || undefined,
       source: source || undefined,
+      link: link || undefined,
       license: license || undefined,
 
       focalPoint
@@ -198,11 +207,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    source: StringType().isURL('please enter a valid url')
+    link: StringType().isURL('please enter a valid url')
   })
 
   const checkResult = validationModel.check({
-    source: source
+    link: link
   })
 
   /**
@@ -335,18 +344,18 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 <FormGroup>
                   <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
-                    value={author}
+                    value={source}
                     disabled={isDisabled}
-                    onChange={value => setAuthor(value)}
+                    onChange={value => setSource(value)}
                   />
                 </FormGroup>
                 <FormGroup model={validationModel}>
                   <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
-                    value={source}
-                    errorMessage={checkResult.source.errorMessage}
+                    value={link}
+                    errorMessage={checkResult.link.errorMessage}
                     disabled={isDisabled}
-                    onChange={value => setSource(value)}
+                    onChange={value => setLink(value)}
                   />
                   <p>{t('images.panels.sourceLink')}</p>
                 </FormGroup>
@@ -367,7 +376,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       <Drawer.Footer>
         <Button
           appearance={'primary'}
-          disabled={isDisabled || checkResult.source.hasError}
+          disabled={isDisabled || checkResult.link.hasError}
           onClick={() => handleSave()}>
           {isUpload ? t('images.panels.upload') : t('images.panels.save')}
         </Button>
