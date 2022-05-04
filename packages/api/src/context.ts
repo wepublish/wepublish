@@ -53,18 +53,18 @@ import {logger} from './server'
  * Peered article cache configuration and setup
  */
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
-const peerCache = new NodeCache({
+const fetcherCache = new NodeCache({
   stdTTL: 1800,
   checkperiod: 60,
   deleteOnExpire: false,
   useClones: false
 })
-peerCache.on('expired', async function (key: string, value: PeerCacheValue) {
+fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
   // Refresh cache only if last use of cached entry is less than 24h ago
   if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
     await loadFreshData(value.queryParams)
   } else {
-    peerCache.del(key)
+    fetcherCache.del(key)
   }
 })
 
@@ -564,7 +564,7 @@ async function loadFreshData(params: PeerQueryParams) {
       data: res,
       queryParams: params
     }
-    peerCache.set(params.cacheKey, cacheValue)
+    fetcherCache.set(params.cacheKey, cacheValue)
     return res
   } catch (err) {
     let errorMessage = err
@@ -595,7 +595,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
           lastQueried: 0
         }
         fetchParams.cacheKey = generateCacheKey(fetchParams)
-        const cachedData: PeerCacheValue | undefined = peerCache.get(fetchParams.cacheKey)
+        const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
 
         // On initial query add data to cache queue
         if (!cachedData) {
