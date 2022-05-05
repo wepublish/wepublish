@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`slugify should transform     text starting with spaces correctly 1`] = `"text-starting-with-spaces"`;
+
+exports[`slugify should transform - text starting with a dash correctly 1`] = `"text-starting-with-a-dash"`;
+
+exports[`slugify should transform text ending with a dash - correctly 1`] = `"text-ending-with-a-dash"`;
+
+exports[`slugify should transform text with UPPERCASE correctly 1`] = `"text-with-uppercase"`;
+
+exports[`slugify should transform text with double -- dashes  correctly 1`] = `"text-with-double-dashes"`;
+
+exports[`slugify should transform text with hyphenized-words correctly 1`] = `"text-with-hyphenized-words"`;
+
+exports[`slugify should transform text with multiple ------------- dashes correctly 1`] = `"text-with-multiple-dashes"`;
+
+exports[`slugify should transform text with spaces correctly 1`] = `"text-with-spaces"`;
+
+exports[`slugify should transform text with special a like ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ correctly 1`] = `"text-with-special-a-like-aaaaaaaaaaaaaaaaaaaaa"`;
+
+exports[`slugify should transform text with special c like ÇĆĈČ correctly 1`] = `"text-with-special-c-like-cccc"`;
+
+exports[`slugify should transform text with special characters like ·/_,:;\\ correctly 1`] = `"text-with-special-characters-like"`;
+
+exports[`slugify should transform text with special d like ÐĎĐÞ correctly 1`] = `"text-with-special-d-like-dddd"`;
+
+exports[`slugify should transform text with special e like ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ correctly 1`] = `"text-with-special-e-like-eeeeeeeeeeeeeeeee"`;
+
+exports[`slugify should transform text with special g like ĜĞĢǴ correctly 1`] = `"text-with-special-g-like-gggg"`;
+
+exports[`slugify should transform text with special h like ĤḦ correctly 1`] = `"text-with-special-h-like-hh"`;
+
+exports[`slugify should transform text with special i like ÌÍÎÏĨĪĮİỈỊ correctly 1`] = `"text-with-special-i-like-iiiiiiiiii"`;
+
+exports[`slugify should transform text with special ij like Ĳ correctly 1`] = `"text-with-special-ij-like-ij"`;
+
+exports[`slugify should transform text with special j like Ĵ correctly 1`] = `"text-with-special-j-like-j"`;
+
+exports[`slugify should transform text with special k like Ķ correctly 1`] = `"text-with-special-k-like-k"`;
+
+exports[`slugify should transform text with special l like ĹĻĽŁ correctly 1`] = `"text-with-special-l-like-llll"`;
+
+exports[`slugify should transform text with special m like Ḿ correctly 1`] = `"text-with-special-m-like-m"`;
+
+exports[`slugify should transform text with special n like ÑŃŅŇ correctly 1`] = `"text-with-special-n-like-nnnn"`;
+
+exports[`slugify should transform text with special o like ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ correctly 1`] = `"text-with-special-o-like-ooooooooooooooooooooooo"`;
+
+exports[`slugify should transform text with special oe like Œ correctly 1`] = `"text-with-special-oe-like-oe"`;
+
+exports[`slugify should transform text with special p like ṕ correctly 1`] = `"text-with-special-p-like-p"`;
+
+exports[`slugify should transform text with special r like ŔŖŘ correctly 1`] = `"text-with-special-r-like-rrr"`;
+
+exports[`slugify should transform text with special s like ŚŜŞŠ correctly 1`] = `"text-with-special-s-like-ssss"`;
+
+exports[`slugify should transform text with special ss like ß correctly 1`] = `"text-with-special-ss-like-ss"`;
+
+exports[`slugify should transform text with special t like ŢŤ correctly 1`] = `"text-with-special-t-like-tt"`;
+
+exports[`slugify should transform text with special u like ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ correctly 1`] = `"text-with-special-u-like-uuuuuuuuuuuuuuuuu"`;
+
+exports[`slugify should transform text with special w like ẂŴẀẄ correctly 1`] = `"text-with-special-w-like-wwww"`;
+
+exports[`slugify should transform text with special x like ẍ correctly 1`] = `"text-with-special-x-like-x"`;
+
+exports[`slugify should transform text with special y like ÝŶŸỲỴỶỸ correctly 1`] = `"text-with-special-y-like-yyyyyyy"`;
+
+exports[`slugify should transform text with special z like ŹŻŽ correctly 1`] = `"text-with-special-z-like-zzz"`;
+
+exports[`slugify should transform text with umlaute like ä ö and ü correctly 1`] = `"text-with-umlaute-like-ae-oe-and-ue"`;
