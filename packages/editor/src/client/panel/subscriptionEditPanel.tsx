@@ -101,6 +101,8 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }, [data?.subscription])
 
+  console.log('rerender!')
+
   const {
     data: userData,
     loading: isUserLoading,
@@ -197,27 +199,33 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (error) Alert.error(error, 0)
   }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
+  const inputBase = {
+    monthlyAmount,
+    paymentPeriodicity,
+    autoRenew,
+    startsAt: startsAt.toISOString(),
+    paidUntil: paidUntil ? paidUntil.toISOString() : null,
+    properties,
+    deactivation
+  }
+
   async function handleSave() {
     if (!memberPlan) return
     if (!paymentMethod) return
     if (!user) return
     // TODO: show error
 
+    console.log('memberPlan', memberPlan)
+
     if (id) {
       const {data} = await updateSubscription({
         variables: {
           id,
           input: {
+            ...inputBase,
             userID: user?.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
@@ -227,19 +235,15 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       const {data} = await createSubscription({
         variables: {
           input: {
+            ...inputBase,
             userID: user.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
+
+      console.log('data', data)
 
       if (data?.createSubscription) onSave?.(data.createSubscription)
     }
@@ -250,19 +254,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
-          memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
-          paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: {
             reason,
             date: date.toISOString()
-          }
+          },
+          paymentMethodID: paymentMethod.id,
+          memberPlanID: memberPlan.id
         }
       }
     })
@@ -278,15 +277,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
           memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: null
         }
       }

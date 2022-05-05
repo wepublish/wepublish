@@ -479,7 +479,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const subscription = await dbAdapter.subscription.createSubscription({input})
         if (!subscription) throw new Error('Subscription not created.')
-
+        console.log('subscription', subscription)
         // create invoice
         const userId = subscription.userID
         const user = await dbAdapter.user.getUserByID(userId)

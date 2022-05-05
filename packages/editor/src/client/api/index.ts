@@ -669,7 +669,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags: Array<Scalars['String']>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -1759,6 +1759,10 @@ export type SubscriptionFilter = {
   deactivationDate?: Maybe<DateFilter>;
   deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
+  paymentMethodID?: Maybe<Scalars['String']>;
+  memberPlanID?: Maybe<Scalars['String']>;
+  paymentPeriodicity?: Maybe<PaymentPeriodicity>;
+  userHasAddress?: Maybe<Scalars['Boolean']>
 };
 
 export type SubscriptionInput = {

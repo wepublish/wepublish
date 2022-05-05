@@ -221,7 +221,7 @@ async function asyncMain() {
   }
 
   const paymentProviders = []
-
+  console.log('process.env.STRIPE_SECRET_KEY', process.env.STRIPE_SECRET_KEY)
   if (
     process.env.STRIPE_SECRET_KEY &&
     process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&

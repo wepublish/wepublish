@@ -59,6 +59,7 @@ export interface SubscriptionFilter {
   readonly paymentMethodID?: string
   readonly memberPlanID?: string
   readonly paymentPeriodicity?: PaymentPeriodicity
+  readonly userHasAddress?: boolean
 }
 
 export interface Subscription {

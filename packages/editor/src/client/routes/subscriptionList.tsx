@@ -15,9 +15,17 @@ import {
 import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {
+  DateFilterComparison,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   FullSubscriptionFragment,
+  SubscriptionDeactivationReason,
+  // PaymentPeriodicity,
+  SubscriptionFilter,
   SubscriptionSort,
   useDeleteSubscriptionMutation,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
   useSubscriptionListQuery
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -25,18 +33,29 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
+  Checkbox,
+  ControlLabel,
+  DatePicker,
+  DateRangePicker,
   Drawer,
   FlexboxGrid,
+  FormGroup,
+  HelpBlock,
   Icon,
   IconButton,
-  Input,
-  InputGroup,
+  // InputGroup,
   Message,
   Modal,
+  SelectPicker,
   Table
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  isTempUser,
+  ALL_PAYMENT_PERIODICITIES
+} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
 
@@ -65,8 +84,17 @@ export function SubscriptionList() {
     current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
   )
 
-  const [filter, setFilter] = useState('')
-
+  const [filter, setFilter] = useState({} as SubscriptionFilter)
+  //
+  // const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
+  //   PaymentPeriodicity.Yearly
+  // )
+  const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
+  // const [paymentMethod, setPaymentMethod] = useState<FullPaymentMethodFragment>()
+  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
+  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
+  const [paidUntil, setPaidUntil] = useState<Date | null>()
+  //
   const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -77,13 +105,11 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
-  const {
-    data,
-    refetch,
-    loading: isLoading
-  } = useSubscriptionListQuery({
+  console.log('filter', filter)
+
+  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
-      filter: {},
+      filter,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -92,9 +118,11 @@ export function SubscriptionList() {
     fetchPolicy: 'network-only'
   })
 
+  console.log('data', data)
+
   useEffect(() => {
     refetch({
-      filter: {},
+      filter,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -127,6 +155,59 @@ export function SubscriptionList() {
     }
   }, [data?.subscriptions])
 
+  const {
+    data: memberPlanData,
+    loading: isMemberPlanLoading,
+    error: loadMemberPlanError
+  } = useMemberPlanListQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      first: 200 // TODO: Pagination
+    }
+  })
+
+  const {
+    data: paymentMethodData,
+    loading: isPaymentMethodLoading,
+    error: paymentMethodLoadError
+  } = usePaymentMethodListQuery({
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    if (memberPlanData?.memberPlans?.nodes) {
+      setMemberPlans(memberPlanData.memberPlans.nodes)
+    }
+  }, [memberPlanData?.memberPlans])
+
+  useEffect(() => {
+    if (paymentMethodData?.paymentMethods) {
+      setPaymentMethods(paymentMethodData.paymentMethods)
+    }
+  }, [paymentMethodData?.paymentMethods])
+
+  const isDisabled =
+    isLoading ||
+    // isCreating ||
+    isMemberPlanLoading ||
+    // isUpdating ||
+    isPaymentMethodLoading ||
+    // isUserLoading ||
+    // loadError !== undefined ||
+    // createError !== undefined ||
+    loadMemberPlanError !== undefined ||
+    paymentMethodLoadError !== undefined
+  // userLoadError !== undefined ||
+  // isTempUser
+
+  const updateFilter = (value: SubscriptionFilter) => {
+    const newFilter = {
+      ...filter,
+      ...value
+    }
+    setFilter(newFilter)
+  }
+
   return (
     <>
       <FlexboxGrid>
@@ -145,14 +226,131 @@ export function SubscriptionList() {
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <Icon icon="search" />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
+        <FormGroup>
+          <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
+          <SelectPicker
+            block
+            disabled={isDisabled}
+            data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
+            value={memberPlan?.id}
+            // onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
+            onChange={value =>
+              updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
+            }
+          />
+          {memberPlan && (
+            <HelpBlock>
+              <DescriptionList>
+                <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                  {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
+                </DescriptionListItem>
+              </DescriptionList>
+            </HelpBlock>
+          )}
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+          <SelectPicker
+            value={filter.paymentPeriodicity}
+            data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+              value: pp,
+              label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+            }))}
+            disabled={isDisabled}
+            // onChange={value => setPaymentPeriodicity(value)}
+            onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
+            block
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
+          <SelectPicker
+            block
+            disabled={isDisabled}
+            data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+            value={filter.paymentMethodID}
+            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
+            onChange={value =>
+              updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
+            }
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
+          <Checkbox
+            block
+            disabled={isDisabled}
+            // data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+            // value={paymentMethod?.id}
+            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
+            value={filter.autoRenew}
+            onChange={(_, checked) => updateFilter({autoRenew: checked})}
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          {/* <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel> */}
+          <ControlLabel>Has address</ControlLabel>
+          <Checkbox
+            block
+            disabled={isDisabled}
+            // data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+            // value={paymentMethod?.id}
+            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
+            value={filter.userHasAddress}
+            onChange={(_, checked) => updateFilter({userHasAddress: checked})}
+          />
+        </FormGroup>
+        {/* <FormGroup>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+          <DateRangePicker
+            block
+            placement="auto"
+            value={filter.deactivationDate}
+            onChange={value => {
+              console.log('value datePicker', value)
+              updateFilter({deactivationDate: value})
+            }}
+          />
+        </FormGroup> */}
+
+        <FormGroup>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
+          <SelectPicker
+            searchable={false}
+            data={[
+              {
+                value: SubscriptionDeactivationReason.None,
+                label: t('userSubscriptionEdit.deactivation.reasonNone')
+              },
+              {
+                value: SubscriptionDeactivationReason.UserSelfDeactivated,
+                label: t('userSubscriptionEdit.deactivation.reasonUserSelfDeactivated')
+              },
+              {
+                value: SubscriptionDeactivationReason.InvoiceNotPaid,
+                label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
+              }
+            ]}
+            // value={deactivationReason}
+            value={filter.deactivationReason}
+            block
+            placement="auto"
+            onChange={value => updateFilter({deactivationReason: value})}
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
+          <DatePicker
+            block
+            value={paidUntil ?? undefined}
+            onChange={value => {
+              console.log('value', value)
+              updateFilter({
+                paidUntil: {date: value.toISOString(), comparison: DateFilterComparison.Lower}
+              })
+            }}
+          />
+        </FormGroup>
       </FlexboxGrid>
 
       <div

@@ -188,7 +188,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   }: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>> {
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
-
+    console.log('filter-mongo', filter)
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
@@ -221,6 +221,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
         startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
+
     if (filter?.paidUntil !== undefined) {
       const {comparison, date} = filter.paidUntil
       textFilter.$and?.push({
@@ -254,6 +255,24 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     if (filter?.autoRenew !== undefined) {
       textFilter.$and?.push({autoRenew: {$eq: filter.autoRenew}})
     }
+
+    if (filter?.paymentPeriodicity !== undefined) {
+      textFilter.$and?.push({paymentPeriodicity: {$eq: filter.paymentPeriodicity}})
+    }
+
+    if (filter?.paymentMethodID !== undefined) {
+      textFilter.$and?.push({paymentMethodID: {$eq: filter.paymentMethodID}})
+    }
+
+    if (filter?.memberPlanID !== undefined) {
+      textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
+    }
+
+    if (filter?.userHasAddress !== undefined) {
+      textFilter.$and?.push({'user.address.zipCode': {$exists: filter.userHasAddress}})
+    }
+
+    console.log('textFilter', textFilter)
 
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {

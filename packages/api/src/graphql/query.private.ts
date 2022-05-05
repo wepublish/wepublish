@@ -336,14 +336,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
-
-        return await dbAdapter.subscription.getSubscriptions({
+        console.log('filter', filter)
+        console.log('sort', sort)
+        console.log('order', order)
+        console.log('cursor', InputCursor(after, before))
+        console.log('limit', Limit(first, last, skip))
+        const toReturn = await dbAdapter.subscription.getSubscriptions({
           filter,
           sort,
           order,
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
+        console.log('toReturn', toReturn)
+        return toReturn
       }
     },
 
@@ -362,14 +368,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         let afterCursor
 
         while (hasMore) {
-          const listResult: ConnectionResult<Subscription> =
-            await dbAdapter.subscription.getSubscriptions({
+          const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
+            {
               cursor: InputCursor(afterCursor ?? undefined),
               filter: {},
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               order: SortOrder.Descending
-            })
+            }
+          )
           subscriptions.push(...listResult.nodes)
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
