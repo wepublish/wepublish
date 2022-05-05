@@ -7,7 +7,7 @@ import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/c
 import {createUploadLink} from 'apollo-upload-client'
 import {onError} from '@apollo/client/link/error'
 
-import './i18n'
+import {initI18N} from './i18n'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
@@ -128,6 +128,8 @@ const onDOMContentLoaded = async () => {
     document.getElementById(ElementID.ReactRoot)
   )
 }
+
+initI18N()
 
 if (document.readyState !== 'loading') {
   onDOMContentLoaded()
