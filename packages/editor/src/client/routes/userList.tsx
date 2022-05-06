@@ -23,17 +23,20 @@ import {
   Button,
   Drawer,
   FlexboxGrid,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   Modal,
-  Table
+  Table,
+  Pagination
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import LockIcon from '@rsuite/icons/legacy/Lock'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -74,11 +77,7 @@ export function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [users, setUsers] = useState<FullUserFragment[]>([])
 
-  const {
-    data,
-    refetch,
-    loading: isLoading
-  } = useUserListQuery({
+  const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
       first: limit,
@@ -143,7 +142,7 @@ export function UserList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -164,7 +163,7 @@ export function UserList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType!)
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
@@ -214,7 +213,7 @@ export function UserList() {
                 <>
                   <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
                     <IconButton
-                      icon={<Icon icon="lock" />}
+                      icon={<LockIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -226,7 +225,7 @@ export function UserList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('userList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -243,20 +242,20 @@ export function UserList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.users.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.users.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -283,7 +282,7 @@ export function UserList() {
         />
       </Drawer>
 
-      <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
+      <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
         </Modal.Header>
@@ -303,7 +302,7 @@ export function UserList() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
         </Modal.Header>

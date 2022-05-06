@@ -8,19 +8,20 @@ import {
   Button,
   Drawer,
   Panel,
-  Icon,
   Input,
   InputGroup,
   Message,
   Loader,
   FlexboxGrid,
-  Notification,
-  ControlLabel
+  Notification
 } from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
+import UploadIcon from '@rsuite/icons/legacy/Upload'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import {toaster, Form} from 'rsuite'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -51,10 +52,15 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     const file = files[0]
 
     if (!file.type.startsWith('image')) {
-      Notification.error({
-        title: t('articleEditor.panels.invalidImage'),
-        duration: 5000
-      })
+      toaster.push(
+        <Notification
+          type="error"
+          header={t('articleEditor.panels.invalidImage')}
+          duration={5000}
+        />,
+        {placement: 'topEnd'}
+      )
+
       return
     }
 
@@ -85,26 +91,32 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     <>
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.chooseImage')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('articleEditor.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <Panel bodyFill={true} style={{height: '150px'}}>
           <FileDropInput
-            icon={<Icon icon="upload" />}
+            icon={<UploadIcon />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
         </Panel>
-        <ControlLabel>
+        <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
-        </ControlLabel>
+        </Form.ControlLabel>
 
         <Panel header={t('articleEditor.panels.images')}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </Panel>
@@ -151,17 +163,11 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
             )}
           </>
         ) : !isLoading ? (
-          <Message type="info" description={t('articleEditor.panels.noImagesFound')} />
+          <Message type="info">{t('articleEditor.panels.noImagesFound')}</Message>
         ) : (
           <Loader center content={t('articleEditor.panels.loading')} />
         )}
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

@@ -1,19 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Button,
-  Drawer,
-  Form,
-  FormControl,
-  Panel,
-  Input,
-  Alert,
-  PanelGroup,
-  InputGroup,
-  Icon,
-  ControlLabel,
-  FormGroup
-} from 'rsuite'
+import {Button, Drawer, Form, Panel, Input, toaster, Message, PanelGroup, InputGroup} from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
 
@@ -37,6 +24,7 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import LinkIcon from '@rsuite/icons/legacy/Link'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -97,7 +85,12 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   useEffect(() => {
     const error = loadError?.message ?? createError?.message ?? updateError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -145,27 +138,36 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <Drawer.Title>
           {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('authors.panels.save') : t('authors.panels.create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('authors.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <PanelGroup>
           <Panel>
             <Form fluid={true}>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.name')}</ControlLabel>
-                <FormControl
+              <Form.Group>
+                <Form.ControlLabel>{t('authors.panels.name')}</Form.ControlLabel>
+                <Form.Control
                   name={t('authors.panels.name')}
                   value={name}
                   disabled={isDisabled}
-                  onChange={value => {
+                  onChange={(value: string) => {
                     setName(value)
                     setSlug(slugify(value))
                   }}
                 />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
-                <FormControl
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('authors.panels.jobTitle')}</Form.ControlLabel>
+                <Form.Control
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
                   disabled={isDisabled}
@@ -173,7 +175,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     setJobTitle(value)
                   }}
                 />
-              </FormGroup>
+              </Form.Group>
             </Form>
           </Panel>
           <Panel header={t('authors.panels.image')}>
@@ -206,7 +208,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   />
                   <InputGroup inside>
                     <InputGroup.Addon>
-                      <Icon icon="link" />
+                      <LinkIcon />
                     </InputGroup.Addon>
                     <Input
                       placeholder={t('authors.panels.link')}
@@ -229,16 +231,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </PanelGroup>
       </Drawer.Body>
 
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('authors.panels.save') : t('authors.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('authors.panels.close')}
-        </Button>
-      </Drawer.Footer>
-
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -247,7 +240,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           }}
         />
       </Drawer>
-      <Drawer show={isEditModalOpen} size={'sm'}>
+
+      <Drawer open={isEditModalOpen} size={'sm'}>
         <ImagedEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
