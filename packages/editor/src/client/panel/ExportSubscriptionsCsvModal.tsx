@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Alert, Button, Divider, Icon, IconButton, Placeholder} from 'rsuite'
+import {toaster, Message, Button, Divider, IconButton, Placeholder} from 'rsuite'
 
 import {useSubscriptionsAsCsvLazyQuery} from '../api'
+import CopyIcon from '@rsuite/icons/legacy/Copy'
 
 export function SubscriptionAsCsvModal() {
   const {t} = useTranslation()
@@ -17,7 +18,12 @@ export function SubscriptionAsCsvModal() {
   })
 
   useEffect(() => {
-    if (getSubsErr?.message) Alert.error(getSubsErr.message, 0)
+    if (getSubsErr?.message)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {getSubsErr.message}
+        </Message>
+      )
   }, [getSubsErr])
 
   return (
@@ -38,7 +44,7 @@ export function SubscriptionAsCsvModal() {
         )}
         <IconButton
           appearance="primary"
-          icon={<Icon size="lg" icon="copy" />}
+          icon={<CopyIcon style={{fontSize: '1.3333em'}} />}
           disabled={!subscriptionsCsvData?.csv}
           onClick={() => navigator.clipboard.writeText(subscriptionsCsvData!.csv!)}
         />

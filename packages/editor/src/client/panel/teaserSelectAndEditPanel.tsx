@@ -28,7 +28,7 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
           setTeaser(teaser)
         }}
       />
-      <Drawer show={isEditOpen} size={'sm'} onHide={() => setEditOpen(false)}>
+      <Drawer open={isEditOpen} size={'sm'} onClose={() => setEditOpen(false)}>
         <TeaserEditPanel
           closeLabel={t('articleEditor.panels.back')}
           initialTeaser={{

@@ -52,6 +52,7 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
 
   return (
     <CheckPicker
+      virtualized
       cleanable={true}
       value={list.map(author => author.id)}
       data={foundAuthors.map(author => ({value: author.id, label: author.name}))}

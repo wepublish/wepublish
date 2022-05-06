@@ -19,7 +19,8 @@ export function NavigationBar({leftChildren, rightChildren, centerChildren}: Nav
         style={{
           display: 'flex',
           flexGrow: 1,
-          flexBasis: 0
+          flexBasis: 0,
+          alignItems: 'flex-start'
         }}>
         {leftChildren}
       </div>
@@ -35,6 +36,7 @@ export function NavigationBar({leftChildren, rightChildren, centerChildren}: Nav
           display: 'flex',
           flexGrow: 1,
           flexBasis: 0,
+          alignItems: 'flex-start',
           justifyContent: 'flex-end'
         }}>
         {rightChildren}

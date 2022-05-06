@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, ControlLabel, Form, FormControl, FormGroup, Notification, Panel} from 'rsuite'
+import {Button, Form, Notification, Panel, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
 
@@ -27,17 +27,18 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
   return (
     <Panel>
       <Form fluid={true}>
-        <FormGroup>
-          <ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</ControlLabel>
-          <FormControl
+        <Form.Group>
+          <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
+          <Form.Control
+            name={'password'}
             disabled={isDisabled}
             type="password"
             placeholder={t('userList.panels.password')}
             errorMessage={updateError?.message}
             value={password}
-            onChange={value => setPassword(value)}
+            onChange={(value: string) => setPassword(value)}
           />
-        </FormGroup>
+        </Form.Group>
       </Form>
 
       <Button
@@ -54,10 +55,14 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
             }
           })
           if (data?.resetUserPassword) {
-            Notification.success({
-              title: t('userList.panels.passwordChangeSuccess'),
-              duration: 2000
-            })
+            toaster.push(
+              <Notification
+                type="success"
+                header={t('userList.panels.passwordChangeSuccess')}
+                duration={5000}
+              />,
+              {placement: 'topEnd'}
+            )
             onClose()
           }
         }}>

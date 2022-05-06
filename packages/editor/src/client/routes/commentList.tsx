@@ -23,14 +23,15 @@ import {
   FlexboxGrid,
   Input,
   InputGroup,
-  Icon,
   IconButton,
   Table,
   Modal,
   Button,
   Dropdown,
-  Alert,
-  Panel
+  toaster,
+  Message,
+  Panel,
+  Pagination
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -40,8 +41,13 @@ import {useTranslation} from 'react-i18next'
 
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 import {ApolloCache} from '@apollo/client'
+import CloseIcon from '@rsuite/icons/legacy/Close'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import EditIcon from '@rsuite/icons/legacy/Edit'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import ReplyIcon from '@rsuite/icons/legacy/Reply'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Approve = 'approve',
@@ -114,7 +120,12 @@ export function CommentList() {
   useEffect(() => {
     const error =
       errorApprove?.message ?? errorRequestingChanges?.message ?? errorRejecting?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
   const commentListVariables = {
@@ -197,7 +208,7 @@ export function CommentList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -230,7 +241,7 @@ export function CommentList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={350} align="left" resizable>
@@ -298,7 +309,7 @@ export function CommentList() {
                 <>
                   <IconButtonTooltip caption={t('comments.overview.approve')}>
                     <IconButton
-                      icon={<Icon icon="check" />}
+                      icon={<CheckIcon />}
                       color="green"
                       circle
                       size="sm"
@@ -312,7 +323,7 @@ export function CommentList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('comments.overview.requestChange')}>
                     <IconButton
-                      icon={<Icon icon="edit" />}
+                      icon={<EditIcon />}
                       color="yellow"
                       circle
                       size="sm"
@@ -326,7 +337,7 @@ export function CommentList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('comments.overview.reject')}>
                     <IconButton
-                      icon={<Icon icon="close" />}
+                      icon={<CloseIcon />}
                       color="red"
                       circle
                       size="sm"
@@ -345,21 +356,21 @@ export function CommentList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.comments.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.comments.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
       {confirmAction && (
         <Modal
-          show={isConfirmationDialogOpen}
-          width="sm"
+          open={isConfirmationDialogOpen}
+          size="sm"
           overflow
-          onHide={() => {
+          onClose={() => {
             setConfirmationDialogOpen(false)
             resetCurrentCommentState()
           }}>
@@ -417,7 +428,7 @@ export function CommentList() {
                       </>
                     </Panel>
                     <div style={{marginTop: 8, marginLeft: 10}}>
-                      <Icon icon="reply" rotate={180} />
+                      <ReplyIcon rotate={180} />
                     </div>
                   </DescriptionListItem>
                 </>

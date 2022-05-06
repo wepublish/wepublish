@@ -118,9 +118,7 @@ describe('Peer Edit Panel', () => {
     })
 
     await act(async () => {
-      wrapper
-        .find('button[className="rs-btn rs-btn-primary fetchButton rs-btn-disabled"]')
-        .simulate('click')
+      wrapper.find('button.fetchButton').simulate('click')
     })
     await updateWrapper(wrapper, 100)
 

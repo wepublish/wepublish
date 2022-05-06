@@ -27,20 +27,22 @@ import {
   Button,
   Drawer,
   FlexboxGrid,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   Message,
   Modal,
-  Table
+  Table,
+  Pagination
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
@@ -77,11 +79,7 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
-  const {
-    data,
-    refetch,
-    loading: isLoading
-  } = useSubscriptionListQuery({
+  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
       filter: {},
       first: limit,
@@ -149,7 +147,7 @@ export function SubscriptionList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -170,7 +168,7 @@ export function SubscriptionList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
@@ -238,7 +236,7 @@ export function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -255,20 +253,20 @@ export function SubscriptionList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.subscriptions.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -295,7 +293,7 @@ export function SubscriptionList() {
         />
       </Drawer>
 
-      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
+      <Modal open={isExportModalOpen} onClose={() => setExportModalOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
         </Modal.Header>
@@ -311,18 +309,16 @@ export function SubscriptionList() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           {currentSubscription && isTempUser(currentSubscription.user?.id) && (
-            <Message
-              showIcon
-              type="warning"
-              description={t('subscriptionList.panels.tempUserWarning')}
-            />
+            <Message showIcon type="warning">
+              {t('subscriptionList.panels.tempUserWarning')}
+            </Message>
           )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>

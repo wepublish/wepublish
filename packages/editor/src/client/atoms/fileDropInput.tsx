@@ -1,11 +1,9 @@
 import React, {useState, useRef} from 'react'
 
-import {IconProps} from 'rsuite'
-
 export interface FileDropInputProps {
   disabled?: boolean
 
-  icon?: React.ReactElement<IconProps>
+  icon?: React.ReactElement
   text?: string
 
   onDrop: (fileList: File[]) => void

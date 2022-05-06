@@ -26,8 +26,13 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag, Notification} from 'rsuite'
+import {toaster, Message, Badge, Drawer, IconButton, Modal, Tag, Notification} from 'rsuite'
 import {StateColor} from '../utility'
+import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
+import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
+import SaveIcon from '@rsuite/icons/legacy/Save'
+import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -183,7 +188,12 @@ export function PageEditor({id}: PageEditorProps) {
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [createError, updateError, publishError])
 
   function createInput(): PageInput {
@@ -208,10 +218,14 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      Notification.success({
-        title: t('pageEditor.overview.pageDraftSaved'),
-        duration: 2000
-      })
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('pageEditor.overview.pageDraftSaved')}
+          duration={2000}
+        />,
+        {placement: 'topEnd'}
+      )
       await refetch({id: pageID})
     } else {
       const {data} = await createPage({variables: {input}})
@@ -223,10 +237,14 @@ export function PageEditor({id}: PageEditorProps) {
         })
       }
       setChanged(false)
-      Notification.success({
-        title: t('pageEditor.overview.pageDraftCreated'),
-        duration: 2000
-      })
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('pageEditor.overview.pageDraftCreated')}
+          duration={2000}
+        />,
+        {placement: 'topEnd'}
+      )
     }
   }
 
@@ -265,19 +283,27 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    Notification.success({
-      title: t(
-        publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
-          ? 'pageEditor.overview.pagePublished'
-          : 'pageEditor.overview.pagePending'
-      ),
-      duration: 2000
-    })
+    toaster.push(
+      <Notification
+        type="success"
+        header={t(
+          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
+            ? 'pageEditor.overview.pagePublished'
+            : 'pageEditor.overview.pagePending'
+        )}
+        duration={2000}
+      />,
+      {placement: 'topEnd'}
+    )
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {t('pageEditor.overview.pageNotFound')}
+        </Message>
+      )
     }
   }, [isNotFound])
 
@@ -294,7 +320,7 @@ export function PageEditor({id}: PageEditorProps) {
                 <IconButtonLink
                   style={{marginTop: '4px', marginBottom: '20px'}}
                   size={'lg'}
-                  icon={<Icon icon="arrow-left" />}
+                  icon={<ArrowLeftIcon />}
                   route={PageListRoute.create({})}
                   onClick={e => {
                     if (!unsavedChangesDialog()) e.preventDefault()
@@ -305,7 +331,7 @@ export function PageEditor({id}: PageEditorProps) {
               centerChildren={
                 <div style={{marginTop: '4px'}}>
                   <IconButton
-                    icon={<Icon icon="newspaper-o" />}
+                    icon={<NewspaperOIcon />}
                     size={'lg'}
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
@@ -318,7 +344,7 @@ export function PageEditor({id}: PageEditorProps) {
                         marginLeft: '10px'
                       }}
                       size={'lg'}
-                      icon={<Icon icon="save" />}
+                      icon={<SaveIcon />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
                       {t('pageEditor.overview.create')}
@@ -331,7 +357,7 @@ export function PageEditor({id}: PageEditorProps) {
                             marginLeft: '10px'
                           }}
                           size={'lg'}
-                          icon={<Icon icon="save" />}
+                          icon={<SaveIcon />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
                           {t('pageEditor.overview.save')}
@@ -346,7 +372,7 @@ export function PageEditor({id}: PageEditorProps) {
                             marginLeft: '10px'
                           }}
                           size={'lg'}
-                          icon={<Icon icon="cloud-upload" />}
+                          icon={<CloudUploadIcon />}
                           disabled={isDisabled}
                           onClick={() => {
                             setPublishDialogOpen(true)
@@ -363,7 +389,7 @@ export function PageEditor({id}: PageEditorProps) {
                   disabled={hasChanged || !id}
                   style={{marginTop: '4px'}}
                   size={'lg'}
-                  icon={<Icon icon="eye" />}
+                  icon={<EyeIcon />}
                   onClick={e => {
                     previewLinkFetch({
                       variables: {
@@ -382,7 +408,7 @@ export function PageEditor({id}: PageEditorProps) {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}
           onClose={() => {
@@ -396,7 +422,7 @@ export function PageEditor({id}: PageEditorProps) {
         />
       </Drawer>
 
-      <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

@@ -1,11 +1,12 @@
 import React from 'react'
 
-import {Button, ControlLabel, Drawer, Icon, Notification} from 'rsuite'
+import {Button, Drawer, Notification, toaster, Form} from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
 
 import {useTranslation} from 'react-i18next'
 import {getImgMinSizeToCompress} from '../utility'
+import UploadIcon from '@rsuite/icons/legacy/Upload'
 
 export interface ImageUploadPanelProps {
   onClose(): void
@@ -20,10 +21,14 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
     const file = files[0]
 
     if (!file.type.startsWith('image')) {
-      Notification.error({
-        title: t('articleEditor.panels.învalidImage'),
-        duration: 5000
-      })
+      toaster.push(
+        <Notification
+          type="error"
+          header={t('articleEditor.panels.învalidImage')}
+          duration={5000}
+        />,
+        {placement: 'topEnd'}
+      )
     }
 
     onUpload(file)
@@ -33,27 +38,27 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
     <>
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.uploadImage')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('articleEditor.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <div style={{height: '100px'}}>
           <FileDropInput
-            icon={<Icon icon="upload" />}
+            icon={<UploadIcon />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
         </div>
-        <ControlLabel>
+        <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
-        </ControlLabel>
+        </Form.ControlLabel>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

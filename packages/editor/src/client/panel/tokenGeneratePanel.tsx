@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, Drawer, Input, Message, Panel} from 'rsuite'
+import {toaster, Button, Drawer, Input, Message, Panel} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
@@ -25,7 +25,12 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (createError?.message) Alert.error(createError.message, 0)
+    if (createError?.message)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {createError.message}
+        </Message>
+      )
   }, [createError])
 
   async function handleSave() {
@@ -36,18 +41,26 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
     <>
       <Drawer.Header>
         <Drawer.Title>{t('tokenList.panels.generateToken')}</Drawer.Title>
+
+        <Drawer.Actions>
+          {!hasGeneratedToken && (
+            <Button disabled={isDisabled} onClick={handleSave} appearance="primary">
+              {t('tokenList.panels.generate')}
+            </Button>
+          )}
+          <Button onClick={() => onClose?.()} appearance="subtle">
+            {t('tokenList.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
       <Drawer.Body>
         {token ? (
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
             <Panel bordered>{token}</Panel>
-            <Message
-              showIcon
-              style={{marginTop: 5}}
-              type="warning"
-              description={t('tokenList.panels.tokenWarning')}
-            />
+            <Message showIcon style={{marginTop: 5}} type="warning">
+              {t('tokenList.panels.tokenWarning')}
+            </Message>
           </>
         ) : (
           <Input
@@ -60,17 +73,6 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           />
         )}
       </Drawer.Body>
-
-      <Drawer.Footer>
-        {!hasGeneratedToken && (
-          <Button disabled={isDisabled} onClick={handleSave} appearance="primary">
-            {t('tokenList.panels.generate')}
-          </Button>
-        )}
-        <Button onClick={() => onClose?.()} appearance="subtle">
-          {t('tokenList.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

@@ -16,6 +16,18 @@ import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
 
+import ListUlIcon from '@rsuite/icons/legacy/ListUl'
+import ListOlIcon from '@rsuite/icons/legacy/ListOl'
+import TableIcon from '@rsuite/icons/legacy/Table'
+import BoldIcon from '@rsuite/icons/legacy/Bold'
+import ItalicIcon from '@rsuite/icons/legacy/Italic'
+import UnderlineIcon from '@rsuite/icons/legacy/Underline'
+import StrikethroughIcon from '@rsuite/icons/legacy/Strikethrough'
+import SuperscriptIcon from '@rsuite/icons/legacy/Superscript'
+import SubscriptIcon from '@rsuite/icons/legacy/Subscript'
+import LinkIcon from '@rsuite/icons/legacy/Link'
+import SmileOIcon from '@rsuite/icons/legacy/SmileO'
+
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
@@ -114,33 +126,33 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
-            <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
+            <FormatIconButton icon={<ListUlIcon />} format={BlockFormat.UnorderedList} />
+            <FormatIconButton icon={<ListOlIcon />} format={BlockFormat.OrderedList} />
 
             <ToolbarDivider />
 
-            <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
+            <EditorSubMenuButton icon={<TableIcon />} editorHasFocus={hasFocus}>
               <TableMenu />
             </EditorSubMenuButton>
 
             <ToolbarDivider />
 
-            <FormatIconButton icon="bold" format={TextFormat.Bold} />
-            <FormatIconButton icon="italic" format={TextFormat.Italic} />
-            <FormatIconButton icon="underline" format={TextFormat.Underline} />
-            <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
-            <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
-            <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+            <FormatIconButton icon={<BoldIcon />} format={TextFormat.Bold} />
+            <FormatIconButton icon={<ItalicIcon />} format={TextFormat.Italic} />
+            <FormatIconButton icon={<UnderlineIcon />} format={TextFormat.Underline} />
+            <FormatIconButton icon={<StrikethroughIcon />} format={TextFormat.Strikethrough} />
+            <FormatIconButton icon={<SuperscriptIcon />} format={TextFormat.Superscript} />
+            <FormatIconButton icon={<SubscriptIcon />} format={TextFormat.Subscript} />
 
             <ToolbarDivider />
 
-            <SubMenuButton icon="link" format={InlineFormat.Link}>
+            <SubMenuButton icon={<LinkIcon />} format={InlineFormat.Link}>
               <LinkMenu />
             </SubMenuButton>
 
             <ToolbarDivider />
 
-            <SubMenuButton icon="smile-o">
+            <SubMenuButton icon={<SmileOIcon />}>
               <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
             </SubMenuButton>
           </Toolbar>

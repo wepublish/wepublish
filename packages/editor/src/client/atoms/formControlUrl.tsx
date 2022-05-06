@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react'
-import {FormControl, Message} from 'rsuite'
+import {Form, Message} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {validateURL} from '../utility'
 
@@ -24,23 +24,20 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
 
   return (
     <div>
-      <FormControl
+      <Form.Control
         style={invalidInput ? {border: 'thin solid red'} : {}}
         placeholder={placeholder}
         name={name}
         value={value}
-        onChange={url => {
+        onChange={(url: string) => {
           handleUrlValidation(url)
           onChange(url)
         }}
       />
       {invalidInput && (
-        <Message
-          showIcon
-          type="error"
-          description={t('peerList.overview.invalidURLTooltip')}
-          style={{marginTop: '5px'}}
-        />
+        <Message showIcon type="error" style={{marginTop: '5px'}}>
+          {t('peerList.overview.invalidURLTooltip')}
+        </Message>
       )}
     </div>
   )

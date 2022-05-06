@@ -116,8 +116,8 @@ describe('User Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    wrapper.find('a[name="userList.panels.userRoles"]').simulate('click')
-    wrapper.find('div[role="menuitem"]').last().simulate('click')
+    wrapper.find('[role="combobox"] input').simulate('click')
+    wrapper.find('.rs-checkbox-checker label').last().simulate('click')
 
     const panel = wrapper.find('UserEditPanel')
     expect(panel).toMatchSnapshot()
@@ -133,7 +133,7 @@ describe('User Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    wrapper.find('a[name="userList.panels.userRoles"]').simulate('click')
+    wrapper.find('[role="combobox"] input').simulate('click')
     wrapper.find('div.rs-checkbox-checked').simulate('click')
 
     const panel = wrapper.find('UserEditPanel')

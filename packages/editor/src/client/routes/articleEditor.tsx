@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {Alert, Badge, Drawer, Icon, IconButton, Modal, Notification, Tag} from 'rsuite'
+import {toaster, Message, Badge, Drawer, IconButton, Modal, Notification, Tag} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -42,6 +42,11 @@ import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
 import {ClientSettings} from '../../shared/types'
 import {ElementID} from '../../shared/elementID'
+import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import SaveIcon from '@rsuite/icons/legacy/Save'
+import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
+import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -236,7 +241,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [createError, updateError, publishError])
 
   function countRichtextChars(blocksCharLength: number, nodes: any) {
@@ -350,10 +360,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       await updateArticle({variables: {id: articleID, input}})
 
       setChanged(false)
-      Notification.success({
-        title: t('articleEditor.overview.draftSaved'),
-        duration: 2000
-      })
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('articleEditor.overview.draftSaved')}
+          duration={2000}
+        />,
+        {placement: 'topEnd'}
+      )
       await refetch({id: articleID})
     } else {
       const {data} = await createArticle({variables: {input}})
@@ -365,16 +379,24 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       }
       setChanged(false)
-      Notification.success({
-        title: t('articleEditor.overview.draftCreated'),
-        duration: 2000
-      })
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('articleEditor.overview.draftCreated')}
+          duration={2000}
+        />,
+        {placement: 'topEnd'}
+      )
     }
   }
 
   async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
     if (!metadata.slug) {
-      Alert.error(t('articleEditor.overview.noSlug'), 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {t('articleEditor.overview.noSlug')}
+        </Message>
+      )
       return
     }
 
@@ -409,21 +431,29 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         }
       }
       setChanged(false)
-      Notification.success({
-        title: t(
-          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
-            ? 'articleEditor.overview.articlePublished'
-            : 'articleEditor.overview.articlePending'
-        ),
-        duration: 2000
-      })
+      toaster.push(
+        <Notification
+          type="success"
+          header={t(
+            publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
+              ? 'articleEditor.overview.articlePublished'
+              : 'articleEditor.overview.articlePending'
+          )}
+          duration={2000}
+        />,
+        {placement: 'topEnd'}
+      )
     }
     await refetch({id: articleID})
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Alert.error(t('articleEditor.overview.notFound'), 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {t('articleEditor.overview.notFound')}
+        </Message>
+      )
     }
   }, [isNotFound])
 
@@ -450,7 +480,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 <IconButtonLink
                   style={{marginTop: '4px'}}
                   size={'lg'}
-                  icon={<Icon icon="arrow-left" />}
+                  icon={<ArrowLeftIcon />}
                   route={ArticleListRoute.create({})}
                   onClick={e => {
                     if (!unsavedChangesDialog()) e.preventDefault()
@@ -461,7 +491,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               centerChildren={
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
-                    icon={<Icon icon="newspaper-o" />}
+                    icon={<NewspaperOIcon />}
                     size={'lg'}
                     disabled={isDisabled}
                     onClick={() => {
@@ -477,7 +507,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         marginLeft: '10px'
                       }}
                       size={'lg'}
-                      icon={<Icon icon="save" />}
+                      icon={<SaveIcon />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
                       {t('articleEditor.overview.create')}
@@ -490,7 +520,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                             marginLeft: '10px'
                           }}
                           size={'lg'}
-                          icon={<Icon icon="save" />}
+                          icon={<SaveIcon />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
                           {t('articleEditor.overview.save')}
@@ -507,7 +537,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                             marginLeft: '10px'
                           }}
                           size={'lg'}
-                          icon={<Icon icon="cloud-upload" />}
+                          icon={<CloudUploadIcon />}
                           disabled={isDisabled}
                           onClick={() => {
                             setPublishDialogOpen(true)
@@ -524,7 +554,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   disabled={hasChanged || !id}
                   style={{marginTop: '4px'}}
                   size={'lg'}
-                  icon={<Icon icon="eye" />}
+                  icon={<EyeIcon />}
                   onClick={e => {
                     previewLinkFetch({
                       variables: {
@@ -543,7 +573,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
           infoData={infoData}
@@ -557,7 +587,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           }}
         />
       </Drawer>
-      <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

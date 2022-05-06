@@ -2,7 +2,8 @@ import React, {useRef, useState, useLayoutEffect} from 'react'
 
 import {DraggableContainer, Draggable, Point} from './draggable'
 
-import {Panel, Icon} from 'rsuite'
+import {Panel} from 'rsuite'
+import SquareOIcon from '@rsuite/icons/legacy/SquareO'
 
 export interface FocalPointInputProps {
   imageURL: string
@@ -128,7 +129,7 @@ export function FocalPoint() {
         backgroundColor: 'rgba(0, 0, 0, 0.4)'
       } */
       }}>
-      <Icon icon="square-o" />
+      <SquareOIcon />
     </div>
   )
 }

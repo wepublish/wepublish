@@ -1,7 +1,6 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton} from 'rsuite'
-
+import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton} from 'rsuite'
 import {
   ArticleListRoute,
   CommentListRoute,
@@ -22,6 +21,25 @@ import {
   SubscriptionListRoute,
   LogoutRoute
 } from './route'
+import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
+import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
+import FileTextIcon from '@rsuite/icons/legacy/FileText'
+import FileTextOIcon from '@rsuite/icons/legacy/FileTextO'
+import FrameIcon from '@rsuite/icons/legacy/Frame'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
+import ImageIcon from '@rsuite/icons/legacy/Image'
+import BarsIcon from '@rsuite/icons/legacy/Bars'
+import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
+import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
+import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
+import MehOIcon from '@rsuite/icons/legacy/MehO'
+import IdCardIcon from '@rsuite/icons/legacy/IdCard'
+import ShareIcon from '@rsuite/icons/legacy/Share'
+import KeyIcon from '@rsuite/icons/legacy/Key'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import GlobeIcon from '@rsuite/icons/legacy/Globe'
+import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 
 import {useTranslation} from 'react-i18next'
 
@@ -77,7 +95,6 @@ export function Base({children}: BaseProps) {
       <Container>
         <Sidebar
           style={{display: 'flex', flexDirection: 'column'}}
-          appearance="default"
           width={isExpanded ? 260 : 56}
           collapsible>
           <Sidenav
@@ -99,12 +116,18 @@ export function Base({children}: BaseProps) {
                 circle
                 size="xs"
                 onClick={() => setIsExpanded(!isExpanded)}
-                icon={<Icon size="lg" icon={isExpanded ? 'angle-left' : 'angle-right'} />}
+                icon={
+                  isExpanded ? (
+                    <AngleLeftIcon style={{fontSize: '1.3333em'}} />
+                  ) : (
+                    <AngleRightIcon style={{fontSize: '1.3333em'}} />
+                  )
+                }
               />
 
               <Nav>
                 <NavItemLink
-                  icon={<Icon icon="file-text" />}
+                  icon={<FileTextIcon />}
                   route={ArticleListRoute.create({})}
                   active={
                     current?.type === RouteType.ArticleList || current?.type === RouteType.Index
@@ -113,97 +136,94 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="file-text-o" />}
+                  icon={<FileTextOIcon />}
                   route={PeerArticleListRoute.create({})}
                   active={current?.type === RouteType.PeerArticleList}>
                   {t('navbar.peerArticles')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="frame" />}
+                  icon={<FrameIcon />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="comment" />}
+                  icon={<CommentIcon />}
                   route={CommentListRoute.create({})}
                   active={current?.type === RouteType.CommentList}>
                   {t('navbar.comments')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="image" />}
+                  icon={<ImageIcon />}
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="bars" />}
+                  icon={<BarsIcon />}
                   route={NavigationListRoute.create({})}
                   active={current?.type === RouteType.NavigationList}>
                   {t('navbar.navigations')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="people-group" />}
+                  icon={<PeopleGroupIcon />}
                   route={AuthorListRoute.create({})}
                   active={current?.type === RouteType.AuthorList}>
                   {t('navbar.authors')}
                 </NavItemLink>
 
-                <Dropdown
-                  eventKey={'1'}
-                  title={t('navbar.usersAndMembers')}
-                  icon={<Icon icon="peoples" />}>
+                <Dropdown eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
                   <DropdownItemLink
                     active={current?.type === RouteType.UserList}
-                    icon={<Icon icon="user-circle" />}
+                    icon={<UserCircleIcon />}
                     route={UserListRoute.create({})}>
                     {t('navbar.users')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.UserRoleList}
-                    icon={<Icon icon="character-authorize" />}
+                    icon={<CharacterAuthorizeIcon />}
                     route={UserRoleListRoute.create({})}>
                     {t('navbar.userRoles')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.SubscriptionList}
-                    icon={<Icon icon="meh-o" />}
+                    icon={<MehOIcon />}
                     route={SubscriptionListRoute.create({})}>
                     {t('navbar.subscriptions')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.MemberPlanList}
-                    icon={<Icon icon="id-card" />}
+                    icon={<IdCardIcon />}
                     route={MemberPlanListRoute.create({})}>
                     {t('navbar.memberPlans')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="credit-card" />}
+                    icon={<CreditCardIcon />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
                 </Dropdown>
 
-                <Dropdown title={t('navbar.peering')} icon={<Icon icon="share" />}>
+                <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
                   <DropdownItemLink
                     active={current?.type === RouteType.PeerList}
-                    icon={<Icon icon="share" />}
+                    icon={<ShareIcon />}
                     route={PeerListRoute.create({})}>
                     {t('navbar.peers')}
                   </DropdownItemLink>
                   <DropdownItemLink
                     active={current?.type === RouteType.TokenList}
-                    icon={<Icon icon="key" />}
+                    icon={<KeyIcon />}
                     route={TokenListRoute.create({})}>
                     {t('navbar.tokens')}
                   </DropdownItemLink>
@@ -212,46 +232,47 @@ export function Base({children}: BaseProps) {
             </Sidenav.Body>
           </Sidenav>
           <Navbar appearance="default" className="nav-toggle">
-            <Navbar.Body>
-              <Nav>
-                <Dropdown
-                  placement="topStart"
-                  trigger="click"
-                  renderTitle={children => {
-                    return <Icon style={iconStyles} icon="cog" className="icon-selector" />
-                  }}>
-                  <DropdownItemLink route={LogoutRoute.create({})}>
-                    {t('navbar.logout')}
-                  </DropdownItemLink>
-                </Dropdown>
-              </Nav>
-              <Nav>
-                <Dropdown
-                  placement="topStart"
-                  trigger="click"
-                  renderTitle={() => (
-                    <Icon
-                      className="icon-selector"
-                      icon="globe"
-                      style={{
-                        width: 56,
-                        height: 56,
-                        lineHeight: '56px',
-                        textAlign: 'center'
-                      }}
-                    />
-                  )}>
-                  {AVAILABLE_LANG.map(lang => (
-                    <Dropdown.Item
-                      key={lang.id}
-                      onSelect={() => setUILanguage(lang.id)}
-                      active={lang.id === uiLanguage}>
-                      {lang.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
-              </Nav>
-            </Navbar.Body>
+            <Nav>
+              <Dropdown
+                placement="topStart"
+                trigger="click"
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    ref={ref}
+                    style={iconStyles}
+                    className="icon-selector"
+                    icon={<CogIcon />}
+                  />
+                )}>
+                <DropdownItemLink route={LogoutRoute.create({})}>
+                  {t('navbar.logout')}
+                </DropdownItemLink>
+              </Dropdown>
+            </Nav>
+            <Nav>
+              <Dropdown
+                placement="topStart"
+                trigger="click"
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    ref={ref}
+                    style={iconStyles}
+                    className="icon-selector"
+                    icon={<GlobeIcon />}
+                  />
+                )}>
+                {AVAILABLE_LANG.map(lang => (
+                  <Dropdown.Item
+                    key={lang.id}
+                    onSelect={() => setUILanguage(lang.id)}
+                    active={lang.id === uiLanguage}>
+                    {lang.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown>
+            </Nav>
           </Navbar>
         </Sidebar>
         <Container
