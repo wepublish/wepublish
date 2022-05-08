@@ -268,10 +268,11 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
-    if (filter?.userHasAddress !== undefined) {
-      textFilter.$and?.push({'user.address.zipCode': {$exists: filter.userHasAddress}})
+    if (filter?.userHasAddress === true) {
+      textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
     }
 
+    console.log('this.subscriptions', this.subscriptions)
     console.log('textFilter', textFilter)
 
     const [totalCount, subscriptions] = await Promise.all([
@@ -281,6 +282,12 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
       this.subscriptions
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        // .lookup({
+        //   from: 'DBUser',
+        //   localField: 'userID',
+        //   foreignField: '_id',
+        //   as: 'user'
+        // })
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
@@ -290,6 +297,8 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     ])
 
     const nodes = subscriptions.slice(0, limitCount)
+
+    console.log('nodesaaa', nodes)
 
     if (limit.type === LimitType.Last) {
       nodes.reverse()

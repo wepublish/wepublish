@@ -43,7 +43,6 @@ import {
   HelpBlock,
   Icon,
   IconButton,
-  // InputGroup,
   Message,
   Modal,
   SelectPicker,
@@ -85,10 +84,6 @@ export function SubscriptionList() {
   )
 
   const [filter, setFilter] = useState({} as SubscriptionFilter)
-  //
-  // const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
-  //   PaymentPeriodicity.Yearly
-  // )
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
   // const [paymentMethod, setPaymentMethod] = useState<FullPaymentMethodFragment>()
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
@@ -233,7 +228,6 @@ export function SubscriptionList() {
             disabled={isDisabled}
             data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
             value={memberPlan?.id}
-            // onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
             onChange={value =>
               updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
             }
@@ -257,7 +251,6 @@ export function SubscriptionList() {
               label: t(`memberPlanList.paymentPeriodicity.${pp}`)
             }))}
             disabled={isDisabled}
-            // onChange={value => setPaymentPeriodicity(value)}
             onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
             block
           />
@@ -269,7 +262,6 @@ export function SubscriptionList() {
             disabled={isDisabled}
             data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
             value={filter.paymentMethodID}
-            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
             onChange={value =>
               updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
             }
@@ -280,38 +272,19 @@ export function SubscriptionList() {
           <Checkbox
             block
             disabled={isDisabled}
-            // data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-            // value={paymentMethod?.id}
-            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
             value={filter.autoRenew}
             onChange={(_, checked) => updateFilter({autoRenew: checked})}
           />
         </FormGroup>
         <FormGroup style={{marginLeft: '15px'}}>
-          {/* <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel> */}
           <ControlLabel>Has address</ControlLabel>
           <Checkbox
             block
             disabled={isDisabled}
-            // data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-            // value={paymentMethod?.id}
-            // onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
             value={filter.userHasAddress}
             onChange={(_, checked) => updateFilter({userHasAddress: checked})}
           />
         </FormGroup>
-        {/* <FormGroup>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
-          <DateRangePicker
-            block
-            placement="auto"
-            value={filter.deactivationDate}
-            onChange={value => {
-              console.log('value datePicker', value)
-              updateFilter({deactivationDate: value})
-            }}
-          />
-        </FormGroup> */}
 
         <FormGroup>
           <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
@@ -331,7 +304,6 @@ export function SubscriptionList() {
                 label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
               }
             ]}
-            // value={deactivationReason}
             value={filter.deactivationReason}
             block
             placement="auto"
