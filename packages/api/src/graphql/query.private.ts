@@ -337,10 +337,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         console.log('filter', filter)
-        console.log('sort', sort)
-        console.log('order', order)
-        console.log('cursor', InputCursor(after, before))
-        console.log('limit', Limit(first, last, skip))
         const toReturn = await dbAdapter.subscription.getSubscriptions({
           filter,
           sort,

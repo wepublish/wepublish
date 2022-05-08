@@ -20,7 +20,6 @@ import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   SubscriptionDeactivationReason,
-  // PaymentPeriodicity,
   SubscriptionFilter,
   SubscriptionSort,
   useDeleteSubscriptionMutation,
@@ -36,7 +35,6 @@ import {
   Checkbox,
   ControlLabel,
   DatePicker,
-  DateRangePicker,
   Drawer,
   FlexboxGrid,
   FormGroup,
@@ -183,17 +181,10 @@ export function SubscriptionList() {
 
   const isDisabled =
     isLoading ||
-    // isCreating ||
     isMemberPlanLoading ||
-    // isUpdating ||
     isPaymentMethodLoading ||
-    // isUserLoading ||
-    // loadError !== undefined ||
-    // createError !== undefined ||
     loadMemberPlanError !== undefined ||
     paymentMethodLoadError !== undefined
-  // userLoadError !== undefined ||
-  // isTempUser
 
   const updateFilter = (value: SubscriptionFilter) => {
     const newFilter = {
@@ -277,7 +268,7 @@ export function SubscriptionList() {
           />
         </FormGroup>
         <FormGroup style={{marginLeft: '15px'}}>
-          <ControlLabel>Has address</ControlLabel>
+          <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
           <Checkbox
             block
             disabled={isDisabled}
@@ -285,8 +276,7 @@ export function SubscriptionList() {
             onChange={(_, checked) => updateFilter({userHasAddress: checked})}
           />
         </FormGroup>
-
-        <FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
           <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
           <SelectPicker
             searchable={false}
@@ -311,16 +301,42 @@ export function SubscriptionList() {
           />
         </FormGroup>
         <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.date.from')}</ControlLabel>
+          <DatePicker
+            block
+            onChange={value =>
+              updateFilter({
+                deactivationDate: {
+                  date: value.toISOString(),
+                  comparison: DateFilterComparison.Greater
+                }
+              })
+            }
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.date.to')}</ControlLabel>
+          <DatePicker
+            block
+            onChange={value =>
+              updateFilter({
+                deactivationDate: {
+                  date: value.toISOString(),
+                  comparison: DateFilterComparison.Lower
+                }
+              })
+            }
+          />
+        </FormGroup>
+        <FormGroup style={{marginLeft: '15px'}}>
           <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
           <DatePicker
             block
-            value={paidUntil ?? undefined}
-            onChange={value => {
-              console.log('value', value)
+            onChange={value =>
               updateFilter({
                 paidUntil: {date: value.toISOString(), comparison: DateFilterComparison.Lower}
               })
-            }}
+            }
           />
         </FormGroup>
       </FlexboxGrid>

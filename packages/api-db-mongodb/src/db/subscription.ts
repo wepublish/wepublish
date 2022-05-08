@@ -272,7 +272,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
     }
 
-    console.log('this.subscriptions', this.subscriptions)
     console.log('textFilter', textFilter)
 
     const [totalCount, subscriptions] = await Promise.all([
@@ -297,8 +296,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     ])
 
     const nodes = subscriptions.slice(0, limitCount)
-
-    console.log('nodesaaa', nodes)
 
     if (limit.type === LimitType.Last) {
       nodes.reverse()
