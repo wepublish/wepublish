@@ -149,6 +149,7 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "as",
             "dateFormat",
             "componentClass",
             "autoComplete",
