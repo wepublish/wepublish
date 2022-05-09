@@ -32,13 +32,11 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
-  Checkbox,
   ControlLabel,
   DatePicker,
   Drawer,
   FlexboxGrid,
   FormGroup,
-  HelpBlock,
   Icon,
   IconButton,
   Message,
@@ -83,11 +81,7 @@ export function SubscriptionList() {
 
   const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  // const [paymentMethod, setPaymentMethod] = useState<FullPaymentMethodFragment>()
-  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-  const [paidUntil, setPaidUntil] = useState<Date | null>()
-  //
   const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -212,28 +206,18 @@ export function SubscriptionList() {
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
-        <FormGroup>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
           <SelectPicker
             block
             disabled={isDisabled}
             data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
-            value={memberPlan?.id}
             onChange={value =>
               updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
             }
           />
-          {memberPlan && (
-            <HelpBlock>
-              <DescriptionList>
-                <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                  {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
-                </DescriptionListItem>
-              </DescriptionList>
-            </HelpBlock>
-          )}
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
           <SelectPicker
             value={filter.paymentPeriodicity}
@@ -246,7 +230,7 @@ export function SubscriptionList() {
             block
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
           <SelectPicker
             block
@@ -258,25 +242,47 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
-          <Checkbox
+          <SelectPicker
+            searchable={false}
+            data={[
+              {
+                value: true,
+                label: 'Yes'
+              },
+              {
+                value: false,
+                label: 'No'
+              }
+            ]}
+            value={filter.deactivationReason}
             block
-            disabled={isDisabled}
-            value={filter.autoRenew}
-            onChange={(_, checked) => updateFilter({autoRenew: checked})}
+            placement="auto"
+            onChange={value => updateFilter({autoRenew: value})}
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
-          <Checkbox
+          <SelectPicker
+            searchable={false}
+            data={[
+              {
+                value: true,
+                label: 'Yes'
+              },
+              {
+                value: false,
+                label: 'No'
+              }
+            ]}
+            value={filter.deactivationReason}
             block
-            disabled={isDisabled}
-            value={filter.userHasAddress}
-            onChange={(_, checked) => updateFilter({userHasAddress: checked})}
+            placement="auto"
+            onChange={value => updateFilter({userHasAddress: value})}
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
           <SelectPicker
             searchable={false}
@@ -300,8 +306,8 @@ export function SubscriptionList() {
             onChange={value => updateFilter({deactivationReason: value})}
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.date.from')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.dateFrom')}</ControlLabel>
           <DatePicker
             block
             onChange={value =>
@@ -314,8 +320,8 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.date.to')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.dateTo')}</ControlLabel>
           <DatePicker
             block
             onChange={value =>
@@ -328,7 +334,7 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginLeft: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
           <DatePicker
             block

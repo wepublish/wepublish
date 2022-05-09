@@ -938,6 +938,7 @@
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter",
       "autoRenew": "Auto Renew",
+      "hasAddress": "User has address",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "tempUser": {
@@ -965,6 +966,8 @@
         },
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
         "date": "Deactivation Date",
+        "dateFrom": "Deactivation date (from)",
+        "dateTo": "Deactivation date (to)",
         "reason": "Deactivation Reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
