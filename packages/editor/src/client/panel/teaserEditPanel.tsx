@@ -82,7 +82,7 @@ export function TeaserEditPanel({
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
               <Form.Control
-                name={'pre-title'}
+                name="pre-title"
                 value={preTitle}
                 onChange={(preTitle: string) => setPreTitle(preTitle)}
               />
@@ -90,14 +90,14 @@ export function TeaserEditPanel({
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
               <Form.Control
-                name={'title'}
+                name="title"
                 value={title}
                 onChange={(title: string) => setTitle(title)}
               />
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
-              <Form.Control name={'lead'} value={lead} onChange={(lead: string) => setLead(lead)} />
+              <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
             </Form.Group>
           </Form>
         </Panel>

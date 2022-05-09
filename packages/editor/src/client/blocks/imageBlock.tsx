@@ -57,7 +57,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
               }}>
               <Dropdown
-                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
                     ref={ref}

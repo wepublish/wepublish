@@ -108,7 +108,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
                 <Form.Control
-                  name={'social-media-title'}
+                  name="social-media-title"
                   value={socialMediaTitle}
                   onChange={(socialMediaTitle: string) => {
                     onChange?.({...value, socialMediaTitle})
@@ -120,7 +120,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   {t('pageEditor.panels.socialMediaDescription')}
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'social-media-description'}
+                  name="social-media-description"
                   rows={5}
                   accepter={Textarea}
                   value={socialMediaDescription}
@@ -154,7 +154,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
                 <Form.Control
-                  name={'slug'}
+                  name="slug"
                   value={slug}
                   onChange={(slug: string) => onChange?.({...value, slug})}
                 />
@@ -162,7 +162,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
                 <Form.Control
-                  name={'title'}
+                  name="title"
                   value={title}
                   onChange={(title: string) => onChange?.({...value, title})}
                 />
@@ -171,7 +171,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
                 <Form.Control
-                  name={'description'}
+                  name="description"
                   accepter={Textarea}
                   value={description}
                   onChange={(description: string) => onChange?.({...value, description})}
