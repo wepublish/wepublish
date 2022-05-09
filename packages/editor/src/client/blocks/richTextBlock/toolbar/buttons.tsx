@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from 'react'
-import {PopoverProps} from 'rsuite'
 import {useSlate} from 'slate-react'
 import {
   ToolbarIconButtonProps,
@@ -11,6 +10,7 @@ import {
 } from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {Format} from '../editor/formats'
+import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly icon: React.ReactElement
@@ -60,10 +60,10 @@ export function EditorSubMenuButton({
   children,
   ...props
 }: EditorSubMenuButtonProps) {
-  const triggerRef = useRef<PopoverProps>(null)
+  const triggerRef = useRef<OverlayTriggerInstance>(null)
 
   useEffect(() => {
-    if (!editorHasFocus && triggerRef.current) triggerRef.current!.visible = false
+    if (!editorHasFocus && triggerRef.current) triggerRef.current!.close()
   }, [editorHasFocus])
 
   return (

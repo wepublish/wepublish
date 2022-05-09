@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from 'react'
-
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  SubscriptionCreateRoute,
-  SubscriptionEditRoute,
-  SubscriptionListRoute,
-  UserEditRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import {RouteActionType} from '@wepublish/karma.run-react'
-
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  Button,
+  DateRangePicker,
+  Drawer,
+  FlexboxGrid,
+  Form,
+  IconButton,
+  Message,
+  Modal,
+  Pagination,
+  SelectPicker,
+  Table
+} from 'rsuite'
 import {
   DateFilterComparison,
   FullMemberPlanFragment,
@@ -27,32 +28,27 @@ import {
   usePaymentMethodListQuery,
   useSubscriptionListQuery
 } from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  DateRangePicker,
-  Drawer,
-  FlexboxGrid,
-  IconButton,
-  Message,
-  Modal,
-  SelectPicker,
-  Table,
-  Pagination
-} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder,
-  isTempUser,
-  ALL_PAYMENT_PERIODICITIES
-} from '../utility'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
+import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {
+  ButtonLink,
+  Link,
+  RouteType,
+  SubscriptionCreateRoute,
+  SubscriptionEditRoute,
+  SubscriptionListRoute,
+  UserEditRoute,
+  useRoute,
+  useRouteDispatch
+} from '../route'
+import {
+  ALL_PAYMENT_PERIODICITIES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  isTempUser,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -251,7 +247,7 @@ export function SubscriptionList() {
             placeholder={t('userSubscriptionEdit.startsAt')}
             block
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   startsAtFrom: {
                     date: value[0]?.toISOString(),
@@ -282,7 +278,6 @@ export function SubscriptionList() {
                 label: t('no')
               }
             ]}
-            value={filter.deactivationReason}
             block
             placement="auto"
             onChange={value => updateFilter({autoRenew: value})}
@@ -340,7 +335,7 @@ export function SubscriptionList() {
             block
             placement="auto"
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   deactivationDateFrom: {
                     date: value[0]?.toISOString(),
@@ -364,7 +359,7 @@ export function SubscriptionList() {
             block
             placement="auto"
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   paidUntilFrom: {
                     date: value[0]?.toISOString(),

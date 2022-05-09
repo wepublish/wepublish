@@ -171,7 +171,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
                   disabled={isDisabled}
-                  onChange={value => {
+                  onChange={(value: string) => {
                     setJobTitle(value)
                   }}
                 />

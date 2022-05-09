@@ -242,6 +242,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             disabled={true}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -253,166 +254,8 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
-<<<<<<< HEAD
-                                <FormGroup
-                                  className=""
-                                  classPrefix="rs-form-group"
-                                >
-                                  <div
-                                    className="rs-form-group"
-                                    role="group"
-                                  >
-                                    <defaultProps(ControlLabel)
-                                      classPrefix="rs-control-label"
-                                    >
-                                      <ControlLabel
-                                        classPrefix="rs-control-label"
-                                      >
-                                        <label
-                                          className="rs-control-label"
-                                        >
-                                          authors.panels.jobTitle
-                                        </label>
-                                      </ControlLabel>
-                                    </defaultProps(ControlLabel)>
-                                    <defaultProps(FormControlWrapper)
-                                      classPrefix="rs-form-control"
-                                      disabled={true}
-                                      name="authors.panels.jobTitle"
-                                      onChange={[Function]}
-                                      value=""
-                                    >
-                                      <FormControlWrapper
-                                        classPrefix="rs-form-control"
-                                        disabled={true}
-                                        name="authors.panels.jobTitle"
-                                        onChange={[Function]}
-                                        value=""
-                                      >
-                                        <FormControl
-                                          accepter={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "contextType": Object {
-                                                "$$typeof": Symbol(react.context),
-                                                "Consumer": Object {
-                                                  "$$typeof": Symbol(react.context),
-                                                  "_calculateChangedBits": null,
-                                                  "_context": [Circular],
-                                                },
-                                                "Provider": Object {
-                                                  "$$typeof": Symbol(react.provider),
-                                                  "_context": [Circular],
-                                                },
-                                                "_calculateChangedBits": null,
-                                                "_currentRenderer": Object {},
-                                                "_currentRenderer2": null,
-                                                "_currentValue": null,
-                                                "_currentValue2": null,
-                                                "_threadCount": 0,
-                                              },
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-input",
-                                                "componentClass": "input",
-                                                "type": "text",
-                                              },
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          classPrefix="rs-form-control"
-                                          disabled={true}
-                                          errorPlacement="bottomStart"
-                                          formValue={Object {}}
-                                          name="authors.panels.jobTitle"
-                                          onChange={[Function]}
-                                          plaintextDefaultValue="--"
-                                          value=""
-                                        >
-                                          <div
-                                            className="rs-form-control-wrapper"
-                                          >
-                                            <withStyleProps(defaultProps(Input))
-                                              classPrefix="rs-input"
-                                              componentClass="input"
-                                              disabled={true}
-                                              name="authors.panels.jobTitle"
-                                              onBlur={[Function]}
-                                              onChange={[Function]}
-                                              type="text"
-                                              value=""
-                                            >
-                                              <defaultProps(Input)
-                                                className=""
-                                                classPrefix="rs-input"
-                                                componentClass="input"
-                                                disabled={true}
-                                                name="authors.panels.jobTitle"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                type="text"
-                                                value=""
-                                              >
-                                                <Input
-                                                  className=""
-                                                  classPrefix="rs-input"
-                                                  componentClass="input"
-                                                  disabled={true}
-                                                  name="authors.panels.jobTitle"
-                                                  onBlur={[Function]}
-                                                  onChange={[Function]}
-                                                  type="text"
-                                                  value=""
-                                                >
-                                                  <input
-                                                    className="rs-input"
-                                                    disabled={true}
-                                                    name="authors.panels.jobTitle"
-                                                    onBlur={[Function]}
-                                                    onChange={[Function]}
-                                                    onKeyDown={[Function]}
-                                                    type="text"
-                                                    value=""
-                                                  />
-                                                </Input>
-                                              </defaultProps(Input)>
-                                            </withStyleProps(defaultProps(Input))>
-                                            <defaultProps(ErrorMessage)
-                                              className="rs-form-control-message-wrapper"
-                                              classPrefix="rs-error-message"
-                                              placement="bottomStart"
-                                              show={false}
-                                            >
-                                              <ErrorMessage
-                                                className="rs-form-control-message-wrapper"
-                                                classPrefix="rs-error-message"
-                                                placement="bottomStart"
-                                                show={false}
-                                              />
-                                            </defaultProps(ErrorMessage)>
-                                          </div>
-                                        </FormControl>
-                                      </FormControlWrapper>
-                                    </defaultProps(FormControlWrapper)>
-                                  </div>
-                                </FormGroup>
-                              </defaultProps(FormGroup)>
-                            </withStyleProps(defaultProps(FormGroup))>
-                          </form>
-                        </Form>
-                      </div>
-                    </div>
-                  </Panel>
-                </defaultProps(Panel)>
-                <defaultProps(Panel)
-                  classPrefix="rs-panel"
-                  header="authors.panels.image"
-                  key="1/.1"
-=======
                                 <input
                                   aria-describedby={null}
                                   aria-labelledby={null}
@@ -420,6 +263,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   disabled={true}
                                   name="authors.panels.jobTitle"
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -448,7 +292,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                 <div
                   className="rs-panel-header"
                   tabIndex={-1}
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                 >
                   authors.panels.image
                 </div>
@@ -1563,6 +1406,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -2929,6 +2773,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -2940,166 +2785,8 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
-<<<<<<< HEAD
-                                <FormGroup
-                                  className=""
-                                  classPrefix="rs-form-group"
-                                >
-                                  <div
-                                    className="rs-form-group"
-                                    role="group"
-                                  >
-                                    <defaultProps(ControlLabel)
-                                      classPrefix="rs-control-label"
-                                    >
-                                      <ControlLabel
-                                        classPrefix="rs-control-label"
-                                      >
-                                        <label
-                                          className="rs-control-label"
-                                        >
-                                          authors.panels.jobTitle
-                                        </label>
-                                      </ControlLabel>
-                                    </defaultProps(ControlLabel)>
-                                    <defaultProps(FormControlWrapper)
-                                      classPrefix="rs-form-control"
-                                      disabled={false}
-                                      name="authors.panels.jobTitle"
-                                      onChange={[Function]}
-                                      value=""
-                                    >
-                                      <FormControlWrapper
-                                        classPrefix="rs-form-control"
-                                        disabled={false}
-                                        name="authors.panels.jobTitle"
-                                        onChange={[Function]}
-                                        value=""
-                                      >
-                                        <FormControl
-                                          accepter={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "contextType": Object {
-                                                "$$typeof": Symbol(react.context),
-                                                "Consumer": Object {
-                                                  "$$typeof": Symbol(react.context),
-                                                  "_calculateChangedBits": null,
-                                                  "_context": [Circular],
-                                                },
-                                                "Provider": Object {
-                                                  "$$typeof": Symbol(react.provider),
-                                                  "_context": [Circular],
-                                                },
-                                                "_calculateChangedBits": null,
-                                                "_currentRenderer": Object {},
-                                                "_currentRenderer2": null,
-                                                "_currentValue": null,
-                                                "_currentValue2": null,
-                                                "_threadCount": 0,
-                                              },
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-input",
-                                                "componentClass": "input",
-                                                "type": "text",
-                                              },
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          classPrefix="rs-form-control"
-                                          disabled={false}
-                                          errorPlacement="bottomStart"
-                                          formValue={Object {}}
-                                          name="authors.panels.jobTitle"
-                                          onChange={[Function]}
-                                          plaintextDefaultValue="--"
-                                          value=""
-                                        >
-                                          <div
-                                            className="rs-form-control-wrapper"
-                                          >
-                                            <withStyleProps(defaultProps(Input))
-                                              classPrefix="rs-input"
-                                              componentClass="input"
-                                              disabled={false}
-                                              name="authors.panels.jobTitle"
-                                              onBlur={[Function]}
-                                              onChange={[Function]}
-                                              type="text"
-                                              value=""
-                                            >
-                                              <defaultProps(Input)
-                                                className=""
-                                                classPrefix="rs-input"
-                                                componentClass="input"
-                                                disabled={false}
-                                                name="authors.panels.jobTitle"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                type="text"
-                                                value=""
-                                              >
-                                                <Input
-                                                  className=""
-                                                  classPrefix="rs-input"
-                                                  componentClass="input"
-                                                  disabled={false}
-                                                  name="authors.panels.jobTitle"
-                                                  onBlur={[Function]}
-                                                  onChange={[Function]}
-                                                  type="text"
-                                                  value=""
-                                                >
-                                                  <input
-                                                    className="rs-input"
-                                                    disabled={false}
-                                                    name="authors.panels.jobTitle"
-                                                    onBlur={[Function]}
-                                                    onChange={[Function]}
-                                                    onKeyDown={[Function]}
-                                                    type="text"
-                                                    value=""
-                                                  />
-                                                </Input>
-                                              </defaultProps(Input)>
-                                            </withStyleProps(defaultProps(Input))>
-                                            <defaultProps(ErrorMessage)
-                                              className="rs-form-control-message-wrapper"
-                                              classPrefix="rs-error-message"
-                                              placement="bottomStart"
-                                              show={false}
-                                            >
-                                              <ErrorMessage
-                                                className="rs-form-control-message-wrapper"
-                                                classPrefix="rs-error-message"
-                                                placement="bottomStart"
-                                                show={false}
-                                              />
-                                            </defaultProps(ErrorMessage)>
-                                          </div>
-                                        </FormControl>
-                                      </FormControlWrapper>
-                                    </defaultProps(FormControlWrapper)>
-                                  </div>
-                                </FormGroup>
-                              </defaultProps(FormGroup)>
-                            </withStyleProps(defaultProps(FormGroup))>
-                          </form>
-                        </Form>
-                      </div>
-                    </div>
-                  </Panel>
-                </defaultProps(Panel)>
-                <defaultProps(Panel)
-                  classPrefix="rs-panel"
-                  header="authors.panels.image"
-                  key="1/.1"
-=======
                                 <input
                                   aria-describedby={null}
                                   aria-labelledby={null}
@@ -3110,6 +2797,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -3138,7 +2826,6 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                 <div
                   className="rs-panel-header"
                   tabIndex={-1}
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                 >
                   authors.panels.image
                 </div>
@@ -4253,6 +3940,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -4469,28 +4157,6 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                           }
                                         }
                                       >
-<<<<<<< HEAD
-                                        <label
-                                          className="rs-control-label"
-                                        >
-                                          authors.panels.jobTitle
-                                        </label>
-                                      </ControlLabel>
-                                    </defaultProps(ControlLabel)>
-                                    <defaultProps(FormControlWrapper)
-                                      classPrefix="rs-form-control"
-                                      disabled={false}
-                                      name="authors.panels.jobTitle"
-                                      onChange={[Function]}
-                                      value=""
-                                    >
-                                      <FormControlWrapper
-                                        classPrefix="rs-form-control"
-                                        disabled={false}
-                                        name="authors.panels.jobTitle"
-                                        onChange={[Function]}
-                                        value=""
-=======
                                         <Underline>
                                           <Icon
                                             aria-label="underline"
@@ -4558,7 +4224,6 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                             "border": "#00000000 1px solid",
                                           }
                                         }
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                                       >
                                         <Strikethrough>
                                           <Icon
@@ -4569,140 +4234,6 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                 "render": [Function],
                                               }
                                             }
-<<<<<<< HEAD
-                                          }
-                                          classPrefix="rs-form-control"
-                                          disabled={false}
-                                          errorPlacement="bottomStart"
-                                          formValue={Object {}}
-                                          name="authors.panels.jobTitle"
-                                          onChange={[Function]}
-                                          plaintextDefaultValue="--"
-                                          value=""
-                                        >
-                                          <div
-                                            className="rs-form-control-wrapper"
-                                          >
-                                            <withStyleProps(defaultProps(Input))
-                                              classPrefix="rs-input"
-                                              componentClass="input"
-                                              disabled={false}
-                                              name="authors.panels.jobTitle"
-                                              onBlur={[Function]}
-                                              onChange={[Function]}
-                                              type="text"
-                                              value=""
-                                            >
-                                              <defaultProps(Input)
-                                                className=""
-                                                classPrefix="rs-input"
-                                                componentClass="input"
-                                                disabled={false}
-                                                name="authors.panels.jobTitle"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                type="text"
-                                                value=""
-                                              >
-                                                <Input
-                                                  className=""
-                                                  classPrefix="rs-input"
-                                                  componentClass="input"
-                                                  disabled={false}
-                                                  name="authors.panels.jobTitle"
-                                                  onBlur={[Function]}
-                                                  onChange={[Function]}
-                                                  type="text"
-                                                  value=""
-                                                >
-                                                  <input
-                                                    className="rs-input"
-                                                    disabled={false}
-                                                    name="authors.panels.jobTitle"
-                                                    onBlur={[Function]}
-                                                    onChange={[Function]}
-                                                    onKeyDown={[Function]}
-                                                    type="text"
-                                                    value=""
-                                                  />
-                                                </Input>
-                                              </defaultProps(Input)>
-                                            </withStyleProps(defaultProps(Input))>
-                                            <defaultProps(ErrorMessage)
-                                              className="rs-form-control-message-wrapper"
-                                              classPrefix="rs-error-message"
-                                              placement="bottomStart"
-                                              show={false}
-                                            >
-                                              <ErrorMessage
-                                                className="rs-form-control-message-wrapper"
-                                                classPrefix="rs-error-message"
-                                                placement="bottomStart"
-                                                show={false}
-                                              />
-                                            </defaultProps(ErrorMessage)>
-                                          </div>
-                                        </FormControl>
-                                      </FormControlWrapper>
-                                    </defaultProps(FormControlWrapper)>
-                                  </div>
-                                </FormGroup>
-                              </defaultProps(FormGroup)>
-                            </withStyleProps(defaultProps(FormGroup))>
-                          </form>
-                        </Form>
-                      </div>
-                    </div>
-                  </Panel>
-                </defaultProps(Panel)>
-                <defaultProps(Panel)
-                  classPrefix="rs-panel"
-                  header="authors.panels.image"
-                  key="1/.1"
-                >
-                  <Panel
-                    classPrefix="rs-panel"
-                    header="authors.panels.image"
-                  >
-                    <div
-                      className="rs-panel rs-panel-default"
-                    >
-                      <div
-                        className="rs-panel-heading"
-                        onClick={[Function]}
-                        role="rowheader"
-                        tabIndex={-1}
-                      >
-                        authors.panels.image
-                      </div>
-                      <div
-                        className="rs-panel-body"
-                      >
-                        <ChooseEditImage
-                          disabled={false}
-                          header=""
-                          left={0}
-                          openChooseModalOpen={[Function]}
-                          openEditModalOpen={[Function]}
-                          removeImage={[Function]}
-                          top={0}
-                        >
-                          <defaultProps(Panel)
-                            bodyFill={true}
-                            classPrefix="rs-panel"
-                            header=""
-                          >
-                            <Panel
-                              bodyFill={true}
-                              classPrefix="rs-panel"
-                              header=""
-                            >
-                              <div
-                                className="rs-panel rs-panel-default"
-                              >
-                                <div
-                                  className="rs-panel-body rs-panel-body-fill"
-=======
                                             data-category="legacy"
                                             fill="currentColor"
                                             height="1em"
@@ -4743,7 +4274,6 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                 <FormatIconButton
                                   format="superscript"
                                   icon={<Superscript />}
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                                 >
                                   <ToolbarIconButton
                                     active={false}
@@ -5767,6 +5297,7 @@ exports[`Author Edit Panel should render 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -5778,6 +5309,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -5789,6 +5321,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -6931,6 +6464,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -7283,28 +6817,6 @@ exports[`Author Edit Panel should render 1`] = `
                                           }
                                         }
                                       >
-<<<<<<< HEAD
-                                        <label
-                                          className="rs-control-label"
-                                        >
-                                          authors.panels.jobTitle
-                                        </label>
-                                      </ControlLabel>
-                                    </defaultProps(ControlLabel)>
-                                    <defaultProps(FormControlWrapper)
-                                      classPrefix="rs-form-control"
-                                      disabled={false}
-                                      name="authors.panels.jobTitle"
-                                      onChange={[Function]}
-                                      value=""
-                                    >
-                                      <FormControlWrapper
-                                        classPrefix="rs-form-control"
-                                        disabled={false}
-                                        name="authors.panels.jobTitle"
-                                        onChange={[Function]}
-                                        value=""
-=======
                                         <Superscript>
                                           <Icon
                                             aria-label="superscript"
@@ -7372,7 +6884,6 @@ exports[`Author Edit Panel should render 1`] = `
                                             "border": "#00000000 1px solid",
                                           }
                                         }
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                                       >
                                         <Subscript>
                                           <Icon
@@ -7383,144 +6894,6 @@ exports[`Author Edit Panel should render 1`] = `
                                                 "render": [Function],
                                               }
                                             }
-<<<<<<< HEAD
-                                          }
-                                          classPrefix="rs-form-control"
-                                          disabled={false}
-                                          errorPlacement="bottomStart"
-                                          formValue={Object {}}
-                                          name="authors.panels.jobTitle"
-                                          onChange={[Function]}
-                                          plaintextDefaultValue="--"
-                                          value=""
-                                        >
-                                          <div
-                                            className="rs-form-control-wrapper"
-                                          >
-                                            <withStyleProps(defaultProps(Input))
-                                              classPrefix="rs-input"
-                                              componentClass="input"
-                                              disabled={false}
-                                              name="authors.panels.jobTitle"
-                                              onBlur={[Function]}
-                                              onChange={[Function]}
-                                              type="text"
-                                              value=""
-                                            >
-                                              <defaultProps(Input)
-                                                className=""
-                                                classPrefix="rs-input"
-                                                componentClass="input"
-                                                disabled={false}
-                                                name="authors.panels.jobTitle"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                type="text"
-                                                value=""
-                                              >
-                                                <Input
-                                                  className=""
-                                                  classPrefix="rs-input"
-                                                  componentClass="input"
-                                                  disabled={false}
-                                                  name="authors.panels.jobTitle"
-                                                  onBlur={[Function]}
-                                                  onChange={[Function]}
-                                                  type="text"
-                                                  value=""
-                                                >
-                                                  <input
-                                                    className="rs-input"
-                                                    disabled={false}
-                                                    name="authors.panels.jobTitle"
-                                                    onBlur={[Function]}
-                                                    onChange={[Function]}
-                                                    onKeyDown={[Function]}
-                                                    type="text"
-                                                    value=""
-                                                  />
-                                                </Input>
-                                              </defaultProps(Input)>
-                                            </withStyleProps(defaultProps(Input))>
-                                            <defaultProps(ErrorMessage)
-                                              className="rs-form-control-message-wrapper"
-                                              classPrefix="rs-error-message"
-                                              placement="bottomStart"
-                                              show={false}
-                                            >
-                                              <ErrorMessage
-                                                className="rs-form-control-message-wrapper"
-                                                classPrefix="rs-error-message"
-                                                placement="bottomStart"
-                                                show={false}
-                                              />
-                                            </defaultProps(ErrorMessage)>
-                                          </div>
-                                        </FormControl>
-                                      </FormControlWrapper>
-                                    </defaultProps(FormControlWrapper)>
-                                  </div>
-                                </FormGroup>
-                              </defaultProps(FormGroup)>
-                            </withStyleProps(defaultProps(FormGroup))>
-                          </form>
-                        </Form>
-                      </div>
-                    </div>
-                  </Panel>
-                </defaultProps(Panel)>
-                <defaultProps(Panel)
-                  classPrefix="rs-panel"
-                  header="authors.panels.image"
-                  key="1/.1"
-                >
-                  <Panel
-                    classPrefix="rs-panel"
-                    header="authors.panels.image"
-                  >
-                    <div
-                      className="rs-panel rs-panel-default"
-                    >
-                      <div
-                        className="rs-panel-heading"
-                        onClick={[Function]}
-                        role="rowheader"
-                        tabIndex={-1}
-                      >
-                        authors.panels.image
-                      </div>
-                      <div
-                        className="rs-panel-body"
-                      >
-                        <ChooseEditImage
-                          disabled={false}
-                          header=""
-                          image={null}
-                          left={0}
-                          openChooseModalOpen={[Function]}
-                          openEditModalOpen={[Function]}
-                          removeImage={[Function]}
-                          top={0}
-                        >
-                          <defaultProps(Panel)
-                            bodyFill={true}
-                            classPrefix="rs-panel"
-                            header=""
-                          >
-                            <Panel
-                              bodyFill={true}
-                              classPrefix="rs-panel"
-                              header=""
-                            >
-                              <div
-                                className="rs-panel rs-panel-default"
-                              >
-                                <div
-                                  className="rs-panel-body rs-panel-body-fill"
-                                >
-                                  <PlaceholderInput
-                                    onAddClick={[Function]}
-=======
                                             data-category="legacy"
                                             fill="currentColor"
                                             height="1em"
@@ -7566,7 +6939,6 @@ exports[`Author Edit Panel should render 1`] = `
                                       }
                                     }
                                     vertical={true}
->>>>>>> b378eb35 (feat(editor): upgrade rsuite)
                                   >
                                     <div
                                       aria-orientation="vertical"
@@ -8451,6 +7823,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -8462,6 +7835,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -8473,6 +7847,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -8511,6 +7886,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                   <ChooseEditImage
                     disabled={false}
                     header=""
+                    image={null}
                     left={0}
                     openChooseModalOpen={[Function]}
                     openEditModalOpen={[Function]}
@@ -9257,6 +8633,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={

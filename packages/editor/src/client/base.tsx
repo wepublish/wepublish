@@ -40,6 +40,7 @@ import KeyIcon from '@rsuite/icons/legacy/Key'
 import CogIcon from '@rsuite/icons/legacy/Cog'
 import GlobeIcon from '@rsuite/icons/legacy/Globe'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
+import {useTranslation} from 'react-i18next'
 
 export interface BaseProps {
   children?: ReactNode
@@ -233,6 +234,7 @@ export function Base({children}: BaseProps) {
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
+                    placement="left"
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"
@@ -251,6 +253,7 @@ export function Base({children}: BaseProps) {
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
+                    placement="left"
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"

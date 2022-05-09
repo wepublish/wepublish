@@ -1,7 +1,7 @@
 import CogIcon from '@rsuite/icons/legacy/Cog'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
-import React, {ComponentType, useEffect, useState} from 'react'
+import {RouteActionType} from '@wepublish/karma.run-react'
+import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
   Avatar,
@@ -40,7 +40,7 @@ import {
   useRouteDispatch
 } from '../route'
 
-const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
+const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
