@@ -198,8 +198,9 @@ export function ImageList() {
               {(rowData: ImageRefFragment) => (
                 <>
                   <IconButtonTooltip caption={t('images.overview.edit')}>
-                    {/* Fragment is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref*/}
                     <>
+                      {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref*/}
+
                       <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
                         <IconButton
                           icon={<EditIcon />}
