@@ -74,7 +74,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
             <Form.Control
-              name={'article-preview-link'}
+              name="article-preview-link"
               disabled={isLoading}
               value={data?.articlePreviewLink}
             />

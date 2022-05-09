@@ -166,7 +166,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'social-media-title'}
+                  name="social-media-title"
                   value={socialMediaTitle || ''}
                   onChange={(socialMediaTitle: string) => {
                     onChange?.({...value, socialMediaTitle})
@@ -190,7 +190,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'social-media-description'}
+                  name="social-media-description"
                   rows={5}
                   accepter={Textarea}
                   value={socialMediaDescription || ''}
@@ -250,7 +250,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'pre-title'}
+                  name="pre-title"
                   className="preTitle"
                   value={preTitle}
                   onChange={(preTitle: string) => onChange?.({...value, preTitle})}
@@ -270,7 +270,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'title'}
+                  name="title"
                   className="title"
                   value={title}
                   onChange={(title: string) => onChange?.({...value, title})}
@@ -291,7 +291,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'lead'}
+                  name="lead"
                   className="lead"
                   rows={5}
                   accepter={Textarea}
@@ -316,7 +316,7 @@ export function ArticleMetadataPanel({
                   </label>
                 </Form.ControlLabel>
                 <Form.Control
-                  name={'seo-title'}
+                  name="seo-title"
                   className="seoTitle"
                   value={seoTitle}
                   onChange={(seoTitle: string) => onChange?.({...value, seoTitle})}
@@ -342,7 +342,7 @@ export function ArticleMetadataPanel({
                 <Form.ControlLabel>{t('articleEditor.panels.slug')}</Form.ControlLabel>
                 <InputGroup style={{width: '100%'}}>
                   <Form.Control
-                    name={'slug'}
+                    name="slug"
                     className="slug"
                     value={slug}
                     onChange={(slug: string) => onChange?.({...value, slug})}
@@ -407,7 +407,7 @@ export function ArticleMetadataPanel({
               <Form.Group>
                 <Form.ControlLabel>{t('articleEditor.panels.canonicalUrl')}</Form.ControlLabel>
                 <Form.Control
-                  name={'canonical-url'}
+                  name="canonical-url"
                   className="canonicalUrl"
                   value={canonicalUrl}
                   onChange={(canonicalUrl: string) => onChange?.({...value, canonicalUrl})}

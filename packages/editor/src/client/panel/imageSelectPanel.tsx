@@ -1,27 +1,25 @@
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import UploadIcon from '@rsuite/icons/legacy/Upload'
 import React, {useState} from 'react'
-
-import {useImageListQuery, ImageRefFragment} from '../api'
-import {ImagedEditPanel} from './imageEditPanel'
-
 import {useTranslation} from 'react-i18next'
 import {
   Button,
   Drawer,
-  Panel,
+  FlexboxGrid,
+  Form,
   Input,
   InputGroup,
-  Message,
   Loader,
-  FlexboxGrid,
-  Notification
+  Message,
+  Notification,
+  Panel,
+  toaster
 } from 'rsuite'
-
+import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
-import UploadIcon from '@rsuite/icons/legacy/Upload'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import {toaster, Form} from 'rsuite'
+import {ImagedEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void

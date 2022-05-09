@@ -99,7 +99,7 @@ export function LinkMenu() {
               <option value={prefixType.other}>{prefixType.other}</option>
             </select>
 
-            <Form.Control name={'url'} value={url} onChange={(url: string) => setURL(url)} />
+            <Form.Control name="url" value={url} onChange={(url: string) => setURL(url)} />
           </InputGroup>
           {prefix !== prefixType.mailto && url && !isValidURL ? (
             <Form.HelpText> {t('blocks.richText.invalidLink')}</Form.HelpText>
@@ -111,7 +111,7 @@ export function LinkMenu() {
         <Form.Group>
           <Form.ControlLabel>{t('blocks.richText.text')}</Form.ControlLabel>
           <Form.Control
-            name={'title'}
+            name="title"
             value={title}
             onChange={(title: string) => {
               setTitle(title)

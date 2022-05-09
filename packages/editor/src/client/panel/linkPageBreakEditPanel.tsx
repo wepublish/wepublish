@@ -105,7 +105,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
           <Form.Group>
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.urlLabel')}</Form.ControlLabel>
             <Form.Control
-              name={'link'}
+              name="link"
               value={linkURL}
               onChange={(linkURL: string) => onChange?.({...value, linkURL})}
             />
@@ -114,7 +114,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
           <Form.Group>
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.buttonLabel')}</Form.ControlLabel>
             <Form.Control
-              name={'link-text'}
+              name="link-text"
               value={linkText}
               onChange={(linkText: string) => onChange?.({...value, linkText})}
             />

@@ -230,7 +230,7 @@ export function Base({children}: BaseProps) {
               <Dropdown
                 placement="topStart"
                 trigger="click"
-                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
                     ref={ref}
@@ -248,7 +248,7 @@ export function Base({children}: BaseProps) {
               <Dropdown
                 placement="topStart"
                 trigger="click"
-                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
                     ref={ref}
