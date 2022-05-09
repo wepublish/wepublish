@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import {
   Alert,
@@ -20,6 +20,8 @@ import {
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '../api'
+
+import {FormInstance} from 'rsuite/lib/Form'
 
 import {useTranslation} from 'react-i18next'
 
@@ -88,7 +90,13 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadPermissionError])
 
+  const form = useRef<FormInstance>(null)
+
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
+
     if (id) {
       const {data} = await updateUserRole({
         variables: {
@@ -122,10 +130,6 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     name: StringType().isRequired('please enter a name')
   })
 
-  const checkResult = validationModel.check({
-    name: name
-  })
-
   return (
     <>
       <Drawer.Header>
@@ -135,17 +139,16 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true} model={validationModel}>
+        <Form ref={form} fluid={true} model={validationModel}>
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.name') + '*'}</ControlLabel>
             <FormControl
-              name={t('userRoles.panels.name')}
+              name="name"
               value={name}
               disabled={isDisabled}
               onChange={value => {
                 setName(value)
               }}
-              errorMessage={checkResult.name.errorMessage}
             />
           </FormGroup>
           <FormGroup>
@@ -178,10 +181,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          disabled={isDisabled || checkResult.name.hasError}
-          onClick={() => handleSave()}>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

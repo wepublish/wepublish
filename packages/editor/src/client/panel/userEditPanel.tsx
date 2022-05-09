@@ -29,7 +29,8 @@ import {
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
-import {hasUncaughtExceptionCaptureCallback} from 'process'
+import {useRef} from 'react'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface UserEditPanelProps {
   id?: string
@@ -139,7 +140,13 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadUserRoleError])
 
+  const form = useRef<FormInstance>(null)
+
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
+
     if (id && data?.user) {
       const {data: updateData} = await updateUser({
         variables: {
@@ -191,6 +198,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     }
   }
 
+  // Schema used for form validation
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     firstName: StringType().isRequired('Please enter a firstname'),
@@ -203,20 +211,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       .isRequired('Please provide a password')
   })
 
-  const checkResult = validationModel.check({
-    firstName: firstName,
-    name: name,
-    email: email,
-    password: password
-  })
-
-  const [errorVisible, setErrorVisible] = useState({
-    name: false,
-    firstName: false,
-    email: false,
-    password: false
-  })
-
   return (
     <>
       <Drawer.Header>
@@ -227,39 +221,33 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
       <Drawer.Body>
         <Panel>
-          <Form fluid={true} model={validationModel}>
+          <Form ref={form} fluid={true} model={validationModel}>
             <FormGroup>
               <ControlLabel>{t('userList.panels.firstName') + '*'}</ControlLabel>
               <FormControl
-                name={t('userList.panels.firstName')}
+                name="firstName"
                 value={firstName}
                 disabled={isDisabled}
                 onChange={value => {
                   setFirstName(value)
-                  checkResult.firstName.hasError
-                    ? setErrorVisible({...errorVisible, firstName: !firstName})
-                    : ''
                 }}
-                errorMessage={errorVisible.firstName ? checkResult.firstName.errorMessage : ''}
               />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userList.panels.name') + '*'}</ControlLabel>
               <FormControl
-                name={t('userList.panels.name')}
+                name="name"
                 value={name}
                 disabled={isDisabled}
                 onChange={value => {
                   setName(value)
-                  checkResult.name.hasError ? setErrorVisible({...errorVisible, name: !name}) : ''
                 }}
-                errorMessage={errorVisible.name ? checkResult.name.errorMessage : ''}
               />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.preferredName')}
+                name="preferredName"
                 value={preferredName}
                 disabled={isDisabled}
                 onChange={value => setPreferredName(value)}
@@ -268,27 +256,18 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.email') + '*'}</ControlLabel>
               <FormControl
-                name={t('userList.panels.email')}
+                name="email"
                 value={email}
                 disabled={isDisabled}
                 onChange={value => {
                   setEmail(value)
-                  checkResult.email.hasError
-                    ? setErrorVisible({...errorVisible, email: true})
-                    : setErrorVisible({...errorVisible, email: false})
-                  console.log(
-                    checkResult.email.hasError,
-                    checkResult.email.errorMessage,
-                    errorVisible.email
-                  )
                 }}
-                errorMessage={errorVisible.email ? checkResult.email.errorMessage : ''}
               />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userList.panels.company')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.company')}
+                name="company"
                 value={address?.company}
                 disabled={isDisabled}
                 onChange={value => updateAddressObject(address, setAddress, 'company', value)}
@@ -297,7 +276,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.streetAddress')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.streetAddress')}
+                name="streetAddress"
                 value={address?.streetAddress}
                 disabled={isDisabled}
                 onChange={value => updateAddressObject(address, setAddress, 'streetAddress', value)}
@@ -306,7 +285,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.streetAddress2')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.streetAddress2')}
+                name="streetAddress2"
                 value={address?.streetAddress2}
                 disabled={isDisabled}
                 onChange={value =>
@@ -317,7 +296,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.zipCode')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.zipCode')}
+                name="zipCode"
                 value={address?.zipCode}
                 disabled={isDisabled}
                 onChange={value => updateAddressObject(address, setAddress, 'zipCode', value)}
@@ -326,7 +305,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.city')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.city')}
+                name="city"
                 value={address?.city}
                 disabled={isDisabled}
                 onChange={value => updateAddressObject(address, setAddress, 'city', value)}
@@ -335,7 +314,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.country')}</ControlLabel>
               <FormControl
-                name={t('userList.panels.country')}
+                name="country"
                 value={address?.country}
                 disabled={isDisabled}
                 onChange={value => updateAddressObject(address, setAddress, 'country', value)}
@@ -350,16 +329,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 <ControlLabel>{t('userList.panels.password') + '*'}</ControlLabel>
                 <FormControl
                   type="password"
-                  name={t('userList.panels.password')}
+                  name="password"
                   value={password}
                   disabled={isDisabled}
                   onChange={value => {
                     setPassword(value)
-                    checkResult.password.hasError
-                      ? setErrorVisible({...errorVisible, password: true})
-                      : setErrorVisible({...errorVisible, password: false})
                   }}
-                  errorMessage={errorVisible.password ? checkResult.password.errorMessage : ''}
                 />
               </FormGroup>
             ) : (
@@ -389,7 +364,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <FormGroup>
               <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
               <CheckPicker
-                name={t('userList.panels.userRoles')}
+                name="userRoles"
                 block={true}
                 value={roles.map(role => role.id)}
                 data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
@@ -403,16 +378,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          disabled={
-            isDisabled ||
-            checkResult.email.hasError ||
-            checkResult.firstName.hasError ||
-            checkResult.name.hasError ||
-            checkResult.name.hasError
-          }
-          onClick={() => handleSave()}>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userList.panels.save') : t('userList.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

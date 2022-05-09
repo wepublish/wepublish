@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import {
   Alert,
@@ -12,6 +12,7 @@ import {
   Message,
   Modal,
   Panel,
+  Schema,
   SelectPicker,
   Toggle
 } from 'rsuite'
@@ -37,6 +38,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES, isTempUser as checkIsTempUser} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -197,7 +199,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (error) Alert.error(error, 0)
   }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
+  const form = useRef<FormInstance>(null)
+  const selectPicker = useRef<any>(null)
+
   async function handleSave() {
+    if (!selectPicker.current?.check()) {
+      return
+    }
     if (!memberPlan) return
     if (!paymentMethod) return
     if (!user) return
@@ -297,6 +305,15 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }
 
+  // Schema used for form validation --- reference custom field for validation
+  const {ArrayType, ObjectType, StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    memberPlan: ObjectType().isRequired('Please select a memberplan')
+  })
+
+  console.log('memberplan: ', memberPlan?.name)
+  console.log(form.current?.check())
+
   return (
     <>
       <Drawer.Header>
@@ -344,10 +361,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         )}
 
         <Panel>
-          <Form fluid={true}>
+          <Form ref={selectPicker} model={validationModel} fluid={true}>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
               <SelectPicker
+                name="memberPlan"
                 block
                 disabled={isDisabled || isDeactivated}
                 data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
@@ -364,7 +382,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 </HelpBlock>
               )}
             </FormGroup>
-            <FormGroup>
+            <FormGroup ref={selectPicker}>
               <ControlLabel>{t('userSubscriptionEdit.selectUser')}</ControlLabel>
               <SelectPicker
                 block

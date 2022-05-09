@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import prettyBytes from 'pretty-bytes'
 
 import {
@@ -30,6 +30,8 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 import {ImageMetaData} from './imageUploadAndEditPanel'
+import {format} from 'path'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -167,7 +169,13 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     if (error) Alert.error(error, 0)
   }, [loadingError, savingError, uploadError])
 
+  const form = useRef<FormInstance>(null)
+
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
+
     const commonInput = {
       filename: filename || undefined,
       title: title || undefined,
@@ -205,15 +213,6 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     }
   }
 
-  const {StringType} = Schema.Types
-  const validationModel = Schema.Model({
-    link: StringType().isURL('please enter a valid url')
-  })
-
-  const checkResult = validationModel.check({
-    link: link
-  })
-
   /**
    * Resizes an image on client side, if larger than the IMG_MIN_SIZE_TO_COMPRESS env variable
    * @param file
@@ -244,6 +243,12 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     }
     return false
   }
+
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    link: StringType().isURL('please enter a valid url')
+  })
 
   return (
     <>
@@ -340,7 +345,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
               </Form>
             </Panel>
             <Panel header={t('images.panels.attribution')}>
-              <Form fluid={true}>
+              <Form ref={form} fluid={true} model={validationModel}>
                 <FormGroup>
                   <ControlLabel>{t('images.panels.source')}</ControlLabel>
                   <FormControl
@@ -349,11 +354,12 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={value => setSource(value)}
                   />
                 </FormGroup>
-                <FormGroup model={validationModel}>
+                <FormGroup>
                   <ControlLabel>{t('images.panels.link')}</ControlLabel>
                   <FormControl
+                    name="link"
                     value={link}
-                    errorMessage={checkResult.link.errorMessage}
+                    placeholder={'https://www.link.com'}
                     disabled={isDisabled}
                     onChange={value => setLink(value)}
                   />
@@ -374,10 +380,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          disabled={isDisabled || checkResult.link.hasError}
-          onClick={() => handleSave()}>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {isUpload ? t('images.panels.upload') : t('images.panels.save')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

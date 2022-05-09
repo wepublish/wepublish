@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import {ListValue, ListInput} from '../atoms/listInput'
 
@@ -14,11 +14,13 @@ import {
   Toggle,
   HelpBlock,
   CheckPicker,
-  TagPicker
+  TagPicker,
+  Schema
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {FormInstance} from 'rsuite/lib/Form'
 
 import {
   AvailablePaymentMethod,
@@ -147,7 +149,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     setImage(image)
   }
 
+  const form = useRef<FormInstance>(null)
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
     if (id) {
       const {data} = await updateMemberPlan({
         variables: {
@@ -194,6 +200,13 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     }
   }
 
+  // Schema used for form validaiton
+  const {StringType, NumberType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('Please enter a name')
+    // currency: NumberType().isRequired('Please enter a minimum amount')
+  })
+
   return (
     <>
       <Drawer.Header>
@@ -203,11 +216,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
+          <Form ref={form} fluid={true} model={validationModel}>
             <FormGroup>
-              <ControlLabel>{t('memberPlanList.name')}</ControlLabel>
+              <ControlLabel>{t('memberPlanList.name') + '*'}</ControlLabel>
               <FormControl
-                name={t('memberPlanList.name')}
+                name="name"
                 value={name}
                 disabled={isDisabled}
                 onChange={value => {
@@ -239,7 +252,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </FormGroup>
 
             <FormGroup>
-              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
+              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount') + '*'}</ControlLabel>
               <CurrencyInput
                 currency="CHF"
                 centAmount={amountPerMonthMin}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import {
   Button,
@@ -38,6 +38,7 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -105,7 +106,13 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     setImage(image)
   }
 
+  const form = useRef<FormInstance>(null)
+
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
+
     if (id) {
       const {data} = await updateAuthor({
         variables: {
@@ -147,15 +154,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     links: StringType().isURL('please enter a valid url')
   })
 
-  const checkResult = validationModel.check({
-    name: name,
-    links: links[0].value.url
-  })
-
-  // const checkResult2 = validationModel2.check({
-  //   links: data?.author?.links
-  // })
-
   return (
     <>
       <Drawer.Header>
@@ -167,28 +165,16 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <Form fluid={true} model={validationModel}>
+            <Form ref={form} fluid={true} model={validationModel}>
               <FormGroup>
                 <ControlLabel>{t('authors.panels.name') + '*'}</ControlLabel>
                 <FormControl
-                  name={t('authors.panels.name')}
+                  name="name"
                   value={name}
                   disabled={isDisabled}
-                  errorMessage={checkResult.name.errorMessage}
                   onChange={value => {
                     setName(value)
                     setSlug(slugify(value))
-                  }}
-                />
-
-                {/* test */}
-                <FormControl
-                  name={t('authors.panels.name')}
-                  value={links}
-                  disabled={isDisabled}
-                  errorMessage={checkResult.links.errorMessage}
-                  onChange={value => {
-                    console.log('value', value, 'link', links[0].value.url, 'link', links)
                   }}
                 />
               </FormGroup>
@@ -218,23 +204,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             />
           </Panel>
           <Panel header={t('authors.panels.links')}>
-            {/* test */}
-            <Form>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
-
-                <FormControl
-                  name={t('authors.panels.name')}
-                  value={links}
-                  disabled={isDisabled}
-                  errorMessage={checkResult.links.errorMessage}
-                  onChange={value => {
-                    console.log('value', value, 'link', links[0].value.url, 'link', links)
-                  }}
-                />
-              </FormGroup>
-            </Form>
-
+            {/* How to validate input fields ? */}
             <ListInput
               value={links}
               onChange={links => {
@@ -279,10 +249,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          disabled={isDisabled || checkResult.name.hasError}
-          onClick={() => handleSave()}>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('authors.panels.save') : t('authors.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

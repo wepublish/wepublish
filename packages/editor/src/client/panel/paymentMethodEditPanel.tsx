@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import {
   Button,
@@ -11,7 +11,8 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  SelectPicker
+  SelectPicker,
+  Schema
 } from 'rsuite'
 
 import {
@@ -25,6 +26,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {slugify} from '../utility'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -100,7 +102,13 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadPaymentProviderError])
 
+  const form = useRef<FormInstance>(null)
+
   async function handleSave() {
+    if (!form.current?.check()) {
+      return
+    }
+
     if (!paymentProvider) {
       return // TODO: handle validation
     }
@@ -137,6 +145,14 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     }
   }
 
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('Please enter a name'),
+    // how to get that inside the picker ?
+    paymentProvider: StringType().isRequired('Please select a payment adapter')
+  })
+
   return (
     <>
       <Drawer.Header>
@@ -147,11 +163,11 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
+          <Form ref={form} fluid={true} model={validationModel}>
             <FormGroup>
-              <ControlLabel>{t('paymentMethodList.name')}</ControlLabel>
+              <ControlLabel>{t('paymentMethodList.name') + '*'}</ControlLabel>
               <FormControl
-                name={t('paymentMethodList.name')}
+                name="name"
                 value={name}
                 disabled={isDisabled}
                 onChange={value => {
@@ -172,6 +188,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
               <SelectPicker
+                name="paymentProvider"
                 value={paymentProvider?.id}
                 data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
@@ -182,7 +199,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.description')}</ControlLabel>
               <FormControl
-                name={t('paymentMethodList.description')}
+                name="description"
                 value={description}
                 disabled={isDisabled}
                 onChange={value => {
