@@ -1,92 +1,96 @@
 # Change Log
 
-## v3.0.0-alpha.2 (2022-03-29)
-
-#### :heart: New Feature
-* `api`, `editor`
-  * [#523](https://github.com/wepublish/wepublish/pull/523) F/wpc 620 peered articles list ([@camilleory](https://github.com/camilleory))
-  * [#512](https://github.com/wepublish/wepublish/pull/512) Tiktok embed block ([@penk85](https://github.com/penk85))
-
-#### :bug: Bug Fix
-* `api`, `editor`
-  * [#536](https://github.com/wepublish/wepublish/pull/536) bug fix in memberplans ([@camilleory](https://github.com/camilleory))
-* `api`
-  * [#518](https://github.com/wepublish/wepublish/pull/518) send next invoice reminder fix ([@roosnic1](https://github.com/roosnic1))
-
-#### :nail_care: Polish
-* `api`, `editor`
-  * [#547](https://github.com/wepublish/wepublish/pull/547) added sandbox property to iframe ([@elias-summermatter](https://github.com/elias-summermatter))
-* `api`
-  * [#541](https://github.com/wepublish/wepublish/pull/541) F/wpc 656 user details ([@camilleory](https://github.com/camilleory))
-* `editor`
-  * [#537](https://github.com/wepublish/wepublish/pull/537) F/wpc 620 translation fix ([@camilleory](https://github.com/camilleory))
-  * [#531](https://github.com/wepublish/wepublish/pull/531) translation fix in peerable articles list ([@camilleory](https://github.com/camilleory))
-  * [#530](https://github.com/wepublish/wepublish/pull/530) preview own peer profile ([@camilleory](https://github.com/camilleory))
-  * [#525](https://github.com/wepublish/wepublish/pull/525) display action buttons ([@camilleory](https://github.com/camilleory))
-* `api-db-mongodb`, `api`, `editor`
-  * [#526](https://github.com/wepublish/wepublish/pull/526) F/wpc 639 filter memberplans by tags ([@camilleory](https://github.com/camilleory))
-
-#### Committers: 4
-- Camille ([@camilleory](https://github.com/camilleory))
-- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-- Penina Cheshin ([@penk85](https://github.com/penk85))
-
-
-## v3.0.0-alpha.1 (2022-02-17)
-
-#### :house: Internal
-* `api-media-karma`, `api`
-  * [#497](https://github.com/wepublish/wepublish/pull/497) karma media additional url ([@penk85](https://github.com/penk85))
-
-#### Committers: 2
-- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
-- Penina Cheshin ([@penk85](https://github.com/penk85))
-
-
-## v3.0.0-alpha.0 (2022-02-16)
+## v3.0.0 (2022-05-09)
 
 #### :boom: Breaking Change
 * `api`
   * [#500](https://github.com/wepublish/wepublish/pull/500) generate loginURL for mails ([@roosnic1](https://github.com/roosnic1))
 * `api-db-mongodb`, `api`
   * [#503](https://github.com/wepublish/wepublish/pull/503) bug fix for user.subscription.deactivation filters ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`, `editor`
+  * [#509](https://github.com/wepublish/wepublish/pull/509) Multiple subscriptions ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#542](https://github.com/wepublish/wepublish/pull/542) WPC-608: As an user i want to comment without authentication ([@elias-summermatter](https://github.com/elias-summermatter))
 
 #### :heart: New Feature
 * `api`, `editor`
   * [#490](https://github.com/wepublish/wepublish/pull/490) Article/Page public URL in editor page ([@bishoymelek](https://github.com/bishoymelek))
   * [#484](https://github.com/wepublish/wepublish/pull/484) export csv for users with subscriptions ([@bishoymelek](https://github.com/bishoymelek))
   * [#403](https://github.com/wepublish/wepublish/pull/403) flex teaser block ([@penk85](https://github.com/penk85))
+  * [#523](https://github.com/wepublish/wepublish/pull/523) F/wpc 620 peered articles list ([@camilleory](https://github.com/camilleory))
+  * [#512](https://github.com/wepublish/wepublish/pull/512) Tiktok embed block ([@penk85](https://github.com/penk85))
+  * [#542](https://github.com/wepublish/wepublish/pull/542) WPC-608: As an user i want to comment without authentication ([@elias-summermatter](https://github.com/elias-summermatter))
 * `api`
   * [#500](https://github.com/wepublish/wepublish/pull/500) generate loginURL for mails ([@roosnic1](https://github.com/roosnic1))
+  * [#516](https://github.com/wepublish/wepublish/pull/516) export event emitters ([@roosnic1](https://github.com/roosnic1))
 * `api-db-mongodb`, `api`, `editor`
   * [#475](https://github.com/wepublish/wepublish/pull/475) more detailed deactivation ([@roosnic1](https://github.com/roosnic1))
+  * [#509](https://github.com/wepublish/wepublish/pull/509) Multiple subscriptions ([@roosnic1](https://github.com/roosnic1))
+  * [#556](https://github.com/wepublish/wepublish/pull/556) f/WPC-674 Introduce firstname to user ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#543](https://github.com/wepublish/wepublish/pull/543) f/wpc-636 - currency in franken ([@camilleory](https://github.com/camilleory))
 
 #### :bug: Bug Fix
 * `editor`
   * [#505](https://github.com/wepublish/wepublish/pull/505) Save flex teaser of page and peer ([@penk85](https://github.com/penk85))
   * [#491](https://github.com/wepublish/wepublish/pull/491) resolve auto open gallery on save ([@penk85](https://github.com/penk85))
+  * [#540](https://github.com/wepublish/wepublish/pull/540) b/WPC-655: As a publisher, i want mailto-Links without slashes (//) ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#555](https://github.com/wepublish/wepublish/pull/555) adjust choose image panel image size ([@penk85](https://github.com/penk85))
+  * [#567](https://github.com/wepublish/wepublish/pull/567) If user with a subscription gets deleted, the subscription list breaks ([@elias-summermatter](https://github.com/elias-summermatter))
 * `api`
   * [#494](https://github.com/wepublish/wepublish/pull/494) duplicate pending article/page ([@penk85](https://github.com/penk85))
   * [#473](https://github.com/wepublish/wepublish/pull/473) bug fix for checking invoice states ([@roosnic1](https://github.com/roosnic1))
+  * [#518](https://github.com/wepublish/wepublish/pull/518) send next invoice reminder fix ([@roosnic1](https://github.com/roosnic1))
+  * [#539](https://github.com/wepublish/wepublish/pull/539) Payload too large ([@penk85](https://github.com/penk85))
+* `api`, `editor`
+  * [#536](https://github.com/wepublish/wepublish/pull/536) bug fix in memberplans ([@camilleory](https://github.com/camilleory))
+* `others`
+  * [#563](https://github.com/wepublish/wepublish/pull/563) Fix npm release on tags ([@tomaszdurka](https://github.com/tomaszdurka))
 
 #### :nail_care: Polish
 * `editor`
   * [#493](https://github.com/wepublish/wepublish/pull/493) f/wpc-611-improve-publication-behavior ([@camilleory](https://github.com/camilleory))
   * [#483](https://github.com/wepublish/wepublish/pull/483) f/wpc-600 preview link ([@camilleory](https://github.com/camilleory))
   * [#481](https://github.com/wepublish/wepublish/pull/481) F/wpc 605 preview publish tooltip ([@camilleory](https://github.com/camilleory))
-* Other
-  * [#480](https://github.com/wepublish/wepublish/pull/480) Remove mail hardcoded mail ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#537](https://github.com/wepublish/wepublish/pull/537) F/wpc 620 translation fix ([@camilleory](https://github.com/camilleory))
+  * [#531](https://github.com/wepublish/wepublish/pull/531) translation fix in peerable articles list ([@camilleory](https://github.com/camilleory))
+  * [#530](https://github.com/wepublish/wepublish/pull/530) preview own peer profile ([@camilleory](https://github.com/camilleory))
+  * [#525](https://github.com/wepublish/wepublish/pull/525) display action buttons ([@camilleory](https://github.com/camilleory))
+  * [#543](https://github.com/wepublish/wepublish/pull/543) f/wpc-636 - currency in franken ([@camilleory](https://github.com/camilleory))
 * `api-db-mongodb`, `api`, `editor`
   * [#460](https://github.com/wepublish/wepublish/pull/460) F/wpc-585-pagination-image-library ([@camilleory](https://github.com/camilleory))
-
+  * [#526](https://github.com/wepublish/wepublish/pull/526) F/wpc 639 filter memberplans by tags ([@camilleory](https://github.com/camilleory))
+* `api`, `editor`
+  * [#547](https://github.com/wepublish/wepublish/pull/547) added sandbox property to iframe ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`
+  * [#541](https://github.com/wepublish/wepublish/pull/541) F/wpc 656 user details ([@camilleory](https://github.com/camilleory))
+* Other
+  * [#480](https://github.com/wepublish/wepublish/pull/480) Remove mail hardcoded mail ([@elias-summermatter](https://github.com/elias-summermatter))
+  
+#### :memo: Documentation
+* `api`
+  * [#533](https://github.com/wepublish/wepublish/pull/533) added env variables to .env.example files ([@camilleory](https://github.com/camilleory))
+  
 #### :house: Internal
+* Other
+  * [#562](https://github.com/wepublish/wepublish/pull/562) chore(releases): semi automated releases ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#552](https://github.com/wepublish/wepublish/pull/552) chore(deps): bump simple-get from 3.1.0 to 3.1.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#510](https://github.com/wepublish/wepublish/pull/510) chore(deps): bump handlebars from 4.7.6 to 4.7.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#511](https://github.com/wepublish/wepublish/pull/511) chore(deps): bump follow-redirects from 1.14.7 to 1.14.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#558](https://github.com/wepublish/wepublish/pull/558) chore(deps): bump moment from 2.29.1 to 2.29.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#546](https://github.com/wepublish/wepublish/pull/546) chore(deps): bump minimist from 1.2.5 to 1.2.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#551](https://github.com/wepublish/wepublish/pull/551) chore(deps): bump node-fetch from 2.6.1 to 2.6.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#561](https://github.com/wepublish/wepublish/pull/561) chore(ci/cd): use GCLOUD_PROJECT_ID, GCLOUD_AUTH_KEY secrets only ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#560](https://github.com/wepublish/wepublish/pull/560) chore(reviews): add CODEOWNERS file ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api-media-karma`, `api`
+  * [#497](https://github.com/wepublish/wepublish/pull/497) karma media additional url ([@penk85](https://github.com/penk85))
 * `editor`
-  * [#478](https://github.com/wepublish/wepublish/pull/478) Fix typos in i18n ([@DamianNode](https://github.com/DamianNode))
+  * [#554](https://github.com/wepublish/wepublish/pull/554) Improve builds ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#478](https://github.com/wepublish/wepublish/pull/478) Fix typos in i18n ([@treflxyz](https://github.com/treflxyz))
 
 #### Committers: 7
 - Camille ([@camilleory](https://github.com/camilleory))
-- Damian Janus ([@DamianNode](https://github.com/DamianNode))
+- Damian Janus ([@treflxyz](https://github.com/treflxyz))
 - Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
 - Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
