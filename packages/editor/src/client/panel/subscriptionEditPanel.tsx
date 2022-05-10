@@ -243,8 +243,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         }
       })
 
-      console.log('data', data)
-
       if (data?.createSubscription) onSave?.(data.createSubscription)
     }
   }

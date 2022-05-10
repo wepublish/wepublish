@@ -450,6 +450,12 @@
         "email": "Email",
         "memberPlan": "plan de membre"
       },
+      "filter": {
+        "deactivationReason": "Motif désactivation",
+        "reasonNone": "Sans",
+        "reasonUserSelfDeactivated": "Par l'utilisateur",
+        "reasonInvoiceNotPaid": "Facture impayée"
+      },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
         "name": "Nom",
@@ -873,6 +879,8 @@
     "confirm": "Confirmer",
     "create": "Créer",
     "save": "Sauvegarder",
+    "yes": "Oui",
+    "no": "Non",
     "untitled": "Sans Titre"
   }
 }

@@ -32,7 +32,6 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
-  ControlLabel,
   DateRangePicker,
   Drawer,
   FlexboxGrid,
@@ -202,9 +201,11 @@ export function SubscriptionList() {
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
+      </FlexboxGrid>
+      <FlexboxGrid style={{marginTop: '30px', marginBottom: '10px'}}>
+        <FormGroup style={{marginRight: '15px'}}>
           <SelectPicker
+            placeholder={t('userSubscriptionEdit.selectMemberPlan')}
             block
             disabled={isDisabled}
             data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
@@ -213,9 +214,9 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <SelectPicker
+            placeholder={t('memberPlanList.paymentPeriodicities')}
             value={filter.paymentPeriodicity}
             data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
               value: pp,
@@ -226,9 +227,9 @@ export function SubscriptionList() {
             block
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <SelectPicker
+            placeholder={t('userSubscriptionEdit.paymentMethod')}
             block
             disabled={isDisabled}
             data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
@@ -238,9 +239,9 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <DateRangePicker
+            placeholder={t('userSubscriptionEdit.startsAt')}
             block
             onChange={value => {
               if (value[0] && value[1]) {
@@ -259,18 +260,18 @@ export function SubscriptionList() {
             onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <SelectPicker
+            placeholder={t('userSubscriptionEdit.autoRenew')}
             searchable={false}
             data={[
               {
                 value: true,
-                label: 'Yes'
+                label: t('yes')
               },
               {
                 value: false,
-                label: 'No'
+                label: t('no')
               }
             ]}
             value={filter.deactivationReason}
@@ -300,22 +301,22 @@ export function SubscriptionList() {
             onChange={value => updateFilter({userHasAddress: value})}
           />
         </FormGroup> */}
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <SelectPicker
+            placeholder={t('subscriptionList.filter.deactivationReason')}
             searchable={false}
             data={[
               {
                 value: SubscriptionDeactivationReason.None,
-                label: t('userSubscriptionEdit.deactivation.reasonNone')
+                label: t('subscriptionList.filter.reasonNone')
               },
               {
                 value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                label: t('userSubscriptionEdit.deactivation.reasonUserSelfDeactivated')
+                label: t('subscriptionList.filter.reasonUserSelfDeactivated')
               },
               {
                 value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
+                label: t('subscriptionList.filter.reasonInvoiceNotPaid')
               }
             ]}
             value={filter.deactivationReason}
@@ -324,10 +325,11 @@ export function SubscriptionList() {
             onChange={value => updateFilter({deactivationReason: value})}
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <DateRangePicker
+            placeholder={t('userSubscriptionEdit.deactivation.date')}
             block
+            placement="auto"
             onChange={value => {
               if (value[0] && value[1]) {
                 updateFilter({
@@ -347,10 +349,11 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
+        <FormGroup style={{marginRight: '15px'}}>
           <DateRangePicker
+            placeholder={t('userSubscriptionEdit.payedUntil')}
             block
+            placement="auto"
             onChange={value => {
               if (value[0] && value[1]) {
                 updateFilter({

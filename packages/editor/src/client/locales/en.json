@@ -789,6 +789,8 @@
       }
     },
     "save": "Save",
+    "yes": "Yes",
+    "no": "No",
     "tokenList": {
       "overview": {
         "delete": "Delete",
@@ -828,6 +830,12 @@
         "tempUser": "(Temporary User) - ",
         "email": "Email",
         "memberPlan": "Member Plan"
+      },
+      "filter": {
+        "deactivationReason": "Deactivation reason",
+        "reasonNone": "None",
+        "reasonUserSelfDeactivated": "By user",
+        "reasonInvoiceNotPaid": "Invoice not paid"
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",

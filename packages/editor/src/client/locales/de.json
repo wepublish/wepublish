@@ -722,6 +722,8 @@
       }
     },
     "save": "Speichern",
+    "yes": "Ja",
+    "no": "Nein",
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
@@ -761,6 +763,12 @@
         "tempUser": "(Temporäre:r Benutzer:in) - ",
         "email": "Email",
         "memberPlan": "Member-Plan"
+      },
+      "filter": {
+        "deactivationReason": "Grund Deaktivierung",
+        "reasonNone": "Kein Grund",
+        "reasonUserSelfDeactivated": "Durch Benutzer:in",
+        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",
@@ -877,7 +885,10 @@
       "createTitle": "Abonnement erstellen",
       "adapter": "Zahlungs-Adapter",
       "selectUser": "Benutzer:in wählen",
-      "tempUserTitle": "Temporäre:r Benutzer:in"
+      "tempUserTitle": "Temporäre:r Benutzer:in",
+      "deactivation": {
+        "date": "Deaktivierung"
+      }
     }
   }
 }
