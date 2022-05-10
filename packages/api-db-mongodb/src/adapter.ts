@@ -183,12 +183,23 @@ export class MongoDBAdapter implements DBAdapter {
     const index = Migrations.findIndex(migration => migration.version === migrationState?.version)
     const remainingMigrations = Migrations.slice(index + 1)
 
-    for (const migration of remainingMigrations) {
-      await migration.migrate(db, locale)
-      await db.collection<DBMigration>(CollectionName.Migrations).insertOne({
-        version: migration.version,
-        createdAt: new Date()
-      })
+    const session = client.startSession()
+    try {
+      session.startTransaction()
+
+      for (const migration of remainingMigrations) {
+        await migration.migrate(db, locale)
+        await db.collection<DBMigration>(CollectionName.Migrations).insertOne({
+          version: migration.version,
+          createdAt: new Date()
+        })
+      }
+
+      await session.commitTransaction()
+    } catch (error) {
+      await session.abortTransaction()
+    } finally {
+      session.endSession()
     }
 
     if (!migrationState) {
