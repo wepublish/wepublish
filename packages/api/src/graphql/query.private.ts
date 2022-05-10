@@ -336,7 +336,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
-        console.log('filter', filter)
         const toReturn = await dbAdapter.subscription.getSubscriptions({
           filter,
           sort,
@@ -344,15 +343,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last, skip)
         })
-        console.log('toReturn', toReturn)
         return toReturn
       }
     },
 
     subscriptionsAsCsv: {
       type: GraphQLString,
-      args: {},
-      async resolve(root, args, {dbAdapter, authenticate}) {
+      args: {filter: {type: GraphQLSubscriptionFilter}},
+      async resolve(root, {filter}, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
@@ -362,14 +360,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         let hasMore = true
         let afterCursor
-
         while (hasMore) {
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
-              cursor: InputCursor(afterCursor ?? undefined),
-              filter: {},
+              filter,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
+              cursor: InputCursor(afterCursor ?? undefined),
               order: SortOrder.Descending
             }
           )

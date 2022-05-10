@@ -669,7 +669,7 @@ export type MemberPlanInput = {
   slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  tags: Array<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -1473,6 +1473,11 @@ export type QuerySubscriptionsArgs = {
 };
 
 
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: Maybe<SubscriptionFilter>;
+};
+
+
 export type QueryUserRoleArgs = {
   id?: Maybe<Scalars['ID']>;
 };
@@ -1754,15 +1759,18 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
-  startsAt?: Maybe<DateFilter>;
-  paidUntil?: Maybe<DateFilter>;
-  deactivationDate?: Maybe<DateFilter>;
+  startsAtFrom?: Maybe<DateFilter>;
+  startsAtTo?: Maybe<DateFilter>;
+  paidUntilFrom?: Maybe<DateFilter>;
+  paidUntilTo?: Maybe<DateFilter>;
+  deactivationDateFrom?: Maybe<DateFilter>;
+  deactivationDateTo?: Maybe<DateFilter>;
   deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
   paymentMethodID?: Maybe<Scalars['String']>;
   memberPlanID?: Maybe<Scalars['String']>;
   paymentPeriodicity?: Maybe<PaymentPeriodicity>;
-  userHasAddress?: Maybe<Scalars['Boolean']>
+  userHasAddress?: Maybe<Scalars['Boolean']>;
 };
 
 export type SubscriptionInput = {
@@ -3589,12 +3597,14 @@ export type SubscriptionQuery = (
   )> }
 );
 
-export type SubscriptionsAsCsvQueryVariables = Exact<{ [key: string]: never; }>;
+export type SubscriptionsAsCsvQueryVariables = Exact<{
+  filter?: Maybe<SubscriptionFilter>;
+}>;
 
 
 export type SubscriptionsAsCsvQuery = (
   { __typename?: 'Query' }
-  & { csv: Query['subscriptionsAsCsv'] }
+  & Pick<Query, 'subscriptionsAsCsv'>
 );
 
 export type CreateSubscriptionMutationVariables = Exact<{
@@ -6851,8 +6861,8 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv {
-  csv: subscriptionsAsCsv
+    query SubscriptionsAsCsv($filter: SubscriptionFilter) {
+  subscriptionsAsCsv(filter: $filter)
 }
     `;
 
@@ -6868,6 +6878,7 @@ export const SubscriptionsAsCsvDocument = gql`
  * @example
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

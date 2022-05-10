@@ -33,7 +33,7 @@ import {useTranslation} from 'react-i18next'
 import {
   Button,
   ControlLabel,
-  DatePicker,
+  DateRangePicker,
   Drawer,
   FlexboxGrid,
   FormGroup,
@@ -92,8 +92,6 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
-  console.log('filter', filter)
-
   const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
       filter,
@@ -104,8 +102,6 @@ export function SubscriptionList() {
     },
     fetchPolicy: 'network-only'
   })
-
-  console.log('data', data)
 
   useEffect(() => {
     refetch({
@@ -243,6 +239,27 @@ export function SubscriptionList() {
           />
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
+          <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
+          <DateRangePicker
+            block
+            onChange={value => {
+              if (value[0] && value[1]) {
+                updateFilter({
+                  startsAtFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  startsAtTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
+          />
+        </FormGroup>
+        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
           <SelectPicker
             searchable={false}
@@ -259,9 +276,10 @@ export function SubscriptionList() {
             value={filter.deactivationReason}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value})}
+            onChange={value => updateFilter({autoRenew: value || undefined})}
           />
         </FormGroup>
+        {/*  hide for now
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
           <SelectPicker
@@ -281,7 +299,7 @@ export function SubscriptionList() {
             placement="auto"
             onChange={value => updateFilter({userHasAddress: value})}
           />
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
           <SelectPicker
@@ -307,42 +325,47 @@ export function SubscriptionList() {
           />
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.dateFrom')}</ControlLabel>
-          <DatePicker
+          <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+          <DateRangePicker
             block
-            onChange={value =>
-              updateFilter({
-                deactivationDate: {
-                  date: value.toISOString(),
-                  comparison: DateFilterComparison.Greater
-                }
-              })
-            }
-          />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.deactivation.dateTo')}</ControlLabel>
-          <DatePicker
-            block
-            onChange={value =>
-              updateFilter({
-                deactivationDate: {
-                  date: value.toISOString(),
-                  comparison: DateFilterComparison.Lower
-                }
-              })
+            onChange={value => {
+              if (value[0] && value[1]) {
+                updateFilter({
+                  deactivationDateFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  deactivationDateTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() =>
+              updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
             }
           />
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
-          <DatePicker
+          <DateRangePicker
             block
-            onChange={value =>
-              updateFilter({
-                paidUntil: {date: value.toISOString(), comparison: DateFilterComparison.Lower}
-              })
-            }
+            onChange={value => {
+              if (value[0] && value[1]) {
+                updateFilter({
+                  paidUntilFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  paidUntilTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
           />
         </FormGroup>
       </FlexboxGrid>
@@ -493,7 +516,7 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
-          <SubscriptionAsCsvModal />
+          <SubscriptionAsCsvModal filter={filter} />
         </Modal.Body>
 
         <Modal.Footer>

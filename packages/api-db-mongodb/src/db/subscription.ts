@@ -188,7 +188,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   }: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>> {
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
-    console.log('filter-mongo', filter)
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
@@ -215,21 +214,38 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and = []
     }
 
-    if (filter?.startsAt !== undefined) {
-      const {comparison, date} = filter.startsAt
+    if (filter?.startsAtFrom !== undefined) {
+      const {comparison, date} = filter.startsAtFrom
       textFilter.$and?.push({
         startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
 
-    if (filter?.paidUntil !== undefined) {
-      const {comparison, date} = filter.paidUntil
+    if (filter?.startsAtTo !== undefined) {
+      const {comparison, date} = filter.startsAtTo
+      textFilter.$and?.push({
+        startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.paidUntilFrom !== undefined) {
+      const {comparison, date} = filter.paidUntilFrom
       textFilter.$and?.push({
         paidUntil: {
           [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
         }
       })
     }
+
+    if (filter?.paidUntilTo !== undefined) {
+      const {comparison, date} = filter.paidUntilTo
+      textFilter.$and?.push({
+        paidUntil: {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
     if (filter?.deactivationDate !== undefined) {
       const {comparison, date} = filter.deactivationDate
 
@@ -242,6 +258,26 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
           }
         })
       }
+    }
+
+    if (filter?.deactivationDateFrom !== undefined) {
+      const {comparison, date} = filter.deactivationDateFrom
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
+    if (filter?.deactivationDateTo !== undefined) {
+      const {comparison, date} = filter.deactivationDateTo
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
     }
 
     if (filter?.deactivationReason !== undefined) {
@@ -272,8 +308,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
     }
 
-    console.log('textFilter', textFilter)
-
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
@@ -281,6 +315,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
       this.subscriptions
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        // how to get related user address?
         // .lookup({
         //   from: 'DBUser',
         //   localField: 'userID',

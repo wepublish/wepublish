@@ -861,6 +861,10 @@
       "panels": {
         "csvData": "CSV Data",
         "exportSubscriptions": "Export",
+        "generateCSV": "Generate",
+        "actions": "Actions",
+        "download": "Download",
+        "copy": "Copy",
         "noUsersWithSubscriptions": "Currently, No users have subscriptions",
         "active": "Active",
         "addUserRole": "Add User Role",
