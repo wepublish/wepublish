@@ -280,7 +280,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
     }
 
-    if (filter?.deactivationReason) {
+    if (filter?.deactivationReason !== undefined) {
       const reason = filter.deactivationReason
 
       textFilter.$and?.push({
@@ -288,7 +288,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
     }
 
-    if (filter?.autoRenew) {
+    if (filter?.autoRenew !== undefined) {
       textFilter.$and?.push({autoRenew: {$eq: filter.autoRenew}})
     }
 
