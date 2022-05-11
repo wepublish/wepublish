@@ -304,10 +304,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
-    // if (filter?.userHasAddress === true) {
-    //   textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
-    // }
-
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
@@ -315,13 +311,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
       this.subscriptions
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
-        // how to get related user address?
-        // .lookup({
-        //   from: 'DBUser',
-        //   localField: 'userID',
-        //   foreignField: '_id',
-        //   as: 'user'
-        // })
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
