@@ -101,8 +101,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }, [data?.subscription])
 
-  console.log('rerender!')
-
   const {
     data: userData,
     loading: isUserLoading,
@@ -214,8 +212,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (!paymentMethod) return
     if (!user) return
     // TODO: show error
-
-    console.log('memberPlan', memberPlan)
 
     if (id) {
       const {data} = await updateSubscription({

@@ -214,21 +214,21 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and = []
     }
 
-    if (filter?.startsAtFrom !== undefined) {
+    if (filter?.startsAtFrom) {
       const {comparison, date} = filter.startsAtFrom
       textFilter.$and?.push({
         startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
 
-    if (filter?.startsAtTo !== undefined) {
+    if (filter?.startsAtTo) {
       const {comparison, date} = filter.startsAtTo
       textFilter.$and?.push({
         startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
 
-    if (filter?.paidUntilFrom !== undefined) {
+    if (filter?.paidUntilFrom) {
       const {comparison, date} = filter.paidUntilFrom
       textFilter.$and?.push({
         paidUntil: {
@@ -237,7 +237,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
     }
 
-    if (filter?.paidUntilTo !== undefined) {
+    if (filter?.paidUntilTo) {
       const {comparison, date} = filter.paidUntilTo
       textFilter.$and?.push({
         paidUntil: {
@@ -280,7 +280,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
     }
 
-    if (filter?.deactivationReason !== undefined) {
+    if (filter?.deactivationReason) {
       const reason = filter.deactivationReason
 
       textFilter.$and?.push({
@@ -288,25 +288,25 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
     }
 
-    if (filter?.autoRenew !== undefined) {
+    if (filter?.autoRenew) {
       textFilter.$and?.push({autoRenew: {$eq: filter.autoRenew}})
     }
 
-    if (filter?.paymentPeriodicity !== undefined) {
+    if (filter?.paymentPeriodicity) {
       textFilter.$and?.push({paymentPeriodicity: {$eq: filter.paymentPeriodicity}})
     }
 
-    if (filter?.paymentMethodID !== undefined) {
+    if (filter?.paymentMethodID) {
       textFilter.$and?.push({paymentMethodID: {$eq: filter.paymentMethodID}})
     }
 
-    if (filter?.memberPlanID !== undefined) {
+    if (filter?.memberPlanID) {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
-    if (filter?.userHasAddress === true) {
-      textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
-    }
+    // if (filter?.userHasAddress === true) {
+    //   textFilter.$and?.push({'user.address.zipCode': {$exists: true}})
+    // }
 
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {

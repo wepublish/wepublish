@@ -281,7 +281,8 @@ export function SubscriptionList() {
             onChange={value => updateFilter({autoRenew: value || undefined})}
           />
         </FormGroup>
-        {/*  hide for now
+        {/*  hide for now until filtering by subscription.user.address
+             is implemented on backend (mongo adpter)
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
           <SelectPicker
