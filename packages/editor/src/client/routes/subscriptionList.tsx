@@ -202,8 +202,8 @@ export function SubscriptionList() {
           </ButtonLink>
         </FlexboxGrid.Item>
       </FlexboxGrid>
-      <FlexboxGrid style={{marginTop: '30px', marginBottom: '10px'}}>
-        <FormGroup style={{marginRight: '15px'}}>
+      <FlexboxGrid style={{marginTop: '15px', marginBottom: '10px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.selectMemberPlan')}
             block
@@ -214,7 +214,7 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('memberPlanList.paymentPeriodicities')}
             value={filter.paymentPeriodicity}
@@ -227,7 +227,7 @@ export function SubscriptionList() {
             block
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.paymentMethod')}
             block
@@ -239,7 +239,7 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.startsAt')}
             block
@@ -258,9 +258,10 @@ export function SubscriptionList() {
               }
             }}
             onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
+            placement="auto"
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.autoRenew')}
             searchable={false}
@@ -301,7 +302,7 @@ export function SubscriptionList() {
             onChange={value => updateFilter({userHasAddress: value})}
           />
         </FormGroup> */}
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('subscriptionList.filter.deactivationReason')}
             searchable={false}
@@ -325,7 +326,7 @@ export function SubscriptionList() {
             onChange={value => updateFilter({deactivationReason: value})}
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.deactivation.date')}
             block
@@ -349,7 +350,7 @@ export function SubscriptionList() {
             }
           />
         </FormGroup>
-        <FormGroup style={{marginRight: '15px'}}>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.payedUntil')}
             block

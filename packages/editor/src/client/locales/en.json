@@ -527,7 +527,7 @@
       "name": "Name",
       "slug": "Slug",
       "paymentMethods": "Possible Payment Methods",
-      "paymentPeriodicities": "Possible Payment Periodicities",
+      "paymentPeriodicities": "Payment Periodicities",
       "paymentPeriodicity": {
         "BIANNUAL": "Biannual",
         "MONTHLY": "Monthly",
@@ -993,7 +993,7 @@
       "name": "Name",
       "payedUntil": "Paid Until",
       "paymentMethod": "Payment Method",
-      "selectMemberPlan": "Choose a Member Plan",
+      "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
     }

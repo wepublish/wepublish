@@ -708,7 +708,7 @@
     "memberPlanList": {
       "autoRenewal": "Force Auto Renew",
       "editTitle": "Modifier le plan membres",
-      "paymentPeriodicities": "Périodicités de paiement possibles",
+      "paymentPeriodicities": "Périodicités de paiement",
       "action": "Actions",
       "active": "Actif",
       "activeDescription": "Rendre le plan disponible",
@@ -748,7 +748,7 @@
       "monthlyAmount": "Montant mensuel",
       "payedUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
-      "selectMemberPlan": "Choisissez un plan de membre",
+      "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
       "selectUser": "Choisir l'utilisateur",
       "tempUserTitle": "Utilisateur temporaire"

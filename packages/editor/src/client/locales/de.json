@@ -486,7 +486,7 @@
       "fixPrice": "Fixpreis",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
-      "paymentPeriodicities": "Mögliche Zahlungsperiodizitäten",
+      "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
         "BIANNUAL": "Halbjährlich",
         "QUARTERLY": "Vierteljährlich",
@@ -880,7 +880,7 @@
       "name": "Name",
       "payedUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
-      "selectMemberPlan": "Memberplan wählen",
+      "selectMemberPlan": "Memberplan",
       "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
       "adapter": "Zahlungs-Adapter",
