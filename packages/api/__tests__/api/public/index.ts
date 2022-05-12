@@ -609,7 +609,7 @@ export enum PaymentState {
   Submitted = 'Submitted',
   RequiresUserAction = 'RequiresUserAction',
   Processing = 'Processing',
-  Payed = 'Payed',
+  Paid = 'Paid',
   Canceled = 'Canceled',
   Declined = 'Declined'
 }
