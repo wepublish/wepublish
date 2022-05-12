@@ -39,7 +39,8 @@ describe('Peer Edit Panel', () => {
                 id: 'peerId1',
                 name: 'Test Peer Name',
                 slug: 'test-peer-name',
-                hostURL: 'https://test-url.ch/'
+                hostURL: 'https://test-url.ch/',
+                profile: {}
               }
             }
           }

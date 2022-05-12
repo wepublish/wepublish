@@ -8,10 +8,11 @@ import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
 
-import {methodsToProxy} from './events'
+import {methodsToProxy, PublishableModelEvents} from './events'
 import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
+import TypedEmitter from 'typed-emitter'
 
 let serverLogger: pino.Logger
 
@@ -41,34 +42,34 @@ export class WepublishServer {
       if (mtp.key in dbAdapter) {
         const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
+          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, Function | any>
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
-          if (methodName in dbAdapter[dbAdapterKeyTyped]) {
-            // @ts-ignore
-            dbAdapter[dbAdapterKeyTyped][methodName] = new Proxy(
-              // @ts-ignore
-              dbAdapter[dbAdapterKeyTyped][methodName],
-              {
-                // create proxy for method
-                async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                  const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
-                  setImmediate(async () => {
-                    // make sure event gets executed in the next event loop
-                    try {
-                      logger('server').info('emitting event for %s', methodName)
-                      // @ts-ignore
-                      mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
-                    } catch (error) {
-                      logger('server').error(
-                        error,
-                        'error during emitting event for %s',
-                        methodName
-                      )
-                    }
-                  })
-                  return result // return actual result "Article, Page, User, ..."
-                }
+
+          if (methodName in adapter) {
+            adapter[methodName] = new Proxy(adapter[methodName], {
+              // create proxy for method
+              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
+                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
+                setImmediate(async () => {
+                  // make sure event gets executed in the next event loop
+                  try {
+                    logger('server').info('emitting event for %s', methodName)
+                    ;(mtp.eventEmitter as TypedEmitter<PublishableModelEvents<unknown>>).emit(
+                      method,
+                      await contextFromRequest(null, opts),
+                      result
+                    ) // execute event emitter
+                  } catch (error) {
+                    logger('server').error(
+                      error as object,
+                      'error during emitting event for %s',
+                      methodName
+                    )
+                  }
+                })
+                return result // return actual result "Article, Page, User, ..."
               }
-            )
+            })
           } else {
             logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
           }
