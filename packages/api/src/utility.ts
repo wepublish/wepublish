@@ -7,6 +7,7 @@ import {TeaserStyle} from './db/block'
 import {User} from './db/user'
 import {Subscription} from './db/subscription'
 import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
+import formatISO from 'date-fns/formatISO'
 
 export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
@@ -65,8 +66,8 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
         `"${user.name ?? ''}"`,
         `"${user.email ?? ''}"`,
         user.active,
-        user.createdAt.toLocaleDateString(),
-        user.modifiedAt.toLocaleDateString(),
+        formatISO(user.createdAt, {representation: 'date'}),
+        formatISO(user.modifiedAt, {representation: 'date'}),
         `"${user.address?.company ?? ''}"`,
         `"${user.address?.streetAddress ?? ''}"`,
         `"${user.address?.streetAddress2 ?? ''}"`,
@@ -77,10 +78,14 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
         subscription?.autoRenew ?? '',
-        subscription?.startsAt?.toLocaleDateString() ?? '',
-        subscription?.paidUntil?.toLocaleDateString() ?? 'no pay',
+        subscription?.startsAt ? formatISO(subscription.startsAt, {representation: 'date'}) : '',
+        subscription?.paidUntil
+          ? formatISO(subscription.paidUntil, {representation: 'date'})
+          : 'no pay',
         subscription?.paymentMethodID ?? '',
-        subscription?.deactivation?.date?.toLocaleDateString() ?? '',
+        subscription?.deactivation
+          ? formatISO(subscription.deactivation.date, {representation: 'date'})
+          : '',
         subscription?.deactivation?.reason ?? ''
       ].join(',') + '\r\n'
   }
