@@ -10,7 +10,7 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDate, GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 
@@ -83,7 +83,11 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
 export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
   name: 'InvoiceFilter',
   fields: {
-    mail: {type: GraphQLString}
+    mail: {type: GraphQLString},
+    paidAt: {type: GraphQLDate},
+    canceledAt: {type: GraphQLDate},
+    userID: {type: GraphQLID},
+    subscriptionID: {type: GraphQLID}
   }
 })
 
@@ -122,6 +126,7 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
     userID: {type: GraphQLID},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    subscriptionID: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

@@ -60,6 +60,7 @@ export interface InvoiceFilter {
   paidAt?: DateFilter
   canceledAt?: DateFilter
   userID?: string
+  subscriptionID?: string
 }
 
 export interface GetInvoicesArgs {

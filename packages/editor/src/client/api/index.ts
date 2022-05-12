@@ -20,6 +20,8 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -324,6 +326,7 @@ export type CreatePeerInput = {
   token: Scalars['String'];
 };
 
+
 export type DateFilter = {
   date?: Maybe<Scalars['DateTime']>;
   comparison: DateFilterComparison;
@@ -553,6 +556,10 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   mail?: Maybe<Scalars['String']>;
+  paidAt?: Maybe<Scalars['Date']>;
+  canceledAt?: Maybe<Scalars['Date']>;
+  userID?: Maybe<Scalars['ID']>;
+  subscriptionID?: Maybe<Scalars['ID']>;
 };
 
 export type InvoiceInput = {
@@ -560,6 +567,7 @@ export type InvoiceInput = {
   userID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['String']>;
   paidAt?: Maybe<Scalars['DateTime']>;
+  subscriptionID?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItemInput>;
 };
 
@@ -736,6 +744,7 @@ export type Mutation = {
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
+  updateInvoicePaidAt?: Maybe<Invoice>;
   deleteInvoice?: Maybe<Scalars['ID']>;
   approveComment: Comment;
   rejectComment: Comment;
@@ -1025,6 +1034,12 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['ID'];
   input: InvoiceInput;
+};
+
+
+export type MutationUpdateInvoicePaidAtArgs = {
+  id: Scalars['ID'];
+  date?: Maybe<Scalars['Date']>;
 };
 
 
@@ -2785,6 +2800,11 @@ export type MetadataPropertyFragment = (
   & Pick<Properties, 'key' | 'value' | 'public'>
 );
 
+export type PageInfoFragment = (
+  { __typename?: 'PageInfo' }
+  & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+);
+
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
   & Pick<Image, 'url'>
@@ -2880,6 +2900,55 @@ export type DeleteImageMutationVariables = Exact<{
 export type DeleteImageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteImage'>
+);
+
+export type InvoiceFragment = (
+  { __typename?: 'Invoice' }
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'modifiedAt' | 'createdAt'>
+  & { items: Array<(
+    { __typename?: 'InvoiceItem' }
+    & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
+  )> }
+);
+
+export type InvoicesQueryVariables = Exact<{
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<InvoiceFilter>;
+  sort?: Maybe<InvoiceSort>;
+  order?: Maybe<SortOrder>;
+}>;
+
+
+export type InvoicesQuery = (
+  { __typename?: 'Query' }
+  & { invoices: (
+    { __typename?: 'InvoiceConnection' }
+    & Pick<InvoiceConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Invoice' }
+      & InvoiceFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & PageInfoFragment
+    ) }
+  ) }
+);
+
+export type UpdateInvoiceMutationVariables = Exact<{
+  updateInvoiceId: Scalars['ID'];
+  input: InvoiceInput;
+}>;
+
+
+export type UpdateInvoiceMutation = (
+  { __typename?: 'Mutation' }
+  & { updateInvoice?: Maybe<(
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
+  )> }
 );
 
 export type MemberPlanRefFragment = (
@@ -4321,6 +4390,14 @@ export const FullCommentFragmentDoc = gql`
 }
     ${FullUserFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
+export const PageInfoFragmentDoc = gql`
+    fragment PageInfo on PageInfo {
+  startCursor
+  endCursor
+  hasNextPage
+  hasPreviousPage
+}
+    `;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -4343,6 +4420,26 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  modifiedAt
+  createdAt
+}
+    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -5597,6 +5694,88 @@ export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
+export const InvoicesDocument = gql`
+    query Invoices($after: ID, $before: ID, $first: Int, $last: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
+  invoices(after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      ...Invoice
+    }
+    pageInfo {
+      ...PageInfo
+    }
+    totalCount
+  }
+}
+    ${InvoiceFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useInvoicesQuery__
+ *
+ * To run a query within a React component, call `useInvoicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInvoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInvoicesQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useInvoicesQuery(baseOptions?: Apollo.QueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+      }
+export function useInvoicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+        }
+export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>;
+export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>;
+export type InvoicesQueryResult = Apollo.QueryResult<InvoicesQuery, InvoicesQueryVariables>;
+export const UpdateInvoiceDocument = gql`
+    mutation UpdateInvoice($updateInvoiceId: ID!, $input: InvoiceInput!) {
+  updateInvoice(id: $updateInvoiceId, input: $input) {
+    ...Invoice
+  }
+}
+    ${InvoiceFragmentDoc}`;
+export type UpdateInvoiceMutationFn = Apollo.MutationFunction<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
+
+/**
+ * __useUpdateInvoiceMutation__
+ *
+ * To run a mutation, you first call `useUpdateInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInvoiceMutation, { data, loading, error }] = useUpdateInvoiceMutation({
+ *   variables: {
+ *      updateInvoiceId: // value for 'updateInvoiceId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>(UpdateInvoiceDocument, options);
+      }
+export type UpdateInvoiceMutationHookResult = ReturnType<typeof useUpdateInvoiceMutation>;
+export type UpdateInvoiceMutationResult = Apollo.MutationResult<UpdateInvoiceMutation>;
+export type UpdateInvoiceMutationOptions = Apollo.BaseMutationOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {

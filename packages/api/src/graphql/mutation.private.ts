@@ -24,7 +24,7 @@ import {
 
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDate, GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'

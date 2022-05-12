@@ -157,6 +157,10 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       textFilter.$and?.push({userID: {$eq: filter.userID}})
     }
 
+    if (filter?.subscriptionID !== undefined) {
+      textFilter.$and?.push({subscriptionID: {$eq: filter.subscriptionID}})
+    }
+
     const [totalCount, invoices] = await Promise.all([
       this.invoices.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}

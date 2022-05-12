@@ -37,6 +37,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES, isTempUser as checkIsTempUser} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
+import {InvoiceListPanel} from './invoiceListPanel'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -69,11 +70,20 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
+  const [isInvoiceListOpen, setIsInvoiceListOpen] = useState<boolean>(false)
+
   const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
   })
+
+  /**
+   * invoice related
+   */
+  function hideInvoiceList() {
+    setIsInvoiceListOpen(false)
+  }
 
   useEffect(() => {
     if (data?.subscription) {
@@ -100,8 +110,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       setDeactivation(data.subscription.deactivation)
     }
   }, [data?.subscription])
-
-  console.log('rerender!')
 
   const {
     data: userData,
@@ -137,7 +145,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   } = useMemberPlanListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 200 // TODO: Pagination
+      first: 100
     }
   })
 
@@ -213,9 +221,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (!memberPlan) return
     if (!paymentMethod) return
     if (!user) return
-    // TODO: show error
-
-    console.log('memberPlan', memberPlan)
 
     if (id) {
       const {data} = await updateSubscription({
@@ -414,11 +419,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
-              <DatePicker
-                block
-                value={paidUntil ?? undefined}
-                disabled={true /* TODO fix this */}
-              />
+              <DatePicker block value={paidUntil ?? undefined} disabled />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Rechnungsverlauf</ControlLabel>
+              <Button onClick={() => setIsInvoiceListOpen(true)}>Rechnungsverlauf ansehen</Button>
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
@@ -459,6 +464,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
           {t('close')}
         </Button>
       </Drawer.Footer>
+
+      <Drawer show={isInvoiceListOpen} size={'md'} onHide={() => hideInvoiceList()}>
+        <InvoiceListPanel id={id} />
+      </Drawer>
 
       {id && user && (
         <Modal
