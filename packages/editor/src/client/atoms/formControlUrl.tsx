@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react'
 import {FormControl, Message} from 'rsuite'
 import {useTranslation} from 'react-i18next'
-import {validateURL} from '../utility'
+// import {validateURL} from '../utility'
 
 interface UrlValidationProps {
   placeholder: string
@@ -14,13 +14,13 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
   const {t} = useTranslation()
   const [invalidInput, setInvalidInput] = useState(false)
 
-  const handleUrlValidation = useCallback(
-    (url: string) => {
-      const isValidURL = validateURL(url)
-      setInvalidInput(!isValidURL)
-    },
-    [value]
-  )
+  // const handleUrlValidation = useCallback(
+  //   (url: string) => {
+  //     const isValidURL = validateURL(url)
+  //     setInvalidInput(!isValidURL)
+  //   },
+  //   [value]
+  // )
 
   return (
     <div>
@@ -30,7 +30,7 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
         name={name}
         value={value}
         onChange={url => {
-          handleUrlValidation(url)
+          // handleUrlValidation(url)
           onChange(url)
         }}
       />

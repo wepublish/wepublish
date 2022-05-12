@@ -56,6 +56,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isLogoChange, setIsLogoChange] = useState(false)
   const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
+  const [profileImgValidation, setProfileImgValidation] = useState('')
+
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
   })
@@ -90,18 +92,28 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     if (error) Alert.error(error, 0)
   }, [fetchError, saveError])
 
-  useEffect(() => {
-    const checkCallToActionURL = async () => {
-      const isValidTextURL = validateURL(callToActionTextURL)
-      const isValidImageURL = validateURL(callToActionImageURL)
-      setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
-    }
-    checkCallToActionURL()
-  }, [callToActionTextURL, callToActionImageURL])
+  // useEffect(() => {
+  //   const checkCallToActionURL = async () => {
+  //     const isValidTextURL = validateURL(callToActionTextURL)
+  //     const isValidImageURL = validateURL(callToActionImageURL)
+  //   }
+  //   checkCallToActionURL()
+  // }, [callToActionTextURL, callToActionImageURL])
 
   const form = useRef<FormInstance>(null)
+  const imgForm = useRef<FormInstance>(null)
+
   async function handleSave() {
+    console.log(form.current?.check())
+    console.log('check imgFOrm', imgForm.current?.check())
+    console.log('profile img', logoImage?.id)
+    console.log('peerProfileVal', profileImgValidation)
+
     if (!form.current?.check()) {
+      return
+    }
+
+    if (!imgForm.current?.check()) {
       return
     }
     await updateSettings({
@@ -122,16 +134,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
-  const {StringType, ObjectType} = Schema.Types
+  const {StringType, ObjectType, ArrayType} = Schema.Types
 
   const validationModel = Schema.Model({
     name: StringType().isRequired('please enter a name'),
-    logoImage: ObjectType()
-      .isRequired()
-      .shape({
-        filename: StringType().isRequired('Please add an image')
-      }),
-    callToActionText: StringType().isRequired('please enter a call to action text'),
+    // callToActionText: ObjectType().isRequired('please enter a call to action text'),
     callToActionTextURL: StringType()
       .isURL('please enter a valid url')
       .isRequired('please enter a url'),
@@ -141,7 +148,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       .isRequired('please enter a url')
   })
 
-  console.log(logoImage?.filename)
+  const imgValidationModel = Schema.Model({
+    profileImg: StringType().isRequired('please enter an image')
+  })
 
   return (
     <>
@@ -167,22 +176,21 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             }}
             removeImage={() => setLogoImage(undefined)}
           />
-
-          {/* what is the best way to validate the image, as it is not a form ? */}
-          {logoImage?.id ? (
-            ''
-          ) : (
-            <Message type="error" description={'Please add an image'}></Message>
-          )}
+          <Form ref={imgForm} fluid={true} model={imgValidationModel} style={{height: '45px'}}>
+            {/* error because name doensn't get typed in manually */}
+            <FormGroup>
+              <FormControl
+                style={{display: 'none'}}
+                name="profileImg"
+                value={logoImage?.id || ''}
+                onChange={setProfileImgValidation}
+              />
+            </FormGroup>
+          </Form>
         </Panel>
 
         <Panel header={t('peerList.panels.information')}>
           <Form ref={form} fluid={true} model={validationModel}>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.name') + '*'}</ControlLabel>
-              <FormControl name="filename" value={logoImage?.filename} />
-            </FormGroup>
-
             <FormGroup>
               <ControlLabel>{t('peerList.panels.name') + '*'}</ControlLabel>
               <FormControl name="name" value={name} onChange={value => setName(value)} />
@@ -206,7 +214,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               />
             </FormGroup>
 
-            <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
+            <ControlLabel>{t('peerList.panels.callToActionText') + '*'}</ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -216,10 +224,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}>
               <FormGroup>
                 <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
-                <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+                <FormControl
+                  name="callToActionText"
+                  value={callToActionText}
+                  onChange={setCallToActionText}
+                  accepter={RichTextBlock}
+                />
               </FormGroup>
               <FormGroup>
-                {/* There is an exisiting validation for URL, should we keep in or use the new one? */}
                 <FormControlUrl
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
@@ -229,7 +241,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               </FormGroup>
             </div>
             <br />
-            <ControlLabel>{t('peerList.panels.callToActionImage')}</ControlLabel>
+            <ControlLabel>{t('peerList.panels.callToActionImage') + '*'}</ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -238,7 +250,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 marginTop: '4px'
               }}>
               <FormGroup>
-                <ControlLabel>{t('peerList.panels.image')}</ControlLabel>
+                <ControlLabel>{t('peerList.panels.image') + '*'}</ControlLabel>
                 <ChooseEditImage
                   image={callToActionImage}
                   header={''}
@@ -255,14 +267,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   }}
                   removeImage={() => setCallToActionImage(undefined)}
                 />
-
-                {/* {checkResult.callToActionImage.hasError ? (
-                  <Message
-                    type="error"
-                    description={checkResult.callToActionImage.errorMessage}></Message>
-                ) : (
-                  ''
-                )} */}
               </FormGroup>
               <FormGroup>
                 <FormControlUrl

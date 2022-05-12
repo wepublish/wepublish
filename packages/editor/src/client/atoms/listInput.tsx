@@ -61,7 +61,7 @@ const ListItem = SortableElement(
           <DragHandle disabled={itemDisabled} />
         </div>
         <Panel bodyFill style={{width: '100%'}}>
-          <div style={{minHeight: '100%'}}>
+          <div style={{minHeight: '100%', display: 'flex'}}>
             {children({value: value.value, onChange: handleValueChange})}
           </div>
         </Panel>

@@ -7,6 +7,7 @@ import {
   DatePicker,
   Drawer,
   Form,
+  FormControl,
   FormGroup,
   HelpBlock,
   Message,
@@ -200,10 +201,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
   const form = useRef<FormInstance>(null)
-  const selectPicker = useRef<any>(null)
 
   async function handleSave() {
-    if (!selectPicker.current?.check()) {
+    if (!form.current?.check()) {
+      console.log('check', form.current?.check())
       return
     }
     if (!memberPlan) return
@@ -306,13 +307,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   }
 
   // Schema used for form validation --- reference custom field for validation
-  const {ArrayType, ObjectType, StringType} = Schema.Types
+  const {StringType, NumberType} = Schema.Types
   const validationModel = Schema.Model({
-    memberPlan: ObjectType().isRequired('Please select a memberplan')
+    memberPlan: StringType().isRequired('Please select a memberplan'),
+    user: StringType().isRequired('Please select a user'),
+    currency: NumberType().isRequired('Please enter a number'),
+    paymentPeriodicity: StringType().isRequired('Please enter payment periodicity'),
+    paymentMethod: StringType().isRequired('Please enter a payment method')
   })
-
-  console.log('memberplan: ', memberPlan?.name)
-  console.log(form.current?.check())
 
   return (
     <>
@@ -361,44 +363,49 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         )}
 
         <Panel>
-          <Form ref={selectPicker} model={validationModel} fluid={true}>
+          <Form ref={form} model={validationModel} fluid={true}>
             <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
-              <SelectPicker
+              <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan') + '*'}</ControlLabel>
+              <FormControl
                 name="memberPlan"
                 block
                 disabled={isDisabled || isDeactivated}
                 data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
                 value={memberPlan?.id}
                 onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
+                accepter={SelectPicker}
               />
               {memberPlan && (
                 <HelpBlock>
                   <DescriptionList>
-                    <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                    <DescriptionListItem
+                      label={t('userSubscriptionEdit.memberPlanMonthlyAmount') + '*'}>
                       {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>
               )}
             </FormGroup>
-            <FormGroup ref={selectPicker}>
-              <ControlLabel>{t('userSubscriptionEdit.selectUser')}</ControlLabel>
-              <SelectPicker
+            <FormGroup>
+              <ControlLabel>{t('userSubscriptionEdit.selectUser') + '*'}</ControlLabel>
+              <FormControl
                 block
+                name="user"
                 disabled={isDisabled || isDeactivated}
                 data={users.map(usr => ({value: usr?.id, label: usr?.name}))}
                 value={user?.id}
                 onChange={value => setUser(users.find(usr => usr?.id === value))}
-                onSearch={searchString => {
+                onSearch={(searchString: React.SetStateAction<string>) => {
                   setUserSearch(searchString)
                   refetchUsers()
                 }}
+                accepter={SelectPicker}
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
+              <ControlLabel>{t('userSubscriptionEdit.monthlyAmount') + '*'}</ControlLabel>
               <CurrencyInput
+                name="currency"
                 currency="CHF"
                 centAmount={monthlyAmount}
                 onChange={centAmount => {
@@ -408,9 +415,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
-              <SelectPicker
+              <ControlLabel>{t('memberPlanList.paymentPeriodicities') + '*'}</ControlLabel>
+              <FormControl
                 value={paymentPeriodicity}
+                name="paymentPeriodicity"
                 data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
                   value: pp,
                   label: t(`memberPlanList.paymentPeriodicity.${pp}`)
@@ -418,6 +426,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setPaymentPeriodicity(value)}
                 block
+                accepter={SelectPicker}
               />
             </FormGroup>
             <FormGroup>
@@ -448,12 +457,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
-              <SelectPicker
+              <FormControl
+                name="paymentMethod"
                 block
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
                 value={paymentMethod?.id}
                 onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
+                accepter={SelectPicker}
               />
             </FormGroup>
           </Form>

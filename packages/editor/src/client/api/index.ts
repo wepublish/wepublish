@@ -1991,7 +1991,8 @@ export enum UserRoleSort {
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  FirstName = 'FIRST_NAME'
 }
 
 export type VimeoVideoBlock = {

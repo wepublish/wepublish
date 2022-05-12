@@ -1,6 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
-import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
+import {
+  Alert,
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Panel,
+  Schema
+} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -17,6 +27,7 @@ import {slugify, getOperationNameFromDocument} from '../utility'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {FormInstance} from 'rsuite/lib/Form'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -49,11 +60,14 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
   const {refetch: fetchRemote} = useRemotePeerProfileQuery({skip: true})
 
-  const isDisabled = isLoading || isCreating || isUpdating || !profile || !name
-
+  const isDisabled = isLoading || isCreating || isUpdating
   const {t} = useTranslation()
 
   async function handleFetch() {
+    if (!form.current?.check()) {
+      return
+    }
+
     try {
       const {data: remote} = await fetchRemote({
         hostURL: urlString,
@@ -87,6 +101,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     setProfile(null)
   }, [urlString, token])
 
+  const form = useRef<FormInstance>(null)
   async function handleSave() {
     if (id) {
       await updatePeer({
@@ -115,6 +130,14 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     onSave?.()
   }
 
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired('Please enter a name'),
+    URL: StringType().isRequired('Please enter a url').isURL('please enter a valid url'),
+    token: StringType().isRequired('Please enter a token')
+  })
+
   return (
     <>
       <Drawer.Header>
@@ -125,12 +148,12 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
+          <Form fluid={true} ref={form} model={validationModel}>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
               <FormControl
                 value={name}
-                name={t('peerList.panels.name')}
+                name="name"
                 onChange={value => {
                   setName(value)
                   setSlug(slugify(value))
@@ -141,7 +164,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
               <FormControl
                 value={urlString}
-                name={t('peerList.panels.URL')}
+                name="URL"
                 onChange={value => {
                   setURLString(value)
                 }}
@@ -151,7 +174,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
               <FormControl
                 value={token}
-                name={t('peerList.panels.token')}
+                name="token"
                 placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
                 onChange={value => {
                   setToken(value)
@@ -161,7 +184,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
             <Button
               className="fetchButton"
               appearance={'primary'}
-              disabled={!urlString || !token}
+              // disabled={!urlString || !token}
               onClick={() => handleFetch()}>
               {t('peerList.panels.getRemote')}
             </Button>

@@ -186,13 +186,14 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
               <HelpBlock>{t('paymentMethodList.activeDescription')}</HelpBlock>
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
-              <SelectPicker
+              <ControlLabel>{t('paymentMethodList.adapter') + '*'}</ControlLabel>
+              <FormControl
                 name="paymentProvider"
                 value={paymentProvider?.id}
                 data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
                 block={true}
+                accepter={SelectPicker}
                 onChange={value => setPaymentProvider(paymentProviders.find(pp => pp.id === value))}
               />
             </FormGroup>

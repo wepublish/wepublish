@@ -143,6 +143,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const form = useRef<FormInstance>(null)
 
   async function handleSave() {
+    console.log(form.current?.check())
+
     if (!form.current?.check()) {
       return
     }
@@ -221,12 +223,18 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
       <Drawer.Body>
         <Panel>
-          <Form ref={form} fluid={true} model={validationModel}>
+          <Form
+            ref={form}
+            fluid={true}
+            model={validationModel}
+            //  formValue={{firstName}}
+            checkTrigger="blur">
             <FormGroup>
               <ControlLabel>{t('userList.panels.firstName') + '*'}</ControlLabel>
               <FormControl
                 name="firstName"
                 value={firstName}
+                checkTrigger="blur"
                 disabled={isDisabled}
                 onChange={value => {
                   setFirstName(value)
@@ -238,6 +246,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <FormControl
                 name="name"
                 value={name}
+                checkTrigger="blur"
                 disabled={isDisabled}
                 onChange={value => {
                   setName(value)
@@ -378,7 +387,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+        <Button
+          appearance={'primary'}
+          type="submit"
+          disabled={isDisabled}
+          onClick={() => handleSave()}>
           {id ? t('userList.panels.save') : t('userList.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>

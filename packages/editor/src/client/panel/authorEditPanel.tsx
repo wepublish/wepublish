@@ -108,8 +108,17 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const form = useRef<FormInstance>(null)
 
+  const formTest = useRef<FormInstance>(null)
+  // other form for second form ?
+
   async function handleSave() {
+    console.log('save', form.current?.check())
     if (!form.current?.check()) {
+      return
+    }
+
+    console.log('save', formTest.current?.check())
+    if (!formTest.current?.check()) {
       return
     }
 
@@ -150,8 +159,12 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   // Defines field requirements
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('please enter a name'),
-    links: StringType().isURL('please enter a valid url')
+    name: StringType().isRequired('please enter a name')
+    // link: StringType().isURL('please enter a valid url')
+  })
+
+  const validationModelTest = Schema.Model({
+    link: StringType().isURL('please enter a valid url')
   })
 
   return (
@@ -203,7 +216,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               removeImage={() => setImage(undefined)}
             />
           </Panel>
-          <Panel header={t('authors.panels.links')}>
+          <Panel header={t('authors.panels.links')} className="authorLinks">
             {/* How to validate input fields ? */}
             <ListInput
               value={links}
@@ -213,29 +226,40 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               defaultValue={{title: '', url: ''}}>
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <Input
-                    placeholder={t('authors.panels.title')}
-                    style={{
-                      width: '30%',
-                      marginRight: '10px'
-                    }}
-                    value={value.title}
-                    onChange={title => onChange({...value, title})}
-                  />
-                  <InputGroup inside>
-                    <InputGroup.Addon>
-                      <Icon icon="link" />
-                    </InputGroup.Addon>
-                    <Input
-                      placeholder={t('authors.panels.link')}
+                  <Form
+                    ref={formTest}
+                    fluid={true}
+                    model={validationModelTest}
+                    style={{display: 'flex'}}
+                    className="form">
+                    <FormControl
+                      placeholder={t('authors.panels.title')}
                       style={{
-                        width: '70%'
+                        width: '90%',
+                        marginRight: '10px'
                       }}
-                      value={value.url}
-                      onChange={url => onChange({...value, url})}
-                      {...console.log(value)}
+                      value={value.title}
+                      onChange={title => onChange({...value, title})}
                     />
-                  </InputGroup>
+                    <FormGroup>
+                      <InputGroup inside>
+                        <InputGroup.Addon>
+                          <Icon icon="link" />
+                        </InputGroup.Addon>
+
+                        <FormControl
+                          name="link"
+                          placeholder={t('authors.panels.link') + ':https//link.com'}
+                          style={{
+                            width: '100%'
+                          }}
+                          value={value.url}
+                          onChange={url => onChange({...value, url})}
+                          accepter={Input}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Form>
                 </div>
               )}
             </ListInput>

@@ -203,8 +203,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   // Schema used for form validaiton
   const {StringType, NumberType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('Please enter a name')
-    // currency: NumberType().isRequired('Please enter a minimum amount')
+    name: StringType().isRequired('Please enter a name'),
+    currency: NumberType().isRequired('Please enter an amount')
   })
 
   return (
@@ -254,6 +254,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             <FormGroup>
               <ControlLabel>{t('memberPlanList.minimumMonthlyAmount') + '*'}</ControlLabel>
               <CurrencyInput
+                name="currency"
                 currency="CHF"
                 centAmount={amountPerMonthMin}
                 disabled={isDisabled}

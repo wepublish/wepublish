@@ -783,7 +783,7 @@
         "token": "Token",
         "unknown": "Unknown",
         "unnamed": "Unnamed",
-        "URL": "URL",
+        "URL": "URL: https://www.url.com",
         "validateToken": "Please confirm token is correct before saving",
         "leaveEmpty": "Leave empty if you don't want to change it"
       }
