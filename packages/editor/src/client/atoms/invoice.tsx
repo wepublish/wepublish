@@ -7,9 +7,11 @@ export interface InvoiceProps {
   subscriptionId: string
   invoice: InvoiceFragment
   me?: FullUserFragment | null
+  disabled?: boolean
+  onInvoicePaid(): void
 }
 
-export function Invoice({subscriptionId, invoice, me}: InvoiceProps) {
+export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: InvoiceProps) {
   // variable definitions
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [updateInvoice] = useUpdateInvoiceMutation()
@@ -43,6 +45,7 @@ export function Invoice({subscriptionId, invoice, me}: InvoiceProps) {
         }
       }
     })
+    onInvoicePaid()
   }
 
   /**
@@ -81,7 +84,7 @@ export function Invoice({subscriptionId, invoice, me}: InvoiceProps) {
             onClick={() => setModalOpen(true)}
             appearance="primary"
             style={{marginTop: '20px'}}
-            disabled={!me?.id}>
+            disabled={!me?.id || disabled}>
             {t('invoice.payManually')}
           </Button>
         </>
@@ -91,13 +94,12 @@ export function Invoice({subscriptionId, invoice, me}: InvoiceProps) {
 
   function invoiceHeaderView() {
     return (
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
-          {`${t('invoice.invoiceNo')} ${invoice.id}`} {!invoice.paidAt && t('invoice.unpaid')}
+      <FlexboxGrid justify="space-between" align="middle">
+        <FlexboxGrid.Item>
+          {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
+          {!invoice.paidAt && <span>({t('invoice.unpaid')})</span>}
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          {invoiceIconView()}
-        </FlexboxGrid.Item>
+        <FlexboxGrid.Item style={{textAlign: 'right'}}>{invoiceIconView()}</FlexboxGrid.Item>
       </FlexboxGrid>
     )
   }

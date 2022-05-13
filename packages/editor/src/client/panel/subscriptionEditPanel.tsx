@@ -5,10 +5,13 @@ import {
   Button,
   ControlLabel,
   DatePicker,
+  Divider,
   Drawer,
+  FlexboxGrid,
   Form,
   FormGroup,
   HelpBlock,
+  Icon,
   Message,
   Modal,
   Panel,
@@ -22,10 +25,12 @@ import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
+  InvoiceFragment,
   MetadataPropertyFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   useCreateSubscriptionMutation,
+  useInvoicesQuery,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
   useSubscriptionQuery,
@@ -41,7 +46,6 @@ import {InvoiceListPanel} from './invoiceListPanel'
 
 export interface SubscriptionEditPanelProps {
   id?: string
-
   onClose?(): void
   onSave?(subscription: FullSubscriptionFragment): void
 }
@@ -71,19 +75,44 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
   const [isInvoiceListOpen, setIsInvoiceListOpen] = useState<boolean>(false)
+  const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(undefined)
+  const [unpaidInvoices, setUnpaidInvoices] = useState<number | undefined>(undefined)
 
-  const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
+  /**
+   * Loading the subscription
+   */
+  const {
+    data,
+    loading: isLoading,
+    error: loadError,
+    refetch: reloadSubscription
+  } = useSubscriptionQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
   })
 
   /**
-   * invoice related
+   * Loading the invoices of the current subscription
    */
-  function hideInvoiceList() {
-    setIsInvoiceListOpen(false)
-  }
+  const {data: invoicesData} = useInvoicesQuery({
+    variables: {
+      first: 100,
+      filter: {
+        subscriptionID: id
+      }
+    }
+  })
+
+  useEffect(() => {
+    const tmpInvoices = invoicesData?.invoices?.nodes
+    if (tmpInvoices) {
+      setInvoices(tmpInvoices)
+      // count unpaid invoices
+      const unpaidInvoices = tmpInvoices.filter(tmpInvoice => !tmpInvoice.paidAt)
+      setUnpaidInvoices(unpaidInvoices.length)
+    }
+  }, [invoicesData?.invoices?.nodes])
 
   useEffect(() => {
     if (data?.subscription) {
@@ -294,6 +323,37 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }
 
+  /**
+   * UI helper functions
+   */
+  function subscriptionActionsView() {
+    if (id && paymentMethod && memberPlan) {
+      return (
+        <FlexboxGrid>
+          <FlexboxGrid.Item style={{paddingRight: '10px'}}>
+            <Button color="green" onClick={() => setIsInvoiceListOpen(true)}>
+              <Icon icon="file" style={{marginRight: '10px'}} />
+              {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
+            </Button>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item>
+            <Button
+              appearance="ghost"
+              disabled={isDisabled}
+              onClick={() => setDeactivationPanelOpen(true)}>
+              {t(
+                deactivation
+                  ? 'userSubscriptionEdit.deactivation.title.deactivated'
+                  : 'userSubscriptionEdit.deactivation.title.activated'
+              )}
+            </Button>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
+      )
+    }
+    return <></>
+  }
+
   return (
     <>
       <Drawer.Header>
@@ -418,12 +478,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
+              <ControlLabel>
+                {t('userSubscriptionEdit.payedUntil')}
+                <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
+                  ({t('invoice.seeInvoiceHistory')})
+                </Button>
+              </ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>Rechnungsverlauf</ControlLabel>
-              <Button onClick={() => setIsInvoiceListOpen(true)}>Rechnungsverlauf ansehen</Button>
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
@@ -437,20 +498,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </FormGroup>
           </Form>
         </Panel>
-        {paymentMethod && memberPlan && (
-          <Panel>
-            <Button
-              appearance={'primary'}
-              disabled={isDisabled}
-              onClick={() => setDeactivationPanelOpen(true)}>
-              {t(
-                deactivation
-                  ? 'userSubscriptionEdit.deactivation.title.deactivated'
-                  : 'userSubscriptionEdit.deactivation.title.activated'
-              )}
-            </Button>
-          </Panel>
-        )}
+        <Panel>{subscriptionActionsView()}</Panel>
       </Drawer.Body>
 
       <Drawer.Footer>
@@ -465,8 +513,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         </Button>
       </Drawer.Footer>
 
-      <Drawer show={isInvoiceListOpen} size={'sm'} onHide={() => hideInvoiceList()}>
-        <InvoiceListPanel id={id} />
+      <Drawer show={isInvoiceListOpen} size={'sm'} onHide={() => setIsInvoiceListOpen(false)}>
+        <InvoiceListPanel
+          subscriptionId={id}
+          invoices={invoices}
+          disabled={!!deactivation}
+          onClose={() => setIsInvoiceListOpen(false)}
+          onInvoicePaid={() => reloadSubscription()}
+        />
       </Drawer>
 
       {id && user && (

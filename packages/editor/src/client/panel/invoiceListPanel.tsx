@@ -1,47 +1,77 @@
 import React from 'react'
-import {Drawer} from 'rsuite'
-import {useInvoicesQuery, useMeQuery} from '../api'
+import {Button, Drawer, Message} from 'rsuite'
+import {InvoiceFragment, useMeQuery} from '../api'
 import {Invoice} from '../atoms/invoice'
+import {useTranslation} from 'react-i18next'
 
 export interface InvoiceListPanelProps {
-  id?: string
+  subscriptionId?: string
+  invoices?: InvoiceFragment[]
+  disabled?: boolean
   onClose?(): void
   onSave?(): void
+  onInvoicePaid(): void
 }
 
-export function InvoiceListPanel({id, onClose, onSave}: InvoiceListPanelProps) {
+export function InvoiceListPanel({
+  subscriptionId,
+  invoices,
+  disabled,
+  onClose,
+  onInvoicePaid
+}: InvoiceListPanelProps) {
   const {data: me} = useMeQuery()
+  const {t} = useTranslation()
 
-  const {data: invoices} = useInvoicesQuery({
-    variables: {
-      first: 100,
-      filter: {
-        subscriptionID: id
-      }
-    }
-  })
-
+  /**
+   * UI helper functions
+   */
   function invoiceHistoryView() {
-    if (id) {
+    // missing subscription
+    if (!subscriptionId) {
       return (
         <Drawer.Body>
-          {invoices?.invoices?.nodes.map((invoice, invoiceId) => (
-            <div key={invoiceId} style={{marginBottom: '10px'}}>
-              <Invoice subscriptionId={id} invoice={invoice} me={me?.me} />
-            </div>
-          ))}
+          <Message type="error" description={t('invoice.panel.missingSubscriptionId')} />
         </Drawer.Body>
       )
     }
-    return <span />
+    // missing invoices
+    if (!invoices?.length) {
+      return (
+        <Drawer.Body>
+          <Message type="info" description={t('invoice.panel.noInvoices')} />
+        </Drawer.Body>
+      )
+    }
+    // iterate invoices
+    return (
+      <Drawer.Body>
+        {invoices?.map((invoice, invoiceId) => (
+          <div key={invoiceId} style={{marginBottom: '10px'}}>
+            <Invoice
+              subscriptionId={subscriptionId}
+              invoice={invoice}
+              me={me?.me}
+              disabled={disabled}
+              onInvoicePaid={() => onInvoicePaid()}
+            />
+          </div>
+        ))}
+      </Drawer.Body>
+    )
   }
 
   return (
     <>
       <Drawer.Header>
-        <Drawer.Title>Rechnungsverlauf</Drawer.Title>
+        <Drawer.Title>{t('invoice.panel.invoiceHistory')}</Drawer.Title>
       </Drawer.Header>
       {invoiceHistoryView()}
+      <Drawer.Footer>
+        <Button appearance="primary" onClick={onClose}>
+          {t('close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }
