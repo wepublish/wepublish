@@ -5,7 +5,6 @@ import {
   Button,
   ControlLabel,
   DatePicker,
-  Divider,
   Drawer,
   FlexboxGrid,
   Form,
