@@ -1,6 +1,6 @@
 import React from 'react'
 import {Drawer} from 'rsuite'
-import {useInvoicesQuery} from '../api'
+import {useInvoicesQuery, useMeQuery} from '../api'
 import {Invoice} from '../atoms/invoice'
 
 export interface InvoiceListPanelProps {
@@ -10,6 +10,8 @@ export interface InvoiceListPanelProps {
 }
 
 export function InvoiceListPanel({id, onClose, onSave}: InvoiceListPanelProps) {
+  const {data: me} = useMeQuery()
+
   const {data: invoices} = useInvoicesQuery({
     variables: {
       first: 100,
@@ -24,7 +26,9 @@ export function InvoiceListPanel({id, onClose, onSave}: InvoiceListPanelProps) {
       return (
         <Drawer.Body>
           {invoices?.invoices?.nodes.map((invoice, invoiceId) => (
-            <Invoice key={invoiceId} subscriptionId={id} invoice={invoice} />
+            <div key={invoiceId} style={{marginBottom: '10px'}}>
+              <Invoice subscriptionId={id} invoice={invoice} me={me?.me} />
+            </div>
           ))}
         </Drawer.Body>
       )

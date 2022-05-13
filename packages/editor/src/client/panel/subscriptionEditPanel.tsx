@@ -465,7 +465,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         </Button>
       </Drawer.Footer>
 
-      <Drawer show={isInvoiceListOpen} size={'md'} onHide={() => hideInvoiceList()}>
+      <Drawer show={isInvoiceListOpen} size={'sm'} onHide={() => hideInvoiceList()}>
         <InvoiceListPanel id={id} />
       </Drawer>
 

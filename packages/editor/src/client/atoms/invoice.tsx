@@ -1,28 +1,34 @@
-import React from 'react'
-import {Button, Panel} from 'rsuite'
-import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, useMeQuery} from '../api'
+import React, {useState} from 'react'
+import {Alert, Button, FlexboxGrid, Icon, Modal, Panel} from 'rsuite'
+import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
+import {useTranslation} from 'react-i18next'
 
 export interface InvoiceProps {
   subscriptionId: string
   invoice: InvoiceFragment
+  me?: FullUserFragment | null
 }
 
-export function Invoice({subscriptionId, invoice}: InvoiceProps) {
+export function Invoice({subscriptionId, invoice, me}: InvoiceProps) {
   // variable definitions
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [updateInvoice] = useUpdateInvoiceMutation()
-  const {data: me} = useMeQuery()
+  const {t} = useTranslation()
 
   /**
    * Manually set invoice as paid.
    * This will trigger an update event in events.ts which updates the subscriptions "paid until".
    */
   async function payManually() {
-    // todo: indicate user is loading
-    const myId = me?.me?.id
+    // close modal
+    setModalOpen(false)
+    // error pre-check
+    const myId = me?.id
     if (!myId) {
-      // todo: send error message to ui
+      Alert.error(t('invoice.userNotLoaded'), 4000)
       return
     }
+    // talk with the private api
     const items = prepareInvoiceItemsForApi(invoice.items)
     await updateInvoice({
       variables: {
@@ -38,11 +44,6 @@ export function Invoice({subscriptionId, invoice}: InvoiceProps) {
       }
     })
   }
-
-  /**
-   * helper function
-   * get my user to be able to pass my user id when updating the invoice
-   */
 
   /**
    * helper function
@@ -63,21 +64,74 @@ export function Invoice({subscriptionId, invoice}: InvoiceProps) {
   }
 
   /**
-   * UI atoms
+   * UI helper functions
    */
   function invoiceActionView() {
     if (invoice.paidAt) {
-      return <p>Bezahlt am {invoice.paidAt}</p>
+      return (
+        <p>
+          {t('invoice.paidAt')}{' '}
+          {new Date(invoice.paidAt).toLocaleString('de-CH', {timeZone: 'europe/zurich'})}
+        </p>
+      )
     } else {
-      return <Button onClick={payManually}>Manuell bezahlen</Button>
+      return (
+        <>
+          <Button
+            onClick={() => setModalOpen(true)}
+            appearance="primary"
+            style={{marginTop: '20px'}}
+            disabled={!me?.id}>
+            {t('invoice.payManually')}
+          </Button>
+        </>
+      )
+    }
+  }
+
+  function invoiceHeaderView() {
+    return (
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          {`${t('invoice.invoiceNo')} ${invoice.id}`} {!invoice.paidAt && t('invoice.unpaid')}
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          {invoiceIconView()}
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+    )
+  }
+
+  function invoiceIconView() {
+    if (invoice.paidAt) {
+      return <Icon icon="check" size="2x" style={{color: 'green'}} />
+    } else {
+      return <Icon icon="envelope-open" size="2x" style={{color: 'red'}} />
     }
   }
 
   return (
     <>
-      <Panel bordered={true} header={`Rechnung ${invoice.id} von ${me?.me?.id}`}>
+      <Panel bordered={true} header={invoiceHeaderView()}>
+        <p>{invoice.description}</p>
+        <p>
+          {t('invoice.total')} {(invoice.total / 100).toFixed(2)} CHF
+        </p>
         {invoiceActionView()}
       </Panel>
+
+      <Modal show={modalOpen} backdrop="static" size="xs" onHide={() => setModalOpen(false)}>
+        <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
+        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
+        <Modal.Footer>
+          <Button appearance="primary" onClick={payManually}>
+            {t('confirm')}
+          </Button>
+          <Button appearance="subtle" onClick={() => setModalOpen(false)}>
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
