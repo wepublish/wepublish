@@ -91,6 +91,12 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
+  // double check
+  Object.keys(filter).map(el => {
+    if (filter[el as keyof SubscriptionFilter] === null)
+      delete filter[el as keyof SubscriptionFilter]
+  })
+
   const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
       filter,
@@ -278,10 +284,11 @@ export function SubscriptionList() {
             value={filter.deactivationReason}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value || undefined})}
+            onChange={value => updateFilter({autoRenew: value})}
           />
         </FormGroup>
-        {/*  hide for now
+        {/*  hide for now until filtering by subscription.user.address
+             is implemented on backend (mongo adpter)
         <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
           <SelectPicker

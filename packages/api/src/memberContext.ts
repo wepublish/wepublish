@@ -944,8 +944,6 @@ export class MemberContext implements MemberContext {
       }
     })
 
-    console.log('subscription', subscription)
-
     if (!subscription) {
       logger('mutation.public').error('Could not create new subscription for userID "%s"', userID)
       throw new InternalError()
