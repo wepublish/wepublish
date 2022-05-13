@@ -898,6 +898,9 @@
         "missingSubscriptionId": "Erreur inattendue : le subscriptionId n'a pas pu être trouvé.",
         "noInvoices": "Pas de factures."
       }
+    },
+    "currency": {
+      "chf": "chf"
     }
   }
 }

@@ -1013,6 +1013,9 @@
         "missingSubscriptionId": "Unexpected error: subscriptionId is missing.",
         "noInvoices": "No invoices."
       }
+    },
+    "currency": {
+      "chf": "chf"
     }
   }
 }
