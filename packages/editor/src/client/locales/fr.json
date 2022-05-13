@@ -881,6 +881,9 @@
     "save": "Sauvegarder",
     "yes": "Oui",
     "no": "Non",
-    "untitled": "Sans Titre"
+    "untitled": "Sans Titre",
+    "invoice": {
+      "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur."
+    }
   }
 }

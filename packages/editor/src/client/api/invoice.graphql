@@ -13,6 +13,7 @@ fragment Invoice on Invoice {
     paidAt
     description
     mail
+    manuallySetAsPaidByUserId
     modifiedAt
     createdAt
 }

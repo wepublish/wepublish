@@ -61,7 +61,8 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
           paidAt: input.paidAt,
           canceledAt: input.canceledAt,
           sentReminderAt: input.sentReminderAt,
-          items: input.items
+          items: input.items,
+          manuallySetAsPaidByUserId: input.manuallySetAsPaidByUserId
         }
       },
       {returnOriginal: false}

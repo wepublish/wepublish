@@ -43,6 +43,7 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
     mail: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     total: {
       type: GraphQLNonNull(GraphQLInt),
@@ -115,7 +116,10 @@ export const GraphQLInvoiceItemInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     quantity: {type: GraphQLNonNull(GraphQLInt)},
-    amount: {type: GraphQLNonNull(GraphQLInt)}
+    amount: {type: GraphQLNonNull(GraphQLInt)},
+    total: {type: GraphQLNonNull(GraphQLInt)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })
 
@@ -123,10 +127,10 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   name: 'InvoiceInput',
   fields: {
     mail: {type: GraphQLNonNull(GraphQLString)},
-    userID: {type: GraphQLID},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     subscriptionID: {type: GraphQLID},
+    manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

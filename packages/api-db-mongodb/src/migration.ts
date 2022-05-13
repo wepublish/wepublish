@@ -789,6 +789,13 @@ export const Migrations: Migration[] = [
       await images.updateMany({}, {$rename: {source: 'link'}})
       await images.updateMany({}, {$rename: {author: 'source'}})
     }
+  },
+  {
+    version: 20,
+    async migrate(db, locale) {
+      const invoices = db.collection(CollectionName.Invoices)
+      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
+    }
   }
 ]
 

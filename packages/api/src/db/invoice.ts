@@ -21,6 +21,7 @@ export interface Invoice {
   canceledAt: Date | null
   sentReminderAt?: Date
   items: InvoiceItem[]
+  manuallySetAsPaidByUserId?: string
 }
 
 export type OptionalInvoice = Invoice | null
@@ -33,6 +34,7 @@ export interface InvoiceInput {
   paidAt: Date | null
   canceledAt: Date | null
   sentReminderAt?: Date
+  manuallySetAsPaidByUserId?: string
   items: InvoiceItem[]
 }
 

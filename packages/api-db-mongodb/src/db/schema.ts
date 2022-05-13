@@ -404,6 +404,7 @@ export interface DBInvoice {
   canceledAt: Date | null
   sentReminderAt?: Date
   items: InvoiceItem[]
+  manuallySetAsPaidByUserId?: string
 }
 
 export interface DBPayment {

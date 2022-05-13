@@ -19,16 +19,25 @@ export function InvoiceListPanel({id, onClose, onSave}: InvoiceListPanelProps) {
     }
   })
 
+  function invoiceHistoryView() {
+    if (id) {
+      return (
+        <Drawer.Body>
+          {invoices?.invoices?.nodes.map((invoice, invoiceId) => (
+            <Invoice key={invoiceId} subscriptionId={id} invoice={invoice} />
+          ))}
+        </Drawer.Body>
+      )
+    }
+    return <span />
+  }
+
   return (
     <>
       <Drawer.Header>
         <Drawer.Title>Rechnungsverlauf</Drawer.Title>
       </Drawer.Header>
-      <Drawer.Body>
-        {invoices?.invoices?.nodes.map((invoice, invoiceId) => (
-          <Invoice key={invoiceId} subscriptionId={id} invoice={invoice} />
-        ))}
-      </Drawer.Body>
+      {invoiceHistoryView()}
     </>
   )
 }

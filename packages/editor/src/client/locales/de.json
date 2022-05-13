@@ -889,6 +889,9 @@
       "deactivation": {
         "date": "Deaktivierung"
       }
+    },
+    "invoice": {
+      "manuallyPaidByAdmin": "Durch Administrator als bezahlt markiert."
     }
   }
 }

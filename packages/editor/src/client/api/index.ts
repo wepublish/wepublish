@@ -543,6 +543,7 @@ export type Invoice = {
   mail: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   paidAt?: Maybe<Scalars['DateTime']>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItem>;
   total: Scalars['Int'];
 };
@@ -564,10 +565,10 @@ export type InvoiceFilter = {
 
 export type InvoiceInput = {
   mail: Scalars['String'];
-  userID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['String']>;
   paidAt?: Maybe<Scalars['DateTime']>;
   subscriptionID?: Maybe<Scalars['ID']>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItemInput>;
 };
 
@@ -587,6 +588,7 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
 };
 
 export enum InvoiceSort {
@@ -744,7 +746,6 @@ export type Mutation = {
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
-  updateInvoicePaidAt?: Maybe<Invoice>;
   deleteInvoice?: Maybe<Scalars['ID']>;
   approveComment: Comment;
   rejectComment: Comment;
@@ -1034,12 +1035,6 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['ID'];
   input: InvoiceInput;
-};
-
-
-export type MutationUpdateInvoicePaidAtArgs = {
-  id: Scalars['ID'];
-  date?: Maybe<Scalars['Date']>;
 };
 
 
@@ -2904,7 +2899,7 @@ export type DeleteImageMutation = (
 
 export type InvoiceFragment = (
   { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'modifiedAt' | 'createdAt'>
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt'>
   & { items: Array<(
     { __typename?: 'InvoiceItem' }
     & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
@@ -3807,6 +3802,17 @@ export type UserQuery = (
   )> }
 );
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & FullUserFragment
+  )> }
+);
+
 export type CreateUserMutationVariables = Exact<{
   input: UserInput;
   password: Scalars['String'];
@@ -4436,6 +4442,7 @@ export const InvoiceFragmentDoc = gql`
   paidAt
   description
   mail
+  manuallySetAsPaidByUserId
   modifiedAt
   createdAt
 }
@@ -7356,6 +7363,40 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    ...FullUser
+  }
+}
+    ${FullUserFragmentDoc}`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: UserInput!, $password: String!) {
   createUser(input: $input, password: $password) {

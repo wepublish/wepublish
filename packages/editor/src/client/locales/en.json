@@ -996,6 +996,9 @@
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "invoice": {
+      "manuallyPaidByAdmin": "Marked as paid by administrator."
     }
   }
 }
