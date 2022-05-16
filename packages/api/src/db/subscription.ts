@@ -52,10 +52,20 @@ export enum SubscriptionSort {
 
 export interface SubscriptionFilter {
   readonly startsAt?: DateFilter
+  readonly startsAtFrom?: DateFilter
+  readonly startsAtTo?: DateFilter
   readonly paidUntil?: DateFilter
+  readonly paidUntilFrom?: DateFilter
+  readonly paidUntilTo?: DateFilter
   readonly deactivationDate?: DateFilter
+  readonly deactivationDateFrom?: DateFilter
+  readonly deactivationDateTo?: DateFilter
   readonly deactivationReason?: SubscriptionDeactivationReason
   readonly autoRenew?: boolean
+  readonly paymentMethodID?: string
+  readonly memberPlanID?: string
+  readonly paymentPeriodicity?: PaymentPeriodicity
+  readonly userHasAddress?: boolean
 }
 
 export interface Subscription {

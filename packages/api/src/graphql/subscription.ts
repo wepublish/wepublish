@@ -131,11 +131,18 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Con
 export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
   name: 'SubscriptionFilter',
   fields: {
-    startsAt: {type: GraphQLDateFilter},
-    paidUntil: {type: GraphQLDateFilter},
-    deactivationDate: {type: GraphQLDateFilter},
+    startsAtFrom: {type: GraphQLDateFilter},
+    startsAtTo: {type: GraphQLDateFilter},
+    paidUntilFrom: {type: GraphQLDateFilter},
+    paidUntilTo: {type: GraphQLDateFilter},
+    deactivationDateFrom: {type: GraphQLDateFilter},
+    deactivationDateTo: {type: GraphQLDateFilter},
     deactivationReason: {type: GraphQLSubscriptionDeactivationReason},
-    autoRenew: {type: GraphQLBoolean}
+    autoRenew: {type: GraphQLBoolean},
+    paymentMethodID: {type: GraphQLString},
+    memberPlanID: {type: GraphQLString},
+    paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
+    userHasAddress: {type: GraphQLBoolean}
   }
 })
 
