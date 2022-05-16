@@ -403,6 +403,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
               <DatePicker
                 block
+                cleanable={false}
                 value={startsAt}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value)}
