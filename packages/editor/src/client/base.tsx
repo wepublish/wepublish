@@ -1,47 +1,45 @@
-import React, {ReactNode, useEffect, useState} from 'react'
-
-import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton} from 'rsuite'
-import {
-  ArticleListRoute,
-  CommentListRoute,
-  useRoute,
-  RouteType,
-  PageListRoute,
-  routeLink,
-  AuthorListRoute,
-  ImageListRoute,
-  UserListRoute,
-  UserRoleListRoute,
-  PeerListRoute,
-  TokenListRoute,
-  MemberPlanListRoute,
-  PaymentMethodListRoute,
-  NavigationListRoute,
-  PeerArticleListRoute,
-  SubscriptionListRoute,
-  LogoutRoute
-} from './route'
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
+import BarsIcon from '@rsuite/icons/legacy/Bars'
+import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
+import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 import FileTextIcon from '@rsuite/icons/legacy/FileText'
 import FileTextOIcon from '@rsuite/icons/legacy/FileTextO'
 import FrameIcon from '@rsuite/icons/legacy/Frame'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
+import GlobeIcon from '@rsuite/icons/legacy/Globe'
+import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ImageIcon from '@rsuite/icons/legacy/Image'
-import BarsIcon from '@rsuite/icons/legacy/Bars'
+import KeyIcon from '@rsuite/icons/legacy/Key'
+import MehOIcon from '@rsuite/icons/legacy/MehO'
 import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
-import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
-import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
-import MehOIcon from '@rsuite/icons/legacy/MehO'
-import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ShareIcon from '@rsuite/icons/legacy/Share'
-import KeyIcon from '@rsuite/icons/legacy/Key'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import GlobeIcon from '@rsuite/icons/legacy/Globe'
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
-
+import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Container, Dropdown, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {
+  ArticleListRoute,
+  AuthorListRoute,
+  CommentListRoute,
+  ImageListRoute,
+  LogoutRoute,
+  MemberPlanListRoute,
+  NavigationListRoute,
+  PageListRoute,
+  PaymentMethodListRoute,
+  PeerArticleListRoute,
+  PeerListRoute,
+  routeLink,
+  RouteType,
+  SubscriptionListRoute,
+  TokenListRoute,
+  UserListRoute,
+  useRoute,
+  UserRoleListRoute
+} from './route'
 
 export interface BaseProps {
   children?: ReactNode
@@ -59,11 +57,7 @@ const iconStyles = {
   lineHeight: '56px',
   textAlign: 'center' as const
 }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const NavItemLink = routeLink(Nav.Item)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const DropdownItemLink = routeLink(Dropdown.Item)
 
 function useStickyState(defaultValue: string, key: string) {

@@ -40,8 +40,6 @@ import {
   useRouteDispatch
 } from '../route'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
 

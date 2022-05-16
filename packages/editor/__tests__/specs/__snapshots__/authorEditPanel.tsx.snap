@@ -242,6 +242,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             disabled={true}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -253,6 +254,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -261,6 +263,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   disabled={true}
                                   name="authors.panels.jobTitle"
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -2769,6 +2772,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -2780,6 +2784,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -2791,6 +2796,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -5289,6 +5295,7 @@ exports[`Author Edit Panel should render 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -5300,6 +5307,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -5311,6 +5319,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -7811,6 +7820,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             disabled={false}
                             name="authors.panels.jobTitle"
                             onChange={[Function]}
+                            value=""
                           >
                             <div
                               className="rs-form-control rs-form-control-wrapper"
@@ -7822,6 +7832,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 name="authors.panels.jobTitle"
                                 onBlur={[Function]}
                                 onChange={[Function]}
+                                value=""
                               >
                                 <input
                                   aria-describedby={null}
@@ -7833,6 +7844,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
                                   type="text"
+                                  value=""
                                 />
                               </Input>
                               <FormErrorMessage
@@ -7871,6 +7883,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                   <ChooseEditImage
                     disabled={false}
                     header=""
+                    image={null}
                     left={0}
                     openChooseModalOpen={[Function]}
                     openEditModalOpen={[Function]}

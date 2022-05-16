@@ -55,8 +55,8 @@ function updateAddressObject(
 
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
-  const [firstName, setFirstName] = useState<string | undefined>()
-  const [preferredName, setPreferredName] = useState<string | undefined>()
+  const [firstName, setFirstName] = useState('')
+  const [preferredName, setPreferredName] = useState('')
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
@@ -97,8 +97,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   useEffect(() => {
     if (data?.user) {
       setName(data.user.name)
-      setPreferredName(data.user.preferredName ?? undefined)
-      setFirstName(data.user.firstName ?? undefined)
+      setPreferredName(data.user.preferredName ?? '')
+      setFirstName(data.user.firstName ?? '')
       setEmail(data.user.email)
       setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)

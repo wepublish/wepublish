@@ -815,6 +815,10 @@ async function  applyApiServer() {
                   name: 'ENABLE_ANONYMOUS_COMMENTS',
                   value: 'false'
                 },
+                {
+                  name: 'PEERING_TIMEOUT_IN_MS',
+                  value: '3000'
+                }
               ],
               ports: [
                 {

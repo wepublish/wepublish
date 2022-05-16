@@ -628,8 +628,13 @@ export const Migrations: Migration[] = [
         const paymentProvidersCustomersArray: PaymentProviderCustomer[] = []
         const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
         paymentProviderCustomers.forEach(ppc => {
-          // @ts-ignore
-          const userPPC = user.paymentProviderCustomers[ppc]
+          interface OldPaymentProviderCustomer extends PaymentProviderCustomer {
+            customerID: never
+            id: PaymentProviderCustomer['customerID']
+          }
+
+          const userPPC = user.paymentProviderCustomers[+ppc] as OldPaymentProviderCustomer
+
           paymentProvidersCustomersArray.push({
             paymentProviderID: ppc,
             customerID: userPPC.id
