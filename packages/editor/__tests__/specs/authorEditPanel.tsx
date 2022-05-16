@@ -35,7 +35,13 @@ describe('Author Edit Panel', () => {
             author: {
               __typename: 'Author',
               id: 'fakeId2',
-              name: 'Douglas Cole'
+              name: 'Douglas Cole',
+              slug: '',
+              links: null,
+              bio: '',
+              createdAt: '',
+              jobTitle: '',
+              image: null
             }
           }
         })
