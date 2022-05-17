@@ -153,7 +153,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
           )
         })
       } catch (error) {
-        logger('mailchimpMailProvider').error(error, `sendTemplate returned NOK`)
+        logger('mailchimpMailProvider').error(error as Error, `sendTemplate returned NOK`)
       }
     } else {
       try {
@@ -181,7 +181,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
           )
         })
       } catch (error) {
-        logger('mailchimpMailProvider').error(error, `send returned NOK`)
+        logger('mailchimpMailProvider').error(error as Error, `send returned NOK`)
       }
     }
   }
