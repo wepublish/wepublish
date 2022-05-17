@@ -317,6 +317,7 @@ async function asyncMain() {
     websiteURL,
     mediaAdapter,
     dbAdapter,
+    mongoUrl: process.env.MONGO_URL!,
     oauth2Providers,
     mailProvider,
     mailContextOptions: {

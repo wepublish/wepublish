@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
-
+import {PrismaClient} from '@prisma/client'
 import {Oauth2Server} from '@wepublish/oauth2'
 import path from 'path'
 
@@ -17,10 +16,14 @@ async function asyncMain() {
     throw new Error('No MONGO_URL defined in ENV')
   }
 
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.MONGO_URL,
-    locale: process.env.MONGO_LOCALE ?? 'en'
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.MONGO_URL
+      }
+    }
   })
+  await prisma.$connect()
 
   if (!process.env.JWKS_KEYS) {
     throw new Error('No JWKS Keys defined in process.env.JWKS_Keys')
@@ -40,7 +43,7 @@ async function asyncMain() {
   const oauth2Server = new Oauth2Server({
     issuer: process.env.ISSUER ?? `http://localhost:${PORT}`,
     debug: true,
-    wepublishDDAdapter: dbAdapter,
+    prisma,
     mongoUrlOauth2: process.env.OAUTH_MONGODB_URI,
     clientID: process.env.OAUTH_CLIENT_ID,
     clientSecret: process.env.OAUTH_CLIENT_SECRET,

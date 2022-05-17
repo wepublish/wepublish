@@ -1,3 +1,4 @@
+import {Subscription} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -6,12 +7,12 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
+import {GraphQLDateTime} from 'graphql-iso-date'
 import {Issuer} from 'openid-client'
-
-import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
-
+import {Block, BlockMap, BlockType} from '../db/block'
+import {CommentState} from '../db/comment'
+import {PaymentState} from '../db/payment'
 import {
   DuplicatePageSlugError,
   InvalidCredentialsError,
@@ -21,17 +22,26 @@ import {
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
-
+import {SendMailType} from '../mails/mailContext'
+import {isTempUser, removePrefixTempUser} from '../utility'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {Block, BlockMap, BlockType} from '../db/block'
-import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
-import {GraphQLPage, GraphQLPageInput} from './page'
-
-import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
-
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
+import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
+import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
+import {GraphQLPage, GraphQLPageInput} from './page'
+import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
+import {
+  GraphQLCreatePeerInput,
+  GraphQLPeer,
+  GraphQLPeerProfile,
+  GraphQLPeerProfileInput,
+  GraphQLUpdatePeerInput
+} from './peer'
 import {
   authorise,
   CanCreateArticle,
@@ -44,6 +54,7 @@ import {
   CanCreatePayment,
   CanCreatePaymentMethod,
   CanCreatePeer,
+  CanCreateSubscription,
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
@@ -56,40 +67,26 @@ import {
   CanDeletePage,
   CanDeletePaymentMethod,
   CanDeletePeer,
+  CanDeleteSubscription,
   CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
-  CanTakeActionOnComment,
-  CanUpdatePeerProfile,
   CanSendJWTLogin,
-  CanCreateSubscription,
-  CanDeleteSubscription
+  CanTakeActionOnComment,
+  CanUpdatePeerProfile
 } from './permissions'
-import {GraphQLUser, GraphQLUserInput} from './user'
-import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
-
-import {
-  GraphQLCreatePeerInput,
-  GraphQLPeer,
-  GraphQLPeerProfile,
-  GraphQLPeerProfileInput,
-  GraphQLUpdatePeerInput
-} from './peer'
-
-import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
-import {CommentState} from '../db/comment'
-import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
-import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
-import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
-import {PaymentState} from '../db/payment'
-import {SendMailType} from '../mails/mailContext'
+import {GraphQLSession, GraphQLSessionWithToken} from './session'
+import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
-import {isTempUser, removePrefixTempUser} from '../utility'
+import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLUser, GraphQLUserInput} from './user'
+import {getUserForCredentials} from './user/user.queries'
+import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
+import {ArticleRevision} from '../db/article'
+import {PageRevision} from '../db/page'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -234,8 +231,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {email, password}, {dbAdapter}) {
-        const user = await dbAdapter.user.getUserForCredentials({email, password})
+      async resolve(root, {email, password}, {dbAdapter, prisma}) {
+        const user = await getUserForCredentials(email, password, prisma.user)
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
@@ -247,10 +244,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         jwt: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {jwt}, {dbAdapter, verifyJWT}) {
+      async resolve(root, {jwt}, {dbAdapter, prisma, verifyJWT}) {
         const userID = verifyJWT(jwt)
 
-        const user = await dbAdapter.user.getUserByID(userID)
+        const user = await prisma.user.findUnique({
+          where: {id: userID}
+        })
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
@@ -264,9 +263,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         code: {type: GraphQLNonNull(GraphQLString)},
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {name, code, redirectUri}, {dbAdapter, oauth2Providers}) {
+      async resolve(root, {name, code, redirectUri}, {dbAdapter, prisma, oauth2Providers}) {
         const provider = oauth2Providers.find(provider => provider.name === name)
         if (!provider) throw new OAuth2ProviderNotFoundError()
+
         const issuer = await Issuer.discover(provider.discoverUrl)
         const client = new issuer.Client({
           client_id: provider.clientId,
@@ -274,13 +274,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           redirect_uris: provider.redirectUri,
           response_types: ['code']
         })
+
         const token = await client.callback(redirectUri, {code})
         if (!token.access_token) throw new InvalidOAuth2TokenError()
+
         const userInfo = await client.userinfo(token.access_token)
         if (!userInfo.email) throw new Error('UserInfo did not return an email')
-        const user = await dbAdapter.user.getUser(userInfo.email)
+
+        const user = await prisma.user.findUnique({
+          where: {email: userInfo.email}
+        })
         if (!user) throw new UserNotFoundError()
         if (!user.active) throw new NotActiveError()
+
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -297,7 +303,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+      async resolve(root, _, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
       }
@@ -306,10 +312,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     sessions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
       args: {},
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        return dbAdapter.session.getUserSessions(user)
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
+        getSessionsForUser(authenticateUser, session, userRole)
     },
 
     sendJWTLogin: {
@@ -318,16 +322,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         url: {type: GraphQLNonNull(GraphQLString)},
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {url, email}, {authenticate, dbAdapter, generateJWT, mailContext}) {
+      async resolve(root, {url, email}, {authenticate, prisma, generateJWT, mailContext}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
-        const user = await dbAdapter.user.getUser(email)
+        const user = await prisma.user.findUnique({
+          where: {email}
+        })
         if (!user) throw new NotFound('User', email)
+
         const token = generateJWT({
           id: user.id,
           expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
+
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: email,
@@ -336,6 +344,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             user
           }
         })
+
         return email
       }
     },
@@ -345,20 +354,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(
-        root,
-        {url, email},
-        {authenticate, dbAdapter, generateJWT, mailContext, urlAdapter}
-      ) {
+      async resolve(root, {email}, {authenticate, prisma, generateJWT, mailContext, urlAdapter}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
-        const user = await dbAdapter.user.getUser(email)
+        const user = await prisma.user.findUnique({
+          where: {email: email}
+        })
         if (!user) throw new NotFound('User', email)
+
         const token = generateJWT({
           id: user.id,
           expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
+
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: email,
@@ -367,6 +376,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             user
           }
         })
+
         return email
       }
     },
@@ -471,7 +481,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {input}, {authenticate, dbAdapter, memberContext}) {
+      async resolve(root, {input}, {authenticate, prisma, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
 
@@ -482,11 +492,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         // create invoice
         const userId = subscription.userID
-        const user = await dbAdapter.user.getUserByID(userId)
+        const user = await prisma.user.findUnique({
+          where: {id: userId}
+        })
         if (!user) throw new Error('User of subscription not found.')
 
         // instantly create a new invoice fo the user
-        await memberContext.renewSubscriptionForUser({subscription})
+        await memberContext.renewSubscriptionForUser({subscription: subscription as Subscription})
         return subscription
       }
     },
@@ -497,18 +509,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {id, input}, {authenticate, dbAdapter, memberContext}) {
+      async resolve(root, {id, input}, {authenticate, prisma, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
 
-        const user = await dbAdapter.user.getUserByID(input.userID)
+        const user = await prisma.user.findUnique({
+          where: {
+            id: input.userID
+          }
+        })
         if (!user) throw new Error('Can not update subscription without user')
 
         const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
         if (!updatedSubscription) throw new NotFound('subscription', id)
 
         return await memberContext.handleSubscriptionChange({
-          subscription: updatedSubscription
+          subscription: updatedSubscription as Subscription
         })
       }
     },
@@ -518,16 +534,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
+      async resolve(root, {id}, {authenticate, prisma, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteSubscription, roles)
 
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        const subscription = await prisma.subscription.findUnique({
+          where: {id}
+        })
 
         if (subscription && isTempUser(subscription.userID)) {
           await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
         }
+
         await dbAdapter.subscription.deleteSubscription({id})
+
         return id
       }
     },
@@ -798,7 +818,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!article) throw new NotFound('article', id)
 
-        const articleRevision = Object.assign(
+        const articleRevision: ArticleRevision = Object.assign(
+          {},
           article.draft ?? article.pending ?? article.published,
           {
             slug: '',
@@ -911,11 +932,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!page) throw new NotFound('page', id)
 
-        const pageRevision = Object.assign(page.draft ?? page.pending ?? page.published, {
-          slug: '',
-          publishedAt: undefined,
-          updatedAt: undefined
-        })
+        const pageRevision: PageRevision = Object.assign(
+          {},
+          page.draft ?? page.pending ?? page.published,
+          {
+            slug: '',
+            publishedAt: undefined,
+            updatedAt: undefined
+          }
+        )
         const output = await dbAdapter.page.createPage({input: {...pageRevision}})
 
         return output

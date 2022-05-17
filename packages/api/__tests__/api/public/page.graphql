@@ -9,8 +9,8 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: [String!], $after: ID, $first: Int) {
-  pages(first: $first, after: $after, filter: {tags: $filter}) {
+query PageList($filter: [String!], $cursor: ID, $take: Int) {
+  pages(take: $take, cursor: $cursor, filter: {tags: $filter}) {
     nodes {
       ...PageRef
     }
@@ -25,7 +25,6 @@ query PageList($filter: [String!], $after: ID, $first: Int) {
     totalCount
   }
 }
-
 
 query Page($id: ID!) {
   page(id: $id) {

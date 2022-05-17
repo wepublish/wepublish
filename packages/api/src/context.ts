@@ -1,53 +1,52 @@
-import {IncomingMessage} from 'http'
-import url from 'url'
-import crypto from 'crypto'
-import jwt, {SignOptions} from 'jsonwebtoken'
-import fetch from 'node-fetch'
+import {
+  Article,
+  Author,
+  Image,
+  MailLog,
+  MemberPlan,
+  Navigation,
+  Page,
+  PaymentMethod,
+  Peer,
+  PrismaClient,
+  UserRole,
+  Invoice,
+  Payment
+} from '@prisma/client'
 import AbortController from 'abort-controller'
-
+import {AuthenticationError} from 'apollo-server-express'
+import crypto from 'crypto'
 import DataLoader from 'dataloader'
-
 import {GraphQLError, GraphQLSchema, print} from 'graphql'
-
 import {
   Fetcher,
   IFetcherOperation,
   introspectSchema,
   makeRemoteExecutableSchema
 } from 'graphql-tools'
-
+import {IncomingMessage} from 'http'
+import jwt, {SignOptions} from 'jsonwebtoken'
+import NodeCache from 'node-cache'
+import fetch from 'node-fetch'
+import {Client, Issuer} from 'openid-client'
+import url from 'url'
+import {ChallengeProvider} from './challenges/challengeProvider'
+import {DBAdapter} from './db/adapter'
+import {OptionalPublicArticle} from './db/article'
+import {OptionalPublicPage} from './db/page'
+import {PaymentState} from './db/payment'
+import {OptionalPeer} from './db/peer'
+import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
+import {User} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
-
-import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
-
-import {DBAdapter} from './db/adapter'
-import {MediaAdapter} from './mediaAdapter'
-import {URLAdapter} from './urlAdapter'
-
-import {AuthenticationError} from 'apollo-server-express'
-import {OptionalImage} from './db/image'
-import {OptionalArticle, OptionalPublicArticle} from './db/article'
-import {OptionalAuthor} from './db/author'
-import {OptionalNavigation} from './db/navigation'
-import {OptionalPage, OptionalPublicPage} from './db/page'
-
-import {OptionalPeer} from './db/peer'
-import {OptionalUserRole} from './db/userRole'
-import {OptionalMemberPlan} from './db/memberPlan'
-import {OptionalPaymentMethod} from './db/paymentMethod'
-import {Invoice, OptionalInvoice} from './db/invoice'
-import {OptionalPayment, Payment, PaymentState} from './db/payment'
-import {PaymentProvider} from './payments/paymentProvider'
-import {BaseMailProvider} from './mails/mailProvider'
-import {OptionalMailLog} from './db/mailLog'
-import {MemberContext} from './memberContext'
-import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
-import {User} from './db/user'
-import {ChallengeProvider} from './challenges/challengeProvider'
-import NodeCache from 'node-cache'
+import {BaseMailProvider} from './mails/mailProvider'
+import {MediaAdapter} from './mediaAdapter'
+import {MemberContext} from './memberContext'
+import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
+import {URLAdapter} from './urlAdapter'
 
 /**
  * Peered article cache configuration and setup
@@ -69,40 +68,40 @@ fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, OptionalNavigation>
-  readonly navigationByKey: DataLoader<string, OptionalNavigation>
+  readonly navigationByID: DataLoader<string, Navigation | null>
+  readonly navigationByKey: DataLoader<string, Navigation | null>
 
-  readonly authorsByID: DataLoader<string, OptionalAuthor>
-  readonly authorsBySlug: DataLoader<string, OptionalAuthor>
+  readonly authorsByID: DataLoader<string, Author | null>
+  readonly authorsBySlug: DataLoader<string, Author | null>
 
-  readonly images: DataLoader<string, OptionalImage>
+  readonly images: DataLoader<string, Image | null>
 
-  readonly articles: DataLoader<string, OptionalArticle>
+  readonly articles: DataLoader<string, Article | null>
   readonly publicArticles: DataLoader<string, OptionalPublicArticle>
 
-  readonly pages: DataLoader<string, OptionalPage>
+  readonly pages: DataLoader<string, Page | null>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
-  readonly userRolesByID: DataLoader<string, OptionalUserRole>
+  readonly userRolesByID: DataLoader<string, UserRole | null>
 
-  readonly mailLogsByID: DataLoader<string, OptionalMailLog>
+  readonly mailLogsByID: DataLoader<string, MailLog | null>
 
-  readonly peer: DataLoader<string, OptionalPeer>
-  readonly peerBySlug: DataLoader<string, OptionalPeer>
+  readonly peer: DataLoader<string, Peer | null>
+  readonly peerBySlug: DataLoader<string, Peer | null>
 
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 
-  readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
-  readonly memberPlansBySlug: DataLoader<string, OptionalMemberPlan>
-  readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
-  readonly activeMemberPlansBySlug: DataLoader<string, OptionalMemberPlan>
-  readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
-  readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
-  readonly activePaymentMethodsBySlug: DataLoader<string, OptionalPaymentMethod>
-  readonly invoicesByID: DataLoader<string, OptionalInvoice>
-  readonly paymentsByID: DataLoader<string, OptionalPayment>
+  readonly memberPlansByID: DataLoader<string, MemberPlan | null>
+  readonly memberPlansBySlug: DataLoader<string, MemberPlan | null>
+  readonly activeMemberPlansByID: DataLoader<string, MemberPlan | null>
+  readonly activeMemberPlansBySlug: DataLoader<string, MemberPlan | null>
+  readonly paymentMethodsByID: DataLoader<string, PaymentMethod | null>
+  readonly activePaymentMethodsByID: DataLoader<string, PaymentMethod | null>
+  readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>
+  readonly invoicesByID: DataLoader<string, Invoice | null>
+  readonly paymentsByID: DataLoader<string, Payment | null>
 }
 
 export interface OAuth2Clients {
@@ -122,6 +121,7 @@ export interface Context {
   readonly memberContext: MemberContext
 
   readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
@@ -171,6 +171,7 @@ export interface ContextOptions {
   readonly websiteURL: string
 
   readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly mailProvider?: BaseMailProvider
@@ -204,12 +205,86 @@ export interface GenerateJWTProps {
   expiresInMinutes?: number
 }
 
+const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
+  keys: Key[],
+  data: Data[],
+  attribute: Attribute
+): Array<Data | null> => {
+  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
+
+  return keys.map(id => dataMap[id] ?? null)
+}
+
+const getSessionByToken = async (
+  token: string,
+  sessionClient: PrismaClient['session'],
+  tokenClient: PrismaClient['token'],
+  userClient: PrismaClient['user'],
+  userRoleClient: PrismaClient['userRole']
+): Promise<OptionalSession> => {
+  const [tokenMatch, session] = await Promise.all([
+    tokenClient.findFirst({
+      where: {
+        token
+      }
+    }),
+    sessionClient.findFirst({
+      where: {
+        token
+      }
+    })
+  ])
+
+  if (tokenMatch) {
+    return {
+      type: SessionType.Token,
+      id: tokenMatch.id,
+      name: tokenMatch.name,
+      token: tokenMatch.token,
+      roles: await userRoleClient.findMany({
+        where: {
+          id: {
+            in: tokenMatch.roleIDs
+          }
+        }
+      })
+    }
+  } else if (session) {
+    const user = await userClient.findUnique({
+      where: {
+        id: session.userID
+      }
+    })
+
+    if (!user) return null
+
+    return {
+      type: SessionType.User,
+      id: session.id,
+      token: session.token,
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+      user,
+      roles: await userRoleClient.findMany({
+        where: {
+          id: {
+            in: user.roleIDs
+          }
+        }
+      })
+    }
+  }
+
+  return null
+}
+
 export async function contextFromRequest(
   req: IncomingMessage | null,
   {
     hostURL,
     websiteURL,
     dbAdapter,
+    prisma,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
@@ -221,40 +296,253 @@ export async function contextFromRequest(
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
-  const session = token ? await dbAdapter.session.getSessionByToken(token) : null
+  const session = token
+    ? await getSessionByToken(token, prisma.session, prisma.token, prisma.user, prisma.userRole)
+    : null
   const isSessionValid = session
     ? session.type === SessionType.User
-      ? session.expiresAt > new Date()
+      ? session.expiresAt! > new Date()
       : true
     : false
 
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
-    dbAdapter.peer.getPeersByID(ids)
+    createOptionalsArray(
+      ids as string[],
+      await prisma.peer.findMany({
+        where: {
+          id: {
+            in: ids as string[]
+          }
+        }
+      }),
+      'id'
+    )
   )
 
   const loaders: DataLoaderContext = {
-    navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
-    navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+    navigationByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.navigation.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    navigationByKey: new DataLoader(async keys =>
+      createOptionalsArray(
+        keys as string[],
+        await prisma.navigation.findMany({
+          where: {
+            key: {
+              in: keys as string[]
+            }
+          }
+        }),
+        'key'
+      )
+    ),
 
-    authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
-    authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
+    authorsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.author.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    authorsBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.author.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
+    ),
 
-    images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
+    images: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.image.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
-    articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
-    publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+    articles: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.article.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    publicArticles: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        (
+          await prisma.article.findMany({
+            where: {
+              id: {
+                in: ids as string[]
+              },
+              OR: [
+                {
+                  published: {
+                    isNot: null
+                  }
+                },
+                {
+                  pending: {
+                    isNot: null
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, shared, published, pending}) => ({id, shared, ...(published || pending!)})),
+        'id'
+      )
+    ),
 
-    pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
-    publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
-    publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+    pages: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.page.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    publicPagesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        (
+          await prisma.page.findMany({
+            where: {
+              id: {
+                in: ids as string[]
+              },
+              OR: [
+                {
+                  published: {
+                    isNot: null
+                  }
+                },
+                {
+                  pending: {
+                    isNot: null
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        'id'
+      )
+    ),
+    publicPagesBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        (
+          await prisma.page.findMany({
+            where: {
+              OR: [
+                {
+                  published: {
+                    is: {
+                      slug: {
+                        in: slugs as string[]
+                      }
+                    }
+                  }
+                },
+                {
+                  pending: {
+                    is: {
+                      slug: {
+                        in: slugs as string[]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        'slug'
+      )
+    ),
 
-    userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+    userRolesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.userRole.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
-    mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
+    mailLogsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.mailLog.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
     peer: peerDataLoader,
-    peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
-      dbAdapter.peer.getPeersBySlug(slugs)
+    peerBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.peer.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
     ),
 
     peerSchema: new DataLoader(async ids => {
@@ -311,23 +599,127 @@ export async function contextFromRequest(
       )
     }),
 
-    memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
-    memberPlansBySlug: new DataLoader(slugs => dbAdapter.memberPlan.getMemberPlansBySlug(slugs)),
-    activeMemberPlansByID: new DataLoader(ids =>
-      dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    memberPlansByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
     ),
-    activeMemberPlansBySlug: new DataLoader(slugs =>
-      dbAdapter.memberPlan.getActiveMemberPlansBySlug(slugs)
+    memberPlansBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
     ),
-    paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
-    activePaymentMethodsByID: new DataLoader(ids =>
-      dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+    activeMemberPlansByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            },
+            active: true
+          }
+        }),
+        'id'
+      )
     ),
-    activePaymentMethodsBySlug: new DataLoader(slugs =>
-      dbAdapter.paymentMethod.getActivePaymentMethodsBySlug(slugs)
+    activeMemberPlansBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            },
+            active: true
+          }
+        }),
+        'slug'
+      )
     ),
-    invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
-    paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
+    paymentMethodsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    activePaymentMethodsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            },
+            active: true
+          }
+        }),
+        'id'
+      )
+    ),
+    activePaymentMethodsBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            },
+            active: true
+          }
+        }),
+        'slug'
+      )
+    ),
+    invoicesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.invoice.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    paymentsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.payment.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    )
   }
 
   const mailContext = new MailContext({
@@ -359,6 +751,7 @@ export async function contextFromRequest(
   const memberContext = new MemberContext({
     loaders,
     dbAdapter,
+    prisma,
     paymentProviders,
     mailContext,
     getLoginUrlForUser(user: User): string {
@@ -376,7 +769,7 @@ export async function contextFromRequest(
     websiteURL,
     session: isSessionValid ? session : null,
     loaders,
-
+    prisma,
     memberContext,
     mailContext,
     dbAdapter,
@@ -494,7 +887,7 @@ export async function contextFromRequest(
 
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
 
-      return updatedPayment
+      return updatedPayment as Payment
     },
     challenge
   }

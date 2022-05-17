@@ -19,18 +19,14 @@ import {PeerProfileInput} from '../../lib'
 // Mocking Fetch calls from the "createFetcher" method in context
 ;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
-let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
     dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
 

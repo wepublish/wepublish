@@ -17,8 +17,8 @@ fragment FullUserRole on UserRole {
 
 
 
-query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
         nodes {
             ...FullUserRole
         }

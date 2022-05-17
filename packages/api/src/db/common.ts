@@ -1,3 +1,5 @@
+import {UserInputError} from 'apollo-server-express'
+
 export enum SortOrder {
   Ascending = 1,
   Descending = -1
@@ -16,8 +18,6 @@ export interface ConnectionResult<T> {
   totalCount: number
 }
 
-import {UserInputError} from 'apollo-server-express'
-
 export enum InputCursorType {
   After = 'after',
   Before = 'before',
@@ -34,7 +34,7 @@ export type InputCursor =
     }
 
 export function InputCursor(after?: string, before?: string): InputCursor {
-  if (after != null && before != null) {
+  if (after && before) {
     throw new UserInputError('You must provide either `after` or `before`.')
   }
 
@@ -59,11 +59,13 @@ export interface Limit {
   readonly skip?: number
 }
 
+export const MaxResultsPerPage = 100
+
 export function Limit(first?: number, last?: number, skip?: number): Limit {
   if ((first == null && last == null) || (first != null && last != null)) {
     throw new UserInputError('You must provide either `first` or `last`.')
   }
-  const count = first || last!
+  const count = Math.min(first || last!, MaxResultsPerPage)
   return {
     type: first ? LimitType.First : LimitType.Last,
     count,

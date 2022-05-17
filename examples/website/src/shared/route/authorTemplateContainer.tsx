@@ -52,14 +52,14 @@ export interface AuthorProps {
 
 export function AuthorTemplateContainer({id}: AuthorProps) {
   const css = useStyle()
-  const first = 30
+  const take = 30
 
   const {data, loading: isLoadingAuthor} = useAuthorQuery({variables: {id: id, slug: id}})
   const author = data?.authorBySlug ?? data?.authorByID
   const authorID = author?.id ?? ''
 
   const {data: articlesData, fetchMore, loading: isLoadingArticles} = useListArticlesQuery({
-    variables: {authors: [authorID], first: first, cursor: null},
+    variables: {authors: [authorID], take: take, cursor: null},
     skip: author == null
   })
 
@@ -87,7 +87,7 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
         }
       },
       variables: {
-        first: first,
+        take: take,
         cursor: articlesData.articles.pageInfo.endCursor,
         authors: [authorID]
       }

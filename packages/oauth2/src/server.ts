@@ -1,13 +1,14 @@
-import {DBAdapter, logger} from '@wepublish/api'
+import {PrismaClient} from '@prisma/client'
+import {logger} from '@wepublish/api'
+import express, {Application, NextFunction} from 'express'
+import set from 'lodash/set'
+import {Provider} from 'oidc-provider'
+import path from 'path'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
-import express, {Application, NextFunction} from 'express'
-import path from 'path'
+import url from 'url'
 import {MongoDBAdapter as OAuth2DBAdapter} from './adapter'
 import {configuration} from './configuration'
-import {Provider} from 'oidc-provider'
-import set from 'lodash/set'
-import url from 'url'
 import {routes} from './routes'
 
 export interface OAuth2ServerOpts {
@@ -21,7 +22,7 @@ export interface OAuth2ServerOpts {
   readonly issuer: string
 
   readonly mongoUrlOauth2: string
-  readonly wepublishDDAdapter: DBAdapter
+  readonly prisma: PrismaClient
 
   readonly viewPath?: string
   readonly debug?: boolean
@@ -36,12 +37,12 @@ export class Oauth2Server {
   private readonly app: Application
   private readonly opts: OAuth2ServerOpts
 
-  private readonly wepublishDDAdapter: DBAdapter
+  private readonly prisma: PrismaClient
 
   constructor(opts: OAuth2ServerOpts) {
     const app = express()
     this.opts = opts
-    this.wepublishDDAdapter = opts.wepublishDDAdapter
+    this.prisma = opts.prisma
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'oauth2'})
 
@@ -81,7 +82,9 @@ export class Oauth2Server {
   }
 
   async findAccount(ctx: any, id: any) {
-    const user = await this.wepublishDDAdapter.user.getUserByID(id)
+    const user = await this.prisma.user.findUnique({
+      where: {id}
+    })
     if (user) {
       return {
         accountId: user.id,
@@ -150,7 +153,7 @@ export class Oauth2Server {
       })
     }
 
-    routes(this.app, provider, this.wepublishDDAdapter)
+    routes(this.app, provider, this.prisma)
     this.app.use(provider.callback)
     console.log('views_path', path.join(__dirname, 'views'))
     this.app.listen(port ?? 4200, hostname ?? 'localhost')

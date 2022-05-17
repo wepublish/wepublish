@@ -47,8 +47,8 @@ fragment FullImage on Image {
   ...ImageRef
 }
 
-query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int) {
-  images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip) {
+query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...ImageRef
     }

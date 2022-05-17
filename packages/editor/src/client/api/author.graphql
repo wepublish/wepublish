@@ -20,20 +20,16 @@ fragment FullAuthor on Author {
 
 query AuthorList(
   $filter: String
-  $after: ID
-  $before: ID
-  $first: Int
-  $last: Int
+  $cursor: ID
+  $take: Int
   $skip: Int
   $order: SortOrder
   $sort: AuthorSort
 ) {
   authors(
     filter: {name: $filter}
-    after: $after
-    before: $before
-    first: $first
-    last: $last
+    cursor: $cursor
+    take: $take
     skip: $skip
     order: $order
     sort: $sort

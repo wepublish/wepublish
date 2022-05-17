@@ -10,18 +10,14 @@ import {
   DeleteAuthor
 } from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
     dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -117,7 +113,7 @@ describe('Authors', () => {
       const res = await query({
         query: AuthorList,
         variables: {
-          first: 100
+          take: 100
         }
       })
       expect(res).toMatchSnapshot({

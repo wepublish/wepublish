@@ -21,24 +21,6 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     this.peers = db.collection(CollectionName.Peers)
   }
 
-  async getPeerProfile(): Promise<PeerProfile> {
-    const value = await this.peerProfiles.findOne({})
-
-    if (!value) {
-      return {
-        name: '',
-        themeColor: '#000000',
-        themeFontColor: '#ffffff',
-        callToActionURL: '',
-        callToActionText: [],
-        callToActionImageID: '',
-        callToActionImageURL: ''
-      }
-    }
-
-    return value
-  }
-
   async updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile> {
     const {value} = await this.peerProfiles.findOneAndUpdate(
       {},
@@ -106,26 +88,5 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
   async deletePeer(id: string): Promise<string | null> {
     const {deletedCount} = await this.peers.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
-  }
-
-  async getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]> {
-    const peers = await this.peers.find({_id: {$in: ids}}).toArray()
-    const peerMap = Object.fromEntries(peers.map(({_id: id, ...peer}) => [id, {id, ...peer}]))
-
-    return ids.map(id => peerMap[id] ?? null)
-  }
-
-  async getPeersBySlug(slugs: readonly string[]): Promise<OptionalPeer[]> {
-    const peers = await this.peers.find({slug: {$in: slugs as string[]}}).toArray()
-    const peerMap = Object.fromEntries(
-      peers.map(({_id: id, slug, ...peer}) => [slug, {id, slug, ...peer!}])
-    )
-
-    return slugs.map<OptionalPeer>(slug => peerMap[slug] ?? null)
-  }
-
-  async getPeers(): Promise<Peer[]> {
-    const peers = await this.peers.find().sort({createdAt: -1}).toArray()
-    return peers.map(({_id: id, ...data}) => ({id, ...data}))
   }
 }
