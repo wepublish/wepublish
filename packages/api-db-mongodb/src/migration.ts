@@ -1,10 +1,18 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
-import {PaymentProviderCustomer, Subscription, SubscriptionDeactivationReason} from '@wepublish/api'
+import {
+  ArticleBlock,
+  BlockType,
+  PageBlock,
+  PaymentProviderCustomer,
+  Subscription,
+  SubscriptionDeactivationReason
+} from '@wepublish/api'
 import {slugify} from './utility'
 
 export interface Migration {
   readonly version: number
+
   migrate(adapter: Db, locale: string): Promise<void>
 }
 
@@ -628,8 +636,13 @@ export const Migrations: Migration[] = [
         const paymentProvidersCustomersArray: PaymentProviderCustomer[] = []
         const paymentProviderCustomers = Object.keys(user.paymentProviderCustomers)
         paymentProviderCustomers.forEach(ppc => {
-          // @ts-ignore
-          const userPPC = user.paymentProviderCustomers[ppc]
+          interface OldPaymentProviderCustomer extends PaymentProviderCustomer {
+            customerID: never
+            id: PaymentProviderCustomer['customerID']
+          }
+
+          const userPPC = user.paymentProviderCustomers[+ppc] as OldPaymentProviderCustomer
+
           paymentProvidersCustomersArray.push({
             paymentProviderID: ppc,
             customerID: userPPC.id
@@ -790,6 +803,70 @@ export const Migrations: Migration[] = [
       await images.updateMany({}, {$rename: {author: 'source'}})
     }
   },
+    // change embed block properties width and height from number to string
+    version: 20,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.published) {
+          article.published.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.pending) {
+          article.pending.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.published) {
+          page.published.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.pending) {
+          page.pending.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await pages.findOneAndReplace({_id: page._id}, page)
+      },
   {
     // add settings category
     version: 21,
@@ -797,7 +874,7 @@ export const Migrations: Migration[] = [
       // TODO add initial settings
       await db.createCollection(CollectionName.Settings, {
         strict: true
-      })
+      })     
     }
   }
 ]

@@ -289,12 +289,14 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       disabled={true}
                                       name="authors.panels.jobTitle"
                                       onChange={[Function]}
+                                      value=""
                                     >
                                       <FormControlWrapper
                                         classPrefix="rs-form-control"
                                         disabled={true}
                                         name="authors.panels.jobTitle"
                                         onChange={[Function]}
+                                        value=""
                                       >
                                         <FormControl
                                           accepter={
@@ -337,6 +339,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           name="authors.panels.jobTitle"
                                           onChange={[Function]}
                                           plaintextDefaultValue="--"
+                                          value=""
                                         >
                                           <div
                                             className="rs-form-control-wrapper"
@@ -349,6 +352,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               onBlur={[Function]}
                                               onChange={[Function]}
                                               type="text"
+                                              value=""
                                             >
                                               <defaultProps(Input)
                                                 className=""
@@ -359,6 +363,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onBlur={[Function]}
                                                 onChange={[Function]}
                                                 type="text"
+                                                value=""
                                               >
                                                 <Input
                                                   className=""
@@ -369,6 +374,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                   onBlur={[Function]}
                                                   onChange={[Function]}
                                                   type="text"
+                                                  value=""
                                                 >
                                                   <input
                                                     className="rs-input"
@@ -378,6 +384,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                     onChange={[Function]}
                                                     onKeyDown={[Function]}
                                                     type="text"
+                                                    value=""
                                                   />
                                                 </Input>
                                               </defaultProps(Input)>
@@ -3254,12 +3261,14 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                       disabled={false}
                                       name="authors.panels.jobTitle"
                                       onChange={[Function]}
+                                      value=""
                                     >
                                       <FormControlWrapper
                                         classPrefix="rs-form-control"
                                         disabled={false}
                                         name="authors.panels.jobTitle"
                                         onChange={[Function]}
+                                        value=""
                                       >
                                         <FormControl
                                           accepter={
@@ -3302,6 +3311,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                           name="authors.panels.jobTitle"
                                           onChange={[Function]}
                                           plaintextDefaultValue="--"
+                                          value=""
                                         >
                                           <div
                                             className="rs-form-control-wrapper"
@@ -3314,6 +3324,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                               onBlur={[Function]}
                                               onChange={[Function]}
                                               type="text"
+                                              value=""
                                             >
                                               <defaultProps(Input)
                                                 className=""
@@ -3324,6 +3335,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                 onBlur={[Function]}
                                                 onChange={[Function]}
                                                 type="text"
+                                                value=""
                                               >
                                                 <Input
                                                   className=""
@@ -3334,6 +3346,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                   onBlur={[Function]}
                                                   onChange={[Function]}
                                                   type="text"
+                                                  value=""
                                                 >
                                                   <input
                                                     className="rs-input"
@@ -3343,6 +3356,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                     onChange={[Function]}
                                                     onKeyDown={[Function]}
                                                     type="text"
+                                                    value=""
                                                   />
                                                 </Input>
                                               </defaultProps(Input)>
@@ -6209,12 +6223,14 @@ exports[`Author Edit Panel should render 1`] = `
                                       disabled={false}
                                       name="authors.panels.jobTitle"
                                       onChange={[Function]}
+                                      value=""
                                     >
                                       <FormControlWrapper
                                         classPrefix="rs-form-control"
                                         disabled={false}
                                         name="authors.panels.jobTitle"
                                         onChange={[Function]}
+                                        value=""
                                       >
                                         <FormControl
                                           accepter={
@@ -6257,6 +6273,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           name="authors.panels.jobTitle"
                                           onChange={[Function]}
                                           plaintextDefaultValue="--"
+                                          value=""
                                         >
                                           <div
                                             className="rs-form-control-wrapper"
@@ -6269,6 +6286,7 @@ exports[`Author Edit Panel should render 1`] = `
                                               onBlur={[Function]}
                                               onChange={[Function]}
                                               type="text"
+                                              value=""
                                             >
                                               <defaultProps(Input)
                                                 className=""
@@ -6279,6 +6297,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onBlur={[Function]}
                                                 onChange={[Function]}
                                                 type="text"
+                                                value=""
                                               >
                                                 <Input
                                                   className=""
@@ -6289,6 +6308,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                   onBlur={[Function]}
                                                   onChange={[Function]}
                                                   type="text"
+                                                  value=""
                                                 >
                                                   <input
                                                     className="rs-input"
@@ -6298,6 +6318,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                     onChange={[Function]}
                                                     onKeyDown={[Function]}
                                                     type="text"
+                                                    value=""
                                                   />
                                                 </Input>
                                               </defaultProps(Input)>
@@ -9166,12 +9187,14 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       disabled={false}
                                       name="authors.panels.jobTitle"
                                       onChange={[Function]}
+                                      value=""
                                     >
                                       <FormControlWrapper
                                         classPrefix="rs-form-control"
                                         disabled={false}
                                         name="authors.panels.jobTitle"
                                         onChange={[Function]}
+                                        value=""
                                       >
                                         <FormControl
                                           accepter={
@@ -9214,6 +9237,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           name="authors.panels.jobTitle"
                                           onChange={[Function]}
                                           plaintextDefaultValue="--"
+                                          value=""
                                         >
                                           <div
                                             className="rs-form-control-wrapper"
@@ -9226,6 +9250,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               onBlur={[Function]}
                                               onChange={[Function]}
                                               type="text"
+                                              value=""
                                             >
                                               <defaultProps(Input)
                                                 className=""
@@ -9236,6 +9261,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onBlur={[Function]}
                                                 onChange={[Function]}
                                                 type="text"
+                                                value=""
                                               >
                                                 <Input
                                                   className=""
@@ -9246,6 +9272,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                   onBlur={[Function]}
                                                   onChange={[Function]}
                                                   type="text"
+                                                  value=""
                                                 >
                                                   <input
                                                     className="rs-input"
@@ -9255,6 +9282,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                     onChange={[Function]}
                                                     onKeyDown={[Function]}
                                                     type="text"
+                                                    value=""
                                                   />
                                                 </Input>
                                               </defaultProps(Input)>
@@ -9312,6 +9340,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                         <ChooseEditImage
                           disabled={false}
                           header=""
+                          image={null}
                           left={0}
                           openChooseModalOpen={[Function]}
                           openEditModalOpen={[Function]}

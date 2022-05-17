@@ -16,30 +16,30 @@ const dateFormatMap = new Map<string, Locale>([
   ['fr', frLocale]
 ])
 
-i18n.init({
-  interpolation: {
-    format: (value, format, lng = 'en') => {
-      if (isDate(value) && format !== undefined) {
-        const myLocale = dateFormatMap.get(lng)
-        return formatDate(value, format, {locale: myLocale})
+export const initI18N = () => {
+  i18n.init({
+    interpolation: {
+      format: (value, format, lng = 'en') => {
+        if (isDate(value) && format !== undefined) {
+          const myLocale = dateFormatMap.get(lng)
+          return formatDate(value, format, {locale: myLocale})
+        }
+        return value
       }
-      return value
     }
-  }
-})
+  })
 
-i18n.use(LanguageDetector).use(initReactI18next).init({
-  fallbackLng: 'en',
-  debug: false,
-  resources: {
-    en,
-    de,
-    fr
-  }
-})
+  i18n.use(LanguageDetector).use(initReactI18next).init({
+    fallbackLng: 'en',
+    debug: false,
+    resources: {
+      en,
+      de,
+      fr
+    }
+  })
 
-// TODO: how to handle other date amd time formats
-registerLocale('de', deLocale)
-setDefaultLocale('de')
-
-export default i18n
+  // TODO: how to handle other date and time formats
+  registerLocale('de', deLocale)
+  setDefaultLocale('de')
+}

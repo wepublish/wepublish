@@ -1,26 +1,37 @@
-import React, {ReactNode, useEffect, useState} from 'react'
-
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton, Drawer} from 'rsuite'
-
+import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
+import React, {ComponentType, ReactNode, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  Container,
+  Dropdown,
+  DropdownProps,
+  Icon,
+  IconButton,
+  Nav,
+  Navbar,
+  NavProps,
+  Sidebar,
+  Sidenav
+} from 'rsuite'
 import {
   ArticleListRoute,
-  CommentListRoute,
-  useRoute,
-  RouteType,
-  PageListRoute,
-  routeLink,
   AuthorListRoute,
+  CommentListRoute,
   ImageListRoute,
-  UserListRoute,
-  UserRoleListRoute,
-  PeerListRoute,
-  TokenListRoute,
+  LogoutRoute,
   MemberPlanListRoute,
-  PaymentMethodListRoute,
   NavigationListRoute,
+  PageListRoute,
+  PaymentMethodListRoute,
   PeerArticleListRoute,
+  PeerListRoute,
+  routeLink,
+  RouteType,
   SubscriptionListRoute,
-  LogoutRoute
+  TokenListRoute,
+  UserListRoute,
+  useRoute,
+  UserRoleListRoute
 } from './route'
 
 import {SettingsPanel} from './panel/settingsPanel'
@@ -43,12 +54,10 @@ const iconStyles = {
   lineHeight: '56px',
   textAlign: 'center' as const
 }
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const NavItemLink = routeLink(Nav.Item)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const DropdownItemLink = routeLink(Dropdown.Item)
+const NavItemLink = routeLink(Nav.Item as ComponentType<NavProps & LinkHOCCompatibleProps>)
+const DropdownItemLink = routeLink(
+  Dropdown.Item as ComponentType<DropdownProps & LinkHOCCompatibleProps>
+)
 
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {

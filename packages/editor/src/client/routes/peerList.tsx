@@ -1,52 +1,45 @@
-import React, {useState, useEffect} from 'react'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  PeerListRoute,
-  PeerCreateRoute,
-  PeerEditRoute,
-  routeLink,
-  PeerInfoEditRoute,
-  IconButtonLink
-} from '../route'
-
-import {
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useDeletePeerMutation,
-  PeerListDocument,
-  PeerListQuery
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {PeerEditPanel} from '../panel/peerEditPanel'
-
+import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
+import React, {ComponentType, useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
-  Drawer,
-  FlexboxGrid,
-  List,
+  Alert,
   Avatar,
-  Icon,
-  IconButton,
   Button,
   Divider,
-  Modal,
-  Alert,
-  HelpBlock
+  Drawer,
+  FlexboxGrid,
+  HelpBlock,
+  Icon,
+  IconButton,
+  List,
+  ListProps,
+  Modal
 } from 'rsuite'
+import {
+  PeerListDocument,
+  PeerListQuery,
+  useDeletePeerMutation,
+  usePeerListQuery,
+  usePeerProfileQuery
+} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
+import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {
+  IconButtonLink,
+  PeerCreateRoute,
+  PeerEditRoute,
+  PeerInfoEditRoute,
+  PeerListRoute,
+  routeLink,
+  RouteType,
+  useRoute,
+  useRouteDispatch
+} from '../route'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const ListItemLink = routeLink(List.Item)
+const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]

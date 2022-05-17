@@ -343,8 +343,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock';
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
 };
@@ -352,8 +352,8 @@ export type EmbedBlock = {
 export type EmbedBlockInput = {
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
 };
@@ -1495,6 +1495,11 @@ export type QuerySubscriptionsArgs = {
 };
 
 
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: Maybe<SubscriptionFilter>;
+};
+
+
 export type QueryUserRoleArgs = {
   id?: Maybe<Scalars['ID']>;
 };
@@ -1803,11 +1808,18 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
-  startsAt?: Maybe<DateFilter>;
-  paidUntil?: Maybe<DateFilter>;
-  deactivationDate?: Maybe<DateFilter>;
+  startsAtFrom?: Maybe<DateFilter>;
+  startsAtTo?: Maybe<DateFilter>;
+  paidUntilFrom?: Maybe<DateFilter>;
+  paidUntilTo?: Maybe<DateFilter>;
+  deactivationDateFrom?: Maybe<DateFilter>;
+  deactivationDateTo?: Maybe<DateFilter>;
   deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
+  paymentMethodID?: Maybe<Scalars['String']>;
+  memberPlanID?: Maybe<Scalars['String']>;
+  paymentPeriodicity?: Maybe<PaymentPeriodicity>;
+  userHasAddress?: Maybe<Scalars['Boolean']>;
 };
 
 export type SubscriptionInput = {
@@ -3640,12 +3652,14 @@ export type SubscriptionQuery = (
   )> }
 );
 
-export type SubscriptionsAsCsvQueryVariables = Exact<{ [key: string]: never; }>;
+export type SubscriptionsAsCsvQueryVariables = Exact<{
+  filter?: Maybe<SubscriptionFilter>;
+}>;
 
 
 export type SubscriptionsAsCsvQuery = (
   { __typename?: 'Query' }
-  & { csv: Query['subscriptionsAsCsv'] }
+  & Pick<Query, 'subscriptionsAsCsv'>
 );
 
 export type CreateSubscriptionMutationVariables = Exact<{
@@ -6921,8 +6935,8 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv {
-  csv: subscriptionsAsCsv
+    query SubscriptionsAsCsv($filter: SubscriptionFilter) {
+  subscriptionsAsCsv(filter: $filter)
 }
     `;
 
@@ -6938,6 +6952,7 @@ export const SubscriptionsAsCsvDocument = gql`
  * @example
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

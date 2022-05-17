@@ -25,7 +25,9 @@ export function slugify(str: string) {
   return str
     .toLowerCase()
     .trim()
-    .replace(/[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[Ä]/gi, 'ae')
+
     .replace(/[ÇĆĈČ]/gi, 'c')
     .replace(/[ÐĎĐÞ]/gi, 'd')
     .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
@@ -38,13 +40,17 @@ export function slugify(str: string) {
     .replace(/[ĹĻĽŁ]/gi, 'l')
     .replace(/[Ḿ]/gi, 'm')
     .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[Œ]/gi, 'oe')
+    .replace(/[ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
+    .replace(/[ŒÖ]/gi, 'oe')
+
     .replace(/[ṕ]/gi, 'p')
     .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ßŚŜŞŠ]/gi, 's')
+    .replace(/[ŚŜŞŠ]/gi, 's')
+    .replace(/[ß]/gi, 'ss')
     .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[Ü]/gi, 'ue')
+
     .replace(/[ẂŴẀẄ]/gi, 'w')
     .replace(/[ẍ]/gi, 'x')
     .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
@@ -126,13 +132,19 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   return firstOperation.name.value
 }
 
+// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): Record<string, unknown> {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+      return Object.assign(previousValue, {
+        [key
+          .toLowerCase()
+          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
+          .trim()]: value.trim()
+      })
     }
     return previousValue
   }, {})
@@ -202,10 +214,10 @@ export function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )

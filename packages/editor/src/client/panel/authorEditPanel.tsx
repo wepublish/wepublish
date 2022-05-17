@@ -48,7 +48,7 @@ export interface AuthorEditPanelProps {
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
-  const [jobTitle, setJobTitle] = useState<Maybe<string>>()
+  const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
@@ -78,7 +78,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     if (data?.author) {
       setName(data.author.name)
       setSlug(data.author.slug)
-      setJobTitle(data.author.jobTitle)
+      setJobTitle(data.author.jobTitle ?? '')
       setImage(data.author.image)
       setBio(data.author.bio ? data.author.bio : createDefaultValue())
       setLinks(

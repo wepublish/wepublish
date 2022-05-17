@@ -150,8 +150,8 @@ export interface OtherEmbed {
   type: EmbedType.Other
   url?: string
   title?: string
-  width?: number
-  height?: number
+  width?: string
+  height?: string
   styleCustom?: string
   sandbox?: string
 }
