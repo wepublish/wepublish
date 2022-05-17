@@ -12,6 +12,7 @@ export function SettingsPanel() {
   return (
     <>
       <Drawer.Header>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
         <Drawer.Title>Edit Settings</Drawer.Title>
       </Drawer.Header>
 
@@ -19,10 +20,12 @@ export function SettingsPanel() {
         <Panel>
           <Form fluid={true}>
             <FormGroup>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
               <ControlLabel>Setting 1</ControlLabel>
               <Toggle />
             </FormGroup>
             <FormGroup>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
               <ControlLabel>Setting 2</ControlLabel>
               <Toggle />
             </FormGroup>
@@ -31,6 +34,7 @@ export function SettingsPanel() {
       </Drawer.Body>
 
       <Drawer.Footer>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
         <Button appearance={'primary'}>Close</Button>
       </Drawer.Footer>
     </>

@@ -231,6 +231,8 @@ export function Base({children}: BaseProps) {
                   renderTitle={children => {
                     return <Icon style={iconStyles} icon="list-ul" className="icon-selector" />
                   }}>
+                  {/* TODO translation */}
+                  {/* eslint-disable-next-line i18next/no-literal-string */}
                   <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
                     Settings
                   </DropdownItemLink>
