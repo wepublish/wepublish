@@ -504,7 +504,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             }
           })
         } catch (error) {
-          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+          logger('mutation.public').warn(error as Error, 'Updating User with ID %s failed', user.id)
         }
         return email
       }
@@ -606,8 +606,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const updateSubscription = await dbAdapter.subscription.updateSubscription({
           id,
           input: {
-            userID: user.id,
             ...subscription,
+            userID: subscription.userID ?? user.id,
             memberPlanID,
             paymentPeriodicity,
             monthlyAmount,
