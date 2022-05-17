@@ -5554,50 +5554,6 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wepublish/api-db-mongodb@*":
-  version "2.15.0"
-  resolved "https://registry.npmjs.org/@wepublish/api-db-mongodb/-/api-db-mongodb-2.15.0.tgz#441f6bc6be6f27c70ba42555a5ed0cb8b5de92c1"
-  integrity sha512-FzcpRfu6QTi1HkpHF7/km71fxAdVs8FazDo6m3XFXPsCUMRfHM/YxSKtUAZQI7EafHMczPxHWn8J9C5yFj8h5g==
-  dependencies:
-    bcrypt "^5.0.0"
-    mongodb "^3.5.4"
-    nanoid "^2.1.11"
-
-"@wepublish/api-media-karma@*":
-  version "2.15.0"
-  resolved "https://registry.npmjs.org/@wepublish/api-media-karma/-/api-media-karma-2.15.0.tgz#5441a338dd467eee15e2f02b6959e2770ad51704"
-  integrity sha512-BZ4ps0IchF8CWEJdQtObYdm6uqLEKX1dNMu5o5NhYJ6H7wAqPn3E6WqoB3l2rPoHqxwAspnot0F7k0CGDQfCuA==
-  dependencies:
-    form-data "^3.0.0"
-    node-fetch "^2.6.0"
-
-"@wepublish/api@*":
-  version "2.15.0"
-  resolved "https://registry.npmjs.org/@wepublish/api/-/api-2.15.0.tgz#0e79253573212cae2370a6b5d6c75f31d18d9640"
-  integrity sha512-fLnke9MvgG+NQpljycsSYruZfjIoGiBtonmbpa3BXO7TU7MqV5HwU6EloCbNRfoNpoK5oR4AME+t8eoTPKYV2w==
-  dependencies:
-    "@karma.run/utility" "^0.1.0"
-    abort-controller "^3.0.0"
-    apollo-server-express "2.25.3"
-    body-parser "^1.19.0"
-    dataloader "^2.0.0"
-    email-templates "^8.0.7"
-    express "^4.17.1"
-    form-data "^3.0.0"
-    graphql "^14.6.0"
-    graphql-iso-date "^3.6.1"
-    graphql-tag "^2.11.0"
-    graphql-tools "^5.0.0"
-    jsonwebtoken "^8.5.1"
-    mandrill-api "^1.0.45"
-    node-fetch "^2.6.0"
-    openid-client "^3.14.0"
-    pino "^6.11.0"
-    pino-http "^5.3.0"
-    pug "^3.0.2"
-    qs "^6.9.1"
-    stripe "^8.126.0"
-
 "@wepublish/karma.run-react@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@wepublish/karma.run-react/-/karma.run-react-0.2.0.tgz#159f364e3a91cce08ec61a03b773cb03f29eb2e3"
@@ -5608,15 +5564,6 @@
     fela "^10.6.1"
     fela-dom "^10.6.1"
     path-to-regexp "^3.0.0"
-
-"@wepublish/oauth2@*":
-  version "2.15.0"
-  resolved "https://registry.npmjs.org/@wepublish/oauth2/-/oauth2-2.15.0.tgz#768a5810b91c68cfab3802f722d64e49f4ab7eeb"
-  integrity sha512-d37UTdaphTra4rloVPJWgKbiwCLWD7W6wkLNTFGtynWmJ1Ifa7K+btJLDK9r0sbIzSNC27W7+CHtxk6sh68nvQ==
-  dependencies:
-    express "^4.17.1"
-    lodash "^4.17.19"
-    oidc-provider "^6.23.4"
 
 "@wojtekmaj/enzyme-adapter-react-17@^0.6.3":
   version "0.6.3"

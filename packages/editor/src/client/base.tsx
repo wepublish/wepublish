@@ -3,6 +3,7 @@ import React, {ComponentType, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Container,
+  Drawer,
   Dropdown,
   DropdownProps,
   Icon,
@@ -35,8 +36,6 @@ import {
 } from './route'
 
 import {SettingsPanel} from './panel/settingsPanel'
-
-import {useTranslation} from 'react-i18next'
 
 export interface BaseProps {
   children?: ReactNode

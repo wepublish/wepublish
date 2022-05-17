@@ -803,6 +803,7 @@ export const Migrations: Migration[] = [
       await images.updateMany({}, {$rename: {author: 'source'}})
     }
   },
+  {
     // change embed block properties width and height from number to string
     version: 20,
     async migrate(db) {
@@ -866,7 +867,9 @@ export const Migrations: Migration[] = [
           })
         }
         await pages.findOneAndReplace({_id: page._id}, page)
-      },
+      }
+    }
+  },
   {
     // add settings category
     version: 21,
@@ -874,7 +877,7 @@ export const Migrations: Migration[] = [
       // TODO add initial settings
       await db.createCollection(CollectionName.Settings, {
         strict: true
-      })     
+      })
     }
   }
 ]
