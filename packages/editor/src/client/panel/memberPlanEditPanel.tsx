@@ -4,15 +4,12 @@ import {ListValue, ListInput} from '../atoms/listInput'
 
 import {
   Button,
-  ControlLabel,
   Drawer,
   Form,
-  FormControl,
-  FormGroup,
   Panel,
-  Alert,
+  toaster,
+  Message,
   Toggle,
-  HelpBlock,
   CheckPicker,
   TagPicker,
   Schema
@@ -20,7 +17,7 @@ import {
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {FormInstance} from 'rsuite/lib/Form'
+import {FormInstance} from 'rsuite/esm/Form'
 
 import {
   AvailablePaymentMethod,
@@ -142,7 +139,12 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
       createError?.message ??
       updateError?.message ??
       paymentMethodLoadError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError, paymentMethodLoadError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -151,7 +153,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   const form = useRef<FormInstance>(null)
   async function handleSave() {
-    if (!form.current?.check()) {
+    if (!form.current?.check?.()) {
       return
     }
     if (id) {
@@ -213,46 +215,58 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <Drawer.Title>
           {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('save') : t('create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form ref={form} fluid={true} model={validationModel}>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.name') + '*'}</ControlLabel>
-              <FormControl
+          <Form fluid={true} model={validationModel} ref={form}>
+            <Form.Group>
+              <Form.ControlLabel>{t('memberPlanList.name') + '*'}</Form.ControlLabel>
+              <Form.Control
                 name="name"
                 value={name}
                 disabled={isDisabled}
-                onChange={value => {
+                onChange={(value: string) => {
                   setName(value)
                   setSlug(slugify(value))
                 }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.slug')}</ControlLabel>
-              <FormControl name={t('memberPlanList.slug')} value={slug} plaintext={true} />
-            </FormGroup>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('memberPlanList.slug')}</Form.ControlLabel>
+              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext={true} />
+            </Form.Group>
 
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
+            <Form.Group>
+              <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
                 block
+                virtualized
                 value={tags ?? []}
                 creatable={true}
                 data={tags ? tags.map(tag => ({label: tag, value: tag})) : []}
                 onChange={tagsValue => setTags(tagsValue ?? [])}
               />
-            </FormGroup>
+            </Form.Group>
 
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
+            <Form.Group>
+              <Form.ControlLabel>{t('memberPlanList.active')}</Form.ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-              <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
-            </FormGroup>
+              <Form.HelpText>{t('memberPlanList.activeDescription')}</Form.HelpText>
+            </Form.Group>
 
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount') + '*'}</ControlLabel>
+            <Form.Group>
+              <Form.ControlLabel>
+                {t('memberPlanList.minimumMonthlyAmount' + '*')}
+              </Form.ControlLabel>
               <CurrencyInput
                 name="currency"
                 currency="CHF"
@@ -262,13 +276,13 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                   setAmountPerMonthMin(centAmount)
                 }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
               <div className="richTextFrame">
                 <RichTextBlock value={description} onChange={value => setDescription(value)} />
               </div>
-            </FormGroup>
+            </Form.Group>
           </Form>
         </Panel>
 
@@ -291,18 +305,19 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             }}>
             {({value, onChange}) => (
               <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.autoRenewal')}</ControlLabel>
+                <Form.Group>
+                  <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
                   <Toggle
                     checked={value.forceAutoRenewal}
                     disabled={isDisabled}
                     onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
                   />
-                  <HelpBlock>{t('memberPlanList.autoRenewalDescription')}</HelpBlock>
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+                  <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
+                </Form.Group>
+                <Form.Group>
+                  <Form.ControlLabel>{t('memberPlanList.paymentPeriodicities')}</Form.ControlLabel>
                   <CheckPicker
+                    virtualized
                     value={value.paymentPeriodicities}
                     data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
                       value: pp,
@@ -311,10 +326,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                     onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
                     block
                   />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.paymentMethods')}</ControlLabel>
+                </Form.Group>
+                <Form.Group>
+                  <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
                   <CheckPicker
+                    virtualized
                     value={value.paymentMethods.map(pm => pm.id)}
                     data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
                     onChange={paymentMethodIDs => {
@@ -328,23 +344,14 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                     }}
                     block
                   />
-                </FormGroup>
+                </Form.Group>
               </Form>
             )}
           </ListInput>
         </Panel>
       </Drawer.Body>
 
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('save') : t('create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('close')}
-        </Button>
-      </Drawer.Footer>
-
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -354,7 +361,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}

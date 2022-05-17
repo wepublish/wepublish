@@ -4,15 +4,12 @@ import {
   Button,
   Drawer,
   Form,
-  FormControl,
   Panel,
   Input,
-  Alert,
+  toaster,
+  Message,
   PanelGroup,
   InputGroup,
-  Icon,
-  ControlLabel,
-  FormGroup,
   Schema
 } from 'rsuite'
 
@@ -38,7 +35,8 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {FormInstance} from 'rsuite/lib/Form'
+import LinkIcon from '@rsuite/icons/legacy/Link'
+import {FormInstance} from 'rsuite/esm/Form'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -50,7 +48,7 @@ export interface AuthorEditPanelProps {
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
-  const [jobTitle, setJobTitle] = useState<Maybe<string>>()
+  const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
@@ -80,7 +78,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     if (data?.author) {
       setName(data.author.name)
       setSlug(data.author.slug)
-      setJobTitle(data.author.jobTitle)
+      setJobTitle(data.author.jobTitle ?? '')
       setImage(data.author.image)
       setBio(data.author.bio ? data.author.bio : createDefaultValue())
       setLinks(
@@ -99,7 +97,12 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   useEffect(() => {
     const error = loadError?.message ?? createError?.message ?? updateError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -112,13 +115,13 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   // other form for second form ?
 
   async function handleSave() {
-    console.log('save', form.current?.check())
-    if (!form.current?.check()) {
+    console.log('save', form.current?.check?.())
+    if (!form.current?.check?.()) {
       return
     }
 
-    console.log('save', formTest.current?.check())
-    if (!formTest.current?.check()) {
+    console.log('save', formTest.current?.check?.())
+    if (!formTest.current?.check?.()) {
       return
     }
 
@@ -173,35 +176,44 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <Drawer.Title>
           {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('authors.panels.save') : t('authors.panels.create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('authors.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <PanelGroup>
           <Panel>
             <Form ref={form} fluid={true} model={validationModel}>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.name') + '*'}</ControlLabel>
-                <FormControl
+              <Form.Group>
+                <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
+                <Form.Control
                   name="name"
                   value={name}
                   disabled={isDisabled}
-                  onChange={value => {
+                  onChange={(value: string) => {
                     setName(value)
                     setSlug(slugify(value))
                   }}
                 />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
-                <FormControl
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('authors.panels.jobTitle')}</Form.ControlLabel>
+                <Form.Control
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
                   disabled={isDisabled}
-                  onChange={value => {
+                  onChange={(value: string) => {
                     setJobTitle(value)
                   }}
                 />
-              </FormGroup>
+              </Form.Group>
             </Form>
           </Panel>
           <Panel header={t('authors.panels.image')}>
@@ -232,33 +244,34 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     model={validationModelTest}
                     style={{display: 'flex'}}
                     className="form">
-                    <FormControl
+                    <Form.Control
+                      name="title"
                       placeholder={t('authors.panels.title')}
                       style={{
                         width: '90%',
                         marginRight: '10px'
                       }}
                       value={value.title}
-                      onChange={title => onChange({...value, title})}
+                      onChange={(title: string) => onChange({...value, title})}
                     />
-                    <FormGroup>
+                    <Form.Group>
                       <InputGroup inside>
                         <InputGroup.Addon>
-                          <Icon icon="link" />
+                          <LinkIcon />
                         </InputGroup.Addon>
 
-                        <FormControl
+                        <Form.Control
                           name="link"
                           placeholder={t('authors.panels.link') + ':https//link.com'}
                           style={{
                             width: '100%'
                           }}
                           value={value.url}
-                          onChange={url => onChange({...value, url})}
+                          onChange={(url: any) => onChange({...value, url})}
                           accepter={Input}
                         />
                       </InputGroup>
-                    </FormGroup>
+                    </Form.Group>
                   </Form>
                 </div>
               )}
@@ -272,16 +285,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </PanelGroup>
       </Drawer.Body>
 
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('authors.panels.save') : t('authors.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('authors.panels.close')}
-        </Button>
-      </Drawer.Footer>
-
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -290,7 +294,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           }}
         />
       </Drawer>
-      <Drawer show={isEditModalOpen} size={'sm'}>
+
+      <Drawer open={isEditModalOpen} size={'sm'}>
         <ImagedEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}

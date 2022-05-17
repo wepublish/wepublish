@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {FormControl, FormGroup, InputGroup} from 'rsuite'
+import {Form, InputGroup} from 'rsuite'
 
 export interface CurrencyInputProps {
   currency: string
@@ -24,13 +24,13 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
 
   return (
     <div>
-      <FormGroup>
+      <Form.Group>
         <InputGroup inside>
-          <FormControl
+          <Form.Control
             value={amount as string}
             name="currency"
             disabled={disabled}
-            onChange={amount => {
+            onChange={(amount: string) => {
               amount = toFloat(amount)
               setAmount(amount)
             }}
@@ -42,7 +42,7 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
           />
           <InputGroup.Addon>{currency}</InputGroup.Addon>
         </InputGroup>
-      </FormGroup>
+      </Form.Group>
     </div>
   )
 }

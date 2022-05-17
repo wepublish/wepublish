@@ -122,7 +122,7 @@ export interface DBCommentAdapter {
   updatePublicComment(args: UpdatePublicCommentArgs): Promise<OptionalPublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getPublicCommentsForItemByID(args: GetPublicCommentsArgs): Promise<PublicComment[]>
-  getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]>
+  getPublicChildrenCommentsByParentId(id: string, userID: string): Promise<PublicComment[]>
   getCommentById(id: string): Promise<OptionalComment>
   takeActionOnComment(args: TakeActionOnCommentArgs): Promise<OptionalComment>
 }

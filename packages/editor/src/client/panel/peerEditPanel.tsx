@@ -1,16 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 
-import {
-  Alert,
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Panel,
-  Schema
-} from 'rsuite'
+import {toaster, Message, Button, Drawer, Form, Panel, Schema} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -27,7 +17,7 @@ import {slugify, getOperationNameFromDocument} from '../utility'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {FormInstance} from 'rsuite/lib/Form'
+import {FormInstance} from 'rsuite/esm/Form'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -64,7 +54,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   const {t} = useTranslation()
 
   async function handleFetch() {
-    if (!form.current?.check()) {
+    if (!form.current?.check?.()) {
       return
     }
 
@@ -75,7 +65,11 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
       })
       setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null)
     } catch (error) {
-      Alert.error(error.message, 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error.message}
+        </Message>
+      )
     }
   }
 
@@ -94,7 +88,12 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
   useEffect(() => {
     const error = loadError?.message ?? createError?.message ?? updateError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError])
 
   useEffect(() => {
@@ -144,43 +143,52 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
         <Drawer.Title>
           {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('peerList.panels.save') : t('peerList.panels.create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('peerList.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <Panel>
           <Form fluid={true} ref={form} model={validationModel}>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
-              <FormControl
+            <Form.Group>
+              <Form.ControlLabel>{t('peerList.panels.name')}</Form.ControlLabel>
+              <Form.Control
                 value={name}
                 name="name"
-                onChange={value => {
+                onChange={(value: string) => {
                   setName(value)
                   setSlug(slugify(value))
                 }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
-              <FormControl
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('peerList.panels.URL')}</Form.ControlLabel>
+              <Form.Control
                 value={urlString}
                 name="URL"
-                onChange={value => {
+                onChange={(value: string) => {
                   setURLString(value)
                 }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
-              <FormControl
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('peerList.panels.token')}</Form.ControlLabel>
+              <Form.Control
                 value={token}
                 name="token"
                 placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
-                onChange={value => {
+                onChange={(value: string) => {
                   setToken(value)
                 }}
               />
-            </FormGroup>
+            </Form.Group>
             <Button
               className="fetchButton"
               appearance={'primary'}
@@ -251,15 +259,6 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
           </Panel>
         )}
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('peerList.panels.save') : t('peerList.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('peerList.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

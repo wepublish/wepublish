@@ -13,6 +13,7 @@ import {WepublishEditor} from '../editor/wepublishEditor'
 import {Format} from '../editor/formats'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
+  readonly icon: React.ReactElement
   readonly format: Format
 }
 
@@ -62,7 +63,7 @@ export function EditorSubMenuButton({
   const triggerRef = useRef<PopoverProps>(null)
 
   useEffect(() => {
-    if (!editorHasFocus && triggerRef.current) triggerRef.current!.close()
+    if (!editorHasFocus && triggerRef.current) triggerRef.current!.visible = false
   }, [editorHasFocus])
 
   return (

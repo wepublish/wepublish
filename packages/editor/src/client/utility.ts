@@ -25,7 +25,9 @@ export function slugify(str: string) {
   return str
     .toLowerCase()
     .trim()
-    .replace(/[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[Ä]/gi, 'ae')
+
     .replace(/[ÇĆĈČ]/gi, 'c')
     .replace(/[ÐĎĐÞ]/gi, 'd')
     .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
@@ -38,13 +40,17 @@ export function slugify(str: string) {
     .replace(/[ĹĻĽŁ]/gi, 'l')
     .replace(/[Ḿ]/gi, 'm')
     .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[Œ]/gi, 'oe')
+    .replace(/[ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
+    .replace(/[ŒÖ]/gi, 'oe')
+
     .replace(/[ṕ]/gi, 'p')
     .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ßŚŜŞŠ]/gi, 's')
+    .replace(/[ŚŜŞŠ]/gi, 's')
+    .replace(/[ß]/gi, 'ss')
     .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[Ü]/gi, 'ue')
+
     .replace(/[ẂŴẀẄ]/gi, 'w')
     .replace(/[ẍ]/gi, 'x')
     .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
@@ -150,39 +156,8 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
   }
 }
 
-export const DEFAULT_TABLE_PAGE_SIZES = [
-  {
-    value: 10,
-    label: 10
-  },
-  {
-    value: 20,
-    label: 20
-  },
-  {
-    value: 50,
-    label: 50
-  },
-  {
-    value: 100,
-    label: 100
-  }
-]
-
-export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [
-  {
-    value: 5,
-    label: 5
-  },
-  {
-    value: 10,
-    label: 10
-  },
-  {
-    value: 15,
-    label: 15
-  }
-]
+export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
+export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [5, 10, 15]
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,
