@@ -789,6 +789,16 @@ export const Migrations: Migration[] = [
       await images.updateMany({}, {$rename: {source: 'link'}})
       await images.updateMany({}, {$rename: {author: 'source'}})
     }
+  },
+  {
+    // add settings category
+    version: 21,
+    async migrate(db, locale) {
+      // TODO add initial settings
+      await db.createCollection(CollectionName.Settings, {
+        strict: true
+      })
+    }
   }
 ]
 

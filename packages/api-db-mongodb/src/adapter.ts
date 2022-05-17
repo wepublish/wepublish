@@ -25,6 +25,7 @@ import {MongoDBPaymentAdapter} from './db/payment'
 import {MongoDBMailLogAdapter} from './db/mailLog'
 import {MongoDBTempUserAdapter} from './db/tempUser'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
+import {MongoDBSettingAdapter} from './db/setting'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -81,6 +82,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly invoice: MongoDBInvoiceAdapter
   readonly payment: MongoDBPaymentAdapter
   readonly mailLog: MongoDBMailLogAdapter
+  readonly setting: MongoDBSettingAdapter
 
   // Init
   // ====
@@ -117,6 +119,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.invoice = new MongoDBInvoiceAdapter(db, locale)
     this.payment = new MongoDBPaymentAdapter(db, locale)
     this.mailLog = new MongoDBMailLogAdapter(db, locale)
+    this.setting = new MongoDBSettingAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {

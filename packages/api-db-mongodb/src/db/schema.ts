@@ -19,7 +19,8 @@ import {
   UserOAuth2Account,
   PaymentPeriodicity,
   SubscriptionPeriod,
-  SubscriptionDeactivation
+  SubscriptionDeactivation,
+  SettingType
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -52,7 +53,9 @@ export enum CollectionName {
   Invoices = 'invoices',
   Payments = 'payments',
 
-  MailLog = 'mail.log'
+  MailLog = 'mail.log',
+
+  Settings = 'settings'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -434,4 +437,12 @@ export interface DBMailLog {
   state: MailLogState
   mailProviderID: string
   mailData?: string
+}
+
+export interface DBSetting<T> {
+  _id: any
+
+  name: string
+  settingType: SettingType
+  value: T | null
 }

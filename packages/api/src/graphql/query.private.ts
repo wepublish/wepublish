@@ -148,6 +148,7 @@ import {
   GraphQLSubscriptionFilter,
   GraphQLSubscriptionSort
 } from './subscription'
+import {GraphQLSetting} from './setting'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -362,14 +363,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         let afterCursor
 
         while (hasMore) {
-          const listResult: ConnectionResult<Subscription> =
-            await dbAdapter.subscription.getSubscriptions({
+          const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
+            {
               cursor: InputCursor(afterCursor ?? undefined),
               filter: {},
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               order: SortOrder.Descending
-            })
+            }
+          )
           subscriptions.push(...listResult.nodes)
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
@@ -1141,6 +1143,29 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+    // Setting
+    // ======
+
+    setting: {
+      type: GraphQLSetting,
+      args: {id: {type: GraphQLID}, name: {type: GraphQLString}},
+      resolve(root, {id, slug}, {authenticate, loaders}) {
+        // TODO authenticate
+
+        if ((id == null && name == null) || (id != null && name != null)) {
+          throw new UserInputError('You must provide either `id` or `name`.')
+        }
+
+        return id ? loaders.settingsByID.load(id) : loaders.settingsByName.load(name)
+      }
+    },
+    settings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      resolve(root, {}, {authenticate, dbAdapter}) {
+        // TODO authenticate
+        return dbAdapter.setting.getSettings()
       }
     }
   }

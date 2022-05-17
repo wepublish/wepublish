@@ -20,6 +20,7 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
+  value: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -740,6 +741,9 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  createSetting?: Maybe<Setting>;
+  updateSetting?: Maybe<Setting>;
+  deleteSetting?: Maybe<Scalars['ID']>;
 };
 
 
@@ -1047,6 +1051,22 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationCreateSettingArgs = {
+  input: SettingInput;
+};
+
+
+export type MutationUpdateSettingArgs = {
+  id: Scalars['String'];
+  input: SettingInput;
+};
+
+
+export type MutationDeleteSettingArgs = {
+  id: Scalars['ID'];
 };
 
 export type Navigation = {
@@ -1420,6 +1440,8 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
 };
 
 
@@ -1659,6 +1681,12 @@ export type QueryPaymentsArgs = {
   order?: Maybe<SortOrder>;
 };
 
+
+export type QuerySettingArgs = {
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
   quote?: Maybe<Scalars['String']>;
@@ -1696,6 +1724,27 @@ export type SessionWithToken = {
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
 };
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  settingType: SettingType;
+  value?: Maybe<Scalars['value']>;
+};
+
+export type SettingInput = {
+  name: Scalars['String'];
+  type: SettingType;
+  value?: Maybe<Scalars['value']>;
+};
+
+export enum SettingType {
+  Switch = 'switch',
+  MultiSelect = 'multiSelect',
+  Input = 'input',
+  Number = 'number'
+}
 
 
 export enum SortOrder {
@@ -1994,6 +2043,7 @@ export enum UserSort {
   Name = 'NAME',
   FirstName = 'FIRST_NAME'
 }
+
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
@@ -3519,6 +3569,11 @@ export type DeletePeerMutation = (
   & Pick<Mutation, 'deletePeer'>
 );
 
+export type FullSettingFragment = (
+  { __typename?: 'Setting' }
+  & Pick<Setting, 'id' | 'name' | 'settingType' | 'value'>
+);
+
 export type FullSubscriptionFragment = (
   { __typename?: 'Subscription' }
   & Pick<Subscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
@@ -3719,6 +3774,17 @@ export type UserQueryVariables = Exact<{
 export type UserQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
+    { __typename?: 'User' }
+    & FullUserFragment
+  )> }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
   )> }
@@ -4380,6 +4446,14 @@ export const MutationPageFragmentDoc = gql`
     publishAt
     revision
   }
+}
+    `;
+export const FullSettingFragmentDoc = gql`
+    fragment FullSetting on Setting {
+  id
+  name
+  settingType
+  value
 }
     `;
 export const FullPaymentProviderFragmentDoc = gql`
@@ -7162,6 +7236,40 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    ...FullUser
+  }
+}
+    ${FullUserFragmentDoc}`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: UserInput!, $password: String!) {
   createUser(input: $input, password: $password) {

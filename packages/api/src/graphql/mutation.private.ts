@@ -90,6 +90,7 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
+import {GraphQLSetting, GraphQLSettingInput} from './setting'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1152,8 +1153,52 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           rejectionReason
         })
       }
+    },
+    // Settings
+    // ==========
+
+    createSetting: {
+      type: GraphQLSetting,
+      args: {input: {type: GraphQLNonNull(GraphQLSettingInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        // TODO authentication
+        // const {roles} = authenticate()
+        //     authorise(CanCreateSettings, roles)
+        return dbAdapter.setting.createSetting({input})
+      }
+    },
+
+    updateSetting: {
+      type: GraphQLSetting,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLString)},
+        input: {type: GraphQLNonNull(GraphQLSettingInput)}
+      },
+
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        // TODO
+        //  const {roles} = authenticate()
+        // authorise(CanCreateNavigation, roles)
+
+        return dbAdapter.setting.updateSetting({
+          id,
+          input: input
+        })
+      }
+    },
+
+    deleteSetting: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        // TODO authenticate
+        await dbAdapter.setting.deleteSetting({id})
+      }
     }
-    // Image
-    // =====
   }
+
+  // Image
+  // =====
 })

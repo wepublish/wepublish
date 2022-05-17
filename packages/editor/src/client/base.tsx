@@ -1,6 +1,6 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton} from 'rsuite'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton, Drawer} from 'rsuite'
 
 import {
   ArticleListRoute,
@@ -22,6 +22,8 @@ import {
   SubscriptionListRoute,
   LogoutRoute
 } from './route'
+
+import {SettingsPanel} from './panel/settingsPanel'
 
 import {useTranslation} from 'react-i18next'
 
@@ -65,6 +67,7 @@ export function Base({children}: BaseProps) {
   const {t, i18n} = useTranslation()
 
   const [isExpanded, setIsExpanded] = useState(true)
+  const [isSettingsDrawerOpen, setSettingsDrawerOpen] = useState(false)
 
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
 
@@ -218,8 +221,11 @@ export function Base({children}: BaseProps) {
                   placement="topStart"
                   trigger="click"
                   renderTitle={children => {
-                    return <Icon style={iconStyles} icon="cog" className="icon-selector" />
+                    return <Icon style={iconStyles} icon="list-ul" className="icon-selector" />
                   }}>
+                  <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
+                    Settings
+                  </DropdownItemLink>
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
                   </DropdownItemLink>
@@ -253,6 +259,9 @@ export function Base({children}: BaseProps) {
               </Nav>
             </Navbar.Body>
           </Navbar>
+          <Drawer show={isSettingsDrawerOpen} onHide={() => setSettingsDrawerOpen(false)}>
+            <SettingsPanel />
+          </Drawer>
         </Sidebar>
         <Container
           style={{

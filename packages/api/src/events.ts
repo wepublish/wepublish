@@ -17,6 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
+import {Setting} from './db/setting'
 import {isTempUser, removePrefixTempUser} from './utility'
 
 interface ModelEvents<T> {
@@ -71,6 +72,9 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 export type UserRoleModelEventsEmitter = TypedEmitter<ModelEvents<UserRole>>
 export const userRoleModelEvents = new EventEmitter() as UserRoleModelEventsEmitter
 
+export type SettingModelEventsEmitter = TypedEmitter<ModelEvents<Setting>>
+export const settingModelEvents = new EventEmitter() as SettingModelEventsEmitter
+
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
@@ -86,6 +90,7 @@ export type EventsEmitter =
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
+  | SettingModelEventsEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -166,6 +171,11 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'userRole',
     methods: ['create', 'update', 'delete'],
     eventEmitter: userRoleModelEvents
+  },
+  {
+    key: 'setting',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: settingModelEvents
   }
 ]
 

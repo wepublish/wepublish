@@ -1,0 +1,6 @@
+fragment FullSetting on Setting {
+    id
+    name
+    settingType
+    value
+}
