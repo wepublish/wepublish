@@ -29,7 +29,12 @@ import {
   AuthorListDocument
 } from '../api'
 
-import {slugify, generateID, getOperationNameFromDocument, validateURL} from '../utility'
+import {
+  slugify,
+  generateID,
+  getOperationNameFromDocument
+  //  validateURL
+} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 

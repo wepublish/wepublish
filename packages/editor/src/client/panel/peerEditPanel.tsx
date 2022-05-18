@@ -158,7 +158,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
         <Panel>
           <Form fluid={true} ref={form} model={validationModel}>
             <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.name')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={name}
                 name="name"
@@ -169,7 +169,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               />
             </Form.Group>
             <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.URL')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('peerList.panels.URL') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={urlString}
                 name="URL"
@@ -179,7 +179,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               />
             </Form.Group>
             <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.token')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('peerList.panels.token') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={token}
                 name="token"

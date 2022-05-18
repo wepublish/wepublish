@@ -1,4 +1,7 @@
-import React, {useState, useCallback} from 'react'
+import React, {
+  useState
+  //  useCallback
+} from 'react'
 import {Form, Message} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 // import {validateURL} from '../utility'
@@ -12,7 +15,10 @@ interface UrlValidationProps {
 
 export function FormControlUrl({placeholder, name, value, onChange}: UrlValidationProps) {
   const {t} = useTranslation()
-  const [invalidInput, setInvalidInput] = useState(false)
+  const [
+    invalidInput
+    // setInvalidInput
+  ] = useState(false)
 
   // const handleUrlValidation = useCallback(
   //   (url: string) => {

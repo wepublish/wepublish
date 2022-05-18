@@ -222,6 +222,15 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <Drawer.Title>
           {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('userList.panels.save') : t('userList.panels.create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('userList.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
@@ -231,7 +240,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             fluid={true}
             model={validationModel}
             //  formValue={{firstName}}
-            checkTrigger="blur">
+            // checkTrigger="blur"
+          >
             <Form.Group>
               <Form.ControlLabel>{t('userList.panels.firstName') + '*'}</Form.ControlLabel>
               <Form.Control
@@ -403,19 +413,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           </Form>
         </Panel>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          type="submit"
-          disabled={isDisabled}
-          onClick={() => handleSave()}>
-          {id ? t('userList.panels.save') : t('userList.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('userList.panels.close')}
-        </Button>
-      </Drawer.Footer>
 
       <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>

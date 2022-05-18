@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import {
   Button,
@@ -32,6 +32,8 @@ import ListIcon from '@rsuite/icons/legacy/List'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
+import {format} from 'date-fns'
+import {FormInstance} from 'rsuite/esm/Form'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -146,14 +148,11 @@ export function ArticleMetadataPanel({
   const socialMediaTitleMax = 100
   const socialMediaDescriptionMax = 140
 
+  const form = useRef<FormInstance>(null)
   // Defines field requirements
   const {StringType} = Schema.Types
   const model = Schema.Model({
     canonicalUrl: StringType().isURL('please enter a valid url')
-  })
-
-  const checkResult = model.check({
-    canonicalUrl: canonicalUrl
   })
 
   function currentContent() {
@@ -248,7 +247,7 @@ export function ArticleMetadataPanel({
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true} model={model}>
+            <Form fluid={true} model={model} ref={form}>
               <div style={{paddingBottom: '20px'}}>
                 {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
               </div>
@@ -418,7 +417,7 @@ export function ArticleMetadataPanel({
               <Form.Group>
                 <Form.ControlLabel>{t('articleEditor.panels.canonicalUrl')}</Form.ControlLabel>
                 <Form.Control
-                  name="canonical-url"
+                  name="canonicalUrl"
                   className="canonicalUrl"
                   placeholder={'https://canonical-url.com'}
                   value={canonicalUrl}
@@ -520,7 +519,14 @@ export function ArticleMetadataPanel({
         <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} onClick={() => onClose?.()}>
+          <Button
+            appearance={'primary'}
+            onClick={() => {
+              if (!form.current?.check?.()) {
+                return
+              }
+              onClose?.()
+            }}>
             {t('articleEditor.panels.saveAndClose')}
           </Button>
         </Drawer.Actions>

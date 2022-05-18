@@ -13,7 +13,10 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument, validateURL} from '../utility'
+import {
+  getOperationNameFromDocument
+  // validateURL
+} from '../utility'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -43,7 +46,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
-  const [validCallToActionURL, setValidCallToActionURL] = useState(true)
+  // const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
   const [profileImgValidation, setProfileImgValidation] = useState('')
 
@@ -132,15 +135,15 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
-  const {StringType, ObjectType, ArrayType} = Schema.Types
+  const {StringType, ObjectType} = Schema.Types
 
   const validationModel = Schema.Model({
     name: StringType().isRequired('please enter a name'),
-    // callToActionText: ObjectType().isRequired('please enter a call to action text'),
+    callToActionText: ObjectType().isRequired('please enter a call to action text'),
     callToActionTextURL: StringType()
       .isURL('please enter a valid url')
       .isRequired('please enter a url'),
-    callToActionImage: ObjectType().isRequired('please add a call to action image'),
+    callToActionImage: StringType().isRequired('please add a call to action image'),
     callToActionImageURL: StringType()
       .isURL('please enter a valid url')
       .isRequired('please enter a url')
@@ -273,6 +276,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                     setEditModalOpen(true)
                   }}
                   removeImage={() => setCallToActionImage(undefined)}
+                />
+                <Form.Control
+                  name="callToActionImage"
+                  value={callToActionImage?.filename}
+                  style={{display: 'none'}}
                 />
               </Form.Group>
               <Form.Group>

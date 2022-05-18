@@ -14,7 +14,6 @@ import {
 import {useTranslation} from 'react-i18next'
 import {slugify} from '../utility'
 import {FormInstance} from 'rsuite/esm/Form'
-import {ControlsContainer} from '../atoms/toolbar'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -169,7 +168,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             <Form.Group>
               <Form.ControlLabel>{t('paymentMethodList.name') + '*'}</Form.ControlLabel>
               <Form.Control
-                name={t('paymentMethodList.name')}
+                name="name"
                 value={name}
                 disabled={isDisabled}
                 onChange={(value: string) => {
