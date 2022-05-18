@@ -101,11 +101,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const imgForm = useRef<FormInstance>(null)
 
   async function handleSave() {
-    console.log(form.current?.check?.())
-    console.log('check imgFOrm', imgForm.current?.check?.())
-    console.log('profile img', logoImage?.id)
-    console.log('peerProfileVal', profileImgValidation)
-
     if (!form.current?.check?.()) {
       return
     }

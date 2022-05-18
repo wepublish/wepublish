@@ -231,7 +231,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             />
           </Panel>
           <Panel header={t('authors.panels.links')} className="authorLinks">
-            {/* How to validate input fields ? */}
             <ListInput
               value={links}
               onChange={links => {
@@ -244,13 +243,13 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     ref={authorLinkForm}
                     fluid={true}
                     model={authorLinkFormModel}
-                    style={{display: 'flex'}}
+                    style={{display: 'flex', width: '100px'}}
                     className="form">
                     <Form.Control
                       name="title"
                       placeholder={t('authors.panels.title')}
                       style={{
-                        width: '90%',
+                        width: '95px',
                         marginRight: '10px'
                       }}
                       value={value.title}
@@ -266,7 +265,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                           name="link"
                           placeholder={t('authors.panels.link') + ':https//link.com'}
                           style={{
-                            width: '100%'
+                            width: '90%'
                           }}
                           value={value.url}
                           onChange={(url: any) => onChange({...value, url})}

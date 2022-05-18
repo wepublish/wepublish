@@ -145,8 +145,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const form = useRef<FormInstance>(null)
 
   async function handleSave() {
-    console.log(form.current?.check?.())
-
     if (!form.current?.check?.()) {
       return
     }
@@ -204,7 +202,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   const {StringType} = Schema.Types
 
-  let validatePassword: any = id
+  const validatePassword: any = id
     ? StringType().minLength(8, 'Password must be at least 8 characters long')
     : StringType()
         .minLength(8, 'Password must be at least 8 characters long')
