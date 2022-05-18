@@ -32,7 +32,6 @@ import ListIcon from '@rsuite/icons/legacy/List'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
-import {format} from 'date-fns'
 import {FormInstance} from 'rsuite/esm/Form'
 
 export interface ArticleMetadataProperty {
@@ -419,7 +418,7 @@ export function ArticleMetadataPanel({
                 <Form.Control
                   name="canonicalUrl"
                   className="canonicalUrl"
-                  placeholder={'https://canonical-url.com'}
+                  placeholder={t('articleEditor.panels.urlPlaceholder')}
                   value={canonicalUrl}
                   onChange={(canonicalUrl: string) => onChange?.({...value, canonicalUrl})}
                 />

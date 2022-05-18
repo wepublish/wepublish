@@ -138,6 +138,7 @@
         "updateDate": "Update Date",
         "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://canonical-url.com",
         "value": "Value",
         "yes": "Yes",
         "canonicalUrl": "Canonical Url",
@@ -459,6 +460,7 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://www.link.com",
         "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },

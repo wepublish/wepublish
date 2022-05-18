@@ -143,7 +143,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     callToActionTextURL: StringType()
       .isURL('please enter a valid url')
       .isRequired('please enter a url'),
-    callToActionImage: StringType().isRequired('please add a call to action image'),
+    callToActionImage: ObjectType().isRequired('please add a call to action image'),
     callToActionImageURL: StringType()
       .isURL('please enter a valid url')
       .isRequired('please enter a url')
@@ -186,7 +186,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             }}
             removeImage={() => setLogoImage(undefined)}
           />
-          <Form ref={imgForm} fluid={true} model={imgValidationModel} style={{height: '45px'}}>
+          <Form
+            ref={imgForm}
+            fluid={true}
+            model={imgValidationModel}
+            style={{height: '45px'}}
+            formValue={{profileImg: logoImage?.filename}}>
             {/* error because name doensn't get typed in manually */}
             <Form.Group>
               <Form.Control
@@ -200,7 +205,17 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         </Panel>
 
         <Panel header={t('peerList.panels.information')}>
-          <Form ref={form} fluid={true} model={validationModel}>
+          <Form
+            ref={form}
+            fluid={true}
+            model={validationModel}
+            formValue={{
+              name: name,
+              callToActionText: callToActionText,
+              callToActionImage: callToActionImage,
+              callToActionTextURL: callToActionTextURL,
+              callToActionImageURL: callToActionImageURL
+            }}>
             <Form.Group>
               <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />

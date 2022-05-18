@@ -164,7 +164,11 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
       <Drawer.Body>
         <Panel>
-          <Form ref={form} fluid={true} model={validationModel}>
+          <Form
+            ref={form}
+            fluid={true}
+            model={validationModel}
+            formValue={{name: name, paymentProvider: paymentProvider}}>
             <Form.Group>
               <Form.ControlLabel>{t('paymentMethodList.name') + '*'}</Form.ControlLabel>
               <Form.Control

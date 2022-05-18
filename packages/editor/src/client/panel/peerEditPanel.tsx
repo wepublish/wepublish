@@ -133,7 +133,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired('Please enter a name'),
-    URL: StringType().isRequired('Please enter a url').isURL('please enter a valid url'),
+    url: StringType().isRequired('Please enter a url').isURL('please enter a valid url'),
     token: StringType().isRequired('Please enter a token')
   })
 
@@ -156,7 +156,11 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
       <Drawer.Body>
         <Panel>
-          <Form fluid={true} ref={form} model={validationModel}>
+          <Form
+            fluid={true}
+            ref={form}
+            model={validationModel}
+            formValue={{name: name, url: urlString, token: token}}>
             <Form.Group>
               <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control
@@ -172,7 +176,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <Form.ControlLabel>{t('peerList.panels.URL') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={urlString}
-                name="URL"
+                name="url"
                 onChange={(value: string) => {
                   setURLString(value)
                 }}

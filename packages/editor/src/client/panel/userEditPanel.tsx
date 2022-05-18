@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import {
   Button,
@@ -27,7 +27,6 @@ import {
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
-import {useRef} from 'react'
 import {FormInstance} from 'rsuite/esm/Form'
 
 export interface UserEditPanelProps {
@@ -213,9 +212,9 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       .isEmail('Please enter a valid email address'),
     password: StringType()
       .minLength(8, 'Password must be at least 8 characters long')
+      // make required only when there's no id
       .isRequired('Please provide a password')
   })
-
   return (
     <>
       <Drawer.Header>
@@ -239,15 +238,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             ref={form}
             fluid={true}
             model={validationModel}
-            //  formValue={{firstName}}
-            // checkTrigger="blur"
-          >
+            formValue={{firstName: firstName, name: name, email: email, password: password}}>
             <Form.Group>
               <Form.ControlLabel>{t('userList.panels.firstName') + '*'}</Form.ControlLabel>
               <Form.Control
                 name="firstName"
                 value={firstName}
-                checkTrigger="blur"
                 disabled={isDisabled}
                 onChange={(value: string) => {
                   setFirstName(value)
@@ -259,7 +255,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.Control
                 name="name"
                 value={name}
-                checkTrigger="blur"
                 disabled={isDisabled}
                 onChange={(value: string) => {
                   setName(value)

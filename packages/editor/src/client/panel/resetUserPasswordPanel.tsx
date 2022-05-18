@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 
-import {Button, Form, Notification, Panel, toaster} from 'rsuite'
+import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {FormInstance} from 'rsuite/esm/Form'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string
@@ -24,9 +25,19 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   const {t} = useTranslation()
 
+  const form = useRef<FormInstance>(null)
+
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    password: StringType()
+      .isRequired('please enter a password')
+      .minLength(8, 'Password must be at least 8 characters long')
+  })
+
   return (
     <Panel>
-      <Form fluid={true}>
+      <Form fluid={true} model={validationModel} ref={form}>
         <Form.Group>
           <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
           <Form.Control
@@ -45,6 +56,9 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
         disabled={isDisabled}
         appearance="primary"
         onClick={async () => {
+          if (!form.current?.check?.()) {
+            return
+          }
           if (!userID || !password) {
             return
           }

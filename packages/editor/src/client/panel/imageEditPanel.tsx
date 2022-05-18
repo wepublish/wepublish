@@ -374,7 +374,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                   <Form.Control
                     name="link"
                     value={link}
-                    placeholder={'https://www.link.com'}
+                    placeholder={t('images.panels.urlPlaceholder')}
                     disabled={isDisabled}
                     onChange={(value: string) => setLink(value)}
                   />

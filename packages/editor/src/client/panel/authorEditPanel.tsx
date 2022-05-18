@@ -116,17 +116,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const form = useRef<FormInstance>(null)
 
-  const formTest = useRef<FormInstance>(null)
-  // other form for second form ?
+  const authorLinkForm = useRef<FormInstance>(null)
 
   async function handleSave() {
-    console.log('save', form.current?.check?.())
     if (!form.current?.check?.()) {
       return
     }
 
-    console.log('save', formTest.current?.check?.())
-    if (!formTest.current?.check?.()) {
+    if (!authorLinkForm.current?.check?.()) {
       return
     }
 
@@ -171,7 +168,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     // link: StringType().isURL('please enter a valid url')
   })
 
-  const validationModelTest = Schema.Model({
+  const authorLinkFormModel = Schema.Model({
     link: StringType().isURL('please enter a valid url')
   })
 
@@ -195,7 +192,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <Form ref={form} fluid={true} model={validationModel}>
+            <Form ref={form} fluid={true} model={validationModel} formValue={{name: name}}>
               <Form.Group>
                 <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
                 <Form.Control
@@ -244,9 +241,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Form
-                    ref={formTest}
+                    ref={authorLinkForm}
                     fluid={true}
-                    model={validationModelTest}
+                    model={authorLinkFormModel}
                     style={{display: 'flex'}}
                     className="form">
                     <Form.Control

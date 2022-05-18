@@ -143,7 +143,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true} model={validationModel} ref={form}>
+        <Form fluid={true} model={validationModel} ref={form} formValue={{name: name}}>
           <Form.Group>
             <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
             <Form.Control
