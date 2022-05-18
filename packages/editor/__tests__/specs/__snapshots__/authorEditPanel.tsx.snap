@@ -167,6 +167,53 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                 >
                   <Form
                     fluid={true}
+                    formValue={
+                      Object {
+                        "name": "Clark Kent",
+                      }
+                    }
+                    model={
+                      Schema {
+                        "data": undefined,
+                        "spec": Object {
+                          "name": StringType {
+                            "emptyAllowed": false,
+                            "locale": Object {
+                              "containsLetter": "\${name} field must contain letters",
+                              "containsLetterOnly": "\${name} must all be letters",
+                              "containsLowercaseLetter": "\${name} must be a lowercase string",
+                              "containsNumber": "\${name} field must contain numbers",
+                              "containsUppercaseLetter": "\${name} must be a upper case string",
+                              "isEmail": "\${name} must be a valid email",
+                              "isHex": "\${name} must be a valid hexadecimal",
+                              "isOneOf": "\${name} must be one of the following values: \${values}",
+                              "isRequired": "\${name} is a required field",
+                              "isRequiredOrEmpty": "\${name} is a required field",
+                              "isURL": "\${name} must be a valid URL",
+                              "maxLength": "\${name} must be at most \${maxLength} characters",
+                              "minLength": "\${name} must be at least \${minLength} characters",
+                              "pattern": "\${name} is invalid",
+                              "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                              "type": "\${name} must be a string",
+                            },
+                            "priorityRules": Array [],
+                            "required": true,
+                            "requiredMessage": "please enter a name",
+                            "rules": Array [
+                              Object {
+                                "errorMessage": "\${name} must be a string",
+                                "onValid": [Function],
+                                "params": undefined,
+                              },
+                            ],
+                            "schemaSpec": undefined,
+                            "trim": true,
+                            "typeName": "string",
+                            "value": undefined,
+                          },
+                        },
+                      }
+                    }
                   >
                     <form
                       className="rs-form rs-form-vertical rs-form-fluid"
@@ -182,12 +229,12 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                               className="rs-form-control-label"
                               id={null}
                             >
-                              authors.panels.name
+                              authors.panels.name*
                             </label>
                           </FormControlLabel>
                           <FormControl
                             disabled={true}
-                            name="authors.panels.name"
+                            name="name"
                             onChange={[Function]}
                             value="Clark Kent"
                           >
@@ -198,7 +245,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 aria-describedby={null}
                                 aria-labelledby={null}
                                 disabled={true}
-                                name="authors.panels.name"
+                                name="name"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 value="Clark Kent"
@@ -208,7 +255,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   aria-labelledby={null}
                                   className="rs-input"
                                   disabled={true}
-                                  name="authors.panels.name"
+                                  name="name"
                                   type="text"
                                   value="Clark Kent"
                                 />
@@ -422,10 +469,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
               </div>
             </Panel>
             <Panel
+              className="authorLinks"
               header="authors.panels.links"
             >
               <div
-                className="rs-panel"
+                className="authorLinks rs-panel"
               >
                 <div
                   className="rs-panel-header"
@@ -610,6 +658,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     <div
                                       style={
                                         Object {
+                                          "display": "flex",
                                           "minHeight": "100%",
                                         }
                                       }
@@ -622,114 +671,275 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           }
                                         }
                                       >
-                                        <Input
-                                          onChange={[Function]}
-                                          placeholder="authors.panels.title"
-                                          style={
-                                            Object {
-                                              "marginRight": "10px",
-                                              "width": "30%",
+                                        <Form
+                                          className="form"
+                                          fluid={true}
+                                          model={
+                                            Schema {
+                                              "data": undefined,
+                                              "spec": Object {
+                                                "link": StringType {
+                                                  "emptyAllowed": false,
+                                                  "locale": Object {
+                                                    "containsLetter": "\${name} field must contain letters",
+                                                    "containsLetterOnly": "\${name} must all be letters",
+                                                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                                                    "containsNumber": "\${name} field must contain numbers",
+                                                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                                                    "isEmail": "\${name} must be a valid email",
+                                                    "isHex": "\${name} must be a valid hexadecimal",
+                                                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                                                    "isRequired": "\${name} is a required field",
+                                                    "isRequiredOrEmpty": "\${name} is a required field",
+                                                    "isURL": "\${name} must be a valid URL",
+                                                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                                                    "minLength": "\${name} must be at least \${minLength} characters",
+                                                    "pattern": "\${name} is invalid",
+                                                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                                                    "type": "\${name} must be a string",
+                                                  },
+                                                  "priorityRules": Array [],
+                                                  "required": false,
+                                                  "requiredMessage": "",
+                                                  "rules": Array [
+                                                    Object {
+                                                      "errorMessage": "\${name} must be a string",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                    Object {
+                                                      "errorMessage": "please enter a valid url",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                  ],
+                                                  "schemaSpec": undefined,
+                                                  "trim": false,
+                                                  "typeName": "string",
+                                                  "value": undefined,
+                                                },
+                                              },
                                             }
                                           }
-                                          value=""
+                                          style={
+                                            Object {
+                                              "display": "flex",
+                                            }
+                                          }
                                         >
-                                          <input
-                                            className="rs-input"
-                                            onChange={[Function]}
-                                            onKeyDown={[Function]}
-                                            placeholder="authors.panels.title"
+                                          <form
+                                            className="form rs-form rs-form-vertical rs-form-fluid"
+                                            onSubmit={[Function]}
                                             style={
                                               Object {
-                                                "marginRight": "10px",
-                                                "width": "30%",
+                                                "display": "flex",
                                               }
                                             }
-                                            type="text"
-                                            value=""
-                                          />
-                                        </Input>
-                                        <InputGroup
-                                          inside={true}
-                                        >
-                                          <div
-                                            className="rs-input-group rs-input-group-inside"
                                           >
-                                            <InputGroupAddon>
-                                              <span
-                                                className="rs-input-group-addon"
-                                              >
-                                                <Link>
-                                                  <Icon
-                                                    aria-label="link"
-                                                    as={
-                                                      Object {
-                                                        "$$typeof": Symbol(react.forward_ref),
-                                                        "render": [Function],
-                                                      }
-                                                    }
-                                                    data-category="legacy"
-                                                    fill="currentColor"
-                                                    height="1em"
-                                                    width="1em"
-                                                  >
-                                                    <ForwardRef(Link)
-                                                      aria-hidden={true}
-                                                      aria-label="link"
-                                                      className="rs-icon"
-                                                      data-category="legacy"
-                                                      fill="currentColor"
-                                                      focusable={false}
-                                                      height="1em"
-                                                      width="1em"
-                                                    >
-                                                      <svg
-                                                        aria-hidden={true}
-                                                        aria-label="link"
-                                                        className="rs-icon"
-                                                        data-category="legacy"
-                                                        fill="currentColor"
-                                                        focusable={false}
-                                                        height="1em"
-                                                        viewBox="0 0 30 32"
-                                                        width="1em"
-                                                      >
-                                                        <path
-                                                          d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
-                                                        />
-                                                      </svg>
-                                                    </ForwardRef(Link)>
-                                                  </Icon>
-                                                </Link>
-                                              </span>
-                                            </InputGroupAddon>
-                                            <Input
+                                            <FormControl
+                                              name="title"
                                               onChange={[Function]}
-                                              placeholder="authors.panels.link"
+                                              placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "width": "70%",
+                                                  "marginRight": "10px",
+                                                  "width": "90%",
                                                 }
                                               }
                                               value=""
                                             >
-                                              <input
-                                                className="rs-input"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                onFocus={[Function]}
-                                                onKeyDown={[Function]}
-                                                placeholder="authors.panels.link"
-                                                style={
-                                                  Object {
-                                                    "width": "70%",
+                                              <div
+                                                className="rs-form-control rs-form-control-wrapper"
+                                              >
+                                                <Input
+                                                  aria-describedby={null}
+                                                  aria-labelledby={null}
+                                                  name="title"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  placeholder="authors.panels.title"
+                                                  style={
+                                                    Object {
+                                                      "marginRight": "10px",
+                                                      "width": "90%",
+                                                    }
                                                   }
-                                                }
-                                                type="text"
-                                                value=""
-                                              />
-                                            </Input>
-                                          </div>
-                                        </InputGroup>
+                                                  value=""
+                                                >
+                                                  <input
+                                                    aria-describedby={null}
+                                                    aria-labelledby={null}
+                                                    className="rs-input"
+                                                    name="title"
+                                                    onBlur={[Function]}
+                                                    onChange={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    placeholder="authors.panels.title"
+                                                    style={
+                                                      Object {
+                                                        "marginRight": "10px",
+                                                        "width": "90%",
+                                                      }
+                                                    }
+                                                    type="text"
+                                                    value=""
+                                                  />
+                                                </Input>
+                                                <FormErrorMessage
+                                                  aria-relevant="all"
+                                                  className="rs-form-control-message-wrapper"
+                                                  id="undefined-error-message"
+                                                  placement="bottomStart"
+                                                  role="alert"
+                                                  show={false}
+                                                />
+                                              </div>
+                                            </FormControl>
+                                            <FormGroup>
+                                              <div
+                                                className="rs-form-group"
+                                                role="group"
+                                              >
+                                                <InputGroup
+                                                  inside={true}
+                                                >
+                                                  <div
+                                                    className="rs-input-group rs-input-group-inside"
+                                                  >
+                                                    <InputGroupAddon>
+                                                      <span
+                                                        className="rs-input-group-addon"
+                                                      >
+                                                        <Link>
+                                                          <Icon
+                                                            aria-label="link"
+                                                            as={
+                                                              Object {
+                                                                "$$typeof": Symbol(react.forward_ref),
+                                                                "render": [Function],
+                                                              }
+                                                            }
+                                                            data-category="legacy"
+                                                            fill="currentColor"
+                                                            height="1em"
+                                                            width="1em"
+                                                          >
+                                                            <ForwardRef(Link)
+                                                              aria-hidden={true}
+                                                              aria-label="link"
+                                                              className="rs-icon"
+                                                              data-category="legacy"
+                                                              fill="currentColor"
+                                                              focusable={false}
+                                                              height="1em"
+                                                              width="1em"
+                                                            >
+                                                              <svg
+                                                                aria-hidden={true}
+                                                                aria-label="link"
+                                                                className="rs-icon"
+                                                                data-category="legacy"
+                                                                fill="currentColor"
+                                                                focusable={false}
+                                                                height="1em"
+                                                                viewBox="0 0 30 32"
+                                                                width="1em"
+                                                              >
+                                                                <path
+                                                                  d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
+                                                                />
+                                                              </svg>
+                                                            </ForwardRef(Link)>
+                                                          </Icon>
+                                                        </Link>
+                                                      </span>
+                                                    </InputGroupAddon>
+                                                    <FormControl
+                                                      accepter={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "propTypes": Object {
+                                                            "as": [Function],
+                                                            "className": [Function],
+                                                            "classPrefix": [Function],
+                                                            "defaultValue": [Function],
+                                                            "disabled": [Function],
+                                                            "id": [Function],
+                                                            "inputRef": [Function],
+                                                            "onBlur": [Function],
+                                                            "onChange": [Function],
+                                                            "onFocus": [Function],
+                                                            "onKeyDown": [Function],
+                                                            "onPressEnter": [Function],
+                                                            "size": [Function],
+                                                            "type": [Function],
+                                                            "value": [Function],
+                                                          },
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                      name="link"
+                                                      onChange={[Function]}
+                                                      placeholder="authors.panels.link:https//link.com"
+                                                      style={
+                                                        Object {
+                                                          "width": "100%",
+                                                        }
+                                                      }
+                                                      value=""
+                                                    >
+                                                      <div
+                                                        className="rs-form-control rs-form-control-wrapper"
+                                                      >
+                                                        <Input
+                                                          aria-describedby={null}
+                                                          aria-labelledby={null}
+                                                          name="link"
+                                                          onBlur={[Function]}
+                                                          onChange={[Function]}
+                                                          placeholder="authors.panels.link:https//link.com"
+                                                          style={
+                                                            Object {
+                                                              "width": "100%",
+                                                            }
+                                                          }
+                                                          value=""
+                                                        >
+                                                          <input
+                                                            aria-describedby={null}
+                                                            aria-labelledby={null}
+                                                            className="rs-input"
+                                                            name="link"
+                                                            onBlur={[Function]}
+                                                            onChange={[Function]}
+                                                            onFocus={[Function]}
+                                                            onKeyDown={[Function]}
+                                                            placeholder="authors.panels.link:https//link.com"
+                                                            style={
+                                                              Object {
+                                                                "width": "100%",
+                                                              }
+                                                            }
+                                                            type="text"
+                                                            value=""
+                                                          />
+                                                        </Input>
+                                                        <FormErrorMessage
+                                                          aria-relevant="all"
+                                                          className="rs-form-control-message-wrapper"
+                                                          id="undefined-error-message"
+                                                          placement="bottomStart"
+                                                          role="alert"
+                                                          show={false}
+                                                        />
+                                                      </div>
+                                                    </FormControl>
+                                                  </div>
+                                                </InputGroup>
+                                              </div>
+                                            </FormGroup>
+                                          </form>
+                                        </Form>
                                       </div>
                                     </div>
                                   </div>
@@ -2694,6 +2904,53 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                 >
                   <Form
                     fluid={true}
+                    formValue={
+                      Object {
+                        "name": "",
+                      }
+                    }
+                    model={
+                      Schema {
+                        "data": undefined,
+                        "spec": Object {
+                          "name": StringType {
+                            "emptyAllowed": false,
+                            "locale": Object {
+                              "containsLetter": "\${name} field must contain letters",
+                              "containsLetterOnly": "\${name} must all be letters",
+                              "containsLowercaseLetter": "\${name} must be a lowercase string",
+                              "containsNumber": "\${name} field must contain numbers",
+                              "containsUppercaseLetter": "\${name} must be a upper case string",
+                              "isEmail": "\${name} must be a valid email",
+                              "isHex": "\${name} must be a valid hexadecimal",
+                              "isOneOf": "\${name} must be one of the following values: \${values}",
+                              "isRequired": "\${name} is a required field",
+                              "isRequiredOrEmpty": "\${name} is a required field",
+                              "isURL": "\${name} must be a valid URL",
+                              "maxLength": "\${name} must be at most \${maxLength} characters",
+                              "minLength": "\${name} must be at least \${minLength} characters",
+                              "pattern": "\${name} is invalid",
+                              "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                              "type": "\${name} must be a string",
+                            },
+                            "priorityRules": Array [],
+                            "required": true,
+                            "requiredMessage": "please enter a name",
+                            "rules": Array [
+                              Object {
+                                "errorMessage": "\${name} must be a string",
+                                "onValid": [Function],
+                                "params": undefined,
+                              },
+                            ],
+                            "schemaSpec": undefined,
+                            "trim": true,
+                            "typeName": "string",
+                            "value": undefined,
+                          },
+                        },
+                      }
+                    }
                   >
                     <form
                       className="rs-form rs-form-vertical rs-form-fluid"
@@ -2709,12 +2966,12 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                               className="rs-form-control-label"
                               id={null}
                             >
-                              authors.panels.name
+                              authors.panels.name*
                             </label>
                           </FormControlLabel>
                           <FormControl
                             disabled={false}
-                            name="authors.panels.name"
+                            name="name"
                             onChange={[Function]}
                             value=""
                           >
@@ -2725,7 +2982,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                 aria-describedby={null}
                                 aria-labelledby={null}
                                 disabled={false}
-                                name="authors.panels.name"
+                                name="name"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 value=""
@@ -2735,7 +2992,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                   aria-labelledby={null}
                                   className="rs-input"
                                   disabled={false}
-                                  name="authors.panels.name"
+                                  name="name"
                                   onBlur={[Function]}
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
@@ -2955,10 +3212,11 @@ exports[`Author Edit Panel should fill the link field 1`] = `
               </div>
             </Panel>
             <Panel
+              className="authorLinks"
               header="authors.panels.links"
             >
               <div
-                className="rs-panel"
+                className="authorLinks rs-panel"
               >
                 <div
                   className="rs-panel-header"
@@ -3143,6 +3401,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                     <div
                                       style={
                                         Object {
+                                          "display": "flex",
                                           "minHeight": "100%",
                                         }
                                       }
@@ -3155,114 +3414,275 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                           }
                                         }
                                       >
-                                        <Input
-                                          onChange={[Function]}
-                                          placeholder="authors.panels.title"
-                                          style={
-                                            Object {
-                                              "marginRight": "10px",
-                                              "width": "30%",
+                                        <Form
+                                          className="form"
+                                          fluid={true}
+                                          model={
+                                            Schema {
+                                              "data": undefined,
+                                              "spec": Object {
+                                                "link": StringType {
+                                                  "emptyAllowed": false,
+                                                  "locale": Object {
+                                                    "containsLetter": "\${name} field must contain letters",
+                                                    "containsLetterOnly": "\${name} must all be letters",
+                                                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                                                    "containsNumber": "\${name} field must contain numbers",
+                                                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                                                    "isEmail": "\${name} must be a valid email",
+                                                    "isHex": "\${name} must be a valid hexadecimal",
+                                                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                                                    "isRequired": "\${name} is a required field",
+                                                    "isRequiredOrEmpty": "\${name} is a required field",
+                                                    "isURL": "\${name} must be a valid URL",
+                                                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                                                    "minLength": "\${name} must be at least \${minLength} characters",
+                                                    "pattern": "\${name} is invalid",
+                                                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                                                    "type": "\${name} must be a string",
+                                                  },
+                                                  "priorityRules": Array [],
+                                                  "required": false,
+                                                  "requiredMessage": "",
+                                                  "rules": Array [
+                                                    Object {
+                                                      "errorMessage": "\${name} must be a string",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                    Object {
+                                                      "errorMessage": "please enter a valid url",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                  ],
+                                                  "schemaSpec": undefined,
+                                                  "trim": false,
+                                                  "typeName": "string",
+                                                  "value": undefined,
+                                                },
+                                              },
                                             }
                                           }
-                                          value=""
+                                          style={
+                                            Object {
+                                              "display": "flex",
+                                            }
+                                          }
                                         >
-                                          <input
-                                            className="rs-input"
-                                            onChange={[Function]}
-                                            onKeyDown={[Function]}
-                                            placeholder="authors.panels.title"
+                                          <form
+                                            className="form rs-form rs-form-vertical rs-form-fluid"
+                                            onSubmit={[Function]}
                                             style={
                                               Object {
-                                                "marginRight": "10px",
-                                                "width": "30%",
+                                                "display": "flex",
                                               }
                                             }
-                                            type="text"
-                                            value="abcd"
-                                          />
-                                        </Input>
-                                        <InputGroup
-                                          inside={true}
-                                        >
-                                          <div
-                                            className="rs-input-group rs-input-group-inside"
                                           >
-                                            <InputGroupAddon>
-                                              <span
-                                                className="rs-input-group-addon"
-                                              >
-                                                <Link>
-                                                  <Icon
-                                                    aria-label="link"
-                                                    as={
-                                                      Object {
-                                                        "$$typeof": Symbol(react.forward_ref),
-                                                        "render": [Function],
-                                                      }
-                                                    }
-                                                    data-category="legacy"
-                                                    fill="currentColor"
-                                                    height="1em"
-                                                    width="1em"
-                                                  >
-                                                    <ForwardRef(Link)
-                                                      aria-hidden={true}
-                                                      aria-label="link"
-                                                      className="rs-icon"
-                                                      data-category="legacy"
-                                                      fill="currentColor"
-                                                      focusable={false}
-                                                      height="1em"
-                                                      width="1em"
-                                                    >
-                                                      <svg
-                                                        aria-hidden={true}
-                                                        aria-label="link"
-                                                        className="rs-icon"
-                                                        data-category="legacy"
-                                                        fill="currentColor"
-                                                        focusable={false}
-                                                        height="1em"
-                                                        viewBox="0 0 30 32"
-                                                        width="1em"
-                                                      >
-                                                        <path
-                                                          d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
-                                                        />
-                                                      </svg>
-                                                    </ForwardRef(Link)>
-                                                  </Icon>
-                                                </Link>
-                                              </span>
-                                            </InputGroupAddon>
-                                            <Input
+                                            <FormControl
+                                              name="title"
                                               onChange={[Function]}
-                                              placeholder="authors.panels.link"
+                                              placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "width": "70%",
+                                                  "marginRight": "10px",
+                                                  "width": "90%",
                                                 }
                                               }
                                               value=""
                                             >
-                                              <input
-                                                className="rs-input"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                onFocus={[Function]}
-                                                onKeyDown={[Function]}
-                                                placeholder="authors.panels.link"
-                                                style={
-                                                  Object {
-                                                    "width": "70%",
+                                              <div
+                                                className="rs-form-control rs-form-control-wrapper"
+                                              >
+                                                <Input
+                                                  aria-describedby={null}
+                                                  aria-labelledby={null}
+                                                  name="title"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  placeholder="authors.panels.title"
+                                                  style={
+                                                    Object {
+                                                      "marginRight": "10px",
+                                                      "width": "90%",
+                                                    }
                                                   }
-                                                }
-                                                type="text"
-                                                value=""
-                                              />
-                                            </Input>
-                                          </div>
-                                        </InputGroup>
+                                                  value=""
+                                                >
+                                                  <input
+                                                    aria-describedby={null}
+                                                    aria-labelledby={null}
+                                                    className="rs-input"
+                                                    name="title"
+                                                    onBlur={[Function]}
+                                                    onChange={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    placeholder="authors.panels.title"
+                                                    style={
+                                                      Object {
+                                                        "marginRight": "10px",
+                                                        "width": "90%",
+                                                      }
+                                                    }
+                                                    type="text"
+                                                    value="abcd"
+                                                  />
+                                                </Input>
+                                                <FormErrorMessage
+                                                  aria-relevant="all"
+                                                  className="rs-form-control-message-wrapper"
+                                                  id="undefined-error-message"
+                                                  placement="bottomStart"
+                                                  role="alert"
+                                                  show={false}
+                                                />
+                                              </div>
+                                            </FormControl>
+                                            <FormGroup>
+                                              <div
+                                                className="rs-form-group"
+                                                role="group"
+                                              >
+                                                <InputGroup
+                                                  inside={true}
+                                                >
+                                                  <div
+                                                    className="rs-input-group rs-input-group-inside"
+                                                  >
+                                                    <InputGroupAddon>
+                                                      <span
+                                                        className="rs-input-group-addon"
+                                                      >
+                                                        <Link>
+                                                          <Icon
+                                                            aria-label="link"
+                                                            as={
+                                                              Object {
+                                                                "$$typeof": Symbol(react.forward_ref),
+                                                                "render": [Function],
+                                                              }
+                                                            }
+                                                            data-category="legacy"
+                                                            fill="currentColor"
+                                                            height="1em"
+                                                            width="1em"
+                                                          >
+                                                            <ForwardRef(Link)
+                                                              aria-hidden={true}
+                                                              aria-label="link"
+                                                              className="rs-icon"
+                                                              data-category="legacy"
+                                                              fill="currentColor"
+                                                              focusable={false}
+                                                              height="1em"
+                                                              width="1em"
+                                                            >
+                                                              <svg
+                                                                aria-hidden={true}
+                                                                aria-label="link"
+                                                                className="rs-icon"
+                                                                data-category="legacy"
+                                                                fill="currentColor"
+                                                                focusable={false}
+                                                                height="1em"
+                                                                viewBox="0 0 30 32"
+                                                                width="1em"
+                                                              >
+                                                                <path
+                                                                  d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
+                                                                />
+                                                              </svg>
+                                                            </ForwardRef(Link)>
+                                                          </Icon>
+                                                        </Link>
+                                                      </span>
+                                                    </InputGroupAddon>
+                                                    <FormControl
+                                                      accepter={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "propTypes": Object {
+                                                            "as": [Function],
+                                                            "className": [Function],
+                                                            "classPrefix": [Function],
+                                                            "defaultValue": [Function],
+                                                            "disabled": [Function],
+                                                            "id": [Function],
+                                                            "inputRef": [Function],
+                                                            "onBlur": [Function],
+                                                            "onChange": [Function],
+                                                            "onFocus": [Function],
+                                                            "onKeyDown": [Function],
+                                                            "onPressEnter": [Function],
+                                                            "size": [Function],
+                                                            "type": [Function],
+                                                            "value": [Function],
+                                                          },
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                      name="link"
+                                                      onChange={[Function]}
+                                                      placeholder="authors.panels.link:https//link.com"
+                                                      style={
+                                                        Object {
+                                                          "width": "100%",
+                                                        }
+                                                      }
+                                                      value=""
+                                                    >
+                                                      <div
+                                                        className="rs-form-control rs-form-control-wrapper"
+                                                      >
+                                                        <Input
+                                                          aria-describedby={null}
+                                                          aria-labelledby={null}
+                                                          name="link"
+                                                          onBlur={[Function]}
+                                                          onChange={[Function]}
+                                                          placeholder="authors.panels.link:https//link.com"
+                                                          style={
+                                                            Object {
+                                                              "width": "100%",
+                                                            }
+                                                          }
+                                                          value=""
+                                                        >
+                                                          <input
+                                                            aria-describedby={null}
+                                                            aria-labelledby={null}
+                                                            className="rs-input"
+                                                            name="link"
+                                                            onBlur={[Function]}
+                                                            onChange={[Function]}
+                                                            onFocus={[Function]}
+                                                            onKeyDown={[Function]}
+                                                            placeholder="authors.panels.link:https//link.com"
+                                                            style={
+                                                              Object {
+                                                                "width": "100%",
+                                                              }
+                                                            }
+                                                            type="text"
+                                                            value=""
+                                                          />
+                                                        </Input>
+                                                        <FormErrorMessage
+                                                          aria-relevant="all"
+                                                          className="rs-form-control-message-wrapper"
+                                                          id="undefined-error-message"
+                                                          placement="bottomStart"
+                                                          role="alert"
+                                                          show={false}
+                                                        />
+                                                      </div>
+                                                    </FormControl>
+                                                  </div>
+                                                </InputGroup>
+                                              </div>
+                                            </FormGroup>
+                                          </form>
+                                        </Form>
                                       </div>
                                     </div>
                                   </div>
@@ -5217,6 +5637,53 @@ exports[`Author Edit Panel should render 1`] = `
                 >
                   <Form
                     fluid={true}
+                    formValue={
+                      Object {
+                        "name": "",
+                      }
+                    }
+                    model={
+                      Schema {
+                        "data": undefined,
+                        "spec": Object {
+                          "name": StringType {
+                            "emptyAllowed": false,
+                            "locale": Object {
+                              "containsLetter": "\${name} field must contain letters",
+                              "containsLetterOnly": "\${name} must all be letters",
+                              "containsLowercaseLetter": "\${name} must be a lowercase string",
+                              "containsNumber": "\${name} field must contain numbers",
+                              "containsUppercaseLetter": "\${name} must be a upper case string",
+                              "isEmail": "\${name} must be a valid email",
+                              "isHex": "\${name} must be a valid hexadecimal",
+                              "isOneOf": "\${name} must be one of the following values: \${values}",
+                              "isRequired": "\${name} is a required field",
+                              "isRequiredOrEmpty": "\${name} is a required field",
+                              "isURL": "\${name} must be a valid URL",
+                              "maxLength": "\${name} must be at most \${maxLength} characters",
+                              "minLength": "\${name} must be at least \${minLength} characters",
+                              "pattern": "\${name} is invalid",
+                              "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                              "type": "\${name} must be a string",
+                            },
+                            "priorityRules": Array [],
+                            "required": true,
+                            "requiredMessage": "please enter a name",
+                            "rules": Array [
+                              Object {
+                                "errorMessage": "\${name} must be a string",
+                                "onValid": [Function],
+                                "params": undefined,
+                              },
+                            ],
+                            "schemaSpec": undefined,
+                            "trim": true,
+                            "typeName": "string",
+                            "value": undefined,
+                          },
+                        },
+                      }
+                    }
                   >
                     <form
                       className="rs-form rs-form-vertical rs-form-fluid"
@@ -5232,12 +5699,12 @@ exports[`Author Edit Panel should render 1`] = `
                               className="rs-form-control-label"
                               id={null}
                             >
-                              authors.panels.name
+                              authors.panels.name*
                             </label>
                           </FormControlLabel>
                           <FormControl
                             disabled={false}
-                            name="authors.panels.name"
+                            name="name"
                             onChange={[Function]}
                             value=""
                           >
@@ -5248,7 +5715,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 aria-describedby={null}
                                 aria-labelledby={null}
                                 disabled={false}
-                                name="authors.panels.name"
+                                name="name"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 value=""
@@ -5258,7 +5725,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   aria-labelledby={null}
                                   className="rs-input"
                                   disabled={false}
-                                  name="authors.panels.name"
+                                  name="name"
                                   onBlur={[Function]}
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
@@ -5478,10 +5945,11 @@ exports[`Author Edit Panel should render 1`] = `
               </div>
             </Panel>
             <Panel
+              className="authorLinks"
               header="authors.panels.links"
             >
               <div
-                className="rs-panel"
+                className="authorLinks rs-panel"
               >
                 <div
                   className="rs-panel-header"
@@ -5666,6 +6134,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     <div
                                       style={
                                         Object {
+                                          "display": "flex",
                                           "minHeight": "100%",
                                         }
                                       }
@@ -5678,114 +6147,275 @@ exports[`Author Edit Panel should render 1`] = `
                                           }
                                         }
                                       >
-                                        <Input
-                                          onChange={[Function]}
-                                          placeholder="authors.panels.title"
-                                          style={
-                                            Object {
-                                              "marginRight": "10px",
-                                              "width": "30%",
+                                        <Form
+                                          className="form"
+                                          fluid={true}
+                                          model={
+                                            Schema {
+                                              "data": undefined,
+                                              "spec": Object {
+                                                "link": StringType {
+                                                  "emptyAllowed": false,
+                                                  "locale": Object {
+                                                    "containsLetter": "\${name} field must contain letters",
+                                                    "containsLetterOnly": "\${name} must all be letters",
+                                                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                                                    "containsNumber": "\${name} field must contain numbers",
+                                                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                                                    "isEmail": "\${name} must be a valid email",
+                                                    "isHex": "\${name} must be a valid hexadecimal",
+                                                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                                                    "isRequired": "\${name} is a required field",
+                                                    "isRequiredOrEmpty": "\${name} is a required field",
+                                                    "isURL": "\${name} must be a valid URL",
+                                                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                                                    "minLength": "\${name} must be at least \${minLength} characters",
+                                                    "pattern": "\${name} is invalid",
+                                                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                                                    "type": "\${name} must be a string",
+                                                  },
+                                                  "priorityRules": Array [],
+                                                  "required": false,
+                                                  "requiredMessage": "",
+                                                  "rules": Array [
+                                                    Object {
+                                                      "errorMessage": "\${name} must be a string",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                    Object {
+                                                      "errorMessage": "please enter a valid url",
+                                                      "onValid": [Function],
+                                                      "params": undefined,
+                                                    },
+                                                  ],
+                                                  "schemaSpec": undefined,
+                                                  "trim": false,
+                                                  "typeName": "string",
+                                                  "value": undefined,
+                                                },
+                                              },
                                             }
                                           }
-                                          value=""
+                                          style={
+                                            Object {
+                                              "display": "flex",
+                                            }
+                                          }
                                         >
-                                          <input
-                                            className="rs-input"
-                                            onChange={[Function]}
-                                            onKeyDown={[Function]}
-                                            placeholder="authors.panels.title"
+                                          <form
+                                            className="form rs-form rs-form-vertical rs-form-fluid"
+                                            onSubmit={[Function]}
                                             style={
                                               Object {
-                                                "marginRight": "10px",
-                                                "width": "30%",
+                                                "display": "flex",
                                               }
                                             }
-                                            type="text"
-                                            value=""
-                                          />
-                                        </Input>
-                                        <InputGroup
-                                          inside={true}
-                                        >
-                                          <div
-                                            className="rs-input-group rs-input-group-inside"
                                           >
-                                            <InputGroupAddon>
-                                              <span
-                                                className="rs-input-group-addon"
-                                              >
-                                                <Link>
-                                                  <Icon
-                                                    aria-label="link"
-                                                    as={
-                                                      Object {
-                                                        "$$typeof": Symbol(react.forward_ref),
-                                                        "render": [Function],
-                                                      }
-                                                    }
-                                                    data-category="legacy"
-                                                    fill="currentColor"
-                                                    height="1em"
-                                                    width="1em"
-                                                  >
-                                                    <ForwardRef(Link)
-                                                      aria-hidden={true}
-                                                      aria-label="link"
-                                                      className="rs-icon"
-                                                      data-category="legacy"
-                                                      fill="currentColor"
-                                                      focusable={false}
-                                                      height="1em"
-                                                      width="1em"
-                                                    >
-                                                      <svg
-                                                        aria-hidden={true}
-                                                        aria-label="link"
-                                                        className="rs-icon"
-                                                        data-category="legacy"
-                                                        fill="currentColor"
-                                                        focusable={false}
-                                                        height="1em"
-                                                        viewBox="0 0 30 32"
-                                                        width="1em"
-                                                      >
-                                                        <path
-                                                          d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
-                                                        />
-                                                      </svg>
-                                                    </ForwardRef(Link)>
-                                                  </Icon>
-                                                </Link>
-                                              </span>
-                                            </InputGroupAddon>
-                                            <Input
+                                            <FormControl
+                                              name="title"
                                               onChange={[Function]}
-                                              placeholder="authors.panels.link"
+                                              placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "width": "70%",
+                                                  "marginRight": "10px",
+                                                  "width": "90%",
                                                 }
                                               }
                                               value=""
                                             >
-                                              <input
-                                                className="rs-input"
-                                                onBlur={[Function]}
-                                                onChange={[Function]}
-                                                onFocus={[Function]}
-                                                onKeyDown={[Function]}
-                                                placeholder="authors.panels.link"
-                                                style={
-                                                  Object {
-                                                    "width": "70%",
+                                              <div
+                                                className="rs-form-control rs-form-control-wrapper"
+                                              >
+                                                <Input
+                                                  aria-describedby={null}
+                                                  aria-labelledby={null}
+                                                  name="title"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  placeholder="authors.panels.title"
+                                                  style={
+                                                    Object {
+                                                      "marginRight": "10px",
+                                                      "width": "90%",
+                                                    }
                                                   }
-                                                }
-                                                type="text"
-                                                value=""
-                                              />
-                                            </Input>
-                                          </div>
-                                        </InputGroup>
+                                                  value=""
+                                                >
+                                                  <input
+                                                    aria-describedby={null}
+                                                    aria-labelledby={null}
+                                                    className="rs-input"
+                                                    name="title"
+                                                    onBlur={[Function]}
+                                                    onChange={[Function]}
+                                                    onKeyDown={[Function]}
+                                                    placeholder="authors.panels.title"
+                                                    style={
+                                                      Object {
+                                                        "marginRight": "10px",
+                                                        "width": "90%",
+                                                      }
+                                                    }
+                                                    type="text"
+                                                    value=""
+                                                  />
+                                                </Input>
+                                                <FormErrorMessage
+                                                  aria-relevant="all"
+                                                  className="rs-form-control-message-wrapper"
+                                                  id="undefined-error-message"
+                                                  placement="bottomStart"
+                                                  role="alert"
+                                                  show={false}
+                                                />
+                                              </div>
+                                            </FormControl>
+                                            <FormGroup>
+                                              <div
+                                                className="rs-form-group"
+                                                role="group"
+                                              >
+                                                <InputGroup
+                                                  inside={true}
+                                                >
+                                                  <div
+                                                    className="rs-input-group rs-input-group-inside"
+                                                  >
+                                                    <InputGroupAddon>
+                                                      <span
+                                                        className="rs-input-group-addon"
+                                                      >
+                                                        <Link>
+                                                          <Icon
+                                                            aria-label="link"
+                                                            as={
+                                                              Object {
+                                                                "$$typeof": Symbol(react.forward_ref),
+                                                                "render": [Function],
+                                                              }
+                                                            }
+                                                            data-category="legacy"
+                                                            fill="currentColor"
+                                                            height="1em"
+                                                            width="1em"
+                                                          >
+                                                            <ForwardRef(Link)
+                                                              aria-hidden={true}
+                                                              aria-label="link"
+                                                              className="rs-icon"
+                                                              data-category="legacy"
+                                                              fill="currentColor"
+                                                              focusable={false}
+                                                              height="1em"
+                                                              width="1em"
+                                                            >
+                                                              <svg
+                                                                aria-hidden={true}
+                                                                aria-label="link"
+                                                                className="rs-icon"
+                                                                data-category="legacy"
+                                                                fill="currentColor"
+                                                                focusable={false}
+                                                                height="1em"
+                                                                viewBox="0 0 30 32"
+                                                                width="1em"
+                                                              >
+                                                                <path
+                                                                  d="M26 21.714c0-.464-.179-.893-.5-1.214l-3.714-3.714a1.733 1.733 0 00-1.214-.5c-.518 0-.929.196-1.286.571.589.589 1.286 1.089 1.286 2 0 .946-.768 1.714-1.714 1.714-.911 0-1.411-.696-2-1.286-.375.357-.589.768-.589 1.304 0 .446.179.893.5 1.214l3.679 3.696c.321.321.768.482 1.214.482s.893-.161 1.214-.464l2.625-2.607c.321-.321.5-.75.5-1.196zM13.446 9.125c0-.446-.179-.893-.5-1.214L9.267 4.215c-.321-.321-.768-.5-1.214-.5s-.893.179-1.214.482L4.214 6.804a1.702 1.702 0 000 2.41l3.714 3.714c.321.321.768.482 1.214.482.518 0 .929-.179 1.286-.554-.589-.589-1.286-1.089-1.286-2 0-.946.768-1.714 1.714-1.714.911 0 1.411.696 2 1.286.375-.357.589-.768.589-1.304zm15.983 12.589a5.11 5.11 0 01-1.518 3.625l-2.625 2.607a5.106 5.106 0 01-3.625 1.482 5.077 5.077 0 01-3.643-1.518l-3.679-3.696a5.106 5.106 0 01-1.482-3.625c0-1.411.571-2.75 1.571-3.732l-1.571-1.571a5.187 5.187 0 01-3.714 1.571 5.165 5.165 0 01-3.643-1.5l-3.714-3.714A5.09 5.09 0 01.286 8a5.11 5.11 0 011.518-3.625l2.625-2.607A5.106 5.106 0 018.054.286c1.375 0 2.679.536 3.643 1.518L15.376 5.5a5.106 5.106 0 011.482 3.625c0 1.411-.571 2.75-1.571 3.732l1.571 1.571a5.187 5.187 0 013.714-1.571c1.357 0 2.679.536 3.643 1.5l3.714 3.714a5.09 5.09 0 011.5 3.643z"
+                                                                />
+                                                              </svg>
+                                                            </ForwardRef(Link)>
+                                                          </Icon>
+                                                        </Link>
+                                                      </span>
+                                                    </InputGroupAddon>
+                                                    <FormControl
+                                                      accepter={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "propTypes": Object {
+                                                            "as": [Function],
+                                                            "className": [Function],
+                                                            "classPrefix": [Function],
+                                                            "defaultValue": [Function],
+                                                            "disabled": [Function],
+                                                            "id": [Function],
+                                                            "inputRef": [Function],
+                                                            "onBlur": [Function],
+                                                            "onChange": [Function],
+                                                            "onFocus": [Function],
+                                                            "onKeyDown": [Function],
+                                                            "onPressEnter": [Function],
+                                                            "size": [Function],
+                                                            "type": [Function],
+                                                            "value": [Function],
+                                                          },
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                      name="link"
+                                                      onChange={[Function]}
+                                                      placeholder="authors.panels.link:https//link.com"
+                                                      style={
+                                                        Object {
+                                                          "width": "100%",
+                                                        }
+                                                      }
+                                                      value=""
+                                                    >
+                                                      <div
+                                                        className="rs-form-control rs-form-control-wrapper"
+                                                      >
+                                                        <Input
+                                                          aria-describedby={null}
+                                                          aria-labelledby={null}
+                                                          name="link"
+                                                          onBlur={[Function]}
+                                                          onChange={[Function]}
+                                                          placeholder="authors.panels.link:https//link.com"
+                                                          style={
+                                                            Object {
+                                                              "width": "100%",
+                                                            }
+                                                          }
+                                                          value=""
+                                                        >
+                                                          <input
+                                                            aria-describedby={null}
+                                                            aria-labelledby={null}
+                                                            className="rs-input"
+                                                            name="link"
+                                                            onBlur={[Function]}
+                                                            onChange={[Function]}
+                                                            onFocus={[Function]}
+                                                            onKeyDown={[Function]}
+                                                            placeholder="authors.panels.link:https//link.com"
+                                                            style={
+                                                              Object {
+                                                                "width": "100%",
+                                                              }
+                                                            }
+                                                            type="text"
+                                                            value=""
+                                                          />
+                                                        </Input>
+                                                        <FormErrorMessage
+                                                          aria-relevant="all"
+                                                          className="rs-form-control-message-wrapper"
+                                                          id="undefined-error-message"
+                                                          placement="bottomStart"
+                                                          role="alert"
+                                                          show={false}
+                                                        />
+                                                      </div>
+                                                    </FormControl>
+                                                  </div>
+                                                </InputGroup>
+                                              </div>
+                                            </FormGroup>
+                                          </form>
+                                        </Form>
                                       </div>
                                     </div>
                                   </div>
@@ -7742,6 +8372,53 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 >
                   <Form
                     fluid={true}
+                    formValue={
+                      Object {
+                        "name": "Douglas Cole",
+                      }
+                    }
+                    model={
+                      Schema {
+                        "data": undefined,
+                        "spec": Object {
+                          "name": StringType {
+                            "emptyAllowed": false,
+                            "locale": Object {
+                              "containsLetter": "\${name} field must contain letters",
+                              "containsLetterOnly": "\${name} must all be letters",
+                              "containsLowercaseLetter": "\${name} must be a lowercase string",
+                              "containsNumber": "\${name} field must contain numbers",
+                              "containsUppercaseLetter": "\${name} must be a upper case string",
+                              "isEmail": "\${name} must be a valid email",
+                              "isHex": "\${name} must be a valid hexadecimal",
+                              "isOneOf": "\${name} must be one of the following values: \${values}",
+                              "isRequired": "\${name} is a required field",
+                              "isRequiredOrEmpty": "\${name} is a required field",
+                              "isURL": "\${name} must be a valid URL",
+                              "maxLength": "\${name} must be at most \${maxLength} characters",
+                              "minLength": "\${name} must be at least \${minLength} characters",
+                              "pattern": "\${name} is invalid",
+                              "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                              "type": "\${name} must be a string",
+                            },
+                            "priorityRules": Array [],
+                            "required": true,
+                            "requiredMessage": "please enter a name",
+                            "rules": Array [
+                              Object {
+                                "errorMessage": "\${name} must be a string",
+                                "onValid": [Function],
+                                "params": undefined,
+                              },
+                            ],
+                            "schemaSpec": undefined,
+                            "trim": true,
+                            "typeName": "string",
+                            "value": undefined,
+                          },
+                        },
+                      }
+                    }
                   >
                     <form
                       className="rs-form rs-form-vertical rs-form-fluid"
@@ -7757,12 +8434,12 @@ exports[`Author Edit Panel should render with ID 1`] = `
                               className="rs-form-control-label"
                               id={null}
                             >
-                              authors.panels.name
+                              authors.panels.name*
                             </label>
                           </FormControlLabel>
                           <FormControl
                             disabled={false}
-                            name="authors.panels.name"
+                            name="name"
                             onChange={[Function]}
                             value="Douglas Cole"
                           >
@@ -7773,7 +8450,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 aria-describedby={null}
                                 aria-labelledby={null}
                                 disabled={false}
-                                name="authors.panels.name"
+                                name="name"
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 value="Douglas Cole"
@@ -7783,7 +8460,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   aria-labelledby={null}
                                   className="rs-input"
                                   disabled={false}
-                                  name="authors.panels.name"
+                                  name="name"
                                   onBlur={[Function]}
                                   onChange={[Function]}
                                   onKeyDown={[Function]}
@@ -8004,10 +8681,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
               </div>
             </Panel>
             <Panel
+              className="authorLinks"
               header="authors.panels.links"
             >
               <div
-                className="rs-panel"
+                className="authorLinks rs-panel"
               >
                 <div
                   className="rs-panel-header"

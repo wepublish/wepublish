@@ -223,9 +223,7 @@ describe('User Role Edit Panel', () => {
     await updateWrapper(wrapper, 100)
 
     act(() => {
-      wrapper
-        .find('input[name="userRoles.panels.name"]')
-        .simulate('change', {target: {value: userRole.name}})
+      wrapper.find('input[name="name"]').simulate('change', {target: {value: userRole.name}})
       wrapper
         .find('input[name="userRoles.panels.description"]')
         .simulate('change', {target: {value: userRole.description}})

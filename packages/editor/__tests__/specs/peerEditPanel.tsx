@@ -105,17 +105,11 @@ describe('Peer Edit Panel', () => {
     await updateWrapper(wrapper, 100)
 
     act(() => {
-      wrapper
-        .find('input[name="peerList.panels.name"]')
-        .simulate('change', {target: {value: peer.name}})
+      wrapper.find('input[name="name"]').simulate('change', {target: {value: peer.name}})
 
-      wrapper
-        .find('input[name="peerList.panels.URL"]')
-        .simulate('change', {target: {value: peer.hostURL}})
+      wrapper.find('input[name="url"]').simulate('change', {target: {value: peer.hostURL}})
 
-      wrapper
-        .find('input[name="peerList.panels.token"]')
-        .simulate('change', {target: {value: peer.token}})
+      wrapper.find('input[name="token"]').simulate('change', {target: {value: peer.token}})
     })
 
     await act(async () => {

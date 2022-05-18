@@ -155,6 +155,53 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
       >
         <Form
           fluid={true}
+          formValue={
+            Object {
+              "name": "Brand New User Role",
+            }
+          }
+          model={
+            Schema {
+              "data": undefined,
+              "spec": Object {
+                "name": StringType {
+                  "emptyAllowed": false,
+                  "locale": Object {
+                    "containsLetter": "\${name} field must contain letters",
+                    "containsLetterOnly": "\${name} must all be letters",
+                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                    "containsNumber": "\${name} field must contain numbers",
+                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                    "isEmail": "\${name} must be a valid email",
+                    "isHex": "\${name} must be a valid hexadecimal",
+                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                    "isRequired": "\${name} is a required field",
+                    "isRequiredOrEmpty": "\${name} is a required field",
+                    "isURL": "\${name} must be a valid URL",
+                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                    "minLength": "\${name} must be at least \${minLength} characters",
+                    "pattern": "\${name} is invalid",
+                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                    "type": "\${name} must be a string",
+                  },
+                  "priorityRules": Array [],
+                  "required": true,
+                  "requiredMessage": "please enter a name",
+                  "rules": Array [
+                    Object {
+                      "errorMessage": "\${name} must be a string",
+                      "onValid": [Function],
+                      "params": undefined,
+                    },
+                  ],
+                  "schemaSpec": undefined,
+                  "trim": true,
+                  "typeName": "string",
+                  "value": undefined,
+                },
+              },
+            }
+          }
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -170,12 +217,12 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-                    userRoles.panels.name
+                    userRoles.panels.name*
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={true}
-                  name="userRoles.panels.name"
+                  name="name"
                   onChange={[Function]}
                   value="Brand New User Role"
                 >
@@ -186,7 +233,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={true}
-                      name="userRoles.panels.name"
+                      name="name"
                       onBlur={[Function]}
                       onChange={[Function]}
                       value="Brand New User Role"
@@ -196,7 +243,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={true}
-                        name="userRoles.panels.name"
+                        name="name"
                         type="text"
                         value="Brand New User Role"
                       />
@@ -682,6 +729,53 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
       >
         <Form
           fluid={true}
+          formValue={
+            Object {
+              "name": "Role 1",
+            }
+          }
+          model={
+            Schema {
+              "data": undefined,
+              "spec": Object {
+                "name": StringType {
+                  "emptyAllowed": false,
+                  "locale": Object {
+                    "containsLetter": "\${name} field must contain letters",
+                    "containsLetterOnly": "\${name} must all be letters",
+                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                    "containsNumber": "\${name} field must contain numbers",
+                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                    "isEmail": "\${name} must be a valid email",
+                    "isHex": "\${name} must be a valid hexadecimal",
+                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                    "isRequired": "\${name} is a required field",
+                    "isRequiredOrEmpty": "\${name} is a required field",
+                    "isURL": "\${name} must be a valid URL",
+                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                    "minLength": "\${name} must be at least \${minLength} characters",
+                    "pattern": "\${name} is invalid",
+                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                    "type": "\${name} must be a string",
+                  },
+                  "priorityRules": Array [],
+                  "required": true,
+                  "requiredMessage": "please enter a name",
+                  "rules": Array [
+                    Object {
+                      "errorMessage": "\${name} must be a string",
+                      "onValid": [Function],
+                      "params": undefined,
+                    },
+                  ],
+                  "schemaSpec": undefined,
+                  "trim": true,
+                  "typeName": "string",
+                  "value": undefined,
+                },
+              },
+            }
+          }
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -697,12 +791,12 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
                     className="rs-form-control-label"
                     id={null}
                   >
-                    userRoles.panels.name
+                    userRoles.panels.name*
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={true}
-                  name="userRoles.panels.name"
+                  name="name"
                   onChange={[Function]}
                   value="Role 1"
                 >
@@ -713,7 +807,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={true}
-                      name="userRoles.panels.name"
+                      name="name"
                       onBlur={[Function]}
                       onChange={[Function]}
                       value="Role 1"
@@ -723,7 +817,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={true}
-                        name="userRoles.panels.name"
+                        name="name"
                         type="text"
                         value="Role 1"
                       />
@@ -1381,6 +1475,53 @@ exports[`User Role Edit Panel should render 1`] = `
       >
         <Form
           fluid={true}
+          formValue={
+            Object {
+              "name": "",
+            }
+          }
+          model={
+            Schema {
+              "data": undefined,
+              "spec": Object {
+                "name": StringType {
+                  "emptyAllowed": false,
+                  "locale": Object {
+                    "containsLetter": "\${name} field must contain letters",
+                    "containsLetterOnly": "\${name} must all be letters",
+                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                    "containsNumber": "\${name} field must contain numbers",
+                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                    "isEmail": "\${name} must be a valid email",
+                    "isHex": "\${name} must be a valid hexadecimal",
+                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                    "isRequired": "\${name} is a required field",
+                    "isRequiredOrEmpty": "\${name} is a required field",
+                    "isURL": "\${name} must be a valid URL",
+                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                    "minLength": "\${name} must be at least \${minLength} characters",
+                    "pattern": "\${name} is invalid",
+                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                    "type": "\${name} must be a string",
+                  },
+                  "priorityRules": Array [],
+                  "required": true,
+                  "requiredMessage": "please enter a name",
+                  "rules": Array [
+                    Object {
+                      "errorMessage": "\${name} must be a string",
+                      "onValid": [Function],
+                      "params": undefined,
+                    },
+                  ],
+                  "schemaSpec": undefined,
+                  "trim": true,
+                  "typeName": "string",
+                  "value": undefined,
+                },
+              },
+            }
+          }
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -1396,12 +1537,12 @@ exports[`User Role Edit Panel should render 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-                    userRoles.panels.name
+                    userRoles.panels.name*
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={false}
-                  name="userRoles.panels.name"
+                  name="name"
                   onChange={[Function]}
                   value=""
                 >
@@ -1412,7 +1553,7 @@ exports[`User Role Edit Panel should render 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={false}
-                      name="userRoles.panels.name"
+                      name="name"
                       onBlur={[Function]}
                       onChange={[Function]}
                       value=""
@@ -1422,7 +1563,7 @@ exports[`User Role Edit Panel should render 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={false}
-                        name="userRoles.panels.name"
+                        name="name"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onKeyDown={[Function]}
@@ -1914,6 +2055,53 @@ exports[`User Role Edit Panel should render with role 1`] = `
       >
         <Form
           fluid={true}
+          formValue={
+            Object {
+              "name": "Role 1",
+            }
+          }
+          model={
+            Schema {
+              "data": undefined,
+              "spec": Object {
+                "name": StringType {
+                  "emptyAllowed": false,
+                  "locale": Object {
+                    "containsLetter": "\${name} field must contain letters",
+                    "containsLetterOnly": "\${name} must all be letters",
+                    "containsLowercaseLetter": "\${name} must be a lowercase string",
+                    "containsNumber": "\${name} field must contain numbers",
+                    "containsUppercaseLetter": "\${name} must be a upper case string",
+                    "isEmail": "\${name} must be a valid email",
+                    "isHex": "\${name} must be a valid hexadecimal",
+                    "isOneOf": "\${name} must be one of the following values: \${values}",
+                    "isRequired": "\${name} is a required field",
+                    "isRequiredOrEmpty": "\${name} is a required field",
+                    "isURL": "\${name} must be a valid URL",
+                    "maxLength": "\${name} must be at most \${maxLength} characters",
+                    "minLength": "\${name} must be at least \${minLength} characters",
+                    "pattern": "\${name} is invalid",
+                    "rangeLength": "\${name} must contain \${minLength} to \${maxLength} characters",
+                    "type": "\${name} must be a string",
+                  },
+                  "priorityRules": Array [],
+                  "required": true,
+                  "requiredMessage": "please enter a name",
+                  "rules": Array [
+                    Object {
+                      "errorMessage": "\${name} must be a string",
+                      "onValid": [Function],
+                      "params": undefined,
+                    },
+                  ],
+                  "schemaSpec": undefined,
+                  "trim": true,
+                  "typeName": "string",
+                  "value": undefined,
+                },
+              },
+            }
+          }
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -1929,12 +2117,12 @@ exports[`User Role Edit Panel should render with role 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-                    userRoles.panels.name
+                    userRoles.panels.name*
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={false}
-                  name="userRoles.panels.name"
+                  name="name"
                   onChange={[Function]}
                   value="Role 1"
                 >
@@ -1945,7 +2133,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={false}
-                      name="userRoles.panels.name"
+                      name="name"
                       onBlur={[Function]}
                       onChange={[Function]}
                       value="Role 1"
@@ -1955,7 +2143,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={false}
-                        name="userRoles.panels.name"
+                        name="name"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onKeyDown={[Function]}

@@ -203,15 +203,9 @@ describe('User Edit Panel', () => {
     await updateWrapper(wrapper, 100)
 
     act(() => {
-      wrapper
-        .find('input[name="userList.panels.name"]')
-        .simulate('change', {target: {value: user.name}})
-      wrapper
-        .find('input[name="userList.panels.email"]')
-        .simulate('change', {target: {value: user.email}})
-      wrapper
-        .find('input[name="userList.panels.password"]')
-        .simulate('change', {target: {value: user.password}})
+      wrapper.find('input[name="name"]').simulate('change', {target: {value: user.name}})
+      wrapper.find('input[name="email"]').simulate('change', {target: {value: user.email}})
+      wrapper.find('input[name="password"]').simulate('change', {target: {value: user.password}})
     })
 
     wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
