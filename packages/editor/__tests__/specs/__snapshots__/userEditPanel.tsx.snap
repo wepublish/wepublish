@@ -3696,8 +3696,8 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           "type": "\${name} must be a string",
                         },
                         "priorityRules": Array [],
-                        "required": true,
-                        "requiredMessage": "Please provide a password",
+                        "required": false,
+                        "requiredMessage": "",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -3713,7 +3713,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           },
                         ],
                         "schemaSpec": undefined,
-                        "trim": true,
+                        "trim": false,
                         "typeName": "string",
                         "value": undefined,
                       },
@@ -7185,8 +7185,8 @@ exports[`User Edit Panel should render with ID 1`] = `
                           "type": "\${name} must be a string",
                         },
                         "priorityRules": Array [],
-                        "required": true,
-                        "requiredMessage": "Please provide a password",
+                        "required": false,
+                        "requiredMessage": "",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -7202,7 +7202,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                           },
                         ],
                         "schemaSpec": undefined,
-                        "trim": true,
+                        "trim": false,
                         "typeName": "string",
                         "value": undefined,
                       },

@@ -202,19 +202,24 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     }
   }
 
-  // Schema used for form validation
   const {StringType} = Schema.Types
+
+  let validatePassword: any = id
+    ? StringType().minLength(8, 'Password must be at least 8 characters long')
+    : StringType()
+        .minLength(8, 'Password must be at least 8 characters long')
+        .isRequired('Please provide a password')
+
+  // Schema used for form validation
   const validationModel = Schema.Model({
     firstName: StringType().isRequired('Please enter a firstname'),
     name: StringType().isRequired('Please enter a name'),
     email: StringType()
       .isRequired('Please enter a mail address')
       .isEmail('Please enter a valid email address'),
-    password: StringType()
-      .minLength(8, 'Password must be at least 8 characters long')
-      // make required only when there's no id
-      .isRequired('Please provide a password')
+    password: validatePassword
   })
+
   return (
     <>
       <Drawer.Header>
