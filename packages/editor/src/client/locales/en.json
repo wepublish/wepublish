@@ -982,6 +982,26 @@
       "selectMemberPlan": "Choose a Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "errorMessages": {
+      "noFirstNameErrorMessage": "Please enter a firstname",
+      "noNameErrorMessage": "Please enter a name",
+      "noEmailErrorMessage": "Please enter an email address",
+      "invalidEmailErrorMessage": "Please enter a valid email address",
+      "noUrlErrorMessage": "Please enter a url",
+      "invalidUrlErrorMessage": "Please enter a valid url",
+      "noImageErrorMessage": "Please enter an image",
+      "noCallToActionTextErrorMessage": "Please enter a call to action text",
+      "noCallToActionImageErrorMessage": "Please enter a call to action image",
+      "noAmountErrorMessage": "Please enter an amount",
+      "noPasswordErrorMessage": "Please enter a password",
+      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "noPaymentproviderErrorMessage": "Please enter a payment provider",
+      "noMemberPlanErrorMessage": "Please enter a member plan",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
+      "noUserErrorMessage": "Please select a user",
+      "noTokenErrorMessage": "Please enter a token"
     }
   }
 }

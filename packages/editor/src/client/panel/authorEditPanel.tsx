@@ -164,12 +164,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   // Defines field requirements
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('please enter a name')
-    // link: StringType().isURL('please enter a valid url')
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
   })
 
   const authorLinkFormModel = Schema.Model({
-    link: StringType().isURL('please enter a valid url')
+    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
   })
 
   return (

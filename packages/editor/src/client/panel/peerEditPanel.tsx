@@ -102,6 +102,9 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
   const form = useRef<FormInstance>(null)
   async function handleSave() {
+    if (!form.current?.check?.()) {
+      return
+    }
     if (id) {
       await updatePeer({
         variables: {
@@ -132,9 +135,11 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   // Schema used for form validation
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('Please enter a name'),
-    url: StringType().isRequired('Please enter a url').isURL('please enter a valid url'),
-    token: StringType().isRequired('Please enter a token')
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    url: StringType()
+      .isRequired(t('errorMessages.noUrlErrorMessage'))
+      .isURL(t('errorMessages.invalidUrlErrorMessage')),
+    token: StringType().isRequired(t('errorMessages.noTokenErrorMessage'))
   })
 
   return (

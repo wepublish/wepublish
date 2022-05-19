@@ -140,9 +140,9 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   // Schema used for form validation
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('Please enter a name'),
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
     // how to get that inside the picker ?
-    paymentProvider: StringType().isRequired('Please select a payment adapter')
+    paymentProvider: StringType().isRequired(t('errorMessages.noPaymentProvider'))
   })
 
   return (

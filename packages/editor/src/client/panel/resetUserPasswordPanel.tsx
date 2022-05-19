@@ -31,8 +31,8 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     password: StringType()
-      .isRequired('please enter a password')
-      .minLength(8, 'Password must be at least 8 characters long')
+      .isRequired(t('errorMessages.noPasswordErrorMessage'))
+      .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
   })
 
   return (

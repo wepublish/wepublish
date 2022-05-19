@@ -248,7 +248,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
   // Schema used for form validation
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    link: StringType().isURL('please enter a valid url')
+    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
   })
 
   return (

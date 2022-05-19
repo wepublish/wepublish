@@ -310,11 +310,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   // Schema used for form validation --- reference custom field for validation
   const {StringType, NumberType} = Schema.Types
   const validationModel = Schema.Model({
-    memberPlan: StringType().isRequired('Please select a memberplan'),
-    user: StringType().isRequired('Please select a user'),
-    currency: NumberType().isRequired('Please enter a number'),
-    paymentPeriodicity: StringType().isRequired('Please enter payment periodicity'),
-    paymentMethod: StringType().isRequired('Please enter a payment method')
+    memberPlan: StringType().isRequired(t('errorMessages.noMemberPlanErrorMessage')),
+    user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
+    currency: NumberType().isRequired(t('errorMessages.noAmountErrorMessage')),
+    paymentPeriodicity: StringType().isRequired(
+      t('errorMessages.noPaymentPeriodicityErrorMessage')
+    ),
+    paymentMethod: StringType().isRequired(t('errorMessages.noPaymentMethodErrorMessage'))
   })
 
   return (
@@ -370,7 +372,17 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         )}
 
         <Panel>
-          <Form ref={form} model={validationModel} fluid={true}>
+          <Form
+            ref={form}
+            model={validationModel}
+            fluid={true}
+            formValue={{
+              memberPlan: memberPlan?.name,
+              user: user?.name,
+              paymentMethod: paymentMethod?.name,
+              paymentPeriodicity: paymentPeriodicity,
+              currency: monthlyAmount
+            }}>
             <Form.Group>
               <Form.ControlLabel>
                 {t('userSubscriptionEdit.selectMemberPlan') + '*'}
@@ -388,8 +400,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               {memberPlan && (
                 <Form.HelpText>
                   <DescriptionList>
-                    <DescriptionListItem
-                      label={t('userSubscriptionEdit.memberPlanMonthlyAmount') + '*'}>
+                    <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
                       {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                     </DescriptionListItem>
                   </DescriptionList>
@@ -414,7 +425,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </Form.Group>
             <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.monthlyAmount' + '*')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('userSubscriptionEdit.monthlyAmount') + '*'}</Form.ControlLabel>
               <CurrencyInput
                 name="currency"
                 currency="CHF"

@@ -203,18 +203,18 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const {StringType} = Schema.Types
 
   const validatePassword: any = id
-    ? StringType().minLength(8, 'Password must be at least 8 characters long')
+    ? StringType().minLength(8, t('errorMessages.passwordTooShort'))
     : StringType()
-        .minLength(8, 'Password must be at least 8 characters long')
-        .isRequired('Please provide a password')
+        .minLength(8, t('errorMessages.passwordTooShort'))
+        .isRequired(t('errorMessages.noPassword'))
 
   // Schema used for form validation
   const validationModel = Schema.Model({
-    firstName: StringType().isRequired('Please enter a firstname'),
-    name: StringType().isRequired('Please enter a name'),
+    firstName: StringType().isRequired(t('errorMessages.noFirstNameErrorMessage')),
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
     email: StringType()
-      .isRequired('Please enter a mail address')
-      .isEmail('Please enter a valid email address'),
+      .isRequired(t('errorMessages.noEmailErrorMessage'))
+      .isEmail(t('errorMessages.invalidEmailErrorMessage')),
     password: validatePassword
   })
 

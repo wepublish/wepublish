@@ -101,6 +101,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const imgForm = useRef<FormInstance>(null)
 
   async function handleSave() {
+    console.log(form.current?.check?.())
     if (!form.current?.check?.()) {
       return
     }
@@ -133,19 +134,21 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const {StringType, ObjectType} = Schema.Types
 
   const validationModel = Schema.Model({
-    name: StringType().isRequired('please enter a name'),
-    callToActionText: ObjectType().isRequired('please enter a call to action text'),
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    callToActionText: ObjectType('Please enter').isRequired(
+      t('errorMessages.noCallToActionTextErrorMessage')
+    ),
     callToActionTextURL: StringType()
-      .isURL('please enter a valid url')
-      .isRequired('please enter a url'),
-    callToActionImage: ObjectType().isRequired('please add a call to action image'),
+      .isURL(t('errorMessages.invalidUrlErrorMessage'))
+      .isRequired(t('errorMessages.noUrlErrorMessage')),
+    callToActionImage: ObjectType().isRequired(t('errorMessages.noCallToActionImageErrorMessage')),
     callToActionImageURL: StringType()
-      .isURL('please enter a valid url')
-      .isRequired('please enter a url')
+      .isURL(t('errorMessages.invalidUrlErrorMessage'))
+      .isRequired(t('errorMessages.noUrlErrorMessage'))
   })
 
   const imgValidationModel = Schema.Model({
-    profileImg: StringType().isRequired('please enter an image')
+    profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage'))
   })
 
   return (
@@ -186,8 +189,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             fluid={true}
             model={imgValidationModel}
             style={{height: '45px'}}
-            formValue={{profileImg: logoImage?.filename}}>
-            {/* error because name doensn't get typed in manually */}
+            formValue={{profileImg: logoImage?.id}}>
             <Form.Group>
               <Form.Control
                 style={{display: 'none'}}

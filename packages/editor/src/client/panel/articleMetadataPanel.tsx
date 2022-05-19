@@ -151,7 +151,7 @@ export function ArticleMetadataPanel({
   // Defines field requirements
   const {StringType} = Schema.Types
   const model = Schema.Model({
-    canonicalUrl: StringType().isURL('please enter a valid url')
+    canonicalUrl: StringType().isURL(t('errorMessaged.invalidErrorMessage'))
   })
 
   function currentContent() {

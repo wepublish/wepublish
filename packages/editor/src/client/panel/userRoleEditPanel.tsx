@@ -122,7 +122,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired('please enter a name')
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
   })
 
   return (
