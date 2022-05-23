@@ -743,6 +743,7 @@ export type Mutation = {
   requestChangesOnComment: Comment;
   createSetting?: Maybe<Setting>;
   updateSetting?: Maybe<Setting>;
+  updateSettingByName?: Maybe<Setting>;
   deleteSetting?: Maybe<Scalars['ID']>;
 };
 
@@ -1062,6 +1063,12 @@ export type MutationCreateSettingArgs = {
 export type MutationUpdateSettingArgs = {
   id: Scalars['String'];
   input: SettingInput;
+};
+
+
+export type MutationUpdateSettingByNameArgs = {
+  name: Scalars['String'];
+  value: Scalars['value'];
 };
 
 
@@ -1734,22 +1741,30 @@ export type Setting = {
   __typename?: 'Setting';
   id: Scalars['ID'];
   name: Scalars['String'];
-  settingType: SettingType;
   value?: Maybe<Scalars['value']>;
+  settingRestriction?: Maybe<SettingRestriction>;
 };
 
 export type SettingInput = {
   name: Scalars['String'];
-  type: SettingType;
   value?: Maybe<Scalars['value']>;
+  settingRestriction?: Maybe<SettingRestrictionInput>;
 };
 
-export enum SettingType {
-  Switch = 'switch',
-  MultiSelect = 'multiSelect',
-  Input = 'input',
-  Number = 'number'
-}
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']>;
+  allowedValues?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type SettingRestrictionInput = {
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']>;
+  allowedValues?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
 
 
 export enum SortOrder {
@@ -3583,7 +3598,58 @@ export type DeletePeerMutation = (
 
 export type FullSettingFragment = (
   { __typename?: 'Setting' }
-  & Pick<Setting, 'id' | 'name' | 'settingType' | 'value'>
+  & Pick<Setting, 'id' | 'name' | 'value'>
+  & { settingRestriction?: Maybe<(
+    { __typename?: 'SettingRestriction' }
+    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
+  )> }
+);
+
+export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingListQuery = (
+  { __typename?: 'Query' }
+  & { settings: Array<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'id' | 'name' | 'value'>
+    & { settingRestriction?: Maybe<(
+      { __typename?: 'SettingRestriction' }
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
+    )> }
+  )> }
+);
+
+export type SettingQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+}>;
+
+
+export type SettingQuery = (
+  { __typename?: 'Query' }
+  & { setting?: Maybe<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'id' | 'value'>
+    & { settingRestriction?: Maybe<(
+      { __typename?: 'SettingRestriction' }
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
+    )> }
+  )> }
+);
+
+export type UpdateSettingMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: SettingInput;
+}>;
+
+
+export type UpdateSettingMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSetting?: Maybe<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'value'>
+  )> }
 );
 
 export type FullSubscriptionFragment = (
@@ -4466,8 +4532,13 @@ export const FullSettingFragmentDoc = gql`
     fragment FullSetting on Setting {
   id
   name
-  settingType
   value
+  settingRestriction {
+    maxValue
+    minValue
+    inputLength
+    allowedValues
+  }
 }
     `;
 export const FullPaymentProviderFragmentDoc = gql`
@@ -6848,6 +6919,125 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const SettingListDocument = gql`
+    query SettingList {
+  settings {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+      }
+export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+        }
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
+export const SettingDocument = gql`
+    query Setting($id: ID, $name: String) {
+  setting(id: $id, name: $name) {
+    id
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingQuery__
+ *
+ * To run a query within a React component, call `useSettingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useSettingQuery(baseOptions?: Apollo.QueryHookOptions<SettingQuery, SettingQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
+      }
+export function useSettingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
+        }
+export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
+export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;
+export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>;
+export const UpdateSettingDocument = gql`
+    mutation UpdateSetting($id: String!, $input: SettingInput!) {
+  updateSetting(id: $id, input: $input) {
+    value
+  }
+}
+    `;
+export type UpdateSettingMutationFn = Apollo.MutationFunction<UpdateSettingMutation, UpdateSettingMutationVariables>;
+
+/**
+ * __useUpdateSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingMutation, { data, loading, error }] = useUpdateSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingMutation, UpdateSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingMutation, UpdateSettingMutationVariables>(UpdateSettingDocument, options);
+      }
+export type UpdateSettingMutationHookResult = ReturnType<typeof useUpdateSettingMutation>;
+export type UpdateSettingMutationResult = Apollo.MutationResult<UpdateSettingMutation>;
+export type UpdateSettingMutationOptions = Apollo.BaseMutationOptions<UpdateSettingMutation, UpdateSettingMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {

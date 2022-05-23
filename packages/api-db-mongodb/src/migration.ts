@@ -5,6 +5,7 @@ import {
   BlockType,
   PageBlock,
   PaymentProviderCustomer,
+  SettingInput,
   Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
@@ -875,9 +876,11 @@ export const Migrations: Migration[] = [
     version: 21,
     async migrate(db, locale) {
       // TODO add initial settings
-      await db.createCollection(CollectionName.Settings, {
+      const settingsDoc = await db.createCollection(CollectionName.Settings, {
         strict: true
       })
+      const maxCommentLength: SettingInput<number> = {value: 500, name: 'Max Comment Length'}
+      await settingsDoc.insertOne(maxCommentLength)
     }
   }
 ]

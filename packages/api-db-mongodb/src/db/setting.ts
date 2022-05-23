@@ -21,7 +21,6 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
   async createSetting({input}: CreateSettingArgs<any>): Promise<Setting> {
     const {ops} = await this.settings.insertOne({
       name: input.name,
-      settingType: input.type,
       value: input.value
     })
     const {_id: id, ...setting} = ops[0]
@@ -34,9 +33,11 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
   }
 
   async getSettingsByName(names: string[]): Promise<OptionalSetting[]> {
-    const settings = await this.settings.find({name: {$in: names}}).toArray()
-    const settingsMap = Object.fromEntries(settings.map(({...settings}) => [{...settings}]))
-    return names.map(name => settingsMap[name] ?? null)
+    const settings = await this.settings.find({name: {$in: names as string[]}}).toArray()
+    const settingsMap = Object.fromEntries(
+      settings.map(({_id: id, name, ...setting}) => [{...setting}])
+    )
+    return names.map(name => (settingsMap[name] as Setting) ?? null)
   }
 
   async getSettingsByID(ids: string[]): Promise<OptionalSetting[]> {
@@ -54,8 +55,7 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
       {
         $set: {
           name: input.name,
-          value: input.value,
-          type: input.type
+          value: input.value
         }
       },
       {returnOriginal: false}

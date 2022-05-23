@@ -7,7 +7,8 @@ import {
   GraphQLBoolean,
   GraphQLScalarType,
   GraphQLInputObjectType,
-  GraphQLID
+  GraphQLID,
+  GraphQLList
 } from 'graphql'
 
 import {Context} from '../context'
@@ -30,12 +31,32 @@ export const GraphQLSettingType = new GraphQLEnumType({
   }
 })
 
+export const GraphQLSettingRestriction = new GraphQLObjectType({
+  name: 'SettingRestriction',
+  fields: {
+    maxValue: {type: GraphQLInt},
+    minValue: {type: GraphQLInt},
+    inputLength: {type: GraphQLInt},
+    allowedValues: {type: GraphQLList(GraphQLString)}
+  }
+})
+
+export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
+  name: 'SettingRestrictionInput',
+  fields: {
+    maxValue: {type: GraphQLInt},
+    minValue: {type: GraphQLInt},
+    inputLength: {type: GraphQLInt},
+    allowedValues: {type: GraphQLList(GraphQLString)}
+  }
+})
+
 export const GraphQLSettingInput = new GraphQLInputObjectType({
   name: 'SettingInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    type: {type: GraphQLNonNull(GraphQLSettingType)},
-    value: {type: GraphQLSettingValueType}
+    value: {type: GraphQLSettingValueType},
+    settingRestriction: {type: GraphQLSettingRestrictionInput}
   }
 })
 
@@ -44,7 +65,7 @@ export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
-    settingType: {type: GraphQLNonNull(GraphQLSettingType)},
-    value: {type: GraphQLSettingValueType}
+    value: {type: GraphQLSettingValueType},
+    settingRestriction: {type: GraphQLSettingRestriction}
   }
 })

@@ -1,6 +1,43 @@
 fragment FullSetting on Setting {
     id
     name
-    settingType
     value
+    settingRestriction {
+    maxValue
+    minValue
+    inputLength
+    allowedValues
+    }
+}
+
+query SettingList {
+  settings {
+    id
+    name
+    value
+    settingRestriction {
+     maxValue
+        minValue
+        inputLength
+        allowedValues}
+  }
+}
+
+
+query Setting($id: ID, $name: String) {
+    setting(id: $id, name: $name) {
+        id
+        value
+        settingRestriction {
+         maxValue
+            minValue
+            inputLength
+            allowedValues
+            }
+    }
+}
+mutation UpdateSetting($id: String!, $input: SettingInput!) {
+  updateSetting(id: $id, input: $input) {
+    value
+  }
 }

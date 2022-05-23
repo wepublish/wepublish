@@ -1149,7 +1149,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     setting: {
       type: GraphQLSetting,
       args: {id: {type: GraphQLID}, name: {type: GraphQLString}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
+      resolve(root, {id, name}, {authenticate, loaders}) {
         // TODO authenticate
 
         if ((id == null && name == null) || (id != null && name != null)) {

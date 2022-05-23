@@ -1,22 +1,15 @@
-export enum SettingType {
-  Switch = 'switch',
-  MultiSelect = 'multiSelect',
-  Input = 'input',
-  Number = 'number'
-}
-
 export type Setting<T = unknown> = {
   id: string
 
   name: string
-  settingType: SettingType
   value: T | null
+  restrictions?: SettingRestriction
 }
 
 export interface SettingInput<T> {
   name: string
-  type: SettingType
   value: T | null
+  restrictions?: SettingRestriction
 }
 
 export interface CreateSettingArgs<T> {
@@ -30,6 +23,14 @@ export interface UpdateSettingArgs {
 
 export interface DeleteSettingArgs {
   id: string
+}
+
+// TODO restrictions
+export interface SettingRestriction {
+  maxValue?: number
+  minValue?: number
+  inputLength?: number
+  allowedValues?: string[]
 }
 
 export type OptionalSetting = Setting | null
