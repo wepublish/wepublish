@@ -743,7 +743,6 @@ export type Mutation = {
   requestChangesOnComment: Comment;
   createSetting?: Maybe<Setting>;
   updateSetting?: Maybe<Setting>;
-  updateSettingByName?: Maybe<Setting>;
   deleteSetting?: Maybe<Scalars['ID']>;
 };
 
@@ -1057,18 +1056,13 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationCreateSettingArgs = {
   input: SettingInput;
+  settingRestriction?: Maybe<SettingRestrictionInput>;
 };
 
 
 export type MutationUpdateSettingArgs = {
   id: Scalars['String'];
   input: SettingInput;
-};
-
-
-export type MutationUpdateSettingByNameArgs = {
-  name: Scalars['String'];
-  value: Scalars['value'];
 };
 
 
@@ -1748,7 +1742,6 @@ export type Setting = {
 export type SettingInput = {
   name: Scalars['String'];
   value?: Maybe<Scalars['value']>;
-  settingRestriction?: Maybe<SettingRestrictionInput>;
 };
 
 export type SettingRestriction = {

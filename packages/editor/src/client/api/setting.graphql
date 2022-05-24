@@ -19,10 +19,10 @@ query SettingList {
      maxValue
         minValue
         inputLength
-        allowedValues}
+        allowedValues
+        }
   }
 }
-
 
 query Setting($id: ID, $name: String) {
     setting(id: $id, name: $name) {
@@ -36,6 +36,7 @@ query Setting($id: ID, $name: String) {
             }
     }
 }
+
 mutation UpdateSetting($id: String!, $input: SettingInput!) {
   updateSetting(id: $id, input: $input) {
     value

@@ -3,17 +3,18 @@ export type Setting<T = unknown> = {
 
   name: string
   value: T | null
-  restrictions?: SettingRestriction
+  settingRestriction?: SettingRestriction
 }
 
 export interface SettingInput<T> {
   name: string
   value: T | null
-  restrictions?: SettingRestriction
 }
 
 export interface CreateSettingArgs<T> {
-  input: SettingInput<T>
+  name: string
+  value: T | null
+  settingRestriction?: SettingRestriction
 }
 
 export interface UpdateSettingArgs {
@@ -25,7 +26,6 @@ export interface DeleteSettingArgs {
   id: string
 }
 
-// TODO restrictions
 export interface SettingRestriction {
   maxValue?: number
   minValue?: number

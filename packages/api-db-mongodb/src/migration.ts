@@ -3,9 +3,9 @@ import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {
   ArticleBlock,
   BlockType,
+  CreateSettingArgs,
   PageBlock,
   PaymentProviderCustomer,
-  SettingInput,
   Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
@@ -879,8 +879,14 @@ export const Migrations: Migration[] = [
       const settingsDoc = await db.createCollection(CollectionName.Settings, {
         strict: true
       })
-      const maxCommentLength: SettingInput<number> = {value: 500, name: 'Max Comment Length'}
-      await settingsDoc.insertOne(maxCommentLength)
+
+      const maxCommentCreate: CreateSettingArgs<number> = {
+        name: 'Max Comment Length',
+        value: 500,
+        settingRestriction: {maxValue: 600}
+      }
+
+      await settingsDoc.insertOne(maxCommentCreate)
     }
   }
 ]

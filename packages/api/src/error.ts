@@ -20,7 +20,8 @@ export enum ErrorCode {
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
   InternalError = 'InternalError',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
-  ChallengeFailed = 'ChallengeFailed'
+  ChallengeFailed = 'ChallengeFailed',
+  InvalidSettingData = 'INVALID_SETTING_DATA'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -165,5 +166,11 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
         ? 'Subscription is already canceled'
         : 'Subscription is already marked to be canceled'
     super(msg, ErrorCode.UserSubscriptionAlreadyDeactivated)
+  }
+}
+
+export class InvalidSettingValueError extends ApolloError {
+  constructor() {
+    super('Invalid data', ErrorCode.InvalidSettingData)
   }
 }

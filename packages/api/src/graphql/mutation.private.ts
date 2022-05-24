@@ -16,6 +16,7 @@ import {
   DuplicatePageSlugError,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
+  InvalidSettingValueError,
   NotActiveError,
   NotFound,
   OAuth2ProviderNotFoundError,
@@ -90,7 +91,12 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
-import {GraphQLSetting, GraphQLSettingInput} from './setting'
+import {
+  GraphQLSetting,
+  GraphQLSettingInput,
+  GraphQLSettingRestrictionInput,
+  GraphQLSettingValueType
+} from './setting'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1159,12 +1165,21 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createSetting: {
       type: GraphQLSetting,
-      args: {input: {type: GraphQLNonNull(GraphQLSettingInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        settingRestriction: {type: GraphQLSettingRestrictionInput},
+        value: {type: GraphQLNonNull(GraphQLSettingValueType)}
+      },
+      resolve(root, {name, value, restrictions}, {authenticate, dbAdapter}) {
         // TODO authentication
         // const {roles} = authenticate()
         //     authorise(CanCreateSettings, roles)
-        return dbAdapter.setting.createSetting({input})
+
+        return dbAdapter.setting.createSetting({
+          name: name,
+          value: value,
+          settingRestriction: restrictions
+        })
       }
     },
 
@@ -1175,15 +1190,26 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLSettingInput)}
       },
 
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {id, input}, {authenticate, dbAdapter, loaders}) {
+        const fullSetting = await loaders.settingsByID.load(id)
+        const restrictions = fullSetting?.settingRestriction
         // TODO
-        //  const {roles} = authenticate()
+        //   const {roles} = authenticate()
         // authorise(CanCreateNavigation, roles)
-
-        return dbAdapter.setting.updateSetting({
-          id,
-          input: input
-        })
+        if (
+          !restrictions ||
+          ((!restrictions.allowedValues || restrictions.allowedValues.includes(input.value)) &&
+            (!restrictions.inputLength || restrictions.inputLength >= input.value.length) &&
+            (!restrictions.maxValue || restrictions.maxValue >= input.value) &&
+            (!restrictions.minValue || restrictions.minValue <= input.value))
+        ) {
+          return dbAdapter.setting.updateSetting({
+            id,
+            input: input
+          })
+        } else {
+          throw new InvalidSettingValueError()
+        }
       }
     },
 

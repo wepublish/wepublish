@@ -18,10 +18,11 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
     this.settings = db.collection(CollectionName.Settings)
   }
 
-  async createSetting({input}: CreateSettingArgs<any>): Promise<Setting> {
+  async createSetting({name, value, settingRestriction}: CreateSettingArgs<any>): Promise<Setting> {
     const {ops} = await this.settings.insertOne({
-      name: input.name,
-      value: input.value
+      name: name,
+      value: value,
+      settingRestriction: settingRestriction
     })
     const {_id: id, ...setting} = ops[0]
     return {id, ...setting}

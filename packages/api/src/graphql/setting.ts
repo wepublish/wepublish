@@ -2,9 +2,7 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLString,
-  GraphQLEnumType,
   GraphQLInt,
-  GraphQLBoolean,
   GraphQLScalarType,
   GraphQLInputObjectType,
   GraphQLID,
@@ -18,16 +16,6 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
   name: 'value',
   serialize(value) {
     return value
-  }
-})
-
-export const GraphQLSettingType = new GraphQLEnumType({
-  name: 'SettingType',
-  values: {
-    switch: {value: GraphQLBoolean},
-    multiSelect: {value: GraphQLString},
-    input: {value: GraphQLString},
-    number: {value: GraphQLInt}
   }
 })
 
@@ -55,8 +43,7 @@ export const GraphQLSettingInput = new GraphQLInputObjectType({
   name: 'SettingInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    value: {type: GraphQLSettingValueType},
-    settingRestriction: {type: GraphQLSettingRestrictionInput}
+    value: {type: GraphQLSettingValueType}
   }
 })
 
