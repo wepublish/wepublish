@@ -248,8 +248,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                       name="title"
                       placeholder={t('authors.panels.title')}
                       style={{
-                        width: '95px',
-                        marginRight: '10px'
+                        width: '95px'
                       }}
                       value={value.title}
                       onChange={(title: string) => onChange({...value, title})}
@@ -269,6 +268,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                           value={value.url}
                           onChange={(url: any) => onChange({...value, url})}
                           accepter={Input}
+                          // errorPlacement="leftStart"
                         />
                       </InputGroup>
                     </Form.Group>

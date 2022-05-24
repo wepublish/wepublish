@@ -48,7 +48,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isLogoChange, setIsLogoChange] = useState(false)
   // const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
-  const [profileImgValidation, setProfileImgValidation] = useState('')
+  const [profileImgValidation, setProfileImgValidation] = useState(logoImage?.id ?? '')
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -76,6 +76,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setCallToActionTextURL(data.peerProfile.callToActionURL)
       setCallToActionImage(data?.peerProfile?.callToActionImage)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
+      setProfileImgValidation(data.peerProfile.logo?.id ?? '')
     }
   }, [data?.peerProfile])
 
@@ -89,18 +90,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       )
   }, [fetchError, saveError])
 
-  // useEffect(() => {
-  //   const checkCallToActionURL = async () => {
-  //     const isValidTextURL = validateURL(callToActionTextURL)
-  //     const isValidImageURL = validateURL(callToActionImageURL)
-  //   }
-  //   checkCallToActionURL()
-  // }, [callToActionTextURL, callToActionImageURL])
-
   const form = useRef<FormInstance>(null)
   const imgForm = useRef<FormInstance>(null)
 
   async function handleSave() {
+    console.log(callToActionText)
     console.log(form.current?.check?.())
     if (!form.current?.check?.()) {
       return
@@ -131,12 +125,19 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
-  const {StringType, ObjectType} = Schema.Types
+  const {StringType, ObjectType, ArrayType, NumberType} = Schema.Types
 
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    callToActionText: ObjectType('Please enter').isRequired(
-      t('errorMessages.noCallToActionTextErrorMessage')
+
+    callToActionText: ArrayType().of(
+      ObjectType('The tag should be a string').shape({
+        children: ArrayType().of(
+          ObjectType().shape({
+            text: StringType().isRequired(t('errorMessages.noCallToActionTextErrorMessage'))
+          })
+        )
+      })
     ),
     callToActionTextURL: StringType()
       .isURL(t('errorMessages.invalidUrlErrorMessage'))
@@ -195,7 +196,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 style={{display: 'none'}}
                 name="profileImg"
                 value={logoImage?.id || ''}
-                onChange={setProfileImgValidation}
+                // onChange={() => console.log('change', logoImage?.id)}
+                {...console.log(logoImage?.id)}
+                // when the image is uploaded, set the image id to the setProfileImgValidation
               />
             </Form.Group>
           </Form>
@@ -317,6 +320,12 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           onSelect={value => {
             setChooseModalOpen(false)
             isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
+            setTimeout(() => {
+              imgForm.current?.check?.()
+              form.current?.check?.()
+            }, 500)
+
+            setProfileImgValidation(logoImage?.id ?? '')
           }}
         />
       </Drawer>

@@ -166,7 +166,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
         <Panel>
           <Form
             ref={form}
-            fluid={true}
+            fluid
             model={validationModel}
             formValue={{name: name, paymentProvider: paymentProvider}}>
             <Form.Group>

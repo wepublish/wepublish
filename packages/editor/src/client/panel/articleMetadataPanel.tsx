@@ -151,7 +151,7 @@ export function ArticleMetadataPanel({
   // Defines field requirements
   const {StringType} = Schema.Types
   const model = Schema.Model({
-    canonicalUrl: StringType().isURL(t('errorMessaged.invalidErrorMessage'))
+    canonicalUrl: StringType().isURL(t('errorMessages.invalidErrorMessage'))
   })
 
   function currentContent() {
@@ -519,7 +519,7 @@ export function ArticleMetadataPanel({
 
         <Drawer.Actions>
           <Button
-            appearance={'primary'}
+            appearance="primary"
             onClick={() => {
               if (!form.current?.check?.()) {
                 return
