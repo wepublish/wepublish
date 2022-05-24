@@ -3,10 +3,10 @@ fragment FullSetting on Setting {
     name
     value
     settingRestriction {
-    maxValue
-    minValue
-    inputLength
-    allowedValues
+        maxValue
+        minValue
+        inputLength
+        allowedValues
     }
 }
 
@@ -16,11 +16,11 @@ query SettingList {
     name
     value
     settingRestriction {
-     maxValue
+        maxValue
         minValue
         inputLength
         allowedValues
-        }
+    }
   }
 }
 
@@ -29,11 +29,11 @@ query Setting($id: ID, $name: String) {
         id
         value
         settingRestriction {
-         maxValue
+            maxValue
             minValue
             inputLength
             allowedValues
-            }
+        }
     }
 }
 

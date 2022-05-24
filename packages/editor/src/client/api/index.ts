@@ -1055,8 +1055,9 @@ export type MutationRequestChangesOnCommentArgs = {
 
 
 export type MutationCreateSettingArgs = {
-  input: SettingInput;
+  name: Scalars['String'];
   settingRestriction?: Maybe<SettingRestrictionInput>;
+  value: Scalars['value'];
 };
 
 
