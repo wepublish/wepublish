@@ -9,7 +9,6 @@ import {
   GraphQLBoolean,
   GraphQLID
 } from 'graphql'
-import {UserSort} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -21,7 +20,7 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {Subscription, SubscriptionDeactivationReason} from '../db/subscription'
+import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
 import {NotFound} from '../error'
 import {isTempUser, removePrefixTempUser} from '../utility'
@@ -149,8 +148,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
 export const GraphQLSubscriptionSort = new GraphQLEnumType({
   name: 'SubscriptionSort',
   values: {
-    CREATED_AT: {value: UserSort.CreatedAt},
-    MODIFIED_AT: {value: UserSort.ModifiedAt}
+    CREATED_AT: {value: SubscriptionSort.CreatedAt},
+    MODIFIED_AT: {value: SubscriptionSort.ModifiedAt}
   }
 })
 
