@@ -202,7 +202,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a mail address",
+                        "requiredMessage": "errorMessages.noEmailErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -210,7 +210,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Please enter a valid email address",
+                            "errorMessage": "errorMessages.invalidEmailErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -242,7 +242,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a firstname",
+                        "requiredMessage": "errorMessages.noFirstNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -277,7 +277,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -312,7 +312,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please provide a password",
+                        "requiredMessage": "errorMessages.noPassword",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -320,7 +320,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Password must be at least 8 characters long",
+                            "errorMessage": "errorMessages.passwordTooShort",
                             "onValid": [Function],
                             "params": Object {
                               "minLength": 8,
@@ -406,7 +406,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                 <span
                                   className="rs-form-error-message-inner"
                                 >
-                                  Please enter a firstname
+                                  errorMessages.noFirstNameErrorMessage
                                 </span>
                               </span>
                             </div>
@@ -1704,7 +1704,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a mail address",
+                        "requiredMessage": "errorMessages.noEmailErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1712,7 +1712,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Please enter a valid email address",
+                            "errorMessage": "errorMessages.invalidEmailErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -1744,7 +1744,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a firstname",
+                        "requiredMessage": "errorMessages.noFirstNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1779,7 +1779,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1814,7 +1814,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please provide a password",
+                        "requiredMessage": "errorMessages.noPassword",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1822,7 +1822,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Password must be at least 8 characters long",
+                            "errorMessage": "errorMessages.passwordTooShort",
                             "onValid": [Function],
                             "params": Object {
                               "minLength": 8,
@@ -3587,7 +3587,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a mail address",
+                        "requiredMessage": "errorMessages.noEmailErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -3595,7 +3595,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Please enter a valid email address",
+                            "errorMessage": "errorMessages.invalidEmailErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -3627,7 +3627,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a firstname",
+                        "requiredMessage": "errorMessages.noFirstNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -3662,7 +3662,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -3705,7 +3705,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Password must be at least 8 characters long",
+                            "errorMessage": "errorMessages.passwordTooShort",
                             "onValid": [Function],
                             "params": Object {
                               "minLength": 8,
@@ -5824,7 +5824,7 @@ exports[`User Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a mail address",
+                        "requiredMessage": "errorMessages.noEmailErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -5832,7 +5832,7 @@ exports[`User Edit Panel should render 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Please enter a valid email address",
+                            "errorMessage": "errorMessages.invalidEmailErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -5864,7 +5864,7 @@ exports[`User Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a firstname",
+                        "requiredMessage": "errorMessages.noFirstNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -5899,7 +5899,7 @@ exports[`User Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -5934,7 +5934,7 @@ exports[`User Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please provide a password",
+                        "requiredMessage": "errorMessages.noPassword",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -5942,7 +5942,7 @@ exports[`User Edit Panel should render 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Password must be at least 8 characters long",
+                            "errorMessage": "errorMessages.passwordTooShort",
                             "onValid": [Function],
                             "params": Object {
                               "minLength": 8,
@@ -7076,7 +7076,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a mail address",
+                        "requiredMessage": "errorMessages.noEmailErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -7084,7 +7084,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Please enter a valid email address",
+                            "errorMessage": "errorMessages.invalidEmailErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -7116,7 +7116,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a firstname",
+                        "requiredMessage": "errorMessages.noFirstNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -7151,7 +7151,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -7194,7 +7194,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "Password must be at least 8 characters long",
+                            "errorMessage": "errorMessages.passwordTooShort",
                             "onValid": [Function],
                             "params": Object {
                               "minLength": 8,

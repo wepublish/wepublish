@@ -21,7 +21,6 @@ import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
 import {FormInstance} from 'rsuite/esm/Form'
-import {FormControlUrl} from '../atoms/formControlUrl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -243,7 +242,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 />
               </Form.Group>
               <Form.Group>
-                <FormControlUrl
+                <Form.Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
                   value={callToActionTextURL}
@@ -285,7 +284,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 />
               </Form.Group>
               <Form.Group>
-                <FormControlUrl
+                <Form.Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
                   value={callToActionImageURL}

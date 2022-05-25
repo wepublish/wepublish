@@ -198,7 +198,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -233,7 +233,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a token",
+                        "requiredMessage": "errorMessages.noTokenErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -268,7 +268,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a url",
+                        "requiredMessage": "errorMessages.noUrlErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -276,7 +276,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "please enter a valid url",
+                            "errorMessage": "errorMessages.invalidUrlErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -691,7 +691,7 @@ exports[`Peer Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -726,7 +726,7 @@ exports[`Peer Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a token",
+                        "requiredMessage": "errorMessages.noTokenErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -761,7 +761,7 @@ exports[`Peer Edit Panel should render 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a url",
+                        "requiredMessage": "errorMessages.noUrlErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -769,7 +769,7 @@ exports[`Peer Edit Panel should render 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "please enter a valid url",
+                            "errorMessage": "errorMessages.invalidUrlErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },
@@ -1185,7 +1185,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a name",
+                        "requiredMessage": "errorMessages.noNameErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1220,7 +1220,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a token",
+                        "requiredMessage": "errorMessages.noTokenErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1255,7 +1255,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                         },
                         "priorityRules": Array [],
                         "required": true,
-                        "requiredMessage": "Please enter a url",
+                        "requiredMessage": "errorMessages.noUrlErrorMessage",
                         "rules": Array [
                           Object {
                             "errorMessage": "\${name} must be a string",
@@ -1263,7 +1263,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                             "params": undefined,
                           },
                           Object {
-                            "errorMessage": "please enter a valid url",
+                            "errorMessage": "errorMessages.invalidUrlErrorMessage",
                             "onValid": [Function],
                             "params": undefined,
                           },

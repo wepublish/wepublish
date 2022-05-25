@@ -186,7 +186,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                   },
                   "priorityRules": Array [],
                   "required": true,
-                  "requiredMessage": "please enter a name",
+                  "requiredMessage": "errorMessages.noNameErrorMessage",
                   "rules": Array [
                     Object {
                       "errorMessage": "\${name} must be a string",
@@ -760,7 +760,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
                   },
                   "priorityRules": Array [],
                   "required": true,
-                  "requiredMessage": "please enter a name",
+                  "requiredMessage": "errorMessages.noNameErrorMessage",
                   "rules": Array [
                     Object {
                       "errorMessage": "\${name} must be a string",
@@ -1506,7 +1506,7 @@ exports[`User Role Edit Panel should render 1`] = `
                   },
                   "priorityRules": Array [],
                   "required": true,
-                  "requiredMessage": "please enter a name",
+                  "requiredMessage": "errorMessages.noNameErrorMessage",
                   "rules": Array [
                     Object {
                       "errorMessage": "\${name} must be a string",
@@ -2086,7 +2086,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
                   },
                   "priorityRules": Array [],
                   "required": true,
-                  "requiredMessage": "please enter a name",
+                  "requiredMessage": "errorMessages.noNameErrorMessage",
                   "rules": Array [
                     Object {
                       "errorMessage": "\${name} must be a string",

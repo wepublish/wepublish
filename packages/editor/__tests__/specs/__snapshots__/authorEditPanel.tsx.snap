@@ -198,7 +198,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             },
                             "priorityRules": Array [],
                             "required": true,
-                            "requiredMessage": "please enter a name",
+                            "requiredMessage": "errorMessages.noNameErrorMessage",
                             "rules": Array [
                               Object {
                                 "errorMessage": "\${name} must be a string",
@@ -708,7 +708,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                       "params": undefined,
                                                     },
                                                     Object {
-                                                      "errorMessage": "please enter a valid url",
+                                                      "errorMessage": "errorMessages.invalidUrlErrorMessage",
                                                       "onValid": [Function],
                                                       "params": undefined,
                                                     },
@@ -724,6 +724,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           style={
                                             Object {
                                               "display": "flex",
+                                              "width": "100px",
                                             }
                                           }
                                         >
@@ -733,6 +734,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             style={
                                               Object {
                                                 "display": "flex",
+                                                "width": "100px",
                                               }
                                             }
                                           >
@@ -742,8 +744,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "marginRight": "10px",
-                                                  "width": "90%",
+                                                  "width": "95px",
                                                 }
                                               }
                                               value=""
@@ -760,8 +761,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                   placeholder="authors.panels.title"
                                                   style={
                                                     Object {
-                                                      "marginRight": "10px",
-                                                      "width": "90%",
+                                                      "width": "95px",
                                                     }
                                                   }
                                                   value=""
@@ -777,8 +777,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                     placeholder="authors.panels.title"
                                                     style={
                                                       Object {
-                                                        "marginRight": "10px",
-                                                        "width": "90%",
+                                                        "width": "95px",
                                                       }
                                                     }
                                                     type="text"
@@ -883,7 +882,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                       placeholder="authors.panels.link:https//link.com"
                                                       style={
                                                         Object {
-                                                          "width": "100%",
+                                                          "width": "90%",
                                                         }
                                                       }
                                                       value=""
@@ -900,7 +899,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                           placeholder="authors.panels.link:https//link.com"
                                                           style={
                                                             Object {
-                                                              "width": "100%",
+                                                              "width": "90%",
                                                             }
                                                           }
                                                           value=""
@@ -917,7 +916,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                             placeholder="authors.panels.link:https//link.com"
                                                             style={
                                                               Object {
-                                                                "width": "100%",
+                                                                "width": "90%",
                                                               }
                                                             }
                                                             type="text"
@@ -2935,7 +2934,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             },
                             "priorityRules": Array [],
                             "required": true,
-                            "requiredMessage": "please enter a name",
+                            "requiredMessage": "errorMessages.noNameErrorMessage",
                             "rules": Array [
                               Object {
                                 "errorMessage": "\${name} must be a string",
@@ -3451,7 +3450,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                       "params": undefined,
                                                     },
                                                     Object {
-                                                      "errorMessage": "please enter a valid url",
+                                                      "errorMessage": "errorMessages.invalidUrlErrorMessage",
                                                       "onValid": [Function],
                                                       "params": undefined,
                                                     },
@@ -3467,6 +3466,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                           style={
                                             Object {
                                               "display": "flex",
+                                              "width": "100px",
                                             }
                                           }
                                         >
@@ -3476,6 +3476,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                             style={
                                               Object {
                                                 "display": "flex",
+                                                "width": "100px",
                                               }
                                             }
                                           >
@@ -3485,8 +3486,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                               placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "marginRight": "10px",
-                                                  "width": "90%",
+                                                  "width": "95px",
                                                 }
                                               }
                                               value=""
@@ -3503,8 +3503,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                   placeholder="authors.panels.title"
                                                   style={
                                                     Object {
-                                                      "marginRight": "10px",
-                                                      "width": "90%",
+                                                      "width": "95px",
                                                     }
                                                   }
                                                   value=""
@@ -3520,8 +3519,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                     placeholder="authors.panels.title"
                                                     style={
                                                       Object {
-                                                        "marginRight": "10px",
-                                                        "width": "90%",
+                                                        "width": "95px",
                                                       }
                                                     }
                                                     type="text"
@@ -3626,7 +3624,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                       placeholder="authors.panels.link:https//link.com"
                                                       style={
                                                         Object {
-                                                          "width": "100%",
+                                                          "width": "90%",
                                                         }
                                                       }
                                                       value=""
@@ -3643,7 +3641,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                           placeholder="authors.panels.link:https//link.com"
                                                           style={
                                                             Object {
-                                                              "width": "100%",
+                                                              "width": "90%",
                                                             }
                                                           }
                                                           value=""
@@ -3660,7 +3658,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                             placeholder="authors.panels.link:https//link.com"
                                                             style={
                                                               Object {
-                                                                "width": "100%",
+                                                                "width": "90%",
                                                               }
                                                             }
                                                             type="text"
@@ -5668,7 +5666,7 @@ exports[`Author Edit Panel should render 1`] = `
                             },
                             "priorityRules": Array [],
                             "required": true,
-                            "requiredMessage": "please enter a name",
+                            "requiredMessage": "errorMessages.noNameErrorMessage",
                             "rules": Array [
                               Object {
                                 "errorMessage": "\${name} must be a string",
@@ -6184,7 +6182,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                       "params": undefined,
                                                     },
                                                     Object {
-                                                      "errorMessage": "please enter a valid url",
+                                                      "errorMessage": "errorMessages.invalidUrlErrorMessage",
                                                       "onValid": [Function],
                                                       "params": undefined,
                                                     },
@@ -6200,6 +6198,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           style={
                                             Object {
                                               "display": "flex",
+                                              "width": "100px",
                                             }
                                           }
                                         >
@@ -6209,6 +6208,7 @@ exports[`Author Edit Panel should render 1`] = `
                                             style={
                                               Object {
                                                 "display": "flex",
+                                                "width": "100px",
                                               }
                                             }
                                           >
@@ -6218,8 +6218,7 @@ exports[`Author Edit Panel should render 1`] = `
                                               placeholder="authors.panels.title"
                                               style={
                                                 Object {
-                                                  "marginRight": "10px",
-                                                  "width": "90%",
+                                                  "width": "95px",
                                                 }
                                               }
                                               value=""
@@ -6236,8 +6235,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                   placeholder="authors.panels.title"
                                                   style={
                                                     Object {
-                                                      "marginRight": "10px",
-                                                      "width": "90%",
+                                                      "width": "95px",
                                                     }
                                                   }
                                                   value=""
@@ -6253,8 +6251,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                     placeholder="authors.panels.title"
                                                     style={
                                                       Object {
-                                                        "marginRight": "10px",
-                                                        "width": "90%",
+                                                        "width": "95px",
                                                       }
                                                     }
                                                     type="text"
@@ -6359,7 +6356,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                       placeholder="authors.panels.link:https//link.com"
                                                       style={
                                                         Object {
-                                                          "width": "100%",
+                                                          "width": "90%",
                                                         }
                                                       }
                                                       value=""
@@ -6376,7 +6373,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                           placeholder="authors.panels.link:https//link.com"
                                                           style={
                                                             Object {
-                                                              "width": "100%",
+                                                              "width": "90%",
                                                             }
                                                           }
                                                           value=""
@@ -6393,7 +6390,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                             placeholder="authors.panels.link:https//link.com"
                                                             style={
                                                               Object {
-                                                                "width": "100%",
+                                                                "width": "90%",
                                                               }
                                                             }
                                                             type="text"
@@ -8403,7 +8400,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             },
                             "priorityRules": Array [],
                             "required": true,
-                            "requiredMessage": "please enter a name",
+                            "requiredMessage": "errorMessages.noNameErrorMessage",
                             "rules": Array [
                               Object {
                                 "errorMessage": "\${name} must be a string",
