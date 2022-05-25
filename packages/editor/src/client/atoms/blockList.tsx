@@ -72,7 +72,6 @@ const BlockListItem = memo(function BlockListItem({
     },
     [onChange, index]
   )
-
   return (
     <ListItemWrapper
       icon={icon}

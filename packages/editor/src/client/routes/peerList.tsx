@@ -13,12 +13,14 @@ import {
   IconButton,
   List,
   ListProps,
-  Modal
+  Modal,
+  Toggle
 } from 'rsuite'
 import {
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
+  useUpdatePeerMutation,
   usePeerListQuery,
   usePeerProfileQuery
 } from '../api'
@@ -38,6 +40,7 @@ import {
   useRoute,
   useRouteDispatch
 } from '../route'
+import {addOrUpdateOneInArray} from '../utility'
 
 const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
 const ButtonLink = routeLink(Button)
@@ -73,6 +76,7 @@ export function PeerList() {
   })
 
   const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
+  const [updatePeer, {loading: isUpdating}] = useUpdatePeerMutation()
 
   const {t} = useTranslation()
 
@@ -100,14 +104,13 @@ export function PeerList() {
   }, [current])
 
   const peers = peerListData?.peers?.map((peer, index) => {
-    const {id, name, profile, hostURL} = peer
-
+    const {id, name, profile, hostURL, isDisabled} = peer
     return (
       <ListItemLink
         key={name}
         index={index}
-        route={PeerEditRoute.create({id})}
-        style={{cursor: 'pointer'}}>
+        route={isDisabled ? undefined : PeerEditRoute.create({id})}
+        style={{cursor: isDisabled ? 'default' : 'pointer'}}>
         <FlexboxGrid>
           <FlexboxGrid.Item
             colspan={2}
@@ -120,14 +123,43 @@ export function PeerList() {
               alt={profile?.name?.substr(0, 2)}
             />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={21}>
+          <FlexboxGrid.Item colspan={18}>
             <h5>{name}</h5>
             <p>
               {profile && `${profile.name} - `}
               {hostURL}
             </p>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
+          <FlexboxGrid.Item colspan={2}>
+            <IconButtonTooltip
+              caption={isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}>
+              <Toggle
+                disabled={isUpdating}
+                checked={!isDisabled}
+                onChange={async (checked, e) => {
+                  e.preventDefault()
+                  await updatePeer({
+                    variables: {id, input: {isDisabled: !checked}},
+                    update: cache => {
+                      const query = cache.readQuery<PeerListQuery>({
+                        query: PeerListDocument
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<PeerListQuery>({
+                        query: PeerListDocument,
+                        data: {
+                          peers: addOrUpdateOneInArray(query.peers, {...peer, isDisabled: !checked})
+                        }
+                      })
+                    }
+                  })
+                }}
+              />
+            </IconButtonTooltip>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={2} style={{textAlign: 'center'}}>
             <IconButtonTooltip caption={t('peerList.overview.delete')}>
               <IconButton
                 disabled={isPeerInfoLoading}

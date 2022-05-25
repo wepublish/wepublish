@@ -1278,6 +1278,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
+  isDisabled: Scalars['Boolean'];
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
@@ -1876,9 +1877,10 @@ export type UpdateImageInput = {
 };
 
 export type UpdatePeerInput = {
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  hostURL: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hostURL?: Maybe<Scalars['String']>;
+  isDisabled?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
 };
 
@@ -3404,7 +3406,7 @@ export type FullPeerProfileFragment = (
 
 export type PeerRefFragment = (
   { __typename?: 'Peer' }
-  & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
+  & Pick<Peer, 'id' | 'name' | 'slug' | 'isDisabled' | 'hostURL'>
   & { profile?: Maybe<(
     { __typename?: 'PeerProfile' }
     & FullPeerProfileFragment
@@ -4013,6 +4015,7 @@ export const PeerRefFragmentDoc = gql`
   id
   name
   slug
+  isDisabled
   hostURL
   profile {
     ...FullPeerProfile
