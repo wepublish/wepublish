@@ -46,7 +46,7 @@ export interface DeleteSubscriptionArgs {
 }
 
 export enum SubscriptionSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 
