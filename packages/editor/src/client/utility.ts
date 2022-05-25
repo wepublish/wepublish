@@ -13,8 +13,8 @@ export enum LocalStorageKey {
 export const TEMP_USER_PREFIX = '__temp_'
 
 export const addOrUpdateOneInArray = (
-  array: Record<string, unknown>[],
-  entry: Record<string, unknown>
+  array: Maybe<Record<string | 'id', any>[]>,
+  entry: Record<string | 'id', any>
 ) => {
   let isNew = true
 

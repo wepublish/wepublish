@@ -147,10 +147,13 @@ export function PeerList() {
 
                       if (!query) return
 
-                      cache.writeQuery<PeerListQuery>({
+                      cache.writeQuery({
                         query: PeerListDocument,
                         data: {
-                          peers: addOrUpdateOneInArray(query.peers, {...peer, isDisabled: !checked})
+                          peers: addOrUpdateOneInArray(query.peers, {
+                            ...peer,
+                            isDisabled: !checked
+                          })
                         }
                       })
                     }
