@@ -431,8 +431,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 currency="CHF"
                 centAmount={monthlyAmount}
                 onChange={centAmount => {
+                  console.log(centAmount)
+
                   setMonthlyAmount(centAmount)
                 }}
+                // onBlur={centAmount => {!centAmount ? setMonthlyAmount(500) : ''}}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />
             </Form.Group>

@@ -268,7 +268,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                           value={value.url}
                           onChange={(url: any) => onChange({...value, url})}
                           accepter={Input}
-                          // errorPlacement="leftStart"
                         />
                       </InputGroup>
                     </Form.Group>

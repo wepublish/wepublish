@@ -13,10 +13,7 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {
-  getOperationNameFromDocument
-  // validateURL
-} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -46,9 +43,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
-  // const [validCallToActionURL, setValidCallToActionURL] = useState(true)
-
-  const [profileImgValidation, setProfileImgValidation] = useState(logoImage?.id ?? '')
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -58,7 +52,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
   const isDisabled = isLoading || isSaving
-  // || validCallToActionURL
 
   const {t} = useTranslation()
 
@@ -76,7 +69,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setCallToActionTextURL(data.peerProfile.callToActionURL)
       setCallToActionImage(data?.peerProfile?.callToActionImage)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
-      setProfileImgValidation(data.peerProfile.logo?.id ?? '')
     }
   }, [data?.peerProfile])
 
@@ -94,8 +86,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const imgForm = useRef<FormInstance>(null)
 
   async function handleSave() {
-    console.log(callToActionText)
-    console.log(form.current?.check?.())
     if (!form.current?.check?.()) {
       return
     }
@@ -125,20 +115,19 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
-  const {StringType, ObjectType, ArrayType, NumberType} = Schema.Types
+  const {StringType, ObjectType} = Schema.Types
 
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-
-    callToActionText: ArrayType().of(
-      ObjectType('The tag should be a string').shape({
-        children: ArrayType().of(
-          ObjectType().shape({
-            text: StringType().isRequired(t('errorMessages.noCallToActionTextErrorMessage'))
-          })
-        )
-      })
-    ),
+    // callToActionText: ArrayType().of(
+    //   ObjectType().shape({
+    //     children: ArrayType().of(
+    //       ObjectType().shape({
+    //         text: StringType().isRequired(t('errorMessages.noCallToActionTextErrorMessage'))
+    //       })
+    //     )
+    //   })
+    // ),
     callToActionTextURL: StringType()
       .isURL(t('errorMessages.invalidUrlErrorMessage'))
       .isRequired(t('errorMessages.noUrlErrorMessage')),
@@ -196,9 +185,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 style={{display: 'none'}}
                 name="profileImg"
                 value={logoImage?.id || ''}
-                // onChange={() => console.log('change', logoImage?.id)}
-                {...console.log(logoImage?.id)}
-                // when the image is uploaded, set the image id to the setProfileImgValidation
               />
             </Form.Group>
           </Form>
@@ -239,7 +225,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               />
             </Form.Group>
 
-            <Form.ControlLabel>{t('peerList.panels.callToActionText') + '*'}</Form.ControlLabel>
+            <Form.ControlLabel>{t('peerList.panels.callToActionText')}</Form.ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -324,8 +310,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               imgForm.current?.check?.()
               form.current?.check?.()
             }, 500)
-
-            setProfileImgValidation(logoImage?.id ?? '')
           }}
         />
       </Drawer>

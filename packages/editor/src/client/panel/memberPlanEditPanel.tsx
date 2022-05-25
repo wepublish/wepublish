@@ -202,7 +202,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     }
   }
 
-  // Schema used for form validaiton
+  // Schema used for form validation
   const {StringType, NumberType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),

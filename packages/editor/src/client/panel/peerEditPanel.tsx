@@ -198,11 +198,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 }}
               />
             </Form.Group>
-            <Button
-              className="fetchButton"
-              appearance={'primary'}
-              // disabled={!urlString || !token}
-              onClick={() => handleFetch()}>
+            <Button className="fetchButton" appearance={'primary'} onClick={() => handleFetch()}>
               {t('peerList.panels.getRemote')}
             </Button>
           </Form>

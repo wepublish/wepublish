@@ -1,15 +1,23 @@
 import React, {useState, useEffect} from 'react'
-import {Form, InputGroup} from 'rsuite'
+import {Form, InputGroup, Schema} from 'rsuite'
 
 export interface CurrencyInputProps {
   currency: string
   centAmount: number
   onChange(centAmount: number): void
+  // onBlur(centAmount: number): void
+
   disabled?: boolean
   name: string
 }
 
-export function CurrencyInput({currency, centAmount, disabled, onChange}: CurrencyInputProps) {
+export function CurrencyInput({
+  currency,
+  centAmount,
+  disabled,
+  name,
+  onChange
+}: CurrencyInputProps) {
   const [amount, setAmount] = useState<number | string | any>(centAmount / 100)
 
   useEffect(() => {
@@ -28,13 +36,16 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
         <InputGroup inside>
           <Form.Control
             value={amount as string}
-            name="currency"
+            name={name}
             disabled={disabled}
             onChange={(amount: string) => {
               amount = toFloat(amount)
               setAmount(amount)
             }}
             onBlur={() => {
+              console.log(amount, name)
+              // if (!amount) {setAmount(500)}
+              // set amount to 500 if empty
               if (amount) {
                 onChange(parseFloat(amount as string) * 100)
               }
@@ -46,3 +57,5 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
     </div>
   )
 }
+
+// if the mount is empty, either validation should fail or the amount should be automatically set to 5, both in the setAmount and value field
