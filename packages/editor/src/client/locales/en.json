@@ -528,7 +528,7 @@
       "name": "Name",
       "slug": "Slug",
       "paymentMethods": "Possible Payment Methods",
-      "paymentPeriodicities": "Possible Payment Periodicities",
+      "paymentPeriodicities": "Payment Periodicities",
       "paymentPeriodicity": {
         "BIANNUAL": "Biannual",
         "MONTHLY": "Monthly",
@@ -792,6 +792,8 @@
       }
     },
     "save": "Save",
+    "yes": "Yes",
+    "no": "No",
     "tokenList": {
       "overview": {
         "delete": "Delete",
@@ -832,6 +834,12 @@
         "email": "Email",
         "memberPlan": "Member Plan"
       },
+      "filter": {
+        "deactivationReason": "Deactivation reason",
+        "reasonNone": "None",
+        "reasonUserSelfDeactivated": "By user",
+        "reasonInvoiceNotPaid": "Invoice not paid"
+      },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
         "name": "Name",
@@ -864,6 +872,10 @@
       "panels": {
         "csvData": "CSV Data",
         "exportSubscriptions": "Export",
+        "generateCSV": "Generate",
+        "actions": "Actions",
+        "download": "Download",
+        "copy": "Copy",
         "noUsersWithSubscriptions": "Currently, No users have subscriptions",
         "active": "Active",
         "addUserRole": "Add User Role",
@@ -941,6 +953,7 @@
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter",
       "autoRenew": "Auto Renew",
+      "hasAddress": "User has address",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "tempUser": {
@@ -968,6 +981,8 @@
         },
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
         "date": "Deactivation Date",
+        "dateFrom": "Deactivation date (from)",
+        "dateTo": "Deactivation date (to)",
         "reason": "Deactivation Reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
@@ -981,7 +996,7 @@
       "name": "Name",
       "payedUntil": "Paid Until",
       "paymentMethod": "Payment Method",
-      "selectMemberPlan": "Choose a Member Plan",
+      "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
     }
