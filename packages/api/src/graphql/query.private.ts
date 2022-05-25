@@ -370,10 +370,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         while (hasMore) {
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
-              cursor: InputCursor(afterCursor ?? undefined),
               filter,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
+              cursor: InputCursor(afterCursor ?? undefined),
               order: SortOrder.Descending
             }
           )
