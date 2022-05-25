@@ -325,32 +325,53 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   /**
    * UI helper functions
    */
-  function subscriptionActionsView() {
-    if (id && paymentMethod && memberPlan) {
-      return (
-        <FlexboxGrid>
-          <FlexboxGrid.Item style={{paddingRight: '10px'}}>
-            <Button color="green" onClick={() => setIsInvoiceListOpen(true)}>
-              <Icon icon="file" style={{marginRight: '10px'}} />
-              {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
-            </Button>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item>
-            <Button
-              appearance="ghost"
-              disabled={isDisabled}
-              onClick={() => setDeactivationPanelOpen(true)}>
-              {t(
-                deactivation
-                  ? 'userSubscriptionEdit.deactivation.title.deactivated'
-                  : 'userSubscriptionEdit.deactivation.title.activated'
-              )}
-            </Button>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      )
+  function showInvoiceHistory(): boolean {
+    return !!(id && paymentMethod && memberPlan)
+  }
+
+  function subscriptionActionsViewLink() {
+    if (!showInvoiceHistory()) {
+      return <></>
     }
-    return <></>
+    return (
+      <FormGroup>
+        <ControlLabel>
+          {t('userSubscriptionEdit.payedUntil')}
+          <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
+            ({t('invoice.seeInvoiceHistory')})
+          </Button>
+        </ControlLabel>
+        <DatePicker block value={paidUntil ?? undefined} disabled />
+      </FormGroup>
+    )
+  }
+
+  function subscriptionActionsView() {
+    if (!showInvoiceHistory()) {
+      return <></>
+    }
+    return (
+      <FlexboxGrid>
+        <FlexboxGrid.Item style={{paddingRight: '10px'}}>
+          <Button color="green" onClick={() => setIsInvoiceListOpen(true)}>
+            <Icon icon="file" style={{marginRight: '10px'}} />
+            {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
+          </Button>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item>
+          <Button
+            appearance="ghost"
+            disabled={isDisabled}
+            onClick={() => setDeactivationPanelOpen(true)}>
+            {t(
+              deactivation
+                ? 'userSubscriptionEdit.deactivation.title.deactivated'
+                : 'userSubscriptionEdit.deactivation.title.activated'
+            )}
+          </Button>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+    )
   }
 
   return (
@@ -471,20 +492,13 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
               <DatePicker
                 block
+                cleanable={false}
                 value={startsAt}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value)}
               />
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>
-                {t('userSubscriptionEdit.payedUntil')}
-                <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
-                  ({t('invoice.seeInvoiceHistory')})
-                </Button>
-              </ControlLabel>
-              <DatePicker block value={paidUntil ?? undefined} disabled />
-            </FormGroup>
+            {subscriptionActionsViewLink()}
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
               <SelectPicker
