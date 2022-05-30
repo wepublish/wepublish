@@ -995,7 +995,7 @@
       "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
       "noPasswordErrorMessage": "Please enter a password",
       "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
-      "noPaymentproviderErrorMessage": "Please enter a payment provider",
+      "noPaymentProviderErrorMessage": "Please enter a payment provider",
       "noMemberPlanErrorMessage": "Please enter a member plan",
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
       "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
