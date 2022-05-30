@@ -75,12 +75,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
 
-        const toReturn = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
+        const peer = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
 
-        if (toReturn?.isDisabled === true) {
+        if (peer?.isDisabled === true) {
           throw new DisabledPeerError()
         }
-        return toReturn
+        return peer
       }
     },
 

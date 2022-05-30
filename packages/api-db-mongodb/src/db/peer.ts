@@ -84,7 +84,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
   ): Promise<OptionalPeer> {
     const toUpdate = {
       modifiedAt: new Date()
-    } as any
+    } as Record<string, unknown>
     if (hostURL) toUpdate.hostUrl = hostURL
     if (name) toUpdate.name = name
     if (slug) toUpdate.slug = slug

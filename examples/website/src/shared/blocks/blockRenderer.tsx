@@ -162,7 +162,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
       break
 
     case TeaserType.PeerArticle:
-      if (article.peer?.isDisabled === true) {
+      if (article.peer?.isDisabled) {
         // just don't render any teaser for now - agreed with Laurent
         return null
       }

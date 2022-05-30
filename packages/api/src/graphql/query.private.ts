@@ -215,13 +215,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetPeer, roles)
 
-        const toReturn = await loaders.peer.load(id)
+        const peer = await loaders.peer.load(id)
 
-        if (toReturn?.isDisabled === true) {
+        if (peer?.isDisabled === true) {
           throw new DisabledPeerError()
         }
 
-        return toReturn
+        return peer
       }
     },
 

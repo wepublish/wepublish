@@ -1,11 +1,11 @@
 import React from 'react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
+import {PeerEditPanel} from '../peerEditPanel'
 import {mount} from 'enzyme'
 
-import {updateWrapper} from '../utils'
+import {updateWrapper} from '../../../../__tests__/utils'
 import {act} from 'react-dom/test-utils'
-import {PeerDocument, CreatePeerDocument} from '../../src/client/api'
+import {PeerDocument, CreatePeerDocument} from '../../api'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -39,6 +39,7 @@ describe('Peer Edit Panel', () => {
                 id: 'peerId1',
                 name: 'Test Peer Name',
                 slug: 'test-peer-name',
+                isDisabled: false,
                 hostURL: 'https://test-url.ch/',
                 profile: {}
               }
