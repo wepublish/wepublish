@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {Form, InputGroup, Schema} from 'rsuite'
+import {Form, InputGroup} from 'rsuite'
 
 export interface CurrencyInputProps {
   currency: string
   centAmount: number
   onChange(centAmount: number): void
-  // onBlur(centAmount: number): void
 
   disabled?: boolean
   name: string
@@ -43,9 +42,6 @@ export function CurrencyInput({
               setAmount(amount)
             }}
             onBlur={() => {
-              console.log(amount, name)
-              // if (!amount) {setAmount(500)}
-              // set amount to 500 if empty
               if (amount) {
                 onChange(parseFloat(amount as string) * 100)
               }
@@ -57,5 +53,3 @@ export function CurrencyInput({
     </div>
   )
 }
-
-// if the mount is empty, either validation should fail or the amount should be automatically set to 5, both in the setAmount and value field

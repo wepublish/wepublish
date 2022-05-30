@@ -118,6 +118,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    // Validation for richText - not needed for now
     // callToActionText: ArrayType().of(
     //   ObjectType().shape({
     //     children: ArrayType().of(

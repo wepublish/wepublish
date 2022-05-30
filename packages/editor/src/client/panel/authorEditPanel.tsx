@@ -29,12 +29,7 @@ import {
   AuthorListDocument
 } from '../api'
 
-import {
-  slugify,
-  generateID,
-  getOperationNameFromDocument
-  //  validateURL
-} from '../utility'
+import {slugify, generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
@@ -179,7 +174,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {id ? t('authors.panels.save') : t('authors.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
