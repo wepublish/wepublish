@@ -22,13 +22,5 @@ module.exports = {
   },
   snapshotSerializers: ['enzyme-to-json/serializer'],
   coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
-  coverageDirectory: '__tests__/coverage',
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: -10
-    }
-  }
+  coverageDirectory: '__tests__/coverage'
 }

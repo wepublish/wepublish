@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import React from 'react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {PeerEditPanel} from '../peerEditPanel'
