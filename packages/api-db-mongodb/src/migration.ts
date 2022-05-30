@@ -5,8 +5,10 @@ import {
   BlockType,
   PageBlock,
   PaymentProviderCustomer,
+  removePrefixTempUser,
   Subscription,
-  SubscriptionDeactivationReason
+  SubscriptionDeactivationReason,
+  TEMP_USER_PREFIX
 } from '@wepublish/api'
 import {slugify} from './utility'
 
@@ -720,17 +722,19 @@ export const Migrations: Migration[] = [
     // migrate existing deactivated subscriptions
     version: 18,
     async migrate(db, locale) {
+      // 1. move subscription from user object into new collection
       const users = await db.collection(CollectionName.Users)
-
       const userWithSubscriptions = await users.find({subscription: {$exists: true}}).toArray()
-
       const newSubscriptions: Omit<Subscription, 'id'>[] = []
-
+      const OLD_TEMP_USER_REGEX = /^temp_[0-9]+_/
       for (const user of userWithSubscriptions) {
         if (!user.subscription) continue
-
+        // create correct temp user reference id
+        const userId = OLD_TEMP_USER_REGEX.test(user.email)
+          ? `${TEMP_USER_PREFIX}${user._id}`
+          : user._id
         newSubscriptions.push({
-          userID: user._id,
+          userID: userId,
           createdAt: user.createdAt,
           modifiedAt: user.modifiedAt,
           memberPlanID: user.subscription.memberPlanID,
@@ -745,28 +749,29 @@ export const Migrations: Migration[] = [
           deactivation: user.subscription.deactivation
         })
       }
-
       const subscriptions = await db.createCollection(CollectionName.Subscriptions, {
         strict: true
       })
       if (newSubscriptions.length > 0) await subscriptions.insertMany(newSubscriptions)
 
+      // 2. create new invoices
       const invoices = await db.collection(CollectionName.Invoices)
-
       const allInvoices = await invoices.find({}).toArray()
       const allSubscriptions = await subscriptions.find({}).toArray()
-
       const newInvoices: DBInvoice[] = []
-
       for (const invoice of allInvoices) {
         const userID = invoice.userID
-        const subscription = allSubscriptions.find(subscription => subscription.userID === userID)
-
+        const subscription = allSubscriptions.find(subscription => {
+          return removePrefixTempUser(subscription.userID) === userID
+        })
+        if (!subscription) {
+          continue
+        }
         newInvoices.push({
           _id: invoice._id,
           createdAt: invoice.createdAt,
           modifiedAt: invoice.modifiedAt,
-          subscriptionID: subscription?._id ?? '__subscriptionNotFoundDuringMigration',
+          subscriptionID: subscription._id,
           description: invoice.description,
           canceledAt: invoice.canceledAt,
           dueAt: invoice.dueAt,
@@ -776,22 +781,37 @@ export const Migrations: Migration[] = [
           sentReminderAt: invoice.sentReminderAt
         })
       }
-
       // inform We.Publish operators to remove this manually
       await invoices.rename('invoices.bak')
-
       const emptyInvoices = await db.createCollection(CollectionName.Invoices, {
         strict: true
       })
-
       if (newInvoices.length > 0) await emptyInvoices.insertMany(newInvoices)
 
+      // 4. remove subscription object from user collection
       await users.updateMany(
         {subscription: {$exists: true}},
         {
           $unset: {subscription: ''}
         }
       )
+
+      // 3. create new collection with existing temp user
+      const tempUserQuery = {email: {$regex: OLD_TEMP_USER_REGEX}}
+      const tempUsers = await users.find(tempUserQuery).toArray()
+      const newTempUserCollection = await db.createCollection(CollectionName.TempUsers, {
+        strict: true
+      })
+      if (tempUsers.length) {
+        // remove old temp_ prefix from emails in the new temp.user collection
+        for (const tempUser of tempUsers) {
+          tempUser.email = tempUser.email.replace(OLD_TEMP_USER_REGEX, '')
+        }
+        await newTempUserCollection.insertMany(tempUsers)
+
+        // 5. delete migrated temp users from user
+        await users.deleteMany(tempUserQuery)
+      }
     }
   },
   {
