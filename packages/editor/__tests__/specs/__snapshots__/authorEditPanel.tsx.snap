@@ -1615,6 +1615,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -4357,6 +4358,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -7089,6 +7091,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
@@ -9305,6 +9308,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                   "id": undefined,
                                                 }
                                               }
+                                              open={false}
                                               placement="top"
                                               rootClose={true}
                                               triggerTarget={
