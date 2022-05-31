@@ -1,77 +1,92 @@
 fragment FullSubscription on Subscription {
-    id
-    createdAt
-    modifiedAt
+  id
+  createdAt
+  modifiedAt
 
-    user {
-        ...FullUser
-    }
-    memberPlan {
-        ...FullMemberPlan
-    }
-    paymentPeriodicity
-    monthlyAmount
-    autoRenew
-    startsAt
-    paidUntil
-    properties {
-        ...MetadataProperty
-    }
-    paymentMethod {
-        ...FullPaymentMethod
-    }
-    deactivation {
-        ...Deactivation
-    }
+  user {
+    ...FullUser
+  }
+  memberPlan {
+    ...FullMemberPlan
+  }
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  properties {
+    ...MetadataProperty
+  }
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+  deactivation {
+    ...Deactivation
+  }
 }
-
 
 fragment Deactivation on SubscriptionDeactivation {
-    date
-    reason
+  date
+  reason
 }
 
-
-query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-    subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            ...FullSubscription
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+query SubscriptionList(
+  $filter: SubscriptionFilter
+  $after: ID
+  $before: ID
+  $first: Int
+  $last: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: SubscriptionSort
+) {
+  subscriptions(
+    filter: $filter
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullSubscription
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 query Subscription($id: ID!) {
-    subscription(id: $id) {
-        ...FullSubscription
-    }
+  subscription(id: $id) {
+    ...FullSubscription
+  }
 }
 
-query SubscriptionsAsCsv {
-    csv: subscriptionsAsCsv
+query SubscriptionsAsCsv($filter: SubscriptionFilter) {
+  subscriptionsAsCsv(filter: $filter)
 }
-
 
 mutation CreateSubscription($input: SubscriptionInput!) {
-    createSubscription(input: $input) {
-        ...FullSubscription
-    }
+  createSubscription(input: $input) {
+    ...FullSubscription
+  }
 }
 
 mutation UpdateSubscription($id: ID!, $input: SubscriptionInput!) {
-    updateSubscription(id: $id, input: $input) {
-        ...FullSubscription
-    }
+  updateSubscription(id: $id, input: $input) {
+    ...FullSubscription
+  }
 }
 
 mutation DeleteSubscription($id: ID!) {
-    deleteSubscription(id: $id)
+  deleteSubscription(id: $id)
 }

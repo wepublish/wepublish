@@ -188,7 +188,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   }: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>> {
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
-
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
@@ -215,20 +214,38 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and = []
     }
 
-    if (filter?.startsAt !== undefined) {
-      const {comparison, date} = filter.startsAt
+    if (filter?.startsAtFrom) {
+      const {comparison, date} = filter.startsAtFrom
       textFilter.$and?.push({
         startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
-    if (filter?.paidUntil !== undefined) {
-      const {comparison, date} = filter.paidUntil
+
+    if (filter?.startsAtTo) {
+      const {comparison, date} = filter.startsAtTo
+      textFilter.$and?.push({
+        startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.paidUntilFrom) {
+      const {comparison, date} = filter.paidUntilFrom
       textFilter.$and?.push({
         paidUntil: {
           [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
         }
       })
     }
+
+    if (filter?.paidUntilTo) {
+      const {comparison, date} = filter.paidUntilTo
+      textFilter.$and?.push({
+        paidUntil: {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
     if (filter?.deactivationDate !== undefined) {
       const {comparison, date} = filter.deactivationDate
 
@@ -243,6 +260,26 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       }
     }
 
+    if (filter?.deactivationDateFrom !== undefined) {
+      const {comparison, date} = filter.deactivationDateFrom
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
+    if (filter?.deactivationDateTo !== undefined) {
+      const {comparison, date} = filter.deactivationDateTo
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
     if (filter?.deactivationReason !== undefined) {
       const reason = filter.deactivationReason
 
@@ -253,6 +290,18 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
     if (filter?.autoRenew !== undefined) {
       textFilter.$and?.push({autoRenew: {$eq: filter.autoRenew}})
+    }
+
+    if (filter?.paymentPeriodicity) {
+      textFilter.$and?.push({paymentPeriodicity: {$eq: filter.paymentPeriodicity}})
+    }
+
+    if (filter?.paymentMethodID) {
+      textFilter.$and?.push({paymentMethodID: {$eq: filter.paymentMethodID}})
+    }
+
+    if (filter?.memberPlanID) {
+      textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
     const [totalCount, subscriptions] = await Promise.all([

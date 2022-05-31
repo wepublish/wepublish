@@ -103,8 +103,8 @@ export interface EmbedBlock {
   type: BlockType.Embed
   url?: string
   title?: string
-  width?: number
-  height?: number
+  width?: string
+  height?: string
   styleCustom?: string
   sandbox?: string
 }
@@ -220,6 +220,7 @@ export interface TeaserGridFlexBlock {
 }
 
 export type ArticleBlock =
+  | EmbedBlock
   | RichTextBlock
   | ImageBlock
   | ImageGalleryBlock

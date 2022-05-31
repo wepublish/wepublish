@@ -1,20 +1,19 @@
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {
-  ReactNode,
+  createContext,
   forwardRef,
+  ReactEventHandler,
+  ReactNode,
   useCallback,
   useRef,
-  useState,
-  createContext,
-  ReactEventHandler
+  useState
 } from 'react'
-
-import {Popover, PopoverProps, Whisper, Divider} from 'rsuite'
-
-import './toolbar.less'
-import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
-import {Format} from '../blocks/richTextBlock/editor/formats'
+import {Divider, Popover, Whisper} from 'rsuite'
+import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
-import CloseIcon from '@rsuite/icons/legacy/Close'
+import {Format} from '../blocks/richTextBlock/editor/formats'
+import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
+import './toolbar.less'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
@@ -115,20 +114,20 @@ export interface SubMenuButtonProps extends ToolbarIconButtonProps {
   readonly format?: Format
 }
 
-export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
+export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonProps>(
   ({children, icon, format}, ref) => {
     // The Submenu buttons provides some local context to it's children.
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const localRef = useRef<PopoverProps>(null)
+    const localRef = useRef<OverlayTriggerInstance>(null)
     // Optional forwarding ref from parent, else use local ref.
     const triggerRef = (ref || localRef) as typeof localRef
 
     const closeMenu = () => {
-      triggerRef.current!.visible = false
+      triggerRef.current!.close()
     }
 
     const openMenu = () => {
-      triggerRef.current!.visible = true
+      triggerRef.current!.open()
     }
 
     const menuRef = useCallback((node: any) => {

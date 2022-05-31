@@ -202,6 +202,15 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
   const form = useRef<FormInstance>(null)
+  const inputBase = {
+    monthlyAmount,
+    paymentPeriodicity,
+    autoRenew,
+    startsAt: startsAt.toISOString(),
+    paidUntil: paidUntil ? paidUntil.toISOString() : null,
+    properties,
+    deactivation
+  }
 
   async function handleSave() {
     if (!form.current?.check?.()) {
@@ -218,16 +227,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         variables: {
           id,
           input: {
+            ...inputBase,
             userID: user?.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
@@ -237,16 +240,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       const {data} = await createSubscription({
         variables: {
           input: {
+            ...inputBase,
             userID: user.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
@@ -260,19 +257,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
-          memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
-          paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: {
             reason,
             date: date.toISOString()
-          }
+          },
+          paymentMethodID: paymentMethod.id,
+          memberPlanID: memberPlan.id
         }
       }
     })
@@ -288,15 +280,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
           memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: null
         }
       }
@@ -318,6 +305,22 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     ),
     paymentMethod: StringType().isRequired(t('errorMessages.noPaymentMethodErrorMessage'))
   })
+  /**
+   * UI helper to provide a meaningful user labeling.
+   * @param user
+   */
+  function getUserLabel(user: FullUserFragment | null | undefined): string {
+    if (!user) return ''
+    let userLabel = ''
+    if (user.firstName) userLabel += `${user.firstName} `
+    if (user.name) userLabel += `${user.name} `
+    if (user.preferredName) userLabel += `(${user.preferredName}) `
+    if (user.email) userLabel += `| ${user.email} `
+    if (user.address?.streetAddress) userLabel += `| ${user.address.streetAddress} `
+    if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `
+    if (user.address?.city) userLabel += `| ${user.address.city} `
+    return userLabel
+  }
 
   return (
     <>
@@ -414,7 +417,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 name="user"
                 virtualized
                 disabled={isDisabled || isDeactivated}
-                data={users.map(usr => ({value: usr?.id, label: usr?.name}))}
+                data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
                 value={user?.id}
                 onChange={(value: any) => setUser(users.find(usr => usr?.id === value))}
                 onSearch={(searchString: React.SetStateAction<string>) => {
@@ -470,6 +473,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <Form.ControlLabel>{t('userSubscriptionEdit.startsAt')}</Form.ControlLabel>
               <DatePicker
                 block
+                cleanable={false}
                 value={startsAt}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value!)}

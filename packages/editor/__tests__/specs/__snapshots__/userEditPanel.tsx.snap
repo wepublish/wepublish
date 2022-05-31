@@ -82,6 +82,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             >
               <Button
                 appearance="primary"
+<<<<<<< HEAD
                 disabled={false}
                 onClick={[Function]}
               >
@@ -89,6 +90,15 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   aria-disabled={false}
                   className="rs-btn rs-btn-primary"
                   disabled={false}
+=======
+                disabled={true}
+                onClick={[Function]}
+              >
+                <button
+                  aria-disabled={true}
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+>>>>>>> master
                   onClick={[Function]}
                   type="button"
                 >
@@ -163,6 +173,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "email": "testing@mueller.com",
@@ -335,11 +346,68 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
                   onSubmit={[Function]}
                 >
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+<<<<<<< HEAD
+=======
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.firstName
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.firstName"
+                        onChange={[Function]}
+                        value=""
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.firstName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.firstName"
+                              type="text"
+                              value=""
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
                   <FormGroup>
                     <div
                       className="rs-form-group"
@@ -350,12 +418,171 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
-                          userList.panels.firstName*
+                          userList.panels.name
                         </label>
                       </FormControlLabel>
                       <FormControl
-                        disabled={false}
-                        name="firstName"
+                        disabled={true}
+                        name="userList.panels.name"
+                        onChange={[Function]}
+                        value="Testing Müller"
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.name"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="Testing Müller"
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.name"
+                              type="text"
+                              value="Testing Müller"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.preferredName
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.preferredName"
+                        onChange={[Function]}
+                        value=""
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.preferredName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.preferredName"
+                              type="text"
+                              value=""
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.email
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.email"
+                        onChange={[Function]}
+                        value="testing@mueller.com"
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.email"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="testing@mueller.com"
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.email"
+                              type="text"
+                              value="testing@mueller.com"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.company
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.company"
                         onChange={[Function]}
                       >
                         <div
@@ -363,6 +590,363 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         >
                           <Input
                             aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.company"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.company"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.streetAddress
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.streetAddress"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.streetAddress"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.streetAddress"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.streetAddress2
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.streetAddress2"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.streetAddress2"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.streetAddress2"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.zipCode
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.zipCode"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.zipCode"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.zipCode"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.city
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.city"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.city"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.city"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.country
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.country"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.country"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.country"
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+>>>>>>> master
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+<<<<<<< HEAD
+                          userList.panels.firstName*
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+                        name="firstName"
+                        onChange={[Function]}
+=======
+                          userList.panels.active
+                        </label>
+                      </FormControlLabel>
+                      <Toggle
+                        checked={true}
+                        disabled={true}
+                        onChange={[Function]}
+                      >
+                        <label
+                          className="rs-toggle rs-toggle-checked rs-toggle-disabled"
+                        >
+                          <input
+                            aria-checked={true}
+                            aria-disabled={true}
+                            aria-label="Open"
+                            checked={true}
+                            className="rs-toggle-input"
+                            disabled={true}
+                            onChange={[Function]}
+                            role="switch"
+                            type="checkbox"
+                          />
+                          <span
+                            className="rs-toggle-presentation"
+                          >
+                            <span
+                              className="rs-toggle-inner"
+                            />
+                          </span>
+                        </label>
+                      </Toggle>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.password
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={true}
+                        name="userList.panels.password"
+                        onChange={[Function]}
+                        type="password"
+                        value="superSecret"
+>>>>>>> master
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+<<<<<<< HEAD
                             aria-invalid={true}
                             aria-labelledby={null}
                             disabled={false}
@@ -381,6 +965,24 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                               onChange={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+=======
+                            aria-labelledby={null}
+                            disabled={true}
+                            name="userList.panels.password"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            type="password"
+                            value="superSecret"
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={true}
+                              name="userList.panels.password"
+                              type="password"
+                              value="superSecret"
+>>>>>>> master
                             />
                           </Input>
                           <FormErrorMessage
@@ -389,6 +991,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                             id="undefined-error-message"
                             placement="bottomStart"
                             role="alert"
+<<<<<<< HEAD
                             show={true}
                           >
                             <div
@@ -1179,6 +1782,194 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                   <body>
                                     <div
                                       class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.userRoles
+                        </label>
+                      </FormControlLabel>
+                      <CheckPicker
+                        block={true}
+                        data={
+                          Array [
+                            Object {
+                              "label": "Role 1",
+                              "value": "roleId1",
+                            },
+                            Object {
+                              "label": "Role 2",
+                              "value": "roleId2",
+                            },
+                          ]
+                        }
+                        name="userList.panels.userRoles"
+                        onChange={[Function]}
+                        placement="auto"
+                        value={Array []}
+                      >
+                        <PickerToggleTrigger
+                          onEnter={[Function]}
+                          onEntered={[Function]}
+                          onExited={[Function]}
+                          pickerProps={Object {}}
+                          placement="auto"
+                          speaker={[Function]}
+                        >
+                          <OverlayTrigger
+                            onEnter={[Function]}
+                            onEntered={[Function]}
+                            onExited={[Function]}
+                            placement="auto"
+                            speaker={[Function]}
+                            trigger="click"
+                          >
+                            <div
+                              className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+                              onClick={[Function]}
+                            >
+                              <PickerToggle
+                                active={false}
+                                appearance="default"
+                                cleanable={true}
+                                hasValue={false}
+                                inputValue={Array []}
+                                onClean={[Function]}
+                                onKeyDown={[Function]}
+                                placement="auto"
+                              >
+                                <ToggleButton
+                                  appearance="default"
+                                  aria-expanded={false}
+                                  aria-haspopup="listbox"
+                                  className="rs-picker-toggle"
+                                  onBlur={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  role="combobox"
+                                  tabIndex={0}
+                                >
+                                  <Button
+                                    appearance="default"
+                                    aria-expanded={false}
+                                    aria-haspopup="listbox"
+                                    as="div"
+                                    className="rs-picker-toggle"
+                                    onBlur={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    ripple={false}
+                                    role="combobox"
+                                    tabIndex={0}
+                                  >
+                                    <div
+                                      aria-expanded={false}
+                                      aria-haspopup="listbox"
+                                      className="rs-picker-toggle rs-btn rs-btn-default"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                      onKeyDown={[Function]}
+                                      role="combobox"
+                                      tabIndex={0}
+                                    >
+                                      <TextMask
+                                        aria-hidden={true}
+                                        className="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                                        mask={Array []}
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        onKeyDown={[Function]}
+                                        readOnly={true}
+                                        render={[Function]}
+                                        tabIndex={-1}
+                                        value=""
+                                      >
+                                        <input
+                                          aria-hidden={true}
+                                          className="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                                          defaultValue=""
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onKeyDown={[Function]}
+                                          readOnly={true}
+                                          tabIndex={-1}
+                                        />
+                                      </TextMask>
+                                      <span
+                                        aria-placeholder="Select"
+                                        className="rs-picker-toggle-placeholder"
+                                      >
+                                        Select
+                                      </span>
+                                      <AngleDown
+                                        className="rs-picker-toggle-caret"
+                                      >
+                                        <Icon
+                                          aria-label="angle down"
+                                          as={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "render": [Function],
+                                            }
+                                          }
+                                          className="rs-picker-toggle-caret"
+                                          data-category="legacy"
+                                          fill="currentColor"
+                                          height="1em"
+                                          width="1em"
+                                        >
+                                          <ForwardRef(AngleDown)
+                                            aria-hidden={true}
+                                            aria-label="angle down"
+                                            className="rs-picker-toggle-caret rs-icon"
+                                            data-category="legacy"
+                                            fill="currentColor"
+                                            focusable={false}
+                                            height="1em"
+                                            width="1em"
+                                          >
+                                            <svg
+                                              aria-hidden={true}
+                                              aria-label="angle down"
+                                              className="rs-picker-toggle-caret rs-icon"
+                                              data-category="legacy"
+                                              fill="currentColor"
+                                              focusable={false}
+                                              height="1em"
+                                              viewBox="0 0 21 32"
+                                              width="1em"
+                                            >
+                                              <path
+                                                d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                              />
+                                            </svg>
+                                          </ForwardRef(AngleDown)>
+                                        </Icon>
+                                      </AngleDown>
+                                    </div>
+                                  </Button>
+                                </ToggleButton>
+                              </PickerToggle>
+                            </div>
+                            <Component>
+                              <Portal
+                                containerInfo={
+                                  <body>
+                                    <div
+                                      class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
                                       style="left: 0px; top: 0px;"
                                     >
                                       <div
@@ -1290,6 +2081,135 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                         </div>
                                       </div>
                                     </div>
+                                    <div
+                                      class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
+                                      style="left: 0px; top: 0px;"
+                                    >
+                                      <div
+                                        class="rs-picker-search-bar"
+                                        role="searchbox"
+                                      >
+                                        <input
+                                          class="rs-picker-search-bar-input"
+                                          placeholder="Search"
+                                          value=""
+                                        />
+                                        <svg
+                                          aria-hidden="true"
+                                          aria-label="search"
+                                          class="rs-picker-search-bar-search-icon rs-icon"
+                                          data-category="legacy"
+                                          fill="currentColor"
+                                          focusable="false"
+                                          height="1em"
+                                          viewBox="0 0 14 14"
+                                          width="1em"
+                                        >
+                                          <path
+                                            d="M9.293 10.707a.999.999 0 111.414-1.414l3 3a.999.999 0 11-1.414 1.414l-3-3z"
+                                          />
+                                          <path
+                                            d="M6 10a4 4 0 100-8 4 4 0 000 8zm0 2A6 6 0 116 0a6 6 0 010 12z"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <div
+                                        class="rs-picker-check-menu rs-picker-check-menu-items"
+                                        role="listbox"
+                                        style="max-height: 320px;"
+                                      >
+                                        <div
+                                          aria-disabled="false"
+<<<<<<< HEAD
+                                          aria-selected="false"
+=======
+                                          aria-selected="true"
+>>>>>>> master
+                                          data-key="roleId1"
+                                          role="option"
+                                          tabindex="-1"
+                                        >
+                                          <div
+<<<<<<< HEAD
+                                            class="rs-check-item rs-checkbox"
+=======
+                                            class="rs-check-item rs-checkbox rs-checkbox-checked"
+>>>>>>> master
+                                          >
+                                            <div
+                                              class="rs-checkbox-checker"
+                                            >
+                                              <label>
+                                                <span
+                                                  aria-disabled="false"
+                                                  class="rs-checkbox-wrapper"
+                                                >
+                                                  <input
+<<<<<<< HEAD
+                                                    aria-checked="false"
+                                                    aria-disabled="false"
+=======
+                                                    aria-checked="true"
+                                                    aria-disabled="false"
+                                                    checked=""
+>>>>>>> master
+                                                    role="checkbox"
+                                                    tabindex="0"
+                                                    type="checkbox"
+                                                    value="roleId1"
+                                                  />
+                                                  <span
+                                                    aria-hidden="true"
+                                                    class="rs-checkbox-inner"
+                                                    role="presentation"
+                                                  />
+                                                </span>
+                                                Role 1
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div
+                                          aria-disabled="false"
+                                          aria-selected="false"
+                                          data-key="roleId2"
+                                          role="option"
+                                          tabindex="-1"
+                                        >
+                                          <div
+                                            class="rs-check-item rs-checkbox"
+                                          >
+                                            <div
+                                              class="rs-checkbox-checker"
+                                            >
+                                              <label>
+                                                <span
+                                                  aria-disabled="false"
+                                                  class="rs-checkbox-wrapper"
+                                                >
+                                                  <input
+                                                    aria-checked="false"
+                                                    aria-disabled="false"
+                                                    role="checkbox"
+                                                    tabindex="0"
+                                                    type="checkbox"
+                                                    value="roleId2"
+                                                  />
+                                                  <span
+                                                    aria-hidden="true"
+                                                    class="rs-checkbox-inner"
+                                                    role="presentation"
+                                                  />
+                                                </span>
+                                                Role 2
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+<<<<<<< HEAD
                                     <div
                                       class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
                                       style="left: 0px; top: 0px;"
@@ -1463,6 +2383,67 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                       </div>,
                                     }
                                   }
+=======
+                                  </body>
+                                }
+                              >
+                                <Overlay
+                                  childrenProps={
+                                    Object {
+                                      "id": undefined,
+                                    }
+                                  }
+                                  onClose={[Function]}
+                                  onEnter={[Function]}
+                                  onEntered={[Function]}
+                                  onExited={[Function]}
+                                  placement="auto"
+                                  rootClose={true}
+                                  triggerTarget={
+                                    Object {
+                                      "current": <div
+                                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+                                      >
+                                        <div
+                                          aria-expanded="false"
+                                          aria-haspopup="listbox"
+                                          class="rs-picker-toggle rs-btn rs-btn-default"
+                                          role="combobox"
+                                          tabindex="0"
+                                        >
+                                          <input
+                                            aria-hidden="true"
+                                            class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                                            readonly=""
+                                            tabindex="-1"
+                                            value=""
+                                          />
+                                          <span
+                                            aria-placeholder="Select"
+                                            class="rs-picker-toggle-placeholder"
+                                          >
+                                            Select
+                                          </span>
+                                          <svg
+                                            aria-hidden="true"
+                                            aria-label="angle down"
+                                            class="rs-picker-toggle-caret rs-icon"
+                                            data-category="legacy"
+                                            fill="currentColor"
+                                            focusable="false"
+                                            height="1em"
+                                            viewBox="0 0 21 32"
+                                            width="1em"
+                                          >
+                                            <path
+                                              d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>,
+                                    }
+                                  }
+>>>>>>> master
                                 />
                               </Portal>
                             </Component>
@@ -1670,6 +2651,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "email": "",
@@ -1837,6 +2819,8 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -1852,13 +2836,23 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.firstName*
+=======
+                          userList.panels.firstName
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="firstName"
                         onChange={[Function]}
+=======
+                        name="userList.panels.firstName"
+                        onChange={[Function]}
+                        value=""
+>>>>>>> master
                       >
                         <div
                           className="rs-form-control rs-form-control-wrapper"
@@ -1867,20 +2861,35 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="firstName"
                             onBlur={[Function]}
                             onChange={[Function]}
+=======
+                            name="userList.panels.firstName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+>>>>>>> master
                           >
                             <input
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="firstName"
+=======
+                              name="userList.panels.firstName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+<<<<<<< HEAD
+=======
+                              value=""
+>>>>>>> master
                             />
                           </Input>
                           <FormErrorMessage
@@ -1905,12 +2914,20 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.name*
+=======
+                          userList.panels.name
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="name"
+=======
+                        name="userList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -1921,7 +2938,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="userList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -1931,7 +2952,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="userList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -1966,8 +2991,14 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="preferredName"
                         onChange={[Function]}
+=======
+                        name="userList.panels.preferredName"
+                        onChange={[Function]}
+                        value=""
+>>>>>>> master
                       >
                         <div
                           className="rs-form-control rs-form-control-wrapper"
@@ -1976,20 +3007,35 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="preferredName"
                             onBlur={[Function]}
                             onChange={[Function]}
+=======
+                            name="userList.panels.preferredName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+>>>>>>> master
                           >
                             <input
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="preferredName"
+=======
+                              name="userList.panels.preferredName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+<<<<<<< HEAD
+=======
+                              value=""
+>>>>>>> master
                             />
                           </Input>
                           <FormErrorMessage
@@ -2014,12 +3060,20 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.email*
+=======
+                          userList.panels.email
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="email"
+=======
+                        name="userList.panels.email"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -2030,7 +3084,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="email"
+=======
+                            name="userList.panels.email"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -2040,7 +3098,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="email"
+=======
+                              name="userList.panels.email"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2075,7 +3137,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="company"
+=======
+                        name="userList.panels.company"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2085,7 +3151,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="company"
+=======
+                            name="userList.panels.company"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2094,7 +3164,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="company"
+=======
+                              name="userList.panels.company"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2128,7 +3202,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress"
+=======
+                        name="userList.panels.streetAddress"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2138,7 +3216,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress"
+=======
+                            name="userList.panels.streetAddress"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2147,7 +3229,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress"
+=======
+                              name="userList.panels.streetAddress"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2181,7 +3267,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress2"
+=======
+                        name="userList.panels.streetAddress2"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2191,7 +3281,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress2"
+=======
+                            name="userList.panels.streetAddress2"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2200,7 +3294,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress2"
+=======
+                              name="userList.panels.streetAddress2"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2234,7 +3332,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="zipCode"
+=======
+                        name="userList.panels.zipCode"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2244,7 +3346,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="zipCode"
+=======
+                            name="userList.panels.zipCode"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2253,7 +3359,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="zipCode"
+=======
+                              name="userList.panels.zipCode"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2287,7 +3397,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="city"
+=======
+                        name="userList.panels.city"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2297,7 +3411,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="city"
+=======
+                            name="userList.panels.city"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2306,7 +3424,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="city"
+=======
+                              name="userList.panels.city"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2340,7 +3462,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="country"
+=======
+                        name="userList.panels.country"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -2350,7 +3476,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="country"
+=======
+                            name="userList.panels.country"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -2359,7 +3489,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="country"
+=======
+                              name="userList.panels.country"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2431,12 +3565,20 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.password*
+=======
+                          userList.panels.password
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="password"
+=======
+                        name="userList.panels.password"
+>>>>>>> master
                         onChange={[Function]}
                         type="password"
                         value=""
@@ -2448,7 +3590,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="password"
+=======
+                            name="userList.panels.password"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             type="password"
@@ -2459,7 +3605,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="password"
+=======
+                              name="userList.panels.password"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -2506,8 +3656,14 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                             },
                           ]
                         }
+<<<<<<< HEAD
                         name="userRoles"
                         onChange={[Function]}
+=======
+                        name="userList.panels.userRoles"
+                        onChange={[Function]}
+                        placement="auto"
+>>>>>>> master
                         value={Array []}
                       >
                         <PickerToggleTrigger
@@ -2515,19 +3671,31 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                           onEntered={[Function]}
                           onExited={[Function]}
                           pickerProps={Object {}}
+<<<<<<< HEAD
                           placement="bottomStart"
+=======
+                          placement="auto"
+>>>>>>> master
                           speaker={[Function]}
                         >
                           <OverlayTrigger
                             onEnter={[Function]}
                             onEntered={[Function]}
                             onExited={[Function]}
+<<<<<<< HEAD
                             placement="bottomStart"
+=======
+                            placement="auto"
+>>>>>>> master
                             speaker={[Function]}
                             trigger="click"
                           >
                             <div
+<<<<<<< HEAD
                               className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                              className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                               onClick={[Function]}
                             >
                               <PickerToggle
@@ -2538,7 +3706,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                 inputValue={Array []}
                                 onClean={[Function]}
                                 onKeyDown={[Function]}
+<<<<<<< HEAD
                                 placement="bottomStart"
+=======
+                                placement="auto"
+>>>>>>> master
                               >
                                 <ToggleButton
                                   appearance="default"
@@ -2658,7 +3830,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                 containerInfo={
                                   <body>
                                     <div
+<<<<<<< HEAD
                                       class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                      class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                       style="left: 0px; top: 0px;"
                                     >
                                       <div
@@ -2784,12 +3960,20 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                   onEntered={[Function]}
                                   onExited={[Function]}
                                   open={true}
+<<<<<<< HEAD
                                   placement="bottomStart"
+=======
+                                  placement="auto"
+>>>>>>> master
                                   rootClose={true}
                                   triggerTarget={
                                     Object {
                                       "current": <div
+<<<<<<< HEAD
                                         class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                       >
                                         <div
                                           aria-expanded="false"
@@ -2851,11 +4035,19 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                     >
                                       <Position
                                         className="rs-anim-fade rs-anim-in"
+<<<<<<< HEAD
                                         placement="bottomStart"
                                         triggerTarget={
                                           Object {
                                             "current": <div
                                               class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        placement="auto"
+                                        triggerTarget={
+                                          Object {
+                                            "current": <div
+                                              class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                             >
                                               <div
                                                 aria-expanded="false"
@@ -2899,7 +4091,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                       >
                                         <PickerOverlay
                                           autoWidth={true}
+<<<<<<< HEAD
                                           className="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu"
+=======
+                                          className="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu"
+>>>>>>> master
                                           onKeyDown={[Function]}
                                           style={
                                             Object {
@@ -2913,7 +4109,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                 "close": [Function],
                                                 "open": [Function],
                                                 "overlay": <div
+<<<<<<< HEAD
                                                   class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                                  class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                                   style="left: 0px; top: 0px;"
                                                 >
                                                   <div
@@ -3026,7 +4226,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                                   </div>
                                                 </div>,
                                                 "root": <div
+<<<<<<< HEAD
                                                   class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                                  class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                                 >
                                                   <div
                                                     aria-expanded="false"
@@ -3071,7 +4275,11 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                                           }
                                         >
                                           <div
+<<<<<<< HEAD
                                             className="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                            className="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                             onKeyDown={[Function]}
                                             style={
                                               Object {
@@ -3553,6 +4761,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "email": "peter@parker.com",
@@ -3720,6 +4929,8 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -3729,6 +4940,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                     <div
                       className="rs-form-group"
                       role="group"
+<<<<<<< HEAD
                     >
                       <FormControlLabel>
                         <label
@@ -3953,18 +5165,294 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                     <div
                       className="rs-form-group"
                       role="group"
+=======
+>>>>>>> master
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+<<<<<<< HEAD
+                        >
+                          userList.panels.company
+=======
+                        >
+                          userList.panels.firstName
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+                        name="userList.panels.firstName"
+                        onChange={[Function]}
+                        value="Peter"
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+                            name="userList.panels.firstName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="Peter"
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+                              name="userList.panels.firstName"
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+                              value="Peter"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
                     >
                       <FormControlLabel>
                         <label
                           className="rs-form-control-label"
                           id={null}
                         >
+                          userList.panels.name
+>>>>>>> master
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+<<<<<<< HEAD
+                        name="company"
+                        onChange={[Function]}
+=======
+                        name="userList.panels.name"
+                        onChange={[Function]}
+                        value="Parker"
+>>>>>>> master
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+<<<<<<< HEAD
+                            name="company"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+=======
+                            name="userList.panels.name"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="Parker"
+>>>>>>> master
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+<<<<<<< HEAD
+                              name="company"
+=======
+                              name="userList.panels.name"
+>>>>>>> master
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+<<<<<<< HEAD
+=======
+                              value="Parker"
+>>>>>>> master
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+<<<<<<< HEAD
+                        >
+                          userList.panels.streetAddress
+=======
+                        >
+                          userList.panels.preferredName
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+                        name="userList.panels.preferredName"
+                        onChange={[Function]}
+                        value="Peter Parker"
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+                            name="userList.panels.preferredName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="Peter Parker"
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+                              name="userList.panels.preferredName"
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+                              value="Peter Parker"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.email
+>>>>>>> master
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+<<<<<<< HEAD
+                        name="streetAddress"
+                        onChange={[Function]}
+=======
+                        name="userList.panels.email"
+                        onChange={[Function]}
+                        value="peter@parker.com"
+>>>>>>> master
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+<<<<<<< HEAD
+                            name="streetAddress"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+=======
+                            name="userList.panels.email"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value="peter@parker.com"
+>>>>>>> master
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+<<<<<<< HEAD
+                              name="streetAddress"
+=======
+                              name="userList.panels.email"
+>>>>>>> master
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+<<<<<<< HEAD
+=======
+                              value="peter@parker.com"
+>>>>>>> master
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+<<<<<<< HEAD
+                        >
+                          userList.panels.streetAddress2
+=======
+                        >
                           userList.panels.company
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
-                        name="company"
+                        name="userList.panels.company"
                         onChange={[Function]}
                       >
                         <div
@@ -3974,7 +5462,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
-                            name="company"
+                            name="userList.panels.company"
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -3983,7 +5471,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
-                              name="company"
+                              name="userList.panels.company"
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -4013,64 +5501,16 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           id={null}
                         >
                           userList.panels.streetAddress
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
-                        name="streetAddress"
-                        onChange={[Function]}
-                      >
-                        <div
-                          className="rs-form-control rs-form-control-wrapper"
-                        >
-                          <Input
-                            aria-describedby={null}
-                            aria-labelledby={null}
-                            disabled={false}
-                            name="streetAddress"
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                          >
-                            <input
-                              aria-describedby={null}
-                              aria-labelledby={null}
-                              className="rs-input"
-                              disabled={false}
-                              name="streetAddress"
-                              onBlur={[Function]}
-                              onChange={[Function]}
-                              onKeyDown={[Function]}
-                              type="text"
-                            />
-                          </Input>
-                          <FormErrorMessage
-                            aria-relevant="all"
-                            className="rs-form-control-message-wrapper"
-                            id="undefined-error-message"
-                            placement="bottomStart"
-                            role="alert"
-                            show={false}
-                          />
-                        </div>
-                      </FormControl>
-                    </div>
-                  </FormGroup>
-                  <FormGroup>
-                    <div
-                      className="rs-form-group"
-                      role="group"
-                    >
-                      <FormControlLabel>
-                        <label
-                          className="rs-form-control-label"
-                          id={null}
-                        >
-                          userList.panels.streetAddress2
-                        </label>
-                      </FormControlLabel>
-                      <FormControl
-                        disabled={false}
+<<<<<<< HEAD
                         name="streetAddress2"
+=======
+                        name="userList.panels.streetAddress"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -4080,7 +5520,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress2"
+=======
+                            name="userList.panels.streetAddress"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -4089,7 +5533,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress2"
+=======
+                              name="userList.panels.streetAddress"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -4118,12 +5566,20 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.zipCode
+=======
+                          userList.panels.streetAddress2
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="zipCode"
+=======
+                        name="userList.panels.streetAddress2"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -4133,7 +5589,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="zipCode"
+=======
+                            name="userList.panels.streetAddress2"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -4142,7 +5602,79 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="zipCode"
+=======
+                              name="userList.panels.streetAddress2"
+>>>>>>> master
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+<<<<<<< HEAD
+                          userList.panels.city
+=======
+                          userList.panels.zipCode
+>>>>>>> master
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        disabled={false}
+<<<<<<< HEAD
+                        name="city"
+=======
+                        name="userList.panels.zipCode"
+>>>>>>> master
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+<<<<<<< HEAD
+                            name="city"
+=======
+                            name="userList.panels.zipCode"
+>>>>>>> master
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+<<<<<<< HEAD
+                              name="city"
+=======
+                              name="userList.panels.zipCode"
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -4176,7 +5708,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
-                        name="city"
+                        name="userList.panels.city"
                         onChange={[Function]}
                       >
                         <div
@@ -4186,7 +5718,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
-                            name="city"
+                            name="userList.panels.city"
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -4195,7 +5727,8 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
-                              name="city"
+                              name="userList.panels.city"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -4229,6 +5762,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="country"
                         onChange={[Function]}
                       >
@@ -4439,6 +5973,219 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                           >
                             <div
                               className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                        name="userList.panels.country"
+                        onChange={[Function]}
+                      >
+                        <div
+                          className="rs-form-control rs-form-control-wrapper"
+                        >
+                          <Input
+                            aria-describedby={null}
+                            aria-labelledby={null}
+                            disabled={false}
+                            name="userList.panels.country"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                          >
+                            <input
+                              aria-describedby={null}
+                              aria-labelledby={null}
+                              className="rs-input"
+                              disabled={false}
+                              name="userList.panels.country"
+                              onBlur={[Function]}
+                              onChange={[Function]}
+                              onKeyDown={[Function]}
+                              type="text"
+                            />
+                          </Input>
+                          <FormErrorMessage
+                            aria-relevant="all"
+                            className="rs-form-control-message-wrapper"
+                            id="undefined-error-message"
+                            placement="bottomStart"
+                            role="alert"
+                            show={false}
+                          />
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.active
+                        </label>
+                      </FormControlLabel>
+                      <Toggle
+                        checked={false}
+                        disabled={false}
+                        onChange={[Function]}
+                      >
+                        <label
+                          className="rs-toggle"
+                        >
+                          <input
+                            aria-checked={false}
+                            aria-disabled={false}
+                            aria-label="Close"
+                            checked={false}
+                            className="rs-toggle-input"
+                            disabled={false}
+                            onChange={[Function]}
+                            role="switch"
+                            type="checkbox"
+                          />
+                          <span
+                            className="rs-toggle-presentation"
+                          >
+                            <span
+                              className="rs-toggle-inner"
+                            />
+                          </span>
+                        </label>
+                      </Toggle>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <Button
+                        appearance="primary"
+                        onClick={[Function]}
+                      >
+                        <button
+                          className="rs-btn rs-btn-primary"
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          userList.panels.resetPassword
+                          <Ripple>
+                            <span
+                              className="rs-ripple-pond"
+                            >
+                              <Transition
+                                enteringClassName="rs-ripple-rippling"
+                                in={false}
+                                onEntered={[Function]}
+                                timeout={1000}
+                              >
+                                <span
+                                  className="rs-ripple"
+                                />
+                              </Transition>
+                            </span>
+                          </Ripple>
+                        </button>
+                      </Button>
+                      <Button
+                        appearance="primary"
+                        disabled={true}
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "marginLeft": "20px",
+                          }
+                        }
+                      >
+                        <button
+                          aria-disabled={true}
+                          className="rs-btn rs-btn-primary rs-btn-disabled"
+                          disabled={true}
+                          onClick={[Function]}
+                          style={
+                            Object {
+                              "marginLeft": "20px",
+                            }
+                          }
+                          type="button"
+                        >
+                          userList.panels.sendWebsiteLogin
+                          <Ripple>
+                            <span
+                              className="rs-ripple-pond"
+                            >
+                              <Transition
+                                enteringClassName="rs-ripple-rippling"
+                                in={false}
+                                onEntered={[Function]}
+                                timeout={1000}
+                              >
+                                <span
+                                  className="rs-ripple"
+                                />
+                              </Transition>
+                            </span>
+                          </Ripple>
+                        </button>
+                      </Button>
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div
+                      className="rs-form-group"
+                      role="group"
+                    >
+                      <FormControlLabel>
+                        <label
+                          className="rs-form-control-label"
+                          id={null}
+                        >
+                          userList.panels.userRoles
+                        </label>
+                      </FormControlLabel>
+                      <CheckPicker
+                        block={true}
+                        data={
+                          Array [
+                            Object {
+                              "label": "Role 1",
+                              "value": "roleId1",
+                            },
+                            Object {
+                              "label": "Role 2",
+                              "value": "roleId2",
+                            },
+                          ]
+                        }
+                        name="userList.panels.userRoles"
+                        onChange={[Function]}
+                        placement="auto"
+                        value={
+                          Array [
+                            "roleId1",
+                          ]
+                        }
+                      >
+                        <PickerToggleTrigger
+                          onEnter={[Function]}
+                          onEntered={[Function]}
+                          onExited={[Function]}
+                          pickerProps={Object {}}
+                          placement="auto"
+                          speaker={[Function]}
+                        >
+                          <OverlayTrigger
+                            onEnter={[Function]}
+                            onEntered={[Function]}
+                            onExited={[Function]}
+                            placement="auto"
+                            speaker={[Function]}
+                            trigger="click"
+                          >
+                            <div
+                              className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                               onClick={[Function]}
                             >
                               <PickerToggle
@@ -4453,7 +6200,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                 }
                                 onClean={[Function]}
                                 onKeyDown={[Function]}
+<<<<<<< HEAD
                                 placement="bottomStart"
+=======
+                                placement="auto"
+>>>>>>> master
                               >
                                 <ToggleButton
                                   appearance="default"
@@ -4479,6 +6230,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                     role="combobox"
                                     tabIndex={0}
                                   >
+<<<<<<< HEAD
                                     <div
                                       aria-expanded={false}
                                       aria-haspopup="listbox"
@@ -4778,6 +6530,307 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                     </div>
                                     <div
                                       class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                    <div
+                                      aria-expanded={false}
+                                      aria-haspopup="listbox"
+                                      className="rs-picker-toggle rs-btn rs-btn-default"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                      onKeyDown={[Function]}
+                                      role="combobox"
+                                      tabIndex={0}
+                                    >
+                                      <TextMask
+                                        aria-hidden={true}
+                                        className="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                                        mask={Array []}
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        onKeyDown={[Function]}
+                                        readOnly={true}
+                                        render={[Function]}
+                                        tabIndex={-1}
+                                        value="roleId1"
+                                      >
+                                        <input
+                                          aria-hidden={true}
+                                          className="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                                          defaultValue="roleId1"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onKeyDown={[Function]}
+                                          readOnly={true}
+                                          tabIndex={-1}
+                                        />
+                                      </TextMask>
+                                      <span
+                                        className="rs-picker-toggle-value"
+                                      >
+                                        <SelectedElement
+                                          countable={true}
+                                          labelKey="label"
+                                          prefix={[Function]}
+                                          selectedItems={
+                                            Array [
+                                              Object {
+                                                "label": "Role 1",
+                                                "value": "roleId1",
+                                              },
+                                            ]
+                                          }
+                                          valueKey="value"
+                                        >
+                                          <span
+                                            className="rs-picker-value-list"
+                                            title="Role 1"
+                                          >
+                                            <span
+                                              className="rs-picker-value-item"
+                                            >
+                                              Role 1
+                                            </span>
+                                          </span>
+                                          <span
+                                            className="rs-picker-value-count"
+                                            title="1"
+                                          >
+                                            1
+                                          </span>
+                                        </SelectedElement>
+                                      </span>
+                                      <CloseButton
+                                        className="rs-picker-toggle-clean"
+                                        locale={
+                                          Object {
+                                            "closeLabel": "Clear",
+                                          }
+                                        }
+                                        onClick={[Function]}
+                                        tabIndex={-1}
+                                      >
+                                        <span
+                                          aria-label="Clear"
+                                          className="rs-picker-toggle-clean rs-btn-close"
+                                          onClick={[Function]}
+                                          role="button"
+                                          tabIndex={-1}
+                                          title="Clear"
+                                        >
+                                          <Close>
+                                            <Icon
+                                              aria-label="close"
+                                              as={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "render": [Function],
+                                                }
+                                              }
+                                              data-category="application"
+                                              fill="currentColor"
+                                              height="1em"
+                                              width="1em"
+                                            >
+                                              <ForwardRef(Close)
+                                                aria-hidden={true}
+                                                aria-label="close"
+                                                className="rs-icon"
+                                                data-category="application"
+                                                fill="currentColor"
+                                                focusable={false}
+                                                height="1em"
+                                                width="1em"
+                                              >
+                                                <svg
+                                                  aria-hidden={true}
+                                                  aria-label="close"
+                                                  className="rs-icon"
+                                                  data-category="application"
+                                                  fill="currentColor"
+                                                  focusable={false}
+                                                  height="1em"
+                                                  viewBox="0 0 16 16"
+                                                  width="1em"
+                                                >
+                                                  <path
+                                                    d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
+                                                  />
+                                                </svg>
+                                              </ForwardRef(Close)>
+                                            </Icon>
+                                          </Close>
+                                        </span>
+                                      </CloseButton>
+                                      <AngleDown
+                                        className="rs-picker-toggle-caret"
+                                      >
+                                        <Icon
+                                          aria-label="angle down"
+                                          as={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "render": [Function],
+                                            }
+                                          }
+                                          className="rs-picker-toggle-caret"
+                                          data-category="legacy"
+                                          fill="currentColor"
+                                          height="1em"
+                                          width="1em"
+                                        >
+                                          <ForwardRef(AngleDown)
+                                            aria-hidden={true}
+                                            aria-label="angle down"
+                                            className="rs-picker-toggle-caret rs-icon"
+                                            data-category="legacy"
+                                            fill="currentColor"
+                                            focusable={false}
+                                            height="1em"
+                                            width="1em"
+                                          >
+                                            <svg
+                                              aria-hidden={true}
+                                              aria-label="angle down"
+                                              className="rs-picker-toggle-caret rs-icon"
+                                              data-category="legacy"
+                                              fill="currentColor"
+                                              focusable={false}
+                                              height="1em"
+                                              viewBox="0 0 21 32"
+                                              width="1em"
+                                            >
+                                              <path
+                                                d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                              />
+                                            </svg>
+                                          </ForwardRef(AngleDown)>
+                                        </Icon>
+                                      </AngleDown>
+                                    </div>
+                                  </Button>
+                                </ToggleButton>
+                              </PickerToggle>
+                            </div>
+                            <Component>
+                              <Portal
+                                containerInfo={
+                                  <body>
+                                    <div
+                                      class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+                                      style="left: 0px; top: 0px;"
+                                    >
+                                      <div
+                                        class="rs-picker-search-bar"
+                                        role="searchbox"
+                                      >
+                                        <input
+                                          class="rs-picker-search-bar-input"
+                                          placeholder="Search"
+                                          value=""
+                                        />
+                                        <svg
+                                          aria-hidden="true"
+                                          aria-label="search"
+                                          class="rs-picker-search-bar-search-icon rs-icon"
+                                          data-category="legacy"
+                                          fill="currentColor"
+                                          focusable="false"
+                                          height="1em"
+                                          viewBox="0 0 14 14"
+                                          width="1em"
+                                        >
+                                          <path
+                                            d="M9.293 10.707a.999.999 0 111.414-1.414l3 3a.999.999 0 11-1.414 1.414l-3-3z"
+                                          />
+                                          <path
+                                            d="M6 10a4 4 0 100-8 4 4 0 000 8zm0 2A6 6 0 116 0a6 6 0 010 12z"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <div
+                                        class="rs-picker-check-menu rs-picker-check-menu-items"
+                                        role="listbox"
+                                        style="max-height: 320px;"
+                                      >
+                                        <div
+                                          aria-disabled="false"
+                                          aria-selected="false"
+                                          data-key="roleId1"
+                                          role="option"
+                                          tabindex="-1"
+                                        >
+                                          <div
+                                            class="rs-check-item rs-checkbox"
+                                          >
+                                            <div
+                                              class="rs-checkbox-checker"
+                                            >
+                                              <label>
+                                                <span
+                                                  aria-disabled="false"
+                                                  class="rs-checkbox-wrapper"
+                                                >
+                                                  <input
+                                                    aria-checked="false"
+                                                    aria-disabled="false"
+                                                    role="checkbox"
+                                                    tabindex="0"
+                                                    type="checkbox"
+                                                    value="roleId1"
+                                                  />
+                                                  <span
+                                                    aria-hidden="true"
+                                                    class="rs-checkbox-inner"
+                                                    role="presentation"
+                                                  />
+                                                </span>
+                                                Role 1
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div
+                                          aria-disabled="false"
+                                          aria-selected="false"
+                                          data-key="roleId2"
+                                          role="option"
+                                          tabindex="-1"
+                                        >
+                                          <div
+                                            class="rs-check-item rs-checkbox"
+                                          >
+                                            <div
+                                              class="rs-checkbox-checker"
+                                            >
+                                              <label>
+                                                <span
+                                                  aria-disabled="false"
+                                                  class="rs-checkbox-wrapper"
+                                                >
+                                                  <input
+                                                    aria-checked="false"
+                                                    aria-disabled="false"
+                                                    role="checkbox"
+                                                    tabindex="0"
+                                                    type="checkbox"
+                                                    value="roleId2"
+                                                  />
+                                                  <span
+                                                    aria-hidden="true"
+                                                    class="rs-checkbox-inner"
+                                                    role="presentation"
+                                                  />
+                                                </span>
+                                                Role 2
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                       style="left: 0px; top: 0px;"
                                     >
                                       <div
@@ -4904,12 +6957,20 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                   onEntered={[Function]}
                                   onExited={[Function]}
                                   open={true}
+<<<<<<< HEAD
                                   placement="bottomStart"
+=======
+                                  placement="auto"
+>>>>>>> master
                                   rootClose={true}
                                   triggerTarget={
                                     Object {
                                       "current": <div
+<<<<<<< HEAD
                                         class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                       >
                                         <div
                                           aria-expanded="false"
@@ -5009,11 +7070,19 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                     >
                                       <Position
                                         className="rs-anim-fade rs-anim-in"
+<<<<<<< HEAD
                                         placement="bottomStart"
                                         triggerTarget={
                                           Object {
                                             "current": <div
                                               class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        placement="auto"
+                                        triggerTarget={
+                                          Object {
+                                            "current": <div
+                                              class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                             >
                                               <div
                                                 aria-expanded="false"
@@ -5095,7 +7164,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                       >
                                         <PickerOverlay
                                           autoWidth={true}
+<<<<<<< HEAD
                                           className="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu"
+=======
+                                          className="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu"
+>>>>>>> master
                                           onKeyDown={[Function]}
                                           style={
                                             Object {
@@ -5109,7 +7182,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                 "close": [Function],
                                                 "open": [Function],
                                                 "overlay": <div
+<<<<<<< HEAD
                                                   class="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                                  class="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                                   style="left: 0px; top: 0px;"
                                                 >
                                                   <div
@@ -5223,7 +7300,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                                   </div>
                                                 </div>,
                                                 "root": <div
+<<<<<<< HEAD
                                                   class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                                  class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                                 >
                                                   <div
                                                     aria-expanded="false"
@@ -5306,7 +7387,11 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                                           }
                                         >
                                           <div
+<<<<<<< HEAD
                                             className="rs-anim-fade rs-anim-in placement-bottom-start rs-picker-check-menu rs-picker-menu"
+=======
+                                            className="rs-anim-fade rs-anim-in placement-right-start rs-picker-check-menu rs-picker-menu"
+>>>>>>> master
                                             onKeyDown={[Function]}
                                             style={
                                               Object {
@@ -5790,6 +7875,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "email": "",
@@ -5957,6 +8043,8 @@ exports[`User Edit Panel should render 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -5972,13 +8060,23 @@ exports[`User Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.firstName*
+=======
+                          userList.panels.firstName
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="firstName"
                         onChange={[Function]}
+=======
+                        name="userList.panels.firstName"
+                        onChange={[Function]}
+                        value=""
+>>>>>>> master
                       >
                         <div
                           className="rs-form-control rs-form-control-wrapper"
@@ -5987,20 +8085,35 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="firstName"
                             onBlur={[Function]}
                             onChange={[Function]}
+=======
+                            name="userList.panels.firstName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+>>>>>>> master
                           >
                             <input
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="firstName"
+=======
+                              name="userList.panels.firstName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+<<<<<<< HEAD
+=======
+                              value=""
+>>>>>>> master
                             />
                           </Input>
                           <FormErrorMessage
@@ -6025,12 +8138,20 @@ exports[`User Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.name*
+=======
+                          userList.panels.name
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="name"
+=======
+                        name="userList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -6041,7 +8162,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="userList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -6051,7 +8176,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="userList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6086,8 +8215,14 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="preferredName"
                         onChange={[Function]}
+=======
+                        name="userList.panels.preferredName"
+                        onChange={[Function]}
+                        value=""
+>>>>>>> master
                       >
                         <div
                           className="rs-form-control rs-form-control-wrapper"
@@ -6096,20 +8231,35 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="preferredName"
                             onBlur={[Function]}
                             onChange={[Function]}
+=======
+                            name="userList.panels.preferredName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            value=""
+>>>>>>> master
                           >
                             <input
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="preferredName"
+=======
+                              name="userList.panels.preferredName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+<<<<<<< HEAD
+=======
+                              value=""
+>>>>>>> master
                             />
                           </Input>
                           <FormErrorMessage
@@ -6134,12 +8284,20 @@ exports[`User Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.email*
+=======
+                          userList.panels.email
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="email"
+=======
+                        name="userList.panels.email"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -6150,7 +8308,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="email"
+=======
+                            name="userList.panels.email"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -6160,7 +8322,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="email"
+=======
+                              name="userList.panels.email"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6195,7 +8361,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="company"
+=======
+                        name="userList.panels.company"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6205,7 +8375,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="company"
+=======
+                            name="userList.panels.company"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6214,7 +8388,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="company"
+=======
+                              name="userList.panels.company"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6248,7 +8426,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress"
+=======
+                        name="userList.panels.streetAddress"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6258,7 +8440,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress"
+=======
+                            name="userList.panels.streetAddress"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6267,7 +8453,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress"
+=======
+                              name="userList.panels.streetAddress"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6301,7 +8491,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress2"
+=======
+                        name="userList.panels.streetAddress2"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6311,7 +8505,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress2"
+=======
+                            name="userList.panels.streetAddress2"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6320,7 +8518,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress2"
+=======
+                              name="userList.panels.streetAddress2"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6354,7 +8556,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="zipCode"
+=======
+                        name="userList.panels.zipCode"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6364,7 +8570,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="zipCode"
+=======
+                            name="userList.panels.zipCode"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6373,7 +8583,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="zipCode"
+=======
+                              name="userList.panels.zipCode"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6407,7 +8621,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="city"
+=======
+                        name="userList.panels.city"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6417,7 +8635,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="city"
+=======
+                            name="userList.panels.city"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6426,7 +8648,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="city"
+=======
+                              name="userList.panels.city"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6460,7 +8686,11 @@ exports[`User Edit Panel should render 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="country"
+=======
+                        name="userList.panels.country"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -6470,7 +8700,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="country"
+=======
+                            name="userList.panels.country"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -6479,7 +8713,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="country"
+=======
+                              name="userList.panels.country"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6551,12 +8789,20 @@ exports[`User Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.password*
+=======
+                          userList.panels.password
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="password"
+=======
+                        name="userList.panels.password"
+>>>>>>> master
                         onChange={[Function]}
                         type="password"
                         value=""
@@ -6568,7 +8814,11 @@ exports[`User Edit Panel should render 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="password"
+=======
+                            name="userList.panels.password"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             type="password"
@@ -6579,7 +8829,11 @@ exports[`User Edit Panel should render 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="password"
+=======
+                              name="userList.panels.password"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -6626,8 +8880,14 @@ exports[`User Edit Panel should render 1`] = `
                             },
                           ]
                         }
+<<<<<<< HEAD
                         name="userRoles"
                         onChange={[Function]}
+=======
+                        name="userList.panels.userRoles"
+                        onChange={[Function]}
+                        placement="auto"
+>>>>>>> master
                         value={Array []}
                       >
                         <PickerToggleTrigger
@@ -6635,19 +8895,31 @@ exports[`User Edit Panel should render 1`] = `
                           onEntered={[Function]}
                           onExited={[Function]}
                           pickerProps={Object {}}
+<<<<<<< HEAD
                           placement="bottomStart"
+=======
+                          placement="auto"
+>>>>>>> master
                           speaker={[Function]}
                         >
                           <OverlayTrigger
                             onEnter={[Function]}
                             onEntered={[Function]}
                             onExited={[Function]}
+<<<<<<< HEAD
                             placement="bottomStart"
+=======
+                            placement="auto"
+>>>>>>> master
                             speaker={[Function]}
                             trigger="click"
                           >
                             <div
+<<<<<<< HEAD
                               className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                              className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                               onClick={[Function]}
                             >
                               <PickerToggle
@@ -6658,7 +8930,11 @@ exports[`User Edit Panel should render 1`] = `
                                 inputValue={Array []}
                                 onClean={[Function]}
                                 onKeyDown={[Function]}
+<<<<<<< HEAD
                                 placement="bottomStart"
+=======
+                                placement="auto"
+>>>>>>> master
                               >
                                 <ToggleButton
                                   appearance="default"
@@ -6787,12 +9063,20 @@ exports[`User Edit Panel should render 1`] = `
                                   onEnter={[Function]}
                                   onEntered={[Function]}
                                   onExited={[Function]}
+<<<<<<< HEAD
                                   placement="bottomStart"
+=======
+                                  placement="auto"
+>>>>>>> master
                                   rootClose={true}
                                   triggerTarget={
                                     Object {
                                       "current": <div
+<<<<<<< HEAD
                                         class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                       >
                                         <div
                                           aria-expanded="false"
@@ -7042,6 +9326,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "email": "peter@parker.com",
@@ -7209,6 +9494,8 @@ exports[`User Edit Panel should render with ID 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -7224,12 +9511,20 @@ exports[`User Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.firstName*
+=======
+                          userList.panels.firstName
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="firstName"
+=======
+                        name="userList.panels.firstName"
+>>>>>>> master
                         onChange={[Function]}
                         value="Peter"
                       >
@@ -7240,7 +9535,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="firstName"
+=======
+                            name="userList.panels.firstName"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="Peter"
@@ -7250,7 +9549,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="firstName"
+=======
+                              name="userList.panels.firstName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7280,12 +9583,20 @@ exports[`User Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.name*
+=======
+                          userList.panels.name
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="name"
+=======
+                        name="userList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value="Parker"
                       >
@@ -7296,7 +9607,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="userList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="Parker"
@@ -7306,7 +9621,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="userList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7341,7 +9660,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="preferredName"
+=======
+                        name="userList.panels.preferredName"
+>>>>>>> master
                         onChange={[Function]}
                         value="Peter Parker"
                       >
@@ -7352,7 +9675,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="preferredName"
+=======
+                            name="userList.panels.preferredName"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="Peter Parker"
@@ -7362,7 +9689,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="preferredName"
+=======
+                              name="userList.panels.preferredName"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7392,12 +9723,20 @@ exports[`User Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           userList.panels.email*
+=======
+                          userList.panels.email
+>>>>>>> master
                         </label>
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="email"
+=======
+                        name="userList.panels.email"
+>>>>>>> master
                         onChange={[Function]}
                         value="peter@parker.com"
                       >
@@ -7408,7 +9747,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="email"
+=======
+                            name="userList.panels.email"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="peter@parker.com"
@@ -7418,7 +9761,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="email"
+=======
+                              name="userList.panels.email"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7453,7 +9800,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="company"
+=======
+                        name="userList.panels.company"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7463,7 +9814,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="company"
+=======
+                            name="userList.panels.company"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7472,7 +9827,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="company"
+=======
+                              name="userList.panels.company"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7506,7 +9865,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress"
+=======
+                        name="userList.panels.streetAddress"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7516,7 +9879,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress"
+=======
+                            name="userList.panels.streetAddress"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7525,7 +9892,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress"
+=======
+                              name="userList.panels.streetAddress"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7559,7 +9930,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="streetAddress2"
+=======
+                        name="userList.panels.streetAddress2"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7569,7 +9944,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="streetAddress2"
+=======
+                            name="userList.panels.streetAddress2"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7578,7 +9957,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="streetAddress2"
+=======
+                              name="userList.panels.streetAddress2"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7612,7 +9995,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="zipCode"
+=======
+                        name="userList.panels.zipCode"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7622,7 +10009,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="zipCode"
+=======
+                            name="userList.panels.zipCode"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7631,7 +10022,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="zipCode"
+=======
+                              name="userList.panels.zipCode"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7665,7 +10060,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="city"
+=======
+                        name="userList.panels.city"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7675,7 +10074,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="city"
+=======
+                            name="userList.panels.city"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7684,7 +10087,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="city"
+=======
+                              name="userList.panels.city"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7718,7 +10125,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                       </FormControlLabel>
                       <FormControl
                         disabled={false}
+<<<<<<< HEAD
                         name="country"
+=======
+                        name="userList.panels.country"
+>>>>>>> master
                         onChange={[Function]}
                       >
                         <div
@@ -7728,7 +10139,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                             aria-describedby={null}
                             aria-labelledby={null}
                             disabled={false}
+<<<<<<< HEAD
                             name="country"
+=======
+                            name="userList.panels.country"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                           >
@@ -7737,7 +10152,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                               aria-labelledby={null}
                               className="rs-input"
                               disabled={false}
+<<<<<<< HEAD
                               name="country"
+=======
+                              name="userList.panels.country"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -7902,8 +10321,14 @@ exports[`User Edit Panel should render with ID 1`] = `
                             },
                           ]
                         }
+<<<<<<< HEAD
                         name="userRoles"
                         onChange={[Function]}
+=======
+                        name="userList.panels.userRoles"
+                        onChange={[Function]}
+                        placement="auto"
+>>>>>>> master
                         value={
                           Array [
                             "roleId1",
@@ -7915,19 +10340,31 @@ exports[`User Edit Panel should render with ID 1`] = `
                           onEntered={[Function]}
                           onExited={[Function]}
                           pickerProps={Object {}}
+<<<<<<< HEAD
                           placement="bottomStart"
+=======
+                          placement="auto"
+>>>>>>> master
                           speaker={[Function]}
                         >
                           <OverlayTrigger
                             onEnter={[Function]}
                             onEntered={[Function]}
                             onExited={[Function]}
+<<<<<<< HEAD
                             placement="bottomStart"
+=======
+                            placement="auto"
+>>>>>>> master
                             speaker={[Function]}
                             trigger="click"
                           >
                             <div
+<<<<<<< HEAD
                               className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                              className="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                               onClick={[Function]}
                             >
                               <PickerToggle
@@ -7942,7 +10379,11 @@ exports[`User Edit Panel should render with ID 1`] = `
                                 }
                                 onClean={[Function]}
                                 onKeyDown={[Function]}
+<<<<<<< HEAD
                                 placement="bottomStart"
+=======
+                                placement="auto"
+>>>>>>> master
                               >
                                 <ToggleButton
                                   appearance="default"
@@ -8162,12 +10603,20 @@ exports[`User Edit Panel should render with ID 1`] = `
                                   onEnter={[Function]}
                                   onEntered={[Function]}
                                   onExited={[Function]}
+<<<<<<< HEAD
                                   placement="bottomStart"
+=======
+                                  placement="auto"
+>>>>>>> master
                                   rootClose={true}
                                   triggerTarget={
                                     Object {
                                       "current": <div
+<<<<<<< HEAD
                                         class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+=======
+                                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable"
+>>>>>>> master
                                       >
                                         <div
                                           aria-expanded="false"

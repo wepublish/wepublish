@@ -312,7 +312,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 name="streetAddress2"
                 value={address?.streetAddress2}
                 disabled={isDisabled}
-                onChange={value =>
+                onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'streetAddress2', value)
                 }
               />
@@ -403,6 +403,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 block={true}
                 value={roles.map(role => role.id)}
                 data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
+                placement={'auto'}
                 onChange={value => {
                   setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
                 }}

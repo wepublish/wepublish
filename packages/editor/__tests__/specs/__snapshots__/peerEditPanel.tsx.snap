@@ -84,6 +84,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             >
               <Button
                 appearance="primary"
+<<<<<<< HEAD
                 disabled={false}
                 onClick={[Function]}
               >
@@ -91,6 +92,15 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                   aria-disabled={false}
                   className="rs-btn rs-btn-primary"
                   disabled={false}
+=======
+                disabled={true}
+                onClick={[Function]}
+              >
+                <button
+                  aria-disabled={true}
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+>>>>>>> master
                   onClick={[Function]}
                   type="button"
                 >
@@ -165,6 +175,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "name": "something peer name",
@@ -289,6 +300,8 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -304,11 +317,19 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.name*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="name"
+=======
+                          peerList.panels.name
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value="something peer name"
                       >
@@ -318,7 +339,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="peerList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="something peer name"
@@ -327,7 +352,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="peerList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -357,11 +386,19 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.URL*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="url"
+=======
+                          peerList.panels.URL
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.URL"
+>>>>>>> master
                         onChange={[Function]}
                         value="https://host-url.ch/"
                       >
@@ -371,7 +408,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="url"
+=======
+                            name="peerList.panels.URL"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="https://host-url.ch/"
@@ -380,7 +421,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="url"
+=======
+                              name="peerList.panels.URL"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -410,11 +455,19 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.token*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="token"
+=======
+                          peerList.panels.token
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.token"
+>>>>>>> master
                         onChange={[Function]}
                         value="abc123def456"
                       >
@@ -424,7 +477,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="token"
+=======
+                            name="peerList.panels.token"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="abc123def456"
@@ -433,7 +490,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="token"
+=======
+                              name="peerList.panels.token"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -456,10 +517,20 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                   <Button
                     appearance="primary"
                     className="fetchButton"
+<<<<<<< HEAD
                     onClick={[Function]}
                   >
                     <button
                       className="fetchButton rs-btn rs-btn-primary"
+=======
+                    disabled={false}
+                    onClick={[Function]}
+                  >
+                    <button
+                      aria-disabled={false}
+                      className="fetchButton rs-btn rs-btn-primary"
+                      disabled={false}
+>>>>>>> master
                       onClick={[Function]}
                       type="button"
                     >
@@ -577,6 +648,7 @@ exports[`Peer Edit Panel should render 1`] = `
             >
               <Button
                 appearance="primary"
+<<<<<<< HEAD
                 disabled={false}
                 onClick={[Function]}
               >
@@ -584,6 +656,15 @@ exports[`Peer Edit Panel should render 1`] = `
                   aria-disabled={false}
                   className="rs-btn rs-btn-primary"
                   disabled={false}
+=======
+                disabled={true}
+                onClick={[Function]}
+              >
+                <button
+                  aria-disabled={true}
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+>>>>>>> master
                   onClick={[Function]}
                   type="button"
                 >
@@ -658,6 +739,7 @@ exports[`Peer Edit Panel should render 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "name": "",
@@ -782,6 +864,8 @@ exports[`Peer Edit Panel should render 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -797,11 +881,19 @@ exports[`Peer Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.name*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="name"
+=======
+                          peerList.panels.name
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -811,7 +903,11 @@ exports[`Peer Edit Panel should render 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="peerList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -820,7 +916,11 @@ exports[`Peer Edit Panel should render 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="peerList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -850,11 +950,19 @@ exports[`Peer Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.URL*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="url"
+=======
+                          peerList.panels.URL
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.URL"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -864,7 +972,11 @@ exports[`Peer Edit Panel should render 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="url"
+=======
+                            name="peerList.panels.URL"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -873,7 +985,11 @@ exports[`Peer Edit Panel should render 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="url"
+=======
+                              name="peerList.panels.URL"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -903,11 +1019,19 @@ exports[`Peer Edit Panel should render 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.token*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="token"
+=======
+                          peerList.panels.token
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.token"
+>>>>>>> master
                         onChange={[Function]}
                         value=""
                       >
@@ -917,7 +1041,11 @@ exports[`Peer Edit Panel should render 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="token"
+=======
+                            name="peerList.panels.token"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value=""
@@ -926,7 +1054,11 @@ exports[`Peer Edit Panel should render 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="token"
+=======
+                              name="peerList.panels.token"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -949,10 +1081,20 @@ exports[`Peer Edit Panel should render 1`] = `
                   <Button
                     appearance="primary"
                     className="fetchButton"
+<<<<<<< HEAD
                     onClick={[Function]}
                   >
                     <button
                       className="fetchButton rs-btn rs-btn-primary"
+=======
+                    disabled={true}
+                    onClick={[Function]}
+                  >
+                    <button
+                      aria-disabled={true}
+                      className="fetchButton rs-btn rs-btn-primary rs-btn-disabled"
+                      disabled={true}
+>>>>>>> master
                       onClick={[Function]}
                       type="button"
                     >
@@ -1071,6 +1213,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
             >
               <Button
                 appearance="primary"
+<<<<<<< HEAD
                 disabled={false}
                 onClick={[Function]}
               >
@@ -1078,6 +1221,15 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                   aria-disabled={false}
                   className="rs-btn rs-btn-primary"
                   disabled={false}
+=======
+                disabled={true}
+                onClick={[Function]}
+              >
+                <button
+                  aria-disabled={true}
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+>>>>>>> master
                   onClick={[Function]}
                   type="button"
                 >
@@ -1152,6 +1304,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
             >
               <Form
                 fluid={true}
+<<<<<<< HEAD
                 formValue={
                   Object {
                     "name": "Test Peer Name",
@@ -1276,6 +1429,8 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                     },
                   }
                 }
+=======
+>>>>>>> master
               >
                 <form
                   className="rs-form rs-form-vertical rs-form-fluid"
@@ -1291,11 +1446,19 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.name*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="name"
+=======
+                          peerList.panels.name
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.name"
+>>>>>>> master
                         onChange={[Function]}
                         value="Test Peer Name"
                       >
@@ -1305,7 +1468,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="name"
+=======
+                            name="peerList.panels.name"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="Test Peer Name"
@@ -1314,7 +1481,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="name"
+=======
+                              name="peerList.panels.name"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -1344,11 +1515,19 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.URL*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="url"
+=======
+                          peerList.panels.URL
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.URL"
+>>>>>>> master
                         onChange={[Function]}
                         value="https://test-url.ch/"
                       >
@@ -1358,7 +1537,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="url"
+=======
+                            name="peerList.panels.URL"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             value="https://test-url.ch/"
@@ -1367,7 +1550,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="url"
+=======
+                              name="peerList.panels.URL"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -1397,11 +1584,19 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           className="rs-form-control-label"
                           id={null}
                         >
+<<<<<<< HEAD
                           peerList.panels.token*
                         </label>
                       </FormControlLabel>
                       <FormControl
                         name="token"
+=======
+                          peerList.panels.token
+                        </label>
+                      </FormControlLabel>
+                      <FormControl
+                        name="peerList.panels.token"
+>>>>>>> master
                         onChange={[Function]}
                         placeholder="peerList.panels.leaveEmpty"
                         value=""
@@ -1412,7 +1607,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                           <Input
                             aria-describedby={null}
                             aria-labelledby={null}
+<<<<<<< HEAD
                             name="token"
+=======
+                            name="peerList.panels.token"
+>>>>>>> master
                             onBlur={[Function]}
                             onChange={[Function]}
                             placeholder="peerList.panels.leaveEmpty"
@@ -1422,7 +1621,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                               aria-describedby={null}
                               aria-labelledby={null}
                               className="rs-input"
+<<<<<<< HEAD
                               name="token"
+=======
+                              name="peerList.panels.token"
+>>>>>>> master
                               onBlur={[Function]}
                               onChange={[Function]}
                               onKeyDown={[Function]}
@@ -1446,10 +1649,20 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                   <Button
                     appearance="primary"
                     className="fetchButton"
+<<<<<<< HEAD
                     onClick={[Function]}
                   >
                     <button
                       className="fetchButton rs-btn rs-btn-primary"
+=======
+                    disabled={true}
+                    onClick={[Function]}
+                  >
+                    <button
+                      aria-disabled={true}
+                      className="fetchButton rs-btn rs-btn-primary rs-btn-disabled"
+                      disabled={true}
+>>>>>>> master
                       onClick={[Function]}
                       type="button"
                     >
