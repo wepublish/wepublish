@@ -827,7 +827,7 @@
         "unknown": "Unknown",
         "deleted": "Deleted user",
         "subscription": "Subscription",
-        "tempUser": "(Temporary User) - ",
+        "tempUser": "Temporary User",
         "email": "Email",
         "memberPlan": "Member Plan"
       },

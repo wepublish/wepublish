@@ -446,7 +446,7 @@
         "unknown": "Inconnu",
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
-        "tempUser": "(Utilisateur temporaire) - ",
+        "tempUser": "Utilisateur temporaire",
         "email": "Email",
         "memberPlan": "plan de membre"
       },

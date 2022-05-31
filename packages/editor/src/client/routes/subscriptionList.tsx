@@ -6,7 +6,6 @@ import {
   SubscriptionCreateRoute,
   SubscriptionEditRoute,
   SubscriptionListRoute,
-  UserEditRoute,
   useRoute,
   useRouteDispatch
 } from '../route'
@@ -116,6 +115,33 @@ export function SubscriptionList() {
     }
   }, [data?.subscriptions])
 
+  /**
+   * UI helper
+   */
+  function userNameView(fullUser: FullSubscriptionFragment): React.ReactFragment {
+    const user = fullUser.user
+    // user deleted
+    if (!user) {
+      return t('subscriptionList.overview.deleted')
+    }
+    const userFragment = (
+      <>
+        <span>{user.firstName} </span>
+        <span>{user.name}</span>
+      </>
+    )
+    // indicate it's a temp user
+    if (isTempUser(user.id)) {
+      return (
+        <>
+          {userFragment}, <span>{t('subscriptionList.overview.tempUser')}</span>
+        </>
+      )
+    }
+    // just return the users name
+    return userFragment
+  }
+
   return (
     <>
       <FlexboxGrid>
@@ -152,7 +178,7 @@ export function SubscriptionList() {
         <Table
           minHeight={600}
           autoHeight={true}
-          style={{flex: 1}}
+          style={{flex: 1, cursor: 'pointer'}}
           loading={isLoading}
           data={subscriptions}
           sortColumn={sortField}
@@ -160,6 +186,12 @@ export function SubscriptionList() {
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
+          }}
+          onRowClick={data => {
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: SubscriptionEditRoute.create({id: data.id})
+            })
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
@@ -194,19 +226,7 @@ export function SubscriptionList() {
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
-              {(rowData: FullSubscriptionFragment) => (
-                <Link
-                  route={
-                    rowData.user
-                      ? UserEditRoute.create({id: rowData.user.id})
-                      : SubscriptionEditRoute.create({id: rowData.id})
-                  }>
-                  {isTempUser(rowData.user?.id) && (
-                    <span>{t('subscriptionList.overview.tempUser')}</span>
-                  )}
-                  {rowData.user?.name || t('subscriptionList.overview.deleted')}
-                </Link>
-              )}
+              {(rowData: FullSubscriptionFragment) => userNameView(rowData)}
             </Cell>
           </Column>
           {/* email */}
