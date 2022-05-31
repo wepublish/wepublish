@@ -768,7 +768,8 @@
         "deactivationReason": "Grund Deaktivierung",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
-        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt"
+        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
+        "reset": "Filter zurücksetzen"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",

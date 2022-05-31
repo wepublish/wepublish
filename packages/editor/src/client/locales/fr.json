@@ -454,7 +454,8 @@
         "deactivationReason": "Motif désactivation",
         "reasonNone": "Sans",
         "reasonUserSelfDeactivated": "Par l'utilisateur",
-        "reasonInvoiceNotPaid": "Facture impayée"
+        "reasonInvoiceNotPaid": "Facture impayée",
+        "reset": "Réinitialiser filtre"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",

@@ -35,6 +35,7 @@ import {
   DateRangePicker,
   Drawer,
   FlexboxGrid,
+  Form,
   FormGroup,
   Icon,
   IconButton,
@@ -79,6 +80,7 @@ export function SubscriptionList() {
   )
 
   const [filter, setFilter] = useState({} as SubscriptionFilter)
+  const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
@@ -181,12 +183,46 @@ export function SubscriptionList() {
     loadMemberPlanError !== undefined ||
     paymentMethodLoadError !== undefined
 
+  /**
+   * Filter functionality
+   */
+  function isAnyFilterSet(): boolean {
+    for (const [filterKey, filterValue] of Object.entries(filter)) {
+      if (filterKey && filterValue !== undefined) return true
+    }
+    return false
+  }
+
+  function resetFilter(): void {
+    setFilter({})
+    setResetFilterkey(new Date().getTime().toString())
+  }
+
   const updateFilter = (value: SubscriptionFilter) => {
     const newFilter = {
       ...filter,
       ...value
     }
     setFilter(newFilter)
+  }
+
+  /**
+   * UI helper functions
+   */
+  function resetFilterView() {
+    if (!isAnyFilterSet()) {
+      return <></>
+    }
+    return (
+      <>
+        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+          <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+            <Icon icon="close" style={{marginRight: '5px'}} />
+            {t('subscriptionList.filter.reset')}
+          </Button>
+        </FormGroup>
+      </>
+    )
   }
 
   return (
@@ -211,6 +247,7 @@ export function SubscriptionList() {
       <FlexboxGrid style={{marginTop: '15px', marginBottom: '10px'}}>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
+            key={`member-plan-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.selectMemberPlan')}
             block
             disabled={isDisabled}
@@ -222,6 +259,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
+            key={`payment-periodicity-${resetFilterKey}`}
             placeholder={t('memberPlanList.paymentPeriodicities')}
             value={filter.paymentPeriodicity}
             data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
@@ -235,6 +273,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
+            key={`payment-method-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.paymentMethod')}
             block
             disabled={isDisabled}
@@ -247,6 +286,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
+            key={`starts-at-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.startsAt')}
             block
             onChange={value => {
@@ -269,6 +309,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
+            key={`auto-renew-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.autoRenew')}
             searchable={false}
             data={[
@@ -281,36 +322,14 @@ export function SubscriptionList() {
                 label: t('no')
               }
             ]}
-            value={filter.deactivationReason}
             block
             placement="auto"
             onChange={value => updateFilter({autoRenew: value})}
           />
         </FormGroup>
-        {/*  hide for now until filtering by subscription.user.address
-             is implemented on backend (mongo adpter)
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
-          <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
-          <SelectPicker
-            searchable={false}
-            data={[
-              {
-                value: true,
-                label: 'Yes'
-              },
-              {
-                value: false,
-                label: 'No'
-              }
-            ]}
-            value={filter.deactivationReason}
-            block
-            placement="auto"
-            onChange={value => updateFilter({userHasAddress: value})}
-          />
-        </FormGroup> */}
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
+            key={`deactivation-reason-${resetFilterKey}`}
             placeholder={t('subscriptionList.filter.deactivationReason')}
             searchable={false}
             data={[
@@ -335,6 +354,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
+            key={`deactivation-date-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.deactivation.date')}
             block
             placement="auto"
@@ -359,6 +379,7 @@ export function SubscriptionList() {
         </FormGroup>
         <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
+            key={`payed-until-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.payedUntil')}
             block
             placement="auto"
@@ -379,6 +400,7 @@ export function SubscriptionList() {
             onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
           />
         </FormGroup>
+        {resetFilterView()}
       </FlexboxGrid>
 
       <div

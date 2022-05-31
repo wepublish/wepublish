@@ -835,7 +835,8 @@
         "deactivationReason": "Deactivation reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
-        "reasonInvoiceNotPaid": "Invoice not paid"
+        "reasonInvoiceNotPaid": "Invoice not paid",
+        "reset": "Reset Filter"
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
