@@ -148,7 +148,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge, loaders}) {
         const user = optionalAuthenticateUser()
         let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
@@ -156,12 +156,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (commentLength > MAX_COMMENT_LENGTH) {
           throw new CommentLengthError()
         }
+        const guestCanCommentSetting = await dbAdapter.setting.getSetting('ALLOW_GUEST_COMMENTING')
 
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
-            throw new AnonymousCommentsDisabledError()
+          if (!guestCanCommentSetting?.value) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()

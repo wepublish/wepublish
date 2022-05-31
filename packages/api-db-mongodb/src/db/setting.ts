@@ -1,10 +1,10 @@
 import {
   CreateSettingArgs,
-  UpdateSettingArgs,
-  DeleteSettingArgs,
   DBSettingAdapter,
+  DeleteSettingArgs,
   OptionalSetting,
-  Setting
+  Setting,
+  UpdateSettingArgs
 } from '@wepublish/api'
 
 import {Collection, Db} from 'mongodb'
@@ -65,6 +65,20 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
 
     const {_id: outID, ...setting} = value
     return {id: outID, ...setting}
+  }
+
+  async getSetting(name: string): Promise<OptionalSetting> {
+    const setting = await this.settings.findOne({name})
+    if (setting) {
+      return {
+        id: setting._id,
+        name: setting.name,
+        value: setting.value,
+        settingRestriction: setting.settingRestriction
+      }
+    } else {
+      return null
+    }
   }
 
   async deleteSetting({id}: DeleteSettingArgs): Promise<string | null> {

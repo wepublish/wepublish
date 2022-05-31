@@ -6,11 +6,17 @@ export type Setting<T = unknown> = {
   settingRestriction?: SettingRestriction
 }
 
+export enum SettingName {
+  ALLOW_GUEST_COMMENTING = 'allow guest commenting',
+  MAXIMUM_COMMENT_LENGTH = 'maximum comment length'
+}
+
 export interface SettingInput<T> {
   name: string
   value: T | null
 }
 
+// TODO
 export interface CreateSettingArgs<T> {
   name: string
   value: T | null
@@ -42,6 +48,9 @@ export interface DBSettingAdapter {
 
   getSettingsByID(ids: readonly string[]): Promise<OptionalSetting[]>
   getSettingsByName(names: readonly string[]): Promise<OptionalSetting[]>
+
+  // TODO fix type
+  getSetting(name: string | SettingName): Promise<OptionalSetting>
 
   getSettings(): Promise<Setting[]>
 }

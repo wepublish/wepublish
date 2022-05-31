@@ -6,16 +6,25 @@ import {
   GraphQLScalarType,
   GraphQLInputObjectType,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLEnumType
 } from 'graphql'
 
 import {Context} from '../context'
-import {Setting} from '../db/setting'
+import {Setting, SettingName} from '../db/setting'
 
 export const GraphQLSettingValueType = new GraphQLScalarType({
   name: 'value',
   serialize(value) {
     return value
+  }
+})
+
+export const GraphQLSettingName = new GraphQLEnumType({
+  name: 'SettingName',
+  values: {
+    ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
+    MAXIMUM_COMMENT_LENGTH: {value: SettingName.MAXIMUM_COMMENT_LENGTH}
   }
 })
 

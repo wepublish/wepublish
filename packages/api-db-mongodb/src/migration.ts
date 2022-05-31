@@ -881,12 +881,16 @@ export const Migrations: Migration[] = [
       })
 
       const maxCommentCreate: CreateSettingArgs<number> = {
-        name: 'Max Comment Length',
+        name: 'MAXIMUM_COMMENT_LENGTH',
         value: 500,
         settingRestriction: {maxValue: 600}
       }
+      const allowAnonCommenting: CreateSettingArgs<boolean> = {
+        name: 'ALLOW_GUEST_COMMENTING',
+        value: false
+      }
 
-      await settingsDoc.insertOne(maxCommentCreate)
+      await settingsDoc.insertMany([maxCommentCreate, allowAnonCommenting])
     }
   }
 ]
