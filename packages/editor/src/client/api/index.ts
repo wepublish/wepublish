@@ -2069,7 +2069,7 @@ export type ArticleRefFragment = (
 );
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<ArticleFilter>;
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -3104,7 +3104,7 @@ export type PageRefFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<PageFilter>;
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -4495,8 +4495,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: ArticleFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -5946,8 +5946,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: PageFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

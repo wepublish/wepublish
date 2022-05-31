@@ -21,13 +21,12 @@ export interface TeaserSelectPanelProps {
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
 
-  const [peerFilter, setPeerFilter] = useState<ArticleFilter>({title: ''})
+  // const [peerFilter, setPeerFilter] = useState<ArticleFilter>({title: ''})
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
-  // peer variables
   const peerListVariables = {
-    peerFilter: filter || undefined,
+    filter: filter || undefined,
     first: 20,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
@@ -48,15 +47,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchMore: fetchMorePeerArticles,
     error: peerArticleListError
   } = usePeerArticleListQuery({
-    variables: peerListVariables,
+    variables: listVariables,
     fetchPolicy: 'network-only'
   })
 
-  const {
-    data: pageListData,
-    fetchMore: fetchMorePages,
-    error: pageListError
-  } = usePageListQuery({
+  const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
     variables: listVariables,
     fetchPolicy: 'no-cache'
   })
@@ -130,13 +125,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   function currentFilter() {
     switch (type) {
       case TeaserType.Article:
-        return <Input value={filter} onChange={value => setFilter(value)} />
+        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
       case TeaserType.PeerArticle:
-        return (
-          <Input value={peerFilter.title || ''} onChange={value => setPeerFilter({title: value})} />
-        )
+        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
       case TeaserType.Page:
-        return <Input value={filter} onChange={value => setFilter(value)} />
+        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
     }
   }
   function currentContent() {

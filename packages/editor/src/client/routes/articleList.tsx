@@ -4,6 +4,7 @@ import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
 
 import {
   useArticleListQuery,
+  ArticleFilter,
   ArticleRefFragment,
   useUnpublishArticleMutation,
   useDeleteArticleMutation,
@@ -54,7 +55,7 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 }
 
 export function ArticleList() {
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState({title: ''})
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
@@ -122,7 +123,7 @@ export function ArticleList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
+            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
