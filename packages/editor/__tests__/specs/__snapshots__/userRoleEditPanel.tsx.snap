@@ -155,7 +155,6 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
       >
         <Form
           fluid={true}
-<<<<<<< HEAD
           formValue={
             Object {
               "name": "Brand New User Role",
@@ -203,8 +202,6 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
               },
             }
           }
-=======
->>>>>>> master
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -220,20 +217,12 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-<<<<<<< HEAD
                     userRoles.panels.name*
-=======
-                    userRoles.panels.name
->>>>>>> master
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={true}
-<<<<<<< HEAD
                   name="name"
-=======
-                  name="userRoles.panels.name"
->>>>>>> master
                   onChange={[Function]}
                   value="Brand New User Role"
                 >
@@ -244,11 +233,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={true}
-<<<<<<< HEAD
                       name="name"
-=======
-                      name="userRoles.panels.name"
->>>>>>> master
                       onBlur={[Function]}
                       onChange={[Function]}
                       value="Brand New User Role"
@@ -258,11 +243,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={true}
-<<<<<<< HEAD
                         name="name"
-=======
-                        name="userRoles.panels.name"
->>>>>>> master
                         type="text"
                         value="Brand New User Role"
                       />
@@ -462,21 +443,12 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
                                 <span
                                   aria-placeholder="Select"
                                   className="rs-picker-toggle-placeholder"
-<<<<<<< HEAD
                                 >
                                   Select
                                 </span>
                                 <AngleDown
                                   className="rs-picker-toggle-caret"
                                 >
-=======
-                                >
-                                  Select
-                                </span>
-                                <AngleDown
-                                  className="rs-picker-toggle-caret"
-                                >
->>>>>>> master
                                   <Icon
                                     aria-label="angle down"
                                     as={
@@ -757,7 +729,6 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
       >
         <Form
           fluid={true}
-<<<<<<< HEAD
           formValue={
             Object {
               "name": "Role 1",
@@ -805,8 +776,6 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
               },
             }
           }
-=======
->>>>>>> master
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -816,7 +785,6 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
               <div
                 className="rs-form-group"
                 role="group"
-<<<<<<< HEAD
               >
                 <FormControlLabel>
                   <label
@@ -870,80 +838,6 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
               <div
                 className="rs-form-group"
                 role="group"
-=======
->>>>>>> master
-              >
-                <FormControlLabel>
-                  <label
-                    className="rs-form-control-label"
-                    id={null}
-                  >
-<<<<<<< HEAD
-                    userRoles.panels.description
-=======
-                    userRoles.panels.name
->>>>>>> master
-                  </label>
-                </FormControlLabel>
-                <FormControl
-                  disabled={true}
-<<<<<<< HEAD
-                  name="userRoles.panels.description"
-                  onChange={[Function]}
-                  value="Description for role 1"
-=======
-                  name="userRoles.panels.name"
-                  onChange={[Function]}
-                  value="Role 1"
->>>>>>> master
-                >
-                  <div
-                    className="rs-form-control rs-form-control-wrapper"
-                  >
-                    <Input
-                      aria-describedby={null}
-                      aria-labelledby={null}
-                      disabled={true}
-<<<<<<< HEAD
-                      name="userRoles.panels.description"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value="Description for role 1"
-=======
-                      name="userRoles.panels.name"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      value="Role 1"
->>>>>>> master
-                    >
-                      <input
-                        aria-describedby={null}
-                        aria-labelledby={null}
-                        className="rs-input"
-                        disabled={true}
-<<<<<<< HEAD
-=======
-                        name="userRoles.panels.name"
-                        type="text"
-                        value="Role 1"
-                      />
-                    </Input>
-                    <FormErrorMessage
-                      aria-relevant="all"
-                      className="rs-form-control-message-wrapper"
-                      id="undefined-error-message"
-                      placement="bottomStart"
-                      role="alert"
-                      show={false}
-                    />
-                  </div>
-                </FormControl>
-              </div>
-            </FormGroup>
-            <FormGroup>
-              <div
-                className="rs-form-group"
-                role="group"
               >
                 <FormControlLabel>
                   <label
@@ -976,7 +870,6 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={true}
->>>>>>> master
                         name="userRoles.panels.description"
                         type="text"
                         value="Description for role 1"
@@ -1444,7 +1337,6 @@ exports[`User Role Edit Panel should render 1`] = `
             className="rs-drawer-header-close rs-btn-close"
             role="button"
             title="Close"
-<<<<<<< HEAD
           >
             <Close>
               <Icon
@@ -1505,68 +1397,6 @@ exports[`User Role Edit Panel should render 1`] = `
           <ModalFooter
             classPrefix="drawer-actions"
           >
-=======
-          >
-            <Close>
-              <Icon
-                aria-label="close"
-                as={
-                  Object {
-                    "$$typeof": Symbol(react.forward_ref),
-                    "render": [Function],
-                  }
-                }
-                data-category="application"
-                fill="currentColor"
-                height="1em"
-                width="1em"
-              >
-                <ForwardRef(Close)
-                  aria-hidden={true}
-                  aria-label="close"
-                  className="rs-icon"
-                  data-category="application"
-                  fill="currentColor"
-                  focusable={false}
-                  height="1em"
-                  width="1em"
-                >
-                  <svg
-                    aria-hidden={true}
-                    aria-label="close"
-                    className="rs-icon"
-                    data-category="application"
-                    fill="currentColor"
-                    focusable={false}
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    width="1em"
-                  >
-                    <path
-                      d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-                    />
-                  </svg>
-                </ForwardRef(Close)>
-              </Icon>
-            </Close>
-          </span>
-        </CloseButton>
-        <DrawerTitle>
-          <Modal.Title
-            classPrefix="drawer-title"
-          >
-            <h4
-              className="rs-drawer-title"
-            >
-              userRoles.panels.createUserRole
-            </h4>
-          </Modal.Title>
-        </DrawerTitle>
-        <DrawerActions>
-          <ModalFooter
-            classPrefix="drawer-actions"
-          >
->>>>>>> master
             <div
               className="rs-drawer-actions"
             >
@@ -1645,7 +1475,6 @@ exports[`User Role Edit Panel should render 1`] = `
       >
         <Form
           fluid={true}
-<<<<<<< HEAD
           formValue={
             Object {
               "name": "",
@@ -1693,8 +1522,6 @@ exports[`User Role Edit Panel should render 1`] = `
               },
             }
           }
-=======
->>>>>>> master
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -1710,20 +1537,12 @@ exports[`User Role Edit Panel should render 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-<<<<<<< HEAD
                     userRoles.panels.name*
-=======
-                    userRoles.panels.name
->>>>>>> master
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={false}
-<<<<<<< HEAD
                   name="name"
-=======
-                  name="userRoles.panels.name"
->>>>>>> master
                   onChange={[Function]}
                   value=""
                 >
@@ -1734,11 +1553,7 @@ exports[`User Role Edit Panel should render 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={false}
-<<<<<<< HEAD
                       name="name"
-=======
-                      name="userRoles.panels.name"
->>>>>>> master
                       onBlur={[Function]}
                       onChange={[Function]}
                       value=""
@@ -1748,11 +1563,7 @@ exports[`User Role Edit Panel should render 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={false}
-<<<<<<< HEAD
                         name="name"
-=======
-                        name="userRoles.panels.name"
->>>>>>> master
                         onBlur={[Function]}
                         onChange={[Function]}
                         onKeyDown={[Function]}
@@ -2106,7 +1917,6 @@ exports[`User Role Edit Panel should render with role 1`] = `
             className="rs-drawer-header-close rs-btn-close"
             role="button"
             title="Close"
-<<<<<<< HEAD
           >
             <Close>
               <Icon
@@ -2167,68 +1977,6 @@ exports[`User Role Edit Panel should render with role 1`] = `
           <ModalFooter
             classPrefix="drawer-actions"
           >
-=======
-          >
-            <Close>
-              <Icon
-                aria-label="close"
-                as={
-                  Object {
-                    "$$typeof": Symbol(react.forward_ref),
-                    "render": [Function],
-                  }
-                }
-                data-category="application"
-                fill="currentColor"
-                height="1em"
-                width="1em"
-              >
-                <ForwardRef(Close)
-                  aria-hidden={true}
-                  aria-label="close"
-                  className="rs-icon"
-                  data-category="application"
-                  fill="currentColor"
-                  focusable={false}
-                  height="1em"
-                  width="1em"
-                >
-                  <svg
-                    aria-hidden={true}
-                    aria-label="close"
-                    className="rs-icon"
-                    data-category="application"
-                    fill="currentColor"
-                    focusable={false}
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    width="1em"
-                  >
-                    <path
-                      d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-                    />
-                  </svg>
-                </ForwardRef(Close)>
-              </Icon>
-            </Close>
-          </span>
-        </CloseButton>
-        <DrawerTitle>
-          <Modal.Title
-            classPrefix="drawer-title"
-          >
-            <h4
-              className="rs-drawer-title"
-            >
-              userRoles.panels.editUserRole
-            </h4>
-          </Modal.Title>
-        </DrawerTitle>
-        <DrawerActions>
-          <ModalFooter
-            classPrefix="drawer-actions"
-          >
->>>>>>> master
             <div
               className="rs-drawer-actions"
             >
@@ -2307,7 +2055,6 @@ exports[`User Role Edit Panel should render with role 1`] = `
       >
         <Form
           fluid={true}
-<<<<<<< HEAD
           formValue={
             Object {
               "name": "Role 1",
@@ -2355,8 +2102,6 @@ exports[`User Role Edit Panel should render with role 1`] = `
               },
             }
           }
-=======
->>>>>>> master
         >
           <form
             className="rs-form rs-form-vertical rs-form-fluid"
@@ -2372,20 +2117,12 @@ exports[`User Role Edit Panel should render with role 1`] = `
                     className="rs-form-control-label"
                     id={null}
                   >
-<<<<<<< HEAD
                     userRoles.panels.name*
-=======
-                    userRoles.panels.name
->>>>>>> master
                   </label>
                 </FormControlLabel>
                 <FormControl
                   disabled={false}
-<<<<<<< HEAD
                   name="name"
-=======
-                  name="userRoles.panels.name"
->>>>>>> master
                   onChange={[Function]}
                   value="Role 1"
                 >
@@ -2396,11 +2133,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
                       aria-describedby={null}
                       aria-labelledby={null}
                       disabled={false}
-<<<<<<< HEAD
                       name="name"
-=======
-                      name="userRoles.panels.name"
->>>>>>> master
                       onBlur={[Function]}
                       onChange={[Function]}
                       value="Role 1"
@@ -2410,11 +2143,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
                         aria-labelledby={null}
                         className="rs-input"
                         disabled={false}
-<<<<<<< HEAD
                         name="name"
-=======
-                        name="userRoles.panels.name"
->>>>>>> master
                         onBlur={[Function]}
                         onChange={[Function]}
                         onKeyDown={[Function]}
