@@ -63,7 +63,7 @@ export function EditorSubMenuButton({
   const triggerRef = useRef<OverlayTriggerInstance>(null)
 
   useEffect(() => {
-    if (!editorHasFocus && triggerRef.current) triggerRef.current!.visible = false
+    if (!editorHasFocus && triggerRef.current) triggerRef.current!.close()
   }, [editorHasFocus])
 
   return (
