@@ -40,8 +40,7 @@ export default (env: any, {mode}: any) =>
             presets: [
               '@babel/preset-react',
               '@babel/preset-typescript',
-              ['@babel/preset-env', {modules: false}],
-              ['rsuite', {style: true, theme: 'default'}]
+              ['@babel/preset-env', {modules: false}]
             ],
             plugins: [
               '@babel/plugin-syntax-dynamic-import',

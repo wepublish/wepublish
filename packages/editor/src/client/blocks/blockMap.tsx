@@ -14,34 +14,45 @@ import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
+import FileTextIcon from '@rsuite/icons/legacy/FileText'
+import ImageIcon from '@rsuite/icons/legacy/Image'
+import HeaderIcon from '@rsuite/icons/legacy/Header'
+import CloneIcon from '@rsuite/icons/legacy/Clone'
+import ThListIcon from '@rsuite/icons/legacy/ThList'
+import QuoteLeftIcon from '@rsuite/icons/legacy/QuoteLeft'
+import CoffeeIcon from '@rsuite/icons/legacy/Coffee'
+import CodeIcon from '@rsuite/icons/legacy/Code'
+import ColumnsIcon from '@rsuite/icons/legacy/Columns'
+import EllipsisHIcon from '@rsuite/icons/legacy/EllipsisH'
+import EllipsisVIcon from '@rsuite/icons/legacy/EllipsisV'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
     field: props => <TitleBlock {...props} />,
     defaultValue: {title: '', lead: ''},
     label: 'blocks.title.label',
-    icon: 'header'
+    icon: <HeaderIcon />
   },
 
   [BlockType.RichText]: {
     field: props => <RichTextBlock {...props} />,
     defaultValue: createDefaultValue,
     label: 'blocks.richText.label',
-    icon: 'file-text'
+    icon: <FileTextIcon />
   },
 
   [BlockType.Image]: {
     field: props => <ImageBlock {...props} />,
     defaultValue: {image: null, caption: ''},
     label: 'blocks.image.label',
-    icon: 'image'
+    icon: <ImageIcon />
   },
 
   [BlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {images: [{caption: '', image: null}]},
     label: 'blocks.imageGallery.label',
-    icon: 'clone'
+    icon: <CloneIcon />
   },
 
   [BlockType.Listicle]: {
@@ -59,14 +70,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.listicle.label',
-    icon: 'th-list'
+    icon: <ThListIcon />
   },
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
     defaultValue: {quote: '', author: ''},
     label: 'blocks.quote.label',
-    icon: 'quote-left'
+    icon: <QuoteLeftIcon />
   },
 
   [BlockType.LinkPageBreak]: {
@@ -84,21 +95,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       hideButton: false
     },
     label: 'blocks.linkPageBreak.label',
-    icon: 'coffee'
+    icon: <CoffeeIcon />
   },
 
   [BlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
     defaultValue: {type: EmbedType.Other},
     label: 'blocks.embeds.label',
-    icon: 'code'
+    icon: <CodeIcon />
   },
 
   [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
     label: 'blocks.teaserGrid1.label',
-    icon: 'ellipsis-v'
+    icon: <EllipsisVIcon />
   },
 
   [BlockType.TeaserGrid6]: {
@@ -115,7 +126,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.teaserGrid6.label',
-    icon: 'ellipsis-h'
+    icon: <EllipsisHIcon />
   },
 
   [BlockType.TeaserGridFlex]: {
@@ -141,6 +152,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.teaserFlexGrid.label',
-    icon: 'columns'
+    icon: <ColumnsIcon />
   }
 }
