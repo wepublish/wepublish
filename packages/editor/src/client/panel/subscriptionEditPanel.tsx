@@ -285,6 +285,23 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }
 
+  /**
+   * UI helper to provide a meaningful user labeling.
+   * @param user
+   */
+  function getUserLabel(user: FullUserFragment | null | undefined): string {
+    if (!user) return ''
+    let userLabel = ''
+    if (user.firstName) userLabel += `${user.firstName} `
+    if (user.name) userLabel += `${user.name} `
+    if (user.preferredName) userLabel += `(${user.preferredName}) `
+    if (user.email) userLabel += `| ${user.email} `
+    if (user.address?.streetAddress) userLabel += `| ${user.address.streetAddress} `
+    if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `
+    if (user.address?.city) userLabel += `| ${user.address.city} `
+    return userLabel
+  }
+
   return (
     <>
       <Drawer.Header>
@@ -357,7 +374,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <SelectPicker
                 block
                 disabled={isDisabled || isDeactivated}
-                data={users.map(usr => ({value: usr?.id, label: usr?.name}))}
+                data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
                 value={user?.id}
                 onChange={value => setUser(users.find(usr => usr?.id === value))}
                 onSearch={searchString => {
