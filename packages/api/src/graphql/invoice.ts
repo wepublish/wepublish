@@ -67,6 +67,7 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
 
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    canceledAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     subscriptionID: {type: GraphQLNonNull(GraphQLID)},
     total: {

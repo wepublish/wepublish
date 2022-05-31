@@ -44,7 +44,7 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
           }}
         />
       </InputGroup>
-      {message ? <Message type="error" description={t('memberPlanList.errorMessage')} /> : ''}
+      {message ? <Message type="error">{t('memberPlanList.errorMessage')}</Message> : ''}
     </div>
   )
 }

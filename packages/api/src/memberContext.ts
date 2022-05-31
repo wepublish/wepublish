@@ -242,7 +242,12 @@ export class MemberContext implements MemberContext {
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
         const period = periods[periods.length - 1]
-        return await this.loaders.invoicesByID.load(period.id)
+        const invoice = await this.dbAdapter.invoice.getInvoiceByID(period.invoiceID)
+        // only return the invoice if it hasn't been canceled. Otherwise
+        // create a new period and a new invoice
+        if (!invoice?.canceledAt) {
+          return invoice
+        }
       }
 
       const startDate = new Date(
