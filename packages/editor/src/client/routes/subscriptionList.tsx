@@ -25,7 +25,7 @@ import {Button, Drawer, FlexboxGrid, Icon, IconButton, Message, Modal, Table} fr
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
-import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
+import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import {SubscriptionListFilter} from '../atoms/filters/SubscriptionListFilter'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -53,7 +53,6 @@ export function SubscriptionList() {
     current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
   )
   const [filter, setFilter] = useState({} as SubscriptionFilter)
-  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
 
@@ -149,9 +148,7 @@ export function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
-            {t('userList.overview.exportSubscriptionsCsv')}
-          </Button>
+          <ExportSubscriptionsAsCsv filter={filter} />
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -302,22 +299,6 @@ export function SubscriptionList() {
           }}
         />
       </Drawer>
-
-      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <SubscriptionAsCsvModal filter={filter} />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={() => setExportModalOpen(false)} appearance="default">
-            {t('userList.panels.close')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

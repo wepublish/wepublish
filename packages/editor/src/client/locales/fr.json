@@ -448,7 +448,8 @@
         "subscription": "Abonnement",
         "tempUser": "Utilisateur temporaire",
         "email": "Email",
-        "memberPlan": "plan de membre"
+        "memberPlan": "plan de membre",
+        "downloadCsv": "Télécharger CSV"
       },
       "filter": {
         "deactivationReason": "Motif désactivation",

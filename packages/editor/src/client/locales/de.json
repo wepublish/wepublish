@@ -762,7 +762,8 @@
         "subscription": "Subscription",
         "tempUser": "Temporäre:r Benutzer:in",
         "email": "Email",
-        "memberPlan": "Member-Plan"
+        "memberPlan": "Member-Plan",
+        "downloadCsv": "CSV herunterladen"
       },
       "filter": {
         "deactivationReason": "Grund Deaktivierung",
