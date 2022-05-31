@@ -722,7 +722,7 @@ export const Migrations: Migration[] = [
     // migrate existing deactivated subscriptions
     version: 18,
     async migrate(db, locale) {
-      // 1. move subscription from user object into new collection
+      // 1. move subscription from user object into new subscription collection
       const users = await db.collection(CollectionName.Users)
       const userWithSubscriptions = await users.find({subscription: {$exists: true}}).toArray()
       const newSubscriptions: Omit<Subscription, 'id'>[] = []
@@ -761,9 +761,9 @@ export const Migrations: Migration[] = [
       const newInvoices: DBInvoice[] = []
       for (const invoice of allInvoices) {
         const userID = invoice.userID
-        const subscription = allSubscriptions.find(subscription => {
-          return removePrefixTempUser(subscription.userID) === userID
-        })
+        const subscription = allSubscriptions.find(
+          subscription => removePrefixTempUser(subscription.userID) === userID
+        )
         if (!subscription) {
           continue
         }
@@ -788,7 +788,7 @@ export const Migrations: Migration[] = [
       })
       if (newInvoices.length > 0) await emptyInvoices.insertMany(newInvoices)
 
-      // 4. remove subscription object from user collection
+      // 3. remove subscription object from user collection
       await users.updateMany(
         {subscription: {$exists: true}},
         {
@@ -796,7 +796,7 @@ export const Migrations: Migration[] = [
         }
       )
 
-      // 3. create new collection with existing temp user
+      // 4. split existing user collection into new temp.user and user collection
       const tempUserQuery = {email: {$regex: OLD_TEMP_USER_REGEX}}
       const tempUsers = await users.find(tempUserQuery).toArray()
       const newTempUserCollection = await db.createCollection(CollectionName.TempUsers, {
@@ -809,7 +809,7 @@ export const Migrations: Migration[] = [
         }
         await newTempUserCollection.insertMany(tempUsers)
 
-        // 5. delete migrated temp users from user
+        // 5. delete migrated temp users from user collection
         await users.deleteMany(tempUserQuery)
       }
     }
