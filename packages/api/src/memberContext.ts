@@ -321,54 +321,56 @@ export class MemberContext implements MemberContext {
     }
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
-    const subscriptionsPaidUntil = await this.dbAdapter.subscription.getSubscriptions({
-      filter: {
-        autoRenew: true,
-        paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
-        deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-      },
-      limit: {type: LimitType.First, count: 100},
-      order: SortOrder.Ascending,
-      sort: SubscriptionSort.CreatedAt,
-      cursor: InputCursor()
-    })
+    const subscriptionsPaidUntil: Subscription[] = []
+    let hasMore = true
+    let skip = 0
+    while (hasMore) {
+      const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
+        cursor: InputCursor(),
+        limit: {count: 100, type: LimitType.First, skip},
+        order: SortOrder.Ascending,
+        sort: SubscriptionSort.CreatedAt,
+        filter: {
+          autoRenew: true,
+          paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
+        }
+      })
 
-    const subscriptionPaidNull = await this.dbAdapter.subscription.getSubscriptions({
-      filter: {
-        autoRenew: true,
-        paidUntil: {date: null, comparison: DateFilterComparison.Equal},
-        deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-      },
-      limit: {type: LimitType.First, count: 200},
-      order: SortOrder.Ascending,
-      sort: SubscriptionSort.CreatedAt,
-      cursor: InputCursor()
-    })
+      hasMore = subscriptions.pageInfo.hasNextPage
+      skip += 100
+      subscriptionsPaidUntil.push(...subscriptions.nodes)
+    }
 
-    for (const subscription of [...subscriptionsPaidUntil.nodes, ...subscriptionPaidNull.nodes]) {
+    const subscriptionPaidNull: Subscription[] = []
+    hasMore = true
+    skip = 0
+    while (hasMore) {
+      const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
+        cursor: InputCursor(),
+        limit: {count: 100, type: LimitType.First, skip},
+        order: SortOrder.Ascending,
+        sort: SubscriptionSort.CreatedAt,
+        filter: {
+          autoRenew: true,
+          paidUntil: {date: null, comparison: DateFilterComparison.Equal},
+          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
+        }
+      })
+
+      hasMore = subscriptions.pageInfo.hasNextPage
+      skip += 100
+      subscriptionPaidNull.push(...subscriptions.nodes)
+    }
+
+    for (const subscription of [...subscriptionsPaidUntil, ...subscriptionPaidNull]) {
       await this.renewSubscriptionForUser({subscription})
     }
   }
 
   async checkOpenInvoices(): Promise<void> {
-    const invoices = await this.dbAdapter.invoice.getInvoices({
-      filter: {
-        paidAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        },
-        canceledAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        }
-      },
-      limit: {type: LimitType.First, count: 200},
-      order: SortOrder.Ascending,
-      sort: InvoiceSort.CreatedAt,
-      cursor: InputCursor()
-    })
-
-    for (const invoice of invoices.nodes) {
+    const openInvoices = await this.getAllOpenInvoices()
+    for (const invoice of openInvoices) {
       const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
         invoice.subscriptionID
       )
@@ -474,28 +476,42 @@ export class MemberContext implements MemberContext {
     return subscription
   }
 
+  private async getAllOpenInvoices(): Promise<Invoice[]> {
+    const openInvoices: Invoice[] = []
+    let hasMore = true
+    let skip = 0
+    while (hasMore) {
+      const invoices = await this.dbAdapter.invoice.getInvoices({
+        cursor: InputCursor(),
+        limit: {count: 100, type: LimitType.First, skip},
+        order: SortOrder.Ascending,
+        sort: InvoiceSort.CreatedAt,
+        filter: {
+          paidAt: {
+            comparison: DateFilterComparison.Equal,
+            date: null
+          },
+          canceledAt: {
+            comparison: DateFilterComparison.Equal,
+            date: null
+          }
+        }
+      })
+
+      hasMore = invoices.pageInfo.hasNextPage
+      skip += 100
+      openInvoices.push(...invoices.nodes)
+    }
+
+    return openInvoices
+  }
+
   async chargeOpenInvoices(): Promise<void> {
     const today = new Date()
-    const invoices = await this.dbAdapter.invoice.getInvoices({
-      filter: {
-        paidAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        },
-        canceledAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        }
-      },
-      limit: {type: LimitType.First, count: 200},
-      order: SortOrder.Ascending,
-      sort: InvoiceSort.CreatedAt,
-      cursor: InputCursor()
-    })
-
+    const openInvoices = await this.getAllOpenInvoices()
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
 
-    for (const invoice of invoices.nodes) {
+    for (const invoice of openInvoices) {
       const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
         invoice.subscriptionID
       )
@@ -672,28 +688,12 @@ export class MemberContext implements MemberContext {
   async sendReminderForInvoices({replyToAddress}: SendReminderForInvoicesProps): Promise<void> {
     const today = new Date()
 
-    const invoices = await this.dbAdapter.invoice.getInvoices({
-      filter: {
-        paidAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        },
-        canceledAt: {
-          comparison: DateFilterComparison.Equal,
-          date: null
-        }
-      },
-      limit: {type: LimitType.First, count: 200},
-      order: SortOrder.Ascending,
-      sort: InvoiceSort.CreatedAt,
-      cursor: InputCursor()
-    })
-
-    if (invoices.nodes.length === 0) {
+    const openInvoices = await this.getAllOpenInvoices()
+    if (openInvoices.length === 0) {
       logger('memberContext').info('No open invoices to remind')
     }
 
-    for (const invoice of invoices.nodes) {
+    for (const invoice of openInvoices) {
       const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
         invoice.subscriptionID
       )
