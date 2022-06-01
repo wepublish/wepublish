@@ -6,6 +6,7 @@ import {
   CreateSettingArgs,
   PageBlock,
   PaymentProviderCustomer,
+  SettingName,
   Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
@@ -881,12 +882,12 @@ export const Migrations: Migration[] = [
       })
 
       const maxCommentCreate: CreateSettingArgs<number> = {
-        name: 'MAXIMUM_COMMENT_LENGTH',
+        name: SettingName.MAXIMUM_COMMENT_LENGTH,
         value: 500,
         settingRestriction: {maxValue: 600}
       }
       const allowAnonCommenting: CreateSettingArgs<boolean> = {
-        name: 'ALLOW_GUEST_COMMENTING',
+        name: SettingName.ALLOW_GUEST_COMMENTING,
         value: false
       }
 

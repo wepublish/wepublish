@@ -23,6 +23,7 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
 export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
   values: {
+    DEFAULT: {value: SettingName.DEFAULT},
     ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
     MAXIMUM_COMMENT_LENGTH: {value: SettingName.MAXIMUM_COMMENT_LENGTH}
   }
@@ -51,7 +52,6 @@ export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
 export const GraphQLSettingInput = new GraphQLInputObjectType({
   name: 'SettingInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
     value: {type: GraphQLSettingValueType}
   }
 })
@@ -60,7 +60,7 @@ export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLSettingName)},
     value: {type: GraphQLSettingValueType},
     settingRestriction: {type: GraphQLSettingRestriction}
   }

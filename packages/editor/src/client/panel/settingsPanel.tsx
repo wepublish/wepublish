@@ -1,8 +1,14 @@
 import React, {useEffect, useState} from 'react'
 
 // import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Toggle, Panel, InputNumber, Notification, toaster} from 'rsuite'
-import {SettingInput, useSettingListQuery, useSettingQuery, useUpdateSettingMutation} from '../api'
+import {Button, Drawer, Form, InputNumber, Notification, Panel, toaster, Toggle} from 'rsuite'
+import {
+  Setting,
+  SettingInput,
+  SettingName,
+  useSettingListQuery,
+  useUpdateSettingMutation
+} from '../api'
 
 export type SettingInputProps = {
   id?: string
@@ -16,34 +22,31 @@ export function SettingsPanel() {
    console.log('data', data?.me?.roles)
  */
 
-  const {data: settingListData, refetch} = useSettingListQuery()
-  const {data: settingData} = useSettingQuery({variables: {name: 'ALLOW_GUEST_COMMENTING'}})
-  console.log('setting data', settingData)
-  const [settingList, setSettingList] = useState(settingListData?.settings)
-  console.log('setting list', settingList)
-  console.log('setting list', settingListData)
-  const [maxCommentLength, setMaxCommentLength] = useState<number>(
-    settingListData?.settings.find(setting => setting.name === 'MAXIMUM_COMMENT_LENGTH')?.value
-  )
+  const {data: settingListData, refetch, error: err} = useSettingListQuery()
 
-  const [canCommentAnon, setCanCommentAnon] = useState<boolean>(
-    settingListData?.settings.find(setting => setting.name === 'ALLOW_GUEST_COMMENTING')?.value
-  )
+  const [maxCommentLength, setMaxCommentLength] = useState<Setting>({
+    id: '',
+    value: 0,
+    name: SettingName.Default
+  })
+  const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
+    id: '',
+    value: false,
+    name: SettingName.Default
+  })
 
   useEffect(() => {
-    setSettingList(settingListData?.settings)
-    setMaxCommentLength(
-      settingListData?.settings.find(setting => setting.name === 'MAXIMUM_COMMENT_LENGTH')?.value
-    )
-  }, [settingListData])
-
-  const maxCommentSetting = settingListData?.settings.find(
-    setting => setting.name === 'MAXIMUM_COMMENT_LENGTH'
-  )
-
-  const anonCommentingSetting = settingListData?.settings.find(
-    setting => setting.name === 'ALLOW_GUEST_COMMENTING'
-  )
+    if (settingListData?.settings) {
+      const allowGuestCommentSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.AllowGuestCommenting
+      )
+      if (allowGuestCommentSetting) setAllowGuestComment(allowGuestCommentSetting)
+      const maxCommentLengthSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.MaximumCommentLength
+      )
+      if (maxCommentLengthSetting) setMaxCommentLength(maxCommentLengthSetting)
+    }
+  }, [settingListData?.settings])
 
   const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
     fetchPolicy: 'no-cache'
@@ -59,38 +62,33 @@ export function SettingsPanel() {
 
   async function handleSettingListUpdate() {
     const maxInput: SettingInput = {
-      name: maxCommentSetting?.name ?? 'maximum comment length',
-      value: maxCommentLength
+      value: maxCommentLength.value
     }
-    handleSettingUpdate(maxCommentSetting?.id, maxInput)
+    await handleSettingUpdate(maxCommentLength.id, maxInput)
 
     const anonInput: SettingInput = {
-      name: anonCommentingSetting?.name ?? 'ALLOW_GUEST_COMMENTING',
-      value: canCommentAnon
+      value: allowGuestComment.value
     }
-    handleSettingUpdate(anonCommentingSetting?.id, anonInput)
+    await handleSettingUpdate(allowGuestComment.id, anonInput)
   }
 
   useEffect(() => {
-    const id = settingList?.find(setting => setting.name === 'MAXIMUM_COMMENT_LENGTH')?.id
-    console.log(id)
-    console.log('max value', maxCommentLength)
-  }, [maxCommentLength])
-
-  useEffect(() => {
-    const error = updateSettingError
+    const error = updateSettingError ?? err
     if (error) toaster.push(<Notification type="error" header={error.message} duration={2000} />)
-  }, [updateSettingError])
+  }, [err, updateSettingError])
 
-  console.log(
-    'setting max',
-    settingList?.find(v => v.name === 'MAXIMUM_COMMENT_LENGTH')
-  )
   return (
     <>
       <Drawer.Header>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         <Drawer.Title>Edit Settings</Drawer.Title>
+
+        <Drawer.Actions>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
+          <Button appearance={'primary'} onClick={() => handleSettingListUpdate()}>
+            save
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
@@ -102,13 +100,17 @@ export function SettingsPanel() {
               {/* TODO set restrictions on setting values */}
               <InputNumber
                 max={
-                  maxCommentSetting?.settingRestriction?.maxValue
-                    ? maxCommentSetting.settingRestriction.maxValue
+                  maxCommentLength?.settingRestriction?.maxValue
+                    ? maxCommentLength.settingRestriction.maxValue
                     : undefined
                 }
-                value={maxCommentLength}
+                value={maxCommentLength?.value}
                 onChange={value => {
-                  setMaxCommentLength(Number(value))
+                  setMaxCommentLength({
+                    id: maxCommentLength.id,
+                    name: maxCommentLength.name,
+                    value: value
+                  })
                 }}
               />
             </Form.Group>
@@ -116,8 +118,14 @@ export function SettingsPanel() {
               {/* eslint-disable-next-line i18next/no-literal-string */}
               <Form.ControlLabel>Allow Anonymous Commenting</Form.ControlLabel>
               <Toggle
-                checked={canCommentAnon}
-                onChange={() => setCanCommentAnon(!canCommentAnon)}
+                checked={allowGuestComment?.value}
+                onChange={checked =>
+                  setAllowGuestComment({
+                    id: allowGuestComment.id,
+                    name: allowGuestComment.name,
+                    value: checked
+                  })
+                }
               />
             </Form.Group>
             <Form.Group>
@@ -128,13 +136,6 @@ export function SettingsPanel() {
           </Form>
         </Panel>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        {/* eslint-disable-next-line i18next/no-literal-string */}
-        <Button appearance={'primary'} onClick={() => handleSettingListUpdate()}>
-          Save
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

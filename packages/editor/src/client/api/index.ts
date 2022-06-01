@@ -741,9 +741,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
-  createSetting?: Maybe<Setting>;
   updateSetting?: Maybe<Setting>;
-  deleteSetting?: Maybe<Scalars['ID']>;
 };
 
 
@@ -1054,21 +1052,9 @@ export type MutationRequestChangesOnCommentArgs = {
 };
 
 
-export type MutationCreateSettingArgs = {
-  name: Scalars['String'];
-  settingRestriction?: Maybe<SettingRestrictionInput>;
-  value: Scalars['value'];
-};
-
-
 export type MutationUpdateSettingArgs = {
   id: Scalars['String'];
   input: SettingInput;
-};
-
-
-export type MutationDeleteSettingArgs = {
-  id: Scalars['ID'];
 };
 
 export type Navigation = {
@@ -1735,25 +1721,23 @@ export type SessionWithToken = {
 export type Setting = {
   __typename?: 'Setting';
   id: Scalars['ID'];
-  name: Scalars['String'];
+  name: SettingName;
   value?: Maybe<Scalars['value']>;
   settingRestriction?: Maybe<SettingRestriction>;
 };
 
 export type SettingInput = {
-  name: Scalars['String'];
   value?: Maybe<Scalars['value']>;
 };
 
+export enum SettingName {
+  Default = 'DEFAULT',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  MaximumCommentLength = 'MAXIMUM_COMMENT_LENGTH'
+}
+
 export type SettingRestriction = {
   __typename?: 'SettingRestriction';
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
-  inputLength?: Maybe<Scalars['Int']>;
-  allowedValues?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type SettingRestrictionInput = {
   maxValue?: Maybe<Scalars['Int']>;
   minValue?: Maybe<Scalars['Int']>;
   inputLength?: Maybe<Scalars['Int']>;

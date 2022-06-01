@@ -62,6 +62,7 @@ import {logger} from '../server'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
+import {SettingName} from '../db/setting'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -156,7 +157,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (commentLength > MAX_COMMENT_LENGTH) {
           throw new CommentLengthError()
         }
-        const guestCanCommentSetting = await dbAdapter.setting.getSetting('ALLOW_GUEST_COMMENTING')
+        const guestCanCommentSetting = await dbAdapter.setting.getSetting(
+          SettingName.ALLOW_GUEST_COMMENTING
+        )
 
         // Challenge
         if (!user) {

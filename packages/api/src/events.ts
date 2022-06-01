@@ -175,7 +175,7 @@ export const methodsToProxy: MethodsToProxy[] = [
   },
   {
     key: 'setting',
-    methods: ['create', 'update', 'delete'],
+    methods: ['update'],
     eventEmitter: settingModelEvents
   }
 ]

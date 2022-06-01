@@ -20,7 +20,8 @@ import {
   PaymentPeriodicity,
   SubscriptionPeriod,
   SubscriptionDeactivation,
-  SettingRestriction
+  SettingRestriction,
+  SettingName
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -442,7 +443,7 @@ export interface DBMailLog {
 export interface DBSetting<T> {
   _id: any
 
-  name: string
+  name: SettingName
   value: T | null
   settingRestriction?: SettingRestriction
 }

@@ -1,9 +1,8 @@
 import {
-  CreateSettingArgs,
   DBSettingAdapter,
-  DeleteSettingArgs,
   OptionalSetting,
   Setting,
+  SettingName,
   UpdateSettingArgs
 } from '@wepublish/api'
 
@@ -18,14 +17,18 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
     this.settings = db.collection(CollectionName.Settings)
   }
 
-  async createSetting({name, value, settingRestriction}: CreateSettingArgs<any>): Promise<Setting> {
-    const {ops} = await this.settings.insertOne({
-      name: name,
-      value: value,
-      settingRestriction: settingRestriction
-    })
-    const {_id: id, ...setting} = ops[0]
-    return {id, ...setting}
+  async getSetting(name: SettingName): Promise<OptionalSetting> {
+    const setting = await this.settings.findOne({name})
+    if (setting) {
+      return {
+        id: setting._id,
+        name: setting.name,
+        value: setting.value,
+        settingRestriction: setting.settingRestriction
+      }
+    } else {
+      return null
+    }
   }
 
   async getSettings(): Promise<Setting[]> {
@@ -33,8 +36,8 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
     return settings.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
-  async getSettingsByName(names: string[]): Promise<OptionalSetting[]> {
-    const settings = await this.settings.find({name: {$in: names as string[]}}).toArray()
+  async getSettingsByName(names: SettingName[]): Promise<OptionalSetting[]> {
+    const settings = await this.settings.find({name: {$in: names as SettingName[]}}).toArray()
     const settingsMap = Object.fromEntries(
       settings.map(({_id: id, name, ...setting}) => [{...setting}])
     )
@@ -55,7 +58,6 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
       {_id: id},
       {
         $set: {
-          name: input.name,
           value: input.value
         }
       },
@@ -65,24 +67,5 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
 
     const {_id: outID, ...setting} = value
     return {id: outID, ...setting}
-  }
-
-  async getSetting(name: string): Promise<OptionalSetting> {
-    const setting = await this.settings.findOne({name})
-    if (setting) {
-      return {
-        id: setting._id,
-        name: setting.name,
-        value: setting.value,
-        settingRestriction: setting.settingRestriction
-      }
-    } else {
-      return null
-    }
-  }
-
-  async deleteSetting({id}: DeleteSettingArgs): Promise<string | null> {
-    const {deletedCount} = await this.settings.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

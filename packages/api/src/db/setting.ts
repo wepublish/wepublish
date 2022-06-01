@@ -1,24 +1,23 @@
 export type Setting<T = unknown> = {
   id: string
 
-  name: string
+  name: SettingName
   value: T | null
   settingRestriction?: SettingRestriction
 }
 
 export enum SettingName {
+  DEFAULT = '',
   ALLOW_GUEST_COMMENTING = 'allow guest commenting',
   MAXIMUM_COMMENT_LENGTH = 'maximum comment length'
 }
 
 export interface SettingInput<T> {
-  name: string
   value: T | null
 }
 
-// TODO
 export interface CreateSettingArgs<T> {
-  name: string
+  name: SettingName
   value: T | null
   settingRestriction?: SettingRestriction
 }
@@ -26,10 +25,6 @@ export interface CreateSettingArgs<T> {
 export interface UpdateSettingArgs {
   id: string
   input: SettingInput<any>
-}
-
-export interface DeleteSettingArgs {
-  id: string
 }
 
 export interface SettingRestriction {
@@ -42,15 +37,11 @@ export interface SettingRestriction {
 export type OptionalSetting = Setting | null
 
 export interface DBSettingAdapter {
-  createSetting(args: CreateSettingArgs<any>): Promise<Setting>
   updateSetting(args: UpdateSettingArgs): Promise<OptionalSetting>
-  deleteSetting(args: DeleteSettingArgs): Promise<string | null>
 
+  getSetting(name: SettingName): Promise<OptionalSetting>
   getSettingsByID(ids: readonly string[]): Promise<OptionalSetting[]>
-  getSettingsByName(names: readonly string[]): Promise<OptionalSetting[]>
-
-  // TODO fix type
-  getSetting(name: string | SettingName): Promise<OptionalSetting>
+  getSettingsByName(names: readonly SettingName[]): Promise<OptionalSetting[]>
 
   getSettings(): Promise<Setting[]>
 }

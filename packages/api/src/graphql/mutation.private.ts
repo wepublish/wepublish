@@ -91,12 +91,7 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
-import {
-  GraphQLSetting,
-  GraphQLSettingInput,
-  GraphQLSettingRestrictionInput,
-  GraphQLSettingValueType
-} from './setting'
+import {GraphQLSetting, GraphQLSettingInput} from './setting'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1160,28 +1155,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
       }
     },
+
     // Settings
     // ==========
-
-    createSetting: {
-      type: GraphQLSetting,
-      args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
-        settingRestriction: {type: GraphQLSettingRestrictionInput},
-        value: {type: GraphQLNonNull(GraphQLSettingValueType)}
-      },
-      resolve(root, {name, value, restrictions}, {authenticate, dbAdapter}) {
-        // TODO authentication
-        // const {roles} = authenticate()
-        //     authorise(CanCreateSettings, roles)
-
-        return dbAdapter.setting.createSetting({
-          name: name,
-          value: value,
-          settingRestriction: restrictions
-        })
-      }
-    },
 
     updateSetting: {
       type: GraphQLSetting,
@@ -1210,17 +1186,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         } else {
           throw new InvalidSettingValueError()
         }
-      }
-    },
-
-    deleteSetting: {
-      type: GraphQLID,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        // TODO authenticate
-        await dbAdapter.setting.deleteSetting({id})
       }
     }
   }
