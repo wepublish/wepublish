@@ -1,18 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 // import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  Toggle,
-  FormGroup,
-  Panel,
-  InputNumber,
-  Alert,
-  Notification
-} from 'rsuite'
+import {Button, Drawer, Form, Toggle, Panel, InputNumber, Notification, toaster} from 'rsuite'
 import {SettingInput, useSettingListQuery, useSettingQuery, useUpdateSettingMutation} from '../api'
 
 export type SettingInputProps = {
@@ -63,10 +52,8 @@ export function SettingsPanel() {
   async function handleSettingUpdate(id: string | undefined, input: SettingInput) {
     if (!id) return
     await updateSetting({variables: {id: id, input: input}})
-    Notification.success({
-      title: 'updated',
-      duration: 2000
-    })
+    // eslint-disable-next-line i18next/no-literal-string
+    toaster.push(<Notification type="success" header="updated successfully" duration={2000} />)
     await refetch()
   }
 
@@ -92,7 +79,7 @@ export function SettingsPanel() {
 
   useEffect(() => {
     const error = updateSettingError
-    if (error) Alert.error(error.message, 0)
+    if (error) toaster.push(<Notification type="error" header={error.message} duration={2000} />)
   }, [updateSettingError])
 
   console.log(
@@ -109,9 +96,9 @@ export function SettingsPanel() {
       <Drawer.Body>
         <Panel>
           <Form fluid={true}>
-            <FormGroup>
+            <Form.Group>
               {/* eslint-disable-next-line i18next/no-literal-string */}
-              <ControlLabel>Max comment chars</ControlLabel>
+              <Form.ControlLabel>Max comment chars</Form.ControlLabel>
               {/* TODO set restrictions on setting values */}
               <InputNumber
                 max={
@@ -124,20 +111,20 @@ export function SettingsPanel() {
                   setMaxCommentLength(Number(value))
                 }}
               />
-            </FormGroup>
-            <FormGroup>
+            </Form.Group>
+            <Form.Group>
               {/* eslint-disable-next-line i18next/no-literal-string */}
-              <ControlLabel>Allow Anonymous Commenting</ControlLabel>
+              <Form.ControlLabel>Allow Anonymous Commenting</Form.ControlLabel>
               <Toggle
                 checked={canCommentAnon}
                 onChange={() => setCanCommentAnon(!canCommentAnon)}
               />
-            </FormGroup>
-            <FormGroup>
+            </Form.Group>
+            <Form.Group>
               {/* eslint-disable-next-line i18next/no-literal-string */}
-              <ControlLabel>Setting 2</ControlLabel>
+              <Form.ControlLabel>Setting 2</Form.ControlLabel>
               <Toggle />
-            </FormGroup>
+            </Form.Group>
           </Form>
         </Panel>
       </Drawer.Body>

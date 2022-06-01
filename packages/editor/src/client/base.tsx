@@ -1,20 +1,6 @@
-import {LinkHOCCompatibleProps} from '@wepublish/karma.run-react'
-import React, {ComponentType, ReactNode, useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {
-  Container,
-  Drawer,
-  Dropdown,
-  DropdownProps,
-  Icon,
-  IconButton,
-  Nav,
-  Navbar,
-  NavProps,
-  Sidebar,
-  Sidenav
-} from 'rsuite'
-        
+import React, {ReactNode, useEffect, useState} from 'react'
+
+import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton, Drawer} from 'rsuite'
 import {
   ArticleListRoute,
   AuthorListRoute,
@@ -51,11 +37,10 @@ import MehOIcon from '@rsuite/icons/legacy/MehO'
 import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import KeyIcon from '@rsuite/icons/legacy/Key'
-import CogIcon from '@rsuite/icons/legacy/Cog'
 import GlobeIcon from '@rsuite/icons/legacy/Globe'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
+import MenuIcon from '@rsuite/icons/Menu'
 import {useTranslation} from 'react-i18next'
-
 import {SettingsPanel} from './panel/settingsPanel'
 
 export interface BaseProps {
@@ -244,53 +229,55 @@ export function Base({children}: BaseProps) {
             </Sidenav.Body>
           </Sidenav>
           <Navbar appearance="default" className="nav-toggle">
-            <Navbar.Body>
-              <Nav>
-                <Dropdown
-                  placement="topStart"
-                  trigger="click"
-                  renderTitle={children => {
-                    return <Icon style={iconStyles} icon="list-ul" className="icon-selector" />
-                  }}>
-                  {/* TODO translation */}
-                  {/* eslint-disable-next-line i18next/no-literal-string */}
-                  <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
-                    Settings
-                  </DropdownItemLink>
-                  <DropdownItemLink route={LogoutRoute.create({})}>
-                    {t('navbar.logout')}
-                  </DropdownItemLink>
-                </Dropdown>
-              </Nav>
-              <Nav>
-                <Dropdown
-                  placement="topStart"
-                  trigger="click"
-                  renderTitle={() => (
-                    <Icon
-                      className="icon-selector"
-                      icon="globe"
-                      style={{
-                        width: 56,
-                        height: 56,
-                        lineHeight: '56px',
-                        textAlign: 'center'
-                      }}
-                    />
-                  )}>
-                  {AVAILABLE_LANG.map(lang => (
-                    <Dropdown.Item
-                      key={lang.id}
-                      onSelect={() => setUILanguage(lang.id)}
-                      active={lang.id === uiLanguage}>
-                      {lang.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
-              </Nav>
-            </Navbar.Body>
+            <Nav>
+              <Dropdown
+                placement="topStart"
+                trigger="click"
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    placement="left"
+                    ref={ref}
+                    style={iconStyles}
+                    className="icon-selector"
+                    icon={<MenuIcon />}
+                  />
+                )}>
+                {/* eslint-disable-next-line i18next/no-literal-string */}
+                <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
+                  Settings
+                </DropdownItemLink>
+                <DropdownItemLink route={LogoutRoute.create({})}>
+                  {t('navbar.logout')}
+                </DropdownItemLink>
+              </Dropdown>
+            </Nav>
+            <Nav>
+              <Dropdown
+                placement="topStart"
+                trigger="click"
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    placement="left"
+                    ref={ref}
+                    style={iconStyles}
+                    className="icon-selector"
+                    icon={<GlobeIcon />}
+                  />
+                )}>
+                {AVAILABLE_LANG.map(lang => (
+                  <Dropdown.Item
+                    key={lang.id}
+                    onSelect={() => setUILanguage(lang.id)}
+                    active={lang.id === uiLanguage}>
+                    {lang.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown>
+            </Nav>
           </Navbar>
-          <Drawer show={isSettingsDrawerOpen} onHide={() => setSettingsDrawerOpen(false)}>
+          <Drawer open={isSettingsDrawerOpen} onClose={() => setSettingsDrawerOpen(false)}>
             <SettingsPanel />
           </Drawer>
         </Sidebar>
