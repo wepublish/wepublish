@@ -120,7 +120,7 @@ describe('Author Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    act(() => {
+    await act(() => {
       wrapper
         .find('input[name="authors.panels.name"]')
         .simulate('change', {target: {value: author.name}})

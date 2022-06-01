@@ -222,7 +222,7 @@ describe('User Role Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    act(() => {
+    await act(() => {
       wrapper
         .find('input[name="userRoles.panels.name"]')
         .simulate('change', {target: {value: userRole.name}})
