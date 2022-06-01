@@ -181,6 +181,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
   async getSubscriptions({
     filter,
+    joins,
     sort,
     order,
     cursor,
@@ -304,13 +305,39 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
+    // join related collections
+    const preparedJoins = []
+    if (joins?.joinMemberPlan) {
+      preparedJoins.push({
+        $lookup: {
+          from: CollectionName.MemberPlans,
+          localField: 'memberPlanID',
+          foreignField: '_id',
+          as: 'memberPlan'
+        }
+      })
+      preparedJoins.push({$unwind: '$memberPlan'})
+    }
+
+    if (joins?.joinPaymentMethod) {
+      preparedJoins.push({
+        $lookup: {
+          from: CollectionName.PaymentMethods,
+          localField: 'paymentMethodID',
+          foreignField: '_id',
+          as: 'paymentMethod'
+        }
+      })
+      preparedJoins.push({$unwind: '$paymentMethod'})
+    }
+
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
 
       this.subscriptions
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .aggregate([...preparedJoins], {collation: {locale: this.locale, strength: 2}})
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})

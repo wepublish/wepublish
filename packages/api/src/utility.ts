@@ -33,7 +33,9 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
   let csvStr =
     [
       'id',
+      'firstName',
       'name',
+      'preferredName',
       'email',
       'active',
       'createdAt',
@@ -46,12 +48,14 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
       'city',
       'country',
 
+      'memberPlan',
       'memberPlanID',
       'paymentPeriodicity',
       'monthlyAmount',
       'autoRenew',
       'startsAt',
       'paidUntil',
+      'paymentMethod',
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason'
@@ -59,21 +63,26 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
 
   for (const subscription of subscriptions) {
     const user = users.find(user => user.id === subscription.userID)
+    const memberPlan = subscription?.memberPlan
+    const paymentMethod = subscription?.paymentMethod
     if (!user) continue
     csvStr +=
       [
         user.id,
-        `"${user.name ?? ''}"`,
-        `"${user.email ?? ''}"`,
+        `${user.firstName ?? ''}`,
+        `${user.name ?? ''}`,
+        `${user.preferredName ?? ''}`,
+        `${user.email ?? ''}`,
         user.active,
         formatISO(user.createdAt, {representation: 'date'}),
         formatISO(user.modifiedAt, {representation: 'date'}),
-        `"${user.address?.company ?? ''}"`,
-        `"${user.address?.streetAddress ?? ''}"`,
-        `"${user.address?.streetAddress2 ?? ''}"`,
-        `"${user.address?.zipCode ?? ''}"`,
-        `"${user.address?.city ?? ''}"`,
-        `"${user.address?.country ?? ''}"`,
+        `${user.address?.company ?? ''}`,
+        `${user.address?.streetAddress ?? ''}`,
+        `${user.address?.streetAddress2 ?? ''}`,
+        `${user.address?.zipCode ?? ''}`,
+        `${user.address?.city ?? ''}`,
+        `${user.address?.country ?? ''}`,
+        memberPlan?.name ?? '',
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
@@ -82,6 +91,7 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
         subscription?.paidUntil
           ? formatISO(subscription.paidUntil, {representation: 'date'})
           : 'no pay',
+        paymentMethod?.name ?? '',
         subscription?.paymentMethodID ?? '',
         subscription?.deactivation
           ? formatISO(subscription.deactivation.date, {representation: 'date'})

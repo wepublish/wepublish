@@ -141,7 +141,7 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
-import {Subscription, SubscriptionSort} from '../db/subscription'
+import {Subscription, SubscriptionJoins, SubscriptionSort} from '../db/subscription'
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
@@ -356,6 +356,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const subscriptions: Subscription[] = []
         const users: User[] = []
+        const joins: SubscriptionJoins = {
+          joinMemberPlan: true,
+          joinPaymentMethod: true
+        }
 
         let hasMore = true
         let afterCursor
@@ -363,6 +367,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
               filter,
+              joins,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               cursor: InputCursor(afterCursor ?? undefined),
