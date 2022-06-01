@@ -869,6 +869,13 @@ export const Migrations: Migration[] = [
         await pages.findOneAndReplace({_id: page._id}, page)
       }
     }
+  },
+  {
+    version: 21,
+    async migrate(db) {
+      const tempUser = db.collection('temp.users')
+      await tempUser.rename('temp.users.bak')
+    }
   }
 ]
 
