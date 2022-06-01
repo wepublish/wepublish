@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
-import {Alert, Button, FlexboxGrid, Icon, Modal, Panel} from 'rsuite'
+import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
 import {useTranslation} from 'react-i18next'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import {EnvelopeOpen} from '@rsuite/icons/es/icons/legacy'
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -27,7 +29,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
     // error pre-check
     const myId = me?.id
     if (!myId) {
-      Alert.error(t('invoice.userNotLoaded'), 4000)
+      toaster.push(<Message type="error">{t('invoice.userNotLoaded')}</Message>)
       return
     }
     // talk with the private api
@@ -106,9 +108,9 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
   function invoiceIconView() {
     if (invoice.paidAt) {
-      return <Icon icon="check" size="2x" style={{color: 'green'}} />
+      return <CheckIcon style={{color: 'green', fontSize: '2em'}} />
     } else {
-      return <Icon icon="envelope-open" size="2x" style={{color: 'red'}} />
+      return <EnvelopeOpen style={{color: 'red', fontSize: '2em'}} />
     }
   }
 
@@ -122,7 +124,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
         {invoiceActionView()}
       </Panel>
 
-      <Modal show={modalOpen} backdrop="static" size="xs" onHide={() => setModalOpen(false)}>
+      <Modal open={modalOpen} backdrop="static" size="xs" onClose={() => setModalOpen(false)}>
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
         <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
         <Modal.Footer>

@@ -9,8 +9,7 @@ import {
   useRoute,
   useRouteDispatch
 } from '../route'
-import {RouteActionType} from '@wepublish/karma.run-react'
-
+import {Button, Drawer, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 import {
   FullSubscriptionFragment,
   SubscriptionFilter,
@@ -18,17 +17,17 @@ import {
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery
 } from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {RouteActionType} from '@wepublish/karma.run-react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, FlexboxGrid, Icon, IconButton, Message, Modal, Table} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import {SubscriptionListFilter} from '../atoms/filters/SubscriptionListFilter'
-
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
@@ -181,7 +180,7 @@ export function SubscriptionList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}
           onRowClick={data => {
@@ -243,7 +242,7 @@ export function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -260,20 +259,20 @@ export function SubscriptionList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.subscriptions.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -300,18 +299,16 @@ export function SubscriptionList() {
         />
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           {currentSubscription && isTempUser(currentSubscription.user?.id) && (
-            <Message
-              showIcon
-              type="warning"
-              description={t('subscriptionList.panels.tempUserWarning')}
-            />
+            <Message showIcon type="warning">
+              {t('subscriptionList.panels.tempUserWarning')}
+            </Message>
           )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>

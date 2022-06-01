@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Icon, IconButton} from 'rsuite'
+import {IconButton} from 'rsuite'
 import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
+import {FileDownload} from '@rsuite/icons'
 
 export function ExportSubscriptionsAsCsv({filter}: {filter?: SubscriptionFilter}) {
   const {t} = useTranslation()
@@ -32,7 +33,7 @@ export function ExportSubscriptionsAsCsv({filter}: {filter?: SubscriptionFilter}
     <>
       <IconButton
         appearance="primary"
-        icon={<Icon size="lg" icon="download" />}
+        icon={<FileDownload />}
         disabled={loading}
         onClick={() => downloadBlob()}>
         {t('subscriptionList.overview.downloadCsv')}
