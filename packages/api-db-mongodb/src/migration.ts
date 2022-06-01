@@ -871,6 +871,7 @@ export const Migrations: Migration[] = [
     }
   },
   {
+    // Rename unused temp user collection
     version: 21,
     async migrate(db) {
       const tempUser = db.collection('temp.users')
