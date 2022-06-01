@@ -31,7 +31,7 @@ export function InvoiceListPanel({
     if (!subscriptionId) {
       return (
         <Drawer.Body>
-          <Message type="error" description={t('invoice.panel.missingSubscriptionId')} />
+          <Message type="error">{t('invoice.panel.missingSubscriptionId')}</Message>
         </Drawer.Body>
       )
     }
@@ -39,7 +39,7 @@ export function InvoiceListPanel({
     if (!invoices?.length) {
       return (
         <Drawer.Body>
-          <Message type="info" description={t('invoice.panel.noInvoices')} />
+          <Message type="info">{t('invoice.panel.noInvoices')}</Message>
         </Drawer.Body>
       )
     }

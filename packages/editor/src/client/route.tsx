@@ -103,11 +103,7 @@ export const PageEditRoute = route(RouteType.PageEdit, routePath`/page/edit/${re
 
 export const ImageListRoute = route(RouteType.ImageList, routePath`/images`)
 export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`)
-export const ImageEditRoute = route(
-  RouteType.ImageEdit,
-  routePath`/image/edit/${required('id')}`,
-  null
-)
+export const ImageEditRoute = route(RouteType.ImageEdit, routePath`/image/edit/${required('id')}`)
 
 export const AuthorListRoute = route(RouteType.AuthorList, routePath`/authors`)
 export const AuthorEditRoute = route(
@@ -177,7 +173,7 @@ export const PaymentMethodCreateRoute = route(
 
 export const PeerArticleListRoute = route(RouteType.PeerArticleList, routePath`/peerarticles`)
 
-export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
+export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`)
 
 export const routes = [
   IndexRoute,
