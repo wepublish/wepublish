@@ -107,7 +107,13 @@ export function PeerArticleList() {
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+            <Input
+              value={filter.title || ''}
+              onChange={value => {
+                setFilter({title: value})
+                console.log('peerList', peerArticleListData, listVariables)
+              }}
+            />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>

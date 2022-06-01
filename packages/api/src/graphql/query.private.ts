@@ -739,7 +739,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
               return delegateToPeerSchema(peer.id, true, context, {
                 info,
                 fieldName: 'articles',
-                args: {after: after ? after[peer.id] : undefined},
+                args: {after: after ? after[peer.id] : undefined, filter, first, last, skip},
                 transforms: [
                   new ExtractField({
                     from: ['articles', 'nodes', 'article'],

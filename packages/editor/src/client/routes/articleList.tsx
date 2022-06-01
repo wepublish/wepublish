@@ -55,7 +55,7 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 }
 
 export function ArticleList() {
-  const [filter, setFilter] = useState({title: ''})
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
