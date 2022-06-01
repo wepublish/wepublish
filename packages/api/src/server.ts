@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express, {Application, NextFunction, Request, Response} from 'express'
 
 import {ApolloServer} from 'apollo-server-express'
@@ -61,7 +62,7 @@ export class WepublishServer {
                     ) // execute event emitter
                   } catch (error) {
                     logger('server').error(
-                      error as object,
+                      error as Record<string, unknown>,
                       'error during emitting event for %s',
                       methodName
                     )

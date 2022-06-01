@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {EventEmitter} from 'events'
 import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
@@ -19,13 +20,13 @@ import {logger} from './server'
 import {Subscription} from './db/subscription'
 import {isTempUser, removePrefixTempUser} from './utility'
 
-interface ModelEvents<T> {
+interface ModelEvents<T extends keyof EventsEmitter> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
   delete: (context: Context, id: string) => void
 }
 
-export interface PublishableModelEvents<T> extends ModelEvents<T> {
+export interface PublishableModelEvents<T extends keyof EventsEmitter> extends ModelEvents<T> {
   publish: (context: Context, model: T) => void
   unpublish: (context: Context, model: T) => void
 }

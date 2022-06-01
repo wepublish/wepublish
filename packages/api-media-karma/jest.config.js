@@ -12,8 +12,10 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
-  testURL: 'http://localhost/',
-  coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
+  testEnvironmentOptions: {
+    url: 'http://localhost/'
+  },
+  coveragePathIgnorePatterns: ['node_modules', 'version.ts'],
   coverageDirectory: '__tests__/coverage',
   coverageThreshold: {
     global: {

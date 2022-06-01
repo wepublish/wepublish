@@ -30,6 +30,9 @@ interface PayrexxResponse {
 interface PayrexxData {
   id: string
   link: string
+  gateway: string
+  referenceId: string
+  status: string
 }
 
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
@@ -155,7 +158,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       throw new Error(`Payrexx response is NOK with status ${res.status}`)
     }
 
-    const payrexxResponse = await res.json()
+    const payrexxResponse = (await res.json()) as PayrexxResponse
     const [gateway] = payrexxResponse.data
     if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
 

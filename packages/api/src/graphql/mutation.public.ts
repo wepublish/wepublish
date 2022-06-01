@@ -606,8 +606,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const updateSubscription = await dbAdapter.subscription.updateSubscription({
           id,
           input: {
-            userID: user.id,
             ...subscription,
+            userID: user.id,
             memberPlanID,
             paymentPeriodicity,
             monthlyAmount,
