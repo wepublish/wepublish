@@ -37,6 +37,7 @@ import {
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {
+  GraphQLMemberRegistration,
   GraphQLPaymentProviderCustomer,
   GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
@@ -44,6 +45,7 @@ import {
   GraphQLUserAddressInput
 } from './user'
 import {
+  GraphQLChallengeInput,
   GraphQLPublicComment,
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput
@@ -217,6 +219,65 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             text,
             state: CommentState.PendingApproval
           })
+        }
+      }
+    },
+
+    registerMember: {
+      type: GraphQLNonNull(GraphQLMemberRegistration),
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        firstName: {type: GraphQLString},
+        preferredName: {type: GraphQLString},
+        email: {type: GraphQLNonNull(GraphQLString)},
+        address: {type: GraphQLUserAddressInput},
+        password: {type: GraphQLString},
+        challengeAnswer: {
+          type: GraphQLNonNull(GraphQLChallengeInput)
+        }
+      },
+      description: 'This mutation allows to register a new member,',
+      async resolve(
+        root,
+        {name, firstName, preferredName, email, address, password, challengeAnswer},
+        {dbAdapter, loaders, memberContext, createPaymentWithProvider, challenge}
+      ) {
+        const challengeValidationResult = await challenge.validateChallenge({
+          challengeID: challengeAnswer.challengeID,
+          solution: challengeAnswer.challengeSolution
+        })
+        if (!challengeValidationResult.valid)
+          throw new CommentAuthenticationError(challengeValidationResult.message)
+
+        const userExists = await dbAdapter.user.getUser(email)
+        if (userExists) throw new EmailAlreadyInUseError()
+
+        const user = await dbAdapter.user.createUser({
+          input: {
+            name,
+            firstName,
+            preferredName,
+            email,
+            address,
+            emailVerifiedAt: null,
+            active: true,
+            properties: [],
+            roleIDs: [],
+            paymentProviderCustomers: []
+          },
+          password
+        })
+        if (!user) {
+          logger('mutation.public').error('Could not create new user for email "%s"', email)
+          throw new InternalError()
+        }
+        const session = await dbAdapter.session.createUserSession(user)
+
+        return {
+          user,
+          token: session?.token,
+          createdAt: session?.createdAt,
+          expiresAt: session?.expiresAt
         }
       }
     },

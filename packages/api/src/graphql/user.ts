@@ -175,3 +175,13 @@ export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
     customerID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
+
+export const GraphQLMemberRegistration = new GraphQLObjectType({
+  name: 'Registration',
+  fields: {
+    user: {type: GraphQLNonNull(GraphQLPublicUser)},
+    token: {type: GraphQLNonNull(GraphQLString)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
