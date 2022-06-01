@@ -13,6 +13,7 @@ import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} 
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLPublicPayment} from './payment'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -176,12 +177,28 @@ export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLUserSession = new GraphQLObjectType({
+  name: 'UserSession',
+  fields: {
+    token: {type: GraphQLNonNull(GraphQLString)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
 export const GraphQLMemberRegistration = new GraphQLObjectType({
   name: 'Registration',
   fields: {
     user: {type: GraphQLNonNull(GraphQLPublicUser)},
-    token: {type: GraphQLNonNull(GraphQLString)},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    session: {type: GraphQLNonNull(GraphQLUserSession)}
+  }
+})
+
+export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
+  name: 'RegistrationAndPayment',
+  fields: {
+    payment: {type: GraphQLNonNull(GraphQLPublicPayment)},
+    user: {type: GraphQLNonNull(GraphQLPublicUser)},
+    session: {type: GraphQLNonNull(GraphQLUserSession)}
   }
 })
