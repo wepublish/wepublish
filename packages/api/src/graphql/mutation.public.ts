@@ -64,6 +64,7 @@ import {logger} from '../server'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
+import * as crypto from 'crypto'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -251,6 +252,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const userExists = await dbAdapter.user.getUser(email)
         if (userExists) throw new EmailAlreadyInUseError()
+
+        if (!password) password = crypto.randomBytes(48).toString('base64')
 
         const user = await dbAdapter.user.createUser({
           input: {
