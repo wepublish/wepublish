@@ -202,7 +202,7 @@ describe('User Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    await act(() => {
+    await act(async () => {
       wrapper
         .find('input[name="userList.panels.name"]')
         .simulate('change', {target: {value: user.name}})

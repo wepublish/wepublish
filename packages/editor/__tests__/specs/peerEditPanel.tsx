@@ -104,7 +104,7 @@ describe('Peer Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    await act(() => {
+    await act(async () => {
       wrapper
         .find('input[name="peerList.panels.name"]')
         .simulate('change', {target: {value: peer.name}})
