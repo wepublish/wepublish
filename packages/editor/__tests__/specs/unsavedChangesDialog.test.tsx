@@ -1,4 +1,4 @@
-import {mount} from 'enzyme'
+import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
 import {
   UnsavedChangesDialogMessage,
@@ -8,7 +8,7 @@ import {
 const TestComponent = ({hasChanged}: {hasChanged: boolean}) => {
   const openDialog = useUnsavedChangesDialog(hasChanged)
 
-  return <button onClick={openDialog}></button>
+  return <button data-testid="open-dialog" onClick={openDialog}></button>
 }
 
 describe('Unsaved Changes Dialog', () => {
@@ -45,8 +45,8 @@ describe('Unsaved Changes Dialog', () => {
       const addEventListenerSpy = jest.spyOn(window, 'addEventListener')
       const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener')
 
-      const wrapper = mount(<TestComponent hasChanged={current} />)
-      wrapper.setProps({hasChanged: next})
+      const {rerender} = render(<TestComponent hasChanged={current} />)
+      rerender(<TestComponent hasChanged={next} />)
 
       if (shouldAdd) {
         expect(addEventListenerSpy).toHaveBeenCalledWith('beforeunload', expect.any(Function))
@@ -74,8 +74,8 @@ describe('Unsaved Changes Dialog', () => {
       shouldOpenDialog: true
     }
   ])('should work when executing callback for %s', async ({hasChanged, shouldOpenDialog}) => {
-    const wrapper = mount(<TestComponent hasChanged={hasChanged} />)
-    wrapper.find('button').simulate('click')
+    const {findByTestId} = render(<TestComponent hasChanged={hasChanged} />)
+    fireEvent.click(await findByTestId('open-dialog'))
 
     if (shouldOpenDialog) {
       expect(window.confirm).toHaveBeenCalledWith(UnsavedChangesDialogMessage)
