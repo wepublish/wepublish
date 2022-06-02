@@ -560,7 +560,17 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members"
+      "usersAndMembers": "Users & Members",
+      "settings": "Settings",
+      "settingsPanel": {
+        "successMessage": "Settings updated successfully!",
+        "successTitle": "Saved",
+        "save": "Save",
+        "errorTitle": "Error",
+        "editSettings": "Edit Settings",
+        "guestCommenting": "Allow guest commenting",
+        "commentLength": "Maximum comment length"
+      }
     },
     "navigation": {
       "overview": {

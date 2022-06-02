@@ -243,9 +243,8 @@ export function Base({children}: BaseProps) {
                     icon={<MenuIcon />}
                   />
                 )}>
-                {/* eslint-disable-next-line i18next/no-literal-string */}
                 <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
-                  Settings
+                  {t('navbar.settings')}
                 </DropdownItemLink>
                 <DropdownItemLink route={LogoutRoute.create({})}>
                   {t('navbar.logout')}

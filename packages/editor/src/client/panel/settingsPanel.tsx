@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react'
 
-// import {useTranslation} from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, InputNumber, Notification, Panel, toaster, Toggle} from 'rsuite'
-import {
-  Setting,
-  SettingInput,
-  SettingName,
-  useSettingListQuery,
-  useUpdateSettingMutation
-} from '../api'
+import {Setting, SettingName, useSettingListQuery, useUpdateSettingMutation} from '../api'
 
 export type SettingInputProps = {
   id?: string
@@ -21,6 +15,7 @@ export function SettingsPanel() {
    const {data} = useMeQuery()
    console.log('data', data?.me?.roles)
  */
+  const {t} = useTranslation()
 
   const {data: settingListData, refetch, error: err} = useSettingListQuery()
 
@@ -52,41 +47,39 @@ export function SettingsPanel() {
     fetchPolicy: 'no-cache'
   })
 
-  async function handleSettingUpdate(id: string | undefined, input: SettingInput) {
-    if (!id) return
-    await updateSetting({variables: {id: id, input: input}})
-    // eslint-disable-next-line i18next/no-literal-string
-    toaster.push(<Notification type="success" header="updated successfully" duration={2000} />)
-    await refetch()
-  }
-
   async function handleSettingListUpdate() {
-    const maxInput: SettingInput = {
-      value: maxCommentLength.value
-    }
-    await handleSettingUpdate(maxCommentLength.id, maxInput)
-
-    const anonInput: SettingInput = {
-      value: allowGuestComment.value
-    }
-    await handleSettingUpdate(allowGuestComment.id, anonInput)
+    await updateSetting({
+      variables: {id: maxCommentLength.id, input: {value: maxCommentLength.value}}
+    })
+    await updateSetting({
+      variables: {id: allowGuestComment.id, input: {value: allowGuestComment.value}}
+    })
+    await refetch()
+    toaster.push(
+      <Notification header={t('navbar.settingsPanel.successTitle')} type="success" duration={2000}>
+        {t('navbar.settingsPanel.successMessage')}
+      </Notification>
+    )
   }
 
   useEffect(() => {
     const error = updateSettingError ?? err
-    if (error) toaster.push(<Notification type="error" header={error.message} duration={2000} />)
+    if (error)
+      toaster.push(
+        <Notification type="error" header={t('navbar.settingsPanel.errorTitle')} duration={2000}>
+          {error.message.toString()}
+        </Notification>
+      )
   }, [err, updateSettingError])
 
   return (
     <>
       <Drawer.Header>
-        {/* eslint-disable-next-line i18next/no-literal-string */}
-        <Drawer.Title>Edit Settings</Drawer.Title>
+        <Drawer.Title>{t('navbar.settingsPanel.editSettings')}</Drawer.Title>
 
         <Drawer.Actions>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Button appearance={'primary'} onClick={() => handleSettingListUpdate()}>
-            save
+            {t('navbar.settingsPanel.save')}
           </Button>
         </Drawer.Actions>
       </Drawer.Header>
@@ -95,9 +88,7 @@ export function SettingsPanel() {
         <Panel>
           <Form fluid={true}>
             <Form.Group>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <Form.ControlLabel>Max comment chars</Form.ControlLabel>
-              {/* TODO set restrictions on setting values */}
+              <Form.ControlLabel>{t('navbar.settingsPanel.commentLength')}</Form.ControlLabel>
               <InputNumber
                 max={
                   maxCommentLength?.settingRestriction?.maxValue
@@ -115,8 +106,7 @@ export function SettingsPanel() {
               />
             </Form.Group>
             <Form.Group>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <Form.ControlLabel>Allow Anonymous Commenting</Form.ControlLabel>
+              <Form.ControlLabel>{t('navbar.settingsPanel.guestCommenting')}</Form.ControlLabel>
               <Toggle
                 checked={allowGuestComment?.value}
                 onChange={checked =>
