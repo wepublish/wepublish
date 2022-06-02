@@ -662,7 +662,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
-
+        console.log(filter)
         const canGetArticles = isAuthorised(CanGetArticles, roles)
         const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
 
@@ -725,7 +725,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
           peerFilter ? peer.name === peerFilter : true
         )
-
+        console.log('blah', filter)
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
           loaders.peer.prime(peer.id, peer)
