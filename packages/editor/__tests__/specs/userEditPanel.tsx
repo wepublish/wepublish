@@ -1,11 +1,10 @@
-import React from 'react'
-import {UserEditPanel} from '../../src/client/panel/userEditPanel'
-import {UserDocument, CreateUserDocument, UserRoleListDocument} from '../../src/client/api'
-import {mount} from 'enzyme'
-
-import {updateWrapper} from '../utils'
-import {act} from 'react-dom/test-utils'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+import {fireEvent, render, screen} from '@testing-library/react'
+import React from 'react'
+import snapshotDiff from 'snapshot-diff'
+import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
+import {UserEditPanel} from '../../src/client/panel/userEditPanel'
+import {actWait} from '../utils'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -92,63 +91,66 @@ const userDocumentQuery = {
 describe('User Edit Panel', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('UserEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should render with ID', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={true}>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('UserEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should allow user role to be added', async () => {
     const mocks = [userRoleListDocumentQuery]
 
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    wrapper.find('[role="combobox"] input').simulate('click')
-    wrapper.find('.rs-checkbox-checker label').last().simulate('click')
+    fireEvent.click(await screen.findByRole('combobox'))
+    const checkboxLabels = await screen.findAllByRole('checkbox')
+    fireEvent.click(checkboxLabels[checkboxLabels.length - 1])
 
-    const panel = wrapper.find('UserEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 
   test('should allow user role to be removed', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={true}>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    wrapper.find('[role="combobox"] input').simulate('click')
-    wrapper.find('div.rs-checkbox-checked').simulate('click')
+    fireEvent.click(await screen.findByRole('combobox'))
+    fireEvent.click(
+      await screen.findByRole('checkbox', {
+        checked: true
+      })
+    )
 
-    const panel = wrapper.find('UserEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 
   test('should allow a new user to be created', async () => {
@@ -195,28 +197,28 @@ describe('User Edit Panel', () => {
       userRoleListDocumentQuery
     ]
 
-    const wrapper = mount(
+    const {asFragment, container} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    await act(async () => {
-      wrapper
-        .find('input[name="userList.panels.name"]')
-        .simulate('change', {target: {value: user.name}})
-      wrapper
-        .find('input[name="userList.panels.email"]')
-        .simulate('change', {target: {value: user.email}})
-      wrapper
-        .find('input[name="userList.panels.password"]')
-        .simulate('change', {target: {value: user.password}})
+    fireEvent.change(container.querySelector('input[name="userList.panels.name"]')!, {
+      target: {value: user.name}
     })
 
-    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
+    fireEvent.change(container.querySelector('input[name="userList.panels.email"]')!, {
+      target: {value: user.email}
+    })
 
-    const panel = wrapper.find('UserEditPanel')
-    expect(panel).toMatchSnapshot()
+    fireEvent.change(container.querySelector('input[name="userList.panels.password"]')!, {
+      target: {value: user.password}
+    })
+
+    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 })
