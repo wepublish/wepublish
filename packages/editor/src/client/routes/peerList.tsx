@@ -1,20 +1,21 @@
-import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
-import React, {ComponentType, useEffect, useState} from 'react'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {RouteActionType} from '@wepublish/karma.run-react'
+import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
-  Alert,
   Avatar,
   Button,
   Divider,
   Drawer,
   FlexboxGrid,
-  HelpBlock,
-  Icon,
+  Form,
   IconButton,
   List,
-  ListProps,
+  Toggle,
+  Message,
   Modal,
-  Toggle
+  toaster
 } from 'rsuite'
 import {
   PeerListDocument,
@@ -42,7 +43,7 @@ import {
 } from '../route'
 import {addOrUpdateOneInArray} from '../utility'
 
-const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
+const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
@@ -82,7 +83,12 @@ export function PeerList() {
 
   useEffect(() => {
     const error = peerInfoError?.message ?? peerListError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [peerInfoError, peerListError])
 
   useEffect(() => {
@@ -166,7 +172,7 @@ export function PeerList() {
             <IconButtonTooltip caption={t('peerList.overview.delete')}>
               <IconButton
                 disabled={isPeerInfoLoading}
-                icon={<Icon icon="trash" />}
+                icon={<TrashIcon />}
                 circle
                 size="sm"
                 onClick={e => {
@@ -198,7 +204,7 @@ export function PeerList() {
               />
               <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
               <p>{peerInfoData?.peerProfile.hostURL}</p>
-              <HelpBlock>
+              <Form.HelpText>
                 <Trans i18nKey={'peerList.panels.checkOwnPeerProfileHelpBlock'}>
                   text{' '}
                   <a
@@ -207,7 +213,7 @@ export function PeerList() {
                     rel="noreferrer"
                   />
                 </Trans>
-              </HelpBlock>
+              </Form.HelpText>
             </div>
           }
           rightChildren={
@@ -215,7 +221,7 @@ export function PeerList() {
               <IconButtonLink
                 size="lg"
                 appearance="link"
-                icon={<Icon icon="cog" />}
+                icon={<CogIcon />}
                 circle={true}
                 route={PeerInfoEditRoute.create({})}
               />
@@ -249,9 +255,9 @@ export function PeerList() {
       </div>
 
       <Drawer
-        show={isPeerProfileEditModalOpen}
+        open={isPeerProfileEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setPeerProfileEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -270,9 +276,9 @@ export function PeerList() {
       </Drawer>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -294,9 +300,10 @@ export function PeerList() {
             onSave={() => {
               setEditModalOpen(false)
 
-              Alert.success(
-                editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
-                2000
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated')}
+                </Message>
               )
 
               dispatch({
@@ -308,7 +315,7 @@ export function PeerList() {
         )}
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('peerList.panels.deletePeer')}</Modal.Title>
         </Modal.Header>

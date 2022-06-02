@@ -20,7 +20,6 @@ module.exports = {
       '<rootDir>/__mocks__/fileMock.js',
     '\\.(css|less)$': 'identity-obj-proxy'
   },
-  snapshotSerializers: ['enzyme-to-json/serializer'],
   coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
   coverageDirectory: '__tests__/coverage'
 }
