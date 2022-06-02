@@ -914,7 +914,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const pageRevision = Object.assign(page.draft ?? page.pending ?? page.published, {
           slug: '',
           publishedAt: undefined,
-          updatedAt: undefined
+          updatedAt: undefined,
+          title: '',
+          tags: [],
+          properties: [],
+          blocks: []
         })
         const output = await dbAdapter.page.createPage({input: {...pageRevision}})
 
