@@ -465,6 +465,18 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanGetSettings: Permission = {
+  id: 'CAN_GET__SETTINGS',
+  description: 'Allows to get all settings',
+  deprecated: false
+}
+
+export const CanUpdateSetting: Permission = {
+  id: 'CAN_UPDATE_SETTING',
+  description: 'Allows to update a setting',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -536,7 +548,9 @@ export const AllPermissions: Permission[] = [
   CanCreateSubscription,
   CanGetSubscription,
   CanGetSubscriptions,
-  CanDeleteSubscription
+  CanDeleteSubscription,
+  CanGetSettings,
+  CanUpdateSetting
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -559,7 +573,8 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
-  CanLoginEditor
+  CanLoginEditor,
+  CanGetSettings
 ]
 
 export const PeerPermissions: Permission[] = [

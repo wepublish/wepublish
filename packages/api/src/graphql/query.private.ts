@@ -104,7 +104,8 @@ import {
   CanGetPagePreviewLink,
   CanCreatePeer,
   CanGetSubscriptions,
-  CanGetSubscription
+  CanGetSubscription,
+  CanGetSettings
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -1150,7 +1151,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLSetting,
       args: {id: {type: GraphQLID}, name: {type: GraphQLString}},
       resolve(root, {id, name}, {authenticate, loaders}) {
-        // TODO authenticate
+        const {roles} = authenticate()
+        authorise(CanGetSettings, roles)
 
         if ((id == null && name == null) || (id != null && name != null)) {
           throw new UserInputError('You must provide either `id` or `name`.')
@@ -1162,7 +1164,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve(root, {}, {authenticate, dbAdapter}) {
-        // TODO authenticate
+        const {roles} = authenticate()
+        authorise(CanGetSettings, roles)
         return dbAdapter.setting.getSettings()
       }
     }

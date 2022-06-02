@@ -67,7 +67,8 @@ import {
   CanUpdatePeerProfile,
   CanSendJWTLogin,
   CanCreateSubscription,
-  CanDeleteSubscription
+  CanDeleteSubscription,
+  CanUpdateSetting
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -1169,9 +1170,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, input}, {authenticate, dbAdapter, loaders}) {
         const fullSetting = await loaders.settingsByID.load(id)
         const restrictions = fullSetting?.settingRestriction
-        // TODO
-        //   const {roles} = authenticate()
-        // authorise(CanCreateNavigation, roles)
+
+        const {roles} = authenticate()
+        authorise(CanUpdateSetting, roles)
+
         if (
           !restrictions ||
           ((!restrictions.allowedValues || restrictions.allowedValues.includes(input.value)) &&
