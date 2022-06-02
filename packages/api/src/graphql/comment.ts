@@ -199,7 +199,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     text: {type: GraphQLNonNull(GraphQLRichText)},
 
-    state: {type: GraphQLNonNull(GraphQLString)},
+    state: {type: GraphQLNonNull(GraphQLCommentState)},
 
     rejectionReason: {type: GraphQLString},
 

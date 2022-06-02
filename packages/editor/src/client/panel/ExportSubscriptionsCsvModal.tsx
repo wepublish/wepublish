@@ -1,7 +1,8 @@
+import CopyIcon from '@rsuite/icons/legacy/Copy'
+import DownloadIcon from '@rsuite/icons/legacy/Download'
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Alert, Button, Divider, Icon, IconButton, Placeholder} from 'rsuite'
-
+import {Button, Divider, IconButton, Message, Placeholder, toaster} from 'rsuite'
 import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
 
 type ExportAsFile = {
@@ -36,7 +37,12 @@ export function SubscriptionAsCsvModal({filter}: {filter?: SubscriptionFilter}) 
   })
 
   useEffect(() => {
-    if (getSubsErr?.message) Alert.error(getSubsErr.message, 0)
+    if (getSubsErr?.message)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {getSubsErr.message}
+        </Message>
+      )
   }, [getSubsErr])
 
   return (
@@ -50,7 +56,7 @@ export function SubscriptionAsCsvModal({filter}: {filter?: SubscriptionFilter}) 
       <div style={{display: 'flex', justifyContent: 'space-around'}}>
         <IconButton
           appearance="primary"
-          icon={<Icon size="lg" icon="download" />}
+          icon={<DownloadIcon style={{fontSize: '1.3333em'}} />}
           disabled={!subscriptionsCsvData?.subscriptionsAsCsv}
           onClick={() =>
             downloadBlob({
@@ -63,7 +69,7 @@ export function SubscriptionAsCsvModal({filter}: {filter?: SubscriptionFilter}) 
         </IconButton>
         <IconButton
           appearance="primary"
-          icon={<Icon size="lg" icon="copy" />}
+          icon={<CopyIcon style={{fontSize: '1.3333em'}} />}
           disabled={!subscriptionsCsvData?.subscriptionsAsCsv}
           onClick={() => navigator.clipboard.writeText(subscriptionsCsvData!.subscriptionsAsCsv!)}>
           {t('userList.panels.copy')}
