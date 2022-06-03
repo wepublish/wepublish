@@ -270,17 +270,17 @@ export function SubscriptionList() {
             searchable={false}
             data={[
               {
-                value: true,
+                value: 'true',
                 label: t('yes')
               },
               {
-                value: false,
+                value: 'false',
                 label: t('no')
               }
             ]}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value})}
+            onChange={value => updateFilter({autoRenew: value === 'true'})}
           />
         </Form.Group>
         {/*  hide for now until filtering by subscription.user.address
