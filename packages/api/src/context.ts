@@ -568,7 +568,7 @@ async function loadFreshData(params: PeerQueryParams) {
     return res
   } catch (err) {
     let errorMessage = err
-    if (err && err.type === 'aborted') {
+    if ((err as any) === 'aborted') {
       errorMessage = new Error(`Connection to peer (${params.hostURL}) timed out.`)
     }
     logger('context').error(`${errorMessage}`)

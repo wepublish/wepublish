@@ -30,9 +30,8 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
-  private readonly opts: WepublishServerOpts
 
-  constructor(opts: WepublishServerOpts) {
+  constructor(private readonly opts: WepublishServerOpts) {
     const app = express()
     this.opts = opts
     const {dbAdapter} = opts
@@ -43,7 +42,7 @@ export class WepublishServer {
       if (mtp.key in dbAdapter) {
         const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
-          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, Function | any>
+          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, any>
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
 
           if (methodName in adapter) {
@@ -62,7 +61,7 @@ export class WepublishServer {
                     ) // execute event emitter
                   } catch (error) {
                     logger('server').error(
-                      error as Record<string, unknown>,
+                      error as Error,
                       'error during emitting event for %s',
                       methodName
                     )
@@ -159,7 +158,7 @@ export class WepublishServer {
       // Wait for all asynchronous events to finish. I know this is bad code.
       await new Promise(resolve => setTimeout(resolve, 10000))
     } catch (error) {
-      logger('server').error(error, 'Error while running job "%s"', command)
+      logger('server').error(error as Error, 'Error while running job "%s"', command)
     }
   }
 }

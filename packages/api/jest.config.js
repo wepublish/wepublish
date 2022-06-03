@@ -5,14 +5,16 @@ module.exports = {
   },
   globals: {
     'ts-jest': {
-      tsConfig: 'src/tsconfig.json'
+      tsconfig: 'src/tsconfig.json'
     }
   },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
-  testURL: 'http://localhost/',
+  testEnvironmentOptions: {
+    url: 'http://localhost/'
+  },
   coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
   coverageDirectory: '__tests__/coverage',
   coverageThreshold: {

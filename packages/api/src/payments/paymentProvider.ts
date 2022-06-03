@@ -239,7 +239,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
           }
         } catch (error) {
           logger('paymentProvider').error(
-            error,
+            error as Error,
             'Error during webhook update in paymentProvider %s',
             paymentProvider.id
           )

@@ -167,7 +167,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
                 } as PublicArticle)
               : null
           } catch (error) {
-            logger('graphql-query').warn(error, 'Error while verifying token with article id.')
+            logger('graphql-query').warn(
+              error as Error,
+              'Error while verifying token with article id.'
+            )
           }
         }
 
@@ -272,7 +275,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
                 } as PublicPage)
               : null
           } catch (error) {
-            logger('graphql-query').warn(error, 'Error while verifying token with page id.')
+            logger('graphql-query').warn(
+              error as Error,
+              'Error while verifying token with page id.'
+            )
           }
         }
 

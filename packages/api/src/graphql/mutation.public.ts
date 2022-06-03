@@ -504,7 +504,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             }
           })
         } catch (error) {
-          logger('mutation.public').warn(error, 'Updating User with ID %s failed', user.id)
+          logger('mutation.public').warn(error as Error, 'Updating User with ID %s failed', user.id)
         }
         return email
       }
