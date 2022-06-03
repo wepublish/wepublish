@@ -32,6 +32,7 @@ fragment Deactivation on SubscriptionDeactivation {
 
 query SubscriptionList(
   $filter: SubscriptionFilter
+  $search: String
   $after: ID
   $before: ID
   $first: Int
@@ -42,6 +43,7 @@ query SubscriptionList(
 ) {
   subscriptions(
     filter: $filter
+    search: $search
     after: $after
     before: $before
     first: $first

@@ -72,6 +72,7 @@ export interface SubscriptionFilter {
 export interface SubscriptionJoins {
   readonly joinMemberPlan?: boolean
   readonly joinPaymentMethod?: boolean
+  readonly joinUser?: boolean
 }
 
 export interface Subscription {
@@ -128,6 +129,7 @@ export interface GetSubscriptionArgs {
   readonly limit: Limit
   readonly filter?: SubscriptionFilter
   readonly joins?: SubscriptionJoins
+  readonly search?: string
   readonly sort: SubscriptionSort
   readonly order: SortOrder
 }

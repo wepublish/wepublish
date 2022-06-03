@@ -838,6 +838,9 @@
         "reasonInvoiceNotPaid": "Invoice not paid",
         "reset": "Reset Filter"
       },
+      "search": {
+        "inputPlaceholder": "Search by first name, last name, email or user id"
+      },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
         "name": "Name",

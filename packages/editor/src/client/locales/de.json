@@ -771,6 +771,9 @@
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reset": "Filter zurücksetzen"
       },
+      "search": {
+        "inputPlaceholder": "Suche nach Vorname, Name, E-Mail oder User-Id"
+      },
       "panels": {
         "deleteSubscription": "Subscription löschen?",
         "name": "Name",

@@ -326,18 +326,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         last: {type: GraphQLInt},
         skip: {type: GraphQLInt},
         filter: {type: GraphQLSubscriptionFilter},
+        search: {type: GraphQLString},
         sort: {type: GraphQLSubscriptionSort, defaultValue: SubscriptionSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       async resolve(
         root,
-        {filter, sort, order, after, before, first, skip, last},
+        {filter, search, sort, order, after, before, first, skip, last},
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         return await dbAdapter.subscription.getSubscriptions({
           filter,
+          search,
           sort,
           order,
           cursor: InputCursor(after, before),

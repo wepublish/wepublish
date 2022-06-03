@@ -458,6 +458,9 @@
         "reasonInvoiceNotPaid": "Facture impayée",
         "reset": "Réinitialiser filtre"
       },
+      "search": {
+        "inputPlaceholder": "Recherche par prénom, nom, e-mail ou ID utilisateur"
+      },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
         "name": "Nom",

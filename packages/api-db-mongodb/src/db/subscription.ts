@@ -182,6 +182,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   async getSubscriptions({
     filter,
     joins,
+    search,
     sort,
     order,
     cursor,
@@ -306,29 +307,79 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     }
 
     // join related collections
-    const preparedJoins = []
+    let preparedJoins: any = []
+    // member plan join
     if (joins?.joinMemberPlan) {
-      preparedJoins.push({
-        $lookup: {
-          from: CollectionName.MemberPlans,
-          localField: 'memberPlanID',
-          foreignField: '_id',
-          as: 'memberPlan'
+      preparedJoins = [
+        {
+          $lookup: {
+            from: CollectionName.MemberPlans,
+            localField: 'memberPlanID',
+            foreignField: '_id',
+            as: 'memberPlan'
+          }
+        },
+        {$unwind: '$memberPlan'}
+      ]
+    }
+    // payment method join
+    if (joins?.joinPaymentMethod) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.PaymentMethods,
+            localField: 'paymentMethodID',
+            foreignField: '_id',
+            as: 'paymentMethod'
+          }
+        },
+        {$unwind: '$paymentMethod'}
+      ]
+    }
+    // user join
+    if (joins?.joinUser || search) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.Users,
+            localField: 'userID',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
+        {
+          $unwind: '$user'
         }
-      })
-      preparedJoins.push({$unwind: '$memberPlan'})
+      ]
     }
 
-    if (joins?.joinPaymentMethod) {
-      preparedJoins.push({
-        $lookup: {
-          from: CollectionName.PaymentMethods,
-          localField: 'paymentMethodID',
-          foreignField: '_id',
-          as: 'paymentMethod'
+    // build free text search query
+    const columnsToSearch = ['user.name', 'user.firstName', 'user.email', 'user._id']
+    if (search) {
+      // split user's input by spaces
+      const searchTerms = search.split(' ')
+      const orConditions = []
+      // iterate user search terms
+      for (const searchTerm of searchTerms) {
+        // iterate columns to be searched
+        for (const column of columnsToSearch) {
+          const orCondition: any = {}
+          orCondition[column] = {
+            $regex: searchTerm,
+            $options: 'i'
+          }
+          orConditions.push(orCondition)
         }
-      })
-      preparedJoins.push({$unwind: '$paymentMethod'})
+      }
+      const searchConditions = {
+        $match: {
+          $or: [...orConditions]
+        }
+      }
+      // add search conditions
+      preparedJoins = [...preparedJoins, searchConditions]
     }
 
     const [totalCount, subscriptions] = await Promise.all([

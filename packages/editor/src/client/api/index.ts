@@ -588,7 +588,9 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
+  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
 };
 
 export enum InvoiceSort {
@@ -1478,6 +1480,7 @@ export type QuerySubscriptionsArgs = {
   last?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<SubscriptionFilter>;
+  search?: Maybe<Scalars['String']>;
   sort?: Maybe<SubscriptionSort>;
   order?: Maybe<SortOrder>;
 };
@@ -3623,6 +3626,7 @@ export type DeactivationFragment = (
 
 export type SubscriptionListQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
+  search?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -6961,8 +6965,8 @@ export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutati
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
 export const SubscriptionListDocument = gql`
-    query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query SubscriptionList($filter: SubscriptionFilter, $search: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
+  subscriptions(filter: $filter, search: $search, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullSubscription
     }
@@ -6990,6 +6994,7 @@ export const SubscriptionListDocument = gql`
  * const { data, loading, error } = useSubscriptionListQuery({
  *   variables: {
  *      filter: // value for 'filter'
+ *      search: // value for 'search'
  *      after: // value for 'after'
  *      before: // value for 'before'
  *      first: // value for 'first'
