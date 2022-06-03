@@ -123,6 +123,8 @@
     "fork-ts-checker-webpack-plugin": "^4.1.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.4.2",
+    "jsdom": "^19.0.0",
+    "jsdom-global": "^3.0.2",
     "less": "^3.12.2",
     "less-loader": "^7.0.2",
     "nodemon": "^2.0.1",
