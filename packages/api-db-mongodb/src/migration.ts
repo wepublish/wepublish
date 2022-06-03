@@ -874,8 +874,11 @@ export const Migrations: Migration[] = [
     // Rename unused temp user collection
     version: 21,
     async migrate(db) {
-      const tempUser = db.collection('temp.users')
-      await tempUser.rename('temp.users.bak')
+      const collections = await db.listCollections().toArray()
+      if (collections.includes('temp.users')) {
+        const tempUser = await db.collection('temp.users')
+        await tempUser.rename('temp.users.bak')
+      }
     }
   }
 ]
