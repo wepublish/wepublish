@@ -912,15 +912,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!page) throw new NotFound('page', id)
 
-        const pageRevision = Object.assign(page.draft ?? page.pending ?? page.published, {
-          slug: '',
-          publishedAt: undefined,
-          updatedAt: undefined,
-          title: '',
-          tags: [],
-          properties: [],
-          blocks: []
-        })
+        const pageRevision: PageRevision = Object.assign(
+          {},
+          page.draft ?? page.pending ?? page.published,
+          {
+            slug: '',
+            publishedAt: undefined,
+            updatedAt: undefined
+          }
+        )
         const output = await dbAdapter.page.createPage({input: {...pageRevision}})
 
         return output
