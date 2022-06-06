@@ -9,7 +9,7 @@ module.exports = {
       isolatedModules: true
     }
   },
-  testMatch: ['**/src/**/__tests__/**/*.+(ts|tsx|js)'],
+  testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
