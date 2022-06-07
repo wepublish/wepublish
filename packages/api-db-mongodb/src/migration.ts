@@ -889,6 +889,13 @@ export const Migrations: Migration[] = [
         await pages.findOneAndReplace({_id: page._id}, page)
       }
     }
+  },
+  {
+    version: 21,
+    async migrate(db, locale) {
+      const invoices = db.collection(CollectionName.Invoices)
+      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
+    }
   }
 ]
 
