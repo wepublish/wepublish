@@ -150,7 +150,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {id ? t('peerList.panels.save') : t('peerList.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
@@ -162,7 +162,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
       <Drawer.Body>
         <Panel>
           <Form
-            fluid={true}
+            fluid
             ref={form}
             model={validationModel}
             formValue={{name: name, url: urlString, token: token}}>
@@ -198,7 +198,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 }}
               />
             </Form.Group>
-            <Button className="fetchButton" appearance={'primary'} onClick={() => handleFetch()}>
+            <Button className="fetchButton" appearance="primary" onClick={() => handleFetch()}>
               {t('peerList.panels.getRemote')}
             </Button>
           </Form>

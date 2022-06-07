@@ -5,7 +5,6 @@ export interface CurrencyInputProps {
   currency: string
   centAmount: number
   onChange(centAmount: number): void
-
   disabled?: boolean
   name: string
 }

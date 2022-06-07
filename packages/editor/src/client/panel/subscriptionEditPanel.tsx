@@ -214,7 +214,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
 
   async function handleSave() {
     if (!form.current?.check?.()) {
-      console.log('check', form.current?.check?.())
       return
     }
     if (!memberPlan) return
@@ -378,7 +377,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
           <Form
             ref={form}
             model={validationModel}
-            fluid={true}
+            fluid
             formValue={{
               memberPlan: memberPlan?.name,
               user: user?.name,
@@ -438,7 +437,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
 
                   setMonthlyAmount(centAmount)
                 }}
-                // onBlur={centAmount => {!centAmount ? setMonthlyAmount(500) : ''}}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />
             </Form.Group>

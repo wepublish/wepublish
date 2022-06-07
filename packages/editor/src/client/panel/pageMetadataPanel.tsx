@@ -99,7 +99,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.SocialMedia:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('pageEditor.panels.metadataInfo')}
@@ -150,7 +150,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
                 <Form.Control
@@ -210,7 +210,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.Properties:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('pageEditor.panels.propertiesInfo')}

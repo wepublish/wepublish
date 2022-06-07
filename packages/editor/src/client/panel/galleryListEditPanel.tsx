@@ -85,7 +85,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => onChange?.({...value, image: null})}
         />
-        <Form fluid={true}>
+        <Form fluid>
           <Form.Group>
             <Form.ControlLabel>{t('blocks.imageGallery.panels.caption')}</Form.ControlLabel>
             <Form.Control

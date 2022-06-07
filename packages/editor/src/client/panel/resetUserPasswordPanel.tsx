@@ -37,7 +37,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   return (
     <Panel>
-      <Form fluid={true} model={validationModel} ref={form}>
+      <Form fluid model={validationModel} ref={form}>
         <Form.Group>
           <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
           <Form.Control

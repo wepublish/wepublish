@@ -239,7 +239,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <Panel>
           <Form
             ref={form}
-            fluid={true}
+            fluid
             model={validationModel}
             formValue={{firstName: firstName, name: name, email: email, password: password}}>
             <Form.Group>

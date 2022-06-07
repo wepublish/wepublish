@@ -193,7 +193,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Panel header={t('peerList.panels.information')}>
           <Form
             ref={form}
-            fluid={true}
+            fluid
             model={validationModel}
             formValue={{
               name: name,

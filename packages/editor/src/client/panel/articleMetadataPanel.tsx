@@ -159,7 +159,7 @@ export function ArticleMetadataPanel({
       case MetaDataType.SocialMedia:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('pageEditor.panels.metadataInfo')}
@@ -246,7 +246,7 @@ export function ArticleMetadataPanel({
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true} model={model} ref={form}>
+            <Form fluid model={model} ref={form}>
               <div style={{paddingBottom: '20px'}}>
                 {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
               </div>
@@ -435,7 +435,7 @@ export function ArticleMetadataPanel({
                 </Form.HelpText>
               </Form.Group>
             </Form>
-            <Form fluid={true} style={{marginTop: '20px'}}>
+            <Form fluid style={{marginTop: '20px'}}>
               <Form.Group>
                 <Form.ControlLabel>{t('articleEditor.panels.peering')}</Form.ControlLabel>
                 <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
@@ -460,7 +460,7 @@ export function ArticleMetadataPanel({
       case MetaDataType.Properties:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('articleEditor.panels.propertiesInfo')}

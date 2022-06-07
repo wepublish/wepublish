@@ -186,7 +186,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <Form ref={form} fluid={true} model={validationModel} formValue={{name: name}}>
+            <Form ref={form} fluid model={validationModel} formValue={{name: name}}>
               <Form.Group>
                 <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
                 <Form.Control
@@ -235,7 +235,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Form
                     ref={authorLinkForm}
-                    fluid={true}
+                    fluid
                     model={authorLinkFormModel}
                     style={{display: 'flex', width: '100px'}}
                     className="form">

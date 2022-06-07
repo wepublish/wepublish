@@ -308,7 +308,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               paymentMethods: []
             }}>
             {({value, onChange}) => (
-              <Form fluid={true}>
+              <Form fluid>
                 <Form.Group>
                   <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
                   <Toggle

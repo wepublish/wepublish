@@ -316,7 +316,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
               </DescriptionList>
             </Panel>
             <Panel header={t('images.panels.information')}>
-              <Form fluid={true}>
+              <Form fluid>
                 <Form.Group>
                   <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
                   <Form.Control
@@ -359,7 +359,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
               </Form>
             </Panel>
             <Panel header={t('images.panels.attribution')}>
-              <Form ref={form} fluid={true} model={validationModel}>
+              <Form ref={form} fluid model={validationModel}>
                 <Form.Group>
                   <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
                   <Form.Control
