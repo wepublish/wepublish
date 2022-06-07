@@ -93,7 +93,7 @@ describe('Peer Edit Panel', () => {
       }
     ]
 
-    const {asFragment, container, getByLabelText} = render(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
@@ -104,6 +104,7 @@ describe('Peer Edit Panel', () => {
     const nameInput = getByLabelText('peerList.panels.name*')
     const urlInput = getByLabelText('peerList.panels.URL*')
     const tokenInput = getByLabelText('peerList.panels.token*')
+    const saveButton = getByTestId('saveButton')
 
     fireEvent.change(nameInput, {
       target: {value: peer.name}
@@ -117,7 +118,7 @@ describe('Peer Edit Panel', () => {
       target: {value: peer.token}
     })
 
-    fireEvent.click(container.querySelector('button.fetchButton')!)
+    fireEvent.click(saveButton!)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

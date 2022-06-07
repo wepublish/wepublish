@@ -133,7 +133,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button
+            appearance={'primary'}
+            disabled={isDisabled}
+            data-testid="saveButton"
+            onClick={() => handleSave()}>
             {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

@@ -5,7 +5,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
 - First value
 + Second value
 
-@@ -31,12 +31,13 @@
+@@ -31,13 +31,14 @@
       </h4>
       <div
         class=\\"rs-drawer-actions\\"
@@ -15,13 +15,14 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
 -         class=\\"rs-btn rs-btn-primary\\"
 +         aria-disabled=\\"true\\"
 +         class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
+          data-testid=\\"saveButton\\"
 +         disabled=\\"\\"
           type=\\"button\\"
         >
           authors.panels.create
           <span
             class=\\"rs-ripple-pond\\"
-@@ -93,14 +94,15 @@
+@@ -94,14 +95,15 @@
                 >
                   <input
                     aria-describedby=\\"name-help-text\\"
@@ -38,7 +39,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
               </div>
               <div
                 class=\\"rs-form-group\\"
-@@ -114,10 +116,11 @@
+@@ -115,10 +117,11 @@
                 <div
                   class=\\"rs-form-control rs-form-control-wrapper\\"
                 >
@@ -50,7 +51,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     value=\\"\\"
                   />
                 </div>
-@@ -705,10 +708,15 @@
+@@ -706,10 +709,15 @@
                         </svg>
                       </div>
                     </button>
@@ -73,7 +74,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
 - First value
 + Second value
 
-@@ -254,11 +254,11 @@
+@@ -255,11 +255,11 @@
                                 class=\\"rs-input\\"
                                 name=\\"title\\"
                                 placeholder=\\"authors.panels.title\\"
@@ -86,7 +87,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             <div
                               class=\\"rs-form-group\\"
                               role=\\"group\\"
-@@ -703,12 +703,17 @@
+@@ -704,12 +704,17 @@
                             d=\\"M20.25 19.196C19.357 22.071 16.732 24 13.714 24s-5.643-1.929-6.536-4.804c-.196-.607.143-1.232.75-1.429.589-.196 1.232.143 1.429.75a4.543 4.543 0 004.357 3.196c2 0 3.768-1.286 4.357-3.196a1.15 1.15 0 011.446-.75c.589.196.929.821.732 1.429zm-8.821-7.767c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zm9.142 0c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zM25.143 16c0-6.304-5.125-11.429-11.429-11.429S2.285 9.696 2.285 16 7.41 27.429 13.714 27.429 25.143 22.304 25.143 16zm2.286 0c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z\\"
                           />
                         </svg>
@@ -144,6 +145,7 @@ exports[`Author Edit Panel should render 1`] = `
       <button
         aria-disabled="false"
         class="rs-btn rs-btn-primary"
+        data-testid="saveButton"
         type="button"
       >
         authors.panels.create
@@ -891,6 +893,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
       <button
         aria-disabled="false"
         class="rs-btn rs-btn-primary"
+        data-testid="saveButton"
         type="button"
       >
         authors.panels.save

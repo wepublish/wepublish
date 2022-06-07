@@ -174,7 +174,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
+          <Button
+            appearance="primary"
+            disabled={isDisabled}
+            data-testid="saveButton"
+            onClick={() => handleSave()}>
             {id ? t('authors.panels.save') : t('authors.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

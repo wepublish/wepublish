@@ -150,7 +150,11 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
+          <Button
+            appearance="primary"
+            data-testid="saveButton"
+            disabled={isDisabled}
+            onClick={() => handleSave()}>
             {id ? t('peerList.panels.save') : t('peerList.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

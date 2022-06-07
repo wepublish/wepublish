@@ -211,7 +211,7 @@ describe('User Role Edit Panel', () => {
       permissionListQuery
     ]
 
-    const {asFragment, container, getByLabelText} = render(
+    const {asFragment, getByTestId, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
@@ -220,6 +220,7 @@ describe('User Role Edit Panel', () => {
     const initialRender = asFragment()
     const nameInput = getByLabelText('userRoles.panels.name*')
     const descriptionInput = getByLabelText('userRoles.panels.description')
+    const saveButton = getByTestId('saveButton')
 
     fireEvent.change(nameInput!, {
       target: {value: userRole.name}
@@ -227,7 +228,7 @@ describe('User Role Edit Panel', () => {
     fireEvent.change(descriptionInput!, {
       target: {value: userRole.description}
     })
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton!)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

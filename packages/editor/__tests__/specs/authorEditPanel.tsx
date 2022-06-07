@@ -111,7 +111,7 @@ describe('Author Edit Panel', () => {
         })
       }
     ]
-    const {asFragment, container, getByLabelText} = render(
+    const {asFragment, getByTestId, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
@@ -120,11 +120,12 @@ describe('Author Edit Panel', () => {
     const initialRender = asFragment()
 
     const nameInput = getByLabelText('authors.panels.name*')
+    const saveButton = getByTestId('saveButton')
 
     fireEvent.change(nameInput!, {
       target: {value: author.name}
     })
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton!)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
