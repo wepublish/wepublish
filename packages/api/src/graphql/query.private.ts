@@ -522,41 +522,22 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     image: {
       type: GraphQLImage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetImage, roles)
-        return loaders.images.load(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders: {images}}) =>
+        getImageById(id, authenticate, images)
     },
 
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 5},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLImageFilter},
         sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, skip, last},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanGetImages, roles)
-
-        return dbAdapter.image.getImages({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last, skip)
-        })
-      }
+      resolve: (root, {filter, sort, order, skip, take, cursor}, {authenticate, prisma: {image}}) =>
+        getAdminImages(filter, sort, order, cursor, skip, take, authenticate, image)
     },
 
     // Comments
