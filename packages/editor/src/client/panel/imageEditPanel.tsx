@@ -259,7 +259,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {isUpload ? t('images.panels.upload') : t('images.panels.save')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

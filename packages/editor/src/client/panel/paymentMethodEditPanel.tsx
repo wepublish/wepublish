@@ -152,7 +152,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {id ? t('save') : t('create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

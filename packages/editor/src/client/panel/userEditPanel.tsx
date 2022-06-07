@@ -227,7 +227,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
         <Drawer.Actions>
           <Button
-            appearance={'primary'}
+            appearance="primary"
             disabled={isDisabled}
             onClick={() => handleSave()}
             data-testid="saveButton">

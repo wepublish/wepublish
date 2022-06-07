@@ -43,7 +43,7 @@ export function GalleryListEditPanel({
         <Drawer.Title>{t('blocks.imageGallery.panels.editGallery')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} onClick={() => onSave?.(images.map(({value}) => value))}>
+          <Button appearance="primary" onClick={() => onSave?.(images.map(({value}) => value))}>
             {t('blocks.imageGallery.panels.save')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
