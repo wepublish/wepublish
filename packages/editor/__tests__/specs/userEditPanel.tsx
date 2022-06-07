@@ -1,5 +1,5 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {fireEvent, getByLabelText, render, screen} from '@testing-library/react'
+import {fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
