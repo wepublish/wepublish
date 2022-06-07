@@ -9,6 +9,7 @@ import {
 import {MemberPlan, PaymentPeriodicity} from './memberPlan'
 import {GenericUserId} from './tempUser'
 import {PaymentMethod} from './paymentMethod'
+import {User} from './user'
 
 export enum SubscriptionDeactivationReason {
   None,
@@ -92,6 +93,7 @@ export interface Subscription {
   readonly deactivation: SubscriptionDeactivation | null
   readonly memberPlan?: MemberPlan
   readonly paymentMethod?: PaymentMethod
+  readonly user?: User
 }
 
 export interface CreateSubscriptionPeriodArgs {

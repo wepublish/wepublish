@@ -4,7 +4,6 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {User} from './db/user'
 import {Subscription} from './db/subscription'
 import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
 import formatISO from 'date-fns/formatISO'
@@ -29,7 +28,7 @@ export function removePrefixTempUser(userID: UserIdWithTempPrefix): UserId {
   return userID.replace(TEMP_USER_PREFIX, '')
 }
 
-export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription[]) {
+export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
   let csvStr =
     [
       'id',
@@ -62,7 +61,7 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
     ].join(',') + '\n'
 
   for (const subscription of subscriptions) {
-    const user = users.find(user => user.id === subscription.userID)
+    const user = subscription.user
     const memberPlan = subscription?.memberPlan
     const paymentMethod = subscription?.paymentMethod
     if (!user) continue

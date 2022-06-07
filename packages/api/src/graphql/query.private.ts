@@ -45,7 +45,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {User, UserSort} from '../db/user'
+import {UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -357,10 +357,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetUsers, roles)
 
         const subscriptions: Subscription[] = []
-        const users: User[] = []
         const joins: SubscriptionJoins = {
           joinMemberPlan: true,
-          joinPaymentMethod: true
+          joinPaymentMethod: true,
+          joinUser: true
         }
 
         let hasMore = true
@@ -380,24 +380,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
         }
-
-        hasMore = true
-        afterCursor = undefined
-
-        while (hasMore) {
-          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
-            cursor: InputCursor(afterCursor ?? undefined),
-            filter: {},
-            limit: Limit(100),
-            sort: UserSort.ModifiedAt,
-            order: SortOrder.Descending
-          })
-          users.push(...listResult.nodes)
-          hasMore = listResult.pageInfo.hasNextPage
-          afterCursor = listResult.pageInfo.endCursor
-        }
-
-        return mapSubscriptionsAsCsv(users, subscriptions)
+        return mapSubscriptionsAsCsv(subscriptions)
       }
     },
 
