@@ -58,6 +58,7 @@ export interface DeactivateSubscriptionForUserProps {
 
 export interface MemberContext {
   dbAdapter: DBAdapter
+  prisma: PrismaClient
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
@@ -83,6 +84,7 @@ export interface MemberContext {
 
 export interface MemberContextProps {
   readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
   readonly mailContext: MailContext

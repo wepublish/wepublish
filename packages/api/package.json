@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
+    "@prisma/client": "^3.14.0",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",
     "apollo-server-express": "2.25.3",

@@ -122,6 +122,7 @@ export interface Context {
   readonly memberContext: MemberContext
 
   readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
@@ -171,6 +172,7 @@ export interface ContextOptions {
   readonly websiteURL: string
 
   readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly mailProvider?: BaseMailProvider
@@ -359,6 +361,7 @@ export async function contextFromRequest(
   const memberContext = new MemberContext({
     loaders,
     dbAdapter,
+    prisma,
     paymentProviders,
     mailContext,
     getLoginUrlForUser(user: User): string {
@@ -376,7 +379,7 @@ export async function contextFromRequest(
     websiteURL,
     session: isSessionValid ? session : null,
     loaders,
-
+    prisma,
     memberContext,
     mailContext,
     dbAdapter,
