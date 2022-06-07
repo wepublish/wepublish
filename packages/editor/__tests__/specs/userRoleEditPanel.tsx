@@ -222,13 +222,13 @@ describe('User Role Edit Panel', () => {
     const descriptionInput = getByLabelText('userRoles.panels.description')
     const saveButton = getByTestId('saveButton')
 
-    fireEvent.change(nameInput!, {
+    fireEvent.change(nameInput, {
       target: {value: userRole.name}
     })
-    fireEvent.change(descriptionInput!, {
+    fireEvent.change(descriptionInput, {
       target: {value: userRole.description}
     })
-    fireEvent.click(saveButton!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

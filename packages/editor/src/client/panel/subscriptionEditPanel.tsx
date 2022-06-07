@@ -421,7 +421,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
 
         <Drawer.Actions>
           <Button
-            appearance={'primary'}
+            appearance="primary"
             disabled={isDisabled || isDeactivated}
             onClick={() => handleSave()}>
             {id ? t('save') : t('create')}

@@ -122,10 +122,10 @@ describe('Author Edit Panel', () => {
     const nameInput = getByLabelText('authors.panels.name*')
     const saveButton = getByTestId('saveButton')
 
-    fireEvent.change(nameInput!, {
+    fireEvent.change(nameInput, {
       target: {value: author.name}
     })
-    fireEvent.click(saveButton!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

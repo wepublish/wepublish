@@ -118,7 +118,7 @@ describe('Peer Edit Panel', () => {
       target: {value: peer.token}
     })
 
-    fireEvent.click(saveButton!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

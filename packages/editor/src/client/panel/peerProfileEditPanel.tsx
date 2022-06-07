@@ -147,7 +147,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {t('peerList.panels.save')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
