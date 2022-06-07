@@ -904,6 +904,13 @@ export const Migrations: Migration[] = [
         await tempUser.rename('temp.users.bak')
       }
     }
+  },
+  {
+   version: 22,
+   async migrate(db, locale) {
+      const invoices = db.collection(CollectionName.Invoices)
+      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
+    }
   }
 ]
 
