@@ -72,8 +72,8 @@ export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
   readonly navigationByKey: DataLoader<string, OptionalNavigation>
 
-  readonly authorsByID: DataLoader<string, OptionalAuthor>
-  readonly authorsBySlug: DataLoader<string, OptionalAuthor>
+  readonly authorsByID: DataLoader<string, Author | null>
+  readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, OptionalImage>
 
@@ -247,8 +247,32 @@ export async function contextFromRequest(
     navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
     navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
 
-    authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
-    authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
+    authorsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.author.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    authorsBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.author.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
+    ),
 
     images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 

@@ -114,24 +114,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     authors: {
       type: GraphQLNonNull(GraphQLAuthorConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLAuthorFilter},
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query is to get the authors.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.author.getAuthors({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {author}}) =>
+        getPublicAuthors(filter, sort, order, cursor, skip, take, author)
     },
 
     // Article
