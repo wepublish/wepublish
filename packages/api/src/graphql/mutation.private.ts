@@ -790,7 +790,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!article) throw new NotFound('article', id)
 
-        const articleRevision = Object.assign(
+        const articleRevision: ArticleRevision = Object.assign(
+          {},
           article.draft ?? article.pending ?? article.published,
           {
             slug: '',

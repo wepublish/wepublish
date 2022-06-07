@@ -1,19 +1,19 @@
 import {ArticleBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
+import {InputCursor, Limit, MetadataProperty, SortOrder} from './common'
 
 export interface ArticleData {
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead?: string
-  readonly seoTitle?: string
-  readonly slug: string
+  readonly preTitle?: string | null
+  readonly title?: string | null
+  readonly lead?: string | null
+  readonly seoTitle?: string | null
+  readonly slug?: string | null
   readonly tags: string[]
 
-  readonly canonicalUrl?: string
+  readonly canonicalUrl?: string | null
 
   readonly properties: MetadataProperty[]
 
-  readonly imageID?: string
+  readonly imageID?: string | null
   readonly authorIDs: string[]
 
   readonly breaking: boolean
@@ -21,10 +21,10 @@ export interface ArticleData {
 
   readonly hideAuthor: boolean
 
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
+  readonly socialMediaTitle?: string | null
+  readonly socialMediaDescription?: string | null
   readonly socialMediaAuthorIDs: string[]
-  readonly socialMediaImageID?: string
+  readonly socialMediaImageID?: string | null
 }
 
 // Article State Flow:
@@ -55,17 +55,17 @@ export interface ArticleRevision extends ArticleData {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly publishAt?: Date
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
+  readonly publishAt?: Date | null
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 }
 
 export interface PublicArticle extends ArticleData {
   readonly id: string
 
   readonly shared: boolean
-  readonly updatedAt: Date
-  readonly publishedAt: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
   readonly blocks: ArticleBlock[]
 }
@@ -151,15 +151,4 @@ export interface DBArticleAdapter {
   publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
   unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
   deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
-
-  getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
-  getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
-
-  getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle>
-
-  getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
-  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>
-
-  // TODO: Implement article history
-  // getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>
 }

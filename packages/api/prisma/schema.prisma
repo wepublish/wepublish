@@ -382,6 +382,7 @@ model Peer {
   slug       String   @unique(map: "slug_1")
   hostURL    String
   token      String
+  isDisabled Boolean?
 
   @@map("peers")
 }

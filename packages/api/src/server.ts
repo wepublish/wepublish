@@ -42,6 +42,50 @@ export class WepublishServer {
       }
     })
     prisma.$connect()
+
+    // @TODO: move into cron job
+    prisma.$use(async (args, next) => {
+      if (!(args.model === 'Article' && args.action.startsWith('find'))) {
+        return next(args)
+      }
+
+      // skip the call inside this middleware to not create an infinite loop
+      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
+        return next(args)
+      }
+
+      const articles = await prisma.article.findMany({
+        where: {
+          pending: {
+            is: {
+              AND: {
+                publishAt: {
+                  lte: new Date()
+                }
+              }
+            }
+          }
+        }
+      })
+
+      await Promise.all(
+        articles.map(({id, pending}) =>
+          prisma.article.update({
+            where: {
+              id
+            },
+            data: {
+              modifiedAt: new Date(),
+              pending: null,
+              published: pending
+            }
+          })
+        )
+      )
+
+      return next(args)
+    })
+
     this.opts = {...opts, prisma}
     const app = express()
 
