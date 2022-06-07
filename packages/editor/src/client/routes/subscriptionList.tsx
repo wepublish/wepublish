@@ -150,7 +150,7 @@ export function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ExportSubscriptionsAsCsv filter={filter} />
+          <ExportSubscriptionsAsCsv filter={filter} search={search} />
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"

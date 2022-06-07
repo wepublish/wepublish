@@ -350,8 +350,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     subscriptionsAsCsv: {
       type: GraphQLString,
-      args: {filter: {type: GraphQLSubscriptionFilter}},
-      async resolve(root, {filter}, {dbAdapter, authenticate}) {
+      args: {
+        filter: {type: GraphQLSubscriptionFilter},
+        search: {type: GraphQLString}
+      },
+      async resolve(root, {filter, search}, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
@@ -369,6 +372,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
               filter,
+              search,
               joins,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,

@@ -4,11 +4,17 @@ import {IconButton} from 'rsuite'
 import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
 import {FileDownload} from '@rsuite/icons'
 
-export function ExportSubscriptionsAsCsv({filter}: {filter?: SubscriptionFilter}) {
+export interface ExportSubscriptionAsCsvProps {
+  filter?: SubscriptionFilter
+  search?: string
+}
+
+export function ExportSubscriptionsAsCsv({filter, search}: ExportSubscriptionAsCsvProps) {
   const {t} = useTranslation()
   const [getCsv, {data, loading}] = useSubscriptionsAsCsvLazyQuery({
     variables: {
-      filter
+      filter,
+      search
     },
     fetchPolicy: 'network-only'
   })

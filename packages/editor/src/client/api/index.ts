@@ -1488,6 +1488,7 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: Maybe<SubscriptionFilter>;
+  search?: Maybe<Scalars['String']>;
 };
 
 
@@ -3669,6 +3670,7 @@ export type SubscriptionQuery = (
 
 export type SubscriptionsAsCsvQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
+  search?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -7054,8 +7056,8 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv($filter: SubscriptionFilter) {
-  subscriptionsAsCsv(filter: $filter)
+    query SubscriptionsAsCsv($filter: SubscriptionFilter, $search: String) {
+  subscriptionsAsCsv(filter: $filter, search: $search)
 }
     `;
 
@@ -7072,6 +7074,7 @@ export const SubscriptionsAsCsvDocument = gql`
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
  *      filter: // value for 'filter'
+ *      search: // value for 'search'
  *   },
  * });
  */

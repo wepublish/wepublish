@@ -73,8 +73,8 @@ query Subscription($id: ID!) {
   }
 }
 
-query SubscriptionsAsCsv($filter: SubscriptionFilter) {
-  subscriptionsAsCsv(filter: $filter)
+query SubscriptionsAsCsv($filter: SubscriptionFilter, $search: String) {
+  subscriptionsAsCsv(filter: $filter, search: $search)
 }
 
 mutation CreateSubscription($input: SubscriptionInput!) {
