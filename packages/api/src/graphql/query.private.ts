@@ -471,46 +471,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetAuthor, roles)
-
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        return id ? loaders.authorsByID.load(id) : loaders.authorsBySlug.load(slug)
-      }
+      resolve: (root, {id, slug}, {authenticate, loaders: {authorsByID, authorsBySlug}}) =>
+        getAuthorByIdOrSlug(id, slug, authenticate, authorsByID, authorsBySlug)
     },
 
     authors: {
       type: GraphQLNonNull(GraphQLAuthorConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLAuthorFilter},
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
+      resolve: (
         root,
-        {filter, sort, order, after, before, first, skip, last},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanGetAuthors, roles)
-
-        return dbAdapter.author.getAuthors({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last, skip)
-        })
-      }
+        {filter, sort, order, take, skip, cursor},
+        {authenticate, prisma: {author}}
+      ) => getAdminAuthors(filter, sort, order, cursor, skip, take, authenticate, author)
     },
 
     // Image

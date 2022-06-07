@@ -1,5 +1,5 @@
-import {ConnectionResult, SortOrder, InputCursor, Limit} from './common'
 import {RichTextNode} from '../graphql/richText'
+import {InputCursor, Limit, SortOrder} from './common'
 
 export interface AuthorLink {
   title: string
@@ -12,8 +12,8 @@ export interface Author {
   modifiedAt: Date
   name: string
   slug: string
-  jobTitle?: string
-  imageID?: string
+  jobTitle?: string | null
+  imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
 }
@@ -21,8 +21,8 @@ export interface Author {
 export interface AuthorInput {
   name: string
   slug: string
-  jobTitle?: string
-  imageID?: string
+  jobTitle?: string | null
+  imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
 }
@@ -64,9 +64,4 @@ export interface DBAuthorAdapter {
   createAuthor(args: CreateAuthorArgs): Promise<Author>
   updateAuthor(args: UpdateAuthorArgs): Promise<OptionalAuthor>
   deleteAuthor(args: DeleteAuthorArgs): Promise<string | null>
-
-  getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]>
-  getAuthorsBySlug(slugs: readonly string[]): Promise<OptionalAuthor[]>
-
-  getAuthors(args: GetAuthorsArgs): Promise<ConnectionResult<Author>>
 }
