@@ -197,6 +197,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders} = opts
   const paymentProviderWebhookRouter = Router()
 
+  // setup update event listener
   paymentModelEvents.on('update', async (context, model) => {
     if (model.state === PaymentState.Paid) {
       const invoice = await context.loaders.invoicesByID.load(model.invoiceID)
@@ -215,6 +216,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
     }
   })
 
+  // setup webhook routes for each payment provider
   paymentProviders.forEach(paymentProvider => {
     paymentProviderWebhookRouter
       .route(`/${paymentProvider.id}`)

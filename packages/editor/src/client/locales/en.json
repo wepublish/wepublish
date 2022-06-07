@@ -998,6 +998,26 @@
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "invoice": {
+      "manuallyPaidByAdmin": "Marked as paid by administrator.",
+      "invoiceNo": "Invoice No.",
+      "total": "Invoice amount",
+      "paidAt": "Paid at",
+      "payManually": "Pay manually",
+      "areYouSure": "Are you sure?",
+      "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
+      "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
+      "unpaid": "(unpaid)",
+      "seeInvoiceHistory": "see invoice history",
+      "panel": {
+        "invoiceHistory": "Invoice history",
+        "missingSubscriptionId": "Unexpected error: subscriptionId is missing.",
+        "noInvoices": "No invoices."
+      }
+    },
+    "currency": {
+      "chf": "chf"
     }
   }
 }

@@ -880,6 +880,26 @@
     "save": "Sauvegarder",
     "yes": "Oui",
     "no": "Non",
-    "untitled": "Sans Titre"
+    "untitled": "Sans Titre",
+    "invoice": {
+      "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
+      "invoiceNo": "Facture n",
+      "total": "Montant facturé",
+      "paidAt": "Payée le",
+      "payManually": "Payer manuellement",
+      "areYouSure": "Tu es sûr?",
+      "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été reçu par l'utilisateur. Tu devrais discuter de ton intention avec le comptable.",
+      "userNotLoaded": "Erreur inattendue : tes données d'utilisateur n'ont pas pu être chargées.",
+      "unpaid": "(non payé)",
+      "seeInvoiceHistory": "Voir historique des factures",
+      "panel": {
+        "invoiceHistory": "Historique de facturation",
+        "missingSubscriptionId": "Erreur inattendue : le subscriptionId n'a pas pu être trouvé.",
+        "noInvoices": "Pas de factures."
+      }
+    },
+    "currency": {
+      "chf": "chf"
+    }
   }
 }
