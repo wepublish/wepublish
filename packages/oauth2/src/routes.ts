@@ -5,7 +5,7 @@ import querystring from 'querystring'
 import {inspect} from 'util'
 
 import * as assert from 'assert'
-import {DBAdapter} from '@wepublish/api'
+import {PrismaClient} from '@prisma/client'
 
 const body = urlencoded({extended: false})
 

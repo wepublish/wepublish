@@ -13,6 +13,7 @@ import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import TypedEmitter from 'typed-emitter'
+import {PrismaClient} from '@prisma/client'
 
 let serverLogger: pino.Logger
 
@@ -21,6 +22,7 @@ export function logger(moduleName: string): pino.Logger {
 }
 
 export interface WepublishServerOpts extends ContextOptions {
+  readonly mongoUrl: string
   readonly playground?: boolean
   readonly introspection?: boolean
   readonly tracing?: boolean
@@ -29,10 +31,19 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
+  private readonly opts: WepublishServerOpts
 
-  constructor(private readonly opts: WepublishServerOpts) {
+  constructor(opts: Omit<WepublishServerOpts, 'prisma'>) {
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: opts.mongoUrl
+        }
+      }
+    })
+    prisma.$connect()
+    this.opts = {...opts, prisma}
     const app = express()
-    this.opts = opts
 
     const {dbAdapter} = opts
 
@@ -42,13 +53,13 @@ export class WepublishServer {
       if (mtp.key in dbAdapter) {
         const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
         mtp.methods.forEach(method => {
-          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, Function | any>
+          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, any>
           const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
 
           if (methodName in adapter) {
             adapter[methodName] = new Proxy(adapter[methodName], {
               // create proxy for method
-              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
+              apply: async (target: any, thisArg: any, argArray?: any): Promise<any> => {
                 const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
                 setImmediate(async () => {
                   // make sure event gets executed in the next event loop
@@ -56,7 +67,7 @@ export class WepublishServer {
                     logger('server').info('emitting event for %s', methodName)
                     ;(mtp.eventEmitter as TypedEmitter<PublishableModelEvents<unknown>>).emit(
                       method,
-                      await contextFromRequest(null, opts),
+                      await contextFromRequest(null, this.opts),
                       result
                     ) // execute event emitter
                   } catch (error) {
@@ -84,7 +95,7 @@ export class WepublishServer {
       playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
-      context: ({req}) => contextFromRequest(req, opts)
+      context: ({req}) => contextFromRequest(req, this.opts)
     })
 
     const publicServer = new ApolloServer({
@@ -92,7 +103,7 @@ export class WepublishServer {
       playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
-      context: ({req}) => contextFromRequest(req, opts)
+      context: ({req}) => contextFromRequest(req, this.opts)
     })
 
     const corsOptions = {
@@ -116,8 +127,8 @@ export class WepublishServer {
       })
     )
 
-    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
-    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
+    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(this.opts))
+    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(this.opts))
 
     adminServer.applyMiddleware({
       app,

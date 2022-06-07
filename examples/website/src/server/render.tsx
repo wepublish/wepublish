@@ -80,7 +80,7 @@ export async function renderApp({
     await getDataFromTree(ServerApp)
   } catch (err) {
     console.error(`ApolloError: ${JSON.stringify(err, undefined, 2)}`)
-    error = err
+    error = err as Error
   }
 
   const initialState = client.extract()
