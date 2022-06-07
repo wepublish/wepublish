@@ -201,10 +201,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      async resolve(_, {input}, {dbAdapter, authenticateUser}) {
+      async resolve(_, {input}, {dbAdapter, prisma, authenticateUser}) {
         const {user} = authenticateUser()
 
-        const comment = await dbAdapter.comment.getCommentById(input.id)
+        const comment = await prisma.comment.findUnique({
+          where: {
+            id: input.id
+          }
+        })
 
         if (!comment) return null
 
