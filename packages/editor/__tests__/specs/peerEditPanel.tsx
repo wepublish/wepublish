@@ -93,7 +93,7 @@ describe('Peer Edit Panel', () => {
       }
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, container, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
@@ -101,15 +101,19 @@ describe('Peer Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.name"]')!, {
+    const nameInput = getByLabelText('peerList.panels.name*')
+    const urlInput = getByLabelText('peerList.panels.URL*')
+    const tokenInput = getByLabelText('peerList.panels.token*')
+
+    fireEvent.change(nameInput, {
       target: {value: peer.name}
     })
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.URL"]')!, {
+    fireEvent.change(urlInput, {
       target: {value: peer.hostURL}
     })
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.token"]')!, {
+    fireEvent.change(tokenInput, {
       target: {value: peer.token}
     })
 

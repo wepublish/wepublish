@@ -5,11 +5,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 - First value
 + Second value
 
-@@ -89,11 +89,11 @@
-              >
-                <input
+@@ -93,11 +93,11 @@
+                  aria-labelledby=\\"name-control-label\\"
                   class=\\"rs-input\\"
-                  name=\\"peerList.panels.name\\"
+                  id=\\"name\\"
+                  name=\\"name\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"something peer name\\"
@@ -18,11 +18,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -109,11 +109,11 @@
-              >
-                <input
+@@ -118,11 +118,11 @@
+                  aria-labelledby=\\"url-control-label\\"
                   class=\\"rs-input\\"
-                  name=\\"peerList.panels.URL\\"
+                  id=\\"url\\"
+                  name=\\"url\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"https://host-url.ch/\\"
@@ -31,11 +31,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -129,18 +129,17 @@
-              >
-                <input
+@@ -143,11 +143,11 @@
+                  aria-labelledby=\\"token-control-label\\"
                   class=\\"rs-input\\"
-                  name=\\"peerList.panels.token\\"
+                  id=\\"token\\"
+                  name=\\"token\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"abc123def456\\"
@@ -43,16 +43,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
               </div>
             </div>
             <button
--             aria-disabled=\\"true\\"
--             class=\\"fetchButton rs-btn rs-btn-primary rs-btn-disabled\\"
--             disabled=\\"\\"
-+             aria-disabled=\\"false\\"
-+             class=\\"fetchButton rs-btn rs-btn-primary\\"
-              type=\\"button\\"
-            >
-              peerList.panels.getRemote
-              <span
-                class=\\"rs-ripple-pond\\""
+              class=\\"fetchButton rs-btn rs-btn-primary\\""
 `;
 
 exports[`Peer Edit Panel should render 1`] = `
@@ -138,6 +129,8 @@ exports[`Peer Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
               peerList.panels.name*
             </label>
@@ -145,7 +138,10 @@ exports[`Peer Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
+                id="name"
                 name="name"
                 type="text"
                 value=""
@@ -158,6 +154,8 @@ exports[`Peer Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="url"
+              id="url-control-label"
             >
               peerList.panels.URL*
             </label>
@@ -165,7 +163,10 @@ exports[`Peer Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="url-help-text"
+                aria-labelledby="url-control-label"
                 class="rs-input"
+                id="url"
                 name="url"
                 type="text"
                 value=""
@@ -178,6 +179,8 @@ exports[`Peer Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="token"
+              id="token-control-label"
             >
               peerList.panels.token*
             </label>
@@ -185,7 +188,10 @@ exports[`Peer Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="token-help-text"
+                aria-labelledby="token-control-label"
                 class="rs-input"
+                id="token"
                 name="token"
                 type="text"
                 value=""
@@ -295,6 +301,8 @@ exports[`Peer Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
               peerList.panels.name*
             </label>
@@ -302,7 +310,10 @@ exports[`Peer Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
+                id="name"
                 name="name"
                 type="text"
                 value="Test Peer Name"
@@ -315,6 +326,8 @@ exports[`Peer Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="url"
+              id="url-control-label"
             >
               peerList.panels.URL*
             </label>
@@ -322,7 +335,10 @@ exports[`Peer Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="url-help-text"
+                aria-labelledby="url-control-label"
                 class="rs-input"
+                id="url"
                 name="url"
                 type="text"
                 value="https://test-url.ch/"
@@ -335,6 +351,8 @@ exports[`Peer Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="token"
+              id="token-control-label"
             >
               peerList.panels.token*
             </label>
@@ -342,7 +360,10 @@ exports[`Peer Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="token-help-text"
+                aria-labelledby="token-control-label"
                 class="rs-input"
+                id="token"
                 name="token"
                 placeholder="peerList.panels.leaveEmpty"
                 type="text"
