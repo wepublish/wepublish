@@ -197,7 +197,7 @@ describe('User Edit Panel', () => {
       userRoleListDocumentQuery
     ]
 
-    const {asFragment, container, getByLabelText} = render(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
@@ -209,24 +209,25 @@ describe('User Edit Panel', () => {
     const nameInput = getByLabelText('userList.panels.name*')
     const emailInput = getByLabelText('userList.panels.email*')
     const passwordInput = getByLabelText('userList.panels.password*')
+    const saveButton = getByTestId('saveButton')
 
-    fireEvent.change(firstNameInput!, {
+    fireEvent.change(firstNameInput, {
       target: {value: user.name}
     })
 
-    fireEvent.change(nameInput!, {
+    fireEvent.change(nameInput, {
       target: {value: user.name}
     })
 
-    fireEvent.change(emailInput!, {
+    fireEvent.change(emailInput, {
       target: {value: user.email}
     })
 
-    fireEvent.change(passwordInput!, {
+    fireEvent.change(passwordInput, {
       target: {value: user.password}
     })
 
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

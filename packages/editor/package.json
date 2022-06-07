@@ -189,7 +189,8 @@
             "fixed",
             "format",
             "stack",
-            "backdrop"
+            "backdrop",
+            "data-testid"
           ],
           "ignoreComponent": [
             "code"

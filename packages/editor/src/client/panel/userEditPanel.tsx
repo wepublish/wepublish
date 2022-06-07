@@ -226,7 +226,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button
+            appearance={'primary'}
+            disabled={isDisabled}
+            onClick={() => handleSave()}
+            data-testid="saveButton">
             {id ? t('userList.panels.save') : t('userList.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
