@@ -176,7 +176,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           />
           <Form
             ref={imgForm}
-            fluid={true}
+            fluid
             model={imgValidationModel}
             style={{height: '45px'}}
             formValue={{profileImg: logoImage?.id}}>

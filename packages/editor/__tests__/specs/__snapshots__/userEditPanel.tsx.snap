@@ -5,7 +5,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -31,12 +31,13 @@
+@@ -31,13 +31,14 @@
       </h4>
       <div
         class=\\"rs-drawer-actions\\"
@@ -15,13 +15,14 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
 -         class=\\"rs-btn rs-btn-primary\\"
 +         aria-disabled=\\"true\\"
 +         class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
+          data-testid=\\"saveButton\\"
 +         disabled=\\"\\"
           type=\\"button\\"
         >
           userList.panels.create
           <span
             class=\\"rs-ripple-pond\\"
-@@ -90,14 +91,15 @@
+@@ -91,14 +92,15 @@
               >
                 <input
                   aria-describedby=\\"firstName-help-text\\"
@@ -38,7 +39,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -115,14 +117,15 @@
+@@ -116,14 +118,15 @@
               >
                 <input
                   aria-describedby=\\"name-help-text\\"
@@ -55,7 +56,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -136,10 +139,11 @@
+@@ -137,10 +140,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -67,7 +68,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -160,14 +164,15 @@
+@@ -161,14 +165,15 @@
               >
                 <input
                   aria-describedby=\\"email-help-text\\"
@@ -84,7 +85,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -181,10 +186,11 @@
+@@ -182,10 +187,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -96,7 +97,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -201,10 +207,11 @@
+@@ -202,10 +208,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -108,7 +109,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -221,10 +228,11 @@
+@@ -222,10 +229,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -120,7 +121,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -241,10 +249,11 @@
+@@ -242,10 +250,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -132,7 +133,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -261,10 +270,11 @@
+@@ -262,10 +271,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -144,7 +145,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -281,10 +291,11 @@
+@@ -282,10 +292,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -156,7 +157,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -297,18 +308,19 @@
+@@ -298,18 +309,19 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.active
@@ -178,7 +179,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                 />
                 <span
                   class=\\"rs-toggle-presentation\\"
-@@ -335,14 +347,15 @@
+@@ -336,14 +348,15 @@
               >
                 <input
                   aria-describedby=\\"password-help-text\\"
@@ -202,7 +203,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -352,11 +352,11 @@
+@@ -353,11 +353,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -215,7 +216,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -366,17 +366,54 @@
+@@ -367,17 +367,54 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -281,7 +282,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -361,11 +361,11 @@
+@@ -362,11 +362,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -294,7 +295,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -375,54 +375,17 @@
+@@ -376,54 +376,17 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -393,6 +394,7 @@ exports[`User Edit Panel should render 1`] = `
       <button
         aria-disabled="false"
         class="rs-btn rs-btn-primary"
+        data-testid="saveButton"
         type="button"
       >
         userList.panels.create
@@ -797,6 +799,7 @@ exports[`User Edit Panel should render with ID 1`] = `
       <button
         aria-disabled="false"
         class="rs-btn rs-btn-primary"
+        data-testid="saveButton"
         type="button"
       >
         userList.panels.save
