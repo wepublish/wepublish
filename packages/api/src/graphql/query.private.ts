@@ -565,36 +565,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLCommentFilter},
         sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      async resolve(
+      resolve: async (
         root,
-        {filter, sort, order, after, before, first, last, skip},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-
-        const canGetComments = isAuthorised(CanGetComments, roles)
-
-        if (canGetComments) {
-          return await dbAdapter.comment.getComments({
-            filter,
-            sort,
-            order,
-            cursor: InputCursor(after, before),
-            limit: Limit(first, last, skip)
-          })
-        } else {
-          throw new NotAuthorisedError()
-        }
-      }
+        {filter, sort, order, skip, take, cursor},
+        {authenticate, prisma: {comment}}
+      ) => getAdminComments(filter, sort, order, cursor, skip, take, authenticate, comment)
     },
 
     // Article

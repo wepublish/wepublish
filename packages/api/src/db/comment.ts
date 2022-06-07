@@ -1,5 +1,5 @@
 import {RichTextNode} from '../graphql/richText'
-import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
+import {SortOrder, Limit, InputCursor} from './common'
 
 export enum CommentState {
   Approved = 'approved',
@@ -27,14 +27,14 @@ export enum CommentItemType {
 
 export interface CommentData {
   readonly id: string
-  readonly userID: string
+  readonly userID?: string | null
 
   readonly authorType: CommentAuthorType
 
   readonly itemID: string
   readonly itemType: CommentItemType
 
-  readonly parentID?: string
+  readonly parentID?: string | null
 
   readonly createdAt: Date
   readonly modifiedAt: Date
@@ -45,7 +45,7 @@ export interface Comment extends CommentData {
 
   readonly state: CommentState
 
-  readonly rejectionReason?: CommentRejectionReason
+  readonly rejectionReason?: CommentRejectionReason | null
 }
 
 export interface CommentRevision {
@@ -67,7 +67,7 @@ export interface TakeActionOnCommentArgs {
 
   readonly state: CommentState
 
-  readonly rejectionReason?: CommentRejectionReason
+  readonly rejectionReason?: CommentRejectionReason | null
 }
 
 export interface CommentInput {
@@ -76,7 +76,7 @@ export interface CommentInput {
   readonly itemID: string
   readonly itemType: CommentItemType
 
-  readonly parentID?: string
+  readonly parentID?: string | null
 
   readonly state: CommentState
   readonly authorType: CommentAuthorType
@@ -96,12 +96,12 @@ export interface UpdatePublicCommentArgs {
   readonly text: RichTextNode[]
 }
 
-export interface CommentFilterOptions {
-  readonly state?: CommentState
+export interface CommentFilter {
+  readonly states?: CommentState[]
 }
 
 export interface GetCommentsArgs {
-  readonly filter?: CommentFilterOptions
+  readonly filter?: CommentFilter
   readonly cursor: InputCursor
   readonly limit: Limit
   readonly sort: CommentSort
@@ -120,9 +120,5 @@ export type OptionalComment = Comment | null
 export interface DBCommentAdapter {
   addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
   updatePublicComment(args: UpdatePublicCommentArgs): Promise<OptionalPublicComment>
-  getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
-  getPublicCommentsForItemByID(args: GetPublicCommentsArgs): Promise<PublicComment[]>
-  getPublicChildrenCommentsByParentId(id: string, userID: string): Promise<PublicComment[]>
-  getCommentById(id: string): Promise<OptionalComment>
   takeActionOnComment(args: TakeActionOnCommentArgs): Promise<OptionalComment>
 }

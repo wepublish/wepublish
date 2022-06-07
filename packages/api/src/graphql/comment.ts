@@ -21,6 +21,7 @@ import {
   CommentSort
 } from '../db/comment'
 import {createProxyingResolver} from '../utility'
+import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
 import {GraphQLPublicUser, GraphQLUser} from './user'
@@ -71,7 +72,7 @@ export const GraphQLCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    state: {type: GraphQLCommentState}
+    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
   }
 })
 
@@ -140,10 +141,15 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLUser,
-      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        if (userID) return dbAdapter.user.getUserByID(userID)
-        return null
-      })
+      resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
+        userID
+          ? user.findUnique({
+              where: {
+                id: userID
+              }
+            })
+          : null
+      )
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
     itemID: {type: GraphQLNonNull(GraphQLID)},
@@ -152,10 +158,15 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     parentComment: {
       type: GraphQLComment,
-      resolve: createProxyingResolver(({parentID}, _, {dbAdapter}) => {
-        if (parentID) return dbAdapter.comment.getCommentById(parentID)
-        return null
-      })
+      resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
+        parentID
+          ? comment.findUnique({
+              where: {
+                id: parentID
+              }
+            })
+          : null
+      )
     },
     revisions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
@@ -178,10 +189,15 @@ export const GraphQLPublicComment: GraphQLObjectType<
     guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLPublicUser,
-      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        if (userID) return dbAdapter.user.getUserByID(userID)
-        return null
-      })
+      resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
+        userID
+          ? user.findUnique({
+              where: {
+                id: userID
+              }
+            })
+          : null
+      )
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
@@ -192,9 +208,9 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     children: {
       type: GraphQLList(GraphQLPublicComment),
-      resolve: createProxyingResolver(({id, userID}, _, {dbAdapter}) => {
-        return dbAdapter.comment.getPublicChildrenCommentsByParentId(id, userID)
-      })
+      resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
+        getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
+      )
     },
 
     text: {type: GraphQLNonNull(GraphQLRichText)},

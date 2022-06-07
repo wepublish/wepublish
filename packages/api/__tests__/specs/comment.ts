@@ -1,21 +1,16 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
-import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
 // import {CommentInput, AddComment} from '../api/public'
 // import {CommentAuthorType, CommentItemType} from '../../lib'
 
-let testClientPublic: ApolloServerTestClient
 // let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
     // testClientPrivate = setupClient.testClientPrivate
     dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
 
