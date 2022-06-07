@@ -136,14 +136,13 @@ export function SubscriptionListFilter({
         <SelectPicker
           key={`payment-periodicity-${resetFilterKey}`}
           placeholder={t('memberPlanList.paymentPeriodicities')}
-          value={filter.paymentPeriodicity}
+          block
+          disabled={isDisabled}
           data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
             value: pp,
             label: t(`memberPlanList.paymentPeriodicity.${pp}`)
           }))}
-          disabled={isDisabled}
           onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
-          block
         />
       </Form.Group>
       <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
@@ -153,7 +152,6 @@ export function SubscriptionListFilter({
           block
           disabled={isDisabled}
           data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-          value={filter.paymentMethodID}
           onChange={value =>
             updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
           }
@@ -189,17 +187,17 @@ export function SubscriptionListFilter({
           searchable={false}
           data={[
             {
-              value: true,
+              value: 'true',
               label: t('yes')
             },
             {
-              value: false,
+              value: 'false',
               label: t('no')
             }
           ]}
           block
           placement="auto"
-          onChange={value => updateFilter({autoRenew: value})}
+          onChange={value => updateFilter({autoRenew: value === 'true'})}
         />
       </Form.Group>
       <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
@@ -221,7 +219,6 @@ export function SubscriptionListFilter({
               label: t('subscriptionList.filter.reasonInvoiceNotPaid')
             }
           ]}
-          value={filter.deactivationReason}
           block
           placement="auto"
           onChange={value => updateFilter({deactivationReason: value})}
