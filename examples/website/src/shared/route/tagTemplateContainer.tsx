@@ -16,12 +16,12 @@ export interface TagTemplateContainerProps {
 }
 
 export function TagTemplateContainer({tag}: TagTemplateContainerProps) {
-  const first = 30
+  const take = 30
   const decodedTag = decodeURI(tag) as string
   const tagArray = [decodedTag]
 
   const {data, fetchMore, loading} = useListArticlesQuery({
-    variables: {filter: tagArray, first: first, cursor: null}
+    variables: {filter: tagArray, take: take, cursor: null}
   })
 
   if (loading) return <Loader text="Loading" />
@@ -46,7 +46,7 @@ export function TagTemplateContainer({tag}: TagTemplateContainerProps) {
           }
         }
       },
-      variables: {cursor: data.articles.pageInfo.endCursor, first: first, filter: tagArray}
+      variables: {cursor: data.articles.pageInfo.endCursor, take: take, filter: tagArray}
     })
   }
 

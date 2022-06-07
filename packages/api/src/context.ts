@@ -77,7 +77,7 @@ export interface DataLoaderContext {
 
   readonly images: DataLoader<string, OptionalImage>
 
-  readonly articles: DataLoader<string, OptionalArticle>
+  readonly articles: DataLoader<string, Article | null>
   readonly publicArticles: DataLoader<string, OptionalPublicArticle>
 
   readonly pages: DataLoader<string, OptionalPage>
@@ -206,6 +206,15 @@ export interface GenerateJWTProps {
   expiresInMinutes?: number
 }
 
+const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
+  keys: Key[],
+  data: Data[],
+  attribute: Attribute
+): Array<Data | null> => {
+  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
+
+  return keys.map(id => dataMap[id] ?? null)
+}
 export async function contextFromRequest(
   req: IncomingMessage | null,
   {
@@ -243,8 +252,46 @@ export async function contextFromRequest(
 
     images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-    articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
-    publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+    articles: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.article.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    publicArticles: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        (
+          await prisma.article.findMany({
+            where: {
+              id: {
+                in: ids as string[]
+              },
+              OR: [
+                {
+                  published: {
+                    isNot: null
+                  }
+                },
+                {
+                  pending: {
+                    isNot: null
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, shared, published, pending}) => ({id, shared, ...(published || pending!)})),
+        'id'
+      )
+    ),
 
     pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
     publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),

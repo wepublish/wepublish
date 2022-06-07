@@ -624,60 +624,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-
-        const canGetArticle = isAuthorised(CanGetArticle, roles)
-        const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
-
-        if (canGetArticle || canGetSharedArticle) {
-          const article = await loaders.articles.load(id)
-
-          if (canGetArticle) {
-            return article
-          } else {
-            return article?.shared ? article : null
-          }
-        } else {
-          throw new NotAuthorisedError()
-        }
-      }
+      resolve: (root, {id}, {authenticate, loaders}) =>
+        getArticleById(id, authenticate, loaders.articles)
     },
 
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLArticleFilter},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
+      resolve: (
         root,
-        {filter, sort, order, after, before, first, skip, last},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-
-        const canGetArticles = isAuthorised(CanGetArticles, roles)
-        const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
-
-        if (canGetArticles || canGetSharedArticles) {
-          return dbAdapter.article.getArticles({
-            filter: {...filter, shared: !canGetArticles ? true : undefined},
-            sort,
-            order,
-            cursor: InputCursor(after, before),
-            limit: Limit(first, last, skip)
-          })
-        } else {
-          throw new NotAuthorisedError()
-        }
-      }
+        {filter, sort, order, skip, take, cursor},
+        {authenticate, prisma: {article}}
+      ) => getAdminArticles(filter, sort, order, cursor, skip, take, authenticate, article)
     },
 
     // Peer Article
@@ -699,225 +664,24 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     peerArticles: {
       type: GraphQLNonNull(GraphQLPeerArticleConnection),
       args: {
-        after: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        filter: {type: GraphQLArticleFilter},
+        cursors: {type: GraphQLString},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
-        peerFilter: {type: GraphQLString},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt}
+        peerFilter: {type: GraphQLString}
       },
 
-      async resolve(
-        root,
-        {filter, sort, order, after, first, peerFilter, last, skip},
-        context,
-        info
-      ) {
-        const {authenticate, loaders, dbAdapter} = context
-        const {roles} = authenticate()
-
-        authorise(CanGetPeerArticles, roles)
-
-        after = after ? JSON.parse(base64Decode(after)) : null
-
-        const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
-          peerFilter ? peer.name === peerFilter : true
-        )
-
-        for (const peer of peers) {
-          // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
-          loaders.peer.prime(peer.id, peer)
-        }
-
-        const articles = await Promise.all(
-          peers.map(peer => {
-            try {
-              if (after && after[peer.id] == null) return null
-
-              return delegateToPeerSchema(peer.id, true, context, {
-                info,
-                fieldName: 'articles',
-                args: {after: after ? after[peer.id] : undefined},
-                transforms: [
-                  new ExtractField({
-                    from: ['articles', 'nodes', 'article'],
-                    to: ['articles', 'nodes']
-                  }),
-                  new WrapQuery(
-                    ['articles', 'nodes', 'article'],
-                    subtree => ({
-                      kind: Kind.SELECTION_SET,
-                      selections: [
-                        ...subtree.selections,
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'id'}
-                        },
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'latest'},
-                          selectionSet: {
-                            kind: Kind.SELECTION_SET,
-                            selections: [
-                              {
-                                kind: Kind.FIELD,
-                                name: {kind: Kind.NAME, value: 'updatedAt'}
-                              },
-                              {
-                                kind: Kind.FIELD,
-                                name: {kind: Kind.NAME, value: 'publishAt'}
-                              },
-                              {
-                                kind: Kind.FIELD,
-                                name: {kind: Kind.NAME, value: 'publishedAt'}
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'modifiedAt'}
-                        },
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'createdAt'}
-                        }
-                      ]
-                    }),
-                    result => result
-                  ),
-                  new WrapQuery(
-                    ['articles'],
-                    subtree => ({
-                      kind: Kind.SELECTION_SET,
-                      selections: [
-                        ...subtree.selections,
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'pageInfo'},
-                          selectionSet: {
-                            kind: Kind.SELECTION_SET,
-                            selections: [
-                              {
-                                kind: Kind.FIELD,
-                                name: {kind: Kind.NAME, value: 'endCursor'}
-                              },
-                              {
-                                kind: Kind.FIELD,
-                                name: {kind: Kind.NAME, value: 'hasNextPage'}
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          kind: Kind.FIELD,
-                          name: {kind: Kind.NAME, value: 'totalCount'}
-                        }
-                      ]
-                    }),
-                    result => result
-                  )
-                ]
-              })
-            } catch (err) {
-              return null
-            }
-          })
-        )
-
-        const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
-        const cursors = Object.fromEntries(
-          articles.map((result, index) => [peers[index].id, result?.pageInfo.endCursor ?? null])
-        )
-
-        const hasNextPage = articles.reduce(
-          (prev, result) => prev || (result?.pageInfo.hasNextPage ?? false),
-          false
-        )
-
-        const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
-          const peer = peers[index]
-
-          return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
-        })
-
-        switch (sort) {
-          case ArticleSort.CreatedAt:
-            peerArticles.sort(
-              (a, b) =>
-                new Date(b.article.createdAt).getTime() - new Date(a.article.createdAt).getTime()
-            )
-            break
-
-          case ArticleSort.ModifiedAt:
-            peerArticles.sort(
-              (a, b) =>
-                new Date(b.article.modifiedAt).getTime() - new Date(a.article.modifiedAt).getTime()
-            )
-            break
-
-          case ArticleSort.PublishAt:
-            peerArticles.sort(
-              (a, b) =>
-                new Date(b.article.latest.publishAt).getTime() -
-                new Date(a.article.latest.publishAt).getTime()
-            )
-            break
-
-          case ArticleSort.PublishedAt:
-            peerArticles.sort(
-              (a, b) =>
-                new Date(b.article.latest.publishedAt).getTime() -
-                new Date(a.article.latest.publishedAt).getTime()
-            )
-            break
-
-          case ArticleSort.UpdatedAt:
-            peerArticles.sort(
-              (a, b) =>
-                new Date(b.article.latest.updatedAt).getTime() -
-                new Date(a.article.latest.updatedAt).getTime()
-            )
-            break
-        }
-
-        if (order === SortOrder.Ascending) {
-          peerArticles.reverse()
-        }
-
-        return {
-          nodes: peerArticles,
-          totalCount: totalCount,
-          pageInfo: {
-            endCursor: base64Encode(JSON.stringify(cursors)),
-            hasNextPage: hasNextPage
-          }
-        }
-      }
+      resolve: (root, {sort, order, after, peerFilter}, context, info) =>
+        getAdminPeerArticles(sort, order, peerFilter, after, context, info)
     },
 
     articlePreviewLink: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
-      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
-        const {roles} = authenticate()
-        authorise(CanGetArticlePreviewLink, roles)
-
-        const article = await loaders.articles.load(id)
-
-        if (!article) throw new NotFound('article', id)
-
-        if (!article.draft) throw new UserInputError('Article needs to have a draft')
-
-        const token = generateJWT({
-          id: article.id,
-          expiresInMinutes: hours * 60
-        })
-
-        return urlAdapter.getArticlePreviewURL(token)
-      }
+      resolve: async (
+        root,
+        {id, hours},
+        {authenticate, loaders: {articles}, urlAdapter, generateJWT}
+      ) => getArticlePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, articles)
     },
 
     // Page

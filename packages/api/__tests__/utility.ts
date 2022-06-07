@@ -1,23 +1,24 @@
+import {PrismaClient} from '@prisma/client'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
+import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
+import {ApolloServer} from 'apollo-server'
+import {createTestClient} from 'apollo-server-testing'
+import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
 import {URL} from 'url'
+import {AlgebraicCaptchaChallenge} from '../lib'
 import {
   Author,
+  CommentItemType,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
   OptionalUserSession,
+  Peer,
   PublicArticle,
-  PublicPage,
-  URLAdapter,
   PublicComment,
-  CommentItemType,
-  Peer
+  PublicPage,
+  URLAdapter
 } from '../src'
-import {ApolloServer} from 'apollo-server'
-import {createTestClient} from 'apollo-server-testing'
-import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
-import {AlgebraicCaptchaChallenge} from '../lib'
 
 export interface TestClient {
   dbAdapter: MongoDBAdapter
@@ -94,6 +95,15 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     locale: 'en'
   })
 
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.TEST_MONGO_URL!
+      }
+    }
+  })
+  await prisma.$connect()
+
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
     token: 'fake',
@@ -129,6 +139,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         dbAdapter,
+        prisma,
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
@@ -152,6 +163,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         dbAdapter,
+        prisma,
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
