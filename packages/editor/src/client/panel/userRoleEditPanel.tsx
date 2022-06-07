@@ -144,7 +144,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
       <Drawer.Body>
         <Form fluid model={validationModel} ref={form} formValue={{name: name}}>
-          <Form.Group>
+          <Form.Group controlId="name">
             <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
             <Form.Control
               name="name"
@@ -153,7 +153,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
               onChange={(value: string) => setName(value)}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="description">
             <Form.ControlLabel>{t('userRoles.panels.description')}</Form.ControlLabel>
             <Form.Control
               name={t('userRoles.panels.description')}

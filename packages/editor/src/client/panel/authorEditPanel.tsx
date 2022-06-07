@@ -187,7 +187,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <PanelGroup>
           <Panel>
             <Form ref={form} fluid model={validationModel} formValue={{name: name}}>
-              <Form.Group>
+              <Form.Group controlId="name">
                 <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
                 <Form.Control
                   name="name"
@@ -235,7 +235,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Form
                     ref={authorLinkForm}
-                    fluid
+                    fluid={true}
                     model={authorLinkFormModel}
                     style={{display: 'flex', width: '100px'}}
                     className="form">

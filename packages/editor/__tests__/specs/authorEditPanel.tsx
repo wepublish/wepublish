@@ -111,7 +111,7 @@ describe('Author Edit Panel', () => {
         })
       }
     ]
-    const {asFragment, container} = render(
+    const {asFragment, container, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
@@ -119,7 +119,9 @@ describe('Author Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="authors.panels.name"]')!, {
+    const nameInput = getByLabelText('authors.panels.name*')
+
+    fireEvent.change(nameInput!, {
       target: {value: author.name}
     })
     fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)

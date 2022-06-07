@@ -21,14 +21,15 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
           userRoles.panels.create
           <span
             class=\\"rs-ripple-pond\\"
-@@ -79,13 +80,14 @@
-          <div
-            class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -83,14 +84,15 @@
           >
             <input
+              aria-describedby=\\"name-help-text\\"
+              aria-labelledby=\\"name-control-label\\"
               class=\\"rs-input\\"
 +             disabled=\\"\\"
-              name=\\"userRoles.panels.name\\"
+              id=\\"name\\"
+              name=\\"name\\"
               type=\\"text\\"
 -             value=\\"\\"
 +             value=\\"Brand New User Role\\"
@@ -37,13 +38,14 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
         </div>
         <div
           class=\\"rs-form-group\\"
-@@ -99,13 +101,14 @@
-          <div
-            class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -108,14 +110,15 @@
           >
             <input
+              aria-describedby=\\"description-help-text\\"
+              aria-labelledby=\\"description-control-label\\"
               class=\\"rs-input\\"
 +             disabled=\\"\\"
+              id=\\"description\\"
               name=\\"userRoles.panels.description\\"
               type=\\"text\\"
 -             value=\\"\\"
@@ -132,6 +134,8 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
       >
         <label
           class="rs-form-control-label"
+          for="name"
+          id="name-control-label"
         >
           userRoles.panels.name*
         </label>
@@ -139,8 +143,11 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="name-help-text"
+            aria-labelledby="name-control-label"
             class="rs-input"
             disabled=""
+            id="name"
             name="name"
             type="text"
             value="Role 1"
@@ -153,6 +160,8 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
       >
         <label
           class="rs-form-control-label"
+          for="description"
+          id="description-control-label"
         >
           userRoles.panels.description
         </label>
@@ -160,8 +169,11 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="description-help-text"
+            aria-labelledby="description-control-label"
             class="rs-input"
             disabled=""
+            id="description"
             name="userRoles.panels.description"
             type="text"
             value="Description for role 1"
@@ -349,6 +361,8 @@ exports[`User Role Edit Panel should render 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="name"
+          id="name-control-label"
         >
           userRoles.panels.name*
         </label>
@@ -356,7 +370,10 @@ exports[`User Role Edit Panel should render 1`] = `
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="name-help-text"
+            aria-labelledby="name-control-label"
             class="rs-input"
+            id="name"
             name="name"
             type="text"
             value=""
@@ -369,6 +386,8 @@ exports[`User Role Edit Panel should render 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="description"
+          id="description-control-label"
         >
           userRoles.panels.description
         </label>
@@ -376,7 +395,10 @@ exports[`User Role Edit Panel should render 1`] = `
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="description-help-text"
+            aria-labelledby="description-control-label"
             class="rs-input"
+            id="description"
             name="userRoles.panels.description"
             type="text"
             value=""
@@ -514,6 +536,8 @@ exports[`User Role Edit Panel should render with role 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="name"
+          id="name-control-label"
         >
           userRoles.panels.name*
         </label>
@@ -521,7 +545,10 @@ exports[`User Role Edit Panel should render with role 1`] = `
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="name-help-text"
+            aria-labelledby="name-control-label"
             class="rs-input"
+            id="name"
             name="name"
             type="text"
             value="Role 1"
@@ -534,6 +561,8 @@ exports[`User Role Edit Panel should render with role 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="description"
+          id="description-control-label"
         >
           userRoles.panels.description
         </label>
@@ -541,7 +570,10 @@ exports[`User Role Edit Panel should render with role 1`] = `
           class="rs-form-control rs-form-control-wrapper"
         >
           <input
+            aria-describedby="description-help-text"
+            aria-labelledby="description-control-label"
             class="rs-input"
+            id="description"
             name="userRoles.panels.description"
             type="text"
             value="Description for role 1"

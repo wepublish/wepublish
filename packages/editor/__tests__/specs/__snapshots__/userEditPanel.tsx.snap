@@ -21,26 +21,15 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
           userList.panels.create
           <span
             class=\\"rs-ripple-pond\\"
-@@ -86,10 +87,11 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -90,14 +91,15 @@
               >
                 <input
+                  aria-describedby=\\"firstName-help-text\\"
+                  aria-labelledby=\\"firstName-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.firstName\\"
-                  type=\\"text\\"
-                  value=\\"\\"
-                />
-              </div>
-@@ -106,13 +108,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
-              >
-                <input
-                  class=\\"rs-input\\"
-+                 disabled=\\"\\"
-                  name=\\"userList.panels.name\\"
+                  id=\\"firstName\\"
+                  name=\\"firstName\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"Testing Müller\\"
@@ -49,26 +38,44 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -126,10 +129,11 @@
+@@ -115,14 +117,15 @@
+              >
+                <input
+                  aria-describedby=\\"name-help-text\\"
+                  aria-labelledby=\\"name-control-label\\"
+                  class=\\"rs-input\\"
++                 disabled=\\"\\"
+                  id=\\"name\\"
+                  name=\\"name\\"
+                  type=\\"text\\"
+-                 value=\\"\\"
++                 value=\\"Testing Müller\\"
+                />
+              </div>
+            </div>
+            <div
+              class=\\"rs-form-group\\"
+@@ -136,10 +139,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.preferredName\\"
+                  name=\\"preferredName\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -146,13 +150,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -160,14 +164,15 @@
               >
                 <input
+                  aria-describedby=\\"email-help-text\\"
+                  aria-labelledby=\\"email-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.email\\"
+                  id=\\"email\\"
+                  name=\\"email\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"testing@mueller.com\\"
@@ -77,79 +84,79 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -166,10 +171,11 @@
+@@ -181,10 +186,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.company\\"
+                  name=\\"company\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -186,10 +192,11 @@
+@@ -201,10 +207,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.streetAddress\\"
+                  name=\\"streetAddress\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -206,10 +213,11 @@
+@@ -221,10 +228,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.streetAddress2\\"
+                  name=\\"streetAddress2\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -226,10 +234,11 @@
+@@ -241,10 +249,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.zipCode\\"
+                  name=\\"zipCode\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -246,10 +255,11 @@
+@@ -261,10 +270,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.city\\"
+                  name=\\"city\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -266,10 +276,11 @@
+@@ -281,10 +291,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.country\\"
+                  name=\\"country\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -282,18 +293,19 @@
+@@ -297,18 +308,19 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.active
@@ -171,14 +178,15 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                 />
                 <span
                   class=\\"rs-toggle-presentation\\"
-@@ -316,13 +328,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -335,14 +347,15 @@
               >
                 <input
+                  aria-describedby=\\"password-help-text\\"
+                  aria-labelledby=\\"password-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.password\\"
+                  id=\\"password\\"
+                  name=\\"password\\"
                   type=\\"password\\"
 -                 value=\\"\\"
 +                 value=\\"superSecret\\"
@@ -194,7 +202,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -332,11 +332,11 @@
+@@ -352,11 +352,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -207,7 +215,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -346,17 +346,54 @@
+@@ -366,17 +366,54 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -273,7 +281,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -346,11 +346,11 @@
+@@ -361,11 +361,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -286,7 +294,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -360,54 +360,17 @@
+@@ -375,54 +375,17 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -430,6 +438,8 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="firstName"
+              id="firstName-control-label"
             >
               userList.panels.firstName*
             </label>
@@ -437,7 +447,10 @@ exports[`User Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="firstName-help-text"
+                aria-labelledby="firstName-control-label"
                 class="rs-input"
+                id="firstName"
                 name="firstName"
                 type="text"
                 value=""
@@ -450,6 +463,8 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
               userList.panels.name*
             </label>
@@ -457,7 +472,10 @@ exports[`User Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
+                id="name"
                 name="name"
                 type="text"
                 value=""
@@ -490,6 +508,8 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="email"
+              id="email-control-label"
             >
               userList.panels.email*
             </label>
@@ -497,7 +517,10 @@ exports[`User Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="email-help-text"
+                aria-labelledby="email-control-label"
                 class="rs-input"
+                id="email"
                 name="email"
                 type="text"
                 value=""
@@ -660,6 +683,8 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="password"
+              id="password-control-label"
             >
               userList.panels.password*
             </label>
@@ -667,7 +692,10 @@ exports[`User Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="password-help-text"
+                aria-labelledby="password-control-label"
                 class="rs-input"
+                id="password"
                 name="password"
                 type="password"
                 value=""
@@ -814,6 +842,8 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="firstName"
+              id="firstName-control-label"
             >
               userList.panels.firstName*
             </label>
@@ -821,7 +851,10 @@ exports[`User Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="firstName-help-text"
+                aria-labelledby="firstName-control-label"
                 class="rs-input"
+                id="firstName"
                 name="firstName"
                 type="text"
                 value="Peter"
@@ -834,6 +867,8 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
               userList.panels.name*
             </label>
@@ -841,7 +876,10 @@ exports[`User Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
+                id="name"
                 name="name"
                 type="text"
                 value="Parker"
@@ -874,6 +912,8 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="email"
+              id="email-control-label"
             >
               userList.panels.email*
             </label>
@@ -881,7 +921,10 @@ exports[`User Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="email-help-text"
+                aria-labelledby="email-control-label"
                 class="rs-input"
+                id="email"
                 name="email"
                 type="text"
                 value="peter@parker.com"

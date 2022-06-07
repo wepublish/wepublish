@@ -1,5 +1,5 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {fireEvent, getByLabelText, render, screen} from '@testing-library/react'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
@@ -197,7 +197,7 @@ describe('User Edit Panel', () => {
       userRoleListDocumentQuery
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, container, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
@@ -205,15 +205,24 @@ describe('User Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.name"]')!, {
+    const firstNameInput = getByLabelText('userList.panels.firstName*')
+    const nameInput = getByLabelText('userList.panels.name*')
+    const emailInput = getByLabelText('userList.panels.email*')
+    const passwordInput = getByLabelText('userList.panels.password*')
+
+    fireEvent.change(firstNameInput!, {
       target: {value: user.name}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.email"]')!, {
+    fireEvent.change(nameInput!, {
+      target: {value: user.name}
+    })
+
+    fireEvent.change(emailInput!, {
       target: {value: user.email}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.password"]')!, {
+    fireEvent.change(passwordInput!, {
       target: {value: user.password}
     })
 

@@ -242,7 +242,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             fluid
             model={validationModel}
             formValue={{firstName: firstName, name: name, email: email, password: password}}>
-            <Form.Group>
+            <Form.Group controlId="firstName">
               <Form.ControlLabel>{t('userList.panels.firstName') + '*'}</Form.ControlLabel>
               <Form.Control
                 name="firstName"
@@ -253,7 +253,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="name">
               <Form.ControlLabel>{t('userList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control
                 name="name"
@@ -273,7 +273,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 onChange={(value: string) => setPreferredName(value)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="email">
               <Form.ControlLabel>{t('userList.panels.email') + '*'}</Form.ControlLabel>
               <Form.Control
                 name="email"
@@ -355,7 +355,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
             </Form.Group>
             {!id ? (
-              <Form.Group>
+              <Form.Group controlId="password">
                 <Form.ControlLabel>{t('userList.panels.password') + '*'}</Form.ControlLabel>
                 <Form.Control
                   type="password"
