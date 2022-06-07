@@ -235,7 +235,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Form
                     ref={authorLinkForm}
-                    fluid={true}
+                    fluid
                     model={authorLinkFormModel}
                     style={{display: 'flex', width: '100px'}}
                     className="form">

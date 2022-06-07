@@ -228,7 +228,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
       <Drawer.Body>
         <Panel>
           <Form
-            fluid={true}
+            fluid
             model={validationModel}
             ref={form}
             formValue={{name: name, currency: amountPerMonthMin}}>

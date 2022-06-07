@@ -142,6 +142,9 @@
       "react/display-name": [
         0
       ],
+      "react/jsx-boolean-value": [
+        1
+      ],
       "react/prop-types": [
         0
       ],

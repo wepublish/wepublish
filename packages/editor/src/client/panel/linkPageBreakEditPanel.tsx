@@ -50,7 +50,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
+        <Form fluid>
           <Form.Group>
             <Form.ControlLabel>{t('linkPageBreakEditPanel.style.label')}</Form.ControlLabel>
             <SelectPicker
