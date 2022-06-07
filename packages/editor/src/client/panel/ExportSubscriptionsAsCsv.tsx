@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {IconButton} from 'rsuite'
-import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
+import {SubscriptionFilter, useSubscriptionsAsCsvQuery} from '../api'
 import {FileDownload} from '@rsuite/icons'
 
 export interface ExportSubscriptionAsCsvProps {
@@ -11,18 +11,17 @@ export interface ExportSubscriptionAsCsvProps {
 
 export function ExportSubscriptionsAsCsv({filter, search}: ExportSubscriptionAsCsvProps) {
   const {t} = useTranslation()
-  const [getCsv, {data, loading}] = useSubscriptionsAsCsvLazyQuery({
+  const {data, loading, refetch} = useSubscriptionsAsCsvQuery({
     variables: {
       filter,
       search
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'no-cache'
   })
 
-  useEffect(() => {
-    getCsv()
-  }, [filter])
-
+  /**
+   * Get blob from string and download it as csv file.
+   */
   const downloadBlob = () => {
     const content = data?.subscriptionsAsCsv || ''
     const filename = `${new Date().getTime()}-wep-subscriptions.csv`
@@ -35,13 +34,21 @@ export function ExportSubscriptionsAsCsv({filter, search}: ExportSubscriptionAsC
     pom.click()
   }
 
+  /**
+   * Initialize download by getting data from api and start the blob download
+   */
+  async function initDownload(): Promise<void> {
+    await refetch()
+    downloadBlob()
+  }
+
   return (
     <>
       <IconButton
         appearance="primary"
         icon={<FileDownload />}
         disabled={loading}
-        onClick={() => downloadBlob()}>
+        onClick={() => initDownload()}>
         {t('subscriptionList.overview.downloadCsv')}
       </IconButton>
     </>
