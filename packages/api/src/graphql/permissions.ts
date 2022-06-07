@@ -466,7 +466,7 @@ export const CanDeleteSubscription: Permission = {
 }
 
 export const CanGetSettings: Permission = {
-  id: 'CAN_GET__SETTINGS',
+  id: 'CAN_GET_SETTINGS',
   description: 'Allows to get all settings',
   deprecated: false
 }

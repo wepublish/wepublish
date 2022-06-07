@@ -157,13 +157,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (commentLength > MAX_COMMENT_LENGTH) {
           throw new CommentLengthError()
         }
-        const guestCanCommentSetting = await dbAdapter.setting.getSetting(
-          SettingName.ALLOW_GUEST_COMMENTING
-        )
 
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
+          const guestCanCommentSetting = await dbAdapter.setting.getSetting(
+            SettingName.ALLOW_GUEST_COMMENTING
+          )
           if (!guestCanCommentSetting?.value) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()

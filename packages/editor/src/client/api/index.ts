@@ -20,7 +20,7 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
-  value: any;
+  Value: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -1722,12 +1722,12 @@ export type Setting = {
   __typename?: 'Setting';
   id: Scalars['ID'];
   name: SettingName;
-  value?: Maybe<Scalars['value']>;
+  value?: Maybe<Scalars['Value']>;
   settingRestriction?: Maybe<SettingRestriction>;
 };
 
 export type SettingInput = {
-  value?: Maybe<Scalars['value']>;
+  value?: Maybe<Scalars['Value']>;
 };
 
 export enum SettingName {

@@ -884,7 +884,7 @@ export const Migrations: Migration[] = [
       const maxCommentCreate: CreateSettingArgs<number> = {
         name: SettingName.MAXIMUM_COMMENT_LENGTH,
         value: 500,
-        settingRestriction: {maxValue: 600}
+        settingRestriction: {maxValue: 600, minValue: 0}
       }
       const allowAnonCommenting: CreateSettingArgs<boolean> = {
         name: SettingName.ALLOW_GUEST_COMMENTING,

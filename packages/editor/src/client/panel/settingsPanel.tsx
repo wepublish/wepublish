@@ -10,11 +10,6 @@ export type SettingInputProps = {
 }
 
 export function SettingsPanel() {
-  /*
-   // check permissions
-   const {data} = useMeQuery()
-   console.log('data', data?.me?.roles)
- */
   const {t} = useTranslation()
 
   const {data: settingListData, refetch, error: err} = useSettingListQuery()

@@ -1169,18 +1169,29 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
       async resolve(root, {id, input}, {authenticate, dbAdapter, loaders}) {
         const fullSetting = await loaders.settingsByID.load(id)
+
+        if (!fullSetting) {
+          throw new NotFound('setting', id)
+        }
+
         const restrictions = fullSetting?.settingRestriction
 
         const {roles} = authenticate()
         authorise(CanUpdateSetting, roles)
 
-        if (
-          !restrictions ||
-          ((!restrictions.allowedValues || restrictions.allowedValues.includes(input.value)) &&
-            (!restrictions.inputLength || restrictions.inputLength >= input.value.length) &&
-            (!restrictions.maxValue || restrictions.maxValue >= input.value) &&
-            (!restrictions.minValue || restrictions.minValue <= input.value))
-        ) {
+        const allowedValues = restrictions?.allowedValues
+          ? restrictions?.allowedValues?.includes(input)
+          : true
+        const inputLength =
+          restrictions?.inputLength !== undefined
+            ? restrictions.inputLength >= input.value.length
+            : true
+        const maxValue =
+          restrictions?.maxValue !== undefined ? restrictions.maxValue >= input.value : true
+        const minValue =
+          restrictions?.minValue !== undefined ? restrictions.minValue <= input.value : true
+
+        if (allowedValues && inputLength && maxValue && minValue) {
           return dbAdapter.setting.updateSetting({
             id,
             input: input

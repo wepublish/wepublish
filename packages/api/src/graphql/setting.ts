@@ -14,9 +14,9 @@ import {Context} from '../context'
 import {Setting, SettingName} from '../db/setting'
 
 export const GraphQLSettingValueType = new GraphQLScalarType({
-  name: 'value',
-  serialize(value) {
-    return value
+  name: 'Value',
+  serialize(Value) {
+    return Value
   }
 })
 
