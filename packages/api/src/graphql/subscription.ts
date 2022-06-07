@@ -130,6 +130,8 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Con
 export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
   name: 'SubscriptionFilter',
   fields: {
+    startsAt: {type: GraphQLDateFilter},
+    paidUntil: {type: GraphQLDateFilter},
     startsAtFrom: {type: GraphQLDateFilter},
     startsAtTo: {type: GraphQLDateFilter},
     paidUntilFrom: {type: GraphQLDateFilter},

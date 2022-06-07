@@ -1772,6 +1772,8 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
   startsAtFrom?: Maybe<DateFilter>;
   startsAtTo?: Maybe<DateFilter>;
   paidUntilFrom?: Maybe<DateFilter>;
