@@ -1,4 +1,4 @@
-import {SortOrder, InputCursor, Limit, ConnectionResult} from './common'
+import {InputCursor, Limit, SortOrder} from './common'
 
 export interface FocalPoint {
   readonly x: number
@@ -20,24 +20,24 @@ export enum ImageOutput {
 }
 
 export interface ImageTransformation {
-  readonly width?: string
-  readonly height?: string
-  readonly rotation?: ImageRotation
-  readonly quality?: number
-  readonly output?: ImageOutput
+  readonly width?: string | null
+  readonly height?: string | null
+  readonly rotation?: ImageRotation | null
+  readonly quality?: number | null
+  readonly output?: ImageOutput | null
 }
 
 export interface EditableImageComponents {
-  readonly filename?: string
-  readonly title?: string
-  readonly description?: string
+  readonly filename?: string | null
+  readonly title?: string | null
+  readonly description?: string | null
   readonly tags: string[]
 
-  readonly source?: string
-  readonly link?: string
-  readonly license?: string
+  readonly source?: string | null
+  readonly link?: string | null
+  readonly license?: string | null
 
-  readonly focalPoint?: FocalPoint
+  readonly focalPoint?: FocalPoint | null
 }
 
 export interface StaticImageComponents {
@@ -54,7 +54,7 @@ export interface Image extends EditableImageComponents, StaticImageComponents {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly transformURL?: string
+  readonly transformURL?: string | null
 }
 
 export type OptionalImage = Image | null
@@ -100,6 +100,4 @@ export interface DBImageAdapter {
   createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
   deleteImage(args: DeleteImageArgs): Promise<boolean | null>
-  getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
-  getImages(args: GetImagesArgs): Promise<ConnectionResult<Image>>
 }

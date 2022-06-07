@@ -75,7 +75,7 @@ export interface DataLoaderContext {
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
 
-  readonly images: DataLoader<string, OptionalImage>
+  readonly images: DataLoader<string, Image | null>
 
   readonly articles: DataLoader<string, Article | null>
   readonly publicArticles: DataLoader<string, OptionalPublicArticle>
@@ -274,7 +274,19 @@ export async function contextFromRequest(
       )
     ),
 
-    images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
+    images: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.image.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
     articles: new DataLoader(async ids =>
       createOptionalsArray(
