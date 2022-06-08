@@ -291,7 +291,7 @@ export type CommentConnection = {
 }
 
 export type CommentFilter = {
-  state?: Maybe<CommentState>
+  states?: Maybe<Array<CommentState>>
 }
 
 export enum CommentItemType {
@@ -1388,10 +1388,8 @@ export type QueryUserArgs = {
 }
 
 export type QueryUsersArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
@@ -1403,10 +1401,9 @@ export type QueryUserRoleArgs = {
 }
 
 export type QueryUserRolesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserRoleFilter>
   sort?: Maybe<UserRoleSort>
   order?: Maybe<SortOrder>
@@ -1423,10 +1420,8 @@ export type QueryAuthorArgs = {
 }
 
 export type QueryAuthorsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<AuthorFilter>
   sort?: Maybe<AuthorSort>
@@ -1438,10 +1433,8 @@ export type QueryImageArgs = {
 }
 
 export type QueryImagesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
   sort?: Maybe<ImageSort>
@@ -1449,10 +1442,8 @@ export type QueryImagesArgs = {
 }
 
 export type QueryCommentsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<CommentFilter>
   sort?: Maybe<CommentSort>
@@ -1464,10 +1455,8 @@ export type QueryArticleArgs = {
 }
 
 export type QueryArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
@@ -1480,18 +1469,17 @@ export type QueryPeerArticleArgs = {
 }
 
 export type QueryPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
-  last?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
 }
 
 export type QueryFilterByPeerPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
@@ -1508,10 +1496,8 @@ export type QueryPageArgs = {
 }
 
 export type QueryPagesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   filter?: Maybe<PageFilter>
   skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
@@ -1529,10 +1515,9 @@ export type QueryMemberPlanArgs = {
 }
 
 export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<MemberPlanFilter>
   sort?: Maybe<MemberPlanSort>
   order?: Maybe<SortOrder>
@@ -1547,10 +1532,9 @@ export type QueryInvoiceArgs = {
 }
 
 export type QueryInvoicesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<InvoiceFilter>
   sort?: Maybe<InvoiceSort>
   order?: Maybe<SortOrder>
@@ -1561,10 +1545,9 @@ export type QueryPaymentArgs = {
 }
 
 export type QueryPaymentsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<PaymentFilter>
   sort?: Maybe<PaymentSort>
   order?: Maybe<SortOrder>
@@ -1739,11 +1722,11 @@ export type User = {
   name: Scalars['String']
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
-  firstName?: Maybe<Scalars['String']>
+  takeName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
-  lastLogin?: Maybe<Scalars['DateTime']>
+  skipLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
   roles: Array<UserRole>
   subscription?: Maybe<UserSubscription>
@@ -1787,7 +1770,7 @@ export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
-  firstName?: Maybe<Scalars['String']>
+  takeName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']
@@ -1946,8 +1929,8 @@ export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type ArticleListQuery = {__typename?: 'Query'} & {
@@ -1962,8 +1945,8 @@ export type ArticleListQuery = {__typename?: 'Query'} & {
 
 export type PeerArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type PeerArticleListQuery = {__typename?: 'Query'} & {
@@ -2097,10 +2080,9 @@ export type FullAuthorFragment = {__typename?: 'Author'} & Pick<Author, 'slug' |
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type AuthorListQuery = {__typename?: 'Query'} & {
@@ -2326,10 +2308,9 @@ export type FullImageFragment = {__typename?: 'Image'} & Pick<
 
 export type ImageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type ImageListQuery = {__typename?: 'Query'} & {
@@ -2485,8 +2466,8 @@ export type PageRefFragment = {__typename?: 'Page'} & Pick<
 
 export type PageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type PageListQuery = {__typename?: 'Query'} & {
@@ -2666,10 +2647,9 @@ export type FullUserFragment = {__typename?: 'User'} & Pick<
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type UserListQuery = {__typename?: 'Query'} & {
@@ -2762,10 +2742,9 @@ export type FullUserRoleFragment = {__typename?: 'UserRole'} & Pick<
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type UserRoleListQuery = {__typename?: 'Query'} & {
@@ -3248,8 +3227,8 @@ export const FullUser = gql`
   ${FullUserRole}
 `
 export const ArticleList = gql`
-  query ArticleList($filter: String, $after: ID, $first: Int) {
-    articles(first: $first, after: $after, filter: {title: $filter}) {
+  query ArticleList($filter: String, $cursor: ID, $take: Int) {
+    articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...ArticleRef
       }
@@ -3265,8 +3244,8 @@ export const ArticleList = gql`
   ${ArticleRef}
 `
 export const PeerArticleList = gql`
-  query PeerArticleList($filter: String, $after: ID, $first: Int) {
-    peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+  query PeerArticleList($filter: String, $cursor: ID, $take: Int) {
+    peerArticles(take: $take, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         peer {
           ...PeerWithProfile
@@ -3385,8 +3364,8 @@ export const Article = gql`
   ${FullBlock}
 `
 export const AuthorList = gql`
-  query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullAuthor
       }
@@ -3431,8 +3410,8 @@ export const DeleteAuthor = gql`
   }
 `
 export const ImageList = gql`
-  query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...ImageRef
       }
@@ -3513,8 +3492,8 @@ export const DeleteNavigation = gql`
   }
 `
 export const PageList = gql`
-  query PageList($filter: String, $after: ID, $first: Int) {
-    pages(first: $first, after: $after, filter: {title: $filter}) {
+  query PageList($filter: String, $cursor: ID, $take: Int) {
+    pages(take: $take, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...PageRef
       }
@@ -3660,8 +3639,8 @@ export const DeletePeer = gql`
   }
 `
 export const UserList = gql`
-  query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullUser
       }
@@ -3742,8 +3721,8 @@ export const CreateSessionWithJwt = gql`
   }
 `
 export const UserRoleList = gql`
-  query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullUserRole
       }
