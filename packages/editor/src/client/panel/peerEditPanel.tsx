@@ -63,7 +63,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     } catch (error) {
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
-          {error.message}
+          {(error as Error).message}
         </Message>
       )
     }

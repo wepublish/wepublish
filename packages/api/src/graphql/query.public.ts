@@ -61,27 +61,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       description: 'This query returns the peer profile.',
-      async resolve(root, args, {hostURL, websiteURL, dbAdapter}) {
-        return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
-      }
+      resolve: (root, args, {hostURL, websiteURL, prisma: {peerProfile}}) =>
+        getPublicPeerProfile(hostURL, websiteURL, peerProfile)
     },
 
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the peer profile.',
-      async resolve(root, {id, slug}, {loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        const peer = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
-
-        if (peer?.isDisabled) {
-          throw new DisabledPeerError()
-        }
-        return peer
-      }
+      resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
+        getPeerByIdOrSlug(id, slug, peer, peerBySlug)
     },
 
     // Navigation

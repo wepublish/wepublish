@@ -88,8 +88,8 @@ export interface DataLoaderContext {
 
   readonly mailLogsByID: DataLoader<string, OptionalMailLog>
 
-  readonly peer: DataLoader<string, OptionalPeer>
-  readonly peerBySlug: DataLoader<string, OptionalPeer>
+  readonly peer: DataLoader<string, Peer | null>
+  readonly peerBySlug: DataLoader<string, Peer | null>
 
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
@@ -241,7 +241,17 @@ export async function contextFromRequest(
     : false
 
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
-    dbAdapter.peer.getPeersByID(ids)
+    createOptionalsArray(
+      ids as string[],
+      await prisma.peer.findMany({
+        where: {
+          id: {
+            in: ids as string[]
+          }
+        }
+      }),
+      'id'
+    )
   )
 
   const loaders: DataLoaderContext = {
@@ -444,8 +454,18 @@ export async function contextFromRequest(
     mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
 
     peer: peerDataLoader,
-    peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
-      dbAdapter.peer.getPeersBySlug(slugs)
+    peerBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.peer.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
     ),
 
     peerSchema: new DataLoader(async ids => {

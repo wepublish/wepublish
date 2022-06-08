@@ -2,13 +2,13 @@ import {RichTextNode} from '../graphql/richText'
 
 export interface PeerProfile {
   name: string
-  logoID?: string
+  logoID?: string | null
   themeColor: string
   themeFontColor: string
   callToActionText: RichTextNode[]
   callToActionURL: string
-  callToActionImageID?: string
-  callToActionImageURL?: string
+  callToActionImageID?: string | null
+  callToActionImageURL?: string | null
 }
 
 export type ResolvedPeerProfile = unknown
@@ -49,12 +49,8 @@ export interface UpdatePeerInput extends Partial<BasePeer> {
 }
 
 export interface DBPeerAdapter {
-  getPeerProfile(): Promise<PeerProfile>
   updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile>
   createPeer(input: CreatePeerInput): Promise<Peer>
   updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
   deletePeer(id: string): Promise<string | null>
-  getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]>
-  getPeersBySlug(ids: readonly string[]): Promise<OptionalPeer[]>
-  getPeers(): Promise<Peer[]>
 }

@@ -129,68 +129,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         hostURL: {type: GraphQLNonNull(GraphQLString)},
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {hostURL, token}, {authenticate}, info) {
-        const {roles} = authenticate()
-        authorise(CanCreatePeer, roles)
-        const link = new URL('/admin', hostURL)
-        const fetcher = await createFetcher(link.toString(), token)
-        const schema = await introspectSchema(fetcher)
-        const remoteExecutableSchema = await makeRemoteExecutableSchema({
-          schema,
-          fetcher
-        })
-        const remoteAnswer = await delegateToSchema({
-          info,
-          fieldName: 'peerProfile',
-          args: {},
-          schema: remoteExecutableSchema,
-          transforms: []
-        })
-
-        if (remoteAnswer?.extensions?.code === 'UNAUTHENTICATED') {
-          // check for unauthenticated error and throw more specific error.
-          // otherwise client doesn't know who (own or remote api) threw the error
-          throw new PeerTokenInvalidError(link.toString())
-        } else {
-          return await markResultAsProxied(remoteAnswer)
-        }
-      }
+      resolve: (root, {hostURL, token}, {authenticate}, info) =>
+        getRemotePeerProfile(hostURL, token, authenticate, info)
     },
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      async resolve(root, args, {authenticate, hostURL, websiteURL, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetPeerProfile, roles)
-        return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
-      }
+      resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {peerProfile}}) =>
+        getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile)
     },
 
     peers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
-      resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetPeers, roles)
-
-        return dbAdapter.peer.getPeers()
-      }
+      resolve: (root, _, {authenticate, prisma: {peer}}) => getPeers(authenticate, peer)
     },
 
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetPeer, roles)
-
-        const peer = await loaders.peer.load(id)
-
-        if (peer?.isDisabled) {
-          throw new DisabledPeerError()
-        }
-
-        return peer
-      }
+      resolve: (root, {id}, {authenticate, loaders: {peer}}) => getPeerById(id, authenticate, peer)
     },
 
     // User
