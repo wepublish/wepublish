@@ -156,7 +156,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if (!article && slug) {
           article = await dbAdapter.article.getPublishedArticleBySlug(slug)
         }
-
         if (!article && token) {
           try {
             const articleId = verifyJWT(token)
@@ -224,7 +223,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if ((peerID == null && peerSlug == null) || (peerID != null && peerSlug != null)) {
           throw new UserInputError('You must provide either `peerID` or `peerSlug`.')
         }
-
         if (peerSlug) {
           const peer = await loaders.peerBySlug.load(peerSlug)
 

@@ -30,7 +30,12 @@ import {
   Message,
   Pagination
 } from 'rsuite'
-import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  StateColor,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
@@ -297,6 +302,13 @@ export function ArticleList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.articles.totalCount ?? 0}
           activePage={page}

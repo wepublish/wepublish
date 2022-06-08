@@ -75,9 +75,10 @@ export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
 export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
   name: 'UpdatePeerInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLString},
+    slug: {type: GraphQLString},
+    hostURL: {type: GraphQLString},
+    isDisabled: {type: GraphQLBoolean},
     token: {type: GraphQLString}
   }
 })

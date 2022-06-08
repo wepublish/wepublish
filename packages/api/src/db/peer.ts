@@ -44,7 +44,7 @@ export interface CreatePeerInput extends BasePeer {
   token: string
 }
 
-export interface UpdatePeerInput extends BasePeer {
+export interface UpdatePeerInput extends Partial<BasePeer> {
   token?: string
 }
 

@@ -203,6 +203,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetPeers, roles)
+
         return dbAdapter.peer.getPeers()
       }
     },
@@ -636,7 +637,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const canGetArticle = isAuthorised(CanGetArticle, roles)
         const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
-
         if (canGetArticle || canGetSharedArticle) {
           const article = await loaders.articles.load(id)
 
@@ -698,7 +698,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
 
         authorise(CanGetPeerArticle, roles)
-
         return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
       }
     },
