@@ -29,7 +29,12 @@ import {
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  StateColor,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
@@ -284,6 +289,13 @@ export function PageList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.pages.totalCount ?? 0}
           activePage={page}

@@ -22,11 +22,14 @@ const Calendar = {
 
 export default {
   Pagination: {
-    more: 'Mehr',
-    prev: 'Vorherige',
-    next: 'Nächste',
     first: 'Erste',
-    last: 'Letzte'
+    last: 'Letzte',
+    limit: '{0} / Seite',
+    more: 'Mehr',
+    next: 'Nächste',
+    prev: 'Vorherige',
+    skip: 'Gehe zu {0}',
+    total: 'Total: {0}'
   },
   Table: {
     emptyMessage: 'Keine Daten gefunden',

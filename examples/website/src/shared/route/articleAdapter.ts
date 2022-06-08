@@ -6,6 +6,7 @@ export function peerAdapter(peer: any): Peer {
   return {
     id: peer.id,
     slug: peer.slug,
+    isDisabled: peer.isDisabled,
     name: peer.profile.name,
     logoURL: peer.profile.logo?.squareURL,
     websiteURL: peer.profile.websiteURL,

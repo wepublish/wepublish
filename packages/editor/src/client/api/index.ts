@@ -1785,7 +1785,6 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>;
   paymentPeriodicity?: Maybe<PaymentPeriodicity>;
   userHasAddress?: Maybe<Scalars['Boolean']>;
-  userID?: Maybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {

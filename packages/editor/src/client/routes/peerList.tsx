@@ -20,6 +20,7 @@ import {
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
+  useUpdatePeerMutation,
   usePeerListQuery,
   usePeerProfileQuery
 } from '../api'
@@ -39,6 +40,7 @@ import {
   useRoute,
   useRouteDispatch
 } from '../route'
+import {addOrUpdateOneInArray} from '../utility'
 
 const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
@@ -74,6 +76,7 @@ export function PeerList() {
   })
 
   const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
+  const [updatePeer, {loading: isUpdating}] = useUpdatePeerMutation()
 
   const {t} = useTranslation()
 
@@ -106,14 +109,13 @@ export function PeerList() {
   }, [current])
 
   const peers = peerListData?.peers?.map((peer, index) => {
-    const {id, name, profile, hostURL} = peer
-
+    const {id, name, profile, hostURL, isDisabled} = peer
     return (
       <ListItemLink
         key={name}
         index={index}
-        route={PeerEditRoute.create({id})}
-        style={{cursor: 'pointer'}}>
+        route={isDisabled ? undefined : PeerEditRoute.create({id})}
+        style={{cursor: isDisabled ? 'default' : 'pointer'}}>
         <FlexboxGrid>
           <FlexboxGrid.Item
             colspan={2}
@@ -126,12 +128,42 @@ export function PeerList() {
               alt={profile?.name?.substr(0, 2)}
             />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={21}>
+          <FlexboxGrid.Item colspan={18}>
             <h5>{name}</h5>
             <p>
               {profile && `${profile.name} - `}
               {hostURL}
             </p>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={3}>
+            <Button
+              appearance="primary"
+              disabled={isUpdating}
+              onClick={async e => {
+                e.preventDefault()
+                await updatePeer({
+                  variables: {id, input: {isDisabled: !isDisabled}},
+                  update: cache => {
+                    const query = cache.readQuery<PeerListQuery>({
+                      query: PeerListDocument
+                    })
+
+                    if (!query) return
+
+                    cache.writeQuery({
+                      query: PeerListDocument,
+                      data: {
+                        peers: addOrUpdateOneInArray(query.peers, {
+                          ...peer,
+                          isDisabled: !isDisabled
+                        })
+                      }
+                    })
+                  }
+                })
+              }}>
+              {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
+            </Button>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
             <IconButtonTooltip caption={t('peerList.overview.delete')}>
