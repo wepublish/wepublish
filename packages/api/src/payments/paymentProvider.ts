@@ -164,7 +164,8 @@ export abstract class BasePaymentProvider implements PaymentProvider {
    */
   private async updatePaymentProvider(
     dbAdapter: DBAdapter,
-    subscription: OptionalSubscription,
+    userClient: PrismaClient['user'],
+    subscription: Subscription,
     customerID: string
   ) {
     if (!subscription) {
@@ -176,13 +177,21 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     if (tempUser) {
       user = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
     } else {
-      user = await dbAdapter.user.getUserByID(subscription.userID)
+      user = await userClient.findUnique({
+        where: {
+          id: subscription.userID
+        }
+      })
     }
-    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
+
+    if (!user) {
+      throw new Error(`User with ID ${subscription.userID} does not exist`)
+    }
 
     const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-      ppc => ppc.paymentProviderID !== this.id
+      ({paymentProviderID}) => paymentProviderID !== this.id
     )
+
     paymentProviderCustomers.push({
       paymentProviderID: this.id,
       customerID

@@ -1,45 +1,30 @@
-import bcrypt from 'bcrypt'
-
 import {
-  ConnectionResult,
   CreateUserArgs,
   DBUserAdapter,
   DeleteUserArgs,
   DeleteUserOAuth2AccountArgs,
-  GetUserByOAuth2AccountArgs,
   GetUserForCredentialsArgs,
-  GetUsersArgs,
-  InputCursorType,
-  LimitType,
   OptionalUser,
   ResetUserPasswordArgs,
-  SortOrder,
   TempUser,
   UpdatePaymentProviderCustomerArgs,
   UpdateUserArgs,
-  User,
   UserOAuth2Account,
-  UserOAuth2AccountArgs,
-  UserSort
+  UserOAuth2AccountArgs
 } from '@wepublish/api'
-
-import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
-
-import {CollectionName, DBUser} from './schema'
-import {escapeRegExp, MongoErrorCode} from '../utility'
-import {MaxResultsPerPage} from './defaults'
-import {Cursor} from './cursor'
+import bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
+import {Collection, Db, MongoError} from 'mongodb'
+import {MongoErrorCode} from '../utility'
+import {CollectionName, DBUser} from './schema'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
   private bcryptHashCostFactor: number
-  private locale: string
 
-  constructor(db: Db, bcryptHashCostFactor: number, locale: string) {
+  constructor(db: Db, bcryptHashCostFactor: number) {
     this.users = db.collection(CollectionName.Users)
     this.bcryptHashCostFactor = bcryptHashCostFactor
-    this.locale = locale
   }
 
   async createUser({input, password}: CreateUserArgs): Promise<OptionalUser> {
@@ -171,29 +156,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     return this.getUserByID(outID)
   }
 
-  async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
-    const users = await this.users.find({_id: {$in: ids}}).toArray()
-    return users.map(user => {
-      return {
-        id: user._id,
-        createdAt: user.createdAt,
-        modifiedAt: user.modifiedAt,
-        email: user.email,
-        emailVerifiedAt: user.emailVerifiedAt,
-        oauth2Accounts: user.oauth2Accounts,
-        name: user.name,
-        firstName: user.firstName,
-        preferredName: user.preferredName,
-        address: user.address,
-        active: user.active,
-        lastLogin: user.lastLogin,
-        properties: user.properties,
-        roleIDs: user.roleIDs,
-        paymentProviderCustomers: user.paymentProviderCustomers
-      }
-    })
-  }
-
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
 
@@ -242,142 +204,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       }
     } else {
       return null
-    }
-  }
-
-  async getUserByOAuth2Account({
-    provider,
-    providerAccountId
-  }: GetUserByOAuth2AccountArgs): Promise<OptionalUser> {
-    const user = await this.users.findOne({
-      oauth2Accounts: {$elemMatch: {provider, providerAccountId}}
-    })
-    if (user) {
-      return {
-        id: user._id,
-        createdAt: user.createdAt,
-        modifiedAt: user.modifiedAt,
-        email: user.email,
-        emailVerifiedAt: user.emailVerifiedAt,
-        oauth2Accounts: user.oauth2Accounts,
-        name: user.name,
-        firstName: user.firstName,
-        preferredName: user.preferredName,
-        address: user.address,
-        active: user.active,
-        lastLogin: user.lastLogin,
-        properties: user.properties,
-        roleIDs: user.roleIDs,
-        paymentProviderCustomers: user.paymentProviderCustomers
-      }
-    } else {
-      return null
-    }
-  }
-
-  async getUsers({
-    filter,
-    sort,
-    order,
-    cursor,
-    limit
-  }: GetUsersArgs): Promise<ConnectionResult<User>> {
-    const limitCount = Math.min(limit.count, MaxResultsPerPage)
-    const sortDirection = limit.type === LimitType.First ? order : -order
-
-    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
-
-    const expr =
-      order === SortOrder.Ascending
-        ? cursor.type === InputCursorType.After
-          ? '$gt'
-          : '$lt'
-        : cursor.type === InputCursorType.After
-        ? '$lt'
-        : '$gt'
-
-    const sortField = userSortFieldForSort(sort)
-    const cursorFilter = cursorData
-      ? {
-          $or: [
-            {[sortField]: {[expr]: cursorData.date}},
-            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
-          ]
-        }
-      : {}
-
-    const textFilter: FilterQuery<any> = {}
-    if (filter && JSON.stringify(filter) !== '{}') {
-      textFilter.$and = []
-    }
-    // TODO: Rename to search
-    if (filter?.name !== undefined) {
-      textFilter.$and?.push({name: {$regex: escapeRegExp(filter.name), $options: 'i'}})
-    }
-
-    if (filter?.text !== undefined) {
-      textFilter.$and?.push({
-        $or: [
-          {name: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {firstName: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {email: {$regex: escapeRegExp(filter.text), $options: 'im'}}
-        ]
-      })
-    }
-
-    const [totalCount, users] = await Promise.all([
-      this.users.countDocuments(textFilter, {
-        collation: {locale: this.locale, strength: 2}
-      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
-
-      this.users
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
-        .match(textFilter)
-        .match(cursorFilter)
-        .sort({[sortField]: sortDirection, _id: sortDirection})
-        .skip(limit.skip ?? 0)
-        .limit(limitCount + 1)
-        .toArray()
-    ])
-
-    const nodes = users.slice(0, limitCount)
-
-    if (limit.type === LimitType.Last) {
-      nodes.reverse()
-    }
-
-    const hasNextPage =
-      limit.type === LimitType.First
-        ? users.length > limitCount
-        : cursor.type === InputCursorType.Before
-
-    const hasPreviousPage =
-      limit.type === LimitType.Last
-        ? users.length > limitCount
-        : cursor.type === InputCursorType.After
-
-    const firstUser = nodes[0]
-    const lastUser = nodes[nodes.length - 1]
-
-    const startCursor = firstUser
-      ? new Cursor(firstUser._id, userDateForSort(firstUser, sort)).toString()
-      : null
-
-    const endCursor = lastUser
-      ? new Cursor(lastUser._id, userDateForSort(lastUser, sort)).toString()
-      : null
-
-    return {
-      nodes: nodes.map<User>(({_id: id, ...user}) => ({id, ...user})),
-
-      pageInfo: {
-        startCursor,
-        endCursor,
-        hasNextPage,
-        hasPreviousPage
-      },
-
-      totalCount
     }
   }
 
@@ -451,37 +277,5 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
     const {_id: outID} = value
     return this.getUserByID(outID)
-  }
-}
-
-function userSortFieldForSort(sort: UserSort) {
-  switch (sort) {
-    case UserSort.CreatedAt:
-      return 'createdAt'
-
-    case UserSort.ModifiedAt:
-      return 'modifiedAt'
-
-    case UserSort.Name:
-      return 'name'
-
-    case UserSort.FirstName:
-      return 'firstName'
-  }
-}
-
-function userDateForSort(user: DBUser, sort: UserSort): Date {
-  switch (sort) {
-    case UserSort.CreatedAt:
-      return user.createdAt
-
-    case UserSort.ModifiedAt:
-      return user.modifiedAt
-
-    case UserSort.Name:
-      return user.createdAt
-
-    case UserSort.FirstName:
-      return user.createdAt
   }
 }

@@ -264,45 +264,21 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     user: {
       type: GraphQLUser,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetUser, roles)
-
-        if (id == null) {
-          throw new UserInputError('You must provide `id`')
-        }
-        return dbAdapter.user.getUserByID(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {user}}) => getUserById(id, authenticate, user)
     },
 
     users: {
       type: GraphQLNonNull(GraphQLUserConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLUserFilter},
         sort: {type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      async resolve(
-        root,
-        {filter, sort, order, after, before, first, skip, last},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanGetUsers, roles)
-
-        return await dbAdapter.user.getUsers({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last, skip)
-        })
-      }
+      resolve: (root, {filter, sort, order, take, skip, cursor}, {authenticate, prisma: {user}}) =>
+        getAdminUsers(filter, sort, order, cursor, skip, take, authenticate, user)
     },
 
     // Subscriptions
@@ -400,40 +376,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     userRole: {
       type: GraphQLUserRole,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetUserRole, roles)
-
-        if (id == null) {
-          throw new UserInputError('You must provide `id`')
-        }
-        return dbAdapter.userRole.getUserRoleByID(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders}) =>
+        getUserRoleById(id, authenticate, loaders.userRolesByID)
     },
 
     userRoles: {
       type: GraphQLNonNull(GraphQLUserRoleConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLUserRoleFilter},
         sort: {type: GraphQLUserRoleSort, defaultValue: UserRoleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetUserRoles, roles)
-
-        return dbAdapter.userRole.getUserRoles({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (
+        root,
+        {filter, sort, order, take, skip, cursor},
+        {authenticate, prisma: {userRole}}
+      ) => getAdminUserRoles(filter, sort, order, cursor, skip, take, authenticate, userRole)
     },
 
     // Permissions

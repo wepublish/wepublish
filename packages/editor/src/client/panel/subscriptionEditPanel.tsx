@@ -144,7 +144,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     refetch: refetchUsers
   } = useUserListQuery({
     variables: {
-      first: 100,
+      take: 100,
       filter: userSearch
     },
     fetchPolicy: 'network-only'

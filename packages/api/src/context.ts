@@ -84,7 +84,7 @@ export interface DataLoaderContext {
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
-  readonly userRolesByID: DataLoader<string, OptionalUserRole>
+  readonly userRolesByID: DataLoader<string, UserRole | null>
 
   readonly mailLogsByID: DataLoader<string, OptionalMailLog>
 
@@ -333,7 +333,19 @@ export async function contextFromRequest(
     publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
     publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
-    userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+    userRolesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.userRole.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
     mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
 

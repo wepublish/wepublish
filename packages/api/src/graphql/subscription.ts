@@ -50,7 +50,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
       type: GraphQLUser,
-      async resolve({userID}, args, {dbAdapter}) {
+      async resolve({userID}, args, {dbAdapter, prisma}) {
         if (isTempUser(userID)) {
           const tempUser = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(userID))
           if (!tempUser) throw new NotFound('TempUser', userID)
@@ -70,7 +70,11 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
             roleIDs: []
           }
         } else {
-          return dbAdapter.user.getUserByID(userID)
+          return prisma.user.findUnique({
+            where: {
+              id: userID
+            }
+          })
         }
       }
     },
