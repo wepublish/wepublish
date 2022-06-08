@@ -16,7 +16,7 @@ import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
-import {Subscription} from './db/subscription'
+import {OptionalSubscription, Subscription} from './db/subscription'
 import {isTempUser, removePrefixTempUser} from './utility'
 
 interface ModelEvents<T> {
@@ -187,8 +187,16 @@ invoiceModelEvents.on('update', async (context, model) => {
   }
   // by default a new member subscription mail will be sent.
   let mailTypeToSend = SendMailType.NewMemberSubscription
-  let subscription = await context.dbAdapter.subscription.getSubscriptionByID(model.subscriptionID)
-  if (!subscription) return
+  let subscription: OptionalSubscription = (await context.prisma.subscription.findUnique({
+    where: {
+      id: model.subscriptionID
+    }
+  })) as any
+
+  if (!subscription) {
+    return
+  }
+
   const {periods} = subscription
 
   const period = periods.find(period => period.invoiceID === model.id)

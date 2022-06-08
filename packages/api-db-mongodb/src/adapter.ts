@@ -103,7 +103,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
     this.userRole = new MongoDBUserRoleAdapter(db)
     this.tempUser = new MongoDBTempUserAdapter(db)
-    this.subscription = new MongoDBSubscriptionAdapter(db, locale)
+    this.subscription = new MongoDBSubscriptionAdapter(db)
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)

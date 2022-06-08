@@ -208,9 +208,9 @@ export class MemberContext implements MemberContext {
       }
       if (openInvoice) await this.dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
 
-      const finalUpdatedSubscription = await this.dbAdapter.subscription.getSubscriptionByID(
-        subscription.id
-      )
+      const finalUpdatedSubscription = await this.prisma.subscription.findUnique({
+        where: {id: subscription.id}
+      })
       if (!finalUpdatedSubscription) throw new Error('Error during updateSubscription')
 
       // renew user subscription
@@ -265,15 +265,22 @@ export class MemberContext implements MemberContext {
           ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
           : new Date().getTime()
       )
-      const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
+      const nextDate = getNextDateForPeriodicity(
+        startDate,
+        subscription.paymentPeriodicity as PaymentPeriodicity
+      )
       const amount = calculateAmountForPeriodicity(
         subscription.monthlyAmount,
-        subscription.paymentPeriodicity
+        subscription.paymentPeriodicity as PaymentPeriodicity
       )
 
       const user = isTempUser(subscription.userID)
         ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
-        : await this.dbAdapter.user.getUserByID(subscription.userID)
+        : await this.prisma.user.findUnique({
+            where: {
+              id: subscription.userID
+            }
+          })
 
       if (!user) {
         logger('memberContext').info('User with id "%s" not found', subscription.userID)
@@ -304,7 +311,7 @@ export class MemberContext implements MemberContext {
         subscriptionID: subscription.id,
         input: {
           amount,
-          paymentPeriodicity: subscription.paymentPeriodicity,
+          paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
           startsAt: startDate,
           endsAt: nextDate,
           invoiceID: newInvoice.id
@@ -333,44 +340,58 @@ export class MemberContext implements MemberContext {
 
     const subscriptionsPaidUntil: Subscription[] = []
     let hasMore = true
-    let skip = 0
+    let cursor: string | null = null
     while (hasMore) {
-      const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
-        cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
-        order: SortOrder.Ascending,
-        sort: SubscriptionSort.CreatedAt,
-        filter: {
+      const subscriptions: Subscription[] = await this.prisma.subscription.findMany({
+        where: {
           autoRenew: true,
-          paidUntil: {date: lookAheadDate, comparison: DateFilterComparison.LowerThanOrEqual},
-          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-        }
+          paidUntil: {
+            lte: lookAheadDate
+          },
+          deactivation: null
+        },
+        orderBy: {
+          createdAt: 'asc'
+        },
+        skip: cursor ? 1 : 0,
+        take: 100,
+        cursor: cursor
+          ? {
+              id: cursor
+            }
+          : undefined
       })
 
-      hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
-      subscriptionsPaidUntil.push(...subscriptions.nodes)
+      hasMore = Boolean(subscriptions?.length)
+      cursor = subscriptions?.length ? subscriptions[subscriptions.length - 1].id : null
+      subscriptionsPaidUntil.push(...subscriptions)
     }
 
     const subscriptionPaidNull: Subscription[] = []
     hasMore = true
-    skip = 0
+    cursor = null
     while (hasMore) {
-      const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
-        cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
-        order: SortOrder.Ascending,
-        sort: SubscriptionSort.CreatedAt,
-        filter: {
+      const subscriptions: Subscription[] = await this.prisma.subscription.findMany({
+        where: {
           autoRenew: true,
-          paidUntil: {date: null, comparison: DateFilterComparison.Equal},
-          deactivationDate: {date: null, comparison: DateFilterComparison.Equal}
-        }
+          paidUntil: null,
+          deactivation: null
+        },
+        orderBy: {
+          createdAt: 'asc'
+        },
+        skip: cursor ? 1 : 0,
+        take: 100,
+        cursor: cursor
+          ? {
+              id: cursor
+            }
+          : undefined
       })
 
-      hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
-      subscriptionPaidNull.push(...subscriptions.nodes)
+      hasMore = Boolean(subscriptions?.length)
+      cursor = subscriptions?.length ? subscriptions[subscriptions.length - 1].id : null
+      subscriptionPaidNull.push(...subscriptions)
     }
 
     for (const subscription of [...subscriptionsPaidUntil, ...subscriptionPaidNull]) {
@@ -381,9 +402,11 @@ export class MemberContext implements MemberContext {
   async checkOpenInvoices(): Promise<void> {
     const openInvoices = await this.getAllOpenInvoices()
     for (const invoice of openInvoices) {
-      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
-        invoice.subscriptionID
-      )
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
       if (!subscription) {
         logger('memberContext').warn('subscription "%s" not found', invoice.subscriptionID)
         continue
@@ -525,9 +548,11 @@ export class MemberContext implements MemberContext {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
 
     for (const invoice of openInvoices) {
-      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
-        invoice.subscriptionID
-      )
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
       if (!subscription) {
         logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
         continue
@@ -563,6 +588,7 @@ export class MemberContext implements MemberContext {
       const user = await this.prisma.user.findUnique({
         where: {id: subscription.userID}
       })
+
       if (!user) {
         logger('memberContext').warn('user %s not found', subscription.userID)
         continue
@@ -710,9 +736,11 @@ export class MemberContext implements MemberContext {
     }
 
     for (const invoice of openInvoices) {
-      const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
-        invoice.subscriptionID
-      )
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
       if (!subscription) {
         logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
         continue
@@ -776,9 +804,11 @@ export class MemberContext implements MemberContext {
   }: SendReminderForInvoiceProps): Promise<void> {
     const today = new Date()
 
-    const subscription = await this.dbAdapter.subscription.getSubscriptionByID(
-      invoice.subscriptionID
-    )
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {
+        id: invoice.subscriptionID
+      }
+    })
     const user = subscription?.userID
       ? await this.prisma.user.findUnique({
           where: {
@@ -848,7 +878,10 @@ export class MemberContext implements MemberContext {
     deactivationDate,
     deactivationReason
   }: DeactivateSubscriptionForUserProps): Promise<void> {
-    const subscription = await this.dbAdapter.subscription.getSubscriptionByID(subscriptionID)
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {id: subscriptionID}
+    })
+
     if (!subscription) {
       logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
@@ -858,6 +891,7 @@ export class MemberContext implements MemberContext {
       id: subscriptionID,
       input: {
         ...subscription,
+        paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
         deactivation: {
           date: deactivationDate ?? subscription.paidUntil ?? new Date(),
           reason: deactivationReason ?? SubscriptionDeactivationReason.None

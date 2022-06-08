@@ -1,13 +1,13 @@
-import express, {Router} from 'express'
-import {contextFromRequest, DataLoaderContext} from '../context'
-import {logger, WepublishServerOpts} from '../server'
-import {Payment, PaymentState} from '../db/payment'
-import {Invoice} from '../db/invoice'
-import {NextHandleFunction} from 'connect'
+import {PrismaClient, Subscription} from '@prisma/client'
 import bodyParser from 'body-parser'
-import {paymentModelEvents} from '../events'
+import {NextHandleFunction} from 'connect'
+import express, {Router} from 'express'
+import {Context, contextFromRequest} from '../context'
 import {DBAdapter} from '../db/adapter'
-import {OptionalSubscription} from '../db/subscription'
+import {Invoice} from '../db/invoice'
+import {Payment, PaymentState} from '../db/payment'
+import {paymentModelEvents} from '../events'
+import {logger, WepublishServerOpts} from '../server'
 import {isTempUser, removePrefixTempUser} from '../utility'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
@@ -144,14 +144,21 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
     }
 
-    const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
-    if (!subscription)
+    const subscription = await subscriptionClient.findUnique({
+      where: {
+        id: invoice.subscriptionID
+      }
+    })
+
+    if (!subscription) {
       throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+    }
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(dbAdapter, subscription, intentState.customerID)
+      await this.updatePaymentProvider(dbAdapter, userClient, subscription, intentState.customerID)
     }
+
     return updatedPayment
   }
 

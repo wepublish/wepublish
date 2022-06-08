@@ -310,10 +310,14 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     subscriptions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicSubscription))),
       description: 'This query returns the subscriptions of the authenticated user.',
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+      async resolve(root, _, {authenticateUser, prisma}) {
         const {user} = authenticateUser()
 
-        return await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
+        return await prisma.subscription.findMany({
+          where: {
+            userID: user.id
+          }
+        })
       }
     },
 
@@ -376,9 +380,29 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('Invoice', id)
         }
 
+        const subscription = await prisma.subscription.findUnique({
+          where: {
+            id: invoice.subscriptionID
+          }
+        })
 
-        const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
-        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
+        if (!subscription || subscription.userID !== user.id) {
+          throw new NotFound('Invoice', id)
+        }
+
+        const payments = await prisma.payment.findMany({
+          where: {
+            invoiceID: invoice.id
+          }
+        })
+        const paymentMethods = await prisma.paymentMethod.findMany({
+          where: {
+            active: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        })
 
         for (const payment of payments) {
           if (!payment || !payment.intentID) continue

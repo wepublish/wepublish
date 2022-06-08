@@ -5,9 +5,9 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {User} from './db/user'
-import {Subscription} from './db/subscription'
 import {GenericUserId, UserId, UserIdWithTempPrefix} from './db/tempUser'
 import formatISO from 'date-fns/formatISO'
+import {Subscription} from '@prisma/client'
 
 export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'

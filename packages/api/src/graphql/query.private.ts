@@ -286,88 +286,33 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscription: {
       type: GraphQLSubscription,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetSubscription, roles)
-        return dbAdapter.subscription.getSubscriptionByID(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
+        getSubscriptionById(id, authenticate, subscription)
     },
 
     subscriptions: {
       type: GraphQLNonNull(GraphQLSubscriptionConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLSubscriptionFilter},
         sort: {type: GraphQLSubscriptionSort, defaultValue: SubscriptionSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      async resolve(
+      resolve: (
         root,
-        {filter, sort, order, after, before, first, skip, last},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanGetSubscriptions, roles)
-        return await dbAdapter.subscription.getSubscriptions({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last, skip)
-        })
-      }
+        {filter, sort, order, take, skip, cursor},
+        {authenticate, prisma: {subscription}}
+      ) =>
+        getAdminSubscriptions(filter, sort, order, cursor, skip, take, authenticate, subscription)
     },
 
     subscriptionsAsCsv: {
       type: GraphQLString,
       args: {filter: {type: GraphQLSubscriptionFilter}},
-      async resolve(root, {filter}, {dbAdapter, authenticate}) {
-        const {roles} = authenticate()
-        authorise(CanGetSubscriptions, roles)
-        authorise(CanGetUsers, roles)
-
-        const subscriptions: Subscription[] = []
-        const users: User[] = []
-
-        let hasMore = true
-        let afterCursor
-        while (hasMore) {
-          const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
-            {
-              filter,
-              limit: Limit(100),
-              sort: SubscriptionSort.ModifiedAt,
-              cursor: InputCursor(afterCursor ?? undefined),
-              order: SortOrder.Descending
-            }
-          )
-          subscriptions.push(...listResult.nodes)
-          hasMore = listResult.pageInfo.hasNextPage
-          afterCursor = listResult.pageInfo.endCursor
-        }
-
-        hasMore = true
-        afterCursor = undefined
-
-        while (hasMore) {
-          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
-            cursor: InputCursor(afterCursor ?? undefined),
-            filter: {},
-            limit: Limit(100),
-            sort: UserSort.ModifiedAt,
-            order: SortOrder.Descending
-          })
-          users.push(...listResult.nodes)
-          hasMore = listResult.pageInfo.hasNextPage
-          afterCursor = listResult.pageInfo.endCursor
-        }
-
-        return mapSubscriptionsAsCsv(users, subscriptions)
-      }
+      resolve: (root, {filter}, {prisma: {subscription, user}, authenticate}) =>
+        getSubscriptionsAsCSV(filter, authenticate, subscription, user)
     },
 
     // UserRole

@@ -32,20 +32,16 @@ fragment Deactivation on SubscriptionDeactivation {
 
 query SubscriptionList(
   $filter: SubscriptionFilter
-  $after: ID
-  $before: ID
-  $first: Int
-  $last: Int
+  $cursor: ID
+  $take: Int
   $skip: Int
   $order: SortOrder
   $sort: SubscriptionSort
 ) {
   subscriptions(
     filter: $filter
-    after: $after
-    before: $before
-    first: $first
-    last: $last
+    cursor: $cursor
+    take: $take
     skip: $skip
     order: $order
     sort: $sort

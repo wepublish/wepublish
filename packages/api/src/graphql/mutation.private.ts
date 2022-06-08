@@ -349,6 +349,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             user
           }
         })
+
         return email
       }
     },
@@ -380,6 +381,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             user
           }
         })
+
         return email
       }
     },
@@ -501,7 +503,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!user) throw new Error('User of subscription not found.')
 
         // instantly create a new invoice fo the user
-        await memberContext.renewSubscriptionForUser({subscription})
+        await memberContext.renewSubscriptionForUser({subscription: subscription as Subscription})
         return subscription
       }
     },
@@ -527,7 +529,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!updatedSubscription) throw new NotFound('subscription', id)
 
         return await memberContext.handleSubscriptionChange({
-          subscription: updatedSubscription
+          subscription: updatedSubscription as Subscription
         })
       }
     },
@@ -537,16 +539,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
+      async resolve(root, {id}, {authenticate, prisma, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteSubscription, roles)
 
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        const subscription = await prisma.subscription.findUnique({
+          where: {id}
+        })
 
         if (subscription && isTempUser(subscription.userID)) {
           await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
         }
+
         await dbAdapter.subscription.deleteSubscription({id})
+
         return id
       }
     },
