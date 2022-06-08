@@ -895,21 +895,21 @@ export const Migrations: Migration[] = [
     }
   },
   {
+   version: 21,
+   async migrate(db, locale) {
+      const invoices = db.collection(CollectionName.Invoices)
+      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
+    }
+  },
+  {
     // Rename unused temp user collection
-    version: 21,
-    async migrate(db) {
+   version: 22,
+   async migrate(db) {
       const collections = await db.listCollections().toArray()
       if (collections.includes('temp.users')) {
         const tempUser = await db.collection('temp.users')
         await tempUser.rename('temp.users.bak')
       }
-    }
-  },
-  {
-   version: 22,
-   async migrate(db, locale) {
-      const invoices = db.collection(CollectionName.Invoices)
-      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
     }
   }
 ]
