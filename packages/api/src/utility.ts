@@ -61,26 +61,26 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
     ].join(',') + '\n'
 
   for (const subscription of subscriptions) {
-    const user = subscription.user
+    const user = subscription?.user
     const memberPlan = subscription?.memberPlan
     const paymentMethod = subscription?.paymentMethod
-    if (!user) continue
+    // if (!user) continue
     csvStr +=
       [
-        user.id,
-        `${user.firstName ?? ''}`,
-        `${user.name ?? ''}`,
-        `${user.preferredName ?? ''}`,
-        `${user.email ?? ''}`,
-        user.active,
-        formatISO(user.createdAt, {representation: 'date'}),
-        formatISO(user.modifiedAt, {representation: 'date'}),
-        `${user.address?.company ?? ''}`,
-        `${user.address?.streetAddress ?? ''}`,
-        `${user.address?.streetAddress2 ?? ''}`,
-        `${user.address?.zipCode ?? ''}`,
-        `${user.address?.city ?? ''}`,
-        `${user.address?.country ?? ''}`,
+        user?.id,
+        `${user?.firstName ?? ''}`,
+        `${user?.name ?? ''}`,
+        `${user?.preferredName ?? ''}`,
+        `${user?.email ?? ''}`,
+        user?.active,
+        user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',
+        user?.modifiedAt ? formatISO(user.modifiedAt, {representation: 'date'}) : '',
+        `${user?.address?.company ?? ''}`,
+        `${user?.address?.streetAddress ?? ''}`,
+        `${user?.address?.streetAddress2 ?? ''}`,
+        `${user?.address?.zipCode ?? ''}`,
+        `${user?.address?.city ?? ''}`,
+        `${user?.address?.country ?? ''}`,
         memberPlan?.name ?? '',
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',

@@ -358,9 +358,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const subscriptions: Subscription[] = []
         const joins: SubscriptionJoins = {
-          joinMemberPlan: false,
-          joinPaymentMethod: false,
-          joinUser: false
+          joinMemberPlan: true,
+          joinPaymentMethod: true,
+          joinUser: true
         }
 
         let hasMore = true

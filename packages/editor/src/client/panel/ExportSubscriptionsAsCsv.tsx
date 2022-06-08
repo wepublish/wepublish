@@ -1,7 +1,7 @@
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {IconButton} from 'rsuite'
-import {SubscriptionFilter, useSubscriptionsAsCsvQuery} from '../api'
+import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
 import {FileDownload} from '@rsuite/icons'
 
 export interface ExportSubscriptionAsCsvProps {
@@ -10,21 +10,17 @@ export interface ExportSubscriptionAsCsvProps {
 
 export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps) {
   const {t} = useTranslation()
-  const {data, loading, refetch} = useSubscriptionsAsCsvQuery({
-    variables: {
-      filter
-    },
-    fetchPolicy: 'no-cache'
+  const [getCsv, {loading}] = useSubscriptionsAsCsvLazyQuery({
+    fetchPolicy: 'network-only'
   })
 
   /**
-   * Get blob from string and download it as csv file.
+   * Get blob from csv string and download it as file.
    */
-  const downloadBlob = () => {
-    const content = data?.subscriptionsAsCsv || ''
+  function downloadBlob(csvString: string) {
     const filename = `${new Date().getTime()}-wep-subscriptions.csv`
     const contentType = 'text/csv;charset=utf-8;'
-    const blob = new Blob([content], {type: contentType})
+    const blob = new Blob([csvString], {type: contentType})
     const url = URL.createObjectURL(blob)
     const pom = document.createElement('a')
     pom.href = url
@@ -35,9 +31,12 @@ export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps)
   /**
    * Initialize download by getting data from api and start the blob download
    */
-  async function initDownload(): Promise<void> {
-    await refetch()
-    downloadBlob()
+  async function initDownload() {
+    // required to pass the variables here. see: https://github.com/apollographql/apollo-client/issues/5912#issuecomment-587877697
+    const csv = (await getCsv({variables: {filter}}))?.data?.subscriptionsAsCsv
+    if (csv) {
+      downloadBlob(csv)
+    }
   }
 
   return (
@@ -45,8 +44,8 @@ export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps)
       <IconButton
         appearance="primary"
         icon={<FileDownload />}
-        disabled={loading}
-        onClick={() => initDownload()}>
+        loading={loading}
+        onClick={initDownload}>
         {t('subscriptionList.overview.downloadCsv')}
       </IconButton>
     </>
