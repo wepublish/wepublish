@@ -289,6 +289,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
         if (!user) throw new UserNotFoundError()
         if (!user.active) throw new NotActiveError()
+
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -930,11 +931,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!page) throw new NotFound('page', id)
 
-        const pageRevision = Object.assign(page.draft ?? page.pending ?? page.published, {
-          slug: '',
-          publishedAt: undefined,
-          updatedAt: undefined
-        })
+        const pageRevision: PageRevision = Object.assign(
+          {},
+          page.draft ?? page.pending ?? page.published,
+          {
+            slug: '',
+            publishedAt: undefined,
+            updatedAt: undefined
+          }
+        )
         const output = await dbAdapter.page.createPage({input: {...pageRevision}})
 
         return output

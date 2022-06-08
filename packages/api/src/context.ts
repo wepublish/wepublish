@@ -80,7 +80,7 @@ export interface DataLoaderContext {
   readonly articles: DataLoader<string, Article | null>
   readonly publicArticles: DataLoader<string, OptionalPublicArticle>
 
-  readonly pages: DataLoader<string, OptionalPage>
+  readonly pages: DataLoader<string, Page | null>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
@@ -329,9 +329,78 @@ export async function contextFromRequest(
       )
     ),
 
-    pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
-    publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
-    publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+    pages: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.page.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    publicPagesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        (
+          await prisma.page.findMany({
+            where: {
+              id: {
+                in: ids as string[]
+              },
+              OR: [
+                {
+                  published: {
+                    isNot: null
+                  }
+                },
+                {
+                  pending: {
+                    isNot: null
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        'id'
+      )
+    ),
+    publicPagesBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        (
+          await prisma.page.findMany({
+            where: {
+              OR: [
+                {
+                  published: {
+                    is: {
+                      slug: {
+                        in: slugs as string[]
+                      }
+                    }
+                  }
+                },
+                {
+                  pending: {
+                    is: {
+                      slug: {
+                        in: slugs as string[]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          })
+        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        'slug'
+      )
+    ),
 
     userRolesByID: new DataLoader(async ids =>
       createOptionalsArray(

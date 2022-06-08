@@ -1,9 +1,8 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {
-  ArticleBlock,
   BlockType,
-  PageBlock,
+  BlockWithoutJSON,
   PaymentProviderCustomer,
   removePrefixTempUser,
   Subscription,
@@ -832,7 +831,7 @@ export const Migrations: Migration[] = [
 
       for (const article of migrationArticles) {
         if (article.draft) {
-          article.draft.blocks.forEach((block: ArticleBlock) => {
+          article.draft.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -840,7 +839,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.published) {
-          article.published.blocks.forEach((block: ArticleBlock) => {
+          article.published.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -848,7 +847,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.pending) {
-          article.pending.blocks.forEach((block: ArticleBlock) => {
+          article.pending.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -863,7 +862,7 @@ export const Migrations: Migration[] = [
 
       for (const page of migrationPages) {
         if (page.draft) {
-          page.draft.blocks.forEach((block: PageBlock) => {
+          page.draft.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -871,7 +870,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.published) {
-          page.published.blocks.forEach((block: PageBlock) => {
+          page.published.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -879,7 +878,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.pending) {
-          page.pending.blocks.forEach((block: PageBlock) => {
+          page.pending.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)

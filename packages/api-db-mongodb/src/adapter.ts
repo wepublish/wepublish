@@ -111,7 +111,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.author = new MongoDBAuthorAdapter(db)
     this.image = new MongoDBImageAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
-    this.page = new MongoDBPageAdapter(db, locale)
+    this.page = new MongoDBPageAdapter(db)
     this.memberPlan = new MongoDBMemberPlanAdapter(db, locale)
     this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
     this.invoice = new MongoDBInvoiceAdapter(db)

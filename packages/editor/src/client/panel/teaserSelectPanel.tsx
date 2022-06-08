@@ -118,7 +118,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   function loadMorePages() {
     fetchMorePages({
-      variables: {...listVariables, after: pageListData?.pages.pageInfo.endCursor},
+      variables: {...listVariables, cursor: pageListData?.pages.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
