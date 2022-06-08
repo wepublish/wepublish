@@ -98,11 +98,11 @@ export interface DataLoaderContext {
   readonly memberPlansBySlug: DataLoader<string, OptionalMemberPlan>
   readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
   readonly activeMemberPlansBySlug: DataLoader<string, OptionalMemberPlan>
-  readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
-  readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
-  readonly activePaymentMethodsBySlug: DataLoader<string, OptionalPaymentMethod>
+  readonly paymentMethodsByID: DataLoader<string, PaymentMethod | null>
+  readonly activePaymentMethodsByID: DataLoader<string, PaymentMethod | null>
+  readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>
   readonly invoicesByID: DataLoader<string, Invoice | null>
-  readonly paymentsByID: DataLoader<string, OptionalPayment>
+  readonly paymentsByID: DataLoader<string, Payment | null>
 }
 
 export interface OAuth2Clients {
@@ -526,13 +526,46 @@ export async function contextFromRequest(
     memberPlansBySlug: new DataLoader(slugs => dbAdapter.memberPlan.getMemberPlansBySlug(slugs)),
     activeMemberPlansByID: new DataLoader(ids =>
       dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    paymentMethodsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
     ),
-    activeMemberPlansBySlug: new DataLoader(slugs =>
-      dbAdapter.memberPlan.getActiveMemberPlansBySlug(slugs)
+    activePaymentMethodsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            },
+            active: true
+          }
+        }),
+        'id'
+      )
     ),
-    paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
-    activePaymentMethodsByID: new DataLoader(ids =>
-      dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+    activePaymentMethodsBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.paymentMethod.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            },
+            active: true
+          }
+        }),
+        'slug'
+      )
     ),
     invoicesByID: new DataLoader(async ids =>
       createOptionalsArray(
@@ -548,7 +581,18 @@ export async function contextFromRequest(
       )
     ),
     paymentsByID: new DataLoader(async ids =>
-    paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
+      createOptionalsArray(
+        ids as string[],
+        await prisma.payment.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    )
   }
 
   const mailContext = new MailContext({
@@ -716,7 +760,7 @@ export async function contextFromRequest(
 
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
 
-      return updatedPayment
+      return updatedPayment as Payment
     },
     challenge
   }

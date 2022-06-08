@@ -33,12 +33,4 @@ export interface DBPaymentMethodAdapter {
   createPaymentMethod(args: CreatePaymentMethodArgs): Promise<PaymentMethod>
   updatePaymentMethod(args: UpdatePaymentMethodArgs): Promise<OptionalPaymentMethod>
   deletePaymentMethod(id: string): Promise<string | null>
-
-  getPaymentMethods(): Promise<PaymentMethod[]>
-  getPaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]>
-  getPaymentMethodsBySlug(slugs: readonly string[]): Promise<OptionalPaymentMethod[]>
-  getActivePaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]>
-  getActivePaymentMethodsBySlug(slugs: readonly string[]): Promise<OptionalPaymentMethod[]>
-
-  getActivePaymentMethods(): Promise<PaymentMethod[]>
 }
