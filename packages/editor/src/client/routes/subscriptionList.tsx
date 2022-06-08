@@ -27,6 +27,7 @@ import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
+import PlusIcon from '@rsuite/icons/legacy/Plus'
 const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
@@ -153,6 +154,7 @@ export function SubscriptionList() {
             appearance="primary"
             disabled={isLoading}
             route={SubscriptionCreateRoute.create({})}>
+            <PlusIcon style={{marginRight: '5px'}} />
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
