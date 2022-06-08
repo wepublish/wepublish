@@ -1,7 +1,17 @@
 import React, {useEffect, useState} from 'react'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, InputNumber, Notification, Panel, toaster, Toggle} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Notification,
+  Panel,
+  toaster,
+  Toggle
+} from 'rsuite'
 import {Setting, SettingName, useSettingListQuery, useUpdateSettingMutation} from '../api'
 
 export type SettingInputProps = {
@@ -14,14 +24,32 @@ export function SettingsPanel() {
 
   const {data: settingListData, refetch, error: err} = useSettingListQuery()
 
-  const [maxCommentLength, setMaxCommentLength] = useState<Setting>({
+  // TODO where to use?
+  const [googleDiscoveryUrl, setGoogleDiscoveryUrl] = useState<Setting>({
     id: '',
-    value: 0,
+    value: ' ',
     name: SettingName.Default
   })
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
     value: false,
+    name: SettingName.Default
+  })
+  const [sendLoginJwtExpiresMin, setSendLoginJwtExpiresMin] = useState<Setting>({
+    id: '',
+    value: 0,
+    name: SettingName.Default
+  })
+
+  const [resetPwdJwtExpiresMin, setResetPwdJwtExpiresMin] = useState<Setting>({
+    id: '',
+    value: 0,
+    name: SettingName.Default
+  })
+
+  const [jwtSecretKey, setJwtSecretKey] = useState<Setting>({
+    id: '',
+    value: ' ',
     name: SettingName.Default
   })
 
@@ -31,10 +59,26 @@ export function SettingsPanel() {
         setting => setting.name === SettingName.AllowGuestCommenting
       )
       if (allowGuestCommentSetting) setAllowGuestComment(allowGuestCommentSetting)
-      const maxCommentLengthSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.MaximumCommentLength
+
+      const googleDiscoveryUrlSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.OauthGoogleDiscoveryUrl
       )
-      if (maxCommentLengthSetting) setMaxCommentLength(maxCommentLengthSetting)
+      if (googleDiscoveryUrlSetting) setGoogleDiscoveryUrl(googleDiscoveryUrlSetting)
+
+      const sendLoginJwtExpiresSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.SendLoginJwtExpiresMin
+      )
+      if (sendLoginJwtExpiresSetting) setSendLoginJwtExpiresMin(sendLoginJwtExpiresSetting)
+
+      const resetPwdJwtExpiresSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.ResetPasswordJwtExpiresMin
+      )
+      if (resetPwdJwtExpiresSetting) setResetPwdJwtExpiresMin(resetPwdJwtExpiresSetting)
+
+      const jwtSecretKeySetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.JwtSecretKey
+      )
+      if (jwtSecretKeySetting) setJwtSecretKey(jwtSecretKeySetting)
     }
   }, [settingListData?.settings])
 
@@ -43,12 +87,18 @@ export function SettingsPanel() {
   })
 
   async function handleSettingListUpdate() {
-    await updateSetting({
-      variables: {id: maxCommentLength.id, input: {value: maxCommentLength.value}}
-    })
-    await updateSetting({
-      variables: {id: allowGuestComment.id, input: {value: allowGuestComment.value}}
-    })
+    const allSettings = [
+      allowGuestComment,
+      googleDiscoveryUrl,
+      sendLoginJwtExpiresMin,
+      resetPwdJwtExpiresMin,
+      jwtSecretKey
+    ]
+    allSettings.map(
+      async setting =>
+        await updateSetting({variables: {id: setting.id, input: {value: setting.value}}})
+    )
+
     await refetch()
     toaster.push(
       <Notification header={t('navbar.settingsPanel.successTitle')} type="success" duration={2000}>
@@ -83,21 +133,16 @@ export function SettingsPanel() {
         <Panel>
           <Form fluid={true}>
             <Form.Group>
-              <Form.ControlLabel>{t('navbar.settingsPanel.commentLength')}</Form.ControlLabel>
-              <InputNumber
-                max={
-                  maxCommentLength?.settingRestriction?.maxValue
-                    ? maxCommentLength.settingRestriction.maxValue
-                    : undefined
-                }
-                value={maxCommentLength?.value}
-                onChange={value => {
-                  setMaxCommentLength({
-                    id: maxCommentLength.id,
-                    name: maxCommentLength.name,
+              <Form.ControlLabel>{t('navbar.settingsPanel.discoveryUrl')}</Form.ControlLabel>
+              <Input
+                onChange={value =>
+                  setGoogleDiscoveryUrl({
+                    id: googleDiscoveryUrl.id,
+                    name: googleDiscoveryUrl.name,
                     value: value
                   })
-                }}
+                }
+                value={googleDiscoveryUrl.value}
               />
             </Form.Group>
             <Form.Group>
@@ -115,8 +160,65 @@ export function SettingsPanel() {
             </Form.Group>
             <Form.Group>
               {/* eslint-disable-next-line i18next/no-literal-string */}
-              <Form.ControlLabel>Setting 2</Form.ControlLabel>
-              <Toggle />
+              <Form.ControlLabel>JWT expires min</Form.ControlLabel>
+              <InputNumber
+                value={sendLoginJwtExpiresMin.value}
+                min={
+                  sendLoginJwtExpiresMin.settingRestriction?.minValue
+                    ? sendLoginJwtExpiresMin.settingRestriction.minValue
+                    : undefined
+                }
+                max={
+                  sendLoginJwtExpiresMin.settingRestriction?.maxValue
+                    ? sendLoginJwtExpiresMin.settingRestriction.maxValue
+                    : undefined
+                }
+                onChange={value =>
+                  setSendLoginJwtExpiresMin({
+                    id: sendLoginJwtExpiresMin.id,
+                    name: sendLoginJwtExpiresMin.name,
+                    value: value
+                  })
+                }
+              />
+            </Form.Group>
+            <Form.Group>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <Form.ControlLabel>reset password JWT expires min</Form.ControlLabel>
+              <InputNumber
+                value={resetPwdJwtExpiresMin.value}
+                min={
+                  resetPwdJwtExpiresMin.settingRestriction?.minValue
+                    ? resetPwdJwtExpiresMin.settingRestriction.minValue
+                    : undefined
+                }
+                max={
+                  resetPwdJwtExpiresMin.settingRestriction?.maxValue
+                    ? resetPwdJwtExpiresMin.settingRestriction.maxValue
+                    : undefined
+                }
+                onChange={value =>
+                  setResetPwdJwtExpiresMin({
+                    id: resetPwdJwtExpiresMin.id,
+                    name: resetPwdJwtExpiresMin.name,
+                    value: value
+                  })
+                }
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>JWT secret key</Form.ControlLabel>
+              <Input
+                value={jwtSecretKey.value}
+                // type="password"
+                onChange={value =>
+                  setJwtSecretKey({
+                    id: jwtSecretKey.id,
+                    name: jwtSecretKey.name,
+                    value: value
+                  })
+                }
+              />
             </Form.Group>
           </Form>
         </Panel>

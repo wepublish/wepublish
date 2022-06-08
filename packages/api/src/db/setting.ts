@@ -8,8 +8,17 @@ export type Setting<T = unknown> = {
 
 export enum SettingName {
   DEFAULT = '',
-  ALLOW_GUEST_COMMENTING = 'allow guest commenting',
-  MAXIMUM_COMMENT_LENGTH = 'maximum comment length'
+  ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
+  OAUTH_GOOGLE_DISCOVERY_URL = 'oathGoogleDiscoveryUrl',
+  OAUTH_GOOGLE_CLIENT_ID = 'oAuthGoogleClientId',
+  OAUTH_GOOGLE_CLIENT_KEY = 'oAthGoogleClientKey',
+  OAUTH_GOOGLE_REDIRECT_URL = 'oAuthGoogleRedirectUrl',
+  SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
+  INVOICE_REMINDER_FREQ = 'invoiceReminderFreq',
+  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
+  MONGO_LOCALE = 'mongoLocale',
+  RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
+  JWT_SECRET_KEY = 'jwtSecretKey'
 }
 
 export interface SettingInput<T> {

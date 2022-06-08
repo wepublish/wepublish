@@ -475,10 +475,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           )
           return email
         }
-
+        const resetPwd = await dbAdapter.setting.getSetting(
+          SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN
+        )
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes:
+            Number(resetPwd?.value) ??
+            parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,

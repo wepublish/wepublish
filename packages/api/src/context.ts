@@ -356,9 +356,10 @@ export async function contextFromRequest(
     return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
   }
 
+  const jwtSecretKey = await dbAdapter.setting.getSetting(SettingName.JWT_SECRET_KEY)
   const verifyJWT = (token: string): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    if (!jwtSecretKey?.value) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const ver = jwt.verify(token, String(jwtSecretKey.value))
     return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
   }
 

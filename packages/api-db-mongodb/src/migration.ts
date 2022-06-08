@@ -881,17 +881,38 @@ export const Migrations: Migration[] = [
         strict: true
       })
 
-      const maxCommentCreate: CreateSettingArgs<number> = {
-        name: SettingName.MAXIMUM_COMMENT_LENGTH,
-        value: 500,
-        settingRestriction: {maxValue: 600, minValue: 0}
+      const maxCommentCreate: CreateSettingArgs<string> = {
+        name: SettingName.OAUTH_GOOGLE_DISCOVERY_URL,
+        value: 'https://accounts.google.com'
       }
       const allowAnonCommenting: CreateSettingArgs<boolean> = {
         name: SettingName.ALLOW_GUEST_COMMENTING,
         value: false
       }
+      const sendLoginJWTExpires: CreateSettingArgs<number> = {
+        name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN,
+        value: 10080,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
 
-      await settingsDoc.insertMany([maxCommentCreate, allowAnonCommenting])
+      const resetPwdExpires: CreateSettingArgs<number> = {
+        name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN,
+        value: 1440,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
+
+      const jwtSecretKey: CreateSettingArgs<string> = {
+        name: SettingName.JWT_SECRET_KEY,
+        value: 'ThisIsSuperSecret'
+      }
+
+      await settingsDoc.insertMany([
+        maxCommentCreate,
+        allowAnonCommenting,
+        sendLoginJWTExpires,
+        resetPwdExpires,
+        jwtSecretKey
+      ])
     }
   }
 ]

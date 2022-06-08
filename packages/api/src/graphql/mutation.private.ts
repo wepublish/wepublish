@@ -93,6 +93,7 @@ import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {isTempUser, removePrefixTempUser} from '../utility'
 import {GraphQLSetting, GraphQLSettingInput} from './setting'
+import {SettingName} from '../db/setting'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -327,9 +328,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
+        const jwtExpires = await dbAdapter.setting.getSetting(
+          SettingName.SEND_LOGIN_JWT_EXPIRES_MIN
+        )
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes:
+            Number(jwtExpires?.value) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -356,11 +361,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
+        const jwtExpires = await dbAdapter.setting.getSetting(
+          SettingName.SEND_LOGIN_JWT_EXPIRES_MIN
+        )
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes:
+            Number(jwtExpires) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,

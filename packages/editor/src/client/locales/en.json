@@ -569,7 +569,7 @@
         "errorTitle": "Error",
         "editSettings": "Edit Settings",
         "guestCommenting": "Allow guest commenting",
-        "commentLength": "Maximum comment length"
+        "discoveryUrl": "OAUTH discovery URL"
       }
     },
     "navigation": {
