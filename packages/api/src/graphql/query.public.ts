@@ -1,3 +1,4 @@
+import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
   GraphQLInt,
@@ -7,50 +8,55 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {GraphQLSlug} from './slug'
-import {UserInputError} from 'apollo-server-express'
-import {GraphQLPublicNavigation} from './navigation'
-import {
-  GraphQLAuthor,
-  GraphQLAuthorConnection,
-  GraphQLAuthorFilter,
-  GraphQLAuthorSort
-} from './author'
+import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
-import {GraphQLSortOrder} from './common'
-import {InputCursor, Limit, SortOrder} from '../db/common'
+import {SortOrder} from '../db/common'
+import {MemberPlanSort} from '../db/memberPlan'
+import {PageSort, PublicPage} from '../db/page'
+import {SessionType} from '../db/session'
+import {NotFound} from '../error'
+import {logger} from '../server'
+import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicArticle,
   GraphQLPublicArticleConnection,
   GraphQLPublicArticleFilter,
   GraphQLPublicArticleSort
 } from './article'
-import {SessionType} from '../db/session'
-import {ArticleSort, PublicArticle} from '../db/article'
-import {delegateToPeerSchema} from '../utility'
+import {getPublishedArticleByIdOrSlug, getPublishedArticles} from './article/article.public-queries'
+import {GraphQLAuthProvider} from './auth'
 import {
-  GraphQLPublicPage,
-  GraphQLPublicPageConnection,
-  GraphQLPublishedPageFilter,
-  GraphQLPublishedPageSort
-} from './page'
-import {PageSort, PublicPage} from '../db/page'
+  GraphQLAuthor,
+  GraphQLAuthorConnection,
+  GraphQLAuthorFilter,
+  GraphQLAuthorSort
+} from './author'
+import {getPublicAuthors} from './author/author.public-queries'
+import {GraphQLChallenge} from './challenge'
+import {GraphQLSortOrder} from './common'
+import {GraphQLPublicInvoice} from './invoice'
+import {getPublicInvoices} from './invoice/invoice.public-queries'
+import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
 import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLPublicUser} from './user'
-import {GraphQLPublicInvoice} from './invoice'
-import {GraphQLAuthProvider} from './auth'
-import {logger} from '../server'
-import {NotFound} from '../error'
-import {Invoice} from '../db/invoice'
+import {GraphQLPublicNavigation} from './navigation'
+import {
+  GraphQLPublicPage,
+  GraphQLPublicPageConnection,
+  GraphQLPublishedPageFilter,
+  GraphQLPublishedPageSort
+} from './page'
+import {getPublishedPages} from './page/page.public-queries'
+import {GraphQLPeer, GraphQLPeerProfile} from './peer'
+import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
+import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
-import {GraphQLChallenge} from './challenge'
+import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -320,7 +326,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query returns a member plan.',
       resolve(root, {id, slug}, {loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
+        if ((!id && !slug) || (id && slug)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
 
@@ -333,24 +339,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     memberPlans: {
       type: GraphQLNonNull(GraphQLPublicMemberPlanConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLMemberPlanFilter},
         sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.CreatedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the member plans.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.memberPlan.getActiveMemberPlans({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {memberPlan}}) =>
+        getActiveMemberPlans(filter, sort, order, cursor, skip, take, memberPlan)
     },
 
     checkInvoiceStatus: {

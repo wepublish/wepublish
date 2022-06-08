@@ -94,10 +94,10 @@ export interface DataLoaderContext {
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 
-  readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
-  readonly memberPlansBySlug: DataLoader<string, OptionalMemberPlan>
-  readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
-  readonly activeMemberPlansBySlug: DataLoader<string, OptionalMemberPlan>
+  readonly memberPlansByID: DataLoader<string, MemberPlan | null>
+  readonly memberPlansBySlug: DataLoader<string, MemberPlan | null>
+  readonly activeMemberPlansByID: DataLoader<string, MemberPlan | null>
+  readonly activeMemberPlansBySlug: DataLoader<string, MemberPlan | null>
   readonly paymentMethodsByID: DataLoader<string, PaymentMethod | null>
   readonly activePaymentMethodsByID: DataLoader<string, PaymentMethod | null>
   readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>
@@ -522,10 +522,60 @@ export async function contextFromRequest(
       )
     }),
 
-    memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
-    memberPlansBySlug: new DataLoader(slugs => dbAdapter.memberPlan.getMemberPlansBySlug(slugs)),
-    activeMemberPlansByID: new DataLoader(ids =>
-      dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    memberPlansByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    memberPlansBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            }
+          }
+        }),
+        'slug'
+      )
+    ),
+    activeMemberPlansByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            },
+            active: true
+          }
+        }),
+        'id'
+      )
+    ),
+    activeMemberPlansBySlug: new DataLoader(async slugs =>
+      createOptionalsArray(
+        slugs as string[],
+        await prisma.memberPlan.findMany({
+          where: {
+            slug: {
+              in: slugs as string[]
+            },
+            active: true
+          }
+        }),
+        'slug'
+      )
+    ),
     paymentMethodsByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],

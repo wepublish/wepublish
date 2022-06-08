@@ -522,41 +522,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     memberPlan: {
       type: GraphQLMemberPlan,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetMemberPlan, roles)
-
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        return id ? loaders.memberPlansByID.load(id) : loaders.memberPlansBySlug.load(slug)
-      }
+      resolve: (root, {id, slug}, {authenticate, loaders: {memberPlansByID, memberPlansBySlug}}) =>
+        getMemberPlanByIdOrSlug(id, slug, authenticate, memberPlansByID, memberPlansBySlug)
     },
 
     memberPlans: {
       type: GraphQLNonNull(GraphQLMemberPlanConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLMemberPlanFilter},
         sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetMemberPlans, roles)
-
-        return dbAdapter.memberPlan.getMemberPlans({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (
+        root,
+        {filter, sort, order, cursor, take, skip},
+        {authenticate, prisma: {memberPlan}}
+      ) => getAdminMemberPlans(filter, sort, order, cursor, skip, take, authenticate, memberPlan)
     },
 
     // PaymentMethod

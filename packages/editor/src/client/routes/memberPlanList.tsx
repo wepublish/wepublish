@@ -55,7 +55,7 @@ export function MemberPlanList() {
   const {data, /* fetchMore, */ loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
-      first: 50
+      take: 50
     },
     fetchPolicy: 'network-only'
   })
@@ -84,7 +84,7 @@ export function MemberPlanList() {
 
   /* function loadMore() {
     fetchMore({
-      variables: {first: 50, after: data?.memberPlans.pageInfo.endCursor},
+      variables: {take: 50, skip: 1, cursor: data?.memberPlans.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
@@ -210,7 +210,7 @@ export function MemberPlanList() {
                     query: MemberPlanListDocument,
                     variables: {
                       filter: filter || undefined,
-                      first: 50
+                      take: 50
                     }
                   })
 
