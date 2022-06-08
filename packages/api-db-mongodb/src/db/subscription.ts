@@ -214,6 +214,23 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and = []
     }
 
+    // support for old filters https://github.com/wepublish/wepublish/issues/601 -->
+    if (filter?.startsAt !== undefined) {
+      const {comparison, date} = filter.startsAt
+      textFilter.$and?.push({
+        startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+    if (filter?.paidUntil !== undefined) {
+      const {comparison, date} = filter.paidUntil
+      textFilter.$and?.push({
+        paidUntil: {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    // <-- support for old filters
+
     if (filter?.startsAtFrom) {
       const {comparison, date} = filter.startsAtFrom
       textFilter.$and?.push({

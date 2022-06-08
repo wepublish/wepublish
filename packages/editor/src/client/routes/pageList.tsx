@@ -21,19 +21,29 @@ import {
   FlexboxGrid,
   Input,
   InputGroup,
-  Icon,
   Table,
   IconButton,
   Modal,
   Button,
-  Message
+  Message,
+  Pagination
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  StateColor,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import CopyIcon from '@rsuite/icons/legacy/Copy'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -123,7 +133,7 @@ export function PageList() {
           <InputGroup>
             <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -145,7 +155,7 @@ export function PageList() {
           sortType={sortOrder}
           rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={210} align="left" resizable sortable>
@@ -220,7 +230,7 @@ export function PageList() {
                 <>
                   <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
                     <IconButton
-                      icon={<Icon icon="btn-off" />}
+                      icon={<BtnOffIcon />}
                       circle
                       disabled={!(rowData.published || rowData.pending)}
                       size="sm"
@@ -233,7 +243,7 @@ export function PageList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -246,7 +256,7 @@ export function PageList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
                     <IconButton
-                      icon={<Icon icon="copy" />}
+                      icon={<CopyIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -260,7 +270,7 @@ export function PageList() {
 
                   <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
                     <IconButton
-                      icon={<Icon icon="eye" />}
+                      icon={<EyeIcon />}
                       disabled={!rowData.draft}
                       circle
                       size="sm"
@@ -278,17 +288,24 @@ export function PageList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.pages.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.pages.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
-      <Modal show={isPagePreviewLinkOpen} width={'sm'} onHide={() => setPagePreviewLinkOpen(false)}>
+      <Modal open={isPagePreviewLinkOpen} size={'sm'} onClose={() => setPagePreviewLinkOpen(false)}>
         {currentPage && (
           <PagePreviewLinkPanel
             props={{id: currentPage.id}}
@@ -298,9 +315,9 @@ export function PageList() {
       </Modal>
 
       <Modal
-        show={isConfirmationDialogOpen}
-        width={'sm'}
-        onHide={() => setConfirmationDialogOpen(false)}>
+        open={isConfirmationDialogOpen}
+        size={'sm'}
+        onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
@@ -345,12 +362,9 @@ export function PageList() {
             )}
           </DescriptionList>
 
-          <Message
-            showIcon
-            type="warning"
-            title={t('articleEditor.overview.warningLabel')}
-            description={t('articleEditor.overview.unpublishWarningMessage')}
-          />
+          <Message showIcon type="warning" title={t('articleEditor.overview.warningLabel')}>
+            {t('articleEditor.overview.unpublishWarningMessage')}
+          </Message>
         </Modal.Body>
 
         <Modal.Footer>

@@ -161,7 +161,6 @@ export class MongoDBAdapter implements DBAdapter {
     const result = await db
       .collection<DBMigration>(CollectionName.Migrations)
       .findOne({}, {sort: {createdAt: SortOrder.Descending}})
-
     return result
   }
 

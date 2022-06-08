@@ -11,7 +11,10 @@ import {
 import {TeaserType, TeaserLink} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
+import {Button, Drawer, Nav, List, Input, InputGroup, Notification, toaster} from 'rsuite'
+import FileTextIcon from '@rsuite/icons/legacy/FileText'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -64,10 +67,16 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   useEffect(() => {
     if (articleListError ?? pageListError ?? peerArticleListError) {
-      Notification.error({
-        title: articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message,
-        duration: 5000
-      })
+      toaster.push(
+        <Notification
+          type="error"
+          header={
+            articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message
+          }
+          duration={5000}
+        />,
+        {placement: 'topEnd'}
+      )
     }
   }, [articleListError ?? pageListError ?? peerArticleListError])
 
@@ -211,8 +220,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       <a href={peeredArticleURL} target="_blank" rel="noreferrer">
-                        {t('articleEditor.panels.peeredArticlePreview')}{' '}
-                        <Icon icon="external-link" />
+                        {t('articleEditor.panels.peeredArticlePreview')} <ExternalLinkIcon />
                       </a>
                     </div>
                   </div>
@@ -268,6 +276,12 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     <>
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.chooseTeaser')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('articleEditor.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
@@ -276,13 +290,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           activeKey={type}
           onSelect={type => setType(type)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={TeaserType.Article} icon={<Icon icon="file-text" />}>
+          <Nav.Item eventKey={TeaserType.Article} icon={<FileTextIcon />}>
             {t('articleEditor.panels.article')}
           </Nav.Item>
-          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<Icon icon="file-text" />}>
+          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<FileTextIcon />}>
             {t('articleEditor.panels.peerArticle')}
           </Nav.Item>
-          <Nav.Item eventKey={TeaserType.Page} icon={<Icon icon="file-text" />}>
+          <Nav.Item eventKey={TeaserType.Page} icon={<FileTextIcon />}>
             {t('articleEditor.panels.page')}
           </Nav.Item>
         </Nav>
@@ -290,18 +304,12 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         <InputGroup style={{marginBottom: 20}}>
           {currentFilter()}
           <InputGroup.Addon>
-            <Icon icon="search" />
+            <SearchIcon />
           </InputGroup.Addon>
         </InputGroup>
 
         <List>{currentContent()}</List>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }
