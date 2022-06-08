@@ -1,5 +1,5 @@
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, DateFilterComparison} from '../../db/common'
+import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -109,7 +109,7 @@ export const getInvoices = async (
     invoice.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

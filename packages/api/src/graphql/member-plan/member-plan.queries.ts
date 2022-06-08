@@ -1,5 +1,5 @@
 import {MemberPlan, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -78,7 +78,7 @@ export const getMemberPlans = async (
     memberPlan.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

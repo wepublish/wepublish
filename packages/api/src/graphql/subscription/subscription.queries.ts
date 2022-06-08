@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient, Subscription} from '@prisma/client'
-import {ConnectionResult, DateFilterComparison} from '../../db/common'
+import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -251,7 +251,7 @@ export const getSubscriptions = async (
     subscription.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

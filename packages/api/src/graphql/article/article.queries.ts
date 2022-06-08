@@ -1,6 +1,6 @@
 import {Article, Prisma, PrismaClient} from '@prisma/client'
 import {ArticleFilter, ArticleSort} from '../../db/article'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
 export const createArticleOrder = (
@@ -176,7 +176,7 @@ export const getArticles = async (
     article.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })
