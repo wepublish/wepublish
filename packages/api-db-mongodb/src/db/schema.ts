@@ -66,13 +66,13 @@ export interface DBPeerProfile {
   _id: any
 
   name: string
-  logoID?: string
+  logoID?: string | null
   themeColor: string
   themeFontColor: string
   callToActionURL: string
   callToActionText: RichTextNode[]
-  callToActionImageURL?: string
-  callToActionImageID?: string
+  callToActionImageURL?: string | null
+  callToActionImageID?: string | null
 }
 
 export interface DBPeer {
@@ -108,9 +108,9 @@ export interface DBUser {
   email: string
   emailVerifiedAt: Date | null
   name: string
-  firstName?: string
-  preferredName?: string
-  address?: UserAddress
+  firstName?: string | null
+  preferredName?: string | null
+  address?: UserAddress | null
   password: string
 
   oauth2Accounts: UserOAuth2Account[]
@@ -132,7 +132,7 @@ export interface DBUserRole {
   modifiedAt: Date
 
   name: string
-  description?: string
+  description?: string | null
   systemRole: boolean
 
   permissionIDs: string[]
@@ -164,11 +164,11 @@ export interface DBTempUser {
   modifiedAt: Date
 
   name: string
-  firstName?: string
-  preferredName?: string
+  firstName?: string | null
+  preferredName?: string | null
   email: string
 
-  address?: UserAddress
+  address?: UserAddress | null
   paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
@@ -201,8 +201,8 @@ export interface DBAuthor {
 
   slug: string
   name: string
-  jobTitle?: string
-  imageID?: string
+  jobTitle?: string | null
+  imageID?: string | null
 
   links: Array<{title: string; url: string}>
   bio: RichTextNode[]
@@ -240,16 +240,16 @@ export interface DBImage {
   width: number
   height: number
 
-  filename?: string
-  title?: string
-  description?: string
+  filename?: string | null
+  title?: string | null
+  description?: string | null
   tags: string[]
 
-  source?: string
-  link?: string
-  license?: string
+  source?: string | null
+  link?: string | null
+  license?: string | null
 
-  focalPoint?: FocalPoint
+  focalPoint?: FocalPoint | null
 }
 
 export interface DBComment {
@@ -261,13 +261,13 @@ export interface DBComment {
   itemID: string
   itemType: CommentItemType
 
-  userID: string
+  userID?: string | null
 
   revisions: CommentRevision[]
-  parentID?: string
+  parentID?: string | null
 
   state: CommentState
-  rejectionReason?: CommentRejectionReason
+  rejectionReason?: CommentRejectionReason | null
   authorType: CommentAuthorType
 }
 
@@ -287,21 +287,20 @@ export interface DBArticleRevision {
   revision: number
   createdAt: Date
 
-  updatedAt?: Date
-  publishedAt?: Date
-  publishAt?: Date
+  updatedAt?: Date | null
+  publishedAt?: Date | null
+  publishAt?: Date | null
 
-  slug: string
-
-  preTitle?: string
-  title: string
-  lead?: string
-  seoTitle?: string
+  slug?: string | null
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  seoTitle?: string | null
   tags: string[]
 
   properties: MetadataProperty[]
 
-  imageID?: string
+  imageID?: string | null
   authorIDs: string[]
 
   breaking: boolean
@@ -309,10 +308,10 @@ export interface DBArticleRevision {
 
   hideAuthor: boolean
 
-  socialMediaTitle?: string
-  socialMediaDescription?: string
+  socialMediaTitle?: string | null
+  socialMediaDescription?: string | null
   socialMediaAuthorIDs: string[]
-  socialMediaImageID?: string
+  socialMediaImageID?: string | null
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
@@ -335,23 +334,23 @@ export interface DBPageRevision {
   revision: number
   createdAt: Date
 
-  updatedAt?: Date
-  publishedAt?: Date
-  publishAt?: Date
+  updatedAt?: Date | null
+  publishedAt?: Date | null
+  publishAt?: Date | null
 
   slug: string
 
   title: string
-  description?: string
+  description?: string | null
   tags: string[]
 
   properties: MetadataProperty[]
 
-  imageID?: string
+  imageID?: string | null
 
-  socialMediaTitle?: string
-  socialMediaDescription?: string
-  socialMediaImageID?: string
+  socialMediaTitle?: string | null
+  socialMediaDescription?: string | null
+  socialMediaImageID?: string | null
 
   blocks: PageBlock[]
 }
@@ -370,7 +369,7 @@ export interface DBMemberPlan {
   name: string
   slug: string
   tags: string[]
-  imageID?: string
+  imageID?: string | null
   description: RichTextNode[]
   active: boolean
   amountPerMonthMin: number
@@ -399,12 +398,13 @@ export interface DBInvoice {
   mail: string
   dueAt: Date
   subscriptionID: string
-  description?: string
+  description?: string | null
   paidAt: Date | null
   canceledAt: Date | null
-  sentReminderAt?: Date
+  sentReminderAt?: Date | null
   items: InvoiceItem[]
-  manuallySetAsPaidByUserId?: string
+  manuallySetAsPaidByUserId?: string | null
+  userID?: string | null
 }
 
 export interface DBPayment {
@@ -417,11 +417,11 @@ export interface DBPayment {
   state: PaymentState
   paymentMethodID: string
 
-  intentID?: string
-  intentSecret?: string
-  intentData?: string
+  intentID?: string | null
+  intentSecret?: string | null
+  intentData?: string | null
 
-  paymentData?: string
+  paymentData?: string | null
 }
 
 export interface DBMailLog {
@@ -434,5 +434,5 @@ export interface DBMailLog {
   subject: string
   state: MailLogState
   mailProviderID: string
-  mailData?: string
+  mailData?: string | null
 }

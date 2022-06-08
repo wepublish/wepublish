@@ -27,10 +27,10 @@ export interface TempUser {
   readonly createdAt: Date
   readonly modifiedAt: Date
   readonly name: string
-  readonly firstName?: string
-  readonly preferredName?: string
+  readonly firstName?: string | null
+  readonly preferredName?: string | null
   readonly email: string
-  readonly address?: UserAddress
+  readonly address?: UserAddress | null
   readonly paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
