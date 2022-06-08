@@ -588,7 +588,9 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
+  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
 };
 
 export enum InvoiceSort {
@@ -1288,6 +1290,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
@@ -1769,6 +1772,8 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
   startsAtFrom?: Maybe<DateFilter>;
   startsAtTo?: Maybe<DateFilter>;
   paidUntilFrom?: Maybe<DateFilter>;
