@@ -1,5 +1,3 @@
-import {InputCursor, Limit, SortOrder} from './common'
-
 export enum PaymentState {
   Created = 'created',
   Submitted = 'submitted',
@@ -53,14 +51,6 @@ export enum PaymentSort {
 
 export interface PaymentFilter {
   intentID?: string
-}
-
-export interface GetPaymentsArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: PaymentFilter
-  sort: PaymentSort
-  order: SortOrder
 }
 
 export type OptionalPayment = Payment | null

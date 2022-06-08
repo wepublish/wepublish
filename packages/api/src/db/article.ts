@@ -1,5 +1,5 @@
+import {MetadataProperty} from '@prisma/client'
 import {ArticleBlock} from './block'
-import {InputCursor, Limit, MetadataProperty, SortOrder} from './common'
 
 export interface ArticleData {
   readonly preTitle?: string | null
@@ -91,22 +91,6 @@ export enum ArticleSort {
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
-}
-
-export interface GetArticlesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: ArticleFilter
-  readonly sort: ArticleSort
-  readonly order: SortOrder
-}
-
-export interface GetPublishedArticlesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PublicArticleFilter
-  readonly sort: ArticleSort
-  readonly order: SortOrder
 }
 
 export interface GetArticleHistoryArgs {

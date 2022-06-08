@@ -1,5 +1,4 @@
 import {RichTextNode} from '../graphql/richText'
-import {SortOrder, Limit, InputCursor} from './common'
 
 export enum CommentState {
   Approved = 'approved',
@@ -98,14 +97,6 @@ export interface UpdatePublicCommentArgs {
 
 export interface CommentFilter {
   readonly states?: CommentState[]
-}
-
-export interface GetCommentsArgs {
-  readonly filter?: CommentFilter
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly sort: CommentSort
-  readonly order: SortOrder
 }
 
 export interface GetPublicCommentsArgs {

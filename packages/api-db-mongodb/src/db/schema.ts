@@ -7,7 +7,6 @@ import {
   AvailablePaymentMethod,
   FocalPoint,
   InvoiceItem,
-  MetadataProperty,
   NavigationLink,
   PageBlock,
   PaymentProviderCustomer,
@@ -21,6 +20,7 @@ import {
   SubscriptionPeriod,
   SubscriptionDeactivation
 } from '@wepublish/api'
+import {MetadataProperty} from '@prisma/client'
 
 export enum CollectionName {
   Migrations = 'migrations',

@@ -1,5 +1,5 @@
 import {PageBlock} from './block'
-import {InputCursor, Limit, MetadataProperty, SortOrder} from './common'
+import {MetadataProperty} from '@prisma/client'
 
 // TODO: Remove arg interfaces in favor of explicit arguments.
 
@@ -77,36 +77,17 @@ export enum PageSort {
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
 }
-
-export interface GetPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
-}
-
-export interface GetPublishedPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PublishedPageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
-}
-
 export interface GetPageHistoryArgs {
   readonly id: string
 }
 
-export interface PageInput extends PageData {}
-
 export interface CreatePageArgs {
-  readonly input: PageInput
+  readonly input: PageData
 }
 
 export interface UpdatePageArgs {
   readonly id: string
-  readonly input: PageInput
+  readonly input: PageData
 }
 
 export interface DeletePageArgs {

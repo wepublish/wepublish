@@ -1,5 +1,3 @@
-import {InputCursor, Limit, SortOrder} from './common'
-
 export interface FocalPoint {
   readonly x: number
   readonly y: number
@@ -86,14 +84,6 @@ export enum ImageSort {
 export interface ImageFilter {
   readonly title?: string
   readonly tags?: string[]
-}
-
-export interface GetImagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: ImageFilter
-  readonly sort: ImageSort
-  readonly order: SortOrder
 }
 
 export interface DBImageAdapter {

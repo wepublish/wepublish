@@ -1,4 +1,5 @@
-import {DateFilter, InputCursor, Limit, MetadataProperty, SortOrder} from './common'
+import {DateFilter} from './common'
+import {MetadataProperty} from '@prisma/client'
 import {PaymentPeriodicity} from './memberPlan'
 
 export enum SubscriptionDeactivationReason {
@@ -103,14 +104,6 @@ export interface SubscriptionPeriodInput {
 }
 
 export type OptionalSubscription = Subscription | null
-
-export interface GetSubscriptionArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: SubscriptionFilter
-  readonly sort: SubscriptionSort
-  readonly order: SortOrder
-}
 
 export interface DBSubscriptionAdapter {
   createSubscription(args: CreateSubscriptionArgs): Promise<OptionalSubscription>
