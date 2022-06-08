@@ -39,7 +39,10 @@ export interface CheckIntentProps {
 export interface UpdatePaymentWithIntentStateProps {
   intentState: IntentState
   dbAdapter: DBAdapter
-  loaders: DataLoaderContext
+  paymentsByID: Context['loaders']['paymentsByID']
+  invoicesByID: Context['loaders']['invoicesByID']
+  subscriptionClient: PrismaClient['subscription']
+  userClient: PrismaClient['user']
 }
 
 export interface WebhookUpdatesProps {
@@ -109,7 +112,10 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   async updatePaymentWithIntentState({
     intentState,
     dbAdapter,
-    loaders
+    paymentsByID,
+    invoicesByID,
+    subscriptionClient,
+    userClient
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
     const payment = await loaders.paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
@@ -131,8 +137,11 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     if (!updatedPayment) throw new Error('Error while updating Payment')
 
     // get invoice and subscription joins out of the payment
-    const invoice = await loaders.invoicesByID.load(payment.invoiceID)
-    if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+    const invoice = await invoicesByID.load(payment.invoiceID)
+
+    if (!invoice) {
+      throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+    }
 
     const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
     if (!subscription)
@@ -222,7 +231,10 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
             await paymentProvider.updatePaymentWithIntentState({
               intentState: paymentStatus,
               dbAdapter: context.dbAdapter,
-              loaders: context.loaders
+              paymentsByID: context.loaders.paymentsByID,
+              invoicesByID: context.loaders.invoicesByID,
+              subscriptionClient: context.prisma.subscription,
+              userClient: context.prisma.user
             })
           }
         } catch (error) {

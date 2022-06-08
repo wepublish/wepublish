@@ -315,25 +315,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
       description: 'This query returns the invoices  of the authenticated user.',
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-
-        const subscriptions = await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
-
-        const invoices: Invoice[] = []
-
-        for (const subscription of subscriptions) {
-          if (!subscription) continue
-          const subscriptionInvoices = await dbAdapter.invoice.getInvoicesBySubscriptionID(
-            subscription.id
-          )
-          for (const invoice of subscriptionInvoices) {
-            if (!invoice) continue
-            invoices.push(invoice)
-          }
-        }
-        return invoices
-      }
+      resolve: (root, _, {authenticateUser, prisma: {subscription, invoice}}) =>
+        getPublicInvoices(authenticateUser, subscription, invoice)
     },
 
     subscriptions: {
@@ -392,15 +375,19 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation will check the invoice status and update with information from the paymentProvider',
       async resolve(root, {id}, context) {
-        const {authenticateUser, dbAdapter, paymentProviders} = context
+        const {authenticateUser, prisma, paymentProviders} = context
         const {user} = authenticateUser()
 
-        const invoice = await dbAdapter.invoice.getInvoiceByID(id)
-        if (!invoice) throw new NotFound('Invoice', id)
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(
-          invoice.subscriptionID
-        )
-        if (!subscription || subscription.userID !== user.id) throw new NotFound('Invoice', id)
+        const invoice = await prisma.invoice.findUnique({
+          where: {
+            id
+          }
+        })
+
+        if (!invoice) {
+          throw new NotFound('Invoice', id)
+        }
+
 
         const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
         const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
@@ -420,14 +407,22 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           await paymentProvider.updatePaymentWithIntentState({
             intentState,
             dbAdapter: context.dbAdapter,
-            loaders: context.loaders
+            paymentsByID: context.loaders.paymentsByID,
+            invoicesByID: context.loaders.invoicesByID,
+            subscriptionClient: prisma.subscription,
+            userClient: prisma.user
           })
         }
 
         // FIXME: We need to implement a way to wait for all the database
         //  event hooks to finish before we return data. Will be solved in WPC-498
         await new Promise(resolve => setTimeout(resolve, 100))
-        return await dbAdapter.invoice.getInvoiceByID(id)
+
+        return await prisma.invoice.findUnique({
+          where: {
+            id
+          }
+        })
       }
     },
 

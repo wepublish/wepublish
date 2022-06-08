@@ -178,7 +178,11 @@ export class MemberContext implements MemberContext {
     subscription
   }: HandleSubscriptionChangeProps): Promise<Subscription> {
     // Check if user has any unpaid Periods and delete them and their invoices if so
-    const invoices = await this.dbAdapter.invoice.getInvoicesBySubscriptionID(subscription.id)
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        subscriptionID: subscription.id
+      }
+    })
 
     const openInvoice = invoices.find(
       invoice => invoice?.paidAt === null && invoice?.canceledAt === null
@@ -236,7 +240,11 @@ export class MemberContext implements MemberContext {
           (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
       ) {
         const period = periods[periods.length - 1]
-        const invoice = await this.dbAdapter.invoice.getInvoiceByID(period.invoiceID)
+        const invoice = await this.prisma.invoice.findUnique({
+          where: {
+            id: period.invoiceID
+          }
+        })
         // only return the invoice if it hasn't been canceled. Otherwise
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
@@ -409,7 +417,10 @@ export class MemberContext implements MemberContext {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
           dbAdapter: this.dbAdapter,
-          loaders: this.loaders
+          paymentsByID: this.loaders.paymentsByID,
+          invoicesByID: this.loaders.invoicesByID,
+          subscriptionClient: this.prisma.subscription,
+          userClient: this.prisma.user
         })
 
         // FIXME: We need to implement a way to wait for all the database
@@ -434,28 +445,28 @@ export class MemberContext implements MemberContext {
   private async getAllOpenInvoices(): Promise<Invoice[]> {
     const openInvoices: Invoice[] = []
     let hasMore = true
-    let skip = 0
+    let cursor: string | null = null
     while (hasMore) {
-      const invoices = await this.dbAdapter.invoice.getInvoices({
-        cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
-        order: SortOrder.Ascending,
-        sort: InvoiceSort.CreatedAt,
-        filter: {
-          paidAt: {
-            comparison: DateFilterComparison.Equal,
-            date: null
-          },
-          canceledAt: {
-            comparison: DateFilterComparison.Equal,
-            date: null
-          }
-        }
+      const invoices: Invoice[] = await this.prisma.invoice.findMany({
+        where: {
+          paidAt: null,
+          canceledAt: null
+        },
+        orderBy: {
+          createdAt: 'asc'
+        },
+        skip: cursor ? 1 : 0,
+        take: 100,
+        cursor: cursor
+          ? {
+              id: cursor
+            }
+          : undefined
       })
 
-      hasMore = invoices.pageInfo.hasNextPage
-      skip += 100
-      openInvoices.push(...invoices.nodes)
+      hasMore = Boolean(invoices?.length)
+      cursor = invoices?.length ? invoices[invoices.length - 1].id : null
+      openInvoices.push(...invoices)
     }
 
     return openInvoices

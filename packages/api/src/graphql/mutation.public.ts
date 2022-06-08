@@ -782,7 +782,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {input},
-        {authenticateUser, createPaymentWithProvider, loaders, dbAdapter}
+        {authenticateUser, createPaymentWithProvider, loaders, prisma, dbAdapter}
       ) {
         const {user} = authenticateUser()
         const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
@@ -802,7 +802,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!paymentMethod)
           throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
-        const invoice = await dbAdapter.invoice.getInvoiceByID(invoiceID)
+        const invoice = await prisma.invoice.findUnique({
+          where: {id: invoiceID}
+        })
         if (!invoice) throw new NotFound('Invoice', invoiceID)
         const subscription = await dbAdapter.subscription.getSubscriptionByID(
           invoice.subscriptionID
