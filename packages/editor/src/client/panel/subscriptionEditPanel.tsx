@@ -94,7 +94,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
    */
   const {data: invoicesData} = useInvoicesQuery({
     variables: {
-      first: 100,
+      take: 100,
       filter: {
         subscriptionID: id
       }

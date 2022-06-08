@@ -1,10 +1,10 @@
-import {ConnectionResult, DateFilter, InputCursor, Limit, SortOrder} from '..'
+import {DateFilter, InputCursor, Limit, SortOrder} from '..'
 
 export interface InvoiceItem {
   createdAt: Date
   modifiedAt: Date
   name: string
-  description?: string
+  description?: string | null
   quantity: number
   amount: number
 }
@@ -16,12 +16,13 @@ export interface Invoice {
   mail: string
   dueAt: Date
   subscriptionID: string
-  description?: string
+  description?: string | null
   paidAt: Date | null
   canceledAt: Date | null
-  sentReminderAt?: Date
+  sentReminderAt?: Date | null
   items: InvoiceItem[]
-  manuallySetAsPaidByUserId?: string
+  manuallySetAsPaidByUserId?: string | null
+  userID?: string | null
 }
 
 export type OptionalInvoice = Invoice | null
@@ -30,11 +31,11 @@ export interface InvoiceInput {
   mail: string
   dueAt: Date
   subscriptionID: string
-  description?: string
+  description?: string | null
   paidAt: Date | null
   canceledAt: Date | null
-  sentReminderAt?: Date
-  manuallySetAsPaidByUserId?: string
+  manuallySetAsPaidByUserId?: string | null
+  sentReminderAt?: Date | null
   items: InvoiceItem[]
 }
 
@@ -77,10 +78,4 @@ export interface DBInvoiceAdapter {
   createInvoice(args: CreateInvoiceArgs): Promise<Invoice>
   updateInvoice(args: UpdateInvoiceArgs): Promise<OptionalInvoice>
   deleteInvoice(args: DeleteInvoiceArgs): Promise<string | null>
-
-  getInvoiceByID(id: string): Promise<OptionalInvoice>
-  getInvoicesByID(ids: readonly string[]): Promise<OptionalInvoice[]>
-  getInvoicesBySubscriptionID(subscriptionID: string): Promise<OptionalInvoice[]>
-
-  getInvoices(args: GetInvoicesArgs): Promise<ConnectionResult<Invoice>>
 }

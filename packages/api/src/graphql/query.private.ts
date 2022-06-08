@@ -777,37 +777,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     invoice: {
       type: GraphQLInvoice,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetInvoice, roles)
-
-        return loaders.invoicesByID.load(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders: {invoicesByID}}) =>
+        getInvoiceById(id, authenticate, invoicesByID)
     },
 
     invoices: {
       type: GraphQLNonNull(GraphQLInvoiceConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLinvoiceFilter},
         sort: {type: GraphQLInvoiceSort, defaultValue: InvoiceSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetInvoices, roles)
-
-        return dbAdapter.invoice.getInvoices({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (
+        root,
+        {filter, sort, order, cursor, take, skip},
+        {authenticate, prisma: {invoice}}
+      ) => getAdminInvoices(filter, sort, order, cursor, skip, take, authenticate, invoice)
     },
 
     // Payment

@@ -101,7 +101,7 @@ export interface DataLoaderContext {
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly activePaymentMethodsBySlug: DataLoader<string, OptionalPaymentMethod>
-  readonly invoicesByID: DataLoader<string, OptionalInvoice>
+  readonly invoicesByID: DataLoader<string, Invoice | null>
   readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
 
@@ -408,10 +408,20 @@ export async function contextFromRequest(
     activePaymentMethodsByID: new DataLoader(ids =>
       dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
     ),
-    activePaymentMethodsBySlug: new DataLoader(slugs =>
-      dbAdapter.paymentMethod.getActivePaymentMethodsBySlug(slugs)
+    invoicesByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.invoice.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
     ),
-    invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
+    paymentsByID: new DataLoader(async ids =>
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
   }
 
