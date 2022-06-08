@@ -1,112 +1,111 @@
 import {
-  GraphQLObjectType,
+  GraphQLID,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLInt,
-  GraphQLID,
-  GraphQLString,
-  Kind
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
-
+import {Context} from '../context'
+import {ArticleSort} from '../db/article'
+import {AuthorSort} from '../db/author'
+import {CommentSort} from '../db/comment'
+import {SortOrder} from '../db/common'
+import {ImageSort} from '../db/image'
+import {InvoiceSort} from '../db/invoice'
+import {MemberPlanSort} from '../db/memberPlan'
+import {PageSort} from '../db/page'
+import {PaymentSort} from '../db/payment'
+import {SubscriptionSort} from '../db/subscription'
+import {UserSort} from '../db/user'
+import {UserRoleSort} from '../db/userRole'
+import {delegateToPeerSchema} from '../utility'
 import {
-  WrapQuery,
-  ExtractField,
-  introspectSchema,
-  delegateToSchema,
-  makeRemoteExecutableSchema
-} from 'graphql-tools'
-
-import {UserInputError} from 'apollo-server-express'
-
-import {Context, createFetcher} from '../context'
-
-import {GraphQLSession} from './session'
-import {GraphQLAuthProvider} from './auth'
-
-import {
-  GraphQLArticleConnection,
-  GraphQLArticleSort,
-  GraphQLArticleFilter,
   GraphQLArticle,
+  GraphQLArticleConnection,
+  GraphQLArticleFilter,
+  GraphQLArticleSort,
   GraphQLPeerArticleConnection
 } from './article'
-
-import {ConnectionResult, InputCursor, Limit, SortOrder} from '../db/common'
-import {ArticleSort, PeerArticle} from '../db/article'
-import {GraphQLSortOrder} from './common'
-import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
-import {ImageSort} from '../db/image'
-
 import {
+  getAdminArticles,
+  getArticleById,
+  getArticlePreviewLink
+} from './article/article.private-queries'
+import {GraphQLAuthProvider} from './auth'
+import {
+  GraphQLAuthor,
   GraphQLAuthorConnection,
   GraphQLAuthorFilter,
-  GraphQLAuthorSort,
-  GraphQLAuthor
+  GraphQLAuthorSort
 } from './author'
-
-import {AuthorSort} from '../db/author'
-import {User, UserSort} from '../db/user'
+import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
+import {getAdminComments} from './comment/comment.private-queries'
+import {GraphQLSortOrder} from './common'
+import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
+import {getAdminImages, getImageById} from './image/image.private-queries'
+import {
+  GraphQLInvoice,
+  GraphQLInvoiceConnection,
+  GraphQLinvoiceFilter,
+  GraphQLInvoiceSort
+} from './invoice'
+import {getAdminInvoices, getInvoiceById} from './invoice/invoice.private-queries'
+import {
+  getAdminMemberPlans,
+  getMemberPlanByIdOrSlug
+} from './member-plan/member-plan.private-queries'
+import {
+  GraphQLMemberPlan,
+  GraphQLMemberPlanConnection,
+  GraphQLMemberPlanFilter,
+  GraphQLMemberPlanSort
+} from './memberPlan'
 import {GraphQLNavigation} from './navigation'
-import {GraphQLSlug} from './slug'
-
-import {GraphQLPage, GraphQLPageConnection, GraphQLPageFilter, GraphQLPageSort} from './page'
-
-import {PageSort} from '../db/page'
-
-import {SessionType} from '../db/session'
+import {getNavigationByIdOrKey, getNavigations} from './navigation/navigation.private-queries'
+import {GraphQLPage, GraphQLPageConnection, GraphQLPageSort} from './page'
+import {getAdminPages, getPageById, getPagePreviewLink} from './page/page.private-queries'
+import {
+  GraphQLPayment,
+  GraphQLPaymentConnection,
+  GraphQLPaymentFilter,
+  GraphQLPaymentSort
+} from './payment'
+import {
+  getPaymentMethodById,
+  getPaymentMethods
+} from './payment-method/payment-method.private-queries'
+import {getAdminPayments, getPaymentById} from './payment/payment.private-queries'
+import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
+import {getAdminPeerArticles} from './peer-article/peer-article.private-queries'
+import {
+  getAdminPeerProfile,
+  getRemotePeerProfile
+} from './peer-profile/peer-profile.private-queries'
+import {getPeerById, getPeers} from './peer/peer.private-queries'
+import {getPermissions} from './permission/permission.private-queries'
+import {authorise, CanGetPaymentProviders, CanGetPeerArticle} from './permissions'
+import {GraphQLSession} from './session'
+import {getSessionsForUser} from './session/session.private-queries'
+import {GraphQLSlug} from './slug'
+import {
+  GraphQLSubscription,
+  GraphQLSubscriptionConnection,
+  GraphQLSubscriptionFilter,
+  GraphQLSubscriptionSort
+} from './subscription'
+import {
+  getAdminSubscriptions,
+  getSubscriptionById,
+  getSubscriptionsAsCSV
+} from './subscription/subscription.private-queries'
 import {GraphQLToken} from './token'
-import {
-  delegateToPeerSchema,
-  base64Encode,
-  base64Decode,
-  markResultAsProxied,
-  mapSubscriptionsAsCsv
-} from '../utility'
-
-import {
-  authorise,
-  isAuthorised,
-  CanGetArticle,
-  CanGetArticles,
-  CanGetAuthor,
-  CanGetAuthors,
-  CanGetImage,
-  CanGetImages,
-  CanGetNavigation,
-  CanGetPage,
-  CanGetPages,
-  CanGetPermissions,
-  CanGetUser,
-  CanGetUserRole,
-  CanGetUserRoles,
-  CanGetUsers,
-  CanGetSharedArticle,
-  CanGetPeerArticle,
-  CanGetPeerArticles,
-  CanGetNavigations,
-  CanGetSharedArticles,
-  CanGetPeerProfile,
-  CanGetPeers,
-  CanGetPeer,
-  AllPermissions,
-  CanGetComments,
-  CanGetMemberPlan,
-  CanGetMemberPlans,
-  CanGetPaymentMethods,
-  CanGetPaymentMethod,
-  CanGetInvoice,
-  CanGetInvoices,
-  CanGetPayment,
-  CanGetPayments,
-  CanGetPaymentProviders,
-  CanGetArticlePreviewLink,
-  CanGetPagePreviewLink,
-  CanCreatePeer,
-  CanGetSubscriptions,
-  CanGetSubscription
-} from './permissions'
-import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
+import {getTokens} from './token/token.private-queries'
+import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
+import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
+import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -114,40 +113,6 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {UserRoleSort} from '../db/userRole'
-
-import {NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
-import {
-  GraphQLMemberPlan,
-  GraphQLMemberPlanConnection,
-  GraphQLMemberPlanFilter,
-  GraphQLMemberPlanSort
-} from './memberPlan'
-import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
-import {
-  GraphQLInvoice,
-  GraphQLInvoiceConnection,
-  GraphQLinvoiceFilter,
-  GraphQLInvoiceSort
-} from './invoice'
-import {InvoiceSort} from '../db/invoice'
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort
-} from './payment'
-import {PaymentSort} from '../db/payment'
-import {CommentSort} from '../db/comment'
-import {Subscription, SubscriptionSort} from '../db/subscription'
-import {
-  GraphQLSubscription,
-  GraphQLSubscriptionConnection,
-  GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort
-} from './subscription'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -187,10 +152,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     me: {
       type: GraphQLUser,
-      resolve(root, args, {authenticate}) {
-        const session = authenticate()
-        return session?.type === SessionType.User ? session.user : null
-      }
+      resolve: (root, args, {authenticate}) => getMe(authenticate)
     },
 
     // Session
@@ -198,10 +160,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     sessions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
-      resolve(root, args, {authenticateUser, dbAdapter}) {
-        const session = authenticateUser()
-        return dbAdapter.session.getUserSessions(session.user)
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
+        getSessionsForUser(authenticateUser, session, userRole)
     },
 
     authProviders: {
@@ -216,6 +176,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             redirect_uri: `${redirectUri}/${client.name}`,
             state: 'fakeRandomString'
           })
+
           return {
             name: client.name,
             url
@@ -313,12 +274,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     permissions: {
       type: GraphQLList(GraphQLNonNull(GraphQLPermission)),
       args: {},
-      resolve(root, {}, {authenticate}) {
-        const {roles} = authenticate()
-        authorise(CanGetPermissions, roles)
-
-        return AllPermissions
-      }
+      resolve: (root, _, {authenticate}) => getPermissions(authenticate)
     },
 
     // Token
@@ -326,10 +282,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLToken))),
-      resolve(root, args, {authenticateUser, dbAdapter}) {
-        authenticateUser()
-        return dbAdapter.token.getTokens()
-      }
+      resolve: (root, args, {authenticateUser, prisma: {token}}) =>
+        getTokens(authenticateUser, token)
     },
 
     // Navigation

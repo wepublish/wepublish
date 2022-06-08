@@ -1,8 +1,7 @@
 import {DBTokenAdapter, Token, TokenInput} from '@wepublish/api'
 import {Collection, Db} from 'mongodb'
-
-import {CollectionName, DBToken} from './schema'
 import {generateToken} from '../utility'
+import {CollectionName, DBToken} from './schema'
 
 export class MongoDBTokenAdapter implements DBTokenAdapter {
   private tokens: Collection<DBToken>
@@ -24,17 +23,8 @@ export class MongoDBTokenAdapter implements DBTokenAdapter {
     return {id, ...data}
   }
 
-  async getTokens(): Promise<Token[]> {
-    const tokens = await this.tokens.find().sort({createdAt: -1}).toArray()
-    return tokens.map(({_id: id, ...data}) => ({id, ...data}))
-  }
-
   async deleteToken(id: string): Promise<string | null> {
     const {deletedCount} = await this.tokens.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
-  }
-
-  async getTokenByString(token: string): Promise<Token | null> {
-    return this.tokens.findOne({token})
   }
 }
