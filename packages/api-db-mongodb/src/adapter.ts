@@ -113,7 +113,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
     this.invoice = new MongoDBInvoiceAdapter(db)
     this.payment = new MongoDBPaymentAdapter(db)
-    this.mailLog = new MongoDBMailLogAdapter(db, locale)
+    this.mailLog = new MongoDBMailLogAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {
