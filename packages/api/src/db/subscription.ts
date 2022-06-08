@@ -68,6 +68,7 @@ export interface SubscriptionFilter {
   readonly memberPlanID?: string
   readonly paymentPeriodicity?: PaymentPeriodicity
   readonly userHasAddress?: boolean
+  readonly userID?: string
 }
 
 export interface SubscriptionJoins {
@@ -131,7 +132,6 @@ export interface GetSubscriptionArgs {
   readonly limit: Limit
   readonly filter?: SubscriptionFilter
   readonly joins?: SubscriptionJoins
-  readonly search?: string
   readonly sort: SubscriptionSort
   readonly order: SortOrder
 }

@@ -326,20 +326,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         last: {type: GraphQLInt},
         skip: {type: GraphQLInt},
         filter: {type: GraphQLSubscriptionFilter},
-        search: {type: GraphQLString},
         sort: {type: GraphQLSubscriptionSort, defaultValue: SubscriptionSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       async resolve(
         root,
-        {filter, search, sort, order, after, before, first, skip, last},
+        {filter, sort, order, after, before, first, skip, last},
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         return await dbAdapter.subscription.getSubscriptions({
           filter,
-          search,
           sort,
           order,
           cursor: InputCursor(after, before),
@@ -351,19 +349,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscriptionsAsCsv: {
       type: GraphQLString,
       args: {
-        filter: {type: GraphQLSubscriptionFilter},
-        search: {type: GraphQLString}
+        filter: {type: GraphQLSubscriptionFilter}
       },
-      async resolve(root, {filter, search}, {dbAdapter, authenticate}) {
+      async resolve(root, {filter}, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
 
         const subscriptions: Subscription[] = []
         const joins: SubscriptionJoins = {
-          joinMemberPlan: true,
-          joinPaymentMethod: true,
-          joinUser: true
+          joinMemberPlan: false,
+          joinPaymentMethod: false,
+          joinUser: false
         }
 
         let hasMore = true
@@ -372,7 +369,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
               filter,
-              search,
               joins,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,

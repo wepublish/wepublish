@@ -769,10 +769,8 @@
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
-        "reset": "Filter zurücksetzen"
-      },
-      "search": {
-        "inputPlaceholder": "Suche nach Vorname, Name, E-Mail oder User-Id"
+        "reset": "Filter zurücksetzen",
+        "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",

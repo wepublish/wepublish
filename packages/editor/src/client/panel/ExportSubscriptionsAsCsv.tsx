@@ -6,15 +6,13 @@ import {FileDownload} from '@rsuite/icons'
 
 export interface ExportSubscriptionAsCsvProps {
   filter?: SubscriptionFilter
-  search?: string
 }
 
-export function ExportSubscriptionsAsCsv({filter, search}: ExportSubscriptionAsCsvProps) {
+export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps) {
   const {t} = useTranslation()
   const {data, loading, refetch} = useSubscriptionsAsCsvQuery({
     variables: {
-      filter,
-      search
+      filter
     },
     fetchPolicy: 'no-cache'
   })

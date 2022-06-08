@@ -1480,7 +1480,6 @@ export type QuerySubscriptionsArgs = {
   last?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<SubscriptionFilter>;
-  search?: Maybe<Scalars['String']>;
   sort?: Maybe<SubscriptionSort>;
   order?: Maybe<SortOrder>;
 };
@@ -1488,7 +1487,6 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: Maybe<SubscriptionFilter>;
-  search?: Maybe<Scalars['String']>;
 };
 
 
@@ -1787,6 +1785,7 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>;
   paymentPeriodicity?: Maybe<PaymentPeriodicity>;
   userHasAddress?: Maybe<Scalars['Boolean']>;
+  userID?: Maybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {
@@ -3629,7 +3628,6 @@ export type DeactivationFragment = (
 
 export type SubscriptionListQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
-  search?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -3670,7 +3668,6 @@ export type SubscriptionQuery = (
 
 export type SubscriptionsAsCsvQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
-  search?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -6969,8 +6966,8 @@ export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutati
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
 export const SubscriptionListDocument = gql`
-    query SubscriptionList($filter: SubscriptionFilter, $search: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, search: $search, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
+  subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullSubscription
     }
@@ -6998,7 +6995,6 @@ export const SubscriptionListDocument = gql`
  * const { data, loading, error } = useSubscriptionListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      search: // value for 'search'
  *      after: // value for 'after'
  *      before: // value for 'before'
  *      first: // value for 'first'
@@ -7056,8 +7052,8 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv($filter: SubscriptionFilter, $search: String) {
-  subscriptionsAsCsv(filter: $filter, search: $search)
+    query SubscriptionsAsCsv($filter: SubscriptionFilter) {
+  subscriptionsAsCsv(filter: $filter)
 }
     `;
 
@@ -7074,7 +7070,6 @@ export const SubscriptionsAsCsvDocument = gql`
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      search: // value for 'search'
  *   },
  * });
  */

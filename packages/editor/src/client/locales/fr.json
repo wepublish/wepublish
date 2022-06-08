@@ -456,10 +456,8 @@
         "reasonNone": "Sans",
         "reasonUserSelfDeactivated": "Par l'utilisateur",
         "reasonInvoiceNotPaid": "Facture impayée",
-        "reset": "Réinitialiser filtre"
-      },
-      "search": {
-        "inputPlaceholder": "Recherche par prénom, nom, e-mail ou ID utilisateur"
+        "reset": "Réinitialiser filtre",
+        "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",

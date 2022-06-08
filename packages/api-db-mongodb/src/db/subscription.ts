@@ -182,7 +182,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   async getSubscriptions({
     filter,
     joins,
-    search,
     sort,
     order,
     cursor,
@@ -323,6 +322,10 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
+    if (filter?.userID) {
+      textFilter.$and?.push({userID: {$eq: filter.userID}})
+    }
+
     // join related collections
     let preparedJoins: any = []
     // member plan join
@@ -355,7 +358,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       ]
     }
     // user join
-    if (joins?.joinUser || search) {
+    if (joins?.joinUser) {
       preparedJoins = [
         ...preparedJoins,
         {
@@ -366,37 +369,8 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
             as: 'user'
           }
         },
-        {
-          $unwind: '$user'
-        }
+        {$unwind: '$user'}
       ]
-    }
-
-    // build free text search query
-    const columnsToSearch = ['user.name', 'user.firstName', 'user.email', 'user._id']
-    if (search) {
-      // split user's input by spaces
-      const searchTerms = search.split(' ')
-      const orConditions = []
-      // iterate user search terms
-      for (const searchTerm of searchTerms) {
-        // iterate columns to be searched
-        for (const column of columnsToSearch) {
-          const orCondition: any = {}
-          orCondition[column] = {
-            $regex: searchTerm,
-            $options: 'i'
-          }
-          orConditions.push(orCondition)
-        }
-      }
-      const searchConditions = {
-        $match: {
-          $or: [...orConditions]
-        }
-      }
-      // add search conditions
-      preparedJoins = [...preparedJoins, searchConditions]
     }
 
     const [totalCount, subscriptions] = await Promise.all([

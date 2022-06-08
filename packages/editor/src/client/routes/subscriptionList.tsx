@@ -25,9 +25,8 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
-import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
-import {SubscriptionListSearch} from '../atoms/searchAndFilter/subscriptionListSearch'
+import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
@@ -53,7 +52,6 @@ export function SubscriptionList() {
     current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
   )
   const [filter, setFilter] = useState({} as SubscriptionFilter)
-  const [search, setSearch] = useState<string | undefined>(undefined)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
 
@@ -72,7 +70,6 @@ export function SubscriptionList() {
   const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
       filter,
-      search,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -150,7 +147,7 @@ export function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ExportSubscriptionsAsCsv filter={filter} search={search} />
+          <ExportSubscriptionsAsCsv filter={filter} />
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
@@ -158,12 +155,6 @@ export function SubscriptionList() {
             route={SubscriptionCreateRoute.create({})}>
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-      {/* Searchbar */}
-      <FlexboxGrid style={{marginTop: '15px', marginBottom: '10px'}}>
-        <FlexboxGrid.Item colspan={6}>
-          <SubscriptionListSearch onUpdateSearch={searchString => setSearch(searchString)} />
         </FlexboxGrid.Item>
       </FlexboxGrid>
 

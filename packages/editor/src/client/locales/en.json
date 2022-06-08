@@ -836,10 +836,8 @@
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reasonInvoiceNotPaid": "Invoice not paid",
-        "reset": "Reset Filter"
-      },
-      "search": {
-        "inputPlaceholder": "Search by first name, last name, email or user id"
+        "reset": "Reset Filter",
+        "searchPlaceholder": "Search by first name, last name, email, address, zip, city"
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
