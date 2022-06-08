@@ -58,6 +58,8 @@ export enum RouteType {
   SubscriptionEdit = 'subscriptionEdit',
   SubscriptionCreate = 'subscriptionCreate',
 
+  InvoiceList = 'invoiceList',
+
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
   UserRoleCreate = 'userRoleCreate',

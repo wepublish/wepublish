@@ -45,6 +45,7 @@ import {
 } from '../route'
 import {
   ALL_PAYMENT_PERIODICITIES,
+  DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   isTempUser,
   mapTableSortTypeToGraphQLSortOrder
@@ -270,17 +271,17 @@ export function SubscriptionList() {
             searchable={false}
             data={[
               {
-                value: true,
+                value: 'true',
                 label: t('yes')
               },
               {
-                value: false,
+                value: 'false',
                 label: t('no')
               }
             ]}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value})}
+            onChange={value => updateFilter({autoRenew: value === 'true'})}
           />
         </Form.Group>
         {/*  hide for now until filtering by subscription.user.address
@@ -479,6 +480,13 @@ export function SubscriptionList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
