@@ -895,16 +895,16 @@ export const Migrations: Migration[] = [
     }
   },
   {
-   version: 21,
-   async migrate(db, locale) {
+    version: 21,
+    async migrate(db, locale) {
       const invoices = db.collection(CollectionName.Invoices)
       await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
     }
   },
   {
-    // Rename unused temp user collection
-   version: 22,
-   async migrate(db) {
+    // Rename unused temp user collection. For operators to remove manually since the collection not used anymore.
+    version: 22,
+    async migrate(db) {
       const collections = await db.listCollections().toArray()
       if (collections.includes('temp.users')) {
         const tempUser = await db.collection('temp.users')
