@@ -512,7 +512,10 @@ export class MemberContext implements MemberContext {
           continue
         }
       }
-      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
+
+      const user = await this.prisma.user.findUnique({
+        where: {id: subscription.userID}
+      })
       if (!user) {
         logger('memberContext').warn('user %s not found', subscription.userID)
         continue
@@ -695,7 +698,10 @@ export class MemberContext implements MemberContext {
         }
       }
 
-      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
+      const user = await this.prisma.user.findUnique({
+        where: {id: subscription.userID}
+      })
+
       if (!user) {
         logger('memberContext').warn('user %s not found', subscription.userID)
         continue
@@ -727,7 +733,11 @@ export class MemberContext implements MemberContext {
       invoice.subscriptionID
     )
     const user = subscription?.userID
-      ? await this.dbAdapter.user.getUserByID(subscription?.userID)
+      ? await this.prisma.user.findUnique({
+          where: {
+            id: subscription.userID
+          }
+        })
       : null
     const paymentMethod = subscription
       ? await this.loaders.paymentMethodsByID.load(subscription.paymentMethodID)

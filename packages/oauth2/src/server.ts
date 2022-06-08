@@ -88,7 +88,9 @@ export class Oauth2Server {
   }
 
   async findAccount(ctx: any, id: any) {
-    const user = await this.wepublishDDAdapter.user.getUserByID(id)
+    const user = await this.prisma.user.findUnique({
+      where: {id}
+    })
     if (user) {
       return {
         accountId: user.id,

@@ -163,19 +163,25 @@ export abstract class BasePaymentProvider implements PaymentProvider {
    */
   private async updatePaymentProvider(
     dbAdapter: DBAdapter,
-    subscription: OptionalSubscription,
+    userClient: PrismaClient['user'],
+    subscription: Subscription,
     customerID: string
   ) {
     if (!subscription) {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    const user = await dbAdapter.user.getUserByID(subscription.userID)
+    const user = await userClient.user.findUnique({
+      where: {
+        id: subscription.userID
+      }
+    })
     if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
 
     const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-      ppc => ppc.paymentProviderID !== this.id
+      ({paymentProviderID}) => paymentProviderID !== this.id
     )
+
     paymentProviderCustomers.push({
       paymentProviderID: this.id,
       customerID

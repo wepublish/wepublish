@@ -98,8 +98,8 @@ export class MongoDBAdapter implements DBAdapter {
     this.db = db
 
     this.peer = new MongoDBPeerAdapter(db)
-    this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor, locale)
-    this.userRole = new MongoDBUserRoleAdapter(db, locale)
+    this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
+    this.userRole = new MongoDBUserRoleAdapter(db)
     this.subscription = new MongoDBSubscriptionAdapter(db, locale)
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
