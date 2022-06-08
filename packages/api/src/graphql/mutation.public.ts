@@ -434,7 +434,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
+          subscription: subscription as Subscription
         })
 
         if (!invoice) {
@@ -537,7 +537,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
+          subscription: subscription as Subscription
         })
 
         if (!invoice) {
@@ -549,7 +549,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
 
         return await createPaymentWithProvider({
-          invoice,
+          invoice: invoice as Invoice,
           saveCustomer: true,
           paymentMethodID: paymentMethod.id,
           successURL,
@@ -690,10 +690,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
-      async resolve(root, {id, input}, {authenticateUser, dbAdapter, loaders, memberContext}) {
+      async resolve(
+        root,
+        {id, input},
+        {authenticateUser, prisma, dbAdapter, loaders, memberContext}
+      ) {
         const {user} = authenticateUser()
 
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        const subscription = await prisma.subscription.findUnique({
+          where: {id}
+        })
 
         if (!subscription) throw new NotFound('subscription', id)
 
@@ -735,7 +741,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
         return await memberContext.handleSubscriptionChange({
-          subscription: updateSubscription
+          subscription: updateSubscription as Subscription
         })
       }
     },
@@ -747,11 +753,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
-      async resolve(root, {id}, {authenticateUser, dbAdapter, memberContext}) {
+      async resolve(root, {id}, {authenticateUser, prisma, dbAdapter, memberContext}) {
         const {user} = authenticateUser()
         if (!user) throw new NotAuthenticatedError()
 
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        const subscription = await prisma.subscription.findUnique({
+          where: {id}
+        })
 
         if (!subscription) throw new NotFound('subscription', id)
 
@@ -770,8 +778,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           deactivationReason: SubscriptionDeactivationReason.UserSelfDeactivated
         })
 
-        const updatedSubscription = await dbAdapter.subscription.getSubscriptionByID(id)
+        const updatedSubscription = await prisma.subscription.findUnique({
+          where: {id}
+        })
         if (!updatedSubscription) throw new NotFound('subscription', id)
+
         return updatedSubscription
       }
     },
@@ -830,9 +841,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           where: {id: invoiceID}
         })
         if (!invoice) throw new NotFound('Invoice', invoiceID)
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(
-          invoice.subscriptionID
-        )
+        const subscription = await prisma.subscription.findUnique({
+          where: {
+            id: invoice.subscriptionID
+          }
+        })
         if (!subscription || subscription.userID !== user.id)
           throw new NotFound('Invoice', invoiceID)
 

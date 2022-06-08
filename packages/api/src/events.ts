@@ -186,8 +186,16 @@ invoiceModelEvents.on('update', async (context, model) => {
   }
   // by default a new member subscription mail will be sent.
   let mailTypeToSend = SendMailType.NewMemberSubscription
-  let subscription = await context.dbAdapter.subscription.getSubscriptionByID(model.subscriptionID)
-  if (!subscription) return
+  let subscription = await context.prisma.subscription.findUnique({
+    where: {
+      id: model.subscriptionID
+    }
+  })
+
+  if (!subscription) {
+    return
+  }
+
   const {periods} = subscription
 
   const period = periods.find(period => period.invoiceID === model.id)

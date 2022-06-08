@@ -1,13 +1,8 @@
+import {BlockType, BlockWithoutJSON, PaymentProviderCustomer, Subscription} from '@wepublish/api'
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
-import {
-  BlockType,
-  BlockWithoutJSON,
-  PaymentProviderCustomer,
-  Subscription,
-  SubscriptionDeactivationReason
-} from '@wepublish/api'
 import {slugify} from './utility'
+import {SubscriptionDeactivationReason} from '@prisma/client'
 
 export interface Migration {
   readonly version: number
@@ -705,7 +700,7 @@ export const Migrations: Migration[] = [
           {
             $set: {
               'subscription.deactivation.date': '$subscription.deactivatedAt',
-              'subscription.deactivation.reason': SubscriptionDeactivationReason.None
+              'subscription.deactivation.reason': SubscriptionDeactivationReason.none
             }
           },
           {
@@ -909,6 +904,45 @@ export const Migrations: Migration[] = [
         const tempUser = await db.collection('temp.users')
         await tempUser.rename('temp.users.bak')
       }
+    }
+  },
+  {
+    version: 23,
+    async migrate(db) {
+      const subscriptions = db.collection(CollectionName.Subscriptions)
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 0
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.none
+          }
+        }
+      )
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 1
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.userSelfDeactivated
+          }
+        }
+      )
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 2
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.invoiceNotPaid
+          }
+        }
+      )
     }
   }
 ]
