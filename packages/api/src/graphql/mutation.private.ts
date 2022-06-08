@@ -328,13 +328,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
-        const jwtExpires = await dbAdapter.setting.getSetting(
-          SettingName.SEND_LOGIN_JWT_EXPIRES_MIN
-        )
+        const jwtExpires = (
+          await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN)
+        )?.value
         const token = generateJWT({
           id: user.id,
           expiresInMinutes:
-            Number(jwtExpires?.value) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+            Number(jwtExpires) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -361,9 +361,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
-        const jwtExpires = await dbAdapter.setting.getSetting(
-          SettingName.SEND_LOGIN_JWT_EXPIRES_MIN
-        )
+        const jwtExpires = (
+          await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN)
+        )?.value
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
         const token = generateJWT({

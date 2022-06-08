@@ -1,6 +1,6 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton, Drawer} from 'rsuite'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton} from 'rsuite'
 import {
   ArticleListRoute,
   AuthorListRoute,
@@ -15,6 +15,7 @@ import {
   PeerListRoute,
   routeLink,
   RouteType,
+  SettingListRoute,
   SubscriptionListRoute,
   TokenListRoute,
   UserListRoute,
@@ -41,7 +42,7 @@ import GlobeIcon from '@rsuite/icons/legacy/Globe'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 import MenuIcon from '@rsuite/icons/Menu'
 import {useTranslation} from 'react-i18next'
-import {SettingsPanel} from './panel/settingsPanel'
+import CogIcon from '@rsuite/icons/legacy/Cog'
 
 export interface BaseProps {
   children?: ReactNode
@@ -79,7 +80,6 @@ export function Base({children}: BaseProps) {
   const {t, i18n} = useTranslation()
 
   const [isExpanded, setIsExpanded] = useState(true)
-  const [isSettingsDrawerOpen, setSettingsDrawerOpen] = useState(false)
 
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
 
@@ -225,6 +225,12 @@ export function Base({children}: BaseProps) {
                     {t('navbar.tokens')}
                   </DropdownItemLink>
                 </Dropdown>
+                <DropdownItemLink
+                  active={current?.type === RouteType.SettingList}
+                  icon={<CogIcon />}
+                  route={SettingListRoute.create({})}>
+                  {t('navbar.settings')}
+                </DropdownItemLink>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -243,9 +249,6 @@ export function Base({children}: BaseProps) {
                     icon={<MenuIcon />}
                   />
                 )}>
-                <DropdownItemLink onClick={() => setSettingsDrawerOpen(true)}>
-                  {t('navbar.settings')}
-                </DropdownItemLink>
                 <DropdownItemLink route={LogoutRoute.create({})}>
                   {t('navbar.logout')}
                 </DropdownItemLink>
@@ -276,9 +279,6 @@ export function Base({children}: BaseProps) {
               </Dropdown>
             </Nav>
           </Navbar>
-          <Drawer open={isSettingsDrawerOpen} onClose={() => setSettingsDrawerOpen(false)}>
-            <SettingsPanel />
-          </Drawer>
         </Sidebar>
         <Container
           style={{

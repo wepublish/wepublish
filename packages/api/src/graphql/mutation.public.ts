@@ -161,10 +161,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          const guestCanCommentSetting = await dbAdapter.setting.getSetting(
-            SettingName.ALLOW_GUEST_COMMENTING
-          )
-          if (!guestCanCommentSetting?.value) throw new AnonymousCommentsDisabledError()
+          const guestCanCommentSetting = (
+            await dbAdapter.setting.getSetting(SettingName.ALLOW_GUEST_COMMENTING)
+          )?.value
+          if (!guestCanCommentSetting) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
@@ -475,14 +475,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           )
           return email
         }
-        const resetPwd = await dbAdapter.setting.getSetting(
-          SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN
-        )
+        const resetPwd = (
+          await dbAdapter.setting.getSetting(SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN)
+        )?.value
         const token = generateJWT({
           id: user.id,
           expiresInMinutes:
-            Number(resetPwd?.value) ??
-            parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+            Number(resetPwd) ?? parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
