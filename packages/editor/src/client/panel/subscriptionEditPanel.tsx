@@ -579,7 +579,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </Form.Group>
             <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('userSubscriptionEdit.paymentMethod') + '*'}</Form.ControlLabel>
               <Form.Control
                 name="paymentMethod"
                 block

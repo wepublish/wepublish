@@ -205,15 +205,10 @@ describe('User Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    const firstNameInput = getByLabelText('userList.panels.firstName*')
     const nameInput = getByLabelText('userList.panels.name*')
     const emailInput = getByLabelText('userList.panels.email*')
     const passwordInput = getByLabelText('userList.panels.password*')
     const saveButton = getByTestId('saveButton')
-
-    fireEvent.change(firstNameInput, {
-      target: {value: user.name}
-    })
 
     fireEvent.change(nameInput, {
       target: {value: user.name}

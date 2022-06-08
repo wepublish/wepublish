@@ -22,7 +22,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
           userList.panels.create
           <span
             class=\\"rs-ripple-pond\\"
-@@ -91,14 +92,15 @@
+@@ -91,10 +92,11 @@
               >
                 <input
                   aria-describedby=\\"firstName-help-text\\"
@@ -32,13 +32,8 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   id=\\"firstName\\"
                   name=\\"firstName\\"
                   type=\\"text\\"
--                 value=\\"\\"
-+                 value=\\"Testing Müller\\"
+                  value=\\"\\"
                 />
-              </div>
-            </div>
-            <div
-              class=\\"rs-form-group\\"
 @@ -116,14 +118,15 @@
               >
                 <input
@@ -443,7 +438,7 @@ exports[`User Edit Panel should render 1`] = `
               for="firstName"
               id="firstName-control-label"
             >
-              userList.panels.firstName*
+              userList.panels.firstName
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
@@ -848,7 +843,7 @@ exports[`User Edit Panel should render with ID 1`] = `
               for="firstName"
               id="firstName-control-label"
             >
-              userList.panels.firstName*
+              userList.panels.firstName
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"

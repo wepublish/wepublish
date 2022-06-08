@@ -210,7 +210,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   // Schema used for form validation
   const validationModel = Schema.Model({
-    firstName: StringType().isRequired(t('errorMessages.noFirstNameErrorMessage')),
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
     email: StringType()
       .isRequired(t('errorMessages.noEmailErrorMessage'))
@@ -245,9 +244,9 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             ref={form}
             fluid
             model={validationModel}
-            formValue={{firstName: firstName, name: name, email: email, password: password}}>
+            formValue={{name: name, email: email, password: password}}>
             <Form.Group controlId="firstName">
-              <Form.ControlLabel>{t('userList.panels.firstName') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
               <Form.Control
                 name="firstName"
                 value={firstName}
