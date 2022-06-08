@@ -76,8 +76,8 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             // add iframe attributes if set in input
             const setEmbedOther = {
               title: iframe.title,
-              width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined,
+              width: iframe.width ? iframe.width : undefined,
+              height: iframe.height ? iframe.height : undefined,
               styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : '',
               sandbox: iframe.sandbox ? flattenDOMTokenList(iframe.sandbox) : undefined
             }
@@ -106,18 +106,27 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     <>
       <Drawer.Header>
         <Drawer.Title>{t('blocks.embeds.panels.editEmbed')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance={'primary'} disabled={isEmpty} onClick={() => onConfirm(embed)}>
+            {t('blocks.embeds.panels.confirm')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('blocks.embeds.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         <Input
-          componentClass="textarea"
+          as="textarea"
           rows={3}
           style={{width: '100%'}}
           placeholder={t('blocks.embeds.panels.embed')}
           value={input}
           onChange={input => setInput(input)}
         />
-        {errorMessage && <Message type="error" description={errorMessage} />}
+        {errorMessage && <Message type="error">{errorMessage}</Message>}
         <div style={{marginBottom: 8}}>
           <p>{t('blocks.embeds.panels.socialMediaList')}</p>
           <code>{t('blocks.embeds.panels.fbPosts')}</code>
@@ -129,15 +138,6 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         </div>
         <EmbedPreview value={embed} />
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isEmpty} onClick={() => onConfirm(embed)}>
-          {t('blocks.embeds.panels.confirm')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('blocks.embeds.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

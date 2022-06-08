@@ -173,7 +173,7 @@ A good place to start is with an issue that has the label [good first issue](htt
 5. Open a Pull Request
 
 ## Docs
-All code documentation lives here: [DOCUMENTATION][documentation-url]
+All code documentation lives in the [docs folder.][documentation-url]
 
 
 ## Code of Conduct
@@ -234,4 +234,4 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [package-json-url]: package.json
 [faq-md-url]: FAQ.md
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
-[documentation-url]: DOCUMENTATION.md
+[documentation-url]: docs/README.md

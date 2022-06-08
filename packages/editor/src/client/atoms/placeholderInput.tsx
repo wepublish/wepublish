@@ -1,6 +1,7 @@
 import React, {ReactNode} from 'react'
 
-import {Icon, IconButton} from 'rsuite'
+import {IconButton} from 'rsuite'
+import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 
 export interface PlaceholderInputProps {
   /**
@@ -35,8 +36,8 @@ export function PlaceholderInput({children, onAddClick}: PlaceholderInputProps) 
         backgroundColor: '#f7f9fa'
       }}>
       <IconButton
-        size={'lg'}
-        icon={<Icon icon="plus-circle" size="5x" />}
+        size={'sm'}
+        icon={<PlusCircleIcon />}
         onClick={() => onAddClick && onAddClick()}
       />
     </div>

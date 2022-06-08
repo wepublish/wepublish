@@ -132,13 +132,19 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   return firstOperation.name.value
 }
 
+// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): Record<string, unknown> {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+      return Object.assign(previousValue, {
+        [key
+          .toLowerCase()
+          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
+          .trim()]: value.trim()
+      })
     }
     return previousValue
   }, {})
@@ -156,39 +162,9 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
   }
 }
 
-export const DEFAULT_TABLE_PAGE_SIZES = [
-  {
-    value: 10,
-    label: 10
-  },
-  {
-    value: 20,
-    label: 20
-  },
-  {
-    value: 50,
-    label: 50
-  },
-  {
-    value: 100,
-    label: 100
-  }
-]
-
-export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [
-  {
-    value: 5,
-    label: 5
-  },
-  {
-    value: 10,
-    label: 10
-  },
-  {
-    value: 15,
-    label: 15
-  }
-]
+export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
+export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [5, 10, 15]
+export const DEFAULT_MAX_TABLE_PAGES = 5
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,

@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from 'react'
-
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  SubscriptionCreateRoute,
-  SubscriptionEditRoute,
-  SubscriptionListRoute,
-  UserEditRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import {RouteActionType} from '@wepublish/karma.run-react'
-
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  Button,
+  DateRangePicker,
+  Drawer,
+  FlexboxGrid,
+  Form,
+  IconButton,
+  Message,
+  Modal,
+  Pagination,
+  SelectPicker,
+  Table
+} from 'rsuite'
 import {
   DateFilterComparison,
   FullMemberPlanFragment,
@@ -27,33 +28,30 @@ import {
   usePaymentMethodListQuery,
   useSubscriptionListQuery
 } from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  DateRangePicker,
-  Drawer,
-  FlexboxGrid,
-  FormGroup,
-  Icon,
-  IconButton,
-  Message,
-  Modal,
-  SelectPicker,
-  Table
-} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder,
-  isTempUser,
-  ALL_PAYMENT_PERIODICITIES
-} from '../utility'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
+import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {
+  ButtonLink,
+  Link,
+  RouteType,
+  SubscriptionCreateRoute,
+  SubscriptionEditRoute,
+  SubscriptionListRoute,
+  UserEditRoute,
+  useRoute,
+  useRouteDispatch
+} from '../route'
+import {
+  ALL_PAYMENT_PERIODICITIES,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  isTempUser,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
@@ -209,7 +207,7 @@ export function SubscriptionList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <FlexboxGrid style={{marginTop: '15px', marginBottom: '10px'}}>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.selectMemberPlan')}
             block
@@ -219,8 +217,8 @@ export function SubscriptionList() {
               updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
             }
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('memberPlanList.paymentPeriodicities')}
             value={filter.paymentPeriodicity}
@@ -232,8 +230,8 @@ export function SubscriptionList() {
             onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
             block
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.paymentMethod')}
             block
@@ -244,13 +242,13 @@ export function SubscriptionList() {
               updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
             }
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.startsAt')}
             block
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   startsAtFrom: {
                     date: value[0]?.toISOString(),
@@ -266,30 +264,29 @@ export function SubscriptionList() {
             onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
             placement="auto"
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('userSubscriptionEdit.autoRenew')}
             searchable={false}
             data={[
               {
-                value: true,
+                value: 'true',
                 label: t('yes')
               },
               {
-                value: false,
+                value: 'false',
                 label: t('no')
               }
             ]}
-            value={filter.deactivationReason}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value})}
+            onChange={value => updateFilter({autoRenew: value === 'true'})}
           />
-        </FormGroup>
+        </Form.Group>
         {/*  hide for now until filtering by subscription.user.address
              is implemented on backend (mongo adpter)
-        <FormGroup style={{marginRight: '15px', marginTop: '5px'}}>
+        <Form.Group style={{marginRight: '15px', marginTop: '5px'}}>
           <ControlLabel>{t('userSubscriptionEdit.hasAddress')}</ControlLabel>
           <SelectPicker
             searchable={false}
@@ -308,8 +305,8 @@ export function SubscriptionList() {
             placement="auto"
             onChange={value => updateFilter({userHasAddress: value})}
           />
-        </FormGroup> */}
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group> */}
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <SelectPicker
             placeholder={t('subscriptionList.filter.deactivationReason')}
             searchable={false}
@@ -332,14 +329,14 @@ export function SubscriptionList() {
             placement="auto"
             onChange={value => updateFilter({deactivationReason: value})}
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.deactivation.date')}
             block
             placement="auto"
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   deactivationDateFrom: {
                     date: value[0]?.toISOString(),
@@ -356,14 +353,14 @@ export function SubscriptionList() {
               updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
             }
           />
-        </FormGroup>
-        <FormGroup style={{marginRight: '15px', marginTop: '15px'}}>
+        </Form.Group>
+        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
           <DateRangePicker
             placeholder={t('userSubscriptionEdit.payedUntil')}
             block
             placement="auto"
             onChange={value => {
-              if (value[0] && value[1]) {
+              if (value?.[0] && value[1]) {
                 updateFilter({
                   paidUntilFrom: {
                     date: value[0]?.toISOString(),
@@ -378,7 +375,7 @@ export function SubscriptionList() {
             }}
             onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
           />
-        </FormGroup>
+        </Form.Group>
       </FlexboxGrid>
 
       <div
@@ -396,7 +393,7 @@ export function SubscriptionList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
@@ -464,7 +461,7 @@ export function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -481,20 +478,27 @@ export function SubscriptionList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.subscriptions.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -521,7 +525,7 @@ export function SubscriptionList() {
         />
       </Drawer>
 
-      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
+      <Modal open={isExportModalOpen} onClose={() => setExportModalOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
         </Modal.Header>
@@ -537,18 +541,16 @@ export function SubscriptionList() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           {currentSubscription && isTempUser(currentSubscription.user?.id) && (
-            <Message
-              showIcon
-              type="warning"
-              description={t('subscriptionList.panels.tempUserWarning')}
-            />
+            <Message showIcon type="warning">
+              {t('subscriptionList.panels.tempUserWarning')}
+            </Message>
           )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>

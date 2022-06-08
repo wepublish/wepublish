@@ -1,8 +1,8 @@
-import React, {ReactNode} from 'react'
+import React, {ReactElement} from 'react'
 import {Tooltip, Whisper} from 'rsuite'
 
 interface IconButtonTooltipProps {
-  children?: ReactNode
+  children: ReactElement
   caption: string
 }
 
@@ -11,8 +11,8 @@ export function IconButtonTooltip({children, caption}: IconButtonTooltipProps) {
     <Whisper
       placement="top"
       trigger="hover"
-      delayShow={400}
-      delayHide={0}
+      delayOpen={400}
+      delayClose={0}
       speaker={<Tooltip>{caption}</Tooltip>}>
       {children}
     </Whisper>

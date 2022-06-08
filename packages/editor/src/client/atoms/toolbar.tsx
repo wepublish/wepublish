@@ -1,21 +1,19 @@
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {
-  ReactNode,
+  createContext,
   forwardRef,
+  ReactEventHandler,
+  ReactNode,
   useCallback,
   useRef,
-  useState,
-  createContext,
-  ReactEventHandler
+  useState
 } from 'react'
-
-import {Icon, Popover, PopoverProps, Whisper, Divider} from 'rsuite'
-import {SVGIcon} from 'rsuite/lib/@types/common'
-import {IconNames} from 'rsuite/lib/Icon/Icon'
-
-import './toolbar.less'
-import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
-import {Format} from '../blocks/richTextBlock/editor/formats'
+import {Divider, Popover, Whisper} from 'rsuite'
+import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
+import {Format} from '../blocks/richTextBlock/editor/formats'
+import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
+import './toolbar.less'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
@@ -86,13 +84,13 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
 )
 
 export interface ToolbarIconButtonProps extends BaseToolbarButtonProps {
-  readonly icon: IconNames | SVGIcon
+  readonly icon: React.ReactElement
 }
 
 export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonProps) {
   return (
     <ToolbarButton active={active} {...props}>
-      <Icon icon={icon} element={icon} />
+      {icon}
     </ToolbarButton>
   )
 }
@@ -116,11 +114,11 @@ export interface SubMenuButtonProps extends ToolbarIconButtonProps {
   readonly format?: Format
 }
 
-export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
+export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonProps>(
   ({children, icon, format}, ref) => {
     // The Submenu buttons provides some local context to it's children.
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const localRef = useRef<PopoverProps>(null)
+    const localRef = useRef<OverlayTriggerInstance>(null)
     // Optional forwarding ref from parent, else use local ref.
     const triggerRef = (ref || localRef) as typeof localRef
 
@@ -153,12 +151,20 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
               e.preventDefault()
               isMenuOpen ? closeMenu() : openMenu()
             }}>
-            <Icon
-              style={{
-                minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
-              }}
-              icon={isMenuOpen ? 'close' : icon}
-            />
+            {isMenuOpen ? (
+              <CloseIcon
+                style={{
+                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+                }}>
+                {icon}
+              </div>
+            )}
           </ToolbarButton>
         </Whisper>
       </SubMenuContext.Provider>

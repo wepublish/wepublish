@@ -61,7 +61,8 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
           paidAt: input.paidAt,
           canceledAt: input.canceledAt,
           sentReminderAt: input.sentReminderAt,
-          items: input.items
+          items: input.items,
+          manuallySetAsPaidByUserId: input.manuallySetAsPaidByUserId
         }
       },
       {returnOriginal: false}
@@ -157,6 +158,10 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       textFilter.$and?.push({userID: {$eq: filter.userID}})
     }
 
+    if (filter?.subscriptionID !== undefined) {
+      textFilter.$and?.push({subscriptionID: {$eq: filter.subscriptionID}})
+    }
+
     const [totalCount, invoices] = await Promise.all([
       this.invoices.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
@@ -167,6 +172,7 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
