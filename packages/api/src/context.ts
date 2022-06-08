@@ -1,53 +1,52 @@
-import {IncomingMessage} from 'http'
-import url from 'url'
-import crypto from 'crypto'
-import jwt, {SignOptions} from 'jsonwebtoken'
-import fetch from 'node-fetch'
+import {
+  Article,
+  Author,
+  Image,
+  MailLog,
+  MemberPlan,
+  Navigation,
+  Page,
+  PaymentMethod,
+  Peer,
+  PrismaClient,
+  UserRole,
+  Invoice,
+  Payment
+} from '@prisma/client'
 import AbortController from 'abort-controller'
-
+import {AuthenticationError} from 'apollo-server-express'
+import crypto from 'crypto'
 import DataLoader from 'dataloader'
-
 import {GraphQLError, GraphQLSchema, print} from 'graphql'
-
 import {
   Fetcher,
   IFetcherOperation,
   introspectSchema,
   makeRemoteExecutableSchema
 } from 'graphql-tools'
-
+import {IncomingMessage} from 'http'
+import jwt, {SignOptions} from 'jsonwebtoken'
+import NodeCache from 'node-cache'
+import fetch from 'node-fetch'
+import {Client, Issuer} from 'openid-client'
+import url from 'url'
+import {ChallengeProvider} from './challenges/challengeProvider'
+import {DBAdapter} from './db/adapter'
+import {OptionalPublicArticle} from './db/article'
+import {OptionalPublicPage} from './db/page'
+import {PaymentState} from './db/payment'
+import {OptionalPeer} from './db/peer'
+import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
+import {User} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
-
-import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
-
-import {DBAdapter} from './db/adapter'
-import {MediaAdapter} from './mediaAdapter'
-import {URLAdapter} from './urlAdapter'
-
-import {AuthenticationError} from 'apollo-server-express'
-import {OptionalImage} from './db/image'
-import {OptionalArticle, OptionalPublicArticle} from './db/article'
-import {OptionalAuthor} from './db/author'
-import {OptionalNavigation} from './db/navigation'
-import {OptionalPage, OptionalPublicPage} from './db/page'
-
-import {OptionalPeer} from './db/peer'
-import {OptionalUserRole} from './db/userRole'
-import {OptionalMemberPlan} from './db/memberPlan'
-import {OptionalPaymentMethod} from './db/paymentMethod'
-import {Invoice, OptionalInvoice} from './db/invoice'
-import {OptionalPayment, Payment, PaymentState} from './db/payment'
-import {PaymentProvider} from './payments/paymentProvider'
-import {BaseMailProvider} from './mails/mailProvider'
-import {OptionalMailLog} from './db/mailLog'
-import {MemberContext} from './memberContext'
-import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
-import {User} from './db/user'
-import {ChallengeProvider} from './challenges/challengeProvider'
-import NodeCache from 'node-cache'
+import {BaseMailProvider} from './mails/mailProvider'
+import {MediaAdapter} from './mediaAdapter'
+import {MemberContext} from './memberContext'
+import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
+import {URLAdapter} from './urlAdapter'
 
 /**
  * Peered article cache configuration and setup
@@ -215,6 +214,70 @@ const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Da
 
   return keys.map(id => dataMap[id] ?? null)
 }
+
+const getSessionByToken = async (
+  token: string,
+  sessionClient: PrismaClient['session'],
+  tokenClient: PrismaClient['token'],
+  userClient: PrismaClient['user'],
+  userRoleClient: PrismaClient['userRole']
+): Promise<OptionalSession> => {
+  const [tokenMatch, session] = await Promise.all([
+    tokenClient.findFirst({
+      where: {
+        token
+      }
+    }),
+    sessionClient.findFirst({
+      where: {
+        token
+      }
+    })
+  ])
+
+  if (tokenMatch) {
+    return {
+      type: SessionType.Token,
+      id: tokenMatch.id,
+      name: tokenMatch.name,
+      token: tokenMatch.token,
+      roles: await userRoleClient.findMany({
+        where: {
+          id: {
+            in: tokenMatch.roleIDs
+          }
+        }
+      })
+    }
+  } else if (session) {
+    const user = await userClient.findUnique({
+      where: {
+        id: session.userID
+      }
+    })
+
+    if (!user) return null
+
+    return {
+      type: SessionType.User,
+      id: session.id,
+      token: session.token,
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+      user,
+      roles: await userRoleClient.findMany({
+        where: {
+          id: {
+            in: user.roleIDs
+          }
+        }
+      })
+    }
+  }
+
+  return null
+}
+
 export async function contextFromRequest(
   req: IncomingMessage | null,
   {
@@ -233,10 +296,12 @@ export async function contextFromRequest(
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
-  const session = token ? await dbAdapter.session.getSessionByToken(token) : null
+  const session = token
+    ? await getSessionByToken(token, prisma.session, prisma.token, prisma.user, prisma.userRole)
+    : null
   const isSessionValid = session
     ? session.type === SessionType.User
-      ? session.expiresAt > new Date()
+      ? session.expiresAt! > new Date()
       : true
     : false
 

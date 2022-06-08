@@ -31,11 +31,6 @@ export type OptionalSession = Session | null
 
 export interface DBSessionAdapter {
   createUserSession(user: User): Promise<OptionalUserSession>
-  getUserSessions(user: User): Promise<UserSession[]>
-
-  getSessionByID(user: User, id: string): Promise<OptionalSession>
-  getSessionByToken(token: string): Promise<OptionalSession>
-
   // The extensions will be as long as sessionTTL inside the DBSessionAdapter
   extendUserSessionByToken(token: string): Promise<OptionalUserSession>
 

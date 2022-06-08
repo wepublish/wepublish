@@ -1,3 +1,4 @@
+import {Subscription} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -6,12 +7,14 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
+import {GraphQLDateTime} from 'graphql-iso-date'
 import {Issuer} from 'openid-client'
-
-import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
-
+import {ArticleRevision} from '../db/article'
+import {Block, BlockMap, BlockType} from '../db/block'
+import {CommentState} from '../db/comment'
+import {PageRevision} from '../db/page'
+import {PaymentState} from '../db/payment'
 import {
   DuplicatePageSlugError,
   InvalidCredentialsError,
@@ -21,17 +24,25 @@ import {
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
-
+import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {Block, BlockMap, BlockType} from '../db/block'
-import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
-import {GraphQLPage, GraphQLPageInput} from './page'
-
-import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
-
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
+import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
+import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
+import {GraphQLPage, GraphQLPageInput} from './page'
+import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
+import {
+  GraphQLCreatePeerInput,
+  GraphQLPeer,
+  GraphQLPeerProfile,
+  GraphQLPeerProfileInput,
+  GraphQLUpdatePeerInput
+} from './peer'
 import {
   authorise,
   CanCreateArticle,
@@ -44,6 +55,7 @@ import {
   CanCreatePayment,
   CanCreatePaymentMethod,
   CanCreatePeer,
+  CanCreateSubscription,
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
@@ -56,39 +68,24 @@ import {
   CanDeletePage,
   CanDeletePaymentMethod,
   CanDeletePeer,
+  CanDeleteSubscription,
   CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
-  CanTakeActionOnComment,
-  CanUpdatePeerProfile,
   CanSendJWTLogin,
-  CanCreateSubscription,
-  CanDeleteSubscription
+  CanTakeActionOnComment,
+  CanUpdatePeerProfile
 } from './permissions'
-import {GraphQLUser, GraphQLUserInput} from './user'
-import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
-
-import {
-  GraphQLCreatePeerInput,
-  GraphQLPeer,
-  GraphQLPeerProfile,
-  GraphQLPeerProfileInput,
-  GraphQLUpdatePeerInput
-} from './peer'
-
-import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
-import {CommentState} from '../db/comment'
-import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
-import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
-import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
-import {PaymentState} from '../db/payment'
-import {SendMailType} from '../mails/mailContext'
+import {GraphQLSession, GraphQLSessionWithToken} from './session'
+import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
+import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLUser, GraphQLUserInput} from './user'
+import {getUserForCredentials} from './user/user.queries'
+import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -314,10 +311,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     sessions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
       args: {},
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        return dbAdapter.session.getUserSessions(user)
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
+        getSessionsForUser(authenticateUser, session, userRole)
     },
 
     sendJWTLogin: {
