@@ -91,7 +91,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
       description: 'This query takes either the ID or the key and returns the navigation.',
-      resolve(root, {id, key}, {authenticateUser, loaders}) {
+      resolve(root, {id, key}, {loaders}) {
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
         }
