@@ -195,6 +195,7 @@ export function SettingList() {
           />
         </Form.Group>
         <Form.Group>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Form.ControlLabel>JWT secret key</Form.ControlLabel>
           <Input
             value={jwtSecretKey.value}
