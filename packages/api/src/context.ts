@@ -85,7 +85,7 @@ export interface DataLoaderContext {
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
-  readonly mailLogsByID: DataLoader<string, OptionalMailLog>
+  readonly mailLogsByID: DataLoader<string, MailLog | null>
 
   readonly peer: DataLoader<string, Peer | null>
   readonly peerBySlug: DataLoader<string, Peer | null>
@@ -516,7 +516,19 @@ export async function contextFromRequest(
       )
     ),
 
-    mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
+    mailLogsByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.mailLog.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
 
     peer: peerDataLoader,
     peerBySlug: new DataLoader(async slugs =>

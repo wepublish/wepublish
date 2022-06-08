@@ -1,4 +1,4 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
+import {InputCursor, Limit, SortOrder} from './common'
 
 export interface MailLogInput {
   readonly recipient: string
@@ -45,7 +45,7 @@ export interface MailLog {
   readonly recipient: string
   readonly subject: string
   readonly state: MailLogState
-  readonly mailData?: string
+  readonly mailData?: string | null
   readonly mailProviderID: string
 }
 
@@ -63,8 +63,4 @@ export interface DBMailLogAdapter {
   createMailLog(args: CreateMailLogArgs): Promise<MailLog>
   updateMailLog(args: UpdateMailLogArgs): Promise<OptionalMailLog>
   deleteMailLog(args: DeleteMailLogArgs): Promise<string | null>
-
-  getMailLogsByID(ids: readonly string[]): Promise<OptionalMailLog[]>
-
-  getMailLogs(args: GetMailLogsArgs): Promise<ConnectionResult<MailLog>>
 }
