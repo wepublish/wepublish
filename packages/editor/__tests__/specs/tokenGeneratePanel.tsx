@@ -1,25 +1,23 @@
-import React from 'react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {TokenGeneratePanel} from '../../src/client/panel/tokenGeneratePanel'
-import {mount} from 'enzyme'
-
-import {updateWrapper} from '../utils'
-import {act} from 'react-dom/test-utils'
+import {fireEvent, render} from '@testing-library/react'
+import React from 'react'
+import snapshotDiff from 'snapshot-diff'
 import {CreateTokenDocument} from '../../src/client/api'
+import {TokenGeneratePanel} from '../../src/client/panel/tokenGeneratePanel'
+import {actWait} from '../utils'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Token Generate Panel', () => {
   test('should render', async () => {
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider addTypename={false}>
         <TokenGeneratePanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('TokenGeneratePanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should be able to generate a new token', async () => {
@@ -49,23 +47,20 @@ describe('Token Generate Panel', () => {
       }
     ]
 
-    const wrapper = mount(
+    const {asFragment, container} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <TokenGeneratePanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    wrapper
-      .find('input[placeholder="tokenList.panels.name"]')
-      .simulate('change', {target: {value: tokenName}})
-
-    await act(async () => {
-      wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
+    fireEvent.change(container.querySelector('input[placeholder="tokenList.panels.name"]')!, {
+      target: {value: tokenName}
     })
-    await updateWrapper(wrapper, 100)
+    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    await actWait()
 
-    const panel = wrapper.find('TokenGeneratePanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 })
