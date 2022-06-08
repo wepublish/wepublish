@@ -1,4 +1,4 @@
-import {DateFilter, InputCursor, Limit, SortOrder} from '..'
+import {DateFilter} from './common'
 
 export interface InvoiceItem {
   createdAt: Date
@@ -64,14 +64,6 @@ export interface InvoiceFilter {
   canceledAt?: DateFilter
   userID?: string
   subscriptionID?: string
-}
-
-export interface GetInvoicesArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: InvoiceFilter
-  sort: InvoiceSort
-  order: SortOrder
 }
 
 export interface DBInvoiceAdapter {

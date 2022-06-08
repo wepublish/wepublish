@@ -1,5 +1,4 @@
 import {RichTextNode} from '../graphql/richText'
-import {InputCursor, Limit, SortOrder} from './common'
 
 export enum PaymentPeriodicity {
   Monthly = 'monthly',
@@ -71,14 +70,6 @@ export interface MemberPlanFilter {
   name?: string
   active?: boolean
   tags?: string[]
-}
-
-export interface GetMemberPlansArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: MemberPlanFilter
-  sort: MemberPlanSort
-  order: SortOrder
 }
 
 export interface DBMemberPlanAdapter {

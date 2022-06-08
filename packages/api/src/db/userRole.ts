@@ -1,5 +1,3 @@
-import {InputCursor, Limit, SortOrder} from './common'
-
 export interface UserRoleInput {
   readonly name: string
   readonly description: string
@@ -36,14 +34,6 @@ export interface UserRole {
 }
 
 export type OptionalUserRole = UserRole | null
-
-export interface GetUserRolesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: UserRoleFilter
-  readonly sort: UserRoleSort
-  readonly order: SortOrder
-}
 
 export interface DBUserRoleAdapter {
   createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole>

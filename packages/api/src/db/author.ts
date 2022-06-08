@@ -1,5 +1,4 @@
 import {RichTextNode} from '../graphql/richText'
-import {InputCursor, Limit, SortOrder} from './common'
 
 export interface AuthorLink {
   title: string
@@ -50,14 +49,6 @@ export enum AuthorSort {
 
 export interface AuthorFilter {
   name?: string
-}
-
-export interface GetAuthorsArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: AuthorFilter
-  sort: AuthorSort
-  order: SortOrder
 }
 
 export interface DBAuthorAdapter {

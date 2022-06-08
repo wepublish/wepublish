@@ -1,4 +1,5 @@
-import {MetadataProperty} from './common'
+import {MetadataProperty} from '@prisma/client'
+
 import {TempUser} from './tempUser'
 
 export interface CreateUserArgs {
