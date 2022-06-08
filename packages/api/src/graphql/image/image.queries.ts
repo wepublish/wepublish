@@ -1,5 +1,5 @@
 import {Image, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {ImageFilter, ImageSort} from '../../db/image'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -79,7 +79,7 @@ export const getImages = async (
     image.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

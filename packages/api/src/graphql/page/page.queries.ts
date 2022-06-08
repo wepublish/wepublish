@@ -1,5 +1,5 @@
 import {Page, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {PageFilter, PageSort} from '../../db/page'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -148,7 +148,7 @@ export const getPages = async (
     page.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

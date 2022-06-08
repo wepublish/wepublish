@@ -1,6 +1,6 @@
 import {Comment, Prisma, PrismaClient} from '@prisma/client'
 import {CommentFilter, CommentSort} from '../../db/comment'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
 export const createCommentOrder = (
@@ -56,7 +56,7 @@ export const getComments = async (
     comment.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

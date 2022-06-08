@@ -1,6 +1,6 @@
 import {Author, Prisma, PrismaClient} from '@prisma/client'
 import {AuthorFilter, AuthorSort} from '../../db/author'
-import {ConnectionResult} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
 export const createAuthorOrder = (
@@ -59,7 +59,7 @@ export const getAuthors = async (
     author.findMany({
       where: where,
       skip: skip,
-      take: take + 1,
+      take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })
