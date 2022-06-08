@@ -69,8 +69,8 @@ fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, OptionalNavigation>
-  readonly navigationByKey: DataLoader<string, OptionalNavigation>
+  readonly navigationByID: DataLoader<string, Navigation | null>
+  readonly navigationByKey: DataLoader<string, Navigation | null>
 
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
@@ -221,6 +221,7 @@ export async function contextFromRequest(
     hostURL,
     websiteURL,
     dbAdapter,
+    prisma,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
@@ -244,8 +245,32 @@ export async function contextFromRequest(
   )
 
   const loaders: DataLoaderContext = {
-    navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
-    navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+    navigationByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.navigation.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    navigationByKey: new DataLoader(async keys =>
+      createOptionalsArray(
+        keys as string[],
+        await prisma.navigation.findMany({
+          where: {
+            key: {
+              in: keys as string[]
+            }
+          }
+        }),
+        'key'
+      )
+    ),
 
     authorsByID: new DataLoader(async ids =>
       createOptionalsArray(

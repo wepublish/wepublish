@@ -14,7 +14,6 @@ import {
   DeleteNavigation
 } from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 let pageID: string
@@ -23,11 +22,8 @@ let articleID: string
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
     dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')

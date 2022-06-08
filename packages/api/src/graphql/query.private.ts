@@ -428,26 +428,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      resolve(root, {id, key}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetNavigation, roles)
-
-        if ((id == null && key == null) || (id != null && key != null)) {
-          throw new UserInputError('You must provide either `id` or `key`.')
-        }
-
-        return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
-      }
+      resolve: (root, {id, key}, {authenticate, loaders: {navigationByID, navigationByKey}}) =>
+        getNavigationByIdOrKey(id, key, authenticate, navigationByID, navigationByKey)
     },
 
     navigations: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigation))),
-      resolve(root, args, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetNavigations, roles)
-
-        return dbAdapter.navigation.getNavigations()
-      }
+      resolve: (root, args, {authenticate, prisma: {navigation}}) =>
+        getNavigations(authenticate, navigation)
     },
 
     // Author
