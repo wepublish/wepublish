@@ -12,6 +12,35 @@ export enum LocalStorageKey {
 
 export const TEMP_USER_PREFIX = '__temp_'
 
+export const addOrUpdateOneInArray = (
+  array: Maybe<Record<string | 'id', any>[]>,
+  entry: Record<string | 'id', any>
+) => {
+  let isNew = true
+
+  if (!array) {
+    return [entry]
+  }
+  const updated = array.map(item => {
+    if (item.id !== entry.id) {
+      // This isn't the item we care about - keep it as-is
+      return item
+    }
+    isNew = false
+    // Otherwise, this is the one we want - return an updated value
+    return {
+      ...item,
+      ...entry
+    }
+  })
+
+  if (isNew) {
+    return [...updated, entry]
+  }
+
+  return updated
+}
+
 export function isTempUser(userID: string | null | Maybe<string>): boolean {
   return !!userID?.startsWith(TEMP_USER_PREFIX)
 }

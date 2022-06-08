@@ -93,7 +93,7 @@ exports[`Peers can be created/edited/deleted: can be updated 1`] = `
 Object {
   "data": Object {
     "updatePeer": Object {
-      "hostURL": "https://new-host-url.ch/",
+      "hostURL": "https://host-url.ch/",
       "id": Any<String>,
       "name": "Updated Peer",
       "slug": "update-peer",
