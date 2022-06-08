@@ -60,8 +60,8 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

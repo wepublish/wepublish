@@ -257,24 +257,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     pages: {
       type: GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPublishedPageFilter},
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the pages.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.page.getPublishedPages({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma: {page}}) =>
+        getPublishedPages(filter, sort, order, cursor, skip, take, page)
     },
 
     // Auth

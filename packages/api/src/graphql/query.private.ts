@@ -568,63 +568,29 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     page: {
       type: GraphQLPage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetPage, roles)
-        return loaders.pages.load(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders: {pages}}) =>
+        getPageById(id, authenticate, pages)
     },
 
     pages: {
       type: GraphQLNonNull(GraphQLPageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        filter: {type: GraphQLPageFilter},
-        skip: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLArticleFilter},
         sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, last, skip},
-        {authenticate, dbAdapter}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanGetPages, roles)
-
-        return dbAdapter.page.getPages({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last, skip)
-        })
-      }
+      resolve: (root, {filter, sort, order, skip, take, cursor}, {authenticate, prisma: {page}}) =>
+        getAdminPages(filter, sort, order, cursor, skip, take, authenticate, page)
     },
 
     pagePreviewLink: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
-      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
-        const {roles} = authenticate()
-        authorise(CanGetPagePreviewLink, roles)
-
-        const page = await loaders.pages.load(id)
-
-        if (!page) throw new NotFound('page', id)
-
-        if (!page.draft) throw new UserInputError('Page needs to have a draft')
-
-        const token = generateJWT({
-          id: page.id,
-          expiresInMinutes: hours * 60
-        })
-
-        return urlAdapter.getPagePreviewURL(token)
-      }
+      resolve: (root, {id, hours}, {authenticate, loaders: {pages}, urlAdapter, generateJWT}) =>
+        getPagePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, pages)
     },
 
     // MemberPlan
