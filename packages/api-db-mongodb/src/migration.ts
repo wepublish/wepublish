@@ -903,14 +903,14 @@ export const Migrations: Migration[] = [
     // add settings category
     version: 22,
     async migrate(db, locale) {
-      // TODO add initial settings
       const settingsDoc = await db.createCollection(CollectionName.Settings, {
         strict: true
       })
 
-      const maxCommentCreate: CreateSettingArgs<string> = {
-        name: SettingName.OAUTH_GOOGLE_DISCOVERY_URL,
-        value: 'https://accounts.google.com'
+      const peeringTimeout: CreateSettingArgs<number> = {
+        name: SettingName.PEERING_TIMEOUT_MS,
+        value: 3000,
+        settingRestriction: {minValue: 1000, maxValue: 10000}
       }
       const allowAnonCommenting: CreateSettingArgs<boolean> = {
         name: SettingName.ALLOW_GUEST_COMMENTING,
@@ -928,17 +928,11 @@ export const Migrations: Migration[] = [
         settingRestriction: {minValue: 1, maxValue: 10080}
       }
 
-      const jwtSecretKey: CreateSettingArgs<string> = {
-        name: SettingName.JWT_SECRET_KEY,
-        value: 'ThisIsSuperSecret'
-      }
-
       await settingsDoc.insertMany([
-        maxCommentCreate,
+        peeringTimeout,
         allowAnonCommenting,
         sendLoginJWTExpires,
-        resetPwdExpires,
-        jwtSecretKey
+        resetPwdExpires
       ])
     }
   }

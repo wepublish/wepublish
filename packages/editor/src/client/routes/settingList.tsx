@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Form, Input, InputNumber, Notification, toaster, Toggle} from 'rsuite'
+import {FlexboxGrid, Form, InputNumber, Notification, toaster, Toggle} from 'rsuite'
 import {Setting, SettingName, useSettingListQuery, useUpdateSettingMutation} from '../api'
 import {ButtonLink} from '../route'
 
@@ -10,12 +10,6 @@ export function SettingList() {
 
   const {data: settingListData, refetch, error: err} = useSettingListQuery()
 
-  // TODO where to use?
-  const [googleDiscoveryUrl, setGoogleDiscoveryUrl] = useState<Setting>({
-    id: '',
-    value: ' ',
-    name: SettingName.Default
-  })
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
     value: false,
@@ -33,9 +27,9 @@ export function SettingList() {
     name: SettingName.Default
   })
 
-  const [jwtSecretKey, setJwtSecretKey] = useState<Setting>({
+  const [peeringTimeoutMs, setPeeringTimeoutMs] = useState<Setting>({
     id: '',
-    value: ' ',
+    value: 0,
     name: SettingName.Default
   })
 
@@ -46,10 +40,10 @@ export function SettingList() {
       )
       if (allowGuestCommentSetting) setAllowGuestComment(allowGuestCommentSetting)
 
-      const googleDiscoveryUrlSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.OauthGoogleDiscoveryUrl
+      const peeringTimeoutMsSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.PeeringTimeoutMs
       )
-      if (googleDiscoveryUrlSetting) setGoogleDiscoveryUrl(googleDiscoveryUrlSetting)
+      if (peeringTimeoutMsSetting) setPeeringTimeoutMs(peeringTimeoutMsSetting)
 
       const sendLoginJwtExpiresSetting = settingListData?.settings?.find(
         setting => setting.name === SettingName.SendLoginJwtExpiresMin
@@ -60,11 +54,6 @@ export function SettingList() {
         setting => setting.name === SettingName.ResetPasswordJwtExpiresMin
       )
       if (resetPwdJwtExpiresSetting) setResetPwdJwtExpiresMin(resetPwdJwtExpiresSetting)
-
-      const jwtSecretKeySetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.JwtSecretKey
-      )
-      if (jwtSecretKeySetting) setJwtSecretKey(jwtSecretKeySetting)
     }
   }, [settingListData?.settings])
 
@@ -75,10 +64,9 @@ export function SettingList() {
   async function handleSettingListUpdate() {
     const allSettings = [
       allowGuestComment,
-      googleDiscoveryUrl,
       sendLoginJwtExpiresMin,
       resetPwdJwtExpiresMin,
-      jwtSecretKey
+      peeringTimeoutMs
     ]
     allSettings.map(
       async setting =>
@@ -120,19 +108,6 @@ export function SettingList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <Form fluid={true}>
-        <Form.Group>
-          <Form.ControlLabel>{t('navbar.settingsPanel.discoveryUrl')}</Form.ControlLabel>
-          <Input
-            onChange={value =>
-              setGoogleDiscoveryUrl({
-                id: googleDiscoveryUrl.id,
-                name: googleDiscoveryUrl.name,
-                value: value
-              })
-            }
-            value={googleDiscoveryUrl.value}
-          />
-        </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('navbar.settingsPanel.guestCommenting')}</Form.ControlLabel>
           <Toggle
@@ -196,14 +171,23 @@ export function SettingList() {
         </Form.Group>
         <Form.Group>
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>JWT secret key</Form.ControlLabel>
-          <Input
-            value={jwtSecretKey.value}
-            // type="password"
+          <Form.ControlLabel>timeout peer ms</Form.ControlLabel>
+          <InputNumber
+            value={peeringTimeoutMs.value}
+            min={
+              peeringTimeoutMs.settingRestriction?.minValue
+                ? peeringTimeoutMs.settingRestriction.minValue
+                : undefined
+            }
+            max={
+              peeringTimeoutMs.settingRestriction?.maxValue
+                ? peeringTimeoutMs.settingRestriction.maxValue
+                : undefined
+            }
             onChange={value =>
-              setJwtSecretKey({
-                id: jwtSecretKey.id,
-                name: jwtSecretKey.name,
+              setPeeringTimeoutMs({
+                id: peeringTimeoutMs.id,
+                name: peeringTimeoutMs.name,
                 value: value
               })
             }

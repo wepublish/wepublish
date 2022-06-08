@@ -1745,16 +1745,9 @@ export type SettingInput = {
 export enum SettingName {
   Default = 'DEFAULT',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  OauthGoogleDiscoveryUrl = 'OAUTH_GOOGLE_DISCOVERY_URL',
-  OauthGoogleClientId = 'OAUTH_GOOGLE_CLIENT_ID',
-  OauthGoogleClientKey = 'OAUTH_GOOGLE_CLIENT_KEY',
-  OauthGoogleRedirectUrl = 'OAUTH_GOOGLE_REDIRECT_URL',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
-  MongoLocale = 'MONGO_LOCALE',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  JwtSecretKey = 'JWT_SECRET_KEY'
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS'
 }
 
 export type SettingRestriction = {
