@@ -565,33 +565,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     paymentMethod: {
       type: GraphQLPaymentMethod,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetPaymentMethod, roles)
-
-        return loaders.paymentMethodsByID.load(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders: {paymentMethodsByID}}) =>
+        getPaymentMethodById(id, authenticate, paymentMethodsByID)
     },
 
     paymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
-      resolve(root, {}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetPaymentMethods, roles)
-
-        return dbAdapter.paymentMethod.getPaymentMethods()
-      }
+      resolve: (root, _, {authenticate, prisma: {paymentMethod}}) =>
+        getPaymentMethods(authenticate, paymentMethod)
     },
 
     paymentProviders: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProvider))),
-      resolve(root, {}, {authenticate, paymentProviders}) {
+      resolve(root, _, {authenticate, paymentProviders}) {
         const {roles} = authenticate()
         authorise(CanGetPaymentProviders, roles)
 
-        return paymentProviders.map(paymentProvider => ({
-          id: paymentProvider.id,
-          name: paymentProvider.name
+        return paymentProviders.map(({id, name}) => ({
+          id: id,
+          name: name
         }))
       }
     },
@@ -629,37 +621,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     payment: {
       type: GraphQLPayment,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
-        authorise(CanGetPayment, roles)
-
-        return loaders.paymentsByID.load(id)
-      }
+      resolve: (root, {id}, {authenticate, loaders: {paymentsByID}}) =>
+        getPaymentById(id, authenticate, paymentsByID)
     },
 
     payments: {
       type: GraphQLNonNull(GraphQLPaymentConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPaymentFilter},
         sort: {type: GraphQLPaymentSort, defaultValue: PaymentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetPayments, roles)
-
-        return dbAdapter.payment.getPayments({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (
+        root,
+        {filter, sort, order, cursor, take, skip},
+        {authenticate, prisma: {payment}}
+      ) => getAdminPayments(filter, sort, order, cursor, skip, take, authenticate, payment)
     }
   }
 })

@@ -1,8 +1,17 @@
-import {OptionalUser, PaymentProviderCustomer, User} from './db/user'
-import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
-import {DBAdapter} from './db/adapter'
-import {logger} from './server'
+import {MemberPlan, Invoice, PrismaClient, Subscription} from '@prisma/client'
 import {DataLoaderContext} from './context'
+import {DBAdapter} from './db/adapter'
+import {OptionalInvoice} from './db/invoice'
+import {PaymentPeriodicity} from './db/memberPlan'
+import {PaymentState} from './db/payment'
+import {PaymentMethod} from './db/paymentMethod'
+import {OptionalSubscription, SubscriptionDeactivationReason} from './db/subscription'
+import {OptionalTempUser, UserIdWithTempPrefix} from './db/tempUser'
+import {OptionalUser, PaymentProviderCustomer, User} from './db/user'
+import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
+import {MailContext, SendMailType} from './mails/mailContext'
+import {PaymentProvider} from './payments/paymentProvider'
+import {logger} from './server'
 import {
   isTempUser,
   ONE_DAY_IN_MILLISECONDS,
@@ -10,20 +19,6 @@ import {
   ONE_MONTH_IN_MILLISECONDS,
   removePrefixTempUser
 } from './utility'
-import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
-import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
-import {PaymentState} from './db/payment'
-import {PaymentProvider} from './payments/paymentProvider'
-import {MailContext, SendMailType} from './mails/mailContext'
-import {
-  Subscription,
-  SubscriptionDeactivationReason,
-  SubscriptionSort,
-  OptionalSubscription
-} from './db/subscription'
-import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
-import {PaymentMethod} from './db/paymentMethod'
-import {OptionalTempUser, UserIdWithTempPrefix} from './db/tempUser'
 
 export interface HandleSubscriptionChangeProps {
   subscription: Subscription
@@ -417,23 +412,30 @@ export class MemberContext implements MemberContext {
   }
 
   async checkOpenInvoice({invoice}: CheckOpenInvoiceProps): Promise<void> {
-    const paymentMethods = await this.dbAdapter.paymentMethod.getPaymentMethods()
-    const payments = await this.dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
+    const paymentMethods = await this.prisma.paymentMethod.findMany()
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        invoiceID: invoice.id
+      }
+    })
 
     for (const payment of payments) {
-      if (!payment || !payment.intentID) {
+      if (!payment?.intentID) {
         logger('memberContext').error('Payment %s does not have an intentID', payment?.id)
         continue
       }
 
       const paymentMethod = paymentMethods.find(method => method.id === payment.paymentMethodID)
+
       if (!paymentMethod) {
         logger('memberContext').error('PaymentMethod %s does not exist', payment.paymentMethodID)
         continue
       }
+
       const paymentProvider = this.paymentProviders.find(
         provider => provider.id === paymentMethod.paymentProviderID
       )
+
       if (!paymentProvider) {
         logger('memberContext').error(
           'PaymentProvider %s does not exist',
@@ -647,7 +649,7 @@ export class MemberContext implements MemberContext {
     customer
   }: ChargeInvoiceProps): Promise<void> {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
-    const paymentMethods = await this.dbAdapter.paymentMethod.getPaymentMethods()
+    const paymentMethods = await this.prisma.paymentMethod.findMany()
     const paymentMethodIDs = paymentMethods
       .filter(method => offSessionPaymentProvidersID.includes(method.paymentProviderID))
       .map(method => method.id)
@@ -665,9 +667,11 @@ export class MemberContext implements MemberContext {
       logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
       return
     }
+
     const paymentProvider = this.paymentProviders.find(
       provider => provider.id === paymentMethod.paymentProviderID
     )
+
     if (!paymentProvider) {
       logger('memberContext').error(
         'PaymentProvider %s does not exist',

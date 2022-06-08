@@ -1,4 +1,4 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
+import {InputCursor, Limit, SortOrder} from './common'
 
 export enum PaymentState {
   Created = 'created',
@@ -17,20 +17,20 @@ export interface Payment {
   paymentMethodID: string
   state: PaymentState
   invoiceID: string
-  intentID?: string
-  intentSecret?: string
-  intentData?: string
-  paymentData?: string
+  intentID?: string | null
+  intentSecret?: string | null
+  intentData?: string | null
+  paymentData?: string | null
 }
 
 export interface PaymentInput {
   paymentMethodID: string
   state: PaymentState
   invoiceID: string
-  intentID?: string
-  intentSecret?: string
-  intentData?: string
-  paymentData?: string
+  intentID?: string | null
+  intentSecret?: string | null
+  intentData?: string | null
+  paymentData?: string | null
 }
 
 export interface CreatePaymentArgs {
@@ -69,8 +69,4 @@ export interface DBPaymentAdapter {
   createPayment(args: CreatePaymentArgs): Promise<Payment>
   updatePayment(args: UpdatePaymentArgs): Promise<OptionalPayment>
   deletePayment(args: DeletePaymentArgs): Promise<string | null>
-
-  getPaymentsByID(ids: readonly string[]): Promise<OptionalPayment[]>
-  getPaymentsByInvoiceID(invoiceID: string): Promise<OptionalPayment[]>
-  getPayments(args: GetPaymentsArgs): Promise<ConnectionResult<Payment>>
 }
