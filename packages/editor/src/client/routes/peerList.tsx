@@ -136,39 +136,37 @@ export function PeerList() {
               {hostURL}
             </p>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={2}>
-            <IconButtonTooltip
-              caption={isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}>
-              <Toggle
-                disabled={isUpdating}
-                checked={!isDisabled}
-                onChange={async (checked, e) => {
-                  e.preventDefault()
-                  await updatePeer({
-                    variables: {id, input: {isDisabled: !checked}},
-                    update: cache => {
-                      const query = cache.readQuery<PeerListQuery>({
-                        query: PeerListDocument
-                      })
+          <FlexboxGrid.Item colspan={3}>
+            <Button
+              appearance="primary"
+              disabled={isUpdating}
+              onClick={async e => {
+                e.preventDefault()
+                await updatePeer({
+                  variables: {id, input: {isDisabled: !isDisabled}},
+                  update: cache => {
+                    const query = cache.readQuery<PeerListQuery>({
+                      query: PeerListDocument
+                    })
 
-                      if (!query) return
+                    if (!query) return
 
-                      cache.writeQuery({
-                        query: PeerListDocument,
-                        data: {
-                          peers: addOrUpdateOneInArray(query.peers, {
-                            ...peer,
-                            isDisabled: !checked
-                          })
-                        }
-                      })
-                    }
-                  })
-                }}
-              />
-            </IconButtonTooltip>
+                    cache.writeQuery({
+                      query: PeerListDocument,
+                      data: {
+                        peers: addOrUpdateOneInArray(query.peers, {
+                          ...peer,
+                          isDisabled: !isDisabled
+                        })
+                      }
+                    })
+                  }
+                })
+              }}>
+              {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
+            </Button>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={2} style={{textAlign: 'center'}}>
+          <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
             <IconButtonTooltip caption={t('peerList.overview.delete')}>
               <IconButton
                 disabled={isPeerInfoLoading}
