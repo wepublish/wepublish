@@ -19,6 +19,7 @@ export enum ErrorCode {
   CommentLengthError = 'COMMENT_LENGTH_ERROR',
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
   InternalError = 'InternalError',
+  DisabledPeerError = 'DISABLED_PEER_ERROR',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
   InvalidSettingData = 'INVALID_SETTING_DATA'
@@ -102,6 +103,12 @@ export class PaymentConfigurationNotAllowed extends ApolloError {
 export class UserInputError extends ApolloError {
   constructor(actualError: string) {
     super(`User Input Error: \n${actualError}`, ErrorCode.UserInputError)
+  }
+}
+
+export class DisabledPeerError extends ApolloError {
+  constructor() {
+    super(`Cannot return disabled peer.`, ErrorCode.DisabledPeerError)
   }
 }
 

@@ -23,7 +23,6 @@ import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
 import {MongoDBInvoiceAdapter} from './db/invoice'
 import {MongoDBPaymentAdapter} from './db/payment'
 import {MongoDBMailLogAdapter} from './db/mailLog'
-import {MongoDBTempUserAdapter} from './db/tempUser'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
 import {MongoDBSettingAdapter} from './db/setting'
 
@@ -67,7 +66,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly peer: MongoDBPeerAdapter
   readonly user: MongoDBUserAdapter
   readonly userRole: MongoDBUserRoleAdapter
-  readonly tempUser: MongoDBTempUserAdapter
   readonly subscription: MongoDBSubscriptionAdapter
   readonly session: MongoDBSessionAdapter
   readonly token: MongoDBTokenAdapter
@@ -104,7 +102,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.peer = new MongoDBPeerAdapter(db)
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor, locale)
     this.userRole = new MongoDBUserRoleAdapter(db, locale)
-    this.tempUser = new MongoDBTempUserAdapter(db)
     this.subscription = new MongoDBSubscriptionAdapter(db, locale)
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)

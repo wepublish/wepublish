@@ -48,7 +48,7 @@
     "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.3.21",

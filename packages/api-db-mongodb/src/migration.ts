@@ -9,8 +9,7 @@ import {
   SettingName,
   removePrefixTempUser,
   Subscription,
-  SubscriptionDeactivationReason,
-  TEMP_USER_PREFIX
+  SubscriptionDeactivationReason
 } from '@wepublish/api'
 import {slugify} from './utility'
 
@@ -724,6 +723,12 @@ export const Migrations: Migration[] = [
     // migrate existing deactivated subscriptions
     version: 18,
     async migrate(db, locale) {
+      // Values required to execute migration
+      const TEMP_USER_PREFIX = '__temp_'
+      const removePrefixTempUser = function removePrefixTempUser(userID: string): string {
+        return userID.replace(TEMP_USER_PREFIX, '')
+      }
+
       // 1. move subscription from user object into new subscription collection
       const users = await db.collection(CollectionName.Users)
       const userWithSubscriptions = await users.find({subscription: {$exists: true}}).toArray()
@@ -801,7 +806,7 @@ export const Migrations: Migration[] = [
       // 4. split existing user collection into new temp.user and user collection
       const tempUserQuery = {email: {$regex: OLD_TEMP_USER_REGEX}}
       const tempUsers = await users.find(tempUserQuery).toArray()
-      const newTempUserCollection = await db.createCollection(CollectionName.TempUsers, {
+      const newTempUserCollection = await db.createCollection('temp.users', {
         strict: true
       })
       if (tempUsers.length) {
@@ -900,6 +905,15 @@ export const Migrations: Migration[] = [
     }
   },
   {
+    // Rename unused temp user collection. For operators to remove manually since the collection not used anymore.
+    version: 23,
+    async migrate(db) {
+      const collections = await db.listCollections().toArray()
+      if (collections.includes('temp.users')) {
+        const tempUser = await db.collection('temp.users')
+        await tempUser.rename('temp.users.bak')
+      },
+        <<<<<<< f/wpc-12-add-settings-page
     // add settings category
     version: 22,
     async migrate(db, locale) {
@@ -933,7 +947,7 @@ export const Migrations: Migration[] = [
         allowAnonCommenting,
         sendLoginJWTExpires,
         resetPwdExpires
-      ])
+      ]) }
     }
   }
 ]

@@ -141,7 +141,8 @@
         "value": "Value",
         "yes": "Yes",
         "canonicalUrl": "Canonical Url",
-        "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>"
+        "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>",
+        "peerDisabled": "Currently this peer is disabled"
       }
     },
     "articles": {
@@ -747,6 +748,8 @@
     "peerList": {
       "overview": {
         "delete": "Delete",
+        "disable": "Disable",
+        "enable": "Enable",
         "editProfile": "Edit profile",
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
@@ -836,7 +839,6 @@
         "unknown": "Unknown",
         "deleted": "Deleted user",
         "subscription": "Subscription",
-        "tempUser": "(Temporary User) - ",
         "email": "Email",
         "memberPlan": "Member Plan"
       },
@@ -851,8 +853,7 @@
         "name": "Name",
         "unknown": "Unknown",
         "cancel": "Cancel",
-        "confirm": "Confirm",
-        "tempUserWarning": "This Subscription has a temporary user that has not finished the registration. If you delete the subscription the temporary user will be also deleted."
+        "confirm": "Confirm"
       }
     },
     "userList": {
@@ -962,10 +963,6 @@
       "hasAddress": "User has address",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
-      "tempUser": {
-        "disabledInfo": "This subscription belongs to a temporary user that has not yet finished registration. You can not edit anything until the registration is finished."
-      },
-      "tempUserTitle": "Temporary User",
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
