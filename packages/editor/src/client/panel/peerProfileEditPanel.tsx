@@ -82,9 +82,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   }, [fetchError, saveError])
 
   async function handleSave() {
-    // if (!imgForm.current?.check?.()) {
-    //   return
-    // }
     await updateSettings({
       variables: {
         input: {
