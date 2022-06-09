@@ -83,6 +83,7 @@ export interface DBPeer {
 
   name: string
   slug: string
+  isDisabled?: boolean
   hostURL: string
   token: string
 }

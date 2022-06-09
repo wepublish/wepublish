@@ -116,7 +116,7 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
+import {DisabledPeerError, NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
@@ -203,6 +203,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetPeers, roles)
+
         return dbAdapter.peer.getPeers()
       }
     },
@@ -210,10 +211,17 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter, loaders}) {
+      async resolve(root, {id}, {authenticate, dbAdapter, loaders}) {
         const {roles} = authenticate()
         authorise(CanGetPeer, roles)
-        return loaders.peer.load(id)
+
+        const peer = await loaders.peer.load(id)
+
+        if (peer?.isDisabled) {
+          throw new DisabledPeerError()
+        }
+
+        return peer
       }
     },
 
@@ -619,7 +627,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const canGetArticle = isAuthorised(CanGetArticle, roles)
         const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
-
         if (canGetArticle || canGetSharedArticle) {
           const article = await loaders.articles.load(id)
 
@@ -681,7 +688,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
 
         authorise(CanGetPeerArticle, roles)
-
         return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
       }
     },
@@ -712,9 +718,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
-        const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
-          peerFilter ? peer.name === peerFilter : true
-        )
+        const peers = (await dbAdapter.peer.getPeers())
+          .filter(peer => (peerFilter ? peer.name === peerFilter : true))
+          .filter(peer => !peer.isDisabled)
 
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
