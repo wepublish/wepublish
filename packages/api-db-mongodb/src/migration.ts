@@ -7,7 +7,6 @@ import {
   PageBlock,
   PaymentProviderCustomer,
   SettingName,
-  removePrefixTempUser,
   Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
@@ -906,16 +905,18 @@ export const Migrations: Migration[] = [
   },
   {
     // Rename unused temp user collection. For operators to remove manually since the collection not used anymore.
-    version: 23,
+    version: 22,
     async migrate(db) {
       const collections = await db.listCollections().toArray()
       if (collections.includes('temp.users')) {
         const tempUser = await db.collection('temp.users')
         await tempUser.rename('temp.users.bak')
-      },
-        <<<<<<< f/wpc-12-add-settings-page
+      }
+    }
+  },
+  {
     // add settings category
-    version: 22,
+    version: 23,
     async migrate(db, locale) {
       const settingsDoc = await db.createCollection(CollectionName.Settings, {
         strict: true
@@ -947,7 +948,7 @@ export const Migrations: Migration[] = [
         allowAnonCommenting,
         sendLoginJWTExpires,
         resetPwdExpires
-      ]) }
+      ])
     }
   }
 ]
