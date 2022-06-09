@@ -44,6 +44,7 @@ import {
 } from '../route'
 import {
   ALL_PAYMENT_PERIODICITIES,
+  DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
@@ -474,6 +475,13 @@ export function SubscriptionList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.subscriptions.totalCount ?? 0}
           activePage={page}

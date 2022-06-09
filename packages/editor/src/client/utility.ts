@@ -4,9 +4,39 @@ import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
+import Maybe from 'graphql/tsutils/Maybe'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
+}
+
+export const addOrUpdateOneInArray = (
+  array: Maybe<Record<string | 'id', any>[]>,
+  entry: Record<string | 'id', any>
+) => {
+  let isNew = true
+
+  if (!array) {
+    return [entry]
+  }
+  const updated = array.map(item => {
+    if (item.id !== entry.id) {
+      // This isn't the item we care about - keep it as-is
+      return item
+    }
+    isNew = false
+    // Otherwise, this is the one we want - return an updated value
+    return {
+      ...item,
+      ...entry
+    }
+  })
+
+  if (isNew) {
+    return [...updated, entry]
+  }
+
+  return updated
 }
 
 export function generateID(): string {
@@ -157,6 +187,7 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
 
 export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
 export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [5, 10, 15]
+export const DEFAULT_MAX_TABLE_PAGES = 5
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,

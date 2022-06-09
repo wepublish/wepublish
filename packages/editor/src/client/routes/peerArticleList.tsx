@@ -23,7 +23,11 @@ import {
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {Link} from '../route'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 
 export function PeerArticleList() {
@@ -263,8 +267,15 @@ export function PeerArticleList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={peerArticleListData?.peerArticles.totalCount ?? 0}
+          total={peerArticleListData?.peerArticles?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
