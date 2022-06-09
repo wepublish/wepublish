@@ -446,6 +446,7 @@
         "unknown": "Inconnu",
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
+        "tempUser": "(Utilisateur temporaire) - ",
         "email": "Email",
         "memberPlan": "plan de membre"
       },
@@ -460,7 +461,8 @@
         "name": "Nom",
         "unknown": "Inconnu",
         "cancel": "Annuler",
-        "confirm": "Confirmer"
+        "confirm": "Confirmer",
+        "tempUserWarning": "Cet abonnement a un(e) utilisateur(trice) temporaire qui n'a pas terminé son enregistrement. Si tu supprimes l'abonnement, l'utilisateur(trice) temporaire sera également supprimé(e)."
       }
     },
     "userList": {
@@ -748,7 +750,8 @@
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
-      "selectUser": "Choisir l'utilisateur"
+      "selectUser": "Choisir l'utilisateur",
+      "tempUserTitle": "Utilisateur temporaire"
     },
     "navbar": {
       "languageSwitch": {

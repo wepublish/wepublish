@@ -759,6 +759,7 @@
         "unknown": "Unbekannt",
         "deleted": "Gelöschte:r Benutzer:in",
         "subscription": "Subscription",
+        "tempUser": "(Temporäre:r Benutzer:in) - ",
         "email": "Email",
         "memberPlan": "Member-Plan"
       },
@@ -773,7 +774,8 @@
         "name": "Name",
         "unknown": "Unbekannt",
         "cancel": "Abbrechen",
-        "confirm": "Bestätigen"
+        "confirm": "Bestätigen",
+        "tempUserWarning": "Diese Subscription hat eine:n temporäre:n Benutzer:in, welche seine/ihre Registration nicht abgeschlossen hat. Wenn du die Subscription löscht, wird der/die temporäre:r Benutzer:in ebenfalls gelöscht."
       }
     },
     "userList": {
@@ -882,6 +884,7 @@
       "createTitle": "Abonnement erstellen",
       "adapter": "Zahlungs-Adapter",
       "selectUser": "Benutzer:in wählen",
+      "tempUserTitle": "Temporäre:r Benutzer:in",
       "deactivation": {
         "date": "Deaktivierung"
       }

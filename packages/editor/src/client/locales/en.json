@@ -829,6 +829,7 @@
         "unknown": "Unknown",
         "deleted": "Deleted user",
         "subscription": "Subscription",
+        "tempUser": "(Temporary User) - ",
         "email": "Email",
         "memberPlan": "Member Plan"
       },
@@ -843,7 +844,8 @@
         "name": "Name",
         "unknown": "Unknown",
         "cancel": "Cancel",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "tempUserWarning": "This Subscription has a temporary user that has not finished the registration. If you delete the subscription the temporary user will be also deleted."
       }
     },
     "userList": {
@@ -953,6 +955,10 @@
       "hasAddress": "User has address",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
+      "tempUser": {
+        "disabledInfo": "This subscription belongs to a temporary user that has not yet finished registration. You can not edit anything until the registration is finished."
+      },
+      "tempUserTitle": "Temporary User",
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",

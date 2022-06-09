@@ -9,6 +9,7 @@ import {
   FlexboxGrid,
   Form,
   IconButton,
+  Message,
   Modal,
   Pagination,
   SelectPicker,
@@ -46,6 +47,7 @@ import {
   ALL_PAYMENT_PERIODICITIES,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  isTempUser,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
@@ -434,6 +436,9 @@ export function SubscriptionList() {
                       ? UserEditRoute.create({id: rowData.user.id})
                       : SubscriptionEditRoute.create({id: rowData.id})
                   }>
+                  {isTempUser(rowData.user?.id) && (
+                    <span>{t('subscriptionList.overview.tempUser')}</span>
+                  )}
                   {rowData.user?.name || t('subscriptionList.overview.deleted')}
                 </Link>
               )}
@@ -542,6 +547,11 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
+          {currentSubscription && isTempUser(currentSubscription.user?.id) && (
+            <Message showIcon type="warning">
+              {t('subscriptionList.panels.tempUserWarning')}
+            </Message>
+          )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user?.name || t('subscriptionList.panels.unknown')}

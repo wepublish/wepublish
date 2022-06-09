@@ -10,6 +10,8 @@ export enum LocalStorageKey {
   SessionToken = 'sessionToken'
 }
 
+export const TEMP_USER_PREFIX = '__temp_'
+
 export const addOrUpdateOneInArray = (
   array: Maybe<Record<string | 'id', any>[]>,
   entry: Record<string | 'id', any>
@@ -37,6 +39,10 @@ export const addOrUpdateOneInArray = (
   }
 
   return updated
+}
+
+export function isTempUser(userID: string | null | Maybe<string>): boolean {
+  return !!userID?.startsWith(TEMP_USER_PREFIX)
 }
 
 export function generateID(): string {
