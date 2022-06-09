@@ -245,7 +245,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
           collation: {locale: this.locale, strength: 2}
         })
         .match({
-          $and: [{itemID: id}, {userID}, {state: {$ne: CommentState.Approved}}]
+          $and: [{itemID: id}, {userID}, {state: {$ne: CommentState.Approved}}, {parentID: null}]
         })
         .toArray()
     }
@@ -272,14 +272,14 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]> {
+  async getPublicChildrenCommentsByParentId(id: string, userID: string): Promise<PublicComment[]> {
     const [childrenComments] = await Promise.all([
       this.comments
         .aggregate([{$sort: {modifiedAt: -1}}], {
           collation: {locale: this.locale, strength: 2}
         })
         .match({
-          $and: [{parentID: id}, {state: CommentState.Approved}]
+          $and: [{parentID: id}, {$or: [{state: CommentState.Approved}, {userID: userID}]}]
         })
         .toArray()
     ])

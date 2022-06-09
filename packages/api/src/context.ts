@@ -46,6 +46,27 @@ import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {User} from './db/user'
 import {ChallengeProvider} from './challenges/challengeProvider'
+import NodeCache from 'node-cache'
+import {logger} from './server'
+
+/**
+ * Peered article cache configuration and setup
+ */
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+const fetcherCache = new NodeCache({
+  stdTTL: 1800,
+  checkperiod: 60,
+  deleteOnExpire: false,
+  useClones: false
+})
+fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
+  // Refresh cache only if last use of cached entry is less than 24h ago
+  if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
+    await loadFreshData(value.queryParams)
+  } else {
+    fetcherCache.del(key)
+  }
+})
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -128,6 +149,21 @@ export interface Oauth2Provider {
   readonly clientKey: string
   readonly scopes: string[]
   readonly redirectUri: string[]
+}
+
+interface PeerQueryParams {
+  cacheKey: string
+  lastQueried: number
+  readonly hostURL: string
+  readonly variables: {[p: string]: any} | undefined
+  readonly query: string
+  readonly operationName: string | undefined
+  readonly token: string
+}
+
+interface PeerCacheValue {
+  queryParams: PeerQueryParams
+  data: any
 }
 
 export interface ContextOptions {
@@ -473,65 +509,110 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
   return null
 }
 
+/**
+ * Function that generate the key for the cache
+ * @param params
+ */
+function generateCacheKey(params: PeerQueryParams) {
+  return (
+    crypto
+      // Hash function doesn't have to be crypto safe, just fast!
+      .createHash('md5')
+      .update(
+        `${JSON.stringify(params.hostURL)}${JSON.stringify(
+          params.variables?._v0_id
+        )}${JSON.stringify(params.query)}`
+      )
+      .digest('hex')
+  )
+}
+
+/**
+ * Function that refreshes and initializes entries in the cache
+ * @param params
+ */
+
+async function loadFreshData(params: PeerQueryParams) {
+  try {
+    const abortController = new AbortController()
+
+    const peerTimeOUT = process.env.PEERING_TIMEOUT_IN_MS
+      ? process.env.PEERING_TIMEOUT_IN_MS
+      : '3000'
+
+    // Since we use auto refresh cache we can safely set the timeout to 3sec
+    setTimeout(() => abortController.abort(), parseInt(peerTimeOUT))
+
+    const fetchResult = await fetch(params.hostURL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', Authorization: `Bearer ${params.token}`},
+      body: JSON.stringify({
+        query: params.query,
+        variables: params.variables,
+        operationName: params.operationName
+      }),
+      signal: abortController.signal
+    })
+    const res = await fetchResult.json()
+    if (fetchResult?.status !== 200) {
+      return {
+        errors: [new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)]
+      }
+    }
+    params.lastQueried = params.lastQueried ? params.lastQueried : new Date().getTime()
+    const cacheValue: PeerCacheValue = {
+      data: res,
+      queryParams: params
+    }
+    fetcherCache.set(params.cacheKey, cacheValue)
+    return res
+  } catch (err) {
+    let errorMessage = err
+    if (err.type === 'aborted') {
+      errorMessage = new Error(`Connection to peer (${params.hostURL}) timed out.`)
+    }
+    logger('context').error(`${errorMessage}`)
+    return {errors: [err]}
+  }
+}
+
 export function createFetcher(hostURL: string, token: string): Fetcher {
-  // TODO: Implement batching and improve caching.
-  const cache = new DataLoader<
+  const data = new DataLoader<
     {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
     any,
     string
-  >(
-    async queries => {
-      const results = await Promise.all(
-        queries.map(async ({query, variables, operationName}) => {
-          try {
-            const abortController = new AbortController()
+  >(async queries => {
+    const results = await Promise.all(
+      queries.map(async ({query, variables, operationName}) => {
+        // Initialize and prepare caching
+        const fetchParams: PeerQueryParams = {
+          hostURL,
+          variables,
+          query,
+          operationName,
+          token,
+          cacheKey: '',
+          lastQueried: 0
+        }
+        fetchParams.cacheKey = generateCacheKey(fetchParams)
+        const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
 
-            const peerTimeOUT = process.env.PEERING_TIMEOUT_IN_MS
-              ? process.env.PEERING_TIMEOUT_IN_MS
-              : '1000'
+        // On initial query add data to cache queue
+        if (!cachedData) {
+          return await loadFreshData(fetchParams)
+        }
 
-            setTimeout(() => abortController.abort(), parseInt(peerTimeOUT))
+        // Serve cached entries direct
+        cachedData.queryParams.lastQueried = new Date().getTime()
+        return cachedData.data
+      })
+    )
 
-            const fetchResult = await fetch(hostURL, {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
-              body: JSON.stringify({query, variables, operationName}),
-              signal: abortController.signal
-            })
-
-            if (fetchResult?.status !== 200) {
-              return {
-                errors: [
-                  new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)
-                ]
-              }
-            }
-            return await fetchResult.json()
-          } catch (err) {
-            if (err.type === 'aborted') {
-              err = new Error(`Connection to peer (${hostURL}) timed out.`)
-            }
-
-            console.error(err)
-            return {errors: [err]}
-          }
-        })
-      )
-
-      return results
-    },
-    {
-      cacheKeyFn: ({query, variables, operationName}) =>
-        // TODO: Use faster hashing function, doesn't have to be crypto safe.
-        crypto
-          .createHash('sha1')
-          .update(`${query}.${JSON.stringify(variables)}.${operationName}`)
-          .digest('base64')
-    }
-  )
+    return results
+  })
 
   return async ({query: queryDocument, variables, operationName}) => {
     const query = print(queryDocument)
-    return cache.load({query, variables, operationName})
+    return data.load({query, variables, operationName})
   }
 }

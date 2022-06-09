@@ -69,11 +69,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const {
-    data,
-    loading: isLoading,
-    error: loadError
-  } = useSubscriptionQuery({
+  const {data, loading: isLoading, error: loadError} = useSubscriptionQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -151,11 +147,15 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     fetchPolicy: 'network-only'
   })
 
-  const [updateSubscription, {loading: isUpdating, error: updateError}] =
-    useUpdateSubscriptionMutation()
+  const [
+    updateSubscription,
+    {loading: isUpdating, error: updateError}
+  ] = useUpdateSubscriptionMutation()
 
-  const [createSubscription, {loading: isCreating, error: createError}] =
-    useCreateSubscriptionMutation()
+  const [
+    createSubscription,
+    {loading: isCreating, error: createError}
+  ] = useCreateSubscriptionMutation()
 
   const isDeactivated = deactivation?.date ? new Date(deactivation.date) < new Date() : false
 
@@ -197,6 +197,16 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (error) Alert.error(error, 0)
   }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
 
+  const inputBase = {
+    monthlyAmount,
+    paymentPeriodicity,
+    autoRenew,
+    startsAt: startsAt.toISOString(),
+    paidUntil: paidUntil ? paidUntil.toISOString() : null,
+    properties,
+    deactivation
+  }
+
   async function handleSave() {
     if (!memberPlan) return
     if (!paymentMethod) return
@@ -208,16 +218,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         variables: {
           id,
           input: {
+            ...inputBase,
             userID: user?.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
@@ -227,16 +231,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       const {data} = await createSubscription({
         variables: {
           input: {
+            ...inputBase,
             userID: user.id,
-            memberPlanID: memberPlan.id,
-            monthlyAmount,
-            paymentPeriodicity,
-            autoRenew,
-            startsAt: startsAt.toISOString(),
-            paidUntil: paidUntil ? paidUntil.toISOString() : null,
             paymentMethodID: paymentMethod.id,
-            properties,
-            deactivation
+            memberPlanID: memberPlan.id
           }
         }
       })
@@ -250,19 +248,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
-          memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
-          paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: {
             reason,
             date: date.toISOString()
-          }
+          },
+          paymentMethodID: paymentMethod.id,
+          memberPlanID: memberPlan.id
         }
       }
     })
@@ -278,15 +271,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       variables: {
         id,
         input: {
+          ...inputBase,
           userID: user.id,
           memberPlanID: memberPlan.id,
-          monthlyAmount,
-          paymentPeriodicity,
-          autoRenew,
-          startsAt: startsAt.toISOString(),
-          paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
-          properties,
           deactivation: null
         }
       }
@@ -295,6 +283,23 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     if (data?.updateSubscription) {
       setDeactivation(data.updateSubscription.deactivation)
     }
+  }
+
+  /**
+   * UI helper to provide a meaningful user labeling.
+   * @param user
+   */
+  function getUserLabel(user: FullUserFragment | null | undefined): string {
+    if (!user) return ''
+    let userLabel = ''
+    if (user.firstName) userLabel += `${user.firstName} `
+    if (user.name) userLabel += `${user.name} `
+    if (user.preferredName) userLabel += `(${user.preferredName}) `
+    if (user.email) userLabel += `| ${user.email} `
+    if (user.address?.streetAddress) userLabel += `| ${user.address.streetAddress} `
+    if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `
+    if (user.address?.city) userLabel += `| ${user.address.city} `
+    return userLabel
   }
 
   return (
@@ -369,7 +374,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <SelectPicker
                 block
                 disabled={isDisabled || isDeactivated}
-                data={users.map(usr => ({value: usr?.id, label: usr?.name}))}
+                data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
                 value={user?.id}
                 onChange={value => setUser(users.find(usr => usr?.id === value))}
                 onSearch={searchString => {
@@ -415,6 +420,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
               <DatePicker
                 block
+                cleanable={false}
                 value={startsAt}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value)}

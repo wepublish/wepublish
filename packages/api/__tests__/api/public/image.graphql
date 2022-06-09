@@ -35,8 +35,8 @@ fragment FullImage on Image {
   description
   tags
 
-  author
   source
+  link
   license
 
   focalPoint {

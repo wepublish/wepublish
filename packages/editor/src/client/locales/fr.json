@@ -450,6 +450,12 @@
         "email": "Email",
         "memberPlan": "plan de membre"
       },
+      "filter": {
+        "deactivationReason": "Motif désactivation",
+        "reasonNone": "Sans",
+        "reasonUserSelfDeactivated": "Par l'utilisateur",
+        "reasonInvoiceNotPaid": "Facture impayée"
+      },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
         "name": "Nom",
@@ -491,7 +497,13 @@
         "startedAt": "Démarré",
         "startedAtDate": "{{startedAtDate, ccc PP p}}",
         "subEdit": "Modifier",
-        "subCreate": "Créer"
+        "subCreate": "Créer",
+        "company": "Entreprise",
+        "streetAddress": "Rue",
+        "streetAddress2": "Rue 2",
+        "zipCode": "Code Postal",
+        "city": "Ville",
+        "country": "Pays"
       },
       "overview": {
         "action": "Actions",
@@ -696,7 +708,7 @@
     "memberPlanList": {
       "autoRenewal": "Force Auto Renew",
       "editTitle": "Modifier le plan membres",
-      "paymentPeriodicities": "Périodicités de paiement possibles",
+      "paymentPeriodicities": "Périodicités de paiement",
       "action": "Actions",
       "active": "Actif",
       "activeDescription": "Rendre le plan disponible",
@@ -736,7 +748,7 @@
       "monthlyAmount": "Montant mensuel",
       "payedUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
-      "selectMemberPlan": "Choisissez un plan de membre",
+      "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
       "selectUser": "Choisir l'utilisateur",
       "tempUserTitle": "Utilisateur temporaire"
@@ -867,6 +879,8 @@
     "confirm": "Confirmer",
     "create": "Créer",
     "save": "Sauvegarder",
+    "yes": "Oui",
+    "no": "Non",
     "untitled": "Sans Titre"
   }
 }

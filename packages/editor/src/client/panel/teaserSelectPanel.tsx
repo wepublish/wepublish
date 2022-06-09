@@ -52,7 +52,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
+  const {
+    data: pageListData,
+    fetchMore: fetchMorePages,
+    error: pageListError
+  } = usePageListQuery({
     variables: listVariables,
     fetchPolicy: 'no-cache'
   })

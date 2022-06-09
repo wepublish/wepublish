@@ -33,7 +33,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       modifiedAt: new Date(),
       name: input.name,
       slug: input.slug,
-      tags: input.tags,
+      tags: input.tags ? input.tags : [],
       imageID: input.imageID,
       description: input.description,
       active: input.active,

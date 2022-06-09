@@ -11,7 +11,7 @@ export interface ImageBlockProps {
   readonly width: number
   readonly description?: string
   readonly caption?: string
-  readonly author?: string
+  readonly source?: string
 }
 
 const ImageBlockStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
@@ -50,9 +50,9 @@ export function ImageBlock(props: ImageBlockProps) {
         width={props.width}
         fit={ImageFit.Contain}
       />
-      {(props.author || props.caption) && (
+      {(props.source || props.caption) && (
         <p className={css(ImageBlockCaptionStyle)}>
-          {props.caption} {props.author ? <>(Foto: {props.author})</> : null}
+          {props.caption} {props.source ? <>(Foto: {props.source})</> : null}
         </p>
       )}
     </div>

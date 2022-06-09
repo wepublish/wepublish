@@ -440,8 +440,8 @@ export type Image = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
   license?: Maybe<Scalars['String']>;
   fileSize: Scalars['Int'];
   extension: Scalars['String'];
@@ -1473,6 +1473,11 @@ export type QuerySubscriptionsArgs = {
 };
 
 
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: Maybe<SubscriptionFilter>;
+};
+
+
 export type QueryUserRoleArgs = {
   id?: Maybe<Scalars['ID']>;
 };
@@ -1754,11 +1759,18 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
-  startsAt?: Maybe<DateFilter>;
-  paidUntil?: Maybe<DateFilter>;
-  deactivationDate?: Maybe<DateFilter>;
+  startsAtFrom?: Maybe<DateFilter>;
+  startsAtTo?: Maybe<DateFilter>;
+  paidUntilFrom?: Maybe<DateFilter>;
+  paidUntilTo?: Maybe<DateFilter>;
+  deactivationDateFrom?: Maybe<DateFilter>;
+  deactivationDateTo?: Maybe<DateFilter>;
   deactivationReason?: Maybe<SubscriptionDeactivationReason>;
   autoRenew?: Maybe<Scalars['Boolean']>;
+  paymentMethodID?: Maybe<Scalars['String']>;
+  memberPlanID?: Maybe<Scalars['String']>;
+  paymentPeriodicity?: Maybe<PaymentPeriodicity>;
+  userHasAddress?: Maybe<Scalars['Boolean']>;
 };
 
 export type SubscriptionInput = {
@@ -1869,8 +1881,8 @@ export type UpdateImageInput = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
+  link?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
   license?: Maybe<Scalars['String']>;
   focalPoint?: Maybe<InputPoint>;
 };
@@ -1889,8 +1901,8 @@ export type UploadImageInput = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
+  link?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
   license?: Maybe<Scalars['String']>;
   focalPoint?: Maybe<InputPoint>;
 };
@@ -2787,7 +2799,7 @@ export type ImageRefFragment = (
 
 export type FullImageFragment = (
   { __typename?: 'Image' }
-  & Pick<Image, 'id' | 'createdAt' | 'modifiedAt' | 'filename' | 'extension' | 'width' | 'height' | 'fileSize' | 'description' | 'tags' | 'author' | 'source' | 'license'>
+  & Pick<Image, 'id' | 'createdAt' | 'modifiedAt' | 'filename' | 'extension' | 'width' | 'height' | 'fileSize' | 'description' | 'tags' | 'source' | 'link' | 'license'>
   & { focalPoint?: Maybe<(
     { __typename?: 'Point' }
     & Pick<Point, 'x' | 'y'>
@@ -3585,12 +3597,14 @@ export type SubscriptionQuery = (
   )> }
 );
 
-export type SubscriptionsAsCsvQueryVariables = Exact<{ [key: string]: never; }>;
+export type SubscriptionsAsCsvQueryVariables = Exact<{
+  filter?: Maybe<SubscriptionFilter>;
+}>;
 
 
 export type SubscriptionsAsCsvQuery = (
   { __typename?: 'Query' }
-  & { csv: Query['subscriptionsAsCsv'] }
+  & Pick<Query, 'subscriptionsAsCsv'>
 );
 
 export type CreateSubscriptionMutationVariables = Exact<{
@@ -3674,7 +3688,7 @@ export type FullUserFragment = (
   & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'firstName' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
-    & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
+    & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -4248,7 +4262,9 @@ export const FullUserFragmentDoc = gql`
   firstName
   preferredName
   address {
+    company
     streetAddress
+    streetAddress2
     zipCode
     city
     country
@@ -4317,8 +4333,8 @@ export const FullImageFragmentDoc = gql`
   fileSize
   description
   tags
-  author
   source
+  link
   license
   focalPoint {
     x
@@ -6845,8 +6861,8 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv {
-  csv: subscriptionsAsCsv
+    query SubscriptionsAsCsv($filter: SubscriptionFilter) {
+  subscriptionsAsCsv(filter: $filter)
 }
     `;
 
@@ -6862,6 +6878,7 @@ export const SubscriptionsAsCsvDocument = gql`
  * @example
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

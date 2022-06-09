@@ -40,7 +40,9 @@ const userRoleListDocumentQuery = {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false
+            hasPreviousPage: false,
+            startCursor: null,
+            endCursor: null
           },
           totalCount: 2
         }
@@ -61,8 +63,12 @@ const userDocumentQuery = {
       user: {
         __typename: 'User',
         id: 'fakeId3',
-        name: 'Peter Parker',
+        firstName: 'Peter',
+        name: 'Parker',
+        preferredName: 'Peter Parker',
         email: 'peter@parker.com',
+        address: null,
+        active: false,
         roles: [
           {
             __typename: 'UserRole',
@@ -72,7 +78,12 @@ const userDocumentQuery = {
             systemRole: false,
             permissions: []
           }
-        ]
+        ],
+        properties: [],
+        emailVerifiedAt: null,
+        lastLogin: null,
+        createdAt: null,
+        modifiedAt: null
       }
     }
   })

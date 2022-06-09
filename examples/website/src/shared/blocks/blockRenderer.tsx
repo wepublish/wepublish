@@ -95,7 +95,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           height={700}
           description={block.value.description}
           caption={block.value.caption}
-          author={block.value.author}
+          source={block.value.source}
         />
       )
 

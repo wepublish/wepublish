@@ -486,7 +486,7 @@
       "fixPrice": "Fixpreis",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
-      "paymentPeriodicities": "Mögliche Zahlungsperiodizitäten",
+      "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
         "BIANNUAL": "Halbjährlich",
         "QUARTERLY": "Vierteljährlich",
@@ -722,6 +722,8 @@
       }
     },
     "save": "Speichern",
+    "yes": "Ja",
+    "no": "Nein",
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
@@ -761,6 +763,12 @@
         "tempUser": "(Temporäre:r Benutzer:in) - ",
         "email": "Email",
         "memberPlan": "Member-Plan"
+      },
+      "filter": {
+        "deactivationReason": "Grund Deaktivierung",
+        "reasonNone": "Kein Grund",
+        "reasonUserSelfDeactivated": "Durch Benutzer:in",
+        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",
@@ -821,7 +829,13 @@
         "subTitle": "Abonnement",
         "Unknown": "Unbekannt",
         "userRoles": "Userrollen",
-        "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist."
+        "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist.",
+        "company": "Firma",
+        "streetAddress": "Strasse",
+        "streetAddress2": "Strasse 2",
+        "zipCode": "PLZ",
+        "city": "Stadt",
+        "country": "Land"
       }
     },
     "userRoles": {
@@ -866,12 +880,15 @@
       "name": "Name",
       "payedUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
-      "selectMemberPlan": "Memberplan wählen",
+      "selectMemberPlan": "Memberplan",
       "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
       "adapter": "Zahlungs-Adapter",
       "selectUser": "Benutzer:in wählen",
-      "tempUserTitle": "Temporäre:r Benutzer:in"
+      "tempUserTitle": "Temporäre:r Benutzer:in",
+      "deactivation": {
+        "date": "Deaktivierung"
+      }
     }
   }
 }

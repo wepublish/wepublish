@@ -25,7 +25,9 @@ export function slugify(str: string) {
   return str
     .toLowerCase()
     .trim()
-    .replace(/[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
+    .replace(/[Ä]/gi, 'ae')
+
     .replace(/[ÇĆĈČ]/gi, 'c')
     .replace(/[ÐĎĐÞ]/gi, 'd')
     .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
@@ -38,13 +40,17 @@ export function slugify(str: string) {
     .replace(/[ĹĻĽŁ]/gi, 'l')
     .replace(/[Ḿ]/gi, 'm')
     .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[Œ]/gi, 'oe')
+    .replace(/[ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
+    .replace(/[ŒÖ]/gi, 'oe')
+
     .replace(/[ṕ]/gi, 'p')
     .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ßŚŜŞŠ]/gi, 's')
+    .replace(/[ŚŜŞŠ]/gi, 's')
+    .replace(/[ß]/gi, 'ss')
     .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
+    .replace(/[Ü]/gi, 'ue')
+
     .replace(/[ẂŴẀẄ]/gi, 'w')
     .replace(/[ẍ]/gi, 'x')
     .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')

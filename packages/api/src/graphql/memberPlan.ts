@@ -174,7 +174,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     slug: {type: GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLID},
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
