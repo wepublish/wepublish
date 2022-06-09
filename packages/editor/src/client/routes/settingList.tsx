@@ -8,7 +8,7 @@ import {ButtonLink} from '../route'
 export function SettingList() {
   const {t} = useTranslation()
 
-  const {data: settingListData, refetch, error: err} = useSettingListQuery()
+  const {data: settingListData, refetch, error: fetchError, loading} = useSettingListQuery()
 
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
@@ -82,118 +82,120 @@ export function SettingList() {
   }
 
   useEffect(() => {
-    const error = updateSettingError ?? err
+    const error = updateSettingError ?? fetchError
     if (error)
       toaster.push(
         <Notification type="error" header={t('navbar.settingsPanel.errorTitle')} duration={2000}>
           {error.message.toString()}
         </Notification>
       )
-  }, [err, updateSettingError])
+  }, [fetchError, updateSettingError])
 
   return (
-    <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
-          <h2>{t('navbar.settings')}</h2>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            onClick={() => {
-              handleSettingListUpdate()
-            }}>
-            {t('navbar.settingsPanel.save')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-      <Form fluid={true}>
-        <Form.Group>
-          <Form.ControlLabel>{t('navbar.settingsPanel.guestCommenting')}</Form.ControlLabel>
-          <Toggle
-            checked={allowGuestComment?.value}
-            onChange={checked =>
-              setAllowGuestComment({
-                id: allowGuestComment.id,
-                name: allowGuestComment.name,
-                value: checked
-              })
-            }
-          />
-        </Form.Group>
-        <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>JWT expires min</Form.ControlLabel>
-          <InputNumber
-            value={sendLoginJwtExpiresMin.value}
-            min={
-              sendLoginJwtExpiresMin.settingRestriction?.minValue
-                ? sendLoginJwtExpiresMin.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              sendLoginJwtExpiresMin.settingRestriction?.maxValue
-                ? sendLoginJwtExpiresMin.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setSendLoginJwtExpiresMin({
-                id: sendLoginJwtExpiresMin.id,
-                name: sendLoginJwtExpiresMin.name,
-                value: value
-              })
-            }
-          />
-        </Form.Group>
-        <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>reset password JWT expires min</Form.ControlLabel>
-          <InputNumber
-            value={resetPwdJwtExpiresMin.value}
-            min={
-              resetPwdJwtExpiresMin.settingRestriction?.minValue
-                ? resetPwdJwtExpiresMin.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              resetPwdJwtExpiresMin.settingRestriction?.maxValue
-                ? resetPwdJwtExpiresMin.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setResetPwdJwtExpiresMin({
-                id: resetPwdJwtExpiresMin.id,
-                name: resetPwdJwtExpiresMin.name,
-                value: value
-              })
-            }
-          />
-        </Form.Group>
-        <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>timeout peer ms</Form.ControlLabel>
-          <InputNumber
-            value={peeringTimeoutMs.value}
-            min={
-              peeringTimeoutMs.settingRestriction?.minValue
-                ? peeringTimeoutMs.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              peeringTimeoutMs.settingRestriction?.maxValue
-                ? peeringTimeoutMs.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setPeeringTimeoutMs({
-                id: peeringTimeoutMs.id,
-                name: peeringTimeoutMs.name,
-                value: value
-              })
-            }
-          />
-        </Form.Group>
-      </Form>
-    </>
+    !loading && (
+      <>
+        <FlexboxGrid>
+          <FlexboxGrid.Item colspan={16}>
+            <h2>{t('navbar.settings')}</h2>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <ButtonLink
+              appearance="primary"
+              onClick={() => {
+                handleSettingListUpdate()
+              }}>
+              {t('navbar.settingsPanel.save')}
+            </ButtonLink>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
+        <Form fluid={true}>
+          <Form.Group>
+            <Form.ControlLabel>{t('navbar.settingsPanel.guestCommenting')}</Form.ControlLabel>
+            <Toggle
+              checked={allowGuestComment?.value}
+              onChange={checked =>
+                setAllowGuestComment({
+                  id: allowGuestComment.id,
+                  name: allowGuestComment.name,
+                  value: checked
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            <Form.ControlLabel>JWT expires min</Form.ControlLabel>
+            <InputNumber
+              value={sendLoginJwtExpiresMin.value}
+              min={
+                sendLoginJwtExpiresMin.settingRestriction?.minValue
+                  ? sendLoginJwtExpiresMin.settingRestriction.minValue
+                  : undefined
+              }
+              max={
+                sendLoginJwtExpiresMin.settingRestriction?.maxValue
+                  ? sendLoginJwtExpiresMin.settingRestriction.maxValue
+                  : undefined
+              }
+              onChange={value =>
+                setSendLoginJwtExpiresMin({
+                  id: sendLoginJwtExpiresMin.id,
+                  name: sendLoginJwtExpiresMin.name,
+                  value: value
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            <Form.ControlLabel>reset password JWT expires min</Form.ControlLabel>
+            <InputNumber
+              value={resetPwdJwtExpiresMin.value}
+              min={
+                resetPwdJwtExpiresMin.settingRestriction?.minValue
+                  ? resetPwdJwtExpiresMin.settingRestriction.minValue
+                  : undefined
+              }
+              max={
+                resetPwdJwtExpiresMin.settingRestriction?.maxValue
+                  ? resetPwdJwtExpiresMin.settingRestriction.maxValue
+                  : undefined
+              }
+              onChange={value =>
+                setResetPwdJwtExpiresMin({
+                  id: resetPwdJwtExpiresMin.id,
+                  name: resetPwdJwtExpiresMin.name,
+                  value: value
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            <Form.ControlLabel>timeout peer ms</Form.ControlLabel>
+            <InputNumber
+              value={peeringTimeoutMs.value}
+              min={
+                peeringTimeoutMs.settingRestriction?.minValue
+                  ? peeringTimeoutMs.settingRestriction.minValue
+                  : undefined
+              }
+              max={
+                peeringTimeoutMs.settingRestriction?.maxValue
+                  ? peeringTimeoutMs.settingRestriction.maxValue
+                  : undefined
+              }
+              onChange={value =>
+                setPeeringTimeoutMs({
+                  id: peeringTimeoutMs.id,
+                  name: peeringTimeoutMs.name,
+                  value: value
+                })
+              }
+            />
+          </Form.Group>
+        </Form>
+      </>
+    )
   )
 }

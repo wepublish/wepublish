@@ -1065,7 +1065,7 @@ export type MutationRequestChangesOnCommentArgs = {
 
 
 export type MutationUpdateSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: SettingInput;
 };
 
@@ -3689,7 +3689,7 @@ export type SettingQuery = (
 );
 
 export type UpdateSettingMutationVariables = Exact<{
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: SettingInput;
 }>;
 
@@ -7167,7 +7167,7 @@ export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
 export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;
 export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>;
 export const UpdateSettingDocument = gql`
-    mutation UpdateSetting($id: String!, $input: SettingInput!) {
+    mutation UpdateSetting($id: ID!, $input: SettingInput!) {
   updateSetting(id: $id, input: $input) {
     value
   }

@@ -164,10 +164,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          const guestCanCommentSetting = (
+          const guestCanComment = (
             await dbAdapter.setting.getSetting(SettingName.ALLOW_GUEST_COMMENTING)
           )?.value
-          if (!guestCanCommentSetting) throw new AnonymousCommentsDisabledError()
+          if (!guestCanComment) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()

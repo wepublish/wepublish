@@ -1164,7 +1164,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateSetting: {
       type: GraphQLSetting,
       args: {
-        id: {type: GraphQLNonNull(GraphQLString)},
+        id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLSettingInput)}
       },
 

@@ -37,7 +37,7 @@ query Setting($id: ID, $name: String) {
     }
 }
 
-mutation UpdateSetting($id: String!, $input: SettingInput!) {
+mutation UpdateSetting($id: ID!, $input: SettingInput!) {
   updateSetting(id: $id, input: $input) {
     value
   }
