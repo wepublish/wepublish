@@ -7,7 +7,6 @@ import {
   SortOrder
 } from './common'
 import {MemberPlan, PaymentPeriodicity} from './memberPlan'
-import {GenericUserId} from './tempUser'
 import {PaymentMethod} from './paymentMethod'
 import {User} from './user'
 
@@ -81,7 +80,7 @@ export interface Subscription {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly userID: GenericUserId
+  readonly userID: string
   readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number

@@ -1,4 +1,16 @@
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+import {
+  FullSubscriptionFragment,
+  SubscriptionFilter,
+  SubscriptionSort,
+  useDeleteSubscriptionMutation,
+  useSubscriptionListQuery
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {
   ButtonLink,
   Link,
@@ -9,27 +21,14 @@ import {
   useRoute,
   useRouteDispatch
 } from '../route'
-import {Button, Drawer, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
-import {
-  FullSubscriptionFragment,
-  SubscriptionFilter,
-  SubscriptionSort,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery
-} from '../api'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
-  isTempUser,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import {RouteActionType} from '@wepublish/karma.run-react'
-import {useTranslation} from 'react-i18next'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
@@ -128,22 +127,12 @@ export function SubscriptionList() {
     if (!user) {
       return t('subscriptionList.overview.deleted')
     }
-    const userFragment = (
+    return (
       <>
         <span>{user.firstName} </span>
         <span>{user.name}</span>
       </>
     )
-    // indicate it's a temp user
-    if (isTempUser(user.id)) {
-      return (
-        <>
-          {userFragment}, <span>{t('subscriptionList.overview.tempUser')}</span>
-        </>
-      )
-    }
-    // just return the users name
-    return userFragment
   }
 
   return (
@@ -321,11 +310,6 @@ export function SubscriptionList() {
         </Modal.Header>
 
         <Modal.Body>
-          {currentSubscription && isTempUser(currentSubscription.user?.id) && (
-            <Message showIcon type="warning">
-              {t('subscriptionList.panels.tempUserWarning')}
-            </Message>
-          )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user?.name || t('subscriptionList.panels.unknown')}
