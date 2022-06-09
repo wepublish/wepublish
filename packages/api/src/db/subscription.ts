@@ -7,7 +7,6 @@ import {
   SortOrder
 } from './common'
 import {PaymentPeriodicity} from './memberPlan'
-import {GenericUserId} from './tempUser'
 
 export enum SubscriptionDeactivationReason {
   None,
@@ -72,7 +71,7 @@ export interface Subscription {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly userID: GenericUserId
+  readonly userID: string
   readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number
