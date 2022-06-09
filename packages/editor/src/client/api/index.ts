@@ -588,7 +588,9 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
+  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
 };
 
 export enum InvoiceSort {
@@ -1769,6 +1771,8 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
   startsAtFrom?: Maybe<DateFilter>;
   startsAtTo?: Maybe<DateFilter>;
   paidUntilFrom?: Maybe<DateFilter>;

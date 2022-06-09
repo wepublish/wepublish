@@ -81,17 +81,10 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       )
   }, [fetchError, saveError])
 
-  const form = useRef<FormInstance>(null)
-  const imgForm = useRef<FormInstance>(null)
-
   async function handleSave() {
-    if (!form.current?.check?.()) {
-      return
-    }
-
-    if (!imgForm.current?.check?.()) {
-      return
-    }
+    // if (!imgForm.current?.check?.()) {
+    //   return
+    // }
     await updateSettings({
       variables: {
         input: {
@@ -114,6 +107,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
+  const form = useRef<FormInstance>(null)
   const {StringType, ObjectType} = Schema.Types
 
   const validationModel = Schema.Model({
@@ -134,74 +128,66 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     callToActionImage: ObjectType().isRequired(t('errorMessages.noCallToActionImageErrorMessage')),
     callToActionImageURL: StringType()
       .isURL(t('errorMessages.invalidUrlErrorMessage'))
-      .isRequired(t('errorMessages.noUrlErrorMessage'))
-  })
-
-  const imgValidationModel = Schema.Model({
+      .isRequired(t('errorMessages.noUrlErrorMessage')),
     profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage'))
   })
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        ref={form}
+        model={validationModel}
+        formValue={{
+          name: name,
+          callToActionText: callToActionText,
+          callToActionImage: callToActionImage,
+          callToActionTextURL: callToActionTextURL,
+          callToActionImageURL: callToActionImageURL,
+          profileImg: logoImage?.id
+        }}>
+        <Drawer.Header>
+          <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
+          <Drawer.Actions>
+            <Button appearance="primary" disabled={isDisabled} type="submit">
+              {t('peerList.panels.save')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('peerList.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-        <Drawer.Actions>
-          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
-            {t('peerList.panels.save')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('peerList.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-
-      <Drawer.Body>
-        <Panel bodyFill header={t('peerList.panels.image') + '*'}>
-          <ChooseEditImage
-            image={logoImage}
-            header={''}
-            top={0}
-            left={20}
-            disabled={isLoading}
-            openChooseModalOpen={() => {
-              setIsLogoChange(true)
-              setChooseModalOpen(true)
-            }}
-            openEditModalOpen={() => {
-              setIsLogoChange(true)
-              setEditModalOpen(true)
-            }}
-            removeImage={() => setLogoImage(undefined)}
-          />
-          <Form
-            ref={imgForm}
-            fluid
-            model={imgValidationModel}
-            style={{height: '45px'}}
-            formValue={{profileImg: logoImage?.id}}>
-            <Form.Group>
+        <Drawer.Body>
+          <Panel bodyFill header={t('peerList.panels.image') + '*'}>
+            <ChooseEditImage
+              image={logoImage}
+              header={''}
+              top={0}
+              left={20}
+              disabled={isLoading}
+              openChooseModalOpen={() => {
+                setIsLogoChange(true)
+                setChooseModalOpen(true)
+              }}
+              openEditModalOpen={() => {
+                setIsLogoChange(true)
+                setEditModalOpen(true)
+              }}
+              removeImage={() => setLogoImage(undefined)}
+            />
+            <Form.Group style={{height: '45px'}}>
               <Form.Control
                 style={{display: 'none'}}
                 name="profileImg"
                 value={logoImage?.id || ''}
+                onChange={() => console.log('hello')}
               />
             </Form.Group>
-          </Form>
-        </Panel>
+          </Panel>
 
-        <Panel header={t('peerList.panels.information')}>
-          <Form
-            ref={form}
-            fluid
-            model={validationModel}
-            formValue={{
-              name: name,
-              callToActionText: callToActionText,
-              callToActionImage: callToActionImage,
-              callToActionTextURL: callToActionTextURL,
-              callToActionImageURL: callToActionImageURL
-            }}>
+          <Panel header={t('peerList.panels.information')}>
             <Form.Group>
               <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
@@ -296,32 +282,31 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 </Message>
               </Form.Group>
             </div>
-          </Form>
-        </Panel>
-      </Drawer.Body>
+          </Panel>
+        </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
-        <ImageSelectPanel
-          onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
-            setChooseModalOpen(false)
-            isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
-            setTimeout(() => {
-              imgForm.current?.check?.()
-              form.current?.check?.()
-            }, 500)
-          }}
-        />
-      </Drawer>
-
-      <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-        {(logoImage || callToActionImage) && (
-          <ImagedEditPanel
-            id={isLogoChange ? logoImage?.id : callToActionImage?.id}
-            onClose={() => setEditModalOpen(false)}
+        <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+          <ImageSelectPanel
+            onClose={() => setChooseModalOpen(false)}
+            onSelect={value => {
+              setChooseModalOpen(false)
+              isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
+              setTimeout(() => {
+                form.current?.check?.()
+              }, 500)
+            }}
           />
-        )}
-      </Drawer>
+        </Drawer>
+
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+          {(logoImage || callToActionImage) && (
+            <ImagedEditPanel
+              id={isLogoChange ? logoImage?.id : callToActionImage?.id}
+              onClose={() => setEditModalOpen(false)}
+            />
+          )}
+        </Drawer>
+      </Form>
     </>
   )
 }

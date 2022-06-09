@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {
   Button,
@@ -27,7 +27,6 @@ import {
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
-import {FormInstance} from 'rsuite/esm/Form'
 
 export interface UserEditPanelProps {
   id?: string
@@ -142,13 +141,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       )
   }, [loadError, createError, updateError, loadUserRoleError])
 
-  const form = useRef<FormInstance>(null)
-
   async function handleSave() {
-    if (!form.current?.check?.()) {
-      return
-    }
-
     if (id && data?.user) {
       const {data: updateData} = await updateUser({
         variables: {
@@ -203,10 +196,10 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const {StringType} = Schema.Types
 
   const validatePassword: any = id
-    ? StringType().minLength(8, t('errorMessages.passwordTooShort'))
+    ? StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
     : StringType()
-        .minLength(8, t('errorMessages.passwordTooShort'))
-        .isRequired(t('errorMessages.noPassword'))
+        .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+        .isRequired(t('errorMessages.noPasswordErrorMessage'))
 
   // Schema used for form validation
   const validationModel = Schema.Model({
@@ -219,32 +212,32 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
-        </Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        formValue={{name: name, email: email, password: password}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button
-            appearance="primary"
-            disabled={isDisabled}
-            onClick={() => handleSave()}
-            data-testid="saveButton">
-            {id ? t('userList.panels.save') : t('userList.panels.create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('userList.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button
+              appearance="primary"
+              disabled={isDisabled}
+              type="submit"
+              data-testid="saveButton">
+              {id ? t('userList.panels.save') : t('userList.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('userList.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form
-            ref={form}
-            fluid
-            model={validationModel}
-            formValue={{name: name, email: email, password: password}}>
+        <Drawer.Body>
+          <Panel>
             <Form.Group controlId="firstName">
               <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
               <Form.Control
@@ -412,9 +405,9 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 }}
               />
             </Form.Group>
-          </Form>
-        </Panel>
-      </Drawer.Body>
+          </Panel>
+        </Drawer.Body>
+      </Form>
 
       <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>

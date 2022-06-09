@@ -5,23 +5,23 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -31,13 +31,14 @@
-      </h4>
-      <div
-        class=\\"rs-drawer-actions\\"
-      >
-        <button
--         aria-disabled=\\"false\\"
--         class=\\"rs-btn rs-btn-primary\\"
-+         aria-disabled=\\"true\\"
-+         class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
-          data-testid=\\"saveButton\\"
-+         disabled=\\"\\"
-          type=\\"button\\"
+@@ -34,13 +34,14 @@
+        </h4>
+        <div
+          class=\\"rs-drawer-actions\\"
         >
-          userList.panels.create
-          <span
-            class=\\"rs-ripple-pond\\"
+          <button
+-           aria-disabled=\\"false\\"
+-           class=\\"rs-btn rs-btn-primary\\"
++           aria-disabled=\\"true\\"
++           class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
+            data-testid=\\"saveButton\\"
++           disabled=\\"\\"
+            type=\\"submit\\"
+          >
+            userList.panels.create
+            <span
+              class=\\"rs-ripple-pond\\"
 @@ -91,10 +92,11 @@
               >
                 <input
@@ -353,81 +353,81 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 
 exports[`User Edit Panel should render 1`] = `
 <DocumentFragment>
-  <div
-    class="rs-drawer-header"
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
   >
-    <span
-      aria-label="Close"
-      class="rs-drawer-header-close rs-btn-close"
-      role="button"
-      title="Close"
-    >
-      <svg
-        aria-hidden="true"
-        aria-label="close"
-        class="rs-icon"
-        data-category="application"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 16 16"
-        width="1em"
-      >
-        <path
-          d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-        />
-      </svg>
-    </span>
-    <h4
-      class="rs-drawer-title"
-    >
-      userList.panels.createUser
-    </h4>
     <div
-      class="rs-drawer-actions"
+      class="rs-drawer-header"
     >
-      <button
-        aria-disabled="false"
-        class="rs-btn rs-btn-primary"
-        data-testid="saveButton"
-        type="button"
+      <span
+        aria-label="Close"
+        class="rs-drawer-header-close rs-btn-close"
+        role="button"
+        title="Close"
       >
-        userList.panels.create
-        <span
-          class="rs-ripple-pond"
+        <svg
+          aria-hidden="true"
+          aria-label="close"
+          class="rs-icon"
+          data-category="application"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 16 16"
+          width="1em"
         >
-          <span
-            class="rs-ripple"
+          <path
+            d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
           />
-        </span>
-      </button>
-      <button
-        class="rs-btn rs-btn-subtle"
-        type="button"
+        </svg>
+      </span>
+      <h4
+        class="rs-drawer-title"
       >
-        userList.panels.close
-        <span
-          class="rs-ripple-pond"
+        userList.panels.createUser
+      </h4>
+      <div
+        class="rs-drawer-actions"
+      >
+        <button
+          aria-disabled="false"
+          class="rs-btn rs-btn-primary"
+          data-testid="saveButton"
+          type="submit"
         >
+          userList.panels.create
           <span
-            class="rs-ripple"
-          />
-        </span>
-      </button>
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+        <button
+          class="rs-btn rs-btn-subtle"
+          type="button"
+        >
+          userList.panels.close
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div
-    class="rs-drawer-body"
-  >
     <div
-      class="rs-panel"
+      class="rs-drawer-body"
     >
       <div
-        class="rs-panel-body"
-        role="region"
+        class="rs-panel"
       >
-        <form
-          class="rs-form rs-form-vertical rs-form-fluid"
+        <div
+          class="rs-panel-body"
+          role="region"
         >
           <div
             class="rs-form-group"
@@ -749,90 +749,90 @@ exports[`User Edit Panel should render 1`] = `
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </DocumentFragment>
 `;
 
 exports[`User Edit Panel should render with ID 1`] = `
 <DocumentFragment>
-  <div
-    class="rs-drawer-header"
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
   >
-    <span
-      aria-label="Close"
-      class="rs-drawer-header-close rs-btn-close"
-      role="button"
-      title="Close"
-    >
-      <svg
-        aria-hidden="true"
-        aria-label="close"
-        class="rs-icon"
-        data-category="application"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 16 16"
-        width="1em"
-      >
-        <path
-          d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-        />
-      </svg>
-    </span>
-    <h4
-      class="rs-drawer-title"
-    >
-      userList.panels.editUser
-    </h4>
     <div
-      class="rs-drawer-actions"
+      class="rs-drawer-header"
     >
-      <button
-        aria-disabled="false"
-        class="rs-btn rs-btn-primary"
-        data-testid="saveButton"
-        type="button"
+      <span
+        aria-label="Close"
+        class="rs-drawer-header-close rs-btn-close"
+        role="button"
+        title="Close"
       >
-        userList.panels.save
-        <span
-          class="rs-ripple-pond"
+        <svg
+          aria-hidden="true"
+          aria-label="close"
+          class="rs-icon"
+          data-category="application"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 16 16"
+          width="1em"
         >
-          <span
-            class="rs-ripple"
+          <path
+            d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
           />
-        </span>
-      </button>
-      <button
-        class="rs-btn rs-btn-subtle"
-        type="button"
+        </svg>
+      </span>
+      <h4
+        class="rs-drawer-title"
       >
-        userList.panels.close
-        <span
-          class="rs-ripple-pond"
+        userList.panels.editUser
+      </h4>
+      <div
+        class="rs-drawer-actions"
+      >
+        <button
+          aria-disabled="false"
+          class="rs-btn rs-btn-primary"
+          data-testid="saveButton"
+          type="submit"
         >
+          userList.panels.save
           <span
-            class="rs-ripple"
-          />
-        </span>
-      </button>
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+        <button
+          class="rs-btn rs-btn-subtle"
+          type="button"
+        >
+          userList.panels.close
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div
-    class="rs-drawer-body"
-  >
     <div
-      class="rs-panel"
+      class="rs-drawer-body"
     >
       <div
-        class="rs-panel-body"
-        role="region"
+        class="rs-panel"
       >
-        <form
-          class="rs-form rs-form-vertical rs-form-fluid"
+        <div
+          class="rs-panel-body"
+          role="region"
         >
           <div
             class="rs-form-group"
@@ -1200,9 +1200,9 @@ exports[`User Edit Panel should render with ID 1`] = `
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </DocumentFragment>
 `;

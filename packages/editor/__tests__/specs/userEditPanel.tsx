@@ -208,6 +208,7 @@ describe('User Edit Panel', () => {
     const nameInput = getByLabelText('userList.panels.name*')
     const emailInput = getByLabelText('userList.panels.email*')
     const passwordInput = getByLabelText('userList.panels.password*')
+
     const saveButton = getByTestId('saveButton')
 
     fireEvent.change(nameInput, {

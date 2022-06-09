@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {
   Button,
@@ -36,7 +36,6 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import LinkIcon from '@rsuite/icons/legacy/Link'
-import {FormInstance} from 'rsuite/esm/Form'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -109,19 +108,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     setImage(image)
   }
 
-  const form = useRef<FormInstance>(null)
-
-  const authorLinkForm = useRef<FormInstance>(null)
-
   async function handleSave() {
-    if (!form.current?.check?.()) {
-      return
-    }
-
-    if (!authorLinkForm.current?.check?.()) {
-      return
-    }
-
     if (id) {
       const {data} = await updateAuthor({
         variables: {
@@ -159,38 +146,39 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   // Defines field requirements
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
-  })
-
-  const authorLinkFormModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
     link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
   })
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
-        </Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        formValue={{name: name}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button
-            appearance="primary"
-            disabled={isDisabled}
-            data-testid="saveButton"
-            onClick={() => handleSave()}>
-            {id ? t('authors.panels.save') : t('authors.panels.create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('authors.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button
+              appearance="primary"
+              disabled={isDisabled}
+              type="submit"
+              data-testid="saveButton">
+              {id ? t('authors.panels.save') : t('authors.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('authors.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <PanelGroup>
-          <Panel>
-            <Form ref={form} fluid model={validationModel} formValue={{name: name}}>
+        <Drawer.Body>
+          <PanelGroup>
+            <Panel>
               <Form.Group controlId="name">
                 <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
                 <Form.Control
@@ -214,46 +202,37 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   }}
                 />
               </Form.Group>
-            </Form>
-          </Panel>
-          <Panel header={t('authors.panels.image')}>
-            <ChooseEditImage
-              image={image}
-              header={''}
-              top={0}
-              left={0}
-              disabled={isLoading}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
-              removeImage={() => setImage(undefined)}
-            />
-          </Panel>
-          <Panel header={t('authors.panels.links')} className="authorLinks">
-            <ListInput
-              value={links}
-              onChange={links => {
-                setLinks(links)
-              }}
-              defaultValue={{title: '', url: ''}}>
-              {({value, onChange}) => (
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <Form
-                    ref={authorLinkForm}
-                    fluid
-                    model={authorLinkFormModel}
-                    style={{display: 'flex', width: '100px'}}
-                    className="form">
+            </Panel>
+            <Panel header={t('authors.panels.image')}>
+              <ChooseEditImage
+                image={image}
+                header={''}
+                top={0}
+                left={0}
+                disabled={isLoading}
+                openChooseModalOpen={() => setChooseModalOpen(true)}
+                openEditModalOpen={() => setEditModalOpen(true)}
+                removeImage={() => setImage(undefined)}
+              />
+            </Panel>
+            <Panel header={t('authors.panels.links')} className="authorLinks">
+              <ListInput
+                value={links}
+                onChange={links => {
+                  setLinks(links)
+                }}
+                defaultValue={{title: '', url: ''}}>
+                {({value, onChange}) => (
+                  <div style={{display: 'flex', flexDirection: 'row'}}>
                     <Form.Control
                       name="title"
                       placeholder={t('authors.panels.title')}
-                      style={{
-                        width: '95px'
-                      }}
+                      fluid="false"
                       value={value.title}
                       onChange={(title: string) => onChange({...value, title})}
                     />
                     <Form.Group>
-                      <InputGroup inside>
+                      <InputGroup inside style={{width: '230px', marginLeft: '5px'}}>
                         <InputGroup.Addon>
                           <LinkIcon />
                         </InputGroup.Addon>
@@ -261,27 +240,24 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                         <Form.Control
                           name="link"
                           placeholder={t('authors.panels.link') + ':https//link.com'}
-                          style={{
-                            width: '90%'
-                          }}
                           value={value.url}
                           onChange={(url: any) => onChange({...value, url})}
                           accepter={Input}
                         />
                       </InputGroup>
                     </Form.Group>
-                  </Form>
-                </div>
-              )}
-            </ListInput>
-          </Panel>
-          <Panel header={t('authors.panels.bioInformation')}>
-            <div className="richTextFrame">
-              <RichTextBlock value={bio} onChange={value => setBio(value)} />
-            </div>
-          </Panel>
-        </PanelGroup>
-      </Drawer.Body>
+                  </div>
+                )}
+              </ListInput>
+            </Panel>
+            <Panel header={t('authors.panels.bioInformation')}>
+              <div className="richTextFrame">
+                <RichTextBlock value={bio} onChange={value => setBio(value)} />
+              </div>
+            </Panel>
+          </PanelGroup>
+        </Drawer.Body>
+      </Form>
 
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

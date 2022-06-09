@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {toaster, Message, Button, CheckPicker, Drawer, Form, Schema} from 'rsuite'
 
@@ -10,8 +10,6 @@ import {
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '../api'
-
-import {FormInstance} from 'rsuite/esm/Form'
 
 import {useTranslation} from 'react-i18next'
 
@@ -85,13 +83,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       )
   }, [loadError, createError, updateError, loadPermissionError])
 
-  const form = useRef<FormInstance>(null)
-
   async function handleSave() {
-    if (!form.current?.check?.()) {
-      return
-    }
-
     if (id) {
       const {data} = await updateUserRole({
         variables: {
@@ -127,27 +119,31 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-        </Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        formValue={{name: name}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button
-            appearance="primary"
-            disabled={isDisabled}
-            data-testid="saveButton"
-            onClick={() => handleSave()}>
-            {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('userRoles.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={isDisabled}
+              data-testid="saveButton">
+              {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('userRoles.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <Form fluid model={validationModel} ref={form} formValue={{name: name}}>
+        <Drawer.Body>
           <Form.Group controlId="name">
             <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
             <Form.Control
@@ -184,8 +180,8 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
               }}
             />
           </Form.Group>
-        </Form>
-      </Drawer.Body>
+        </Drawer.Body>
+      </Form>
     </>
   )
 }
