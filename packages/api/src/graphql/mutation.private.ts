@@ -41,6 +41,7 @@ import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
+import {deletePageById} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
@@ -66,7 +67,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeletePage,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeleteSubscription,
@@ -856,11 +856,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePage, roles)
-        return dbAdapter.page.deletePage({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {page}}) =>
+        deletePageById(id, authenticate, page)
     },
 
     publishPage: {

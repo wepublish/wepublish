@@ -90,10 +90,6 @@ export interface UpdatePageArgs {
   readonly input: PageData
 }
 
-export interface DeletePageArgs {
-  readonly id: string
-}
-
 export interface UnpublishPageArgs {
   readonly id: string
 }
@@ -114,5 +110,4 @@ export interface DBPageAdapter {
   updatePage(args: UpdatePageArgs): Promise<OptionalPage>
   publishPage(args: PublishPageArgs): Promise<OptionalPage>
   unpublishPage(args: UnpublishPageArgs): Promise<OptionalPage>
-  deletePage(args: DeletePageArgs): Promise<boolean | null>
 }
