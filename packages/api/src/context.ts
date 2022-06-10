@@ -2,16 +2,16 @@ import {
   Article,
   Author,
   Image,
+  Invoice,
   MailLog,
   MemberPlan,
   Navigation,
   Page,
+  Payment,
   PaymentMethod,
   Peer,
   PrismaClient,
-  UserRole,
-  Invoice,
-  Payment
+  UserRole
 } from '@prisma/client'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
@@ -35,7 +35,6 @@ import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
-import {OptionalPeer} from './db/peer'
 import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
 import {User} from './db/user'
 import {TokenExpiredError} from './error'
@@ -305,7 +304,7 @@ export async function contextFromRequest(
       : true
     : false
 
-  const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
+  const peerDataLoader = new DataLoader(async ids =>
     createOptionalsArray(
       ids as string[],
       await prisma.peer.findMany({

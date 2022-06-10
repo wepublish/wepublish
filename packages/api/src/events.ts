@@ -17,6 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
+import {SubscriptionPeriod} from '@prisma/client'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -186,11 +187,11 @@ invoiceModelEvents.on('update', async (context, model) => {
   }
   // by default a new member subscription mail will be sent.
   let mailTypeToSend = SendMailType.NewMemberSubscription
-  let subscription = await context.prisma.subscription.findUnique({
+  let subscription = (await context.prisma.subscription.findUnique({
     where: {
       id: model.subscriptionID
     }
-  })
+  })) as any
 
   if (!subscription) {
     return
@@ -198,7 +199,7 @@ invoiceModelEvents.on('update', async (context, model) => {
 
   const {periods} = subscription
 
-  const period = periods.find(period => period.invoiceID === model.id)
+  const period = periods.find((period: SubscriptionPeriod) => period.invoiceID === model.id)
   if (!period) {
     logger('events').warn(`No period found for subscription with ID ${subscription.id}.`)
     return

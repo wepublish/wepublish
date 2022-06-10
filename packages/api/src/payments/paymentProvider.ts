@@ -180,7 +180,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    const user = await userClient.user.findUnique({
+    const user = await userClient.findUnique({
       where: {
         id: subscription.userID
       }

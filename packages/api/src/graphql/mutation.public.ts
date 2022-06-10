@@ -66,6 +66,7 @@ import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import * as crypto from 'crypto'
 import {getUserForCredentials} from './user/user.queries'
+import {Invoice, Subscription} from '@prisma/client'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -351,7 +352,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           failureURL,
           challengeAnswer
         },
-        {dbAdapter, prisma, loaders, memberContext, createPaymentWithProvider}
+        {dbAdapter, prisma, loaders, memberContext, challenge, createPaymentWithProvider}
       ) {
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -447,7 +448,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         return {
           payment: await createPaymentWithProvider({
-            invoice,
+            invoice: invoice as Invoice,
             saveCustomer: true,
             paymentMethodID: paymentMethod.id,
             successURL,

@@ -27,7 +27,7 @@ export interface PeerProfileInput {
 export interface BasePeer {
   name: string
   slug: string
-  isDisabled: boolean
+  isDisabled?: boolean | null
   hostURL: string
 }
 
