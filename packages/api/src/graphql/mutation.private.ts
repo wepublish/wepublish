@@ -29,6 +29,7 @@ import {isTempUser, removePrefixTempUser} from '../utility'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
+import {deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
@@ -667,12 +668,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteAuthor, roles)
-        await dbAdapter.author.deleteAuthor({id})
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {author}}) =>
+        deleteAuthorById(id, authenticate, author)
     },
 
     // Image

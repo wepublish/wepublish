@@ -37,10 +37,6 @@ export interface UpdateAuthorArgs {
   input: AuthorInput
 }
 
-export interface DeleteAuthorArgs {
-  id: string
-}
-
 export enum AuthorSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
@@ -54,5 +50,4 @@ export interface AuthorFilter {
 export interface DBAuthorAdapter {
   createAuthor(args: CreateAuthorArgs): Promise<Author>
   updateAuthor(args: UpdateAuthorArgs): Promise<OptionalAuthor>
-  deleteAuthor(args: DeleteAuthorArgs): Promise<string | null>
 }
