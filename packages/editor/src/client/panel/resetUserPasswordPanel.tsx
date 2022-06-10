@@ -1,14 +1,13 @@
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 
 import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {FormInstance} from 'rsuite/esm/Form'
 
 export interface ResetUserPasswordPanelProps {
-  userID?: string
+  userID: string
   userName?: string
   onClose(): void
 }
@@ -25,8 +24,25 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   const {t} = useTranslation()
 
-  const form = useRef<FormInstance>(null)
-
+  async function handleSave() {
+    const {data} = await resetUserPassword({
+      variables: {
+        id: userID,
+        password: password
+      }
+    })
+    if (data?.resetUserPassword) {
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('userList.panels.passwordChangeSuccess')}
+          duration={5000}
+        />,
+        {placement: 'topEnd'}
+      )
+      onClose()
+    }
+  }
   // Schema used for form validation
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
@@ -37,7 +53,10 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   return (
     <Panel>
-      <Form fluid={true} model={validationModel} ref={form}>
+      <Form
+        fluid={true}
+        model={validationModel}
+        onSubmit={validationPassed => validationPassed && handleSave()}>
         <Form.Group>
           <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
           <Form.Control
@@ -52,34 +71,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
         </Form.Group>
       </Form>
 
-      <Button
-        disabled={isDisabled}
-        appearance="primary"
-        onClick={async () => {
-          if (!form.current?.check?.()) {
-            return
-          }
-          if (!userID || !password) {
-            return
-          }
-          const {data} = await resetUserPassword({
-            variables: {
-              id: userID,
-              password: password
-            }
-          })
-          if (data?.resetUserPassword) {
-            toaster.push(
-              <Notification
-                type="success"
-                header={t('userList.panels.passwordChangeSuccess')}
-                duration={5000}
-              />,
-              {placement: 'topEnd'}
-            )
-            onClose()
-          }
-        }}>
+      <Button type="submit" disabled={isDisabled} appearance="primary">
         {t('userList.panels.resetPassword')}
       </Button>
     </Panel>
