@@ -217,7 +217,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
+          <Form fluid>
             <Form.Group>
               <Form.ControlLabel>{t('navigation.panels.name')}</Form.ControlLabel>
               <Form.Control

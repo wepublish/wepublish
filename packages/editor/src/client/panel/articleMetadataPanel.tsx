@@ -393,7 +393,7 @@ export function ArticleMetadataPanel({
                 block
                 virtualized
                 value={tags}
-                creatable={true}
+                creatable
                 data={tags.map(tag => ({label: tag, value: tag}))}
                 onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
               />

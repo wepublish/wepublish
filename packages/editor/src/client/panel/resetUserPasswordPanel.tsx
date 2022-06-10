@@ -54,7 +54,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
   return (
     <Panel>
       <Form
-        fluid={true}
+        fluid
         model={validationModel}
         onSubmit={validationPassed => validationPassed && handleSave()}>
         <Form.Group>

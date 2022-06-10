@@ -47,7 +47,7 @@ describe('Author Edit Panel', () => {
     ]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
+      <MockedProvider mocks={mocks} addTypename>
         <AuthorEditPanel id={'fakeId2'} />
       </MockedProvider>
     )

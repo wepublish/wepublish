@@ -183,7 +183,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 <TagPicker
                   virtualized
                   style={{width: '100%'}}
-                  creatable={true}
+                  creatable
                   value={tags}
                   data={tags.map(tag => ({label: tag, value: tag}))}
                   onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}

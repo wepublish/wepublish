@@ -179,7 +179,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
-              <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext={true} />
+              <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
@@ -194,7 +194,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 value={paymentProvider?.id}
                 data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
-                block={true}
+                block
                 accepter={SelectPicker}
                 onChange={(value: any) =>
                   setPaymentProvider(paymentProviders.find(pp => pp.id === value))

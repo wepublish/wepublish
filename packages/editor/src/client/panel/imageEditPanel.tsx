@@ -344,8 +344,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                   <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
                   <TagPicker
                     virtualized
-                    block={true}
-                    creatable={true}
+                    block
+                    creatable
                     disabled={isDisabled}
                     value={tags}
                     data={tags.map(tag => ({value: tag, label: tag}))}

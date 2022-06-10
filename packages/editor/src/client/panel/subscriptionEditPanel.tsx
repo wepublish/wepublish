@@ -535,11 +535,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.payedUntil')}</Form.ControlLabel>
-              <DatePicker
-                block
-                value={paidUntil ?? undefined}
-                disabled={true /* TODO fix this */}
-              />
+              <DatePicker block value={paidUntil ?? undefined} disabled />
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.paymentMethod') + '*'}</Form.ControlLabel>

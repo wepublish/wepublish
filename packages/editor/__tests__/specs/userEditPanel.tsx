@@ -105,7 +105,7 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
+      <MockedProvider mocks={mocks} addTypename>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )
@@ -136,7 +136,7 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
+      <MockedProvider mocks={mocks} addTypename>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )

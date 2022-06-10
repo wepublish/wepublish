@@ -242,7 +242,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('memberPlanList.slug')}</Form.ControlLabel>
-              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext={true} />
+              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext />
             </Form.Group>
 
             <Form.Group>
@@ -251,7 +251,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 block
                 virtualized
                 value={tags ?? []}
-                creatable={true}
+                creatable
                 data={tags ? tags.map(tag => ({label: tag, value: tag})) : []}
                 onChange={tagsValue => setTags(tagsValue ?? [])}
               />

@@ -227,7 +227,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     <Form.Control
                       name="title"
                       placeholder={t('authors.panels.title')}
-                      fluid="false"
                       value={value.title}
                       onChange={(title: string) => onChange({...value, title})}
                     />
