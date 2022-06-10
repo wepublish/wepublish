@@ -52,6 +52,7 @@ import {
   GraphQLPeerProfileInput,
   GraphQLUpdatePeerInput
 } from './peer'
+import {deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
@@ -68,7 +69,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeletePeer,
   CanDeleteSubscription,
   CanDeleteToken,
   CanDeleteUser,
@@ -214,12 +214,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePeer: {
       type: GraphQLID,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePeer, roles)
-
-        return dbAdapter.peer.deletePeer(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
+        deletePeerById(id, authenticate, peer)
     },
 
     // Session

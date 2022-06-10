@@ -51,5 +51,4 @@ export interface DBPeerAdapter {
   updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile>
   createPeer(input: CreatePeerInput): Promise<Peer>
   updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
-  deletePeer(id: string): Promise<string | null>
 }
