@@ -57,10 +57,6 @@ export interface UpdateMemberPlanArgs {
   input: MemberPlanInput
 }
 
-export interface DeleteMemberPlanArgs {
-  id: string
-}
-
 export enum MemberPlanSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -75,5 +71,4 @@ export interface MemberPlanFilter {
 export interface DBMemberPlanAdapter {
   createMemberPlan(args: CreateMemberPlanArgs): Promise<MemberPlan>
   updateMemberPlan(args: UpdateMemberPlanArgs): Promise<OptionalMemberPlan>
-  deleteMemberPlan(args: DeleteMemberPlanArgs): Promise<string | null>
 }
