@@ -2,7 +2,6 @@ import {
   CreateSubscriptionArgs,
   CreateSubscriptionPeriodArgs,
   DBSubscriptionAdapter,
-  DeleteSubscriptionArgs,
   DeleteSubscriptionPeriodArgs,
   OptionalSubscription,
   UpdateSubscriptionArgs
@@ -78,11 +77,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
     )
     if (!value) return null
     return await this.subscriptions.findOne({_id: subscriptionID})
-  }
-
-  async deleteSubscription({id}: DeleteSubscriptionArgs): Promise<string | null> {
-    const {deletedCount} = await this.subscriptions.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 
   async addSubscriptionPeriod({

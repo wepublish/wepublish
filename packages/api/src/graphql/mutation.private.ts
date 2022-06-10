@@ -25,7 +25,7 @@ import {
   UserNotFoundError
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
-import {isTempUser, removePrefixTempUser} from '../utility'
+import {isTempUser} from '../utility'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
@@ -69,7 +69,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteSubscription,
   CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
@@ -85,6 +84,7 @@ import {revokeSessionByToken} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
+import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {getUserForCredentials} from './user/user.queries'
@@ -528,22 +528,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, prisma, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteSubscription, roles)
-
-        const subscription = await prisma.subscription.findUnique({
-          where: {id}
-        })
-
-        if (subscription && isTempUser(subscription.userID)) {
-          await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
-        }
-
-        await dbAdapter.subscription.deleteSubscription({id})
-
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
+        deleteSubscriptionById(id, authenticate, subscription)
     },
 
     // UserRole

@@ -35,10 +35,6 @@ export interface UpdateSubscriptionArgs {
   readonly input: SubscriptionInput
 }
 
-export interface DeleteSubscriptionArgs {
-  readonly id: string
-}
-
 export enum SubscriptionSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
@@ -110,7 +106,6 @@ export interface DBSubscriptionAdapter {
   createSubscription(args: CreateSubscriptionArgs): Promise<OptionalSubscription>
   updateSubscription(args: UpdateSubscriptionArgs): Promise<OptionalSubscription>
   updateUserID(subscriptionID: string, userID: string): Promise<OptionalSubscription>
-  deleteSubscription(args: DeleteSubscriptionArgs): Promise<string | null>
 
   addSubscriptionPeriod(args: CreateSubscriptionPeriodArgs): Promise<OptionalSubscription>
   deleteSubscriptionPeriod(args: DeleteSubscriptionPeriodArgs): Promise<OptionalSubscription>
