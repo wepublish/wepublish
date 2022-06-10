@@ -110,10 +110,6 @@ export interface UpdateArticleArgs {
   readonly input: ArticleInput
 }
 
-export interface DeleteArticleArgs {
-  readonly id: string
-}
-
 export interface UnpublishArticleArgs {
   readonly id: string
 }
@@ -134,5 +130,4 @@ export interface DBArticleAdapter {
   updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
   publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
   unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
-  deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
 }

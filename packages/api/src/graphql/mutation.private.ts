@@ -10,8 +10,10 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Issuer} from 'openid-client'
 import {Context} from '../context'
+import {ArticleRevision} from '../db/article'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
+import {PageRevision} from '../db/page'
 import {PaymentState} from '../db/payment'
 import {
   DuplicatePageSlugError,
@@ -25,6 +27,7 @@ import {
 import {SendMailType} from '../mails/mailContext'
 import {isTempUser, removePrefixTempUser} from '../utility'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
@@ -58,7 +61,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteImage,
   CanDeleteInvoice,
@@ -85,8 +87,6 @@ import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {getUserForCredentials} from './user/user.queries'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
-import {ArticleRevision} from '../db/article'
-import {PageRevision} from '../db/page'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -770,11 +770,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteArticle: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteArticle, roles)
-        return dbAdapter.article.deleteArticle({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
+        deleteArticleById(id, authenticate, article)
     },
 
     publishArticle: {
