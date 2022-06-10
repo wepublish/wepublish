@@ -81,6 +81,8 @@ import {
   CanUpdatePeerProfile
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
+import {revokeSessionByToken} from './session/session.mutation'
+import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
@@ -290,19 +292,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     revokeSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        return dbAdapter.session.deleteUserSessionByID(user, id)
-      }
+      resolve: (root, {id}, {authenticateUser, prisma: {session}}) =>
+        revokeSessionById(id, authenticateUser, session)
     },
 
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      async resolve(root, _, {authenticateUser, dbAdapter}) {
-        const session = authenticateUser()
-        return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
+        revokeSessionByToken(authenticateUser, session)
     },
 
     sessions: {

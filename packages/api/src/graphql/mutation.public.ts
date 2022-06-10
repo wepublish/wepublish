@@ -1,3 +1,4 @@
+import {Invoice, Subscription} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -7,12 +8,10 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
 import {Issuer} from 'openid-client'
-
-import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
-
+import {CommentAuthorType, CommentState} from '../db/comment'
+import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
@@ -34,21 +33,8 @@ import {
   UserNotFoundError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {GraphQLPaymentPeriodicity} from './memberPlan'
-import {
-  GraphQLPaymentProviderCustomer,
-  GraphQLPaymentProviderCustomerInput,
-  GraphQLPublicUser,
-  GraphQLPublicUserInput,
-  GraphQLUserAddressInput
-} from './user'
-import {
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment'
-import {CommentAuthorType, CommentState} from '../db/comment'
+import {SendMailType} from '../mails/mailContext'
+import {logger} from '../server'
 import {
   countRichtextChars,
   FIFTEEN_MINUTES_IN_MILLISECONDS,
@@ -56,13 +42,25 @@ import {
   TEMP_USER_PREFIX,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND
 } from '../utility'
-import {SendMailType} from '../mails/mailContext'
-import {GraphQLSlug} from './slug'
-import {logger} from '../server'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
-import {SubscriptionDeactivationReason} from '../db/subscription'
+import {
+  GraphQLPublicComment,
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput
+} from './comment'
 import {GraphQLMetadataPropertyPublicInput} from './common'
-import {Invoice, Subscription} from '@prisma/client'
+import {GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPublicSessionWithToken} from './session'
+import {revokeSessionByToken} from './session/session.mutation'
+import {GraphQLSlug} from './slug'
+import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
+import {
+  GraphQLPaymentProviderCustomer,
+  GraphQLPaymentProviderCustomerInput,
+  GraphQLPublicUser,
+  GraphQLPublicUserInput,
+  GraphQLUserAddressInput
+} from './user'
 import {getUserForCredentials} from './user/user.queries'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -149,10 +147,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
       description: 'This mutation revokes and deletes the active session.',
-      async resolve(root, _, {authenticateUser, dbAdapter}) {
-        const session = authenticateUser()
-        return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
+        revokeSessionByToken(authenticateUser, session)
     },
 
     // Comment
