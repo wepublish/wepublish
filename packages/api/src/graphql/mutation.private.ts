@@ -25,7 +25,6 @@ import {
   UserNotFoundError
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
-import {isTempUser} from '../utility'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
@@ -470,8 +469,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {input}, {authenticate, prisma, dbAdapter, memberContext}) {
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
-
-        if (isTempUser(input.userID)) throw new Error('Can not update subscription with tempUser')
 
         const subscription = await dbAdapter.subscription.createSubscription({input})
         if (!subscription) throw new Error('Subscription not created.')

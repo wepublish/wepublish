@@ -29,7 +29,9 @@ export const getAdminPeerArticles = async (
         createdAt: 'desc'
       }
     })
-  ).filter(peer => (peerNameFilter ? peer.name === peerNameFilter : true))
+  )
+    .filter(peer => (peerNameFilter ? peer.name === peerNameFilter : true))
+    .filter(({isDisabled}) => !isDisabled)
 
   for (const peer of peers) {
     // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.

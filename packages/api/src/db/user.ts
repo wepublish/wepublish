@@ -1,7 +1,5 @@
 import {MetadataProperty} from '@prisma/client'
 
-import {TempUser} from './tempUser'
-
 export interface CreateUserArgs {
   readonly input: UserInput
   readonly password: string
@@ -121,7 +119,6 @@ export type OptionalUser = User | null
 
 export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<OptionalUser>
-  createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
 
   resetUserPassword(args: ResetUserPasswordArgs): Promise<OptionalUser>

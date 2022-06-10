@@ -1,16 +1,23 @@
 import {Context} from '../../context'
 import {authorise, CanGetPeer, CanGetPeers} from '../permissions'
 import {PrismaClient} from '@prisma/client'
+import {DisabledPeerError} from '../../error'
 
-export const getPeerById = (
+export const getPeerById = async (
   id: string,
   authenticate: Context['authenticate'],
-  peer: Context['loaders']['peer']
+  peerClient: Context['loaders']['peer']
 ) => {
   const {roles} = authenticate()
   authorise(CanGetPeer, roles)
 
-  return peer.load(id)
+  const peer = await peerClient.load(id)
+
+  if (peer?.isDisabled) {
+    throw new DisabledPeerError()
+  }
+
+  return peer
 }
 
 export const getPeers = (authenticate: Context['authenticate'], peer: PrismaClient['peer']) => {

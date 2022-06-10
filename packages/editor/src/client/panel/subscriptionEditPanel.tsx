@@ -34,7 +34,7 @@ import {
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES, isTempUser as checkIsTempUser} from '../utility'
+import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
 import {InvoiceListPanel} from './invoiceListPanel'
@@ -53,7 +53,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
 
   const [user, setUser] = useState<FullUserFragment | null>()
-  const [isTempUser, setIsTempUser] = useState<boolean>()
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
     PaymentPeriodicity.Yearly
@@ -114,7 +113,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   useEffect(() => {
     if (data?.subscription) {
       setUser(data.subscription.user)
-      setIsTempUser(checkIsTempUser(data.subscription.user?.id))
       setUsers([
         ...users.filter(user => user?.id !== data.subscription?.user?.id),
         data.subscription.user
@@ -158,12 +156,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     }
   }, [userData?.users])
 
-  useEffect(() => {
-    if (user) {
-      setIsTempUser(checkIsTempUser(user.id))
-    }
-  }, [user])
-
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
@@ -206,8 +198,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
     paymentMethodLoadError !== undefined ||
-    userLoadError !== undefined ||
-    isTempUser
+    userLoadError !== undefined
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -424,26 +415,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                 : 'userSubscriptionEdit.deactivation.willBeDeactivated',
               {date: new Date(deactivation.date)}
             )}
-          </Message>
-        )}
-        {isTempUser && (
-          <Message showIcon type="info">
-            <div>
-              <p>{t('userSubscriptionEdit.tempUser.disabledInfo')}</p>
-              <br />
-              <p>
-                <b>{t('userSubscriptionEdit.tempUserTitle')}</b>
-              </p>
-              <p>
-                {user?.firstName} {user?.name}
-              </p>
-              <p>{user?.address?.streetAddress}</p>
-              <p>
-                {user?.address?.zipCode} {user?.address?.city}
-              </p>
-              <p>{user?.address?.country}</p>
-              <p>{user?.email}</p>
-            </div>
           </Message>
         )}
 

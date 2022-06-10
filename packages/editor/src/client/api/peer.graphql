@@ -18,6 +18,7 @@ fragment PeerRef on Peer {
   id
   name
   slug
+  isDisabled
   hostURL
   profile {
     ...FullPeerProfile

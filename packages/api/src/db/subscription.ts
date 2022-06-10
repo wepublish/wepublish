@@ -1,7 +1,6 @@
 import {DateFilter} from './common'
 import {MetadataProperty} from '@prisma/client'
 import {PaymentPeriodicity} from './memberPlan'
-import {GenericUserId} from './tempUser'
 
 export enum SubscriptionDeactivationReason {
   None = 'none',
@@ -59,7 +58,7 @@ export interface Subscription {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly userID: GenericUserId
+  readonly userID: string
   readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number

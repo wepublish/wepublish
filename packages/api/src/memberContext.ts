@@ -1,23 +1,20 @@
-import {MemberPlan, Invoice, PrismaClient, Subscription} from '@prisma/client'
+import {Invoice, MemberPlan, PrismaClient, Subscription} from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
 import {OptionalInvoice} from './db/invoice'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {PaymentState} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
-import {OptionalSubscription, SubscriptionDeactivationReason} from './db/subscription'
-import {OptionalTempUser, UserIdWithTempPrefix} from './db/tempUser'
-import {OptionalUser, PaymentProviderCustomer, User} from './db/user'
+import {SubscriptionDeactivationReason} from './db/subscription'
+import {PaymentProviderCustomer, User} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext, SendMailType} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {
-  isTempUser,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
-  ONE_MONTH_IN_MILLISECONDS,
-  removePrefixTempUser
+  ONE_MONTH_IN_MILLISECONDS
 } from './utility'
 
 export interface HandleSubscriptionChangeProps {
@@ -203,19 +200,10 @@ export class MemberContext implements MemberContext {
         })
       }
 
-      if (openInvoice) {
-        await this.prisma.invoice.delete({
-          where: {id: openInvoice.id}
-        })
-      }
-
       const finalUpdatedSubscription = await this.prisma.subscription.findUnique({
         where: {id: subscription.id}
       })
-
-      if (!finalUpdatedSubscription) {
-        throw new Error('Error during updateSubscription')
-      }
+      if (!finalUpdatedSubscription) throw new Error('Error during updateSubscription')
 
       // renew user subscription
       await this.renewSubscriptionForUser({
@@ -278,13 +266,11 @@ export class MemberContext implements MemberContext {
         subscription.paymentPeriodicity as PaymentPeriodicity
       )
 
-      const user = isTempUser(subscription.userID)
-        ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
-        : await this.prisma.user.findUnique({
-            where: {
-              id: subscription.userID
-            }
-          })
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: subscription.userID
+        }
+      })
 
       if (!user) {
         logger('memberContext').info('User with id "%s" not found', subscription.userID)
@@ -484,43 +470,6 @@ export class MemberContext implements MemberContext {
     return this.paymentProviders
       .filter(provider => provider.offSessionPayments)
       .map(provider => provider.id)
-  }
-
-  /**
-   * Create regular user out of temp user and activate subscription
-   * @param dbAdapter
-   * @param userID
-   * @param subscription
-   * @private
-   */
-  public async activateTempUser(
-    dbAdapter: DBAdapter,
-    userID: UserIdWithTempPrefix,
-    subscription: OptionalSubscription
-  ): Promise<OptionalSubscription> {
-    // create non-temp user id
-    const tempUserId = removePrefixTempUser(userID)
-    const tempUser: OptionalTempUser = await dbAdapter.tempUser.getTempUserByID(tempUserId)
-    if (!tempUser) {
-      throw new Error('User not found while updating payment with intent state.')
-    }
-
-    // creating the new user out of the existing temp_user
-    const user: OptionalUser = await dbAdapter.user.createUserFromTempUser(tempUser)
-
-    if (!user) {
-      throw new Error('User could not be created from temp user.')
-    }
-
-    if (!subscription) {
-      throw new Error('Subscription is empty within activateTempUser method.')
-    }
-    // update userID of subscription
-    subscription = await dbAdapter.subscription.updateUserID(subscription.id, user.id)
-    if (!subscription) {
-      throw new Error('Subscription could not be activated.')
-    }
-    return subscription
   }
 
   private async getAllOpenInvoices(): Promise<Invoice[]> {

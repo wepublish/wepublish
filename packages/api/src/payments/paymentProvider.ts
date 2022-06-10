@@ -8,7 +8,6 @@ import {Invoice} from '../db/invoice'
 import {Payment, PaymentState} from '../db/payment'
 import {paymentModelEvents} from '../events'
 import {logger, WepublishServerOpts} from '../server'
-import {isTempUser, removePrefixTempUser} from '../utility'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -165,7 +164,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }
 
   /**
-   * adding or updating paymentProvider customer ID for user or tempUser
+   * adding or updating paymentProvider customer ID for user
    * @param dbAdapter
    * @param subscription
    * @param customerID
@@ -181,21 +180,12 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    let user
-    const tempUser = isTempUser(subscription.userID)
-    if (tempUser) {
-      user = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
-    } else {
-      user = await userClient.findUnique({
-        where: {
-          id: subscription.userID
-        }
-      })
-    }
-
-    if (!user) {
-      throw new Error(`User with ID ${subscription.userID} does not exist`)
-    }
+    const user = await userClient.findUnique({
+      where: {
+        id: subscription.userID
+      }
+    })
+    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
 
     const paymentProviderCustomers = user.paymentProviderCustomers.filter(
       ({paymentProviderID}) => paymentProviderID !== this.id
@@ -206,17 +196,10 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       customerID
     })
 
-    if (tempUser) {
-      await dbAdapter.tempUser.updatePaymentProviderCustomers({
-        userID: user.id,
-        paymentProviderCustomers
-      })
-    } else {
-      await dbAdapter.user.updatePaymentProviderCustomers({
-        userID: user.id,
-        paymentProviderCustomers
-      })
-    }
+    await dbAdapter.user.updatePaymentProviderCustomers({
+      userID: user.id,
+      paymentProviderCustomers
+    })
   }
 }
 

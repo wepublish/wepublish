@@ -4,14 +4,12 @@ import {
   GetUserForCredentialsArgs,
   OptionalUser,
   ResetUserPasswordArgs,
-  TempUser,
   UpdatePaymentProviderCustomerArgs,
   UpdateUserArgs,
   UserOAuth2Account,
   UserOAuth2AccountArgs
 } from '@wepublish/api'
 import bcrypt from 'bcrypt'
-import * as crypto from 'crypto'
 import {Collection, Db, MongoError} from 'mongodb'
 import {MongoErrorCode} from '../utility'
 import {CollectionName, DBUser} from './schema'
@@ -54,30 +52,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
       throw err
     }
-  }
-
-  /**
-   * For now, a user will be confirmed by a valid payment. When a user has a valid payment, the previously temporary
-   * user is converted to a permanent user.
-   * @param tempUser
-   */
-  public async createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser> {
-    const newUser = await this.createUser({
-      input: {
-        email: tempUser.email,
-        name: tempUser.name,
-        firstName: tempUser.firstName,
-        address: tempUser.address,
-        preferredName: tempUser.preferredName,
-        active: true,
-        roleIDs: [],
-        properties: [],
-        emailVerifiedAt: null,
-        paymentProviderCustomers: tempUser.paymentProviderCustomers
-      },
-      password: crypto.randomBytes(48).toString('base64')
-    })
-    return newUser
   }
 
   async getUser(email: string): Promise<OptionalUser> {

@@ -411,7 +411,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
 
         authorise(CanGetPeerArticle, roles)
-
         return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
       }
     },
