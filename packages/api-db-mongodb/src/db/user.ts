@@ -1,8 +1,6 @@
 import {
   CreateUserArgs,
   DBUserAdapter,
-  DeleteUserArgs,
-  DeleteUserOAuth2AccountArgs,
   GetUserForCredentialsArgs,
   OptionalUser,
   ResetUserPasswordArgs,
@@ -133,11 +131,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     return this.getUserByID(outID)
   }
 
-  async deleteUser({id}: DeleteUserArgs): Promise<string | null> {
-    const {deletedCount} = await this.users.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
-  }
-
   async resetUserPassword({id, password}: ResetUserPasswordArgs): Promise<OptionalUser> {
     const {value} = await this.users.findOneAndUpdate(
       {_id: id},
@@ -240,34 +233,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         $set: {
           modifiedAt: new Date(),
           oauth2Accounts: accounts
-        }
-      },
-      {returnOriginal: false}
-    )
-
-    if (!value) return null
-
-    const {_id: outID} = value
-    return this.getUserByID(outID)
-  }
-
-  async deleteOAuth2Account({
-    userID,
-    providerAccountId,
-    provider
-  }: DeleteUserOAuth2AccountArgs): Promise<OptionalUser> {
-    const user = await this.users.findOne({_id: userID})
-    if (!user) return null
-
-    const {value} = await this.users.findOneAndUpdate(
-      {_id: userID},
-      {
-        $set: {
-          modifiedAt: new Date(),
-          oauth2Accounts: user.oauth2Accounts.filter(
-            account =>
-              account.provider !== provider && account.providerAccountId !== providerAccountId
-          )
         }
       },
       {returnOriginal: false}
