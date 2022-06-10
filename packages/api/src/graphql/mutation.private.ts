@@ -43,6 +43,7 @@ import {deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {deletePageById} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {deletePaymentMethodById} from './payment-method/payment-method.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
   GraphQLCreatePeerInput,
@@ -67,7 +68,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeleteSubscription,
   CanDeleteToken,
@@ -1010,12 +1010,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePaymentMethod, roles)
-        await dbAdapter.paymentMethod.deletePaymentMethod(id)
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {paymentMethod}}) =>
+        deletePaymentMethodById(id, authenticate, paymentMethod)
     },
 
     // Invoice

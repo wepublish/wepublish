@@ -32,5 +32,4 @@ export interface UpdatePaymentMethodArgs {
 export interface DBPaymentMethodAdapter {
   createPaymentMethod(args: CreatePaymentMethodArgs): Promise<PaymentMethod>
   updatePaymentMethod(args: UpdatePaymentMethodArgs): Promise<OptionalPaymentMethod>
-  deletePaymentMethod(id: string): Promise<string | null>
 }

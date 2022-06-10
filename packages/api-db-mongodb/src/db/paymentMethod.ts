@@ -51,9 +51,4 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
     const {_id: outId, ...data} = value
     return {id: outId, ...data}
   }
-
-  async deletePaymentMethod(id: string): Promise<string | null> {
-    const {deletedCount} = await this.paymentMethods.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
-  }
 }

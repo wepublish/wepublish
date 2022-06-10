@@ -40,10 +40,6 @@ export interface UpdatePaymentArgs {
   input: PaymentInput
 }
 
-export interface DeletePaymentArgs {
-  id: string
-}
-
 export enum PaymentSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -58,5 +54,4 @@ export type OptionalPayment = Payment | null
 export interface DBPaymentAdapter {
   createPayment(args: CreatePaymentArgs): Promise<Payment>
   updatePayment(args: UpdatePaymentArgs): Promise<OptionalPayment>
-  deletePayment(args: DeletePaymentArgs): Promise<string | null>
 }
