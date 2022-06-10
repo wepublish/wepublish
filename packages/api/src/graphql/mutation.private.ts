@@ -39,6 +39,7 @@ import {deleteInvoiceById} from './invoice/invoice.private-mutation'
 import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
+import {deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
@@ -65,7 +66,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteNavigation,
   CanDeletePage,
   CanDeletePaymentMethod,
   CanDeletePeer,
@@ -629,11 +629,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteNavigation, roles)
-        return await dbAdapter.navigation.deleteNavigation({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {navigation}}) =>
+        deleteNavigationById(id, authenticate, navigation)
     },
 
     // Author
