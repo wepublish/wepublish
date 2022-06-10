@@ -35,6 +35,7 @@ import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {deleteInvoiceById} from './invoice/invoice.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {GraphQLPage, GraphQLPageInput} from './page'
@@ -1108,11 +1109,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteInvoice, roles)
-        return await dbAdapter.invoice.deleteInvoice({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
+        deleteInvoiceById(id, authenticate, invoice)
     },
 
     approveComment: {

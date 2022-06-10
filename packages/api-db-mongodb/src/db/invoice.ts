@@ -1,7 +1,6 @@
 import {
   CreateInvoiceArgs,
   DBInvoiceAdapter,
-  DeleteInvoiceArgs,
   Invoice,
   OptionalInvoice,
   UpdateInvoiceArgs
@@ -58,10 +57,5 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
 
     const {_id: outID, ...invoice} = value
     return {id: outID, ...invoice}
-  }
-
-  async deleteInvoice({id}: DeleteInvoiceArgs): Promise<string | null> {
-    const {deletedCount} = await this.invoices.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

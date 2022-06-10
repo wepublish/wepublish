@@ -48,10 +48,6 @@ export interface UpdateInvoiceArgs {
   input: InvoiceInput
 }
 
-export interface DeleteInvoiceArgs {
-  id: string
-}
-
 export enum InvoiceSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt',
@@ -69,5 +65,4 @@ export interface InvoiceFilter {
 export interface DBInvoiceAdapter {
   createInvoice(args: CreateInvoiceArgs): Promise<Invoice>
   updateInvoice(args: UpdateInvoiceArgs): Promise<OptionalInvoice>
-  deleteInvoice(args: DeleteInvoiceArgs): Promise<string | null>
 }

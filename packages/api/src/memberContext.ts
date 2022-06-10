@@ -195,18 +195,27 @@ export class MemberContext implements MemberContext {
       const periodToDelete = subscription.periods.find(
         period => period.invoiceID === openInvoice?.id
       )
+
       if (periodToDelete) {
         await this.dbAdapter.subscription.deleteSubscriptionPeriod({
           subscriptionID: subscription.id,
           periodID: periodToDelete.id
         })
       }
-      if (openInvoice) await this.dbAdapter.invoice.deleteInvoice({id: openInvoice.id})
+
+      if (openInvoice) {
+        await this.prisma.invoice.delete({
+          where: {id: openInvoice.id}
+        })
+      }
 
       const finalUpdatedSubscription = await this.prisma.subscription.findUnique({
         where: {id: subscription.id}
       })
-      if (!finalUpdatedSubscription) throw new Error('Error during updateSubscription')
+
+      if (!finalUpdatedSubscription) {
+        throw new Error('Error during updateSubscription')
+      }
 
       // renew user subscription
       await this.renewSubscriptionForUser({
