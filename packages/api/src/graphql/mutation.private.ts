@@ -69,7 +69,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
   CanPublishArticle,
@@ -86,6 +85,7 @@ import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {getUserForCredentials} from './user/user.queries'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -393,12 +393,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteToken: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteToken, roles)
-
-        return dbAdapter.token.deleteToken(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {token}}) =>
+        deleteTokenById(id, authenticate, token)
     },
 
     // User
