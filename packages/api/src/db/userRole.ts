@@ -12,10 +12,6 @@ export interface UpdateUserRoleArgs {
   readonly input: UserRoleInput
 }
 
-export interface DeleteUserRoleArgs {
-  readonly id: string
-}
-
 export enum UserRoleSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -38,7 +34,6 @@ export type OptionalUserRole = UserRole | null
 export interface DBUserRoleAdapter {
   createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole>
   updateUserRole(args: UpdateUserRoleArgs): Promise<OptionalUserRole>
-  deleteUserRole(args: DeleteUserRoleArgs): Promise<string | null>
 
   getUserRole(name: string): Promise<OptionalUserRole>
 }
