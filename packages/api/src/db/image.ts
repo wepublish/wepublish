@@ -72,10 +72,6 @@ export interface UpdateImageArgs {
   readonly input: EditableImageComponents
 }
 
-export interface DeleteImageArgs {
-  readonly id: string
-}
-
 export enum ImageSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -89,5 +85,4 @@ export interface ImageFilter {
 export interface DBImageAdapter {
   createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
-  deleteImage(args: DeleteImageArgs): Promise<boolean | null>
 }

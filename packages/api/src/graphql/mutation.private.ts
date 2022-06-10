@@ -33,6 +33,7 @@ import {deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
+import {deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
@@ -62,8 +63,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteAuthor,
-  CanDeleteImage,
   CanDeleteInvoice,
   CanDeleteMemberPlan,
   CanDeleteNavigation,
@@ -722,13 +721,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteImage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, mediaAdapter, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteImage, roles)
-
-        await mediaAdapter.deleteImage(id)
-        return dbAdapter.image.deleteImage({id})
-      }
+      resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
+        deleteImageById(id, authenticate, image, mediaAdapter)
     },
 
     // Article
