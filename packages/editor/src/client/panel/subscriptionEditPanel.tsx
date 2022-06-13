@@ -30,8 +30,7 @@ import {
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
   useSubscriptionQuery,
-  useUpdateSubscriptionMutation,
-  useUserListQuery
+  useUpdateSubscriptionMutation
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -41,6 +40,7 @@ import {CurrencyInput} from '../atoms/currencyInput'
 import {InvoiceListPanel} from './invoiceListPanel'
 import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
+import {UserSearch} from '../atoms/searchAndFilter/userSearch'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -52,7 +52,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const {t} = useTranslation()
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
-
   const [user, setUser] = useState<FullUserFragment | null>()
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>()
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
@@ -66,8 +65,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   const [properties, setProperties] = useState<MetadataPropertyFragment[]>([])
   const [deactivation, setDeactivation] = useState<DeactivationFragment | null>()
 
-  const [userSearch, setUserSearch] = useState<string>('')
-  const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>([])
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
@@ -114,10 +111,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
   useEffect(() => {
     if (data?.subscription) {
       setUser(data.subscription.user)
-      setUsers([
-        ...users.filter(user => user?.id !== data.subscription?.user?.id),
-        data.subscription.user
-      ])
       setMemberPlan(data.subscription.memberPlan)
       setPaymentPeriodicity(data.subscription.paymentPeriodicity)
       setMonthlyAmount(data.subscription.monthlyAmount)
@@ -135,27 +128,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       setDeactivation(data.subscription.deactivation)
     }
   }, [data?.subscription])
-
-  const {
-    data: userData,
-    loading: isUserLoading,
-    error: userLoadError,
-    refetch: refetchUsers
-  } = useUserListQuery({
-    variables: {
-      first: 100,
-      filter: userSearch
-    },
-    fetchPolicy: 'network-only'
-  })
-
-  useEffect(() => {
-    if (userData?.users) {
-      const userList = [...userData.users.nodes.filter(usr => usr.id !== user?.id)]
-      if (user) userList.push(user)
-      setUsers(userList)
-    }
-  }, [userData?.users])
 
   const {
     data: memberPlanData,
@@ -194,12 +166,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     isMemberPlanLoading ||
     isUpdating ||
     isPaymentMethodLoading ||
-    isUserLoading ||
     loadError !== undefined ||
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined ||
-    userLoadError !== undefined
+    paymentMethodLoadError !== undefined
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -220,15 +190,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       loadError?.message ??
       loadMemberPlanError?.message ??
       updateError?.message ??
-      paymentMethodLoadError?.message ??
-      userLoadError?.message
+      paymentMethodLoadError?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {error}
         </Message>
       )
-  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, userLoadError])
+  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError])
 
   const inputBase = {
     monthlyAmount,
@@ -381,23 +350,6 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     )
   }
 
-  /**
-   * UI helper to provide a meaningful user labeling.
-   * @param user
-   */
-  function getUserLabel(user: FullUserFragment | null | undefined): string {
-    if (!user) return ''
-    let userLabel = ''
-    if (user.firstName) userLabel += `${user.firstName} `
-    if (user.name) userLabel += `${user.name} `
-    if (user.preferredName) userLabel += `(${user.preferredName}) `
-    if (user.email) userLabel += `| ${user.email} `
-    if (user.address?.streetAddress) userLabel += `| ${user.address.streetAddress} `
-    if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `
-    if (user.address?.city) userLabel += `| ${user.address.city} `
-    return userLabel
-  }
-
   return (
     <>
       <Form
@@ -465,19 +417,12 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.selectUser') + '*'}</Form.ControlLabel>
-              <Form.Control
-                block
+              <UserSearch
                 name="user"
-                virtualized
-                disabled={isDisabled || isDeactivated}
-                data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
-                value={user?.id}
-                onChange={(value: any) => setUser(users.find(usr => usr?.id === value))}
-                onSearch={(searchString: React.SetStateAction<string>) => {
-                  setUserSearch(searchString)
-                  refetchUsers()
+                user={user}
+                onUpdateUser={user => {
+                  setUser(user)
                 }}
-                accepter={SelectPicker}
               />
             </Form.Group>
             <Form.Group>

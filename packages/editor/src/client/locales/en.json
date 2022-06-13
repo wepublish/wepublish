@@ -831,13 +831,16 @@
         "deleted": "Deleted user",
         "subscription": "Subscription",
         "email": "Email",
-        "memberPlan": "Member Plan"
+        "memberPlan": "Member Plan",
+        "downloadCsv": "Download CSV"
       },
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
-        "reasonInvoiceNotPaid": "Invoice not paid"
+        "reasonInvoiceNotPaid": "Invoice not paid",
+        "reset": "Reset Filter",
+        "searchPlaceholder": "Search by first name, last name, email, address, zip, city"
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",

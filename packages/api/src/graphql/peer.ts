@@ -93,7 +93,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLString)},
-    isDisabled: {type: GraphQLNonNull(GraphQLBoolean)},
+    isDisabled: {type: GraphQLBoolean},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,
