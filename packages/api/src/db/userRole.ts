@@ -4,9 +4,6 @@ export interface UserRoleInput {
   readonly permissionIDs: string[]
 }
 
-export interface CreateUserRoleArgs {
-  readonly input: UserRoleInput
-}
 export interface UpdateUserRoleArgs {
   readonly id: string
   readonly input: UserRoleInput
@@ -32,7 +29,6 @@ export interface UserRole {
 export type OptionalUserRole = UserRole | null
 
 export interface DBUserRoleAdapter {
-  createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole>
   updateUserRole(args: UpdateUserRoleArgs): Promise<OptionalUserRole>
 
   getUserRole(name: string): Promise<OptionalUserRole>

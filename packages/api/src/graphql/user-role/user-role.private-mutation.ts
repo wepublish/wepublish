@@ -1,6 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanDeleteUserRole} from '../permissions'
-import {PrismaClient} from '@prisma/client'
+import {authorise, CanCreateUserRole, CanDeleteUserRole} from '../permissions'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 export const deleteUserRoleById = async (
   id: string,
@@ -22,5 +22,18 @@ export const deleteUserRoleById = async (
     where: {
       id
     }
+  })
+}
+
+export const createUserRole = (
+  input: Omit<Prisma.UserRoleUncheckedCreateInput, 'modifiedAt' | 'systemRole'>,
+  authenticate: Context['authenticate'],
+  userRole: PrismaClient['userRole']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateUserRole, roles)
+
+  return userRole.create({
+    data: {...input, systemRole: false, modifiedAt: new Date()}
   })
 }

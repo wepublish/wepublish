@@ -89,7 +89,7 @@ import {
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
-import {deleteUserRoleById} from './user-role/user-role.private-mutation'
+import {createUserRole, deleteUserRoleById} from './user-role/user-role.private-mutation'
 import {deleteUserById} from './user/user.private-mutation'
 import {getUserForCredentials} from './user/user.queries'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -506,11 +506,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createUserRole: {
       type: GraphQLUserRole,
       args: {input: {type: GraphQLNonNull(GraphQLUserRoleInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUserRole, roles)
-        return dbAdapter.userRole.createUserRole({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {userRole}}) =>
+        createUserRole(input, authenticate, userRole)
     },
 
     updateUserRole: {
