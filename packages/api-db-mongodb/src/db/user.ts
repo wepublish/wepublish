@@ -290,12 +290,32 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
 
     if (filter?.text !== undefined) {
+      const columnsToSearch = [
+        'name',
+        'firstName',
+        'email',
+        'address.streetAddress',
+        'address.zipCode',
+        'address.city'
+      ]
+      const orConditions = []
+      const search = filter?.text
+      const searchTerms = search.split(' ')
+      // iterate user search terms
+      for (const searchTerm of searchTerms) {
+        // iterate columns to be searched
+        for (const column of columnsToSearch) {
+          const orCondition: any = {}
+          orCondition[column] = {
+            $regex: escapeRegExp(searchTerm),
+            $options: 'im'
+          }
+          orConditions.push(orCondition)
+        }
+      }
+
       textFilter.$and?.push({
-        $or: [
-          {name: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {firstName: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {email: {$regex: escapeRegExp(filter.text), $options: 'im'}}
-        ]
+        $or: orConditions
       })
     }
 
