@@ -45,7 +45,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {User, UserSort} from '../db/user'
+import {UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -142,7 +142,7 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
-import {Subscription, SubscriptionSort} from '../db/subscription'
+import {Subscription, SubscriptionJoins, SubscriptionSort} from '../db/subscription'
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
@@ -223,7 +223,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const peer = await loaders.peer.load(id)
 
-        if (peer?.isDisabled === true) {
+        if (peer?.isDisabled) {
           throw new DisabledPeerError()
         }
 
@@ -362,14 +362,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     subscriptionsAsCsv: {
       type: GraphQLString,
-      args: {filter: {type: GraphQLSubscriptionFilter}},
+      args: {
+        filter: {type: GraphQLSubscriptionFilter}
+      },
       async resolve(root, {filter}, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
 
         const subscriptions: Subscription[] = []
-        const users: User[] = []
+        const joins: SubscriptionJoins = {
+          joinMemberPlan: true,
+          joinPaymentMethod: true,
+          joinUser: true
+        }
 
         let hasMore = true
         let afterCursor
@@ -377,6 +383,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
               filter,
+              joins,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               cursor: InputCursor(afterCursor ?? undefined),
@@ -387,24 +394,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
         }
-
-        hasMore = true
-        afterCursor = undefined
-
-        while (hasMore) {
-          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
-            cursor: InputCursor(afterCursor ?? undefined),
-            filter: {},
-            limit: Limit(100),
-            sort: UserSort.ModifiedAt,
-            order: SortOrder.Descending
-          })
-          users.push(...listResult.nodes)
-          hasMore = listResult.pageInfo.hasNextPage
-          afterCursor = listResult.pageInfo.endCursor
-        }
-
-        return mapSubscriptionsAsCsv(users, subscriptions)
+        return mapSubscriptionsAsCsv(subscriptions)
       }
     },
 
@@ -736,7 +726,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const peers = (await dbAdapter.peer.getPeers())
           .filter(peer => (peerFilter ? peer.name === peerFilter : true))
-          .filter(peer => peer.isDisabled !== true)
+          .filter(peer => !peer.isDisabled)
 
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.

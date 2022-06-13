@@ -6,7 +6,9 @@ import {
   MetadataProperty,
   SortOrder
 } from './common'
-import {PaymentPeriodicity} from './memberPlan'
+import {MemberPlan, PaymentPeriodicity} from './memberPlan'
+import {PaymentMethod} from './paymentMethod'
+import {User} from './user'
 
 export enum SubscriptionDeactivationReason {
   None,
@@ -65,6 +67,13 @@ export interface SubscriptionFilter {
   readonly memberPlanID?: string
   readonly paymentPeriodicity?: PaymentPeriodicity
   readonly userHasAddress?: boolean
+  readonly userID?: string
+}
+
+export interface SubscriptionJoins {
+  readonly joinMemberPlan?: boolean
+  readonly joinPaymentMethod?: boolean
+  readonly joinUser?: boolean
 }
 
 export interface Subscription {
@@ -82,6 +91,9 @@ export interface Subscription {
   readonly paymentMethodID: string
   readonly properties: MetadataProperty[]
   readonly deactivation: SubscriptionDeactivation | null
+  readonly memberPlan?: MemberPlan
+  readonly paymentMethod?: PaymentMethod
+  readonly user?: User
 }
 
 export interface CreateSubscriptionPeriodArgs {
@@ -118,6 +130,7 @@ export interface GetSubscriptionArgs {
   readonly cursor: InputCursor
   readonly limit: Limit
   readonly filter?: SubscriptionFilter
+  readonly joins?: SubscriptionJoins
   readonly sort: SubscriptionSort
   readonly order: SortOrder
 }

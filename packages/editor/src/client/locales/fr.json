@@ -447,13 +447,16 @@
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
         "email": "Email",
-        "memberPlan": "plan de membre"
+        "memberPlan": "plan de membre",
+        "downloadCsv": "Télécharger CSV"
       },
       "filter": {
         "deactivationReason": "Motif désactivation",
         "reasonNone": "Sans",
         "reasonUserSelfDeactivated": "Par l'utilisateur",
-        "reasonInvoiceNotPaid": "Facture impayée"
+        "reasonInvoiceNotPaid": "Facture impayée",
+        "reset": "Réinitialiser filtre",
+        "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
