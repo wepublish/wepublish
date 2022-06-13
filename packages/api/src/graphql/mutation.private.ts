@@ -34,7 +34,7 @@ import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {deleteInvoiceById} from './invoice/invoice.private-mutation'
+import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutation'
 import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
@@ -982,11 +982,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createInvoice: {
       type: GraphQLInvoice,
       args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateInvoice, roles)
-        return dbAdapter.invoice.createInvoice({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {invoice}}) =>
+        createInvoice(input, authenticate, invoice)
     },
 
     createPaymentFromInvoice: {

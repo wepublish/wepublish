@@ -277,8 +277,8 @@ export class MemberContext implements MemberContext {
         return null
       }
 
-      const newInvoice = await this.dbAdapter.invoice.createInvoice({
-        input: {
+      const newInvoice = await this.prisma.invoice.create({
+        data: {
           subscriptionID: subscription.id,
           description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
           mail: user.email,
@@ -294,7 +294,8 @@ export class MemberContext implements MemberContext {
             }
           ],
           paidAt: null,
-          canceledAt: null
+          canceledAt: null,
+          modifiedAt: new Date()
         }
       })
       await this.dbAdapter.subscription.addSubscriptionPeriod({
