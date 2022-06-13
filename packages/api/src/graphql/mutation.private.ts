@@ -65,7 +65,6 @@ import {
   CanCreatePaymentMethod,
   CanCreatePeer,
   CanCreateSubscription,
-  CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
   CanPublishArticle,
@@ -82,7 +81,7 @@ import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {deleteTokenById} from './token/token.private-mutation'
+import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {deleteUserRoleById} from './user-role/user-role.private-mutation'
 import {deleteUserById} from './user/user.private-mutation'
@@ -375,13 +374,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createToken: {
       type: GraphQLNonNull(GraphQLCreatedToken),
       args: {input: {type: GraphQLNonNull(GraphQLTokenInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateToken, roles)
-
-        // TODO: Receive roleIDs from input
-        return dbAdapter.token.createToken({...input, roleIDs: ['peer']})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {token}}) =>
+        createToken({...input, roleIDs: ['peer']}, authenticate, token)
     },
 
     deleteToken: {
