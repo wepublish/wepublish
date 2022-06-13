@@ -1,6 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanDeleteMemberPlan} from '../permissions'
-import {PrismaClient} from '@prisma/client'
+import {authorise, CanCreateMemberPlan, CanDeleteMemberPlan} from '../permissions'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 export const deleteMemberPlanById = (
   id: string,
@@ -14,5 +14,18 @@ export const deleteMemberPlanById = (
     where: {
       id
     }
+  })
+}
+
+export const createMemberPlan = (
+  input: Omit<Prisma.MemberPlanUncheckedCreateInput, 'modifiedAt'>,
+  authenticate: Context['authenticate'],
+  memberPlan: PrismaClient['memberPlan']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateMemberPlan, roles)
+
+  return memberPlan.create({
+    data: {...input, modifiedAt: new Date()}
   })
 }

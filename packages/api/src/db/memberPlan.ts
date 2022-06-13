@@ -48,10 +48,6 @@ export interface MemberPlanInput {
 
 export type OptionalMemberPlan = MemberPlan | null
 
-export interface CreateMemberPlanArgs {
-  input: MemberPlanInput
-}
-
 export interface UpdateMemberPlanArgs {
   id: string
   input: MemberPlanInput
@@ -69,6 +65,5 @@ export interface MemberPlanFilter {
 }
 
 export interface DBMemberPlanAdapter {
-  createMemberPlan(args: CreateMemberPlanArgs): Promise<MemberPlan>
   updateMemberPlan(args: UpdateMemberPlanArgs): Promise<OptionalMemberPlan>
 }

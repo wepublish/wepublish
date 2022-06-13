@@ -35,7 +35,7 @@ import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './
 import {createImage, deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutation'
-import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
+import {createMemberPlan, deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {createNavigation, deleteNavigationById} from './navigation/navigation.private-mutation'
@@ -853,18 +853,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createMemberPlan: {
       type: GraphQLMemberPlan,
       args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateMemberPlan, roles)
-
-        if (input.minimumDuration < 0) {
-          throw new Error('Input.minimumDuration can not be < 0')
-        } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
-          throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
-        }
-
-        return dbAdapter.memberPlan.createMemberPlan({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {memberPlan}}) =>
+        createMemberPlan(input, authenticate, memberPlan)
     },
 
     updateMemberPlan: {
