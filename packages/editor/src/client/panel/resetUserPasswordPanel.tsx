@@ -58,7 +58,6 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
               {placement: 'topEnd'}
             )
             onClose()
-            validationPassed && {}
           }
         }}>
         <Form.Group>
