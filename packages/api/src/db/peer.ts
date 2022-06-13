@@ -40,16 +40,11 @@ export interface Peer extends BasePeer {
 
 export type OptionalPeer = Peer | null
 
-export interface CreatePeerInput extends BasePeer {
-  token: string
-}
-
 export interface UpdatePeerInput extends Partial<BasePeer> {
   token?: string
 }
 
 export interface DBPeerAdapter {
   updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile>
-  createPeer(input: CreatePeerInput): Promise<Peer>
   updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
 }

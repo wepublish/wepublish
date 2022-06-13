@@ -51,7 +51,7 @@ import {
   GraphQLPeerProfileInput,
   GraphQLUpdatePeerInput
 } from './peer'
-import {deletePeerById} from './peer/peer.private-mutation'
+import {createPeer, deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
@@ -188,13 +188,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPeer: {
       type: GraphQLNonNull(GraphQLPeer),
       args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePeer, roles)
-
-        // TODO: Check if valid peer?
-        return dbAdapter.peer.createPeer(input)
-      }
+      resolve: (root, {input}, {authenticate, prisma: {peer}}) =>
+        createPeer(input, authenticate, peer)
     },
 
     updatePeer: {
