@@ -409,25 +409,27 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         </Drawer.Body>
       </Form>
 
-      <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
-        </Modal.Header>
+      {id && (
+        <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-          <ResetUserPasswordPanel
-            userID={id}
-            userName={name}
-            onClose={() => setIsResetUserPasswordOpen(false)}
-          />
-        </Modal.Body>
+          <Modal.Body>
+            <ResetUserPasswordPanel
+              userID={id}
+              userName={name}
+              onClose={() => setIsResetUserPasswordOpen(false)}
+            />
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer>
+            <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+              {t('userList.panels.cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   )
 }

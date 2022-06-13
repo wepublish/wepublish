@@ -1290,7 +1290,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  isDisabled: Scalars['Boolean'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
