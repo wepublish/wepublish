@@ -722,7 +722,7 @@ export async function contextFromRequest(
   }
 
   const mailContext = new MailContext({
-    dbAdapter,
+    prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
     defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
