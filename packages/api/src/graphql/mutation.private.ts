@@ -42,7 +42,10 @@ import {createNavigation, deleteNavigationById} from './navigation/navigation.pr
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {deletePageById} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
-import {deletePaymentMethodById} from './payment-method/payment-method.private-mutation'
+import {
+  createPaymentMethod,
+  deletePaymentMethodById
+} from './payment-method/payment-method.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
   GraphQLCreatePeerInput,
@@ -931,14 +934,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePaymentMethod, roles)
-
-        // TODO: check if payment method exists and is active
-
-        return dbAdapter.paymentMethod.createPaymentMethod({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {paymentMethod}}) =>
+        createPaymentMethod(input, authenticate, paymentMethod)
     },
 
     updatePaymentMethod: {
