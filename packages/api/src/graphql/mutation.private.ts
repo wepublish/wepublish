@@ -38,7 +38,7 @@ import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutati
 import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
-import {deleteNavigationById} from './navigation/navigation.private-mutation'
+import {createNavigation, deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {deletePageById} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
@@ -562,14 +562,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createNavigation: {
       type: GraphQLNavigation,
       args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateNavigation, roles)
-
-        return dbAdapter.navigation.createNavigation({
-          input: {...input, links: input.links.map(mapNavigationLinkInput)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {navigation}}) =>
+        createNavigation(
+          {
+            ...input,
+            links: input.links.map(mapNavigationLinkInput)
+          },
+          authenticate,
+          navigation
+        )
     },
 
     updateNavigation: {
