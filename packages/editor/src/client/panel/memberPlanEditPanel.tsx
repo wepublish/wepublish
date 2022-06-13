@@ -17,7 +17,6 @@ import {
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {FormInstance} from 'rsuite/esm/Form'
 
 import {
   AvailablePaymentMethod,
