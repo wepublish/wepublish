@@ -28,7 +28,7 @@ import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
-import {deleteAuthorById} from './author/author.private-mutation'
+import {createAuthor, deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
@@ -604,11 +604,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createAuthor: {
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateAuthor, roles)
-        return dbAdapter.author.createAuthor({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {author}}) =>
+        createAuthor(input, authenticate, author)
     },
 
     updateAuthor: {
