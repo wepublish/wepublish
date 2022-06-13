@@ -13,7 +13,6 @@ import {Context} from '../context'
 import {ArticleRevision} from '../db/article'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
-import {PageRevision} from '../db/page'
 import {PaymentState} from '../db/payment'
 import {
   DuplicatePageSlugError,
@@ -40,7 +39,7 @@ import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {createNavigation, deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
-import {deletePageById} from './page/page.private-mutation'
+import {createPage, deletePageById, duplicatePage} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
@@ -741,14 +740,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPage: {
       type: GraphQLNonNull(GraphQLPage),
       args: {input: {type: GraphQLNonNull(GraphQLPageInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePage, roles)
-
-        return dbAdapter.page.createPage({
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {page}}) =>
+        createPage({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
     },
 
     updatePage: {
@@ -824,24 +817,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {dbAdapter, loaders}) {
-        const page = await loaders.pages.load(id)
-
-        if (!page) throw new NotFound('page', id)
-
-        const pageRevision: PageRevision = Object.assign(
-          {},
-          page.draft ?? page.pending ?? page.published,
-          {
-            slug: '',
-            publishedAt: undefined,
-            updatedAt: undefined
-          }
-        )
-        const output = await dbAdapter.page.createPage({input: {...pageRevision}})
-
-        return output
-      }
+      resolve: (root, {id}, {prisma: {page}, loaders: {pages}, authenticate}) =>
+        duplicatePage(id, authenticate, pages, page)
     },
 
     // MemberPlan

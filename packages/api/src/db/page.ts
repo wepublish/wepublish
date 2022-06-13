@@ -81,10 +81,6 @@ export interface GetPageHistoryArgs {
   readonly id: string
 }
 
-export interface CreatePageArgs {
-  readonly input: PageData
-}
-
 export interface UpdatePageArgs {
   readonly id: string
   readonly input: PageData
@@ -106,7 +102,6 @@ export type OptionalPublicPage = PublicPage | null
 export type OptionalPageHistory = PageHistory | null
 
 export interface DBPageAdapter {
-  createPage(args: CreatePageArgs): Promise<Page>
   updatePage(args: UpdatePageArgs): Promise<OptionalPage>
   publishPage(args: PublishPageArgs): Promise<OptionalPage>
   unpublishPage(args: UnpublishPageArgs): Promise<OptionalPage>
