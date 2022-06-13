@@ -32,7 +32,7 @@ import {createAuthor, deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
-import {deleteImageById} from './image/image.private-mutation'
+import {createImage, deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutation'
 import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
@@ -616,32 +616,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     uploadImage: {
       type: GraphQLImage,
       args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
-      async resolve(root, {input}, {authenticate, mediaAdapter, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateImage, roles)
-
-        const {file, filename, title, description, tags, source, link, license, focalPoint} = input
-
-        const {id, ...image} = await mediaAdapter.uploadImage(file)
-
-        return dbAdapter.image.createImage({
-          id,
-          input: {
-            ...image,
-
-            filename: filename ?? image.filename,
-            title,
-            description,
-            tags,
-
-            source,
-            link,
-            license,
-
-            focalPoint
-          }
-        })
-      }
+      resolve: (root, {input}, {authenticate, mediaAdapter, prisma: {image}}) =>
+        createImage(input, authenticate, mediaAdapter, image)
     },
 
     updateImage: {

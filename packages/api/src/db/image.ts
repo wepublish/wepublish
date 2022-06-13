@@ -62,11 +62,6 @@ export interface UploadImage extends StaticImageComponents {
   readonly filename: string
 }
 
-export interface CreateImageArgs {
-  readonly id: string
-  readonly input: EditableImageComponents & StaticImageComponents
-}
-
 export interface UpdateImageArgs {
   readonly id: string
   readonly input: EditableImageComponents
@@ -83,6 +78,5 @@ export interface ImageFilter {
 }
 
 export interface DBImageAdapter {
-  createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
 }
