@@ -82,7 +82,10 @@ import {revokeSessionByToken} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
-import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
+import {
+  createSubscription,
+  deleteSubscriptionById
+} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
@@ -458,24 +461,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {input}, {authenticate, prisma, dbAdapter, memberContext}) {
-        const {roles} = authenticate()
-        authorise(CanCreateSubscription, roles)
-
-        const subscription = await dbAdapter.subscription.createSubscription({input})
-        if (!subscription) throw new Error('Subscription not created.')
-
-        // create invoice
-        const userId = subscription.userID
-        const user = await prisma.user.findUnique({
-          where: {id: userId}
-        })
-        if (!user) throw new Error('User of subscription not found.')
-
-        // instantly create a new invoice fo the user
-        await memberContext.renewSubscriptionForUser({subscription: subscription as Subscription})
-        return subscription
-      }
+      resolve: (root, {input}, {authenticate, prisma: {subscription}, memberContext}) =>
+        createSubscription(input, authenticate, memberContext, subscription)
     },
 
     updateSubscription: {

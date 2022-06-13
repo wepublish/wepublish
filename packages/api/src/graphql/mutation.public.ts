@@ -422,7 +422,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const subscription = await memberContext.createSubscription(
-          dbAdapter,
+          prisma.subscription,
           user.id,
           paymentMethod,
           paymentPeriodicity,
@@ -490,7 +490,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL
         },
-        {dbAdapter, loaders, memberContext, createPaymentWithProvider, authenticateUser}
+        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
         // authenticate user
         const {user} = authenticateUser()
@@ -525,7 +525,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const subscription = await memberContext.createSubscription(
-          dbAdapter,
+          prisma.subscription,
           user.id,
           paymentMethod,
           paymentPeriodicity,

@@ -1,4 +1,4 @@
-import {Invoice, MemberPlan, PrismaClient, Subscription} from '@prisma/client'
+import {Invoice, MemberPlan, MetadataProperty, PrismaClient, Subscription} from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
 import {OptionalInvoice} from './db/invoice'
@@ -934,7 +934,9 @@ export class MemberContext implements MemberContext {
       throw new PaymentConfigurationNotAllowed()
   }
 
-  async processSubscriptionProperties(subscriptionProperties: any) {
+  async processSubscriptionProperties(
+    subscriptionProperties: Omit<MetadataProperty, 'public'>[]
+  ): Promise<MetadataProperty[]> {
     return Array.isArray(subscriptionProperties)
       ? subscriptionProperties.map(property => {
           return {
@@ -947,19 +949,20 @@ export class MemberContext implements MemberContext {
   }
 
   async createSubscription(
-    dbAdapter: DBAdapter,
+    subscriptionClient: PrismaClient['subscription'],
     userID: string,
     paymentMethod: PaymentMethod,
     paymentPeriodicity: PaymentPeriodicity,
     monthlyAmount: number,
     memberPlan: MemberPlan,
-    properties: any,
+    properties: MetadataProperty[],
     autoRenew: boolean
   ) {
-    const subscription = await dbAdapter.subscription.createSubscription({
-      input: {
+    const subscription = await subscriptionClient.create({
+      data: {
         userID,
         startsAt: new Date(),
+        modifiedAt: new Date(),
         paymentMethodID: paymentMethod.id,
         paymentPeriodicity,
         paidUntil: null,
