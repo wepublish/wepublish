@@ -1290,7 +1290,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  isDisabled: Scalars['Boolean'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
@@ -1786,6 +1786,7 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>;
   paymentPeriodicity?: Maybe<PaymentPeriodicity>;
   userHasAddress?: Maybe<Scalars['Boolean']>;
+  userID?: Maybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {
