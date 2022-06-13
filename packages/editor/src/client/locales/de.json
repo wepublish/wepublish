@@ -760,13 +760,16 @@
         "deleted": "Gelöschte:r Benutzer:in",
         "subscription": "Subscription",
         "email": "Email",
-        "memberPlan": "Member-Plan"
+        "memberPlan": "Member-Plan",
+        "downloadCsv": "CSV herunterladen"
       },
       "filter": {
         "deactivationReason": "Grund Deaktivierung",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
-        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt"
+        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
+        "reset": "Filter zurücksetzen",
+        "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
       "panels": {
         "deleteSubscription": "Subscription löschen?",
