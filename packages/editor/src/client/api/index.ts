@@ -588,7 +588,9 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
+  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
 };
 
 export enum InvoiceSort {
@@ -1288,6 +1290,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
@@ -1769,6 +1772,8 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type SubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
   startsAtFrom?: Maybe<DateFilter>;
   startsAtTo?: Maybe<DateFilter>;
   paidUntilFrom?: Maybe<DateFilter>;
@@ -1781,6 +1786,7 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>;
   paymentPeriodicity?: Maybe<PaymentPeriodicity>;
   userHasAddress?: Maybe<Scalars['Boolean']>;
+  userID?: Maybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {
@@ -1898,9 +1904,10 @@ export type UpdateImageInput = {
 };
 
 export type UpdatePeerInput = {
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  hostURL: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hostURL?: Maybe<Scalars['String']>;
+  isDisabled?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
 };
 
@@ -3480,7 +3487,7 @@ export type FullPeerProfileFragment = (
 
 export type PeerRefFragment = (
   { __typename?: 'Peer' }
-  & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
+  & Pick<Peer, 'id' | 'name' | 'slug' | 'isDisabled' | 'hostURL'>
   & { profile?: Maybe<(
     { __typename?: 'PeerProfile' }
     & FullPeerProfileFragment
@@ -4102,6 +4109,7 @@ export const PeerRefFragmentDoc = gql`
   id
   name
   slug
+  isDisabled
   hostURL
   profile {
     ...FullPeerProfile
