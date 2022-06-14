@@ -14,19 +14,13 @@ export enum SettingName {
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs'
 }
 
-export interface SettingInput<T> {
-  value: T | null
-}
+export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
 
-export interface CreateSettingArgs<T> {
-  name: SettingName
-  value: T | null
-  settingRestriction?: SettingRestriction
-}
+export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>
 
-export interface UpdateSettingArgs {
+export type UpdateSettingArgs = {
   id: string
-  input: SettingInput<any>
+  input: SettingInput
 }
 
 export interface SettingRestriction {

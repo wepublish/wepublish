@@ -900,6 +900,20 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Paramètres",
+      "successMessage": "Mise à jour des paramètres réussie!",
+      "successTitle": "Enregistré",
+      "save": "Sauvegarder",
+      "errorTitle": "Erreur",
+      "editSettings": "Modifier les paramètres",
+      "guestCommenting": "Autoriser les commentaires des invités",
+      "loginMinutes": "Durée de validité du token d’authentification",
+      "passwordToken": "Durée de validité du jeton de réinitialisation du mot de passe",
+      "peerToken": "Durée de validité du peer token",
+      "minutes": "Minutes",
+      "ms": "Millisecondes"
     }
   }
 }

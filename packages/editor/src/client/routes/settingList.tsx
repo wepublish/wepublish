@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Form, InputNumber, Notification, toaster, Toggle} from 'rsuite'
+import {Form, InputNumber, Notification, toaster, Toggle} from 'rsuite'
 import {Setting, SettingName, useSettingListQuery, useUpdateSettingMutation} from '../api'
 import {ButtonLink} from '../route'
 
@@ -55,7 +55,7 @@ export function SettingList() {
       )
       if (resetPwdJwtExpiresSetting) setResetPwdJwtExpiresMin(resetPwdJwtExpiresSetting)
     }
-  }, [settingListData?.settings])
+  }, [settingListData])
 
   const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
     fetchPolicy: 'no-cache'
@@ -75,8 +75,8 @@ export function SettingList() {
 
     await refetch()
     toaster.push(
-      <Notification header={t('navbar.settingsPanel.successTitle')} type="success" duration={2000}>
-        {t('navbar.settingsPanel.successMessage')}
+      <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
+        {t('settingList.successMessage')}
       </Notification>
     )
   }
@@ -85,7 +85,7 @@ export function SettingList() {
     const error = updateSettingError ?? fetchError
     if (error)
       toaster.push(
-        <Notification type="error" header={t('navbar.settingsPanel.errorTitle')} duration={2000}>
+        <Notification type="error" header={t('settingList.errorTitle')} duration={2000}>
           {error.message.toString()}
         </Notification>
       )
@@ -93,37 +93,24 @@ export function SettingList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
-          <h2>{t('navbar.settings')}</h2>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            onClick={() => {
-              handleSettingListUpdate()
-            }}>
-            {t('navbar.settingsPanel.save')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-      <Form fluid={true}>
+      <Form>
         <Form.Group>
-          <Form.ControlLabel>{t('navbar.settingsPanel.guestCommenting')}</Form.ControlLabel>
+          <h2>{t('settingList.settings')}</h2>
+        </Form.Group>
+        <Form.Group>
+          <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
           <Toggle
             checked={allowGuestComment?.value}
             onChange={checked =>
               setAllowGuestComment({
-                id: allowGuestComment.id,
-                name: allowGuestComment.name,
+                ...allowGuestComment,
                 value: checked
               })
             }
           />
         </Form.Group>
         <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>JWT expires min</Form.ControlLabel>
+          <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
           <InputNumber
             value={sendLoginJwtExpiresMin.value}
             min={
@@ -138,16 +125,15 @@ export function SettingList() {
             }
             onChange={value =>
               setSendLoginJwtExpiresMin({
-                id: sendLoginJwtExpiresMin.id,
-                name: sendLoginJwtExpiresMin.name,
+                ...sendLoginJwtExpiresMin,
                 value: value
               })
             }
+            postfix={t('settingList.minutes')}
           />
         </Form.Group>
         <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>reset password JWT expires min</Form.ControlLabel>
+          <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
           <InputNumber
             value={resetPwdJwtExpiresMin.value}
             min={
@@ -162,16 +148,15 @@ export function SettingList() {
             }
             onChange={value =>
               setResetPwdJwtExpiresMin({
-                id: resetPwdJwtExpiresMin.id,
-                name: resetPwdJwtExpiresMin.name,
+                ...resetPwdJwtExpiresMin,
                 value: value
               })
             }
+            postfix={t('settingList.minutes')}
           />
         </Form.Group>
         <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>timeout peer ms</Form.ControlLabel>
+          <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
           <InputNumber
             value={peeringTimeoutMs.value}
             min={
@@ -186,13 +171,16 @@ export function SettingList() {
             }
             onChange={value =>
               setPeeringTimeoutMs({
-                id: peeringTimeoutMs.id,
-                name: peeringTimeoutMs.name,
+                ...peeringTimeoutMs,
                 value: value
               })
             }
+            postfix={t('settingList.ms')}
           />
         </Form.Group>
+        <ButtonLink appearance="primary" onClick={handleSettingListUpdate}>
+          {t('settingList.save')}
+        </ButtonLink>
       </Form>
     </>
   )

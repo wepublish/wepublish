@@ -908,6 +908,20 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Einstellungen",
+      "successMessage": "Einstellungen erfolgreich aktualisiert!",
+      "successTitle": "Gespeichert",
+      "save": "Speichern",
+      "errorTitle": "Fehler",
+      "editSettings": "Einstellungen ändern",
+      "guestCommenting": "Gastkommentare erlauben",
+      "loginMinutes": "Gültigkeitsdauer Login-Token",
+      "passwordToken": "Gültigkeitsdauer Passwort-Reset-Token",
+      "peerToken": "Gültigkeitsdauser Peer token",
+      "minutes": "Minuten",
+      "ms": "Milisekunden"
     }
   }
 }

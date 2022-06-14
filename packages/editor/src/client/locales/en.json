@@ -561,17 +561,7 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members",
-      "settings": "Settings",
-      "settingsPanel": {
-        "successMessage": "Settings updated successfully!",
-        "successTitle": "Saved",
-        "save": "Save",
-        "errorTitle": "Error",
-        "editSettings": "Edit Settings",
-        "guestCommenting": "Allow guest commenting",
-        "discoveryUrl": "OAUTH discovery URL"
-      }
+      "usersAndMembers": "Users & Members"
     },
     "navigation": {
       "overview": {
@@ -1025,6 +1015,20 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Settings",
+      "successMessage": "Settings updated successfully!",
+      "successTitle": "Saved",
+      "save": "Save",
+      "errorTitle": "Error",
+      "editSettings": "Edit Settings",
+      "guestCommenting": "Allow guest commenting",
+      "loginMinutes": "Login token validity period",
+      "passwordToken": "Password reset token validity period",
+      "peerToken": "Peer token validity period",
+      "minutes": "minutes",
+      "ms": "milliseconds"
     }
   }
 }
