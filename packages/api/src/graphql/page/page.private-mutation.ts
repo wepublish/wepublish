@@ -1,8 +1,7 @@
-import {Context} from '../../context'
-import {authorise, CanCreatePage, CanDeletePage} from '../permissions'
 import {Prisma, PrismaClient} from '@prisma/client'
+import {Context} from '../../context'
 import {NotFound} from '../../error'
-import {PageRevision} from '../../db/page'
+import {authorise, CanCreatePage, CanDeletePage} from '../permissions'
 
 export const deletePageById = (
   id: string,
@@ -53,21 +52,16 @@ export const duplicatePage = async (
     throw new NotFound('page', id)
   }
 
-  const pageRevision = Object.assign(
-    {},
-    (page.draft ?? page.pending ?? page.published) as PageRevision,
-    {
-      slug: '',
-      publishedAt: undefined,
-      updatedAt: undefined
-    }
-  )
+  const pageRevision = (page.draft ?? page.pending ?? page.published)!
 
   const input: Prisma.PageRevisionCreateInput = {
     ...pageRevision,
     blocks: pageRevision.blocks as Prisma.JsonValue[],
+    slug: '',
     revision: 0,
-    updatedAt: new Date()
+    publishedAt: null,
+    updatedAt: new Date(),
+    createdAt: new Date()
   }
 
   return pageClient.create({

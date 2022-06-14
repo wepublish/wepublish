@@ -10,7 +10,6 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Issuer} from 'openid-client'
 import {Context} from '../context'
-import {ArticleRevision} from '../db/article'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
 import {PaymentState} from '../db/payment'
@@ -25,7 +24,11 @@ import {
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {deleteArticleById} from './article/article.private-mutation'
+import {
+  createArticle,
+  deleteArticleById,
+  duplicateArticle
+} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
@@ -642,14 +645,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: GraphQLNonNull(GraphQLArticle),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateArticle, roles)
-
-        return dbAdapter.article.createArticle({
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {article}}) =>
+        createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
     },
 
     updateArticle: {
@@ -712,26 +709,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {dbAdapter, loaders}) {
-        const article = await loaders.articles.load(id)
-
-        if (!article) throw new NotFound('article', id)
-
-        const articleRevision: ArticleRevision = Object.assign(
-          {},
-          article.draft ?? article.pending ?? article.published,
-          {
-            slug: '',
-            publishedAt: undefined,
-            updatedAt: undefined
-          }
-        )
-        const output = await dbAdapter.article.createArticle({
-          input: {shared: article.shared, ...articleRevision}
-        })
-
-        return output
-      }
+      resolve: (root, {id}, {authenticate, prisma: {article}, loaders: {articles}}) =>
+        duplicateArticle(id, authenticate, articles, article)
     },
 
     // Page

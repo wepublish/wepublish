@@ -101,10 +101,6 @@ export interface ArticleInput extends ArticleData {
   readonly shared: boolean
 }
 
-export interface CreateArticleArgs {
-  readonly input: ArticleInput
-}
-
 export interface UpdateArticleArgs {
   readonly id: string
   readonly input: ArticleInput
@@ -126,7 +122,6 @@ export type OptionalPublicArticle = PublicArticle | null
 export type OptionalArticleHistory = ArticleHistory | null
 
 export interface DBArticleAdapter {
-  createArticle(args: CreateArticleArgs): Promise<Article>
   updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
   publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
   unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
