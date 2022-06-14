@@ -33,7 +33,7 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
-import {DefaultSessionTTL} from './db/common'
+import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
 import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
@@ -114,6 +114,7 @@ export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
   readonly sessionTTL: number
+  readonly hashCostFactor: number
 
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
@@ -171,6 +172,7 @@ export interface ContextOptions {
   readonly hostURL: string
   readonly websiteURL: string
   readonly sessionTTL?: number
+  readonly hashCostFactor?: number
 
   readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
@@ -295,7 +297,8 @@ export async function contextFromRequest(
     mailContextOptions,
     paymentProviders,
     challenge,
-    sessionTTL
+    sessionTTL,
+    hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -782,6 +785,7 @@ export async function contextFromRequest(
     paymentProviders,
     hooks,
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
+    hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
     async getOauth2Clients() {
       return await Promise.all(

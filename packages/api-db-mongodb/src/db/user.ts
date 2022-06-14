@@ -1,5 +1,4 @@
 import {
-  CreateUserArgs,
   DBUserAdapter,
   GetUserForCredentialsArgs,
   OptionalUser,
@@ -10,8 +9,7 @@ import {
   UserOAuth2AccountArgs
 } from '@wepublish/api'
 import bcrypt from 'bcrypt'
-import {Collection, Db, MongoError} from 'mongodb'
-import {MongoErrorCode} from '../utility'
+import {Collection, Db} from 'mongodb'
 import {CollectionName, DBUser} from './schema'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
@@ -21,37 +19,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   constructor(db: Db, bcryptHashCostFactor: number) {
     this.users = db.collection(CollectionName.Users)
     this.bcryptHashCostFactor = bcryptHashCostFactor
-  }
-
-  async createUser({input, password}: CreateUserArgs): Promise<OptionalUser> {
-    try {
-      const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
-      const {insertedId: id} = await this.users.insertOne({
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        email: input.email,
-        emailVerifiedAt: null,
-        oauth2Accounts: [],
-        name: input.name,
-        firstName: input.firstName,
-        preferredName: input.preferredName,
-        address: input.address,
-        active: input.active,
-        lastLogin: null,
-        properties: input.properties,
-        roleIDs: input.roleIDs,
-        password: passwordHash,
-        paymentProviderCustomers: input.paymentProviderCustomers || []
-      })
-
-      return this.getUserByID(id)
-    } catch (err) {
-      if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
-        throw new Error('Email address already exists!')
-      }
-
-      throw err
-    }
   }
 
   async getUser(email: string): Promise<OptionalUser> {

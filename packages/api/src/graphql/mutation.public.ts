@@ -1,4 +1,4 @@
-import {Invoice, Subscription, User} from '@prisma/client'
+import {Invoice, Subscription} from '@prisma/client'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
@@ -64,6 +64,7 @@ import {
   GraphQLPublicUserInput,
   GraphQLUserAddressInput
 } from './user'
+import {createUser} from './user/user.mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -218,15 +219,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {name, firstName, preferredName, email, address, password, challengeAnswer},
-        {
-          sessionTTL,
-          dbAdapter,
-          prisma,
-          loaders,
-          memberContext,
-          createPaymentWithProvider,
-          challenge
-        }
+        {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -244,8 +237,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!password) password = crypto.randomBytes(48).toString('base64')
 
-        const user = await dbAdapter.user.createUser({
-          input: {
+        const user = await createUser(
+          {
             name,
             firstName,
             preferredName,
@@ -255,20 +248,19 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             active: true,
             properties: [],
             roleIDs: [],
-            paymentProviderCustomers: []
+            paymentProviderCustomers: [],
+            password
           },
-          password
-        })
+          hashCostFactor,
+          prisma.user
+        )
+
         if (!user) {
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await createUserSession(
-          user as User,
-          sessionTTL,
-          prisma.session,
-          prisma.userRole
-        )
+
+        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
 
         return {
           user,
@@ -327,7 +319,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {
           sessionTTL,
-          dbAdapter,
+          hashCostFactor,
           prisma,
           loaders,
           memberContext,
@@ -380,8 +372,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!password) password = crypto.randomBytes(48).toString('base64')
 
-        const user = await dbAdapter.user.createUser({
-          input: {
+        const user = await createUser(
+          {
             name,
             firstName,
             preferredName,
@@ -391,21 +383,19 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             active: true,
             properties: [],
             roleIDs: [],
-            paymentProviderCustomers: []
+            paymentProviderCustomers: [],
+            password
           },
-          password
-        })
+          hashCostFactor,
+          prisma.user
+        )
+
         if (!user) {
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await createUserSession(
-          user as User,
-          sessionTTL,
-          prisma.session,
-          prisma.userRole
-        )
 
+        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const subscription = await memberContext.createSubscription(

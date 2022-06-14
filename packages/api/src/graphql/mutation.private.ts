@@ -87,7 +87,7 @@ import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {createUserRole, deleteUserRoleById} from './user-role/user-role.private-mutation'
-import {deleteUserById} from './user/user.private-mutation'
+import {createAdminUser, deleteUserById} from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 function mapTeaserUnionMap(value: any) {
@@ -369,11 +369,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLUserInput)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve(root, {input, password}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUser, roles)
-        return dbAdapter.user.createUser({input, password})
-      }
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
     },
 
     updateUser: {

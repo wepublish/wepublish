@@ -12,6 +12,7 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
+  hashPassword,
   Peer,
   PublicArticle,
   PublicComment,
@@ -82,7 +83,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   await MongoDBAdapter.initialize({
     url: process.env.TEST_MONGO_URL!,
     locale: 'en',
-    seed: async adapter => {
+    seed: async () => {
       const adminUserRoleId =
         (
           await prisma.userRole.findUnique({
@@ -92,16 +93,17 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
           })
         )?.id ?? 'fake'
 
-      adminUser = await adapter.user.createUser({
-        input: {
+      adminUser = await prisma.user.create({
+        data: {
           email: 'dev@wepublish.ch',
           emailVerifiedAt: new Date(),
           name: 'Dev User',
           roleIDs: [adminUserRoleId],
           active: true,
-          properties: []
-        },
-        password: '123'
+          properties: [],
+          password: await hashPassword('123'),
+          modifiedAt: new Date()
+        }
       })
     }
   })
