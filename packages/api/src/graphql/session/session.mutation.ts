@@ -33,7 +33,7 @@ export const revokeSessionByToken = (
     : Promise.resolve()
 }
 
-const createUserSession = async (
+export const createUserSession = async (
   user: User,
   sessionTTL: number,
   sessionClient: PrismaClient['session'],

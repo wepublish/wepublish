@@ -12,13 +12,14 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  OptionalUserSession,
   Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
   URLAdapter
 } from '../src'
+import {DefaultSessionTTL} from '../src/db/common'
+import {createUserSession} from '../src/graphql/session/session.mutation'
 
 export interface TestClient {
   dbAdapter: MongoDBAdapter
@@ -125,7 +126,12 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     throw new Error('Could not get admin user')
   }
 
-  const userSession: OptionalUserSession = await dbAdapter.session.createUserSession(adminUser)
+  const userSession = await createUserSession(
+    adminUser,
+    DefaultSessionTTL,
+    prisma.session,
+    prisma.userRole
+  )
 
   const request: any = {
     headers: {

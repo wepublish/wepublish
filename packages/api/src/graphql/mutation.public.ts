@@ -1,4 +1,4 @@
-import {Invoice, Subscription} from '@prisma/client'
+import {Invoice, Subscription, User} from '@prisma/client'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
@@ -50,6 +50,7 @@ import {
   createJWTSession,
   createOAuth2Session,
   createSession,
+  createUserSession,
   revokeSessionByToken
 } from './session/session.mutation'
 import {GraphQLSlug} from './slug'
@@ -217,7 +218,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {name, firstName, preferredName, email, address, password, challengeAnswer},
-        {dbAdapter, prisma, loaders, memberContext, createPaymentWithProvider, challenge}
+        {
+          sessionTTL,
+          dbAdapter,
+          prisma,
+          loaders,
+          memberContext,
+          createPaymentWithProvider,
+          challenge
+        }
       ) {
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -254,7 +263,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await dbAdapter.session.createUserSession(user)
+        const session = await createUserSession(
+          user as User,
+          sessionTTL,
+          prisma.session,
+          prisma.userRole
+        )
 
         return {
           user,
@@ -311,7 +325,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           failureURL,
           challengeAnswer
         },
-        {dbAdapter, prisma, loaders, memberContext, challenge, createPaymentWithProvider}
+        {
+          sessionTTL,
+          dbAdapter,
+          prisma,
+          loaders,
+          memberContext,
+          challenge,
+          createPaymentWithProvider
+        }
       ) {
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -377,7 +399,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await dbAdapter.session.createUserSession(user)
+        const session = await createUserSession(
+          user as User,
+          sessionTTL,
+          prisma.session,
+          prisma.userRole
+        )
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
