@@ -30,6 +30,4 @@ export type OptionalUserRole = UserRole | null
 
 export interface DBUserRoleAdapter {
   updateUserRole(args: UpdateUserRoleArgs): Promise<OptionalUserRole>
-
-  getUserRole(name: string): Promise<OptionalUserRole>
 }

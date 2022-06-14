@@ -108,14 +108,35 @@ async function asyncMain() {
       : undefined
   )
 
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.MONGO_URL!
+      }
+    }
+  })
+  await prisma.$connect()
+
   await MongoDBAdapter.initialize({
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-      const editorUserRole = await adapter.userRole.getUserRole('Editor')
-      const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
+      const adminUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Admin'
+            }
+          })
+        )?.id ?? 'fake'
+      const editorUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Editor'
+            }
+          })
+        )?.id ?? 'fake'
 
       await adapter.user.createUser({
         input: {
@@ -147,15 +168,6 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
-
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.MONGO_URL!
-      }
-    }
-  })
-  await prisma.$connect()
 
   const oauth2Providers: Oauth2Provider[] = []
   if (

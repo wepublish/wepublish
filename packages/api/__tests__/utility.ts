@@ -69,12 +69,27 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   }
   let adminUser
 
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.TEST_MONGO_URL!
+      }
+    }
+  })
+  await prisma.$connect()
+
   await MongoDBAdapter.initialize({
     url: process.env.TEST_MONGO_URL!,
     locale: 'en',
     seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
+      const adminUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Admin'
+            }
+          })
+        )?.id ?? 'fake'
 
       adminUser = await adapter.user.createUser({
         input: {
@@ -94,15 +109,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     url: process.env.TEST_MONGO_URL!,
     locale: 'en'
   })
-
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.TEST_MONGO_URL!
-      }
-    }
-  })
-  await prisma.$connect()
 
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),

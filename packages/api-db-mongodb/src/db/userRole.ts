@@ -34,21 +34,6 @@ export class MongoDBUserRoleAdapter implements DBUserRoleAdapter {
     return this.getUserRoleByID(outID)
   }
 
-  async getUserRole(name: string): Promise<OptionalUserRole> {
-    const userRole = await this.userRoles.findOne({name})
-    if (userRole) {
-      return {
-        id: userRole._id,
-        name: userRole.name,
-        description: userRole.description,
-        systemRole: userRole.systemRole,
-        permissionIDs: userRole.permissionIDs
-      }
-    } else {
-      return null
-    }
-  }
-
   async getUserRoleByID(id: string): Promise<OptionalUserRole> {
     const userRole = await this.userRoles.findOne({_id: id})
     if (userRole) {
