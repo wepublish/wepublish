@@ -8,19 +8,10 @@ import {
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {Issuer} from 'openid-client'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
-import {
-  DuplicatePageSlugError,
-  InvalidCredentialsError,
-  InvalidOAuth2TokenError,
-  NotActiveError,
-  NotFound,
-  OAuth2ProviderNotFoundError,
-  UserNotFoundError
-} from '../error'
+import {DuplicatePageSlugError, NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
@@ -79,7 +70,12 @@ import {
   CanUpdatePeerProfile
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
-import {revokeSessionByToken} from './session/session.mutation'
+import {
+  createJWTSession,
+  createOAuth2Session,
+  createSession,
+  revokeSessionByToken
+} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
@@ -92,7 +88,6 @@ import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {createUserRole, deleteUserRoleById} from './user-role/user-role.private-mutation'
 import {deleteUserById} from './user/user.private-mutation'
-import {getUserForCredentials} from './user/user.queries'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 function mapTeaserUnionMap(value: any) {
@@ -229,12 +224,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {email, password}, {dbAdapter, prisma}) {
-        const user = await getUserForCredentials(email, password, prisma.user)
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
+        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
@@ -242,16 +233,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         jwt: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {jwt}, {dbAdapter, prisma, verifyJWT}) {
-        const userID = verifyJWT(jwt)
-
-        const user = await prisma.user.findUnique({
-          where: {id: userID}
-        })
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
+        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
@@ -261,32 +244,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         code: {type: GraphQLNonNull(GraphQLString)},
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {name, code, redirectUri}, {dbAdapter, prisma, oauth2Providers}) {
-        const provider = oauth2Providers.find(provider => provider.name === name)
-        if (!provider) throw new OAuth2ProviderNotFoundError()
-
-        const issuer = await Issuer.discover(provider.discoverUrl)
-        const client = new issuer.Client({
-          client_id: provider.clientId,
-          client_secret: provider.clientKey,
-          redirect_uris: provider.redirectUri,
-          response_types: ['code']
-        })
-
-        const token = await client.callback(redirectUri, {code})
-        if (!token.access_token) throw new InvalidOAuth2TokenError()
-
-        const userInfo = await client.userinfo(token.access_token)
-        if (!userInfo.email) throw new Error('UserInfo did not return an email')
-
-        const user = await prisma.user.findUnique({
-          where: {email: userInfo.email}
-        })
-        if (!user) throw new UserNotFoundError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
+        createOAuth2Session(
+          name,
+          code,
+          redirectUri,
+          sessionTTL,
+          oauth2Providers,
+          prisma.session,
+          prisma.user,
+          prisma.userRole
+        )
     },
 
     revokeSession: {

@@ -33,6 +33,7 @@ import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
 import path from 'path'
 import * as process from 'process'
+import {PrismaClient} from '@prisma/client'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -146,6 +147,15 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
+
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.MONGO_URL!
+      }
+    }
+  })
+  await prisma.$connect()
 
   const oauth2Providers: Oauth2Provider[] = []
   if (
@@ -317,7 +327,7 @@ async function asyncMain() {
     websiteURL,
     mediaAdapter,
     dbAdapter,
-    mongoUrl: process.env.MONGO_URL!,
+    prisma,
     oauth2Providers,
     mailProvider,
     mailContextOptions: {

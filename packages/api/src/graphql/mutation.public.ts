@@ -1,3 +1,5 @@
+import {Invoice, Subscription} from '@prisma/client'
+import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -7,12 +9,9 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
-import {Issuer} from 'openid-client'
-
-import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
-
+import {CommentAuthorType, CommentState} from '../db/comment'
+import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
@@ -21,21 +20,40 @@ import {
   CommentLengthError,
   EmailAlreadyInUseError,
   InternalError,
-  InvalidCredentialsError,
-  InvalidOAuth2TokenError,
   MonthlyAmountNotEnough,
-  NotActiveError,
   NotAuthenticatedError,
   NotAuthorisedError as NotAuthorizedError,
   NotFound,
-  OAuth2ProviderNotFoundError,
   PaymentConfigurationNotAllowed,
   UserInputError,
-  UserNotFoundError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {SendMailType} from '../mails/mailContext'
+import {logger} from '../server'
+import {
+  countRichtextChars,
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  MAX_COMMENT_LENGTH,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
+} from '../utility'
+import {
+  GraphQLChallengeInput,
+  GraphQLPublicComment,
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput
+} from './comment'
+import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPublicSessionWithToken} from './session'
+import {
+  createJWTSession,
+  createOAuth2Session,
+  createSession,
+  revokeSessionByToken
+} from './session/session.mutation'
+import {GraphQLSlug} from './slug'
+import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {
   GraphQLMemberRegistration,
   GraphQLMemberRegistrationAndPayment,
@@ -45,29 +63,6 @@ import {
   GraphQLPublicUserInput,
   GraphQLUserAddressInput
 } from './user'
-import {
-  GraphQLChallengeInput,
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment'
-import {CommentAuthorType, CommentState} from '../db/comment'
-import {
-  countRichtextChars,
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
-  MAX_COMMENT_LENGTH,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND
-} from '../utility'
-import {SendMailType} from '../mails/mailContext'
-import {GraphQLSlug} from './slug'
-import {logger} from '../server'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
-import {SubscriptionDeactivationReason} from '../db/subscription'
-import {GraphQLMetadataPropertyPublicInput} from './common'
-import * as crypto from 'crypto'
-import {getUserForCredentials} from './user/user.queries'
-import {Invoice, Subscription} from '@prisma/client'
-import {revokeSessionByToken} from './session/session.mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -81,14 +76,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
-      async resolve(root, {email, password}, {dbAdapter, prisma}) {
-        const user = await getUserForCredentials(email, password, prisma.user)
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
+        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
@@ -96,20 +85,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         jwt: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        'This mutation allows to create a user session with JSON Web Token by taking the JSON Web Token as an input and returns a session with token',
-      async resolve(root, {jwt}, {dbAdapter, prisma, verifyJWT}) {
-        const userID = verifyJWT(jwt)
-
-        const user = await prisma.user.findUnique({
-          where: {id: userID}
-        })
-
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
+        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
@@ -119,34 +96,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         code: {type: GraphQLNonNull(GraphQLString)},
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        'This mutation allows to create user session with OAuth2 code by taking the name, code and redirect Uri as an input and returns a session with token.',
-      async resolve(root, {name, code, redirectUri}, {dbAdapter, prisma, oauth2Providers}) {
-        const provider = oauth2Providers.find(provider => provider.name === name)
-        if (!provider) throw new OAuth2ProviderNotFoundError()
-        const issuer = await Issuer.discover(provider.discoverUrl)
-        const client = new issuer.Client({
-          client_id: provider.clientId,
-          client_secret: provider.clientKey,
-          redirect_uris: provider.redirectUri,
-          response_types: ['code']
-        })
-        const token = await client.callback(redirectUri, {code})
-        if (!token.access_token) throw new InvalidOAuth2TokenError()
-
-        const userInfo = await client.userinfo(token.access_token)
-        if (!userInfo.email) throw new Error('UserInfo did not return an email')
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: userInfo.email
-          }
-        })
-        if (!user) throw new UserNotFoundError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
+        createOAuth2Session(
+          name,
+          code,
+          redirectUri,
+          sessionTTL,
+          oauth2Providers,
+          prisma.session,
+          prisma.user,
+          prisma.userRole
+        )
     },
 
     revokeActiveSession: {

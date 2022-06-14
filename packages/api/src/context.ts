@@ -33,6 +33,7 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
+import {DefaultSessionTTL} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
 import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
@@ -112,6 +113,7 @@ export interface OAuth2Clients {
 export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
+  readonly sessionTTL: number
 
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
@@ -168,6 +170,7 @@ interface PeerCacheValue {
 export interface ContextOptions {
   readonly hostURL: string
   readonly websiteURL: string
+  readonly sessionTTL?: number
 
   readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
@@ -291,7 +294,8 @@ export async function contextFromRequest(
     mailProvider,
     mailContextOptions,
     paymentProviders,
-    challenge
+    challenge,
+    sessionTTL
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -777,6 +781,7 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
+    sessionTTL: sessionTTL ?? DefaultSessionTTL,
 
     async getOauth2Clients() {
       return await Promise.all(

@@ -1,5 +1,4 @@
 import {
-  Article,
   DBArticleAdapter,
   OptionalArticle,
   PublishArticleArgs,
