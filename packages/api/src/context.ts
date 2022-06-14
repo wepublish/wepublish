@@ -855,11 +855,12 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
-      const payment = await dbAdapter.payment.createPayment({
-        input: {
+      const payment = await prisma.payment.create({
+        data: {
           paymentMethodID,
           invoiceID: invoice.id,
-          state: PaymentState.Created
+          state: PaymentState.Created,
+          modifiedAt: new Date()
         }
       })
 

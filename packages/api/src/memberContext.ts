@@ -639,11 +639,12 @@ export class MemberContext implements MemberContext {
       return
     }
 
-    const payment = await this.dbAdapter.payment.createPayment({
-      input: {
+    const payment = await this.prisma.payment.create({
+      data: {
         paymentMethodID,
         invoiceID: invoice.id,
-        state: PaymentState.Created
+        state: PaymentState.Created,
+        modifiedAt: new Date()
       }
     })
 

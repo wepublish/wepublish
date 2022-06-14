@@ -31,10 +31,6 @@ export interface PaymentInput {
   paymentData?: string | null
 }
 
-export interface CreatePaymentArgs {
-  input: PaymentInput
-}
-
 export interface UpdatePaymentArgs {
   id: string
   input: PaymentInput
@@ -52,6 +48,5 @@ export interface PaymentFilter {
 export type OptionalPayment = Payment | null
 
 export interface DBPaymentAdapter {
-  createPayment(args: CreatePaymentArgs): Promise<Payment>
   updatePayment(args: UpdatePaymentArgs): Promise<OptionalPayment>
 }

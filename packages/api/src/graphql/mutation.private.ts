@@ -12,7 +12,6 @@ import {Issuer} from 'openid-client'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
-import {PaymentState} from '../db/payment'
 import {
   DuplicatePageSlugError,
   InvalidCredentialsError,
@@ -48,6 +47,7 @@ import {
   createPaymentMethod,
   deletePaymentMethodById
 } from './payment-method/payment-method.private-mutation'
+import {createPaymentFromInvoice} from './payment/payment.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
   GraphQLCreatePeerInput,
@@ -66,7 +66,6 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
-  CanCreatePayment,
   CanCreatePaymentMethod,
   CanCreatePeer,
   CanCreateSubscription,
@@ -882,50 +881,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentFromInvoice: {
       type: GraphQLPayment,
       args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      async resolve(root, {input}, {authenticate, loaders, paymentProviders, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePayment, roles)
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
-        const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
-        const paymentProvider = paymentProviders.find(
-          pp => pp.id === paymentMethod?.paymentProviderID
+      resolve: (
+        root,
+        {input},
+        {authenticate, loaders, paymentProviders, dbAdapter, prisma: {payment}}
+      ) =>
+        createPaymentFromInvoice(
+          input,
+          authenticate,
+          paymentProviders,
+          loaders.invoicesByID,
+          loaders.paymentMethodsByID,
+          dbAdapter,
+          payment
         )
-
-        const invoice = await loaders.invoicesByID.load(invoiceID)
-
-        if (!invoice || !paymentProvider) {
-          throw new Error('Invalid data') // TODO: better error handling
-        }
-
-        const payment = await dbAdapter.payment.createPayment({
-          input: {
-            paymentMethodID,
-            invoiceID,
-            state: PaymentState.Created
-          }
-        })
-
-        const intent = await paymentProvider.createIntent({
-          paymentID: payment.id,
-          invoice,
-          saveCustomer: true,
-          successURL,
-          failureURL
-        })
-
-        return await dbAdapter.payment.updatePayment({
-          id: payment.id,
-          input: {
-            state: intent.state,
-            intentID: intent.intentID,
-            intentData: intent.intentData,
-            intentSecret: intent.intentSecret,
-            paymentData: intent.paymentData,
-            paymentMethodID: payment.paymentMethodID,
-            invoiceID: payment.invoiceID
-          }
-        })
-      }
     },
 
     updateInvoice: {
