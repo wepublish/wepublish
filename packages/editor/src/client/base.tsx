@@ -38,11 +38,10 @@ import MehOIcon from '@rsuite/icons/legacy/MehO'
 import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import KeyIcon from '@rsuite/icons/legacy/Key'
+import CogIcon from '@rsuite/icons/legacy/Cog'
 import GlobeIcon from '@rsuite/icons/legacy/Globe'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
-import MenuIcon from '@rsuite/icons/Menu'
 import {useTranslation} from 'react-i18next'
-import CogIcon from '@rsuite/icons/legacy/Cog'
 
 export interface BaseProps {
   children?: ReactNode
@@ -225,12 +224,13 @@ export function Base({children}: BaseProps) {
                     {t('navbar.tokens')}
                   </DropdownItemLink>
                 </Dropdown>
-                <DropdownItemLink
+
+                <NavItemLink
                   active={current?.type === RouteType.SettingList}
                   icon={<CogIcon />}
                   route={SettingListRoute.create({})}>
                   {t('navbar.settings')}
-                </DropdownItemLink>
+                </NavItemLink>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -246,7 +246,7 @@ export function Base({children}: BaseProps) {
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"
-                    icon={<MenuIcon />}
+                    icon={<BarsIcon />}
                   />
                 )}>
                 <DropdownItemLink route={LogoutRoute.create({})}>

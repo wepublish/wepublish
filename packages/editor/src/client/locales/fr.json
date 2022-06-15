@@ -774,7 +774,8 @@
       "users": "Utilisateur/Utilisatrices",
       "usersAndMembers": "Utilisateur/Utilisatrices et membres",
       "myPeerInfo": "Mon profil pair",
-      "peers": "Peers"
+      "peers": "Peers",
+      "settings": "Paramètres"
     },
     "navigation": {
       "overview": {
