@@ -5,7 +5,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 - First value
 + Second value
 
-@@ -34,13 +34,14 @@
+@@ -35,13 +35,14 @@
         </h4>
         <div
           class=\\"rs-drawer-actions\\"
@@ -22,7 +22,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
             userRoles.panels.create
             <span
               class=\\"rs-ripple-pond\\"
-@@ -84,14 +85,15 @@
+@@ -85,14 +86,15 @@
           >
             <input
               aria-describedby=\\"name-help-text\\"
@@ -39,7 +39,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
         </div>
         <div
           class=\\"rs-form-group\\"
-@@ -109,14 +111,15 @@
+@@ -110,14 +112,15 @@
           >
             <input
               aria-describedby=\\"description-help-text\\"
@@ -62,6 +62,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
     <div
       class="rs-drawer-header"
@@ -291,6 +292,7 @@ exports[`User Role Edit Panel should render 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
     <div
       class="rs-drawer-header"
@@ -467,6 +469,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
     <div
       class="rs-drawer-header"

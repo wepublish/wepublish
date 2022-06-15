@@ -5,7 +5,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -34,13 +34,14 @@
+@@ -35,13 +35,14 @@
         </h4>
         <div
           class=\\"rs-drawer-actions\\"
@@ -22,7 +22,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             userList.panels.create
             <span
               class=\\"rs-ripple-pond\\"
-@@ -91,10 +92,11 @@
+@@ -92,10 +93,11 @@
               >
                 <input
                   aria-describedby=\\"firstName-help-text\\"
@@ -34,7 +34,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   type=\\"text\\"
                   value=\\"\\"
                 />
-@@ -116,14 +118,15 @@
+@@ -117,14 +119,15 @@
               >
                 <input
                   aria-describedby=\\"name-help-text\\"
@@ -51,7 +51,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -137,10 +140,11 @@
+@@ -138,10 +141,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -63,7 +63,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -161,14 +165,15 @@
+@@ -162,14 +166,15 @@
               >
                 <input
                   aria-describedby=\\"email-help-text\\"
@@ -80,7 +80,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -182,10 +187,11 @@
+@@ -183,10 +188,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -92,7 +92,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -202,10 +208,11 @@
+@@ -203,10 +209,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -104,7 +104,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -222,10 +229,11 @@
+@@ -223,10 +230,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -116,7 +116,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -242,10 +250,11 @@
+@@ -243,10 +251,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -128,7 +128,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -262,10 +271,11 @@
+@@ -263,10 +272,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -140,7 +140,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -282,10 +292,11 @@
+@@ -283,10 +293,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
@@ -152,7 +152,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                   value=\\"\\"
                 />
               </div>
-@@ -298,18 +309,19 @@
+@@ -299,18 +310,19 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.active
@@ -174,7 +174,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                 />
                 <span
                   class=\\"rs-toggle-presentation\\"
-@@ -336,14 +348,15 @@
+@@ -337,14 +349,15 @@
               >
                 <input
                   aria-describedby=\\"password-help-text\\"
@@ -198,7 +198,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -353,11 +353,11 @@
+@@ -354,11 +354,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -211,7 +211,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -367,17 +367,54 @@
+@@ -368,17 +368,54 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -277,7 +277,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -362,11 +362,11 @@
+@@ -363,11 +363,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -290,7 +290,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -376,54 +376,17 @@
+@@ -377,54 +377,17 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -355,6 +355,7 @@ exports[`User Edit Panel should render 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
     <div
       class="rs-drawer-header"
@@ -760,6 +761,7 @@ exports[`User Edit Panel should render with ID 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
     <div
       class="rs-drawer-header"
