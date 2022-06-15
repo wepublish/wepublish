@@ -35,6 +35,18 @@ export function SettingList() {
     name: SettingName.Default
   })
 
+  const [invoiceReminderTries, setInvoiceReminderTries] = useState<Setting>({
+    id: '',
+    value: 0,
+    name: SettingName.Default
+  })
+
+  const [invoiceReminderFreq, setInvoiceReminderFreq] = useState<Setting>({
+    id: '',
+    value: 0,
+    name: SettingName.Default
+  })
+
   useEffect(() => {
     if (settingListData?.settings) {
       const allowGuestCommentSetting = settingListData?.settings?.find(
@@ -56,6 +68,16 @@ export function SettingList() {
         setting => setting.name === SettingName.ResetPasswordJwtExpiresMin
       )
       if (resetPwdJwtExpiresSetting) setResetPwdJwtExpiresMin(resetPwdJwtExpiresSetting)
+
+      const invoiceRetries = settingListData?.settings?.find(
+        setting => setting.name === SettingName.InvoiceReminderMaxTries
+      )
+      if (invoiceRetries) setInvoiceReminderTries(invoiceRetries)
+
+      const invoiceFreq = settingListData?.settings?.find(
+        setting => setting.name === SettingName.InvoiceReminderFreq
+      )
+      if (invoiceFreq) setInvoiceReminderFreq(invoiceFreq)
     }
   }, [settingListData])
 
@@ -68,7 +90,9 @@ export function SettingList() {
       allowGuestComment,
       sendLoginJwtExpiresMin,
       resetPwdJwtExpiresMin,
-      peeringTimeoutMs
+      peeringTimeoutMs,
+      invoiceReminderTries,
+      invoiceReminderFreq
     ]
     allSettings.map(
       async setting =>
@@ -80,7 +104,7 @@ export function SettingList() {
         {t('settingList.successMessage')}
       </Notification>
     )
-    refetch()
+    await refetch()
   }
 
   useEffect(() => {
@@ -178,6 +202,53 @@ export function SettingList() {
               })
             }
             postfix={t('settingList.ms')}
+          />
+        </Form.Group>
+        <Form.Group>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
+          <Form.ControlLabel>invoice reminder retries</Form.ControlLabel>
+          <InputNumber
+            value={invoiceReminderTries.value}
+            min={
+              invoiceReminderTries.settingRestriction?.minValue
+                ? invoiceReminderTries.settingRestriction.minValue
+                : undefined
+            }
+            max={
+              invoiceReminderTries.settingRestriction?.maxValue
+                ? invoiceReminderTries.settingRestriction.maxValue
+                : undefined
+            }
+            onChange={value =>
+              setInvoiceReminderTries({
+                ...invoiceReminderTries,
+                value: value
+              })
+            }
+          />
+        </Form.Group>
+        <Form.Group>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
+          <Form.ControlLabel>invoice reminder frequency</Form.ControlLabel>
+          <InputNumber
+            value={invoiceReminderFreq.value}
+            min={
+              invoiceReminderFreq.settingRestriction?.minValue
+                ? invoiceReminderFreq.settingRestriction.minValue
+                : undefined
+            }
+            max={
+              invoiceReminderFreq.settingRestriction?.maxValue
+                ? invoiceReminderFreq.settingRestriction.maxValue
+                : undefined
+            }
+            onChange={value =>
+              setInvoiceReminderFreq({
+                ...invoiceReminderFreq,
+                value: value
+              })
+            }
+            postfix={t('settingList.days')}
           />
         </Form.Group>
         <ButtonLink

@@ -942,12 +942,24 @@ export const Migrations: Migration[] = [
         value: 1440,
         settingRestriction: {minValue: 1, maxValue: 10080}
       }
+      const invoiceReminderFreq: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_FREQ,
+        value: 3,
+        settingRestriction: {minValue: 0, maxValue: 30}
+      }
+      const invoiceReminderTries: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_MAX_TRIES,
+        value: 5,
+        settingRestriction: {minValue: 0, maxValue: 10}
+      }
 
       await settingsDoc.insertMany([
         peeringTimeout,
         allowAnonCommenting,
         sendLoginJWTExpires,
-        resetPwdExpires
+        resetPwdExpires,
+        invoiceReminderFreq,
+        invoiceReminderTries
       ])
     }
   }

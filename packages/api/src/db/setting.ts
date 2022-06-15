@@ -11,7 +11,9 @@ export enum SettingName {
   ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
-  PEERING_TIMEOUT_MS = 'peeringTimeoutInMs'
+  PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
+  INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
+  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries'
 }
 
 export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>

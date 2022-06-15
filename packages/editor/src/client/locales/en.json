@@ -1029,7 +1029,8 @@
       "passwordToken": "Password reset token validity period",
       "peerToken": "Peer token validity period",
       "minutes": "minutes",
-      "ms": "milliseconds"
+      "ms": "milliseconds",
+      "days": "days"
     }
   }
 }

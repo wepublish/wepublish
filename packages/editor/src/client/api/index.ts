@@ -1748,7 +1748,9 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS'
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
 }
 
 export type SettingRestriction = {

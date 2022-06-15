@@ -8,7 +8,7 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS
 } from './utility'
-import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
+import {MemberPlan, PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
@@ -16,6 +16,7 @@ import {MailContext, SendMailType} from './mails/mailContext'
 import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {PaymentMethod} from './db/paymentMethod'
+import {SettingName} from './db/setting'
 
 export interface HandleSubscriptionChangeProps {
   subscription: Subscription
@@ -122,6 +123,8 @@ export function calculateAmountForPeriodicity(
 interface GetNextReminderAndDeactivationDateProps {
   sentReminderAt: Date
   createdAt: Date
+  frequency: number
+  maxAttempts: number
 }
 
 interface ReminderAndDeactivationDate {
@@ -131,10 +134,12 @@ interface ReminderAndDeactivationDate {
 
 function getNextReminderAndDeactivationDate({
   sentReminderAt,
-  createdAt
+  createdAt,
+  frequency,
+  maxAttempts
 }: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
-  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') || 3
-  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') || 5
+  const invoiceReminderFrequencyInDays = frequency || 3
+  const invoiceReminderMaxTries = maxAttempts || 5
 
   const nextReminder = new Date(
     sentReminderAt.getTime() +
@@ -474,9 +479,17 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequency = Number(
+          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))?.value
+        )
+        const maxAttempts = Number(
+          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))?.value
+        )
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
@@ -656,9 +669,17 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequency = Number(
+          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))?.value
+        )
+        const maxAttempts = Number(
+          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))?.value
+        )
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
