@@ -104,7 +104,7 @@ model Image {
   focalPoint  ImagesFocalPoint?
   format      String
   license     String?
-  link        String
+  link        String?
   mimeType    String
   modifiedAt  DateTime          @db.Date //@updatedAt
   source      String?
@@ -121,6 +121,7 @@ model Image {
   @@index([modifiedAt], map: "modifiedAt_-1")
   @@index([title], map: "title_1")
   @@index([tags], map: "tags_1")
+  @@map("images")
 }
 
 enum CommentItemType {
