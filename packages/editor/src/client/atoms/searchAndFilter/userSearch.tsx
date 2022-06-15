@@ -1,4 +1,4 @@
-import {Message, SelectPicker, toaster} from 'rsuite'
+import {Form, Message, SelectPicker, toaster} from 'rsuite'
 import React, {useEffect, useState} from 'react'
 import {FullUserFragment, useUserListQuery} from '../../api'
 
@@ -6,7 +6,7 @@ export interface UserSearchProps {
   user?: FullUserFragment | null
   placeholder?: string
   resetFilterKey?: string
-  name?: string
+  name: string
   onUpdateUser(user: FullUserFragment | undefined | null): void
 }
 
@@ -72,40 +72,46 @@ export function UserSearch({
     if (resetFilterKey) {
       return (
         <>
-          <SelectPicker
-            key={`user-id-${resetFilterKey}`}
-            placeholder={placeholder}
-            block
-            name={name}
-            disabled={loading || !!error}
-            data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
-            cleanable
-            onChange={userId => setUser(userId)}
-            onSearch={searchString => {
-              setUserSearch(searchString)
-              refetch()
-            }}
-          />
+          <Form.Group>
+            <Form.Control
+              key={`user-id-${resetFilterKey}`}
+              placeholder={placeholder}
+              block
+              name={name}
+              disabled={loading || !!error}
+              data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
+              cleanable
+              accepter={SelectPicker}
+              onChange={(userId: any) => setUser(userId)}
+              onSearch={(searchString: any) => {
+                setUserSearch(searchString)
+                refetch()
+              }}
+            />
+          </Form.Group>
         </>
       )
     }
     return (
       <>
-        <SelectPicker
-          key={`user-id-${resetFilterKey}`}
-          placeholder={placeholder}
-          block
-          disabled={loading || !!error}
-          data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
-          cleanable
-          name={name}
-          onChange={userId => setUser(userId)}
-          onSearch={searchString => {
-            setUserSearch(searchString)
-            refetch()
-          }}
-          value={user?.id}
-        />
+        <Form.Group>
+          <Form.Control
+            key={`user-id-${resetFilterKey}`}
+            placeholder={placeholder}
+            block
+            disabled={loading || !!error}
+            data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
+            cleanable
+            name={name}
+            onChange={(userId: any) => setUser(userId)}
+            onSearch={(searchString: any) => {
+              setUserSearch(searchString)
+              refetch()
+            }}
+            value={user?.id}
+            accepter={SelectPicker}
+          />
+        </Form.Group>
       </>
     )
   }

@@ -356,9 +356,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
         fluid
+        style={{height: '100%'}}
         formValue={{
           memberPlan: memberPlan?.name,
-          user: user?.name,
+          user: user,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity: paymentPeriodicity,
           currency: monthlyAmount

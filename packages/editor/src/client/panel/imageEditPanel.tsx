@@ -249,7 +249,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
       <Form
         fluid
         model={validationModel}
-        onSubmit={validationPassed => validationPassed && handleSave()}>
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>
             {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}

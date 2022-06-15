@@ -503,7 +503,11 @@ export function ArticleMetadataPanel({
 
   return (
     <>
-      <Form fluid model={model} onSubmit={validationPassed => validationPassed && onClose?.()}>
+      <Form
+        fluid
+        model={model}
+        onSubmit={validationPassed => validationPassed && onClose?.()}
+        style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 

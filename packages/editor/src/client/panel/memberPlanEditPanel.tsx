@@ -210,7 +210,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name: name, currency: amountPerMonthMin}}>
+        formValue={{name: name, currency: amountPerMonthMin}}
+        style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}

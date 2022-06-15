@@ -216,6 +216,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
+        style={{height: '100%'}}
         formValue={{name: name, email: email, password: password}}>
         <Drawer.Header>
           <Drawer.Title>

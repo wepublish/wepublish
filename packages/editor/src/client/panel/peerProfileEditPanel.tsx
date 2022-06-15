@@ -136,6 +136,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         fluid
         ref={form}
         model={validationModel}
+        style={{height: '100%'}}
         formValue={{
           name: name,
           callToActionText: callToActionText,
@@ -174,12 +175,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}
               removeImage={() => setLogoImage(undefined)}
             />
-            <Form.Group style={{height: '45px'}}>
+            <Form.Group
+            // style={{height: '45px'}}
+            >
               <Form.Control
                 style={{display: 'none'}}
                 name="profileImg"
                 value={logoImage?.id || ''}
-                onChange={() => console.log('hello')}
               />
             </Form.Group>
           </Panel>

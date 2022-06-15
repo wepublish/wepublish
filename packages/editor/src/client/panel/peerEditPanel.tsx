@@ -139,7 +139,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
         fluid
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
-        formValue={{name: name, url: urlString, token: token}}>
+        formValue={{name: name, url: urlString, token: token}}
+        style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}

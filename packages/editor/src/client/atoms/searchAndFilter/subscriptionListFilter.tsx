@@ -128,171 +128,174 @@ export function SubscriptionListFilter({
 
   return (
     <>
-      <Form.Group style={formInputStyle}>
-        <UserSearch
-          resetFilterKey={resetFilterKey}
-          user={user}
-          onUpdateUser={user => {
-            setUser(user)
-            updateFilter({
-              userID: user?.id
-            })
-          }}
-          placeholder={t('subscriptionList.filter.searchPlaceholder')}
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <SelectPicker
-          key={`member-plan-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.selectMemberPlan')}
-          block
-          disabled={isDisabled}
-          data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
-          onChange={value =>
-            updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
-          }
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <SelectPicker
-          key={`payment-periodicity-${resetFilterKey}`}
-          placeholder={t('memberPlanList.paymentPeriodicities')}
-          block
-          disabled={isDisabled}
-          data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-            value: pp,
-            label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-          }))}
-          onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <SelectPicker
-          key={`payment-method-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.paymentMethod')}
-          block
-          disabled={isDisabled}
-          data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-          onChange={value =>
-            updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
-          }
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <DateRangePicker
-          key={`starts-at-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.startsAt')}
-          block
-          onChange={value => {
-            if (value && value[0] && value[1]) {
+      <Form>
+        <Form.Group style={formInputStyle}>
+          <UserSearch
+            name="user"
+            resetFilterKey={resetFilterKey}
+            user={user}
+            onUpdateUser={user => {
+              setUser(user)
               updateFilter({
-                startsAtFrom: {
-                  date: value[0]?.toISOString(),
-                  comparison: DateFilterComparison.Greater
-                },
-                startsAtTo: {
-                  date: value[1]?.toISOString(),
-                  comparison: DateFilterComparison.Lower
-                }
+                userID: user?.id
               })
+            }}
+            placeholder={t('subscriptionList.filter.searchPlaceholder')}
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <SelectPicker
+            key={`member-plan-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.selectMemberPlan')}
+            block
+            disabled={isDisabled}
+            data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
+            onChange={value =>
+              updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
             }
-          }}
-          onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
-          placement="auto"
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <SelectPicker
-          key={`auto-renew-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.autoRenew')}
-          searchable={false}
-          data={[
-            {
-              value: 'true',
-              label: t('yes')
-            },
-            {
-              value: 'false',
-              label: t('no')
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <SelectPicker
+            key={`payment-periodicity-${resetFilterKey}`}
+            placeholder={t('memberPlanList.paymentPeriodicities')}
+            block
+            disabled={isDisabled}
+            data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+              value: pp,
+              label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+            }))}
+            onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <SelectPicker
+            key={`payment-method-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.paymentMethod')}
+            block
+            disabled={isDisabled}
+            data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+            onChange={value =>
+              updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
             }
-          ]}
-          block
-          placement="auto"
-          onChange={value => updateFilter({autoRenew: value === 'true'})}
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <SelectPicker
-          key={`deactivation-reason-${resetFilterKey}`}
-          placeholder={t('subscriptionList.filter.deactivationReason')}
-          searchable={false}
-          data={[
-            {
-              value: SubscriptionDeactivationReason.None,
-              label: t('subscriptionList.filter.reasonNone')
-            },
-            {
-              value: SubscriptionDeactivationReason.UserSelfDeactivated,
-              label: t('subscriptionList.filter.reasonUserSelfDeactivated')
-            },
-            {
-              value: SubscriptionDeactivationReason.InvoiceNotPaid,
-              label: t('subscriptionList.filter.reasonInvoiceNotPaid')
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <DateRangePicker
+            key={`starts-at-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.startsAt')}
+            block
+            onChange={value => {
+              if (value && value[0] && value[1]) {
+                updateFilter({
+                  startsAtFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  startsAtTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
+            placement="auto"
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <SelectPicker
+            key={`auto-renew-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.autoRenew')}
+            searchable={false}
+            data={[
+              {
+                value: 'true',
+                label: t('yes')
+              },
+              {
+                value: 'false',
+                label: t('no')
+              }
+            ]}
+            block
+            placement="auto"
+            onChange={value => updateFilter({autoRenew: value === 'true'})}
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <SelectPicker
+            key={`deactivation-reason-${resetFilterKey}`}
+            placeholder={t('subscriptionList.filter.deactivationReason')}
+            searchable={false}
+            data={[
+              {
+                value: SubscriptionDeactivationReason.None,
+                label: t('subscriptionList.filter.reasonNone')
+              },
+              {
+                value: SubscriptionDeactivationReason.UserSelfDeactivated,
+                label: t('subscriptionList.filter.reasonUserSelfDeactivated')
+              },
+              {
+                value: SubscriptionDeactivationReason.InvoiceNotPaid,
+                label: t('subscriptionList.filter.reasonInvoiceNotPaid')
+              }
+            ]}
+            block
+            placement="auto"
+            onChange={value => updateFilter({deactivationReason: value})}
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <DateRangePicker
+            key={`deactivation-date-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.deactivation.date')}
+            block
+            placement="auto"
+            onChange={value => {
+              if (value && value[0] && value[1]) {
+                updateFilter({
+                  deactivationDateFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  deactivationDateTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() =>
+              updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
             }
-          ]}
-          block
-          placement="auto"
-          onChange={value => updateFilter({deactivationReason: value})}
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <DateRangePicker
-          key={`deactivation-date-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.deactivation.date')}
-          block
-          placement="auto"
-          onChange={value => {
-            if (value && value[0] && value[1]) {
-              updateFilter({
-                deactivationDateFrom: {
-                  date: value[0]?.toISOString(),
-                  comparison: DateFilterComparison.Greater
-                },
-                deactivationDateTo: {
-                  date: value[1]?.toISOString(),
-                  comparison: DateFilterComparison.Lower
-                }
-              })
-            }
-          }}
-          onClean={() =>
-            updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
-          }
-        />
-      </Form.Group>
-      <Form.Group style={formInputStyle}>
-        <DateRangePicker
-          key={`payed-until-${resetFilterKey}`}
-          placeholder={t('userSubscriptionEdit.payedUntil')}
-          block
-          placement="auto"
-          onChange={value => {
-            if (value && value[0] && value[1]) {
-              updateFilter({
-                paidUntilFrom: {
-                  date: value[0]?.toISOString(),
-                  comparison: DateFilterComparison.Greater
-                },
-                paidUntilTo: {
-                  date: value[1]?.toISOString(),
-                  comparison: DateFilterComparison.Lower
-                }
-              })
-            }
-          }}
-          onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
-        />
-      </Form.Group>
+          />
+        </Form.Group>
+        <Form.Group style={formInputStyle}>
+          <DateRangePicker
+            key={`payed-until-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.payedUntil')}
+            block
+            placement="auto"
+            onChange={value => {
+              if (value && value[0] && value[1]) {
+                updateFilter({
+                  paidUntilFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  paidUntilTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
+          />
+        </Form.Group>
+      </Form>
       {resetFilterView()}
     </>
   )

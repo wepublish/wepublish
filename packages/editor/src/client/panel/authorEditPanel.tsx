@@ -156,7 +156,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name: name}}>
+        formValue={{name: name}}
+        style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
