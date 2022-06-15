@@ -359,7 +359,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         style={{height: '100%'}}
         formValue={{
           memberPlan: memberPlan?.name,
-          user: user,
+          user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity: paymentPeriodicity,
           currency: monthlyAmount
@@ -550,4 +550,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
       </Form>
     </>
   )
+}
+function ObjectType() {
+  throw new Error('Function not implemented.')
 }

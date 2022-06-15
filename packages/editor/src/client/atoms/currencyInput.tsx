@@ -30,25 +30,25 @@ export function CurrencyInput({
 
   return (
     <div>
-      <Form.Group>
-        <InputGroup inside>
-          <Form.Control
-            value={amount as string}
-            name={name}
-            disabled={disabled}
-            onChange={(amount: string) => {
-              amount = toFloat(amount)
-              setAmount(amount)
-            }}
-            onBlur={() => {
-              if (amount) {
-                onChange(parseFloat(amount as string) * 100)
-              }
-            }}
-          />
-          <InputGroup.Addon>{currency}</InputGroup.Addon>
-        </InputGroup>
-      </Form.Group>
+      {/* <Form.Group> */}
+      <InputGroup inside>
+        <Form.Control
+          value={amount as string}
+          name={name}
+          disabled={disabled}
+          onChange={(amount: string) => {
+            amount = toFloat(amount)
+            setAmount(amount)
+          }}
+          onBlur={() => {
+            if (amount) {
+              onChange(parseFloat(amount as string) * 100)
+            }
+          }}
+        />
+        <InputGroup.Addon>{currency}</InputGroup.Addon>
+      </InputGroup>
+      {/* </Form.Group> */}
     </div>
   )
 }
