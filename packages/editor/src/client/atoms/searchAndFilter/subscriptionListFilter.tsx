@@ -45,7 +45,8 @@ export function SubscriptionListFilter({
 
   const formInputStyle = {
     marginRight: '15px',
-    marginTop: '15px'
+    marginTop: '0',
+    marginBottom: '10px'
   }
 
   /**
@@ -128,7 +129,7 @@ export function SubscriptionListFilter({
 
   return (
     <>
-      <Form>
+      <Form style={{display: 'flex', flexWrap: 'wrap', marginTop: '15px'}}>
         <Form.Group style={formInputStyle}>
           <UserSearch
             name="user"
