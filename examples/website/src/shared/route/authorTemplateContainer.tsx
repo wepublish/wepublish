@@ -59,7 +59,7 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
   const authorID = author?.id ?? ''
 
   const {data: articlesData, fetchMore, loading: isLoadingArticles} = useListArticlesQuery({
-    variables: {authors: [authorID], take: take, cursor: null},
+    variables: {authors: [authorID], take, cursor: null},
     skip: author == null
   })
 
@@ -87,7 +87,7 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
         }
       },
       variables: {
-        take: take,
+        take,
         cursor: articlesData.articles.pageInfo.endCursor,
         authors: [authorID]
       }

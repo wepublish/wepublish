@@ -200,7 +200,7 @@ enum MailLogState {
   delivered  @map("delivered")
   deferred   @map("deferred")
   bounced    @map("bounced")
-  rejected   @map("rejecte")
+  rejected   @map("rejected")
 }
 
 model MailLog {

@@ -27,11 +27,11 @@ export function ArticleFooterContainer({
   const take = 4
 
   const {data, loading} = useListArticlesQuery({
-    variables: {filter: tags.length >= 1 ? tags : undefined, take: take}
+    variables: {filter: tags.length >= 1 ? tags : undefined, take}
   })
 
   const {data: fallbackData, loading: fallbackLoading} = useListArticlesQuery({
-    variables: {take: take}
+    variables: {take}
   })
 
   const tagArticles = data?.articles.nodes
