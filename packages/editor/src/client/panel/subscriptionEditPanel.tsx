@@ -551,6 +551,3 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     </>
   )
 }
-function ObjectType() {
-  throw new Error('Function not implemented.')
-}
