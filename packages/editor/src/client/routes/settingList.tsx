@@ -8,7 +8,9 @@ import {ButtonLink} from '../route'
 export function SettingList() {
   const {t} = useTranslation()
 
-  const {data: settingListData, refetch, error: fetchError} = useSettingListQuery()
+  const {data: settingListData, refetch, error: fetchError} = useSettingListQuery({
+    fetchPolicy: 'network-only'
+  })
 
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
@@ -58,7 +60,7 @@ export function SettingList() {
   }, [settingListData])
 
   const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'network-only'
   })
 
   async function handleSettingListUpdate() {
@@ -73,12 +75,12 @@ export function SettingList() {
         await updateSetting({variables: {id: setting.id, input: {value: setting.value}}})
     )
 
-    await refetch()
     toaster.push(
       <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
         {t('settingList.successMessage')}
       </Notification>
     )
+    refetch()
   }
 
   useEffect(() => {
@@ -178,7 +180,11 @@ export function SettingList() {
             postfix={t('settingList.ms')}
           />
         </Form.Group>
-        <ButtonLink appearance="primary" onClick={handleSettingListUpdate}>
+        <ButtonLink
+          appearance="primary"
+          onClick={async () => {
+            await handleSettingListUpdate()
+          }}>
           {t('settingList.save')}
         </ButtonLink>
       </Form>
