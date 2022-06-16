@@ -36,7 +36,7 @@ import {OptionalPublicArticle} from './db/article'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
-import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
+import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {User} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
@@ -116,7 +116,7 @@ export interface Context {
   readonly sessionTTL: number
   readonly hashCostFactor: number
 
-  readonly session: OptionalSession
+  readonly session: Session | null
   readonly loaders: DataLoaderContext
 
   readonly mailContext: MailContext
@@ -225,7 +225,7 @@ const getSessionByToken = async (
   tokenClient: PrismaClient['token'],
   userClient: PrismaClient['user'],
   userRoleClient: PrismaClient['userRole']
-): Promise<OptionalSession> => {
+): Promise<Session | null> => {
   const [tokenMatch, session] = await Promise.all([
     tokenClient.findFirst({
       where: {

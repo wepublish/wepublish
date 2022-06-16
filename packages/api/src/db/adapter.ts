@@ -1,5 +1,4 @@
 import {DBUserAdapter} from './user'
-import {DBSessionAdapter} from './session'
 import {DBNavigationAdapter} from './navigation'
 import {DBAuthorAdapter} from './author'
 import {DBImageAdapter} from './image'
@@ -20,7 +19,6 @@ export interface DBAdapter {
   readonly user: DBUserAdapter
   readonly subscription: DBSubscriptionAdapter
   readonly userRole: DBUserRoleAdapter
-  readonly session: DBSessionAdapter
   readonly navigation: DBNavigationAdapter
   readonly author: DBAuthorAdapter
   readonly image: DBImageAdapter

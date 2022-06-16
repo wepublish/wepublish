@@ -24,12 +24,4 @@ export interface UserSession {
   token: string
 }
 
-export type OptionalUserSession = UserSession | null
-
 export type Session = TokenSession | UserSession
-export type OptionalSession = Session | null
-
-export interface DBSessionAdapter {
-  // The extensions will be as long as sessionTTL inside the DBSessionAdapter
-  extendUserSessionByToken(token: string): Promise<OptionalUserSession>
-}

@@ -157,16 +157,6 @@ export interface DBSubscription {
   deactivation: SubscriptionDeactivation | null
 }
 
-export interface DBSession {
-  _id: any
-
-  createdAt: Date
-  expiresAt: Date
-
-  userID: string
-  token: string
-}
-
 export interface DBNavigation {
   _id: any
 
