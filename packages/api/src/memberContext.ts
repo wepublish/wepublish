@@ -8,7 +8,7 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS
 } from './utility'
-import {MemberPlan, PaymentPeriodicity} from './db/memberPlan'
+import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
