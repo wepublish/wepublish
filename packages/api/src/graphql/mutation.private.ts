@@ -61,7 +61,6 @@ import {
   CanCreatePeer,
   CanCreateSubscription,
   CanCreateUser,
-  CanCreateUserRole,
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
@@ -86,7 +85,11 @@ import {
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
-import {createUserRole, deleteUserRoleById} from './user-role/user-role.private-mutation'
+import {
+  createUserRole,
+  deleteUserRoleById,
+  updateUserRole
+} from './user-role/user-role.private-mutation'
 import {createAdminUser, deleteUserById} from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
@@ -482,11 +485,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserRoleInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUserRole, roles)
-        return dbAdapter.userRole.updateUserRole({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {userRole}}) =>
+        updateUserRole(id, input, authenticate, userRole)
     },
 
     deleteUserRole: {

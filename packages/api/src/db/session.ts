@@ -1,5 +1,5 @@
+import {UserRole} from '@prisma/client'
 import {User} from './user'
-import {UserRole} from './userRole'
 
 export enum SessionType {
   User = 'user',

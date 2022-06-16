@@ -8,7 +8,6 @@ import {Page} from './db/page'
 import {Author} from './db/author'
 import {Image} from './db/image'
 import {Navigation} from './db/navigation'
-import {UserRole} from './db/userRole'
 import {Invoice} from './db/invoice'
 import {MailLog} from './db/mailLog'
 import {MemberPlan} from './db/memberPlan'
@@ -69,9 +68,6 @@ export const subscriptionModelEvents = new EventEmitter() as SubscriptionModelEv
 export type UserModelEventsEmitter = TypedEmitter<ModelEvents<User>>
 export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 
-export type UserRoleModelEventsEmitter = TypedEmitter<ModelEvents<UserRole>>
-export const userRoleModelEvents = new EventEmitter() as UserRoleModelEventsEmitter
-
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
@@ -86,7 +82,6 @@ export type EventsEmitter =
   | PeerModelEventsEmitter
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
-  | UserRoleModelEventsEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -162,11 +157,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'user',
     methods: ['create', 'update', 'delete'],
     eventEmitter: userModelEvents
-  },
-  {
-    key: 'userRole',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: userRoleModelEvents
   }
 ]
 

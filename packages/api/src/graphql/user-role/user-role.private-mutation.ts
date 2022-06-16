@@ -37,3 +37,28 @@ export const createUserRole = (
     data: {...input, systemRole: false, modifiedAt: new Date()}
   })
 }
+
+export const updateUserRole = async (
+  id: string,
+  input: Omit<Prisma.UserRoleUncheckedUpdateInput, 'modifiedAt' | 'systemRole'>,
+  authenticate: Context['authenticate'],
+  userRole: PrismaClient['userRole']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateUserRole, roles)
+
+  const role = await userRole.findUnique({
+    where: {id}
+  })
+
+  if (role?.systemRole) {
+    throw new Error('Can not change SystemRoles')
+  }
+
+  return userRole.update({
+    where: {
+      id
+    },
+    data: input
+  })
+}
