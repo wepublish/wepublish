@@ -37,3 +37,7 @@
 
 * [Setup Commenting](commenting.md)
 * [Email Templates](emailtemplates.md)
+
+## API
+### Environment Variables
+- MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, not batch maxima are considered. Possible values: `number` or any other value.

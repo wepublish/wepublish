@@ -323,9 +323,10 @@ export class MemberContext implements MemberContext {
 
     const subscriptionsPaidUntil: Subscription[] = []
     const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || '10000')
+    const noMaxBatch = !!isNaN(maxSubscriptionBatch)
     let hasMore = true
     let skip = 0
-    while (hasMore && skip < maxSubscriptionBatch) {
+    while (hasMore && (noMaxBatch || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
         limit: {count: 100, type: LimitType.First, skip},
@@ -346,7 +347,7 @@ export class MemberContext implements MemberContext {
     const subscriptionPaidNull: Subscription[] = []
     hasMore = true
     skip = 0
-    while (hasMore && skip < maxSubscriptionBatch) {
+    while (hasMore && (noMaxBatch || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
         limit: {count: 100, type: LimitType.First, skip},
