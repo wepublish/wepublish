@@ -243,7 +243,7 @@ export class MemberContext implements MemberContext {
       ) {
         const period = periods[periods.length - 1]
         const invoice = await this.dbAdapter.invoice.getInvoiceByID(period.invoiceID)
-        // only return the invoice if it hasn't been canceled. Otherwise
+        // only return the invoice if it hasn't been canceled. Otherwise,
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
           return invoice
@@ -322,14 +322,16 @@ export class MemberContext implements MemberContext {
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
     const subscriptionsPaidUntil: Subscription[] = []
-    const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || '10000')
+    const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
+    const batchSize =
+      !isNaN(maxSubscriptionBatch) && maxSubscriptionBatch < 100 ? maxSubscriptionBatch : 100
     let hasMore = true
     let skip = 0
     // if no MAX_AUTO_RENEW_SUBSCRIPTION_BATCH is set, do not consider any max batches
     while (hasMore && (isNaN(maxSubscriptionBatch) || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
+        limit: {count: batchSize, type: LimitType.First, skip},
         order: SortOrder.Ascending,
         sort: SubscriptionSort.CreatedAt,
         filter: {
@@ -340,7 +342,7 @@ export class MemberContext implements MemberContext {
       })
 
       hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
+      skip += batchSize
       subscriptionsPaidUntil.push(...subscriptions.nodes)
     }
 
@@ -350,7 +352,7 @@ export class MemberContext implements MemberContext {
     while (hasMore && (isNaN(maxSubscriptionBatch) || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
+        limit: {count: batchSize, type: LimitType.First, skip},
         order: SortOrder.Ascending,
         sort: SubscriptionSort.CreatedAt,
         filter: {
@@ -361,7 +363,7 @@ export class MemberContext implements MemberContext {
       })
 
       hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
+      skip += batchSize
       subscriptionPaidNull.push(...subscriptions.nodes)
     }
 
