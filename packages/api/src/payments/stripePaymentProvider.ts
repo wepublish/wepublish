@@ -8,8 +8,8 @@ import {
   WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
-import {PaymentState} from '../db/payment'
 import {logger} from '../server'
+import {PaymentState} from '@prisma/client'
 
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -25,13 +25,13 @@ function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
     case 'requires_payment_method':
     case 'requires_confirmation':
     case 'requires_action':
-      return PaymentState.RequiresUserAction
+      return PaymentState.requiresUserAction
     case 'processing':
-      return PaymentState.Processing
+      return PaymentState.processing
     case 'succeeded':
-      return PaymentState.Paid
+      return PaymentState.paid
     case 'canceled':
-      return PaymentState.Canceled
+      return PaymentState.canceled
     default:
       return null
   }
@@ -165,7 +165,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
         intent = {
           id: 'unknown_error',
           error,
-          state: PaymentState.RequiresUserAction
+          state: PaymentState.requiresUserAction
         }
         errorCode = 'unknown_error'
       }
@@ -182,7 +182,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      state: state ?? PaymentState.Submitted,
+      state: state ?? PaymentState.submitted,
       errorCode
     }
   }

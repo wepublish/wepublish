@@ -10,7 +10,6 @@ import {
   PaymentProviderCustomer,
   RichTextNode,
   CommentRevision,
-  PaymentState,
   UserAddress,
   UserOAuth2Account,
   SubscriptionPeriod,
@@ -21,7 +20,8 @@ import {
   InvoiceItem,
   MailLogState,
   MetadataProperty,
-  PaymentPeriodicity
+  PaymentPeriodicity,
+  PaymentState
 } from '@prisma/client'
 
 export enum CollectionName {

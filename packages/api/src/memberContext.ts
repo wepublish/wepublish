@@ -4,12 +4,12 @@ import {
   MetadataProperty,
   PaymentMethod,
   PaymentPeriodicity,
+  PaymentState,
   PrismaClient,
   Subscription
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
-import {PaymentState} from './db/payment'
 import {SubscriptionDeactivationReason} from './db/subscription'
 import {PaymentProviderCustomer, User} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
@@ -453,6 +453,7 @@ export class MemberContext implements MemberContext {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
           dbAdapter: this.dbAdapter,
+          paymentClient: this.prisma.payment,
           paymentsByID: this.loaders.paymentsByID,
           invoicesByID: this.loaders.invoicesByID,
           subscriptionClient: this.prisma.subscription,
@@ -648,7 +649,7 @@ export class MemberContext implements MemberContext {
       data: {
         paymentMethodID,
         invoiceID: invoice.id,
-        state: PaymentState.Created,
+        state: PaymentState.created,
         modifiedAt: new Date()
       }
     })
@@ -660,9 +661,9 @@ export class MemberContext implements MemberContext {
       customerID: customer.customerID
     })
 
-    await this.dbAdapter.payment.updatePayment({
-      id: payment.id,
-      input: {
+    await this.prisma.payment.update({
+      where: {id: payment.id},
+      data: {
         state: intent.state,
         intentID: intent.intentID,
         intentData: intent.intentData,
@@ -673,7 +674,7 @@ export class MemberContext implements MemberContext {
       }
     })
 
-    if (intent.state === PaymentState.RequiresUserAction) {
+    if (intent.state === PaymentState.requiresUserAction) {
       await this.mailContext.sendMail({
         type: SendMailType.MemberSubscriptionOffSessionFailed,
         recipient: invoice.mail,

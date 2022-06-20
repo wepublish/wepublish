@@ -836,18 +836,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentFromInvoice: {
       type: GraphQLPayment,
       args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      resolve: (
-        root,
-        {input},
-        {authenticate, loaders, paymentProviders, dbAdapter, prisma: {payment}}
-      ) =>
+      resolve: (root, {input}, {authenticate, loaders, paymentProviders, prisma: {payment}}) =>
         createPaymentFromInvoice(
           input,
           authenticate,
           paymentProviders,
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
-          dbAdapter,
           payment
         )
     },

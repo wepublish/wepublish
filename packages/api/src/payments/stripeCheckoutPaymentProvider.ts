@@ -8,8 +8,8 @@ import {
   WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
-import {PaymentState} from '../db/payment'
 import {logger} from '../server'
+import {PaymentState} from '@prisma/client'
 
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -21,13 +21,13 @@ function mapStripeCheckoutEventToPaymentStatue(event: string): PaymentState | nu
     case 'requires_payment_method':
     case 'requires_confirmation':
     case 'requires_action':
-      return PaymentState.RequiresUserAction
+      return PaymentState.requiresUserAction
     case 'processing':
-      return PaymentState.Processing
+      return PaymentState.processing
     case 'succeeded':
-      return PaymentState.Paid
+      return PaymentState.paid
     case 'canceled':
-      return PaymentState.Canceled
+      return PaymentState.canceled
     default:
       return null
   }
@@ -112,14 +112,14 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
       intentID: session.id,
       intentSecret: session.url,
       intentData: JSON.stringify(session),
-      state: PaymentState.Submitted
+      state: PaymentState.submitted
     }
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     const session = await this.stripe.checkout.sessions.retrieve(intentID)
     const state =
-      session.payment_status === 'paid' ? PaymentState.Paid : PaymentState.RequiresUserAction
+      session.payment_status === 'paid' ? PaymentState.paid : PaymentState.requiresUserAction
 
     if (!session.client_reference_id) {
       logger('stripePaymentProvider').error(

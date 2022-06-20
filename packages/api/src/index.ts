@@ -61,7 +61,6 @@ export {
   articleModelEvents,
   imageModelEvents,
   pageModelEvents,
-  paymentModelEvents,
   peerModelEvents,
   userModelEvents,
   subscriptionModelEvents

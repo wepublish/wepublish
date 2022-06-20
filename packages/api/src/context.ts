@@ -9,6 +9,7 @@ import {
   Page,
   Payment,
   PaymentMethod,
+  PaymentState,
   Peer,
   PrismaClient,
   UserRole
@@ -33,9 +34,8 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
-import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/common'
+import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {OptionalPublicPage} from './db/page'
-import {PaymentState} from './db/payment'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {User} from './db/user'
 import {TokenExpiredError} from './error'
@@ -868,7 +868,7 @@ export async function contextFromRequest(
         data: {
           paymentMethodID,
           invoiceID: invoice.id,
-          state: PaymentState.Created,
+          state: PaymentState.created,
           modifiedAt: new Date()
         }
       })
@@ -881,9 +881,9 @@ export async function contextFromRequest(
         failureURL
       })
 
-      const updatedPayment = await dbAdapter.payment.updatePayment({
-        id: payment.id,
-        input: {
+      const updatedPayment = await prisma.payment.update({
+        where: {id: payment.id},
+        data: {
           state: intent.state,
           intentID: intent.intentID,
           intentData: intent.intentData,
