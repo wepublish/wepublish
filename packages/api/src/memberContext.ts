@@ -459,36 +459,6 @@ export class MemberContext implements MemberContext {
     return openInvoices
   }
 
-  private async getAllOpenInvoices(): Promise<Invoice[]> {
-    const openInvoices: Invoice[] = []
-    let hasMore = true
-    let skip = 0
-    while (hasMore) {
-      const invoices = await this.dbAdapter.invoice.getInvoices({
-        cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
-        order: SortOrder.Ascending,
-        sort: InvoiceSort.CreatedAt,
-        filter: {
-          paidAt: {
-            comparison: DateFilterComparison.Equal,
-            date: null
-          },
-          canceledAt: {
-            comparison: DateFilterComparison.Equal,
-            date: null
-          }
-        }
-      })
-
-      hasMore = invoices.pageInfo.hasNextPage
-      skip += 100
-      openInvoices.push(...invoices.nodes)
-    }
-
-    return openInvoices
-  }
-
   async chargeOpenInvoices(): Promise<void> {
     const today = new Date()
     const openInvoices = await this.getAllOpenInvoices()
