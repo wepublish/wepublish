@@ -7,7 +7,6 @@ import {Peer} from './db/peer'
 import {Page} from './db/page'
 import {Author} from './db/author'
 import {Image} from './db/image'
-import {Navigation} from './db/navigation'
 import {Invoice} from './db/invoice'
 import {MailLog} from './db/mailLog'
 import {MemberPlan} from './db/memberPlan'
@@ -47,9 +46,6 @@ export const mailLogModelEvents = new EventEmitter() as MailLogModelEventsEmitte
 export type MemberPlanModelEventsEmitter = TypedEmitter<ModelEvents<MemberPlan>>
 export const memberPlanModelEvents = new EventEmitter() as MemberPlanModelEventsEmitter
 
-export type NavigationModelEventsEmitter = TypedEmitter<ModelEvents<Navigation>>
-export const navigationModelEvents = new EventEmitter() as NavigationModelEventsEmitter
-
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 
@@ -75,7 +71,6 @@ export type EventsEmitter =
   | InvoiceModelEventsEmitter
   | MailLogModelEventsEmitter
   | MemberPlanModelEventsEmitter
-  | NavigationModelEventsEmitter
   | PageModelEventEmitter
   | PaymentModelEventEmitter
   | PaymentMethodModelEventEmitter
@@ -122,11 +117,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'memberPlan',
     methods: ['create', 'update', 'delete'],
     eventEmitter: memberPlanModelEvents
-  },
-  {
-    key: 'navigation',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: navigationModelEvents
   },
   {
     key: 'page',

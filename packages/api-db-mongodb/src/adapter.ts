@@ -8,14 +8,12 @@ import {generateID} from './utility'
 import {MongoDBUserAdapter} from './db/user'
 import {MongoDBPeerAdapter} from './db/peer'
 import {MongoDBAuthorAdapter} from './db/author'
-import {MongoDBNavigationAdapter} from './db/navigation'
 import {MongoDBImageAdapter} from './db/image'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
-import {MongoDBUserRoleAdapter} from './db/userRole'
 import {MongoDBMemberPlanAdapter} from './db/memberPlan'
 import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
 import {MongoDBInvoiceAdapter} from './db/invoice'
@@ -62,9 +60,7 @@ export class MongoDBAdapter implements DBAdapter {
 
   readonly peer: MongoDBPeerAdapter
   readonly user: MongoDBUserAdapter
-  readonly userRole: MongoDBUserRoleAdapter
   readonly subscription: MongoDBSubscriptionAdapter
-  readonly navigation: MongoDBNavigationAdapter
   readonly author: MongoDBAuthorAdapter
   readonly image: MongoDBImageAdapter
   readonly comment: MongoDBCommentAdapter
@@ -95,9 +91,7 @@ export class MongoDBAdapter implements DBAdapter {
 
     this.peer = new MongoDBPeerAdapter(db)
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
-    this.userRole = new MongoDBUserRoleAdapter(db)
     this.subscription = new MongoDBSubscriptionAdapter(db)
-    this.navigation = new MongoDBNavigationAdapter(db)
     this.comment = new MongoDBCommentAdapter(db)
     this.author = new MongoDBAuthorAdapter(db)
     this.image = new MongoDBImageAdapter(db)

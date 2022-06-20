@@ -24,26 +24,3 @@ export interface ExternalNavigationLink extends BaseNavigationLink {
 }
 
 export type NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
-
-export interface Navigation {
-  id: string
-  key: string
-  name: string
-  links: NavigationLink[]
-}
-export type OptionalNavigation = Navigation | null
-
-export interface NavigationInput {
-  key: string
-  name: string
-  links: NavigationLink[]
-}
-
-export interface UpdateNavigationArgs {
-  id: string
-  input: NavigationInput
-}
-
-export interface DBNavigationAdapter {
-  updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
-}

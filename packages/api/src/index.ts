@@ -64,7 +64,6 @@ export {
   invoiceModelEvents,
   mailLogModelEvents,
   memberPlanModelEvents,
-  navigationModelEvents,
   pageModelEvents,
   paymentModelEvents,
   paymentMethodModelEvents,
