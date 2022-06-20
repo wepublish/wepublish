@@ -1,4 +1,4 @@
-import {Invoice, InvoiceItem, InvoiceSort} from '../db/invoice'
+import {InvoiceSort} from '../db/invoice'
 import {Context} from '../context'
 import {
   GraphQLID,
@@ -13,6 +13,7 @@ import {
 import {GraphQLDate, GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
+import {Invoice, InvoiceItem} from '@prisma/client'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
   name: 'InvoiceItem',

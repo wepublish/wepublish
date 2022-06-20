@@ -26,7 +26,7 @@ import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutation'
+import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
 import {createMemberPlan, deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
@@ -57,7 +57,6 @@ import {
   CanCreateArticle,
   CanCreateAuthor,
   CanCreateImage,
-  CanCreateInvoice,
   CanCreateMemberPlan,
   CanCreatePage,
   CanCreatePaymentMethod,
@@ -869,11 +868,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateInvoice, roles)
-        return dbAdapter.invoice.updateInvoice({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {invoice}}) =>
+        updateInvoice(id, input, authenticate, invoice)
     },
 
     deleteInvoice: {

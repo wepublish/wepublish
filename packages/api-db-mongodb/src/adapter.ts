@@ -16,7 +16,6 @@ import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBMemberPlanAdapter} from './db/memberPlan'
 import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
-import {MongoDBInvoiceAdapter} from './db/invoice'
 import {MongoDBPaymentAdapter} from './db/payment'
 import {MongoDBMailLogAdapter} from './db/mailLog'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
@@ -68,7 +67,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly page: MongoDBPageAdapter
   readonly memberPlan: MongoDBMemberPlanAdapter
   readonly paymentMethod: MongoDBPaymentMethodAdapter
-  readonly invoice: MongoDBInvoiceAdapter
   readonly payment: MongoDBPaymentAdapter
   readonly mailLog: MongoDBMailLogAdapter
 
@@ -99,7 +97,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.page = new MongoDBPageAdapter(db)
     this.memberPlan = new MongoDBMemberPlanAdapter(db)
     this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
-    this.invoice = new MongoDBInvoiceAdapter(db)
     this.payment = new MongoDBPaymentAdapter(db)
     this.mailLog = new MongoDBMailLogAdapter(db)
   }

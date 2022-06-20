@@ -1,10 +1,9 @@
-import {PrismaClient, Subscription} from '@prisma/client'
+import {Invoice, PrismaClient, Subscription} from '@prisma/client'
 import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {Context, contextFromRequest} from '../context'
 import {DBAdapter} from '../db/adapter'
-import {Invoice} from '../db/invoice'
 import {Payment, PaymentState} from '../db/payment'
 import {paymentModelEvents} from '../events'
 import {logger, WepublishServerOpts} from '../server'
@@ -215,9 +214,9 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
         console.warn(`No invoice with id ${model.invoiceID}`)
         return
       }
-      await context.dbAdapter.invoice.updateInvoice({
-        id: invoice.id,
-        input: {
+      await context.prisma.invoice.update({
+        where: {id: invoice.id},
+        data: {
           ...invoice,
           paidAt: new Date(),
           canceledAt: null

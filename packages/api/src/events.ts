@@ -1,21 +1,20 @@
+import {Invoice, Prisma, SubscriptionPeriod} from '@prisma/client'
 import {EventEmitter} from 'events'
 import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
-import {User} from './db/user'
 import {Article} from './db/article'
-import {Peer} from './db/peer'
-import {Page} from './db/page'
 import {Author} from './db/author'
 import {Image} from './db/image'
-import {Invoice} from './db/invoice'
 import {MailLog} from './db/mailLog'
 import {MemberPlan} from './db/memberPlan'
+import {Page} from './db/page'
 import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
+import {Peer} from './db/peer'
+import {Subscription} from './db/subscription'
+import {User} from './db/user'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
-import {Subscription} from './db/subscription'
-import {SubscriptionPeriod} from '@prisma/client'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -36,9 +35,6 @@ export const authorModelEvents = new EventEmitter() as AuthorModelEventsEmitter
 
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
-
-export type InvoiceModelEventsEmitter = TypedEmitter<ModelEvents<Invoice>>
-export const invoiceModelEvents = new EventEmitter() as InvoiceModelEventsEmitter
 
 export type MailLogModelEventsEmitter = TypedEmitter<ModelEvents<MailLog>>
 export const mailLogModelEvents = new EventEmitter() as MailLogModelEventsEmitter
@@ -68,7 +64,6 @@ export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
   | ImageModelEventsEmitter
-  | InvoiceModelEventsEmitter
   | MailLogModelEventsEmitter
   | MemberPlanModelEventsEmitter
   | PageModelEventEmitter
@@ -102,11 +97,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'image',
     methods: ['create', 'update', 'delete'],
     eventEmitter: imageModelEvents
-  },
-  {
-    key: 'invoice',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: invoiceModelEvents
   },
   {
     key: 'mailLog',
@@ -160,26 +150,38 @@ userModelEvents.on('create', (context, model) => {
  * update the subscription periode, eventually create a permanent user out of the temp user and sending mails
  * to the user.
  */
-invoiceModelEvents.on('update', async (context, model) => {
+export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (params, next) => {
+  if (params.model !== 'Invoice') {
+    next(params)
+    return
+  }
+
+  if (params.action !== 'update') {
+    next(params)
+    return
+  }
+
+  const model: Invoice = await next(params)
+
   // only activate subscription, if invoice has a paidAt and subscriptionID.
   if (!model.paidAt || !model.subscriptionID) {
     return
   }
-  // by default a new member subscription mail will be sent.
+
   let mailTypeToSend = SendMailType.NewMemberSubscription
-  let subscription = (await context.prisma.subscription.findUnique({
+  let subscription = await context.prisma.subscription.findUnique({
     where: {
       id: model.subscriptionID
     }
-  })) as any
+  })
 
   if (!subscription) {
     return
   }
 
   const {periods} = subscription
-
   const period = periods.find((period: SubscriptionPeriod) => period.invoiceID === model.id)
+
   if (!period) {
     logger('events').warn(`No period found for subscription with ID ${subscription.id}.`)
     return
@@ -191,7 +193,7 @@ invoiceModelEvents.on('update', async (context, model) => {
     subscription = await context.dbAdapter.subscription.updateSubscription({
       id: subscription.id,
       input: {
-        ...subscription,
+        ...(subscription as any),
         paidUntil: period.endsAt,
         deactivation: null
       }
@@ -234,4 +236,4 @@ invoiceModelEvents.on('update', async (context, model) => {
       }
     })
   }
-})
+}

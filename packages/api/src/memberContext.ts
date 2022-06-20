@@ -1,7 +1,6 @@
 import {Invoice, MemberPlan, MetadataProperty, PrismaClient, Subscription} from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
-import {OptionalInvoice} from './db/invoice'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {PaymentState} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
@@ -67,7 +66,7 @@ export interface MemberContext {
 
   handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<Subscription>
 
-  renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
+  renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<Invoice | null>
   renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
 
   checkOpenInvoices(): Promise<void>
@@ -217,7 +216,7 @@ export class MemberContext implements MemberContext {
 
   async renewSubscriptionForUser({
     subscription
-  }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
+  }: RenewSubscriptionForUserProps): Promise<Invoice | null> {
     try {
       const {periods = [], paidUntil, deactivation} = subscription
 
@@ -530,9 +529,9 @@ export class MemberContext implements MemberContext {
         }
 
         if (deactivateSubscription < today) {
-          await this.dbAdapter.invoice.updateInvoice({
-            id: invoice.id,
-            input: {
+          await this.prisma.invoice.update({
+            where: {id: invoice.id},
+            data: {
               ...invoice,
               canceledAt: today
             }
@@ -681,9 +680,9 @@ export class MemberContext implements MemberContext {
         }
       })
 
-      await this.dbAdapter.invoice.updateInvoice({
-        id: invoice.id,
-        input: {
+      await this.prisma.invoice.update({
+        where: {id: invoice.id},
+        data: {
           ...invoice,
           sentReminderAt: new Date()
         }
@@ -721,13 +720,14 @@ export class MemberContext implements MemberContext {
         }
 
         if (deactivateSubscription < today) {
-          await this.dbAdapter.invoice.updateInvoice({
-            id: invoice.id,
-            input: {
+          await this.prisma.invoice.update({
+            where: {id: invoice.id},
+            data: {
               ...invoice,
               canceledAt: today
             }
           })
+
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,
@@ -828,9 +828,9 @@ export class MemberContext implements MemberContext {
       }
     }
 
-    await this.dbAdapter.invoice.updateInvoice({
-      id: invoice.id,
-      input: {
+    await this.prisma.invoice.update({
+      where: {id: invoice.id},
+      data: {
         ...invoice,
         sentReminderAt: today
       }

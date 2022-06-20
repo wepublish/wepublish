@@ -8,7 +8,7 @@ import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
 
-import {methodsToProxy, PublishableModelEvents} from './events'
+import {methodsToProxy, onInvoiceUpdate, PublishableModelEvents} from './events'
 import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
@@ -31,94 +31,9 @@ export class WepublishServer {
   private readonly app: Application
 
   constructor(private readonly opts: WepublishServerOpts) {
-    // @TODO: move into cron job
-    this.opts.prisma.$use(async (args, next) => {
-      if (!(args.model === 'Article' && args.action.startsWith('find'))) {
-        return next(args)
-      }
-
-      // skip the call inside this middleware to not create an infinite loop
-      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
-        return next(args)
-      }
-
-      const articles = await this.opts.prisma.article.findMany({
-        where: {
-          pending: {
-            is: {
-              AND: {
-                publishAt: {
-                  lte: new Date()
-                }
-              }
-            }
-          }
-        }
-      })
-
-      await Promise.all(
-        articles.map(({id, pending}) =>
-          this.opts.prisma.article.update({
-            where: {
-              id
-            },
-            data: {
-              modifiedAt: new Date(),
-              pending: null,
-              published: pending
-            }
-          })
-        )
-      )
-
-      return next(args)
-    })
-
-    // @TODO: move into cron job
-    this.opts.prisma.$use(async (args, next) => {
-      if (!(args.model === 'Page' && args.action.startsWith('find'))) {
-        return next(args)
-      }
-
-      // skip the call inside this middleware to not create an infinite loop
-      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
-        return next(args)
-      }
-
-      const pages = await this.opts.prisma.page.findMany({
-        where: {
-          pending: {
-            is: {
-              AND: {
-                publishAt: {
-                  lte: new Date()
-                }
-              }
-            }
-          }
-        }
-      })
-
-      await Promise.all(
-        pages.map(({id, pending}) =>
-          this.opts.prisma.page.update({
-            where: {
-              id
-            },
-            data: {
-              modifiedAt: new Date(),
-              pending: null,
-              published: pending
-            }
-          })
-        )
-      )
-
-      return next(args)
-    })
-
     const app = express()
 
+    this.setupPrismaMiddlewares()
     const {dbAdapter} = opts
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
@@ -245,5 +160,96 @@ export class WepublishServer {
     } catch (error) {
       logger('server').error(error as Error, 'Error while running job "%s"', command)
     }
+  }
+
+  private async setupPrismaMiddlewares(): Promise<void> {
+    // @TODO: move into cron job
+    this.opts.prisma.$use(async (args, next) => {
+      if (!(args.model === 'Article' && args.action.startsWith('find'))) {
+        return next(args)
+      }
+
+      // skip the call inside this middleware to not create an infinite loop
+      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
+        return next(args)
+      }
+
+      const articles = await this.opts.prisma.article.findMany({
+        where: {
+          pending: {
+            is: {
+              AND: {
+                publishAt: {
+                  lte: new Date()
+                }
+              }
+            }
+          }
+        }
+      })
+
+      await Promise.all(
+        articles.map(({id, pending}) =>
+          this.opts.prisma.article.update({
+            where: {
+              id
+            },
+            data: {
+              modifiedAt: new Date(),
+              pending: null,
+              published: pending
+            }
+          })
+        )
+      )
+
+      return next(args)
+    })
+
+    // @TODO: move into cron job
+    this.opts.prisma.$use(async (args, next) => {
+      if (!(args.model === 'Page' && args.action.startsWith('find'))) {
+        return next(args)
+      }
+
+      // skip the call inside this middleware to not create an infinite loop
+      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
+        return next(args)
+      }
+
+      const pages = await this.opts.prisma.page.findMany({
+        where: {
+          pending: {
+            is: {
+              AND: {
+                publishAt: {
+                  lte: new Date()
+                }
+              }
+            }
+          }
+        }
+      })
+
+      await Promise.all(
+        pages.map(({id, pending}) =>
+          this.opts.prisma.page.update({
+            where: {
+              id
+            },
+            data: {
+              modifiedAt: new Date(),
+              pending: null,
+              published: pending
+            }
+          })
+        )
+      )
+
+      return next(args)
+    })
+
+    const contextWithoutReq = await contextFromRequest(null, this.opts)
+    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }
