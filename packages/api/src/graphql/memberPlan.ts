@@ -1,9 +1,4 @@
-import {
-  AvailablePaymentMethod,
-  MemberPlan,
-  MemberPlanSort,
-  PaymentPeriodicity
-} from '../db/memberPlan'
+import {MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -23,14 +18,15 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    MONTHLY: {value: PaymentPeriodicity.Monthly},
-    QUARTERLY: {value: PaymentPeriodicity.Quarterly},
-    BIANNUAL: {value: PaymentPeriodicity.Biannual},
-    YEARLY: {value: PaymentPeriodicity.Yearly}
+    MONTHLY: {value: PaymentPeriodicity.monthly},
+    QUARTERLY: {value: PaymentPeriodicity.quarterly},
+    BIANNUAL: {value: PaymentPeriodicity.biannual},
+    YEARLY: {value: PaymentPeriodicity.yearly}
   }
 })
 

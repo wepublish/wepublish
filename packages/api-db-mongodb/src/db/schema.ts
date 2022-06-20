@@ -4,7 +4,6 @@ import {
   CommentAuthorType,
   CommentRejectionReason,
   CommentState,
-  AvailablePaymentMethod,
   FocalPoint,
   NavigationLink,
   PageBlock,
@@ -14,11 +13,16 @@ import {
   PaymentState,
   UserAddress,
   UserOAuth2Account,
-  PaymentPeriodicity,
   SubscriptionPeriod,
   SubscriptionDeactivation
 } from '@wepublish/api'
-import {InvoiceItem, MailLogState, MetadataProperty} from '@prisma/client'
+import {
+  AvailablePaymentMethod,
+  InvoiceItem,
+  MailLogState,
+  MetadataProperty,
+  PaymentPeriodicity
+} from '@prisma/client'
 
 export enum CollectionName {
   Migrations = 'migrations',

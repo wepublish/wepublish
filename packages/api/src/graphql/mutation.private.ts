@@ -27,7 +27,11 @@ import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './
 import {createImage, deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
-import {createMemberPlan, deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
+import {
+  createMemberPlan,
+  deleteMemberPlanById,
+  updateMemberPlan
+} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {
@@ -56,7 +60,6 @@ import {
   authorise,
   CanCreateArticle,
   CanCreateImage,
-  CanCreateMemberPlan,
   CanCreatePage,
   CanCreatePaymentMethod,
   CanCreatePeer,
@@ -776,11 +779,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateMemberPlan, roles)
-        return dbAdapter.memberPlan.updateMemberPlan({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {memberPlan}}) =>
+        updateMemberPlan(id, input, authenticate, memberPlan)
     },
 
     deleteMemberPlan: {

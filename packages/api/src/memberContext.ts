@@ -1,7 +1,13 @@
-import {Invoice, MemberPlan, MetadataProperty, PrismaClient, Subscription} from '@prisma/client'
+import {
+  Invoice,
+  MemberPlan,
+  MetadataProperty,
+  PaymentPeriodicity,
+  PrismaClient,
+  Subscription
+} from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
-import {PaymentPeriodicity} from './db/memberPlan'
 import {PaymentState} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
 import {SubscriptionDeactivationReason} from './db/subscription'
@@ -93,13 +99,13 @@ export interface MemberContextProps {
 export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
   start = new Date(start.getTime() - ONE_DAY_IN_MILLISECONDS) // create new Date object
   switch (periodicity) {
-    case PaymentPeriodicity.Monthly:
+    case PaymentPeriodicity.monthly:
       return new Date(start.setMonth(start.getMonth() + 1))
-    case PaymentPeriodicity.Quarterly:
+    case PaymentPeriodicity.quarterly:
       return new Date(start.setMonth(start.getMonth() + 3))
-    case PaymentPeriodicity.Biannual:
+    case PaymentPeriodicity.biannual:
       return new Date(start.setMonth(start.getMonth() + 6))
-    case PaymentPeriodicity.Yearly:
+    case PaymentPeriodicity.yearly:
       return new Date(start.setMonth(start.getMonth() + 12))
   }
 }
@@ -109,13 +115,13 @@ export function calculateAmountForPeriodicity(
   periodicity: PaymentPeriodicity
 ): number {
   switch (periodicity) {
-    case PaymentPeriodicity.Monthly:
+    case PaymentPeriodicity.monthly:
       return monthlyAmount
-    case PaymentPeriodicity.Quarterly:
+    case PaymentPeriodicity.quarterly:
       return monthlyAmount * 3
-    case PaymentPeriodicity.Biannual:
+    case PaymentPeriodicity.biannual:
       return monthlyAmount * 6
-    case PaymentPeriodicity.Yearly:
+    case PaymentPeriodicity.yearly:
       return monthlyAmount * 12
   }
 }

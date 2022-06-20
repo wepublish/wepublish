@@ -1,6 +1,5 @@
 import {DateFilter} from './common'
-import {MetadataProperty} from '@prisma/client'
-import {PaymentPeriodicity} from './memberPlan'
+import {MetadataProperty, PaymentPeriodicity} from '@prisma/client'
 
 export enum SubscriptionDeactivationReason {
   None = 'none',

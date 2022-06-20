@@ -4,7 +4,6 @@ import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
 import {Image} from './db/image'
-import {MemberPlan} from './db/memberPlan'
 import {Page} from './db/page'
 import {Payment} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
@@ -31,9 +30,6 @@ export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
 
-export type MemberPlanModelEventsEmitter = TypedEmitter<ModelEvents<MemberPlan>>
-export const memberPlanModelEvents = new EventEmitter() as MemberPlanModelEventsEmitter
-
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 
@@ -55,7 +51,6 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | ImageModelEventsEmitter
-  | MemberPlanModelEventsEmitter
   | PageModelEventEmitter
   | PaymentModelEventEmitter
   | PaymentMethodModelEventEmitter
@@ -82,11 +77,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'image',
     methods: ['create', 'update', 'delete'],
     eventEmitter: imageModelEvents
-  },
-  {
-    key: 'memberPlan',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: memberPlanModelEvents
   },
   {
     key: 'page',
