@@ -29,3 +29,18 @@ export const createPaymentMethod = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updatePaymentMethod = (
+  id: string,
+  input: Omit<Prisma.PaymentMethodUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  paymentMethod: PrismaClient['paymentMethod']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreatePaymentMethod, roles)
+
+  return paymentMethod.update({
+    where: {id},
+    data: input
+  })
+}

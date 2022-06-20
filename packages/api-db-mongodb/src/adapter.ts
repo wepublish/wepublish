@@ -13,7 +13,6 @@ import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
-import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
 import {MongoDBPaymentAdapter} from './db/payment'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
 
@@ -61,7 +60,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly comment: MongoDBCommentAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
-  readonly paymentMethod: MongoDBPaymentMethodAdapter
   readonly payment: MongoDBPaymentAdapter
 
   // Init
@@ -88,7 +86,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.image = new MongoDBImageAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
     this.page = new MongoDBPageAdapter(db)
-    this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
     this.payment = new MongoDBPaymentAdapter(db)
   }
 

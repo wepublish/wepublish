@@ -44,7 +44,8 @@ import {createPage, deletePageById, duplicatePage} from './page/page.private-mut
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
-  deletePaymentMethodById
+  deletePaymentMethodById,
+  updatePaymentMethod
 } from './payment-method/payment-method.private-mutation'
 import {createPaymentFromInvoice} from './payment/payment.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
@@ -61,7 +62,6 @@ import {
   CanCreateArticle,
   CanCreateImage,
   CanCreatePage,
-  CanCreatePaymentMethod,
   CanCreatePeer,
   CanCreateSubscription,
   CanCreateUser,
@@ -810,14 +810,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePaymentMethod, roles)
-
-        // TODO: check if payment method exists and is active
-
-        return dbAdapter.paymentMethod.updatePaymentMethod({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {paymentMethod}}) =>
+        updatePaymentMethod(id, input, authenticate, paymentMethod)
     },
 
     deletePaymentMethod: {

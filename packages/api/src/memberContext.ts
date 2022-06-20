@@ -2,6 +2,7 @@ import {
   Invoice,
   MemberPlan,
   MetadataProperty,
+  PaymentMethod,
   PaymentPeriodicity,
   PrismaClient,
   Subscription
@@ -9,7 +10,6 @@ import {
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
 import {PaymentState} from './db/payment'
-import {PaymentMethod} from './db/paymentMethod'
 import {SubscriptionDeactivationReason} from './db/subscription'
 import {PaymentProviderCustomer, User} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'

@@ -6,7 +6,6 @@ import {Article} from './db/article'
 import {Image} from './db/image'
 import {Page} from './db/page'
 import {Payment} from './db/payment'
-import {PaymentMethod} from './db/paymentMethod'
 import {Peer} from './db/peer'
 import {Subscription} from './db/subscription'
 import {User} from './db/user'
@@ -36,9 +35,6 @@ export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 export type PaymentModelEventEmitter = TypedEmitter<ModelEvents<Payment>>
 export const paymentModelEvents = new EventEmitter() as PaymentModelEventEmitter
 
-export type PaymentMethodModelEventEmitter = TypedEmitter<ModelEvents<PaymentMethod>>
-export const paymentMethodModelEvents = new EventEmitter() as PaymentMethodModelEventEmitter
-
 export type PeerModelEventsEmitter = TypedEmitter<ModelEvents<Peer>>
 export const peerModelEvents = new EventEmitter() as PeerModelEventsEmitter
 
@@ -53,7 +49,6 @@ export type EventsEmitter =
   | ImageModelEventsEmitter
   | PageModelEventEmitter
   | PaymentModelEventEmitter
-  | PaymentMethodModelEventEmitter
   | PeerModelEventsEmitter
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
@@ -87,11 +82,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'payment',
     methods: ['create', 'update', 'delete'],
     eventEmitter: paymentModelEvents
-  },
-  {
-    key: 'paymentMethod',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: paymentMethodModelEvents
   },
   {
     key: 'peer',

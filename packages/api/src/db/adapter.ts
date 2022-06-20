@@ -4,7 +4,6 @@ import {DBArticleAdapter} from './article'
 import {DBCommentAdapter} from './comment'
 import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
-import {DBPaymentMethodAdapter} from './paymentMethod'
 import {DBPaymentAdapter} from './payment'
 import {DBSubscriptionAdapter} from './subscription'
 
@@ -16,6 +15,5 @@ export interface DBAdapter {
   readonly article: DBArticleAdapter
   readonly comment: DBCommentAdapter
   readonly page: DBPageAdapter
-  readonly paymentMethod: DBPaymentMethodAdapter
   readonly payment: DBPaymentAdapter
 }
