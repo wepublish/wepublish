@@ -7,7 +7,6 @@ import {generateID} from './utility'
 
 import {MongoDBUserAdapter} from './db/user'
 import {MongoDBPeerAdapter} from './db/peer'
-import {MongoDBImageAdapter} from './db/image'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
@@ -55,7 +54,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly peer: MongoDBPeerAdapter
   readonly user: MongoDBUserAdapter
   readonly subscription: MongoDBSubscriptionAdapter
-  readonly image: MongoDBImageAdapter
   readonly comment: MongoDBCommentAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
@@ -81,7 +79,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
     this.subscription = new MongoDBSubscriptionAdapter(db)
     this.comment = new MongoDBCommentAdapter(db)
-    this.image = new MongoDBImageAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
     this.page = new MongoDBPageAdapter(db)
   }

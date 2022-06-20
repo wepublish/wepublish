@@ -4,7 +4,6 @@ import {
   CommentAuthorType,
   CommentRejectionReason,
   CommentState,
-  FocalPoint,
   NavigationLink,
   PageBlock,
   PaymentProviderCustomer,
@@ -17,6 +16,7 @@ import {
 } from '@wepublish/api'
 import {
   AvailablePaymentMethod,
+  ImagesFocalPoint,
   InvoiceItem,
   MailLogState,
   MetadataProperty,
@@ -226,7 +226,7 @@ export interface DBImage {
   link?: string | null
   license?: string | null
 
-  focalPoint?: FocalPoint | null
+  focalPoint?: ImagesFocalPoint | null
 }
 
 export interface DBComment {

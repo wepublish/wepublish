@@ -3,7 +3,6 @@ import {EventEmitter} from 'events'
 import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
-import {Image} from './db/image'
 import {Page} from './db/page'
 import {Peer} from './db/peer'
 import {Subscription} from './db/subscription'
@@ -25,9 +24,6 @@ export interface PublishableModelEvents<T> extends ModelEvents<T> {
 export type ArticleModelEventEmitter = TypedEmitter<PublishableModelEvents<Article>>
 export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 
-export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
-export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
-
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 
@@ -42,7 +38,6 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 
 export type EventsEmitter =
   | ArticleModelEventEmitter
-  | ImageModelEventsEmitter
   | PageModelEventEmitter
   | PeerModelEventsEmitter
   | SubscriptionModelEventsEmitter
@@ -62,11 +57,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'article',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: articleModelEvents
-  },
-  {
-    key: 'image',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: imageModelEvents
   },
   {
     key: 'page',

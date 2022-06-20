@@ -14,7 +14,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLUpload} from 'apollo-server-express'
 
 import {Context} from '../context'
-import {Image, ImageRotation, ImageOutput, ImageSort} from '../db/image'
+import {ImageRotation, ImageOutput, ImageSort, ImageWithTransformURL} from '../db/image'
 import {GraphQLPageInfo} from './common'
 import {createProxyingResolver} from '../utility'
 
@@ -116,7 +116,7 @@ export const GraphQLImageSort = new GraphQLEnumType({
   }
 })
 
-export const GraphQLImage = new GraphQLObjectType<Image, Context>({
+export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context>({
   name: 'Image',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},

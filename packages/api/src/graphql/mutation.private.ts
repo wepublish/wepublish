@@ -24,7 +24,7 @@ import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.priv
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
-import {createImage, deleteImageById} from './image/image.private-mutation'
+import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
 import {
@@ -60,7 +60,6 @@ import {createPeer, deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
-  CanCreateImage,
   CanCreatePage,
   CanCreatePeer,
   CanCreateSubscription,
@@ -588,11 +587,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateImage, roles)
-        return dbAdapter.image.updateImage({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {image}}) =>
+        updateImage(id, input, authenticate, image)
     },
 
     deleteImage: {
