@@ -77,7 +77,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
         const peer = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
 
-        if (peer?.isDisabled === true) {
+        if (peer?.isDisabled) {
           throw new DisabledPeerError()
         }
         return peer

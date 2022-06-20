@@ -29,7 +29,6 @@ export enum CollectionName {
   Peers = 'peers',
   Users = 'users',
   UserRoles = 'users.roles',
-  TempUsers = 'temp.users',
   Subscriptions = 'subscriptions',
 
   Sessions = 'sessions',
@@ -83,7 +82,7 @@ export interface DBPeer {
 
   name: string
   slug: string
-  isDisabled: boolean
+  isDisabled?: boolean
   hostURL: string
   token: string
 }
@@ -156,21 +155,6 @@ export interface DBSubscription {
   paymentMethodID: string
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
-}
-
-export interface DBTempUser {
-  _id: any
-
-  createdAt: Date
-  modifiedAt: Date
-
-  name: string
-  firstName?: string
-  preferredName?: string
-  email: string
-
-  address?: UserAddress
-  paymentProviderCustomers: PaymentProviderCustomer[]
 }
 
 export interface DBSession {

@@ -446,23 +446,24 @@
         "unknown": "Inconnu",
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
-        "tempUser": "(Utilisateur temporaire) - ",
         "email": "Email",
-        "memberPlan": "plan de membre"
+        "memberPlan": "plan de membre",
+        "downloadCsv": "Télécharger CSV"
       },
       "filter": {
         "deactivationReason": "Motif désactivation",
         "reasonNone": "Sans",
         "reasonUserSelfDeactivated": "Par l'utilisateur",
-        "reasonInvoiceNotPaid": "Facture impayée"
+        "reasonInvoiceNotPaid": "Facture impayée",
+        "reset": "Réinitialiser filtre",
+        "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
         "name": "Nom",
         "unknown": "Inconnu",
         "cancel": "Annuler",
-        "confirm": "Confirmer",
-        "tempUserWarning": "Cet abonnement a un(e) utilisateur(trice) temporaire qui n'a pas terminé son enregistrement. Si tu supprimes l'abonnement, l'utilisateur(trice) temporaire sera également supprimé(e)."
+        "confirm": "Confirmer"
       }
     },
     "userList": {
@@ -750,8 +751,7 @@
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
-      "selectUser": "Choisir l'utilisateur",
-      "tempUserTitle": "Utilisateur temporaire"
+      "selectUser": "Choisir l'utilisateur"
     },
     "navbar": {
       "languageSwitch": {
