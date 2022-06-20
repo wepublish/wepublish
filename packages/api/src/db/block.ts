@@ -103,8 +103,8 @@ export interface EmbedBlock {
   type: BlockType.Embed
   url?: string
   title?: string
-  width?: number
-  height?: number
+  width?: string
+  height?: string
   styleCustom?: string
   sandbox?: string
 }
@@ -227,6 +227,7 @@ export type ArticleBlock =
   | QuoteBlock
   | ListicleBlock
   | LinkPageBreakBlock
+  | EmbedBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock
