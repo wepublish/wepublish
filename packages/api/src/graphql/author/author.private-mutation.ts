@@ -29,3 +29,18 @@ export const createAuthor = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updateAuthor = (
+  id: string,
+  input: Omit<Prisma.AuthorUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  author: PrismaClient['author']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateAuthor, roles)
+
+  return author.update({
+    where: {id},
+    data: input
+  })
+}

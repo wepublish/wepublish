@@ -20,7 +20,7 @@ import {
   duplicateArticle
 } from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
-import {createAuthor, deleteAuthorById} from './author/author.private-mutation'
+import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
@@ -55,7 +55,6 @@ import {createPeer, deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
-  CanCreateAuthor,
   CanCreateImage,
   CanCreateMemberPlan,
   CanCreatePage,
@@ -557,11 +556,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLAuthorInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateAuthor, roles)
-        return dbAdapter.author.updateAuthor({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {author}}) =>
+        updateAuthor(id, input, authenticate, author)
     },
 
     deleteAuthor: {

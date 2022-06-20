@@ -59,7 +59,6 @@ export * from './challenges/algebraicCaptchaChallenge'
 
 export {
   articleModelEvents,
-  authorModelEvents,
   imageModelEvents,
   memberPlanModelEvents,
   pageModelEvents,

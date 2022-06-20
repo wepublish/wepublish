@@ -3,7 +3,6 @@ import {EventEmitter} from 'events'
 import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
-import {Author} from './db/author'
 import {Image} from './db/image'
 import {MemberPlan} from './db/memberPlan'
 import {Page} from './db/page'
@@ -28,9 +27,6 @@ export interface PublishableModelEvents<T> extends ModelEvents<T> {
 
 export type ArticleModelEventEmitter = TypedEmitter<PublishableModelEvents<Article>>
 export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
-
-export type AuthorModelEventsEmitter = TypedEmitter<ModelEvents<Author>>
-export const authorModelEvents = new EventEmitter() as AuthorModelEventsEmitter
 
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
@@ -58,7 +54,6 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 
 export type EventsEmitter =
   | ArticleModelEventEmitter
-  | AuthorModelEventsEmitter
   | ImageModelEventsEmitter
   | MemberPlanModelEventsEmitter
   | PageModelEventEmitter
@@ -82,11 +77,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'article',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: articleModelEvents
-  },
-  {
-    key: 'author',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: authorModelEvents
   },
   {
     key: 'image',
