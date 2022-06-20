@@ -4,15 +4,15 @@ import {transformCssStringToObject} from '../../utility'
 export interface IframeEmbedProps {
   url?: string
   title?: string
-  width?: string
-  height?: string
+  width?: number
+  height?: number
   styleCustom?: string
   sandbox?: string
 }
 
 export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: IframeEmbedProps) {
-  const ratio = width && height ? parseInt(width) / parseInt(height) : 0
-  const noRatio = !!styleCustom || ratio === 0
+  const ratio = width !== undefined && height !== undefined ? width / height : 0
+  const noRatio = !!styleCustom && ratio === 0
   const styleCustomCss =
     noRatio && !!styleCustom && styleCustom !== ''
       ? transformCssStringToObject(styleCustom)
@@ -25,7 +25,8 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
     <div style={{width: '100%'}}>
       <div
         style={{
-          paddingTop: `${noRatio || ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
+          position: 'relative',
+          paddingTop: `${noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
           minHeight: '45px'
         }}>
         <iframe
@@ -40,9 +41,7 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
           scrolling="no"
           frameBorder="0"
           allowFullScreen
-          width={width}
-          height={height}
-          sandbox={sandbox?.length !== 0 ? sandbox : undefined}
+          sandbox={sandbox}
         />
       </div>
     </div>
