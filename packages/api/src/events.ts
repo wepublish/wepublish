@@ -5,7 +5,6 @@ import {Context} from './context'
 import {Article} from './db/article'
 import {Author} from './db/author'
 import {Image} from './db/image'
-import {MailLog} from './db/mailLog'
 import {MemberPlan} from './db/memberPlan'
 import {Page} from './db/page'
 import {Payment} from './db/payment'
@@ -36,9 +35,6 @@ export const authorModelEvents = new EventEmitter() as AuthorModelEventsEmitter
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
 
-export type MailLogModelEventsEmitter = TypedEmitter<ModelEvents<MailLog>>
-export const mailLogModelEvents = new EventEmitter() as MailLogModelEventsEmitter
-
 export type MemberPlanModelEventsEmitter = TypedEmitter<ModelEvents<MemberPlan>>
 export const memberPlanModelEvents = new EventEmitter() as MemberPlanModelEventsEmitter
 
@@ -64,7 +60,6 @@ export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
   | ImageModelEventsEmitter
-  | MailLogModelEventsEmitter
   | MemberPlanModelEventsEmitter
   | PageModelEventEmitter
   | PaymentModelEventEmitter
@@ -97,11 +92,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'image',
     methods: ['create', 'update', 'delete'],
     eventEmitter: imageModelEvents
-  },
-  {
-    key: 'mailLog',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: mailLogModelEvents
   },
   {
     key: 'memberPlan',

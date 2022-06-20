@@ -11,7 +11,6 @@ import {
   PaymentProviderCustomer,
   RichTextNode,
   CommentRevision,
-  MailLogState,
   PaymentState,
   UserAddress,
   UserOAuth2Account,
@@ -19,7 +18,7 @@ import {
   SubscriptionPeriod,
   SubscriptionDeactivation
 } from '@wepublish/api'
-import {InvoiceItem, MetadataProperty} from '@prisma/client'
+import {InvoiceItem, MailLogState, MetadataProperty} from '@prisma/client'
 
 export enum CollectionName {
   Migrations = 'migrations',

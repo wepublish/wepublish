@@ -61,7 +61,6 @@ export {
   articleModelEvents,
   authorModelEvents,
   imageModelEvents,
-  mailLogModelEvents,
   memberPlanModelEvents,
   pageModelEvents,
   paymentModelEvents,

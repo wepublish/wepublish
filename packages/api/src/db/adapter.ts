@@ -8,7 +8,6 @@ import {DBPeerAdapter} from './peer'
 import {DBMemberPlanAdapter} from './memberPlan'
 import {DBPaymentMethodAdapter} from './paymentMethod'
 import {DBPaymentAdapter} from './payment'
-import {DBMailLogAdapter} from './mailLog'
 import {DBSubscriptionAdapter} from './subscription'
 
 export interface DBAdapter {
@@ -23,5 +22,4 @@ export interface DBAdapter {
   readonly memberPlan: DBMemberPlanAdapter
   readonly paymentMethod: DBPaymentMethodAdapter
   readonly payment: DBPaymentAdapter
-  readonly mailLog: DBMailLogAdapter
 }

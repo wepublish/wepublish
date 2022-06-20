@@ -17,7 +17,6 @@ import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBMemberPlanAdapter} from './db/memberPlan'
 import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
 import {MongoDBPaymentAdapter} from './db/payment'
-import {MongoDBMailLogAdapter} from './db/mailLog'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
 
 export interface MongoDBAdabterCommonArgs {
@@ -68,7 +67,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly memberPlan: MongoDBMemberPlanAdapter
   readonly paymentMethod: MongoDBPaymentMethodAdapter
   readonly payment: MongoDBPaymentAdapter
-  readonly mailLog: MongoDBMailLogAdapter
 
   // Init
   // ====
@@ -98,7 +96,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.memberPlan = new MongoDBMemberPlanAdapter(db)
     this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
     this.payment = new MongoDBPaymentAdapter(db)
-    this.mailLog = new MongoDBMailLogAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {
