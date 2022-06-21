@@ -142,6 +142,9 @@
       "react/display-name": [
         0
       ],
+      "react/jsx-boolean-value": [
+        1
+      ],
       "react/prop-types": [
         0
       ],
@@ -186,7 +189,8 @@
             "fixed",
             "format",
             "stack",
-            "backdrop"
+            "backdrop",
+            "data-testid"
           ],
           "ignoreComponent": [
             "code"
