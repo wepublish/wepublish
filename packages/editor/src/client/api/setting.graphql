@@ -24,19 +24,6 @@ query SettingList {
   }
 }
 
-query Setting($id: ID, $name: String) {
-    setting(id: $id, name: $name) {
-        id
-        value
-        settingRestriction {
-            maxValue
-            minValue
-            inputLength
-            allowedValues
-        }
-    }
-}
-
 mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
   updateSettingList(value: $input) {
     value

@@ -3673,24 +3673,6 @@ export type SettingListQuery = (
   )> }
 );
 
-export type SettingQueryVariables = Exact<{
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-}>;
-
-
-export type SettingQuery = (
-  { __typename?: 'Query' }
-  & { setting?: Maybe<(
-    { __typename?: 'Setting' }
-    & Pick<Setting, 'id' | 'value'>
-    & { settingRestriction?: Maybe<(
-      { __typename?: 'SettingRestriction' }
-      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
-    )> }
-  )> }
-);
-
 export type UpdateSettingListMutationVariables = Exact<{
   input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
 }>;
@@ -7125,49 +7107,6 @@ export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
 export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
 export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
-export const SettingDocument = gql`
-    query Setting($id: ID, $name: String) {
-  setting(id: $id, name: $name) {
-    id
-    value
-    settingRestriction {
-      maxValue
-      minValue
-      inputLength
-      allowedValues
-    }
-  }
-}
-    `;
-
-/**
- * __useSettingQuery__
- *
- * To run a query within a React component, call `useSettingQuery` and pass it any options that fit your needs.
- * When your component renders, `useSettingQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSettingQuery({
- *   variables: {
- *      id: // value for 'id'
- *      name: // value for 'name'
- *   },
- * });
- */
-export function useSettingQuery(baseOptions?: Apollo.QueryHookOptions<SettingQuery, SettingQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
-      }
-export function useSettingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
-        }
-export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
-export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;
-export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>;
 export const UpdateSettingListDocument = gql`
     mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
   updateSettingList(value: $input) {

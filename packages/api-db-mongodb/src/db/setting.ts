@@ -11,7 +11,7 @@ import {Collection, Db} from 'mongodb'
 import {CollectionName, DBSetting} from './schema'
 
 export class MongoDBSettingAdapter implements DBSettingAdapter {
-  private settings: Collection<DBSetting<any>>
+  private settings: Collection<DBSetting<unknown>>
 
   constructor(db: Db) {
     this.settings = db.collection(CollectionName.Settings)
