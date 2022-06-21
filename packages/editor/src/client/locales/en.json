@@ -21,7 +21,6 @@
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
-        "preview": "Preview",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
@@ -138,6 +137,7 @@
         "updateDate": "Update Date",
         "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://canonical-url.com",
         "value": "Value",
         "yes": "Yes",
         "canonicalUrl": "Canonical Url",
@@ -460,6 +460,7 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://www.link.com",
         "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },
@@ -786,7 +787,7 @@
         "token": "Token",
         "unknown": "Unknown",
         "unnamed": "Unnamed",
-        "URL": "URL",
+        "URL": "URL: https://www.url.com",
         "validateToken": "Please confirm token is correct before saving",
         "leaveEmpty": "Leave empty if you don't want to change it"
       }
@@ -996,6 +997,26 @@
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "errorMessages": {
+      "noFirstNameErrorMessage": "Please enter a firstname",
+      "noNameErrorMessage": "Please enter a name",
+      "noEmailErrorMessage": "Please enter an email address",
+      "invalidEmailErrorMessage": "Please enter a valid email address",
+      "noUrlErrorMessage": "Please enter a url",
+      "invalidUrlErrorMessage": "Please enter a valid url",
+      "noImageErrorMessage": "Please enter an image",
+      "noCallToActionTextErrorMessage": "Please enter a call to action text",
+      "noCallToActionImageErrorMessage": "Please enter a call to action image",
+      "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
+      "noPasswordErrorMessage": "Please enter a password",
+      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "noPaymentProviderErrorMessage": "Please enter a payment provider",
+      "noMemberPlanErrorMessage": "Please enter a member plan",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
+      "noUserErrorMessage": "Please select a user",
+      "noTokenErrorMessage": "Please enter a token"
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marked as paid by administrator.",

@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -130,7 +130,7 @@
     "snapshot-diff": "^0.9.0",
     "style-loader": "^1.0.0",
     "ts-jest": "^26.4.1",
-    "typescript": "^3.8.3",
+    "typescript": "^4.6.4",
     "webpack": "^4.41.2",
     "webpack-dev-server": "^3.9.0"
   },
@@ -141,6 +141,9 @@
     "rules": {
       "react/display-name": [
         0
+      ],
+      "react/jsx-boolean-value": [
+        1
       ],
       "react/prop-types": [
         0
@@ -186,7 +189,8 @@
             "fixed",
             "format",
             "stack",
-            "backdrop"
+            "backdrop",
+            "data-testid"
           ],
           "ignoreComponent": [
             "code"

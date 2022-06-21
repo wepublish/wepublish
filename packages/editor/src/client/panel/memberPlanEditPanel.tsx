@@ -2,7 +2,18 @@ import React, {useState, useEffect} from 'react'
 
 import {ListValue, ListInput} from '../atoms/listInput'
 
-import {Button, Drawer, Form, Panel, toaster, Message, Toggle, CheckPicker, TagPicker} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Panel,
+  toaster,
+  Message,
+  Toggle,
+  CheckPicker,
+  TagPicker,
+  Schema
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -186,29 +197,41 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     }
   }
 
+  // Schema used for form validation
+  const {StringType, NumberType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    currency: NumberType().isRequired(t('errorMessages.noAmountErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
-        </Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        formValue={{name: name, currency: amountPerMonthMin}}
+        style={{height: '100%'}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('save') : t('create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
+          <Drawer.Actions>
+            <Button appearance="primary" disabled={isDisabled} type="submit">
+              {id ? t('save') : t('create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
+        <Drawer.Body>
+          <Panel>
             <Form.Group>
-              <Form.ControlLabel>{t('memberPlanList.name')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('memberPlanList.name') + '*'}</Form.ControlLabel>
               <Form.Control
-                name={t('memberPlanList.name')}
+                name="name"
                 value={name}
                 disabled={isDisabled}
                 onChange={(value: string) => {
@@ -219,7 +242,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>{t('memberPlanList.slug')}</Form.ControlLabel>
-              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext={true} />
+              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext />
             </Form.Group>
 
             <Form.Group>
@@ -228,7 +251,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 block
                 virtualized
                 value={tags ?? []}
-                creatable={true}
+                creatable
                 data={tags ? tags.map(tag => ({label: tag, value: tag})) : []}
                 onChange={tagsValue => setTags(tagsValue ?? [])}
               />
@@ -241,8 +264,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             </Form.Group>
 
             <Form.Group>
-              <Form.ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {t('memberPlanList.minimumMonthlyAmount') + '*'}
+              </Form.ControlLabel>
               <CurrencyInput
+                name="currency"
                 currency="CHF"
                 centAmount={amountPerMonthMin}
                 disabled={isDisabled}
@@ -257,92 +283,94 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 <RichTextBlock value={description} onChange={value => setDescription(value)} />
               </div>
             </Form.Group>
-          </Form>
-        </Panel>
+          </Panel>
 
-        <ChooseEditImage
-          image={image}
-          disabled={isLoading}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => setImage(undefined)}
-        />
+          <ChooseEditImage
+            image={image}
+            disabled={isLoading}
+            openChooseModalOpen={() => setChooseModalOpen(true)}
+            openEditModalOpen={() => setEditModalOpen(true)}
+            removeImage={() => setImage(undefined)}
+          />
 
-        <Panel>
-          <ListInput
-            value={availablePaymentMethods}
-            onChange={app => setAvailablePaymentMethods(app)}
-            defaultValue={{
-              forceAutoRenewal: false,
-              paymentPeriodicities: [],
-              paymentMethods: []
-            }}>
-            {({value, onChange}) => (
-              <Form fluid={true}>
-                <Form.Group>
-                  <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
-                  <Toggle
-                    checked={value.forceAutoRenewal}
-                    disabled={isDisabled}
-                    onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
-                  />
-                  <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
-                </Form.Group>
-                <Form.Group>
-                  <Form.ControlLabel>{t('memberPlanList.paymentPeriodicities')}</Form.ControlLabel>
-                  <CheckPicker
-                    virtualized
-                    value={value.paymentPeriodicities}
-                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                      value: pp,
-                      label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-                    }))}
-                    onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
-                    block
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
-                  <CheckPicker
-                    virtualized
-                    value={value.paymentMethods.map(pm => pm.id)}
-                    data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                    onChange={paymentMethodIDs => {
-                      onChange({
-                        ...value,
-                        paymentMethods: paymentMethodIDs
-                          .map(pmID => paymentMethods.find(pm => pm.id === pmID))
-                          .filter(pm => pm !== undefined)
-                          .map(pm => pm as PaymentMethod)
-                      })
-                    }}
-                    block
-                  />
-                </Form.Group>
-              </Form>
-            )}
-          </ListInput>
-        </Panel>
-      </Drawer.Body>
+          <Panel>
+            <ListInput
+              value={availablePaymentMethods}
+              onChange={app => setAvailablePaymentMethods(app)}
+              defaultValue={{
+                forceAutoRenewal: false,
+                paymentPeriodicities: [],
+                paymentMethods: []
+              }}>
+              {({value, onChange}) => (
+                <Form fluid>
+                  <Form.Group>
+                    <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
+                    <Toggle
+                      checked={value.forceAutoRenewal}
+                      disabled={isDisabled}
+                      onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
+                    />
+                    <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.ControlLabel>
+                      {t('memberPlanList.paymentPeriodicities')}
+                    </Form.ControlLabel>
+                    <CheckPicker
+                      virtualized
+                      value={value.paymentPeriodicities}
+                      data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                        value: pp,
+                        label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                      }))}
+                      onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
+                      block
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
+                    <CheckPicker
+                      virtualized
+                      value={value.paymentMethods.map(pm => pm.id)}
+                      data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                      onChange={paymentMethodIDs => {
+                        onChange({
+                          ...value,
+                          paymentMethods: paymentMethodIDs
+                            .map(pmID => paymentMethods.find(pm => pm.id === pmID))
+                            .filter(pm => pm !== undefined)
+                            .map(pm => pm as PaymentMethod)
+                        })
+                      }}
+                      block
+                    />
+                  </Form.Group>
+                </Form>
+              )}
+            </ListInput>
+          </Panel>
+        </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
-        <ImageSelectPanel
-          onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
-            setChooseModalOpen(false)
-            handleImageChange(value)
-          }}
-        />
-      </Drawer>
-      {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
-            id={image!.id}
-            onClose={() => setEditModalOpen(false)}
-            onSave={() => setEditModalOpen(false)}
+        <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+          <ImageSelectPanel
+            onClose={() => setChooseModalOpen(false)}
+            onSelect={value => {
+              setChooseModalOpen(false)
+              handleImageChange(value)
+            }}
           />
         </Drawer>
-      )}
+        {image && (
+          <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+            <ImagedEditPanel
+              id={image!.id}
+              onClose={() => setEditModalOpen(false)}
+              onSave={() => setEditModalOpen(false)}
+            />
+          </Drawer>
+        )}
+      </Form>
     </>
   )
 }

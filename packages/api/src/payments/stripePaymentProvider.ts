@@ -149,7 +149,9 @@ export class StripePaymentProvider extends BasePaymentProvider {
           mail: invoice.mail
         }
       })
-    } catch (error) {
+    } catch (err) {
+      const error: any = err
+
       logger('stripePaymentProvider').error(
         error,
         'Error while creating Stripe Intent for paymentProvider %s',

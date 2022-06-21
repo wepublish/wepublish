@@ -99,7 +99,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.SocialMedia:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('pageEditor.panels.metadataInfo')}
@@ -150,7 +150,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
                 <Form.Control
@@ -183,7 +183,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 <TagPicker
                   virtualized
                   style={{width: '100%'}}
-                  creatable={true}
+                  creatable
                   value={tags}
                   data={tags.map(tag => ({label: tag, value: tag}))}
                   onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
@@ -210,7 +210,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.Properties:
         return (
           <Panel>
-            <Form fluid={true}>
+            <Form fluid>
               <Form.Group>
                 <Message showIcon type="info">
                   {t('pageEditor.panels.propertiesInfo')}
@@ -272,7 +272,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
         <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} onClick={() => onClose?.()}>
+          <Button appearance="primary" onClick={() => onClose?.()}>
             {t('pageEditor.panels.saveAndClose')}
           </Button>
         </Drawer.Actions>
