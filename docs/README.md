@@ -86,7 +86,7 @@ The model then needs to be specified in the related `<Form>` and the name of the
   ...
 </Form>
 ````
-The validation will be triggered `onSubmit`. The `handleSave()` function will be triggered only if validation is successfull. 
+The validation will be triggered `onSubmit`. The `handleSave()` function will be triggered only if validation is successful. 
 This part differs from the Rsuite documentation, where validation is checked with an if statement, which is less clean. 
 
 For validation to be triggered on `onSubmit`, the form button needs to be of type `submit` and needs to be inside the form: 
