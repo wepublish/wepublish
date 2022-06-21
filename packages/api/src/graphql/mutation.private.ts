@@ -56,20 +56,19 @@ import {
   GraphQLPeerProfileInput,
   GraphQLUpdatePeerInput
 } from './peer'
-import {createPeer, deletePeerById} from './peer/peer.private-mutation'
+import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
+import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
   CanCreatePage,
-  CanCreatePeer,
   CanCreateSubscription,
   CanCreateUser,
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
   CanSendJWTLogin,
-  CanTakeActionOnComment,
-  CanUpdatePeerProfile
+  CanTakeActionOnComment
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
@@ -184,12 +183,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePeerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
-      async resolve(root, {input}, {hostURL, authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanUpdatePeerProfile, roles)
-
-        return {...(await dbAdapter.peer.updatePeerProfile(input)), hostURL}
-      }
+      resolve: (root, {input}, {hostURL, authenticate, prisma: {peerProfile}}) =>
+        upsertPeerProfile(input, hostURL, authenticate, peerProfile)
     },
 
     createPeer: {
@@ -205,13 +200,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUpdatePeerInput)}
       },
-      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePeer, roles)
-
-        // TODO: Check if valid peer?
-        return dbAdapter.peer.updatePeer(id, input)
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {peer}}) =>
+        updatePeer(id, input, authenticate, peer)
     },
 
     deletePeer: {

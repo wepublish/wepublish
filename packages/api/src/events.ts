@@ -4,7 +4,6 @@ import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
 import {Page} from './db/page'
-import {Peer} from './db/peer'
 import {Subscription} from './db/subscription'
 import {User} from './db/user'
 import {SendMailType} from './mails/mailContext'
@@ -27,9 +26,6 @@ export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 
-export type PeerModelEventsEmitter = TypedEmitter<ModelEvents<Peer>>
-export const peerModelEvents = new EventEmitter() as PeerModelEventsEmitter
-
 export type SubscriptionModelEventsEmitter = TypedEmitter<ModelEvents<Subscription>>
 export const subscriptionModelEvents = new EventEmitter() as SubscriptionModelEventsEmitter
 
@@ -39,7 +35,6 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | PageModelEventEmitter
-  | PeerModelEventsEmitter
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
 
@@ -62,11 +57,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'page',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: pageModelEvents
-  },
-  {
-    key: 'peer',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: peerModelEvents
   },
   {
     key: 'subscription',

@@ -2,11 +2,9 @@ import {DBUserAdapter} from './user'
 import {DBArticleAdapter} from './article'
 import {DBCommentAdapter} from './comment'
 import {DBPageAdapter} from './page'
-import {DBPeerAdapter} from './peer'
 import {DBSubscriptionAdapter} from './subscription'
 
 export interface DBAdapter {
-  readonly peer: DBPeerAdapter
   readonly user: DBUserAdapter
   readonly subscription: DBSubscriptionAdapter
   readonly article: DBArticleAdapter

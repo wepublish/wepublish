@@ -6,7 +6,6 @@ import {Migrations, LatestMigration} from './migration'
 import {generateID} from './utility'
 
 import {MongoDBUserAdapter} from './db/user'
-import {MongoDBPeerAdapter} from './db/peer'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
@@ -51,7 +50,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly client: MongoClient
   readonly db: Db
 
-  readonly peer: MongoDBPeerAdapter
   readonly user: MongoDBUserAdapter
   readonly subscription: MongoDBSubscriptionAdapter
   readonly comment: MongoDBCommentAdapter
@@ -75,7 +73,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.client = client
     this.db = db
 
-    this.peer = new MongoDBPeerAdapter(db)
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
     this.subscription = new MongoDBSubscriptionAdapter(db)
     this.comment = new MongoDBCommentAdapter(db)
