@@ -312,7 +312,9 @@ export class MemberContext implements MemberContext {
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
     const subscriptionsPaidUntil: Subscription[] = []
+    // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
     const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
+    // max batch size is 100 given by https://github.com/wepublish/wepublish/blob/master/packages/api-db-mongodb/src/db/defaults.ts#L3
     const batchSize =
       !isNaN(maxSubscriptionBatch) && maxSubscriptionBatch < 100 ? maxSubscriptionBatch : 100
     let hasMore = true
