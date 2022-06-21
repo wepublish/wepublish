@@ -181,6 +181,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
   async getSubscriptions({
     filter,
+    joins,
     sort,
     order,
     cursor,
@@ -321,13 +322,64 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
     }
 
+    if (filter?.userID) {
+      textFilter.$and?.push({userID: {$eq: filter.userID}})
+    }
+
+    // join related collections
+    let preparedJoins: any = []
+    // member plan join
+    if (joins?.joinMemberPlan) {
+      preparedJoins = [
+        {
+          $lookup: {
+            from: CollectionName.MemberPlans,
+            localField: 'memberPlanID',
+            foreignField: '_id',
+            as: 'memberPlan'
+          }
+        },
+        {$unwind: '$memberPlan'}
+      ]
+    }
+    // payment method join
+    if (joins?.joinPaymentMethod) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.PaymentMethods,
+            localField: 'paymentMethodID',
+            foreignField: '_id',
+            as: 'paymentMethod'
+          }
+        },
+        {$unwind: '$paymentMethod'}
+      ]
+    }
+    // user join
+    if (joins?.joinUser) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.Users,
+            localField: 'userID',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
+        {$unwind: '$user'}
+      ]
+    }
+
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
 
       this.subscriptions
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .aggregate([...preparedJoins], {collation: {locale: this.locale, strength: 2}})
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})

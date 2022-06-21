@@ -109,7 +109,6 @@ export function PageTemplateContainer({slug, id, token}: PageTemplateContainerPr
   const {canonicalHost} = useAppContext()
   if (!token) token = slug
   const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id, token}})
-
   if (loading) return <Loader text="Loading" />
 
   if (error) return <NotFoundTemplate statusCode={500} />
