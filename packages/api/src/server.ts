@@ -29,11 +29,11 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
-  private readonly opts: WepublishServerOpts
 
-  constructor(opts: WepublishServerOpts) {
+  constructor(private readonly opts: WepublishServerOpts) {
     const app = express()
     this.opts = opts
+
     const {dbAdapter} = opts
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
@@ -61,7 +61,7 @@ export class WepublishServer {
                     ) // execute event emitter
                   } catch (error) {
                     logger('server').error(
-                      error as object,
+                      error as Error,
                       'error during emitting event for %s',
                       methodName
                     )
@@ -158,7 +158,7 @@ export class WepublishServer {
       // Wait for all asynchronous events to finish. I know this is bad code.
       await new Promise(resolve => setTimeout(resolve, 10000))
     } catch (error) {
-      logger('server').error(error, 'Error while running job "%s"', command)
+      logger('server').error(error as Error, 'Error while running job "%s"', command)
     }
   }
 }

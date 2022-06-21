@@ -80,7 +80,7 @@ export async function renderApp({
     await getDataFromTree(ServerApp)
   } catch (err) {
     console.error(`ApolloError: ${JSON.stringify(err, undefined, 2)}`)
-    error = err
+    error = err as Error
   }
 
   const initialState = client.extract()
@@ -121,7 +121,9 @@ export async function renderMarkup(opts: RenderOptions) {
     new Set(bundles.reduce((acc, file) => [...acc, ...file], []))
   ).filter(url => url !== clientEntryFile)
 
-  const scriptElements = bundleSet.map(url => <script async src={`${staticHost}/${url}`}></script>)
+  const scriptElements = bundleSet.map((url, index) => (
+    <script key={index} async src={`${staticHost}/${url}`}></script>
+  ))
 
   return {
     markup:

@@ -294,7 +294,7 @@ export class MemberContext implements MemberContext {
       return newInvoice
     } catch (error) {
       logger('memberContext').error(
-        error,
+        error as Error,
         'Error while renewing subscription with id %s',
         subscription.id
       )
@@ -415,7 +415,7 @@ export class MemberContext implements MemberContext {
         await new Promise(resolve => setTimeout(resolve, 100))
       } catch (error) {
         logger('memberContext').error(
-          error,
+          error as Error,
           'Checking Intent State for Payment %s failed',
           payment?.id
         )
@@ -699,7 +699,7 @@ export class MemberContext implements MemberContext {
           replyToAddress
         })
       } catch (error) {
-        logger('memberContext').error(error, 'Error while sending reminder')
+        logger('memberContext').error(error as Error, 'Error while sending reminder')
       }
     }
   }
