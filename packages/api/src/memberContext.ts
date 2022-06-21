@@ -1,29 +1,21 @@
-import {OptionalUser, PaymentProviderCustomer, User} from './db/user'
+import {PaymentProviderCustomer, User} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
 import {DataLoaderContext} from './context'
 import {
-  isTempUser,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
-  ONE_MONTH_IN_MILLISECONDS,
-  removePrefixTempUser
+  ONE_MONTH_IN_MILLISECONDS
 } from './utility'
 import {PaymentPeriodicity, MemberPlan} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {MailContext, SendMailType} from './mails/mailContext'
-import {
-  Subscription,
-  SubscriptionDeactivationReason,
-  SubscriptionSort,
-  OptionalSubscription
-} from './db/subscription'
+import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {PaymentMethod} from './db/paymentMethod'
-import {OptionalTempUser, UserIdWithTempPrefix} from './db/tempUser'
 
 export interface HandleSubscriptionChangeProps {
   subscription: Subscription
@@ -261,9 +253,7 @@ export class MemberContext implements MemberContext {
         subscription.paymentPeriodicity
       )
 
-      const user = isTempUser(subscription.userID)
-        ? await this.dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
-        : await this.dbAdapter.user.getUserByID(subscription.userID)
+      const user = await this.dbAdapter.user.getUserByID(subscription.userID)
 
       if (!user) {
         logger('memberContext').info('User with id "%s" not found', subscription.userID)
@@ -437,43 +427,6 @@ export class MemberContext implements MemberContext {
     return this.paymentProviders
       .filter(provider => provider.offSessionPayments)
       .map(provider => provider.id)
-  }
-
-  /**
-   * Create regular user out of temp user and activate subscription
-   * @param dbAdapter
-   * @param userID
-   * @param subscription
-   * @private
-   */
-  public async activateTempUser(
-    dbAdapter: DBAdapter,
-    userID: UserIdWithTempPrefix,
-    subscription: OptionalSubscription
-  ): Promise<OptionalSubscription> {
-    // create non-temp user id
-    const tempUserId = removePrefixTempUser(userID)
-    const tempUser: OptionalTempUser = await dbAdapter.tempUser.getTempUserByID(tempUserId)
-    if (!tempUser) {
-      throw new Error('User not found while updating payment with intent state.')
-    }
-
-    // creating the new user out of the existing temp_user
-    const user: OptionalUser = await dbAdapter.user.createUserFromTempUser(tempUser)
-
-    if (!user) {
-      throw new Error('User could not be created from temp user.')
-    }
-
-    if (!subscription) {
-      throw new Error('Subscription is empty within activateTempUser method.')
-    }
-    // update userID of subscription
-    subscription = await dbAdapter.subscription.updateUserID(subscription.id, user.id)
-    if (!subscription) {
-      throw new Error('Subscription could not be activated.')
-    }
-    return subscription
   }
 
   private async getAllOpenInvoices(): Promise<Invoice[]> {

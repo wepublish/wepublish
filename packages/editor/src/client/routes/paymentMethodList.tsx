@@ -89,11 +89,7 @@ export function PaymentMethodList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table
-        autoHeight={true}
-        style={{marginTop: '20px'}}
-        loading={isLoading}
-        data={paymentMethods}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={paymentMethods}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
           <Cell>

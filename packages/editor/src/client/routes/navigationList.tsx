@@ -95,7 +95,7 @@ export function NavigationList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>

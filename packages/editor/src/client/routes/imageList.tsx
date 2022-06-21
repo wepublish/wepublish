@@ -39,7 +39,7 @@ import {
   Pagination
 } from 'rsuite'
 
-import {DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import EditIcon from '@rsuite/icons/legacy/Edit'
@@ -143,7 +143,7 @@ export function ImageList() {
           minHeight={600}
           data={images}
           rowHeight={100}
-          autoHeight={true}
+          autoHeight
           loading={isLoading}
           wordWrap
           className={'displayThreeLinesOnly'}>
@@ -233,6 +233,13 @@ export function ImageList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.images.totalCount ?? 0}
           activePage={activePage}

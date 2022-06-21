@@ -31,7 +31,11 @@ import {
   Pagination
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import LockIcon from '@rsuite/icons/legacy/Lock'
@@ -156,7 +160,7 @@ export function UserList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={users}
@@ -244,6 +248,13 @@ export function UserList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.users.totalCount ?? 0}
           activePage={page}
@@ -282,25 +293,27 @@ export function UserList() {
         />
       </Drawer>
 
-      <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
-        </Modal.Header>
+      {currentUser?.id && (
+        <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-          <ResetUserPasswordPanel
-            userID={currentUser?.id}
-            userName={currentUser?.name}
-            onClose={() => setIsResetUserPasswordOpen(false)}
-          />
-        </Modal.Body>
+          <Modal.Body>
+            <ResetUserPasswordPanel
+              userID={currentUser?.id}
+              userName={currentUser?.name}
+              onClose={() => setIsResetUserPasswordOpen(false)}
+            />
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer>
+            <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+              {t('userList.panels.cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

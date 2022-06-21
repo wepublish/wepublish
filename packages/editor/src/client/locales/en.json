@@ -21,7 +21,6 @@
         "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
-        "preview": "Preview",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
@@ -138,10 +137,12 @@
         "updateDate": "Update Date",
         "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://canonical-url.com",
         "value": "Value",
         "yes": "Yes",
         "canonicalUrl": "Canonical Url",
-        "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>"
+        "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>",
+        "peerDisabled": "Currently this peer is disabled"
       }
     },
     "articles": {
@@ -459,6 +460,7 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadImage": "Upload Image",
+        "urlPlaceholder": "https://www.link.com",
         "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading."
       }
     },
@@ -737,6 +739,8 @@
     "peerList": {
       "overview": {
         "delete": "Delete",
+        "disable": "Disable",
+        "enable": "Enable",
         "editProfile": "Edit profile",
         "newPeer": "New Peer",
         "noPeersFound": "No peers found",
@@ -782,7 +786,7 @@
         "token": "Token",
         "unknown": "Unknown",
         "unnamed": "Unnamed",
-        "URL": "URL",
+        "URL": "URL: https://www.url.com",
         "validateToken": "Please confirm token is correct before saving",
         "leaveEmpty": "Leave empty if you don't want to change it"
       }
@@ -826,23 +830,24 @@
         "unknown": "Unknown",
         "deleted": "Deleted user",
         "subscription": "Subscription",
-        "tempUser": "(Temporary User) - ",
         "email": "Email",
-        "memberPlan": "Member Plan"
+        "memberPlan": "Member Plan",
+        "downloadCsv": "Download CSV"
       },
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
-        "reasonInvoiceNotPaid": "Invoice not paid"
+        "reasonInvoiceNotPaid": "Invoice not paid",
+        "reset": "Reset Filter",
+        "searchPlaceholder": "Search by first name, last name, email, address, zip, city"
       },
       "panels": {
         "deleteSubscription": "Delete Subscription?",
         "name": "Name",
         "unknown": "Unknown",
         "cancel": "Cancel",
-        "confirm": "Confirm",
-        "tempUserWarning": "This Subscription has a temporary user that has not finished the registration. If you delete the subscription the temporary user will be also deleted."
+        "confirm": "Confirm"
       }
     },
     "userList": {
@@ -952,10 +957,6 @@
       "hasAddress": "User has address",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
-      "tempUser": {
-        "disabledInfo": "This subscription belongs to a temporary user that has not yet finished registration. You can not edit anything until the registration is finished."
-      },
-      "tempUserTitle": "Temporary User",
       "deactivation": {
         "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
@@ -995,6 +996,46 @@
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "errorMessages": {
+      "noFirstNameErrorMessage": "Please enter a firstname",
+      "noNameErrorMessage": "Please enter a name",
+      "noEmailErrorMessage": "Please enter an email address",
+      "invalidEmailErrorMessage": "Please enter a valid email address",
+      "noUrlErrorMessage": "Please enter a url",
+      "invalidUrlErrorMessage": "Please enter a valid url",
+      "noImageErrorMessage": "Please enter an image",
+      "noCallToActionTextErrorMessage": "Please enter a call to action text",
+      "noCallToActionImageErrorMessage": "Please enter a call to action image",
+      "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
+      "noPasswordErrorMessage": "Please enter a password",
+      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "noPaymentProviderErrorMessage": "Please enter a payment provider",
+      "noMemberPlanErrorMessage": "Please enter a member plan",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
+      "noUserErrorMessage": "Please select a user",
+      "noTokenErrorMessage": "Please enter a token"
+    },
+    "invoice": {
+      "manuallyPaidByAdmin": "Marked as paid by administrator.",
+      "invoiceNo": "Invoice No.",
+      "total": "Invoice amount",
+      "paidAt": "Paid at",
+      "payManually": "Pay manually",
+      "areYouSure": "Are you sure?",
+      "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
+      "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
+      "unpaid": "(unpaid)",
+      "seeInvoiceHistory": "see invoice history",
+      "panel": {
+        "invoiceHistory": "Invoice history",
+        "missingSubscriptionId": "Unexpected error: subscriptionId is missing.",
+        "noInvoices": "No invoices."
+      }
+    },
+    "currency": {
+      "chf": "chf"
     }
   }
 }

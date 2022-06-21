@@ -15,7 +15,7 @@ import {Link} from '../route'
 import {useTranslation} from 'react-i18next'
 import {FocalPointInput} from '../atoms/focalPointInput'
 import {Point} from '../atoms/draggable'
-import {Button, Drawer, Form, Panel, TagPicker, toaster, Message} from 'rsuite'
+import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 import {ImageMetaData} from './imageUploadAndEditPanel'
@@ -238,72 +238,82 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     return false
   }
 
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
-        </Drawer.Title>
+      <Form
+        fluid
+        model={validationModel}
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        style={{height: '100%'}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-            {isUpload ? t('images.panels.upload') : t('images.panels.save')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button appearance={'primary'} disabled={isDisabled} type="submit">
+              {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        {!isLoading && (
-          <>
-            <Panel style={{backgroundColor: 'dark'}}>
-              {imageURL && imageWidth && imageHeight && (
-                <FocalPointInput
-                  imageURL={imageURL}
-                  imageWidth={imageWidth}
-                  imageHeight={imageHeight}
-                  maxHeight={300}
-                  focalPoint={focalPoint}
-                  onChange={point => setFocalPoint(point)}
-                />
-              )}
-            </Panel>
-            <Panel header={t('images.panels.description')}>
-              <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')}>
-                  {filename || t('images.panels.untitled')}
-                  {extension}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('images.panels.dimension')}>
-                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-                </DescriptionListItem>
-                {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')}>
-                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
-                  </DescriptionListItem>
+        <Drawer.Body>
+          {!isLoading && (
+            <>
+              <Panel style={{backgroundColor: 'dark'}}>
+                {imageURL && imageWidth && imageHeight && (
+                  <FocalPointInput
+                    imageURL={imageURL}
+                    imageWidth={imageWidth}
+                    imageHeight={imageHeight}
+                    maxHeight={300}
+                    focalPoint={focalPoint}
+                    onChange={point => setFocalPoint(point)}
+                  />
                 )}
-                {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')}>
-                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
+              </Panel>
+              <Panel header={t('images.panels.description')}>
+                <DescriptionList>
+                  <DescriptionListItem label={t('images.panels.filename')}>
+                    {filename || t('images.panels.untitled')}
+                    {extension}
                   </DescriptionListItem>
-                )}
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
+                  <DescriptionListItem label={t('images.panels.dimension')}>
+                    {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                  </DescriptionListItem>
+                  {createdAt && (
+                    <DescriptionListItem label={t('images.panels.created')}>
+                      {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
+                    </DescriptionListItem>
+                  )}
+                  {updatedAt && (
+                    <DescriptionListItem label={t('images.panels.updated')}>
+                      {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
+                    </DescriptionListItem>
+                  )}
+                  <DescriptionListItem label={t('images.panels.fileSize')}>
+                    {prettyBytes(fileSize)}
+                  </DescriptionListItem>
 
-                {originalImageURL && (
-                  <DescriptionListItem label={t('images.panels.link')}>
-                    <Link href={originalImageURL} target="_blank">
-                      {originalImageURL}
-                    </Link>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </Panel>
-            <Panel header={t('images.panels.information')}>
-              <Form fluid={true}>
+                  {originalImageURL && (
+                    <DescriptionListItem label={t('images.panels.link')}>
+                      <Link href={originalImageURL} target="_blank">
+                        {originalImageURL}
+                      </Link>
+                    </DescriptionListItem>
+                  )}
+                </DescriptionList>
+              </Panel>
+              <Panel header={t('images.panels.information')}>
                 <Form.Group>
                   <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
                   <Form.Control
@@ -335,18 +345,17 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                   <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
                   <TagPicker
                     virtualized
-                    block={true}
-                    creatable={true}
+                    block
+                    creatable
                     disabled={isDisabled}
                     value={tags}
                     data={tags.map(tag => ({value: tag, label: tag}))}
                     onChange={value => setTags(value ?? [])}
                   />
                 </Form.Group>
-              </Form>
-            </Panel>
-            <Panel header={t('images.panels.attribution')}>
-              <Form fluid={true}>
+              </Panel>
+              <Panel header={t('images.panels.attribution')}>
+                {/* <Form > */}
                 <Form.Group>
                   <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
                   <Form.Control
@@ -361,6 +370,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                   <Form.Control
                     name="link"
                     value={link}
+                    placeholder={t('images.panels.urlPlaceholder')}
                     disabled={isDisabled}
                     onChange={(value: string) => setLink(value)}
                   />
@@ -375,11 +385,12 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setLicense(value)}
                   />
                 </Form.Group>
-              </Form>
-            </Panel>
-          </>
-        )}
-      </Drawer.Body>
+                {/* </Form> */}
+              </Panel>
+            </>
+          )}
+        </Drawer.Body>
+      </Form>
     </>
   )
 }

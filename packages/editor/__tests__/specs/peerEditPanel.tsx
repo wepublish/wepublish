@@ -36,6 +36,7 @@ describe('Peer Edit Panel', () => {
                 id: 'peerId1',
                 name: 'Test Peer Name',
                 slug: 'test-peer-name',
+                isDisabled: false,
                 hostURL: 'https://test-url.ch/',
                 profile: {}
               }
@@ -93,7 +94,7 @@ describe('Peer Edit Panel', () => {
       }
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
@@ -101,19 +102,24 @@ describe('Peer Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.name"]')!, {
+    const nameInput = getByLabelText('peerList.panels.name*')
+    const urlInput = getByLabelText('peerList.panels.URL*')
+    const tokenInput = getByLabelText('peerList.panels.token*')
+    const saveButton = getByTestId('saveButton')
+
+    fireEvent.change(nameInput, {
       target: {value: peer.name}
     })
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.URL"]')!, {
+    fireEvent.change(urlInput, {
       target: {value: peer.hostURL}
     })
 
-    fireEvent.change(container.querySelector('input[name="peerList.panels.token"]')!, {
+    fireEvent.change(tokenInput, {
       target: {value: peer.token}
     })
 
-    fireEvent.click(container.querySelector('button.fetchButton')!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

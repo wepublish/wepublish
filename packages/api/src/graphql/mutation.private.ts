@@ -90,7 +90,6 @@ import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
-import {isTempUser, removePrefixTempUser} from '../utility'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -476,8 +475,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateSubscription, roles)
 
-        if (isTempUser(input.userID)) throw new Error('Can not update subscription with tempUser')
-
         const subscription = await dbAdapter.subscription.createSubscription({input})
         if (!subscription) throw new Error('Subscription not created.')
 
@@ -523,11 +520,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanDeleteSubscription, roles)
 
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(id)
-
-        if (subscription && isTempUser(subscription.userID)) {
-          await dbAdapter.tempUser.deleteTempUser({id: removePrefixTempUser(subscription.userID)})
-        }
         await dbAdapter.subscription.deleteSubscription({id})
         return id
       }

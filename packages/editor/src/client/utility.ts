@@ -10,10 +10,33 @@ export enum LocalStorageKey {
   SessionToken = 'sessionToken'
 }
 
-export const TEMP_USER_PREFIX = '__temp_'
+export const addOrUpdateOneInArray = (
+  array: Maybe<Record<string | 'id', any>[]>,
+  entry: Record<string | 'id', any>
+) => {
+  let isNew = true
 
-export function isTempUser(userID: string | null | Maybe<string>): boolean {
-  return !!userID?.startsWith(TEMP_USER_PREFIX)
+  if (!array) {
+    return [entry]
+  }
+  const updated = array.map(item => {
+    if (item.id !== entry.id) {
+      // This isn't the item we care about - keep it as-is
+      return item
+    }
+    isNew = false
+    // Otherwise, this is the one we want - return an updated value
+    return {
+      ...item,
+      ...entry
+    }
+  })
+
+  if (isNew) {
+    return [...updated, entry]
+  }
+
+  return updated
 }
 
 export function generateID(): string {
@@ -132,19 +155,13 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   return firstOperation.name.value
 }
 
-// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): Record<string, unknown> {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      return Object.assign(previousValue, {
-        [key
-          .toLowerCase()
-          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
-          .trim()]: value.trim()
-      })
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
     }
     return previousValue
   }, {})
@@ -164,6 +181,7 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
 
 export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
 export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [5, 10, 15]
+export const DEFAULT_MAX_TABLE_PAGES = 5
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,

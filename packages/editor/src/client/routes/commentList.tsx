@@ -39,7 +39,11 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 import {useTranslation} from 'react-i18next'
 
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 import {ApolloCache} from '@apollo/client'
 import CloseIcon from '@rsuite/icons/legacy/Close'
 import SearchIcon from '@rsuite/icons/legacy/Search'
@@ -220,7 +224,7 @@ export function CommentList() {
           marginTop: '20px'
         }}>
         <Table
-          autoHeight={true}
+          autoHeight
           rowClassName={rowData => {
             switch (rowData?.state) {
               case CommentState.Approved:
@@ -358,6 +362,13 @@ export function CommentList() {
         <Pagination
           limit={limit}
           limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={data?.comments.totalCount ?? 0}
           activePage={page}

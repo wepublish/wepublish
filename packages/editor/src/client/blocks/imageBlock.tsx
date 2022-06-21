@@ -36,8 +36,8 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
   return (
     <>
       <Panel
-        bodyFill={true}
-        bordered={true}
+        bodyFill
+        bordered
         style={{
           height: 300,
           overflow: 'hidden',

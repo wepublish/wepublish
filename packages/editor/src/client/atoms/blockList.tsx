@@ -73,7 +73,6 @@ const BlockListItem = memo(function BlockListItem({
     },
     [onChange, index]
   )
-
   return (
     <ListItemWrapper
       icon={icon}
@@ -289,7 +288,7 @@ function ListItemWrapper({
           display: 'flex',
           width: '100%'
         }}>
-        <Panel style={{width: '100%'}} bordered={true}>
+        <Panel style={{width: '100%'}} bordered>
           <div style={{padding: 20}}>{children}</div>
         </Panel>
       </div>

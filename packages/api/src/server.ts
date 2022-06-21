@@ -34,6 +34,7 @@ export class WepublishServer {
   constructor(private readonly opts: WepublishServerOpts) {
     const app = express()
     this.opts = opts
+
     const {dbAdapter} = opts
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
