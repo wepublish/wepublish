@@ -91,8 +91,8 @@ import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
-import {GraphQLSetting, GraphQLSettingInput} from './setting'
-import {SettingName} from '../db/setting'
+import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
+import {SettingName, UpdateSettingArgs} from '../db/setting'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1161,45 +1161,42 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // Settings
     // ==========
 
-    updateSetting: {
-      type: GraphQLSetting,
+    updateSettingList: {
+      type: GraphQLList(GraphQLSetting),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLSettingInput)}
+        value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
       },
 
-      async resolve(root, {id, input}, {authenticate, dbAdapter, loaders}) {
-        const fullSetting = await loaders.settingsByID.load(id)
-
-        if (!fullSetting) {
-          throw new NotFound('setting', id)
-        }
-
-        const restrictions = fullSetting?.settingRestriction
-
+      async resolve(root, {value}, {authenticate, dbAdapter, loaders}) {
         const {roles} = authenticate()
         authorise(CanUpdateSetting, roles)
 
-        const allowedValues = restrictions?.allowedValues
-          ? restrictions?.allowedValues?.includes(input)
-          : true
-        const inputLength =
-          restrictions?.inputLength !== undefined
-            ? restrictions.inputLength >= input.value.length
-            : true
-        const maxValue =
-          restrictions?.maxValue !== undefined ? restrictions.maxValue >= input.value : true
-        const minValue =
-          restrictions?.minValue !== undefined ? restrictions.minValue <= input.value : true
+        value.map(async ({id, value: val}: UpdateSettingArgs) => {
+          const fullSetting = await loaders.settingsByID.load(id)
 
-        if (allowedValues && inputLength && maxValue && minValue) {
-          return dbAdapter.setting.updateSetting({
-            id,
-            input: input
-          })
-        } else {
-          throw new InvalidSettingValueError()
-        }
+          if (!fullSetting) {
+            throw new NotFound('setting', id)
+          }
+
+          const restrictions = fullSetting?.settingRestriction
+
+          const allowedValues = restrictions?.allowedValues
+            ? restrictions?.allowedValues?.includes(String(val))
+            : true
+          const inputLength =
+            restrictions?.inputLength !== undefined
+              ? restrictions.inputLength >= String(val).length
+              : true
+          const maxValue =
+            restrictions?.maxValue !== undefined ? restrictions.maxValue >= Number(val) : true
+          const minValue =
+            restrictions?.minValue !== undefined ? restrictions.minValue <= Number(val) : true
+
+          if (!allowedValues || !inputLength || !maxValue || !minValue) {
+            throw new InvalidSettingValueError()
+          }
+        })
+        return await dbAdapter.setting.updateSettingList(value)
       }
     }
   }

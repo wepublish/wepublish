@@ -60,12 +60,27 @@ export const GraphQLSettingInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLUpdateSettingArgs = new GraphQLInputObjectType({
+  name: 'UpdateSettingArgs',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    value: {type: GraphQLNonNull(GraphQLSettingValueType)}
+  }
+})
+
+export const GraphQLSettingsInput = new GraphQLInputObjectType({
+  name: 'SettingsInput',
+  fields: {
+    value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
+  }
+})
+
 export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLSettingName)},
-    value: {type: GraphQLSettingValueType},
+    value: {type: GraphQLNonNull(GraphQLSettingValueType)},
     settingRestriction: {type: GraphQLSettingRestriction}
   }
 })

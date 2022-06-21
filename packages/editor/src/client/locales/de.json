@@ -921,6 +921,8 @@
       "loginMinutes": "Gültigkeitsdauer Login-Token",
       "passwordToken": "Gültigkeitsdauer Passwort-Reset-Token",
       "peerToken": "Gültigkeitsdauser Peer token",
+      "invoiceReminders": "Anzahl Rechnungserinnerungen",
+      "invoiceFrequency": "Rechnungserinnerungsintervall",
       "minutes": "Minuten",
       "ms": "Milisekunden"
     }

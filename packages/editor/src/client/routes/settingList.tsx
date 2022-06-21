@@ -2,7 +2,13 @@ import React, {useEffect, useState} from 'react'
 
 import {useTranslation} from 'react-i18next'
 import {Form, InputNumber, Notification, toaster, Toggle} from 'rsuite'
-import {Setting, SettingName, useSettingListQuery, useUpdateSettingMutation} from '../api'
+import {
+  Setting,
+  SettingName,
+  UpdateSettingArgs,
+  useSettingListQuery,
+  useUpdateSettingListMutation
+} from '../api'
 import {ButtonLink} from '../route'
 
 export function SettingList() {
@@ -81,23 +87,21 @@ export function SettingList() {
     }
   }, [settingListData])
 
-  const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
+  const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
     fetchPolicy: 'network-only'
   })
 
   async function handleSettingListUpdate() {
-    const allSettings = [
-      allowGuestComment,
-      sendLoginJwtExpiresMin,
-      resetPwdJwtExpiresMin,
-      peeringTimeoutMs,
-      invoiceReminderTries,
-      invoiceReminderFreq
-    ]
-    allSettings.map(
-      async setting =>
-        await updateSetting({variables: {id: setting.id, input: {value: setting.value}}})
+    const allSettings: UpdateSettingArgs[] = []
+    allSettings.push(
+      {id: allowGuestComment.id, value: allowGuestComment.value},
+      {id: sendLoginJwtExpiresMin.id, value: sendLoginJwtExpiresMin.value},
+      {id: resetPwdJwtExpiresMin.id, value: resetPwdJwtExpiresMin.value},
+      {id: peeringTimeoutMs.id, value: peeringTimeoutMs.value},
+      {id: invoiceReminderTries.id, value: invoiceReminderTries.value},
+      {id: invoiceReminderFreq.id, value: invoiceReminderFreq.value}
     )
+    await updateSettings({variables: {input: allSettings}})
 
     toaster.push(
       <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
@@ -205,8 +209,7 @@ export function SettingList() {
           />
         </Form.Group>
         <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>invoice reminder retries</Form.ControlLabel>
+          <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
           <InputNumber
             value={invoiceReminderTries.value}
             min={
@@ -228,8 +231,7 @@ export function SettingList() {
           />
         </Form.Group>
         <Form.Group>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Form.ControlLabel>invoice reminder frequency</Form.ControlLabel>
+          <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
           <InputNumber
             value={invoiceReminderFreq.value}
             min={

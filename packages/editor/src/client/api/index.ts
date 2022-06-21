@@ -753,7 +753,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
-  updateSetting?: Maybe<Setting>;
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
 };
 
 
@@ -1064,9 +1064,8 @@ export type MutationRequestChangesOnCommentArgs = {
 };
 
 
-export type MutationUpdateSettingArgs = {
-  id: Scalars['ID'];
-  input: SettingInput;
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
 };
 
 export type Navigation = {
@@ -1735,12 +1734,8 @@ export type Setting = {
   __typename?: 'Setting';
   id: Scalars['ID'];
   name: SettingName;
-  value?: Maybe<Scalars['Value']>;
+  value: Scalars['Value'];
   settingRestriction?: Maybe<SettingRestriction>;
-};
-
-export type SettingInput = {
-  value?: Maybe<Scalars['Value']>;
 };
 
 export enum SettingName {
@@ -1955,6 +1950,11 @@ export type UpdatePeerInput = {
   hostURL?: Maybe<Scalars['String']>;
   isDisabled?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
+};
+
+export type UpdateSettingArgs = {
+  id: Scalars['ID'];
+  value: Scalars['Value'];
 };
 
 
@@ -3691,18 +3691,17 @@ export type SettingQuery = (
   )> }
 );
 
-export type UpdateSettingMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: SettingInput;
+export type UpdateSettingListMutationVariables = Exact<{
+  input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
 }>;
 
 
-export type UpdateSettingMutation = (
+export type UpdateSettingListMutation = (
   { __typename?: 'Mutation' }
-  & { updateSetting?: Maybe<(
+  & { updateSettingList?: Maybe<Array<Maybe<(
     { __typename?: 'Setting' }
     & Pick<Setting, 'value'>
-  )> }
+  )>>> }
 );
 
 export type FullSubscriptionFragment = (
@@ -7169,40 +7168,39 @@ export function useSettingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Se
 export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
 export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;
 export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>;
-export const UpdateSettingDocument = gql`
-    mutation UpdateSetting($id: ID!, $input: SettingInput!) {
-  updateSetting(id: $id, input: $input) {
+export const UpdateSettingListDocument = gql`
+    mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
+  updateSettingList(value: $input) {
     value
   }
 }
     `;
-export type UpdateSettingMutationFn = Apollo.MutationFunction<UpdateSettingMutation, UpdateSettingMutationVariables>;
+export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 
 /**
- * __useUpdateSettingMutation__
+ * __useUpdateSettingListMutation__
  *
- * To run a mutation, you first call `useUpdateSettingMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSettingMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateSettingMutation, { data, loading, error }] = useUpdateSettingMutation({
+ * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
  *   variables: {
- *      id: // value for 'id'
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingMutation, UpdateSettingMutationVariables>) {
+export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingMutation, UpdateSettingMutationVariables>(UpdateSettingDocument, options);
+        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
       }
-export type UpdateSettingMutationHookResult = ReturnType<typeof useUpdateSettingMutation>;
-export type UpdateSettingMutationResult = Apollo.MutationResult<UpdateSettingMutation>;
-export type UpdateSettingMutationOptions = Apollo.BaseMutationOptions<UpdateSettingMutation, UpdateSettingMutationVariables>;
+export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
+export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
+export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {

@@ -17,8 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
-import {Setting} from './db/setting'
-
+import {Setting, SettingName} from './db/setting'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -227,6 +226,9 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
 
     // send mails including login link
+    const jwtExpires = Number(
+      (await context.dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))?.value
+    )
     const user = await context.dbAdapter.user.getUserByID(subscription.userID)
     if (!user) {
       logger('events').warn(`User not found %s`, subscription.userID)
@@ -234,7 +236,7 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
     const token = context.generateJWT({
       id: user.id,
-      expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+      expiresInMinutes: jwtExpires
     })
     await context.mailContext.sendMail({
       type: mailTypeToSend,

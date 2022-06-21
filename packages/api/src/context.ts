@@ -89,7 +89,7 @@ export interface DataLoaderContext {
 
   readonly mailLogsByID: DataLoader<string, OptionalMailLog>
   readonly settingsByName: DataLoader<SettingName, OptionalSetting>
-  readonly settingsByID: DataLoader<SettingName, OptionalSetting>
+  readonly settingsByID: DataLoader<string, OptionalSetting>
 
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>

@@ -1028,6 +1028,8 @@
       "loginMinutes": "Login token validity period",
       "passwordToken": "Password reset token validity period",
       "peerToken": "Peer token validity period",
+      "invoiceReminders": "Invoice reminder attempts",
+      "invoiceFrequency": "Invoice reminder frequency",
       "minutes": "minutes",
       "ms": "milliseconds",
       "days": "days"

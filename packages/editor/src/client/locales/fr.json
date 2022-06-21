@@ -913,6 +913,8 @@
       "loginMinutes": "Durée de validité du token d’authentification",
       "passwordToken": "Durée de validité du jeton de réinitialisation du mot de passe",
       "peerToken": "Durée de validité du peer token",
+      "invoiceReminders": "Essais de rappel de facture",
+      "invoiceFrequency": "Fréquence des rappels de factures",
       "minutes": "Minutes",
       "ms": "Millisecondes"
     }
