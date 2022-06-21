@@ -12,6 +12,7 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
+  testEnvironment: 'node',
   testEnvironmentOptions: {
     url: 'http://localhost/'
   },
