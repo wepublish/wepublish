@@ -160,7 +160,7 @@ export function UserList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={users}
@@ -293,25 +293,27 @@ export function UserList() {
         />
       </Drawer>
 
-      <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
-        </Modal.Header>
+      {currentUser?.id && (
+        <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-          <ResetUserPasswordPanel
-            userID={currentUser?.id}
-            userName={currentUser?.name}
-            onClose={() => setIsResetUserPasswordOpen(false)}
-          />
-        </Modal.Body>
+          <Modal.Body>
+            <ResetUserPasswordPanel
+              userID={currentUser?.id}
+              userName={currentUser?.name}
+              onClose={() => setIsResetUserPasswordOpen(false)}
+            />
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer>
+            <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+              {t('userList.panels.cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

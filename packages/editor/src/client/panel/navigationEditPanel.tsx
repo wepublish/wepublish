@@ -207,7 +207,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
             {id ? t('navigation.panels.save') : t('navigation.panels.create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
@@ -217,7 +217,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
+          <Form fluid>
             <Form.Group>
               <Form.ControlLabel>{t('navigation.panels.name')}</Form.ControlLabel>
               <Form.Control
