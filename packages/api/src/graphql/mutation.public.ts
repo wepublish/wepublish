@@ -55,6 +55,11 @@ import {
   GraphQLUserAddressInput
 } from './user'
 import {createUser} from './user/user.mutation'
+import {
+  updatePaymentProviderCustomers,
+  updatePublicUser,
+  updateUserPassword
+} from './user/user.public-mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -514,10 +519,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
 
         try {
-          await dbAdapter.user.updateUser({
-            id: user.id,
-            input: {
-              ...user,
+          await prisma.user.update({
+            where: {id: user.id},
+            data: {
               properties
             }
           })
@@ -535,34 +539,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's data by taking an input of type UserInput.",
-      async resolve(root, {input}, {authenticateUser, prisma, dbAdapter}) {
-        const {user} = authenticateUser()
-
-        const {name, email, firstName, preferredName, address} = input
-        // TODO: implement new email check
-
-        if (user.email !== email) {
-          const userExists = await prisma.user.findUnique({
-            where: {email}
-          })
-          if (userExists) throw new EmailAlreadyInUseError()
-        }
-
-        const updateUser = await dbAdapter.user.updateUser({
-          id: user.id,
-          input: {
-            ...user,
-            name,
-            firstName,
-            preferredName,
-            address
-          }
-        })
-
-        if (!updateUser) throw new Error('Error during updateUser')
-
-        return updateUser
-      }
+      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
+        updatePublicUser(input, authenticateUser, user)
     },
 
     updatePassword: {
@@ -573,18 +551,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
-      async resolve(root, {password, passwordRepeated}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        if (!user) throw new NotAuthenticatedError()
-
-        if (password !== passwordRepeated)
-          throw new UserInputError('password and passwordRepeat are not equal')
-
-        return await dbAdapter.user.resetUserPassword({
-          id: user.id,
-          password
-        })
-      }
+      resolve: (
+        root,
+        {password, passwordRepeated},
+        {authenticateUser, prisma: {user}, hashCostFactor}
+      ) => updateUserPassword(password, passwordRepeated, hashCostFactor, authenticateUser, user)
     },
 
     updateUserSubscription: {
@@ -700,16 +671,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
       },
       description: 'This mutation allows to update the Payment Provider Customers',
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        const updateUser = await dbAdapter.user.updatePaymentProviderCustomers({
-          userID: user.id,
-          paymentProviderCustomers: input
-        })
-
-        if (!updateUser) throw new NotFound('User', user.id)
-        return updateUser.paymentProviderCustomers
-      }
+      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
+        updatePaymentProviderCustomers(input, authenticateUser, user)
     },
 
     createPaymentFromInvoice: {

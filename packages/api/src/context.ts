@@ -12,6 +12,7 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
+  User,
   UserRole
 } from '@prisma/client'
 import AbortController from 'abort-controller'
@@ -37,7 +38,7 @@ import {OptionalPublicArticle} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
-import {User} from './db/user'
+import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
@@ -257,7 +258,8 @@ const getSessionByToken = async (
     const user = await userClient.findUnique({
       where: {
         id: session.userID
-      }
+      },
+      select: unselectPassword
     })
 
     if (!user) return null

@@ -57,9 +57,6 @@ export * from './mails/mailContext'
 export * from './challenges/challengeProvider'
 export * from './challenges/algebraicCaptchaChallenge'
 
-export {
-  articleModelEvents,
-  pageModelEvents,
-  userModelEvents,
-  subscriptionModelEvents
-} from './events'
+export {getUserForCredentials} from './graphql/user/user.queries'
+
+export {articleModelEvents, pageModelEvents, subscriptionModelEvents} from './events'

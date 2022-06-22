@@ -5,24 +5,17 @@ import {DBAdapter, SortOrder} from '@wepublish/api'
 import {Migrations, LatestMigration} from './migration'
 import {generateID} from './utility'
 
-import {MongoDBUserAdapter} from './db/user'
-import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBSubscriptionAdapter} from './db/subscription'
 
-export interface MongoDBAdabterCommonArgs {
-  readonly sessionTTL?: number
-  readonly bcryptHashCostFactor?: number
-}
-
-export interface MongoDBAdapterConnectArgs extends MongoDBAdabterCommonArgs {
+export interface MongoDBAdapterConnectArgs {
   readonly url: string
   readonly locale: string
 }
 
-export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterCommonArgs {
+export interface MongoDBAdapterInitializeArgs {
   readonly url: string
   readonly locale: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
@@ -35,21 +28,17 @@ export interface InitializationResult {
   }
 }
 
-interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
+interface MongoDBAdapterArgs {
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db
 }
 
 export class MongoDBAdapter implements DBAdapter {
-  readonly sessionTTL: number
-  readonly bcryptHashCostFactor: number
-
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db
 
-  readonly user: MongoDBUserAdapter
   readonly subscription: MongoDBSubscriptionAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
@@ -57,21 +46,11 @@ export class MongoDBAdapter implements DBAdapter {
   // Init
   // ====
 
-  private constructor({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
-    locale,
-    client,
-    db
-  }: MongoDBAdapterArgs) {
-    this.sessionTTL = sessionTTL
-    this.bcryptHashCostFactor = bcryptHashCostFactor
-
+  private constructor({locale, client, db}: MongoDBAdapterArgs) {
     this.locale = locale
     this.client = client
     this.db = db
 
-    this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
     this.subscription = new MongoDBSubscriptionAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
     this.page = new MongoDBPageAdapter(db)
@@ -89,12 +68,7 @@ export class MongoDBAdapter implements DBAdapter {
     })
   }
 
-  static async connect({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
-    url,
-    locale
-  }: MongoDBAdapterConnectArgs) {
+  static async connect({url, locale}: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
     const db = client.db()
 
@@ -107,8 +81,6 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     return new MongoDBAdapter({
-      sessionTTL,
-      bcryptHashCostFactor,
       client,
       db,
       locale
@@ -123,8 +95,6 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   static async initialize({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
     url,
     locale,
     seed
@@ -149,7 +119,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
+      const adapter = await this.connect({url, locale})
       await seed?.(adapter)
       await adapter.client.close()
     }

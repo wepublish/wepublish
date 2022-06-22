@@ -2,11 +2,8 @@ import {
   ArticleBlock,
   NavigationLink,
   PageBlock,
-  PaymentProviderCustomer,
   RichTextNode,
   CommentRevision,
-  UserAddress,
-  UserOAuth2Account,
   SubscriptionPeriod,
   SubscriptionDeactivation
 } from '@wepublish/api'
@@ -21,7 +18,10 @@ import {
   MailLogState,
   MetadataProperty,
   PaymentPeriodicity,
-  PaymentState
+  PaymentProviderCustomer,
+  PaymentState,
+  UserAddress,
+  UserOAuth2Account
 } from '@prisma/client'
 
 export enum CollectionName {

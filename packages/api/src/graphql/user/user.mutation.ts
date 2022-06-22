@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {hashPassword} from '../../db/user'
+import {hashPassword, unselectPassword} from '../../db/user'
 import {Context} from '../../context'
 
 export const createUser = async (
@@ -11,6 +11,7 @@ export const createUser = async (
   const hashedPassword = await hashPassword(password, hashCostFactor)
 
   return user.create({
-    data: {...data, password: hashedPassword, modifiedAt: new Date()}
+    data: {...data, password: hashedPassword, modifiedAt: new Date()},
+    select: unselectPassword
   })
 }

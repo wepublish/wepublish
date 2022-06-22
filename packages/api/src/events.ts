@@ -5,7 +5,6 @@ import {Context} from './context'
 import {Article} from './db/article'
 import {Page} from './db/page'
 import {Subscription} from './db/subscription'
-import {User} from './db/user'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 
@@ -29,14 +28,10 @@ export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 export type SubscriptionModelEventsEmitter = TypedEmitter<ModelEvents<Subscription>>
 export const subscriptionModelEvents = new EventEmitter() as SubscriptionModelEventsEmitter
 
-export type UserModelEventsEmitter = TypedEmitter<ModelEvents<User>>
-export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
-
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | PageModelEventEmitter
   | SubscriptionModelEventsEmitter
-  | UserModelEventsEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -62,18 +57,8 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'subscription',
     methods: ['create', 'update', 'delete'],
     eventEmitter: subscriptionModelEvents
-  },
-  {
-    key: 'user',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: userModelEvents
   }
 ]
-
-// this is an example on how to react to events. Not yet sure where that logic should go
-userModelEvents.on('create', (context, model) => {
-  console.log(`User ${model.name} created`)
-})
 
 /**
  * This event listener is used after invoice has been marked as paid. The following logic is responsible to

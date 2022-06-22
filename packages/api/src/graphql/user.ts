@@ -8,12 +8,13 @@ import {
   GraphQLString,
   GraphQLBoolean
 } from 'graphql'
-import {User, UserSort} from '../db/user'
+import {UserSort} from '../db/user'
 import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPublicPayment} from './payment'
+import {User} from '@prisma/client'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',

@@ -17,6 +17,7 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {CommentRevision, PublicComment, Comment, CommentSort} from '../db/comment'
+import {unselectPassword} from '../db/user'
 import {createProxyingResolver} from '../utility'
 import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
 import {GraphQLPageInfo} from './common'
@@ -143,7 +144,8 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
           ? user.findUnique({
               where: {
                 id: userID
-              }
+              },
+              select: unselectPassword
             })
           : null
       )
@@ -191,7 +193,8 @@ export const GraphQLPublicComment: GraphQLObjectType<
           ? user.findUnique({
               where: {
                 id: userID
-              }
+              },
+              select: unselectPassword
             })
           : null
       )

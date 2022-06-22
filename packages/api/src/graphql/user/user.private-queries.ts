@@ -3,7 +3,7 @@ import {SessionType} from '../../db/session'
 import {CanGetUser, authorise, CanGetUsers} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
-import {UserFilter, UserSort} from '../../db/user'
+import {unselectPassword, UserFilter, UserSort} from '../../db/user'
 import {getUsers} from './user.queries'
 
 export const getMe = (authenticate: Context['authenticate']) => {
@@ -27,7 +27,8 @@ export const getUserById = (
   return user.findUnique({
     where: {
       id
-    }
+    },
+    select: unselectPassword
   })
 }
 

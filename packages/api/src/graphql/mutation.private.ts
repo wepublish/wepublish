@@ -10,6 +10,7 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
+import {unselectPassword} from '../db/user'
 import {DuplicatePageSlugError, NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
@@ -63,10 +64,8 @@ import {
   CanCreateArticle,
   CanCreatePage,
   CanCreateSubscription,
-  CanCreateUser,
   CanPublishArticle,
   CanPublishPage,
-  CanResetUserPassword,
   CanSendJWTLogin
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
@@ -91,7 +90,12 @@ import {
   deleteUserRoleById,
   updateUserRole
 } from './user-role/user-role.private-mutation'
-import {createAdminUser, deleteUserById} from './user/user.private-mutation'
+import {
+  createAdminUser,
+  deleteUserById,
+  resetUserPassword,
+  updateAdminUser
+} from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 function mapTeaserUnionMap(value: any) {
@@ -284,7 +288,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await prisma.user.findUnique({
-          where: {email}
+          where: {email},
+          select: unselectPassword
         })
         if (!user) throw new NotFound('User', email)
 
@@ -316,7 +321,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await prisma.user.findUnique({
-          where: {email: email}
+          where: {email: email},
+          select: unselectPassword
         })
         if (!user) throw new NotFound('User', email)
 
@@ -374,11 +380,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUser, roles)
-        return dbAdapter.user.updateUser({id, input})
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {user}}) =>
+        updateAdminUser(id, input, authenticate, user)
     },
 
     resetUserPassword: {
@@ -388,21 +391,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         password: {type: GraphQLNonNull(GraphQLString)},
         sendMail: {type: GraphQLBoolean}
       },
-      async resolve(root, {id, password, sendMail}, {authenticate, mailContext, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanResetUserPassword, roles)
-        const user = await dbAdapter.user.resetUserPassword({id, password})
-        if (sendMail && user) {
-          await mailContext.sendMail({
-            type: SendMailType.PasswordReset,
-            recipient: user.email,
-            data: {
-              user
-            }
-          })
-        }
-        return user
-      }
+      resolve: (
+        root,
+        {id, password, sendMail},
+        {authenticate, mailContext, prisma: {user}, hashCostFactor}
+      ) =>
+        resetUserPassword(id, password, sendMail, hashCostFactor, authenticate, mailContext, user)
     },
 
     deleteUser: {
@@ -439,7 +433,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const user = await prisma.user.findUnique({
           where: {
             id: input.userID
-          }
+          },
+          select: unselectPassword
         })
         if (!user) throw new Error('Can not update subscription without user')
 

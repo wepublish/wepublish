@@ -22,6 +22,7 @@ import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} f
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
+import {unselectPassword} from '../db/user'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
@@ -52,7 +53,8 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
         return prisma.user.findUnique({
           where: {
             id: userID
-          }
+          },
+          select: unselectPassword
         })
       }
     },

@@ -3,7 +3,6 @@ import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {Context, contextFromRequest} from '../context'
-import {DBAdapter} from '../db/adapter'
 import {logger, WepublishServerOpts} from '../server'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
@@ -156,7 +155,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(dbAdapter, userClient, subscription, intentState.customerID)
+      await this.updatePaymentProvider(userClient, subscription, intentState.customerID)
     }
 
     return updatedPayment
@@ -170,7 +169,6 @@ export abstract class BasePaymentProvider implements PaymentProvider {
    * @private
    */
   private async updatePaymentProvider(
-    dbAdapter: DBAdapter,
     userClient: PrismaClient['user'],
     subscription: Subscription,
     customerID: string
@@ -195,9 +193,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       customerID
     })
 
-    await dbAdapter.user.updatePaymentProviderCustomers({
-      userID: user.id,
-      paymentProviderCustomers
+    await userClient.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        paymentProviderCustomers
+      }
     })
   }
 }

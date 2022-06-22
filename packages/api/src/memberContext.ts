@@ -4,14 +4,16 @@ import {
   MetadataProperty,
   PaymentMethod,
   PaymentPeriodicity,
+  PaymentProviderCustomer,
   PaymentState,
   PrismaClient,
-  Subscription
+  Subscription,
+  User
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
 import {SubscriptionDeactivationReason} from './db/subscription'
-import {PaymentProviderCustomer, User} from './db/user'
+import {unselectPassword} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext, SendMailType} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
@@ -784,7 +786,8 @@ export class MemberContext implements MemberContext {
       ? await this.prisma.user.findUnique({
           where: {
             id: subscription.userID
-          }
+          },
+          select: unselectPassword
         })
       : null
     const paymentMethod = subscription
