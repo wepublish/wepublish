@@ -4,7 +4,6 @@ import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
 import {Page} from './db/page'
-import {Subscription} from './db/subscription'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 
@@ -25,13 +24,7 @@ export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
 
-export type SubscriptionModelEventsEmitter = TypedEmitter<ModelEvents<Subscription>>
-export const subscriptionModelEvents = new EventEmitter() as SubscriptionModelEventsEmitter
-
-export type EventsEmitter =
-  | ArticleModelEventEmitter
-  | PageModelEventEmitter
-  | SubscriptionModelEventsEmitter
+export type EventsEmitter = ArticleModelEventEmitter | PageModelEventEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -52,11 +45,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'page',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: pageModelEvents
-  },
-  {
-    key: 'subscription',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: subscriptionModelEvents
   }
 ]
 
@@ -105,10 +93,9 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
   // remove eventual deactivation object from subscription (in case the subscription has been auto-deactivated but the
   // respective invoice was paid later on). Also update the paidUntil field of the subscription
   if (subscription.paidUntil === null || period.endsAt > subscription.paidUntil) {
-    subscription = await context.dbAdapter.subscription.updateSubscription({
-      id: subscription.id,
-      input: {
-        ...(subscription as any),
+    subscription = await context.prisma.subscription.update({
+      where: {id: subscription.id},
+      data: {
         paidUntil: period.endsAt,
         deactivation: null
       }

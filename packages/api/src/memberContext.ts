@@ -8,16 +8,17 @@ import {
   PaymentState,
   PrismaClient,
   Subscription,
+  SubscriptionDeactivationReason,
   User
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
-import {SubscriptionDeactivationReason} from './db/subscription'
 import {unselectPassword} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext, SendMailType} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
+import nanoid from 'nanoid'
 import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
@@ -201,9 +202,15 @@ export class MemberContext implements MemberContext {
       )
 
       if (periodToDelete) {
-        await this.dbAdapter.subscription.deleteSubscriptionPeriod({
-          subscriptionID: subscription.id,
-          periodID: periodToDelete.id
+        const updatedPeriods = subscription.periods.filter(
+          period => period.id !== periodToDelete.id
+        )
+
+        await this.prisma.subscription.update({
+          where: {id: subscription.id},
+          data: {
+            periods: updatedPeriods
+          }
         })
       }
 
@@ -305,14 +312,20 @@ export class MemberContext implements MemberContext {
           modifiedAt: new Date()
         }
       })
-      await this.dbAdapter.subscription.addSubscriptionPeriod({
-        subscriptionID: subscription.id,
-        input: {
-          amount,
-          paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
-          startsAt: startDate,
-          endsAt: nextDate,
-          invoiceID: newInvoice.id
+      await this.prisma.subscription.update({
+        where: {id: subscription.id},
+        data: {
+          periods: {
+            push: {
+              id: nanoid(),
+              createdAt: new Date(),
+              amount: amount,
+              paymentPeriodicity: subscription.paymentPeriodicity,
+              startsAt: startDate,
+              endsAt: nextDate,
+              invoiceID: newInvoice.id
+            }
+          }
         }
       })
       logger('memberContext').info('Renewed subscription with id %s', subscription.id)
@@ -548,7 +561,7 @@ export class MemberContext implements MemberContext {
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
           })
           continue
         }
@@ -740,7 +753,7 @@ export class MemberContext implements MemberContext {
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.InvoiceNotPaid
+            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
           })
           continue
         }
@@ -861,14 +874,13 @@ export class MemberContext implements MemberContext {
       return
     }
 
-    await this.dbAdapter.subscription.updateSubscription({
-      id: subscriptionID,
-      input: {
-        ...subscription,
+    await this.prisma.subscription.update({
+      where: {id: subscriptionID},
+      data: {
         paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
         deactivation: {
           date: deactivationDate ?? subscription.paidUntil ?? new Date(),
-          reason: deactivationReason ?? SubscriptionDeactivationReason.None
+          reason: deactivationReason ?? SubscriptionDeactivationReason.none
         }
       }
     })

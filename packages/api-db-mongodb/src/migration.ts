@@ -1,8 +1,8 @@
-import {BlockType, BlockWithoutJSON, Subscription} from '@wepublish/api'
+import {BlockType, BlockWithoutJSON} from '@wepublish/api'
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {slugify} from './utility'
-import {PaymentProviderCustomer, SubscriptionDeactivationReason} from '@prisma/client'
+import {PaymentProviderCustomer, Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 
 export interface Migration {
   readonly version: number

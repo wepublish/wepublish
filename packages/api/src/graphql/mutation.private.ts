@@ -1,4 +1,4 @@
-import {CommentState, Subscription} from '@prisma/client'
+import {CommentState} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -63,7 +63,6 @@ import {
   authorise,
   CanCreateArticle,
   CanCreatePage,
-  CanCreateSubscription,
   CanPublishArticle,
   CanPublishPage,
   CanSendJWTLogin
@@ -80,7 +79,8 @@ import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
   createSubscription,
-  deleteSubscriptionById
+  deleteSubscriptionById,
+  updateAdminSubscription
 } from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
@@ -426,25 +426,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {id, input}, {authenticate, prisma, dbAdapter, memberContext}) {
-        const {roles} = authenticate()
-        authorise(CanCreateSubscription, roles)
-
-        const user = await prisma.user.findUnique({
-          where: {
-            id: input.userID
-          },
-          select: unselectPassword
-        })
-        if (!user) throw new Error('Can not update subscription without user')
-
-        const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
-        if (!updatedSubscription) throw new NotFound('subscription', id)
-
-        return await memberContext.handleSubscriptionChange({
-          subscription: updatedSubscription as Subscription
-        })
-      }
+      resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
+        updateAdminSubscription(
+          id,
+          input,
+          authenticate,
+          memberContext,
+          prisma.subscription,
+          prisma.user
+        )
     },
 
     deleteSubscription: {

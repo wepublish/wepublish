@@ -1,4 +1,4 @@
-import {Invoice, Subscription} from '@prisma/client'
+import {Invoice, Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
@@ -10,7 +10,6 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
   CommentAuthenticationError,
   EmailAlreadyInUseError,
@@ -18,7 +17,6 @@ import {
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
-  PaymentConfigurationNotAllowed,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
@@ -45,6 +43,7 @@ import {
 } from './session/session.mutation'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
+import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
   GraphQLMemberRegistration,
   GraphQLMemberRegistrationAndPayment,
@@ -566,60 +565,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
-      async resolve(
+      resolve: (
         root,
         {id, input},
-        {authenticateUser, prisma, dbAdapter, loaders, memberContext}
-      ) {
-        const {user} = authenticateUser()
-
-        const subscription = await prisma.subscription.findUnique({
-          where: {id}
-        })
-
-        if (!subscription) throw new NotFound('subscription', id)
-
-        const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
-
-        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
-
-        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
-
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
-
-        if (
-          !memberPlan.availablePaymentMethods.some(apm => {
-            if (apm.forceAutoRenewal && !autoRenew) return false
-            return (
-              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-              apm.paymentMethodIDs.includes(paymentMethodID)
-            )
-          })
-        )
-          throw new PaymentConfigurationNotAllowed()
-
-        const updateSubscription = await dbAdapter.subscription.updateSubscription({
+        {authenticateUser, prisma: {subscription}, loaders, memberContext}
+      ) =>
+        updatePublicSubscription(
           id,
-          input: {
-            ...subscription,
-            userID: subscription.userID ?? user.id,
-            memberPlanID,
-            paymentPeriodicity,
-            monthlyAmount,
-            autoRenew,
-            paymentMethodID,
-            deactivation: null
-          }
-        })
-
-        if (!updateSubscription) throw new Error('Error during updateSubscription')
-
-        return await memberContext.handleSubscriptionChange({
-          subscription: updateSubscription as Subscription
-        })
-      }
+          input,
+          authenticateUser,
+          memberContext,
+          loaders.activeMemberPlansByID,
+          loaders.activePaymentMethodsByID,
+          subscription
+        )
     },
 
     cancelUserSubscription: {
@@ -629,7 +588,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
-      async resolve(root, {id}, {authenticateUser, prisma, dbAdapter, memberContext}) {
+      async resolve(root, {id}, {authenticateUser, prisma, memberContext}) {
         const {user} = authenticateUser()
         if (!user) throw new NotAuthenticatedError()
 
@@ -651,7 +610,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         await memberContext.deactivateSubscriptionForUser({
           subscriptionID: subscription.id,
           deactivationDate,
-          deactivationReason: SubscriptionDeactivationReason.UserSelfDeactivated
+          deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
         })
 
         const updatedSubscription = await prisma.subscription.findUnique({

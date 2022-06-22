@@ -8,7 +8,6 @@ import {generateID} from './utility'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
-import {MongoDBSubscriptionAdapter} from './db/subscription'
 
 export interface MongoDBAdapterConnectArgs {
   readonly url: string
@@ -39,7 +38,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly client: MongoClient
   readonly db: Db
 
-  readonly subscription: MongoDBSubscriptionAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
 
@@ -51,7 +49,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.client = client
     this.db = db
 
-    this.subscription = new MongoDBSubscriptionAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
     this.page = new MongoDBPageAdapter(db)
   }

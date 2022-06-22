@@ -3,9 +3,7 @@ import {
   NavigationLink,
   PageBlock,
   RichTextNode,
-  CommentRevision,
-  SubscriptionPeriod,
-  SubscriptionDeactivation
+  CommentRevision
 } from '@wepublish/api'
 import {
   AvailablePaymentMethod,
@@ -20,6 +18,8 @@ import {
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
+  SubscriptionDeactivation,
+  SubscriptionPeriod,
   UserAddress,
   UserOAuth2Account
 } from '@prisma/client'

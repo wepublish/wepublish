@@ -59,4 +59,4 @@ export * from './challenges/algebraicCaptchaChallenge'
 
 export {getUserForCredentials} from './graphql/user/user.queries'
 
-export {articleModelEvents, pageModelEvents, subscriptionModelEvents} from './events'
+export {articleModelEvents, pageModelEvents} from './events'

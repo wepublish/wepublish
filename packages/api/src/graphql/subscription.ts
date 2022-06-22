@@ -20,16 +20,17 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from '../db/subscription'
+import {SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
 import {unselectPassword} from '../db/user'
+import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
   values: {
-    NONE: {value: SubscriptionDeactivationReason.None},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.UserSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.InvoiceNotPaid}
+    NONE: {value: SubscriptionDeactivationReason.none},
+    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.userSelfDeactivated},
+    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.invoiceNotPaid}
   }
 })
 
