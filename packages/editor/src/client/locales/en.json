@@ -1016,7 +1016,9 @@
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
       "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
       "noUserErrorMessage": "Please select a user",
-      "noTokenErrorMessage": "Please enter a token"
+      "noTokenErrorMessage": "Please enter a token",
+      "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
+      "required": "This field is required"
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marked as paid by administrator.",

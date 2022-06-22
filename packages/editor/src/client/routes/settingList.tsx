@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {useTranslation} from 'react-i18next'
-import {Form, InputNumber, Notification, toaster, Toggle} from 'rsuite'
+import {Button, Form, InputGroup, InputNumber, Notification, Schema, toaster, Toggle} from 'rsuite'
 import {
   Setting,
   SettingName,
@@ -9,7 +9,8 @@ import {
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '../api'
-import {ButtonLink} from '../route'
+import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
+import FormControl from 'rsuite/FormControl'
 
 export function SettingList() {
   const {t} = useTranslation()
@@ -121,9 +122,76 @@ export function SettingList() {
       )
   }, [fetchError, updateSettingError])
 
+  const {NumberType} = Schema.Types
+
+  const validationModel = Schema.Model({
+    loginToken: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        sendLoginJwtExpiresMin.settingRestriction?.minValue ?? 1,
+        sendLoginJwtExpiresMin.settingRestriction?.maxValue ?? 10080,
+        t('errorMessages.invalidRange', {
+          min: sendLoginJwtExpiresMin.settingRestriction?.minValue ?? 1,
+          max: sendLoginJwtExpiresMin.settingRestriction?.maxValue ?? 10080
+        })
+      ),
+    passwordExpire: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        resetPwdJwtExpiresMin.settingRestriction?.minValue ?? 10,
+        resetPwdJwtExpiresMin.settingRestriction?.maxValue ?? 10080,
+        t('errorMessages.invalidRange', {
+          min: resetPwdJwtExpiresMin.settingRestriction?.minValue ?? 10,
+          max: resetPwdJwtExpiresMin.settingRestriction?.maxValue ?? 10080
+        })
+      ),
+    peeringTimeout: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
+        peeringTimeoutMs.settingRestriction?.maxValue ?? 10000,
+        t('errorMessages.invalidRange'),
+        {
+          min: peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
+          max: peeringTimeoutMs.settingRestriction?.maxValue ?? 10000
+        }
+      ),
+    invoiceTries: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        invoiceReminderTries.settingRestriction?.minValue ?? 0,
+        invoiceReminderTries.settingRestriction?.maxValue ?? 10,
+        t('errorMessages.invalidRange', {
+          min: invoiceReminderTries.settingRestriction?.minValue ?? 0,
+          max: invoiceReminderTries.settingRestriction?.maxValue ?? 10
+        })
+      ),
+    invoiceFrequency: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        invoiceReminderFreq.settingRestriction?.minValue ?? 0,
+        invoiceReminderFreq.settingRestriction?.maxValue ?? 30,
+        t('errorMessages.invalidRange', {
+          min: invoiceReminderFreq.settingRestriction?.minValue ?? 0,
+          max: invoiceReminderFreq.settingRestriction?.maxValue ?? 30
+        })
+      )
+  })
+
   return (
     <>
-      <Form>
+      <Form
+        model={validationModel}
+        formValue={{
+          loginToken: sendLoginJwtExpiresMin.value,
+          passwordExpire: resetPwdJwtExpiresMin.value,
+          peeringTimeout: peeringTimeoutMs.value,
+          invoiceTries: invoiceReminderTries.value,
+          invoiceFrequency: invoiceReminderFreq.value
+        }}
+        onSubmit={async validationPassed => {
+          validationPassed && (await handleSettingListUpdate())
+        }}>
         <Form.Group>
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
@@ -141,88 +209,59 @@ export function SettingList() {
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
-          <InputNumber
-            value={sendLoginJwtExpiresMin.value}
-            min={
-              sendLoginJwtExpiresMin.settingRestriction?.minValue
-                ? sendLoginJwtExpiresMin.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              sendLoginJwtExpiresMin.settingRestriction?.maxValue
-                ? sendLoginJwtExpiresMin.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setSendLoginJwtExpiresMin({
-                ...sendLoginJwtExpiresMin,
-                value: value
-              })
-            }
-            postfix={t('settingList.minutes')}
-          />
+          <InputGroup>
+            <FormControl
+              name="loginToken"
+              accepter={InputNumber}
+              value={sendLoginJwtExpiresMin.value}
+              onChange={(value: number) =>
+                setSendLoginJwtExpiresMin({
+                  ...sendLoginJwtExpiresMin,
+                  value: value
+                })
+              }
+            />
+            <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
+          </InputGroup>
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
-          <InputNumber
-            value={resetPwdJwtExpiresMin.value}
-            min={
-              resetPwdJwtExpiresMin.settingRestriction?.minValue
-                ? resetPwdJwtExpiresMin.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              resetPwdJwtExpiresMin.settingRestriction?.maxValue
-                ? resetPwdJwtExpiresMin.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setResetPwdJwtExpiresMin({
-                ...resetPwdJwtExpiresMin,
-                value: value
-              })
-            }
-            postfix={t('settingList.minutes')}
-          />
+          <InputGroup>
+            <Form.Control
+              name="passwordExpire"
+              accepter={InputNumber}
+              value={resetPwdJwtExpiresMin.value}
+              onChange={(value: number) => {
+                setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value: value})
+              }}
+            />
+            <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
+          </InputGroup>
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
-          <InputNumber
-            value={peeringTimeoutMs.value}
-            min={
-              peeringTimeoutMs.settingRestriction?.minValue
-                ? peeringTimeoutMs.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              peeringTimeoutMs.settingRestriction?.maxValue
-                ? peeringTimeoutMs.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setPeeringTimeoutMs({
-                ...peeringTimeoutMs,
-                value: value
-              })
-            }
-            postfix={t('settingList.ms')}
-          />
+          <InputGroup>
+            <Form.Control
+              name="peeringTimeoutMs"
+              accepter={InputNumber}
+              value={peeringTimeoutMs.value}
+              onChange={(value: number) => {
+                setPeeringTimeoutMs({
+                  ...peeringTimeoutMs,
+                  value: value
+                })
+              }}
+            />
+            <InputGroupAddon>{t('settingList.ms')}</InputGroupAddon>
+          </InputGroup>
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
-          <InputNumber
+          <Form.Control
+            name="invoiceTries"
+            accepter={InputNumber}
             value={invoiceReminderTries.value}
-            min={
-              invoiceReminderTries.settingRestriction?.minValue
-                ? invoiceReminderTries.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              invoiceReminderTries.settingRestriction?.maxValue
-                ? invoiceReminderTries.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
+            onChange={(value: number) =>
               setInvoiceReminderTries({
                 ...invoiceReminderTries,
                 value: value
@@ -232,34 +271,24 @@ export function SettingList() {
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
-          <InputNumber
-            value={invoiceReminderFreq.value}
-            min={
-              invoiceReminderFreq.settingRestriction?.minValue
-                ? invoiceReminderFreq.settingRestriction.minValue
-                : undefined
-            }
-            max={
-              invoiceReminderFreq.settingRestriction?.maxValue
-                ? invoiceReminderFreq.settingRestriction.maxValue
-                : undefined
-            }
-            onChange={value =>
-              setInvoiceReminderFreq({
-                ...invoiceReminderFreq,
-                value: value
-              })
-            }
-            postfix={t('settingList.days')}
-          />
+          <InputGroup>
+            <Form.Control
+              name="invoiceFrequency"
+              accepter={InputNumber}
+              value={invoiceReminderFreq.value}
+              onChange={(value: number) =>
+                setInvoiceReminderFreq({
+                  ...invoiceReminderFreq,
+                  value: value
+                })
+              }
+            />
+            <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
+          </InputGroup>
         </Form.Group>
-        <ButtonLink
-          appearance="primary"
-          onClick={async () => {
-            await handleSettingListUpdate()
-          }}>
+        <Button type="submit" appearance="primary">
           {t('settingList.save')}
-        </ButtonLink>
+        </Button>
       </Form>
     </>
   )
