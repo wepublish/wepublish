@@ -100,6 +100,8 @@ For validation to be triggered on `onSubmit`, the form button needs to be of typ
 
 Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields through `formValue`. This will allow the validation to run correctly when the fields are pre-filled as well. 
 
+Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
+
 
 ## packages/api
 ### Subscriptions
