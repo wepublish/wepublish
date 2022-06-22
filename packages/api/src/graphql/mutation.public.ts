@@ -10,19 +10,13 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {CommentAuthorType, CommentState} from '../db/comment'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
-  AnonymousCommentError,
-  AnonymousCommentsDisabledError,
-  ChallengeMissingCommentError,
   CommentAuthenticationError,
-  CommentLengthError,
   EmailAlreadyInUseError,
   InternalError,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
-  NotAuthorisedError as NotAuthorizedError,
   NotFound,
   PaymentConfigurationNotAllowed,
   UserInputError,
@@ -30,18 +24,14 @@ import {
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {logger} from '../server'
-import {
-  countRichtextChars,
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
-  MAX_COMMENT_LENGTH,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND
-} from '../utility'
+import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {
   GraphQLChallengeInput,
   GraphQLPublicComment,
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput
 } from './comment'
+import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
@@ -125,47 +115,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
-        const user = optionalAuthenticateUser()
-        let authorType = CommentAuthorType.VerifiedUser
-        const commentLength = countRichtextChars(0, input.text)
-
-        if (commentLength > MAX_COMMENT_LENGTH) {
-          throw new CommentLengthError()
-        }
-
-        // Challenge
-        if (!user) {
-          authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
-            throw new AnonymousCommentsDisabledError()
-
-          if (!input.guestUsername) throw new AnonymousCommentError()
-          if (!input.challenge) throw new ChallengeMissingCommentError()
-
-          const challengeValidationResult = await challenge.validateChallenge({
-            challengeID: input.challenge.challengeID,
-            solution: input.challenge.challengeSolution
-          })
-          if (!challengeValidationResult.valid)
-            throw new CommentAuthenticationError(challengeValidationResult.message)
-        } else {
-          input.guestUsername = ''
-        }
-
-        // Cleanup
-        delete input.challenge
-        delete input.challengeSolution
-
-        return await dbAdapter.comment.addPublicComment({
-          input: {
-            ...input,
-            userID: user?.user.id,
-            authorType,
-            state: CommentState.PendingApproval
-          }
-        })
-      }
+      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment}, challenge}) =>
+        addPublicComment(input, optionalAuthenticateUser, challenge, comment)
     },
 
     updateComment: {
@@ -175,31 +126,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      async resolve(_, {input}, {dbAdapter, prisma, authenticateUser}) {
-        const {user} = authenticateUser()
-
-        const comment = await prisma.comment.findUnique({
-          where: {
-            id: input.id
-          }
-        })
-
-        if (!comment) return null
-
-        if (user.id !== comment?.userID) {
-          throw new NotAuthorizedError()
-        } else if (comment.state !== CommentState.PendingUserChanges) {
-          throw new UserInputError('Comment state must be pending user changes')
-        } else {
-          const {id, text} = input
-
-          return await dbAdapter.comment.updatePublicComment({
-            id,
-            text,
-            state: CommentState.PendingApproval
-          })
-        }
-      }
+      resolve: (_, {input}, {prisma: {comment}, authenticateUser}) =>
+        updatePublicComment(input, authenticateUser, comment)
     },
 
     registerMember: {

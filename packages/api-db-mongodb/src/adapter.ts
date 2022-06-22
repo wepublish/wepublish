@@ -7,7 +7,6 @@ import {generateID} from './utility'
 
 import {MongoDBUserAdapter} from './db/user'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
-import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
@@ -52,7 +51,6 @@ export class MongoDBAdapter implements DBAdapter {
 
   readonly user: MongoDBUserAdapter
   readonly subscription: MongoDBSubscriptionAdapter
-  readonly comment: MongoDBCommentAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
 
@@ -75,7 +73,6 @@ export class MongoDBAdapter implements DBAdapter {
 
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
     this.subscription = new MongoDBSubscriptionAdapter(db)
-    this.comment = new MongoDBCommentAdapter(db)
     this.article = new MongoDBArticleAdapter(db)
     this.page = new MongoDBPageAdapter(db)
   }

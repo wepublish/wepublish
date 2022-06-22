@@ -1,9 +1,5 @@
 import {
   ArticleBlock,
-  CommentItemType,
-  CommentAuthorType,
-  CommentRejectionReason,
-  CommentState,
   NavigationLink,
   PageBlock,
   PaymentProviderCustomer,
@@ -16,6 +12,10 @@ import {
 } from '@wepublish/api'
 import {
   AvailablePaymentMethod,
+  CommentAuthorType,
+  CommentItemType,
+  CommentRejectionReason,
+  CommentState,
   ImagesFocalPoint,
   InvoiceItem,
   MailLogState,

@@ -1,4 +1,4 @@
-import {Subscription} from '@prisma/client'
+import {CommentState, Subscription} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -10,7 +10,6 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {CommentState} from '../db/comment'
 import {DuplicatePageSlugError, NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
@@ -23,6 +22,7 @@ import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {takeActionOnComment} from './comment/comment.private-mutation'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
@@ -67,8 +67,7 @@ import {
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
-  CanSendJWTLogin,
-  CanTakeActionOnComment
+  CanSendJWTLogin
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
@@ -857,15 +856,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanTakeActionOnComment, roles)
-
-        return await dbAdapter.comment.takeActionOnComment({
-          id,
-          state: CommentState.Approved
-        })
-      }
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        takeActionOnComment(id, {state: CommentState.approved}, authenticate, comment)
     },
 
     rejectComment: {
@@ -874,16 +866,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
-      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanTakeActionOnComment, roles)
-
-        return await dbAdapter.comment.takeActionOnComment({
+      resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
+        takeActionOnComment(
           id,
-          state: CommentState.Rejected,
-          rejectionReason
-        })
-      }
+          {state: CommentState.rejected, rejectionReason},
+          authenticate,
+          comment
+        )
     },
 
     requestChangesOnComment: {
@@ -892,16 +881,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
-      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanTakeActionOnComment, roles)
-
-        return await dbAdapter.comment.takeActionOnComment({
+      resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
+        takeActionOnComment(
           id,
-          state: CommentState.PendingUserChanges,
-          rejectionReason
-        })
-      }
+          {state: CommentState.pendingUserChanges, rejectionReason},
+          authenticate,
+          comment
+        )
     }
     // Image
     // =====

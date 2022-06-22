@@ -1,4 +1,10 @@
 import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentRejectionReason,
+  CommentState
+} from '@prisma/client'
+import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLID,
@@ -10,16 +16,7 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
-import {
-  CommentAuthorType,
-  CommentItemType,
-  CommentRejectionReason,
-  CommentRevision,
-  CommentState,
-  PublicComment,
-  Comment,
-  CommentSort
-} from '../db/comment'
+import {CommentRevision, PublicComment, Comment, CommentSort} from '../db/comment'
 import {createProxyingResolver} from '../utility'
 import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
 import {GraphQLPageInfo} from './common'
@@ -29,35 +26,35 @@ import {GraphQLPublicUser, GraphQLUser} from './user'
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
   values: {
-    Approved: {value: CommentState.Approved},
-    PendingApproval: {value: CommentState.PendingApproval},
-    PendingUserChanges: {value: CommentState.PendingUserChanges},
-    Rejected: {value: CommentState.Rejected}
+    Approved: {value: CommentState.approved},
+    PendingApproval: {value: CommentState.pendingApproval},
+    PendingUserChanges: {value: CommentState.pendingUserChanges},
+    Rejected: {value: CommentState.rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    Misconduct: {value: CommentRejectionReason.Misconduct},
-    Spam: {value: CommentRejectionReason.Spam}
+    Misconduct: {value: CommentRejectionReason.misconduct},
+    Spam: {value: CommentRejectionReason.spam}
   }
 })
 
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Author: {value: CommentAuthorType.Author},
-    Team: {value: CommentAuthorType.Team},
-    VerifiedUser: {value: CommentAuthorType.VerifiedUser}
+    Author: {value: CommentAuthorType.author},
+    Team: {value: CommentAuthorType.team},
+    VerifiedUser: {value: CommentAuthorType.verifiedUser}
   }
 })
 
 export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
-    Article: {value: CommentItemType.Article},
-    Page: {value: CommentItemType.Page}
+    Article: {value: CommentItemType.article},
+    Page: {value: CommentItemType.page}
   }
 })
 
