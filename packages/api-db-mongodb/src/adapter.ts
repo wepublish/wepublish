@@ -6,7 +6,6 @@ import {Migrations, LatestMigration} from './migration'
 import {generateID} from './utility'
 
 import {MongoDBArticleAdapter} from './db/article'
-import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 
 export interface MongoDBAdapterConnectArgs {
@@ -39,7 +38,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly db: Db
 
   readonly article: MongoDBArticleAdapter
-  readonly page: MongoDBPageAdapter
 
   // Init
   // ====
@@ -50,7 +48,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.db = db
 
     this.article = new MongoDBArticleAdapter(db)
-    this.page = new MongoDBPageAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {

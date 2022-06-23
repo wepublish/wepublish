@@ -3,7 +3,6 @@ import {EventEmitter} from 'events'
 import TypedEmitter from 'typed-emitter'
 import {Context} from './context'
 import {Article} from './db/article'
-import {Page} from './db/page'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 
@@ -21,10 +20,7 @@ export interface PublishableModelEvents<T> extends ModelEvents<T> {
 export type ArticleModelEventEmitter = TypedEmitter<PublishableModelEvents<Article>>
 export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
 
-export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
-export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
-
-export type EventsEmitter = ArticleModelEventEmitter | PageModelEventEmitter
+export type EventsEmitter = ArticleModelEventEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -40,11 +36,6 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'article',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: articleModelEvents
-  },
-  {
-    key: 'page',
-    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
-    eventEmitter: pageModelEvents
   }
 ]
 

@@ -36,7 +36,6 @@ import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {OptionalPublicPage} from './db/page'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
@@ -48,6 +47,7 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
+import {PublicPage} from './db/page'
 
 /**
  * Peered article cache configuration and setup
@@ -81,8 +81,8 @@ export interface DataLoaderContext {
   readonly publicArticles: DataLoader<string, OptionalPublicArticle>
 
   readonly pages: DataLoader<string, Page | null>
-  readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
-  readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+  readonly publicPagesByID: DataLoader<string, PublicPage | null>
+  readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 

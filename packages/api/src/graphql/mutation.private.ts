@@ -11,7 +11,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {unselectPassword} from '../db/user'
-import {DuplicatePageSlugError, NotFound} from '../error'
+import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
@@ -41,7 +41,14 @@ import {
   updateNavigation
 } from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
-import {createPage, deletePageById, duplicatePage} from './page/page.private-mutation'
+import {
+  createPage,
+  deletePageById,
+  duplicatePage,
+  publishPage,
+  unpublishPage,
+  updatePage
+} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
@@ -59,14 +66,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {
-  authorise,
-  CanCreateArticle,
-  CanCreatePage,
-  CanPublishArticle,
-  CanPublishPage,
-  CanSendJWTLogin
-} from './permissions'
+import {authorise, CanCreateArticle, CanPublishArticle, CanSendJWTLogin} from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -662,15 +662,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLPageInput)}
       },
-      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePage, roles)
-
-        return dbAdapter.page.updatePage({
-          id,
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {page}}) =>
+        updatePage(id, input, authenticate, page)
     },
 
     deletePage: {
@@ -688,40 +681,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(
+      resolve: (
         root,
         {id, publishAt, updatedAt, publishedAt},
-        {authenticate, dbAdapter, loaders}
-      ) {
-        const {roles} = authenticate()
-        authorise(CanPublishPage, roles)
-
-        const page = await loaders.pages.load(id)
-
-        if (!page) throw new NotFound('page', id)
-        if (!page.draft) return null
-
-        const publishedPage = await loaders.publicPagesBySlug.load(page.draft.slug)
-        if (publishedPage && publishedPage.id !== id)
-          throw new DuplicatePageSlugError(publishedPage.id, publishedPage.slug)
-
-        return dbAdapter.page.publishPage({
-          id,
-          publishAt,
-          updatedAt,
-          publishedAt
-        })
-      }
+        {authenticate, prisma: {page}, loaders: {publicPagesBySlug}}
+      ) =>
+        publishPage(id, {publishAt, updatedAt, publishedAt}, authenticate, publicPagesBySlug, page)
     },
 
     unpublishPage: {
       type: GraphQLPage,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanPublishPage, roles)
-        return dbAdapter.page.unpublishPage({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {page}}) => unpublishPage(id, authenticate, page)
     },
 
     duplicatePage: {
