@@ -3,10 +3,8 @@ import {MongoClient, Db} from 'mongodb'
 import {DBAdapter, SortOrder} from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
+import {CollectionName, DBMigration} from './db/schema'
 import {generateID} from './utility'
-
-import {MongoDBArticleAdapter} from './db/article'
-import {DBMigration, CollectionName} from './db/schema'
 
 export interface MongoDBAdapterConnectArgs {
   readonly url: string
@@ -37,8 +35,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly client: MongoClient
   readonly db: Db
 
-  readonly article: MongoDBArticleAdapter
-
   // Init
   // ====
 
@@ -46,8 +42,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.locale = locale
     this.client = client
     this.db = db
-
-    this.article = new MongoDBArticleAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {

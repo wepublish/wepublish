@@ -176,16 +176,7 @@ export const updatePage = async (
     where: {id},
     data: {
       draft: {
-        slug: input.slug,
-        title: input.title,
-        description: input.description,
-        imageID: input.imageID,
-        tags: input.tags,
-        socialMediaTitle: input.socialMediaTitle,
-        socialMediaDescription: input.socialMediaDescription,
-        socialMediaImageID: input.socialMediaImageID,
-        properties: input.properties,
-        blocks: input.blocks,
+        ...input,
         revision: page.pending
           ? page.pending.revision + 1
           : page.published

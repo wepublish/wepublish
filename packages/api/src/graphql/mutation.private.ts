@@ -17,7 +17,10 @@ import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
   createArticle,
   deleteArticleById,
-  duplicateArticle
+  duplicateArticle,
+  publishArticle,
+  unpublishArticle,
+  updateArticle
 } from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
@@ -66,7 +69,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {authorise, CanCreateArticle, CanPublishArticle, CanSendJWTLogin} from './permissions'
+import {authorise, CanSendJWTLogin} from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -588,15 +591,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
-      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateArticle, roles)
-
-        return dbAdapter.article.updateArticle({
-          id,
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {id, input}, {authenticate, prisma: {article}}) =>
+        updateArticle(id, input, authenticate, article)
     },
 
     deleteArticle: {
@@ -614,27 +610,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanPublishArticle, roles)
-
-        return dbAdapter.article.publishArticle({
-          id,
-          publishAt,
-          updatedAt,
-          publishedAt
-        })
-      }
+      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {article}}) =>
+        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, article)
     },
 
     unpublishArticle: {
       type: GraphQLArticle,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanPublishArticle, roles)
-        return dbAdapter.article.unpublishArticle({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
+        unpublishArticle(id, authenticate, article)
     },
 
     duplicateArticle: {

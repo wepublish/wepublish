@@ -1,43 +1,93 @@
-import {Invoice, Prisma, SubscriptionPeriod} from '@prisma/client'
-import {EventEmitter} from 'events'
-import TypedEmitter from 'typed-emitter'
+import {Invoice, Prisma, SubscriptionPeriod, PrismaClient} from '@prisma/client'
 import {Context} from './context'
-import {Article} from './db/article'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 
-interface ModelEvents<T> {
-  create: (context: Context, model: T) => void
-  update: (context: Context, model: T) => void
-  delete: (context: Context, id: string) => void
-}
-
-export interface PublishableModelEvents<T> extends ModelEvents<T> {
-  publish: (context: Context, model: T) => void
-  unpublish: (context: Context, model: T) => void
-}
-
-export type ArticleModelEventEmitter = TypedEmitter<PublishableModelEvents<Article>>
-export const articleModelEvents = new EventEmitter() as ArticleModelEventEmitter
-
-export type EventsEmitter = ArticleModelEventEmitter
-
-type NormalProxyMethods = 'create' | 'update' | 'delete'
-type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
-
-interface MethodsToProxy {
-  key: string
-  methods: (NormalProxyMethods | PublishableProxyMethods)[]
-  eventEmitter: EventsEmitter
-}
-
-export const methodsToProxy: MethodsToProxy[] = [
-  {
-    key: 'article',
-    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
-    eventEmitter: articleModelEvents
+// @TODO: move into cron job
+export const onFindArticle = (prisma: PrismaClient): Prisma.Middleware => async (params, next) => {
+  if (!(params.model === 'Article' && params.action.startsWith('find'))) {
+    return next(params)
   }
-]
+
+  // skip the call inside this middleware to not create an infinite loop
+  if (params.args?.where?.pending?.is?.AND?.publishAt?.lte) {
+    return next(params)
+  }
+
+  const articles = await prisma.article.findMany({
+    where: {
+      pending: {
+        is: {
+          AND: {
+            publishAt: {
+              lte: new Date()
+            }
+          }
+        }
+      }
+    }
+  })
+
+  await Promise.all(
+    articles.map(({id, pending}) =>
+      prisma.article.update({
+        where: {
+          id
+        },
+        data: {
+          modifiedAt: new Date(),
+          pending: null,
+          published: pending
+        }
+      })
+    )
+  )
+
+  return next(params)
+}
+
+// @TODO: move into cron job
+export const onFindPage = (prisma: PrismaClient): Prisma.Middleware => async (params, next) => {
+  if (!(params.model === 'Page' && params.action.startsWith('find'))) {
+    return next(params)
+  }
+
+  // skip the call inside this middleware to not create an infinite loop
+  if (params.args?.where?.pending?.is?.AND?.publishAt?.lte) {
+    return next(params)
+  }
+
+  const pages = await prisma.page.findMany({
+    where: {
+      pending: {
+        is: {
+          AND: {
+            publishAt: {
+              lte: new Date()
+            }
+          }
+        }
+      }
+    }
+  })
+
+  await Promise.all(
+    pages.map(({id, pending}) =>
+      prisma.page.update({
+        where: {
+          id
+        },
+        data: {
+          modifiedAt: new Date(),
+          pending: null,
+          published: pending
+        }
+      })
+    )
+  )
+
+  return next(params)
+}
 
 /**
  * This event listener is used after invoice has been marked as paid. The following logic is responsible to
