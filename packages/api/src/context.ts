@@ -305,7 +305,6 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
-            // TODO fix types
             const peerTimeout = Number(
               (await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value
             )

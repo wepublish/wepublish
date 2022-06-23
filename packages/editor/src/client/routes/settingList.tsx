@@ -150,11 +150,10 @@ export function SettingList() {
       .range(
         peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
         peeringTimeoutMs.settingRestriction?.maxValue ?? 10000,
-        t('errorMessages.invalidRange'),
-        {
+        t('errorMessages.invalidRange', {
           min: peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
           max: peeringTimeoutMs.settingRestriction?.maxValue ?? 10000
-        }
+        })
       ),
     invoiceTries: NumberType()
       .isRequired(t('errorMessages.required'))

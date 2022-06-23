@@ -53,24 +53,21 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
   }
 
   async updateSettingList(args: UpdateSettingArgs[]): Promise<OptionalSetting[]> {
-    const settings: OptionalSetting[] = []
-    for (const v of args) {
-      const {id, value: val} = v
-
-      const {value} = await this.settings.findOneAndUpdate(
-        {_id: id},
-        {
-          $set: {
-            value: val
-          }
-        },
-        {returnOriginal: false}
-      )
-      if (value) {
+    return Promise.all(
+      args.map(async ({id, value: val}) => {
+        const {value} = await this.settings.findOneAndUpdate(
+          {_id: id},
+          {
+            $set: {
+              value: val
+            }
+          },
+          {returnOriginal: false}
+        )
+        if (!value) return null
         const {_id: outID, ...setting} = value
-        settings.push({id, ...setting})
-      }
-    }
-    return settings
+        return {id: outID, ...setting}
+      })
+    )
   }
 }
