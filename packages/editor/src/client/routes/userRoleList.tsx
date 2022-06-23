@@ -94,7 +94,7 @@ export function UserRoleList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>

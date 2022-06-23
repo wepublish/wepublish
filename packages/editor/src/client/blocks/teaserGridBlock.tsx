@@ -150,7 +150,7 @@ export function TeaserBlock({
 }: TeaserBlockProps) {
   return (
     <Panel
-      bodyFill={true}
+      bodyFill
       style={{
         cursor: showGrabCursor ? 'grab' : '',
         height: 300,

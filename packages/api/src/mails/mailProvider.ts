@@ -98,7 +98,7 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
           }
         } catch (error) {
           logger('mailProvider').error(
-            error,
+            error as Error,
             'Error during webhook update in mailProvider %s',
             mailProvider.id
           )

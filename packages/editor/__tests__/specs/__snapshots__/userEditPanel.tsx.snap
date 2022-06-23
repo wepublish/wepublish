@@ -5,42 +5,44 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -31,12 +31,13 @@
-      </h4>
-      <div
-        class=\\"rs-drawer-actions\\"
-      >
-        <button
--         aria-disabled=\\"false\\"
--         class=\\"rs-btn rs-btn-primary\\"
-+         aria-disabled=\\"true\\"
-+         class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
-+         disabled=\\"\\"
-          type=\\"button\\"
+@@ -35,13 +35,14 @@
+        </h4>
+        <div
+          class=\\"rs-drawer-actions\\"
         >
-          userList.panels.create
-          <span
-            class=\\"rs-ripple-pond\\"
-@@ -86,10 +87,11 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+          <button
+-           aria-disabled=\\"false\\"
+-           class=\\"rs-btn rs-btn-primary\\"
++           aria-disabled=\\"true\\"
++           class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
+            data-testid=\\"saveButton\\"
++           disabled=\\"\\"
+            type=\\"submit\\"
+          >
+            userList.panels.create
+            <span
+              class=\\"rs-ripple-pond\\"
+@@ -92,10 +93,11 @@
               >
                 <input
+                  aria-describedby=\\"firstName-help-text\\"
+                  aria-labelledby=\\"firstName-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.firstName\\"
+                  id=\\"firstName\\"
+                  name=\\"firstName\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
-              </div>
-@@ -106,13 +108,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -117,14 +119,15 @@
               >
                 <input
+                  aria-describedby=\\"name-help-text\\"
+                  aria-labelledby=\\"name-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.name\\"
+                  id=\\"name\\"
+                  name=\\"name\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"Testing Müller\\"
@@ -49,26 +51,27 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -126,10 +129,11 @@
+@@ -138,10 +141,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.preferredName\\"
+                  name=\\"preferredName\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -146,13 +150,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -162,14 +166,15 @@
               >
                 <input
+                  aria-describedby=\\"email-help-text\\"
+                  aria-labelledby=\\"email-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.email\\"
+                  id=\\"email\\"
+                  name=\\"email\\"
                   type=\\"text\\"
 -                 value=\\"\\"
 +                 value=\\"testing@mueller.com\\"
@@ -77,79 +80,79 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -166,10 +171,11 @@
+@@ -183,10 +188,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.company\\"
+                  name=\\"company\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -186,10 +192,11 @@
+@@ -203,10 +209,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.streetAddress\\"
+                  name=\\"streetAddress\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -206,10 +213,11 @@
+@@ -223,10 +230,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.streetAddress2\\"
+                  name=\\"streetAddress2\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -226,10 +234,11 @@
+@@ -243,10 +251,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.zipCode\\"
+                  name=\\"zipCode\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -246,10 +255,11 @@
+@@ -263,10 +272,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.city\\"
+                  name=\\"city\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -266,10 +276,11 @@
+@@ -283,10 +293,11 @@
               <div
                 class=\\"rs-form-control rs-form-control-wrapper\\"
               >
                 <input
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.country\\"
+                  name=\\"country\\"
                   type=\\"text\\"
                   value=\\"\\"
                 />
               </div>
-@@ -282,18 +293,19 @@
+@@ -299,18 +310,19 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.active
@@ -171,14 +174,15 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                 />
                 <span
                   class=\\"rs-toggle-presentation\\"
-@@ -316,13 +328,14 @@
-              <div
-                class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -337,14 +349,15 @@
               >
                 <input
+                  aria-describedby=\\"password-help-text\\"
+                  aria-labelledby=\\"password-control-label\\"
                   class=\\"rs-input\\"
 +                 disabled=\\"\\"
-                  name=\\"userList.panels.password\\"
+                  id=\\"password\\"
+                  name=\\"password\\"
                   type=\\"password\\"
 -                 value=\\"\\"
 +                 value=\\"superSecret\\"
@@ -194,7 +198,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -332,11 +332,11 @@
+@@ -354,11 +354,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -207,7 +211,7 @@ exports[`User Edit Panel should allow user role to be added 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -346,17 +346,54 @@
+@@ -368,17 +368,54 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -273,7 +277,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -346,11 +346,11 @@
+@@ -363,11 +363,11 @@
                 class=\\"rs-form-control-label\\"
               >
                 userList.panels.userRoles
@@ -286,7 +290,7 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -360,54 +360,17 @@
+@@ -377,54 +377,17 @@
                   <input
                     aria-hidden=\\"true\\"
                     class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -349,80 +353,82 @@ exports[`User Edit Panel should allow user role to be removed 1`] = `
 
 exports[`User Edit Panel should render 1`] = `
 <DocumentFragment>
-  <div
-    class="rs-drawer-header"
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
-    <span
-      aria-label="Close"
-      class="rs-drawer-header-close rs-btn-close"
-      role="button"
-      title="Close"
-    >
-      <svg
-        aria-hidden="true"
-        aria-label="close"
-        class="rs-icon"
-        data-category="application"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 16 16"
-        width="1em"
-      >
-        <path
-          d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-        />
-      </svg>
-    </span>
-    <h4
-      class="rs-drawer-title"
-    >
-      userList.panels.createUser
-    </h4>
     <div
-      class="rs-drawer-actions"
+      class="rs-drawer-header"
     >
-      <button
-        aria-disabled="false"
-        class="rs-btn rs-btn-primary"
-        type="button"
+      <span
+        aria-label="Close"
+        class="rs-drawer-header-close rs-btn-close"
+        role="button"
+        title="Close"
       >
-        userList.panels.create
-        <span
-          class="rs-ripple-pond"
+        <svg
+          aria-hidden="true"
+          aria-label="close"
+          class="rs-icon"
+          data-category="application"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 16 16"
+          width="1em"
         >
-          <span
-            class="rs-ripple"
+          <path
+            d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
           />
-        </span>
-      </button>
-      <button
-        class="rs-btn rs-btn-subtle"
-        type="button"
+        </svg>
+      </span>
+      <h4
+        class="rs-drawer-title"
       >
-        userList.panels.close
-        <span
-          class="rs-ripple-pond"
+        userList.panels.createUser
+      </h4>
+      <div
+        class="rs-drawer-actions"
+      >
+        <button
+          aria-disabled="false"
+          class="rs-btn rs-btn-primary"
+          data-testid="saveButton"
+          type="submit"
         >
+          userList.panels.create
           <span
-            class="rs-ripple"
-          />
-        </span>
-      </button>
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+        <button
+          class="rs-btn rs-btn-subtle"
+          type="button"
+        >
+          userList.panels.close
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div
-    class="rs-drawer-body"
-  >
     <div
-      class="rs-panel"
+      class="rs-drawer-body"
     >
       <div
-        class="rs-panel-body"
-        role="region"
+        class="rs-panel"
       >
-        <form
-          class="rs-form rs-form-vertical rs-form-fluid"
+        <div
+          class="rs-panel-body"
+          role="region"
         >
           <div
             class="rs-form-group"
@@ -430,6 +436,8 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="firstName"
+              id="firstName-control-label"
             >
               userList.panels.firstName
             </label>
@@ -437,8 +445,11 @@ exports[`User Edit Panel should render 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="firstName-help-text"
+                aria-labelledby="firstName-control-label"
                 class="rs-input"
-                name="userList.panels.firstName"
+                id="firstName"
+                name="firstName"
                 type="text"
                 value=""
               />
@@ -450,15 +461,20 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
-              userList.panels.name
+              userList.panels.name*
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
-                name="userList.panels.name"
+                id="name"
+                name="name"
                 type="text"
                 value=""
               />
@@ -478,7 +494,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.preferredName"
+                name="preferredName"
                 type="text"
                 value=""
               />
@@ -490,15 +506,20 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="email"
+              id="email-control-label"
             >
-              userList.panels.email
+              userList.panels.email*
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="email-help-text"
+                aria-labelledby="email-control-label"
                 class="rs-input"
-                name="userList.panels.email"
+                id="email"
+                name="email"
                 type="text"
                 value=""
               />
@@ -518,7 +539,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.company"
+                name="company"
                 type="text"
                 value=""
               />
@@ -538,7 +559,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.streetAddress"
+                name="streetAddress"
                 type="text"
                 value=""
               />
@@ -558,7 +579,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.streetAddress2"
+                name="streetAddress2"
                 type="text"
                 value=""
               />
@@ -578,7 +599,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.zipCode"
+                name="zipCode"
                 type="text"
                 value=""
               />
@@ -598,7 +619,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.city"
+                name="city"
                 type="text"
                 value=""
               />
@@ -618,7 +639,7 @@ exports[`User Edit Panel should render 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.country"
+                name="country"
                 type="text"
                 value=""
               />
@@ -660,15 +681,20 @@ exports[`User Edit Panel should render 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="password"
+              id="password-control-label"
             >
-              userList.panels.password
+              userList.panels.password*
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="password-help-text"
+                aria-labelledby="password-control-label"
                 class="rs-input"
-                name="userList.panels.password"
+                id="password"
+                name="password"
                 type="password"
                 value=""
               />
@@ -724,89 +750,91 @@ exports[`User Edit Panel should render 1`] = `
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </DocumentFragment>
 `;
 
 exports[`User Edit Panel should render with ID 1`] = `
 <DocumentFragment>
-  <div
-    class="rs-drawer-header"
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
+    style="height: 100%;"
   >
-    <span
-      aria-label="Close"
-      class="rs-drawer-header-close rs-btn-close"
-      role="button"
-      title="Close"
-    >
-      <svg
-        aria-hidden="true"
-        aria-label="close"
-        class="rs-icon"
-        data-category="application"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 16 16"
-        width="1em"
-      >
-        <path
-          d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
-        />
-      </svg>
-    </span>
-    <h4
-      class="rs-drawer-title"
-    >
-      userList.panels.editUser
-    </h4>
     <div
-      class="rs-drawer-actions"
+      class="rs-drawer-header"
     >
-      <button
-        aria-disabled="false"
-        class="rs-btn rs-btn-primary"
-        type="button"
+      <span
+        aria-label="Close"
+        class="rs-drawer-header-close rs-btn-close"
+        role="button"
+        title="Close"
       >
-        userList.panels.save
-        <span
-          class="rs-ripple-pond"
+        <svg
+          aria-hidden="true"
+          aria-label="close"
+          class="rs-icon"
+          data-category="application"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 16 16"
+          width="1em"
         >
-          <span
-            class="rs-ripple"
+          <path
+            d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
           />
-        </span>
-      </button>
-      <button
-        class="rs-btn rs-btn-subtle"
-        type="button"
+        </svg>
+      </span>
+      <h4
+        class="rs-drawer-title"
       >
-        userList.panels.close
-        <span
-          class="rs-ripple-pond"
+        userList.panels.editUser
+      </h4>
+      <div
+        class="rs-drawer-actions"
+      >
+        <button
+          aria-disabled="false"
+          class="rs-btn rs-btn-primary"
+          data-testid="saveButton"
+          type="submit"
         >
+          userList.panels.save
           <span
-            class="rs-ripple"
-          />
-        </span>
-      </button>
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+        <button
+          class="rs-btn rs-btn-subtle"
+          type="button"
+        >
+          userList.panels.close
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div
-    class="rs-drawer-body"
-  >
     <div
-      class="rs-panel"
+      class="rs-drawer-body"
     >
       <div
-        class="rs-panel-body"
-        role="region"
+        class="rs-panel"
       >
-        <form
-          class="rs-form rs-form-vertical rs-form-fluid"
+        <div
+          class="rs-panel-body"
+          role="region"
         >
           <div
             class="rs-form-group"
@@ -814,6 +842,8 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="firstName"
+              id="firstName-control-label"
             >
               userList.panels.firstName
             </label>
@@ -821,8 +851,11 @@ exports[`User Edit Panel should render with ID 1`] = `
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="firstName-help-text"
+                aria-labelledby="firstName-control-label"
                 class="rs-input"
-                name="userList.panels.firstName"
+                id="firstName"
+                name="firstName"
                 type="text"
                 value="Peter"
               />
@@ -834,15 +867,20 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="name"
+              id="name-control-label"
             >
-              userList.panels.name
+              userList.panels.name*
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="name-help-text"
+                aria-labelledby="name-control-label"
                 class="rs-input"
-                name="userList.panels.name"
+                id="name"
+                name="name"
                 type="text"
                 value="Parker"
               />
@@ -862,7 +900,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.preferredName"
+                name="preferredName"
                 type="text"
                 value="Peter Parker"
               />
@@ -874,15 +912,20 @@ exports[`User Edit Panel should render with ID 1`] = `
           >
             <label
               class="rs-form-control-label"
+              for="email"
+              id="email-control-label"
             >
-              userList.panels.email
+              userList.panels.email*
             </label>
             <div
               class="rs-form-control rs-form-control-wrapper"
             >
               <input
+                aria-describedby="email-help-text"
+                aria-labelledby="email-control-label"
                 class="rs-input"
-                name="userList.panels.email"
+                id="email"
+                name="email"
                 type="text"
                 value="peter@parker.com"
               />
@@ -902,7 +945,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.company"
+                name="company"
                 type="text"
                 value=""
               />
@@ -922,7 +965,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.streetAddress"
+                name="streetAddress"
                 type="text"
                 value=""
               />
@@ -942,7 +985,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.streetAddress2"
+                name="streetAddress2"
                 type="text"
                 value=""
               />
@@ -962,7 +1005,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.zipCode"
+                name="zipCode"
                 type="text"
                 value=""
               />
@@ -982,7 +1025,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.city"
+                name="city"
                 type="text"
                 value=""
               />
@@ -1002,7 +1045,7 @@ exports[`User Edit Panel should render with ID 1`] = `
             >
               <input
                 class="rs-input"
-                name="userList.panels.country"
+                name="country"
                 type="text"
                 value=""
               />
@@ -1159,9 +1202,9 @@ exports[`User Edit Panel should render with ID 1`] = `
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </DocumentFragment>
 `;

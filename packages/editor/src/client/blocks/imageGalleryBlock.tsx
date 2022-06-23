@@ -140,8 +140,8 @@ export function ImageGalleryBlock({
         </div>
       </div>
       <Panel
-        bordered={true}
-        bodyFill={true}
+        bordered
+        bodyFill
         style={{
           height: 300,
           overflow: 'hidden',
