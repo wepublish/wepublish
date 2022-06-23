@@ -1,5 +1,29 @@
 # Change Log
 
+## 4.0.0-alpha.0 (2022-06-23)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* `editor`
+  * [#565](https://github.com/wepublish/wepublish/pull/565) F/wpc 667 form validation ([@camilleory](https://github.com/camilleory))
+
+#### :memo: Documentation
+* [#624](https://github.com/wepublish/wepublish/pull/624) documentation for validation ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## v3.2.0 (2022-06-23)
 
 #### :heart: New Feature
