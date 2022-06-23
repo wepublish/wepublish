@@ -88,7 +88,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         </div>
       </div>
 
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
@@ -98,7 +98,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}

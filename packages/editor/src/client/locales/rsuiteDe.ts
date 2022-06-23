@@ -7,33 +7,36 @@ const Calendar = {
   friday: 'Fr',
   saturday: 'Sa',
   ok: 'OK',
-  today: 'Today',
-  yesterday: 'Yesterday',
-  hours: 'Hours',
-  minutes: 'Minutes',
-  seconds: 'Seconds',
+  today: 'Heute',
+  yesterday: 'Gestern',
+  hours: 'Stunden',
+  minutes: 'Minuten',
+  seconds: 'Sekunden',
   /**
    * Format of the string is based on Unicode Technical Standard #35:
    * https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
    **/
-  formattedMonthPattern: 'MMM YYYY',
-  formattedDayPattern: 'DD MMM YYYY'
+  formattedMonthPattern: 'MMM yyyy',
+  formattedDayPattern: 'dd MMM yyyy'
 }
 
 export default {
   Pagination: {
-    more: 'More',
-    prev: 'Previous',
-    next: 'Next',
-    first: 'First',
-    last: 'Last'
+    first: 'Erste',
+    last: 'Letzte',
+    limit: '{0} / Seite',
+    more: 'Mehr',
+    next: 'Nächste',
+    prev: 'Vorherige',
+    skip: 'Gehe zu {0}',
+    total: 'Total: {0}'
   },
   Table: {
     emptyMessage: 'Keine Daten gefunden',
-    loading: 'Loading...'
+    loading: 'Lade...'
   },
   TablePagination: {
-    lengthMenuInfo: '{0} / page',
+    lengthMenuInfo: '{0} / Seite',
     totalInfo: 'Total: {0}'
   },
   Calendar,
@@ -42,24 +45,24 @@ export default {
   },
   DateRangePicker: {
     ...Calendar,
-    last7Days: 'Last 7 Days'
+    last7Days: 'Letzte 7 Tage'
   },
   Picker: {
     noResultsText: 'Kein Ergebnis',
     placeholder: 'Auswählen',
     searchPlaceholder: 'Suchen',
-    checkAll: 'All'
+    checkAll: 'Alle'
   },
   InputPicker: {
-    newItem: 'New item',
-    createOption: 'Create option "{0}"'
+    newItem: 'Neuer Eintrag',
+    createOption: 'Erstelle Option "{0}"'
   },
   Uploader: {
-    inited: 'Initial',
-    progress: 'Uploading',
-    error: 'Error',
-    complete: 'Finished',
-    emptyFile: 'Empty',
+    inited: 'Start',
+    progress: 'Lädt hoch',
+    error: 'Fehler',
+    complete: 'Beendet',
+    emptyFile: 'Leer',
     upload: 'Upload'
   }
 }

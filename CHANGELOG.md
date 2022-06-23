@@ -1,5 +1,37 @@
 # Change Log
 
+## v3.2.0 (2022-06-23)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#598](https://github.com/wepublish/wepublish/pull/598) WPC-640 Disable peer ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#590](https://github.com/wepublish/wepublish/pull/590) WPC-665 set paidAt manually (invoice history) ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#611](https://github.com/wepublish/wepublish/pull/611) fix(editor): pagination translation broken and max pages ([@Itrulia](https://github.com/Itrulia))
+  * [#612](https://github.com/wepublish/wepublish/pull/612) fix: autoRenew filter ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#613](https://github.com/wepublish/wepublish/pull/613) test(editor): replace enzyme with @testing-library/react to fix tests ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* `api-db-mongodb`, `api`, `editor`
+  * [#610](https://github.com/wepublish/wepublish/pull/610) WPC 679 remove tmp user ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* `editor`
+  * [#613](https://github.com/wepublish/wepublish/pull/613) test(editor): replace enzyme with @testing-library/react to fix tests ([@Itrulia](https://github.com/Itrulia))
+  * [#584](https://github.com/wepublish/wepublish/pull/584) feat(editor): upgrade rsuite ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Karl Merkli ([@Itrulia](https://github.com/Itrulia))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+
 ## 3.1.0 (2022-06-09)
 
 #### :boom: Breaking Change
