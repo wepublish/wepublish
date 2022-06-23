@@ -28,7 +28,7 @@ export interface ArticleData {
 }
 
 // Article State Flow:
-// Draft -> Pending (Optional) -> Published -> History
+// Draft -> Pending (Optional) -> Published
 export interface Article {
   readonly id: string
 
@@ -44,11 +44,6 @@ export interface Article {
 export interface PeerArticle {
   peerID: string
   article: any
-}
-
-export interface ArticleHistory {
-  readonly id: string
-  readonly revisions: ArticleRevision[]
 }
 
 export interface ArticleRevision extends ArticleData {
@@ -91,38 +86,4 @@ export enum ArticleSort {
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
-}
-
-export interface GetArticleHistoryArgs {
-  readonly id: string
-}
-
-export interface ArticleInput extends ArticleData {
-  readonly shared: boolean
-}
-
-export interface UpdateArticleArgs {
-  readonly id: string
-  readonly input: ArticleInput
-}
-
-export interface UnpublishArticleArgs {
-  readonly id: string
-}
-
-export interface PublishArticleArgs {
-  readonly id: string
-  readonly publishAt?: Date
-  readonly publishedAt?: Date
-  readonly updatedAt?: Date
-}
-
-export type OptionalArticle = Article | null
-export type OptionalPublicArticle = PublicArticle | null
-export type OptionalArticleHistory = ArticleHistory | null
-
-export interface DBArticleAdapter {
-  updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
-  publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
-  unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
 }
