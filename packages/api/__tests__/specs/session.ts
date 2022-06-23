@@ -10,14 +10,12 @@ import jwt, {SignOptions} from 'jsonwebtoken'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')

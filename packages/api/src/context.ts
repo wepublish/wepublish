@@ -33,9 +33,9 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {DBAdapter} from './db/adapter'
-import {OptionalPublicArticle} from './db/article'
+import {PublicArticle} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
+import {PublicPage} from './db/page'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
@@ -47,7 +47,6 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
-import {PublicPage} from './db/page'
 
 /**
  * Peered article cache configuration and setup
@@ -78,7 +77,7 @@ export interface DataLoaderContext {
   readonly images: DataLoader<string, Image | null>
 
   readonly articles: DataLoader<string, Article | null>
-  readonly publicArticles: DataLoader<string, OptionalPublicArticle>
+  readonly publicArticles: DataLoader<string, PublicArticle | null>
 
   readonly pages: DataLoader<string, Page | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
@@ -123,7 +122,6 @@ export interface Context {
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
 
-  readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -175,7 +173,6 @@ export interface ContextOptions {
   readonly sessionTTL?: number
   readonly hashCostFactor?: number
 
-  readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -289,7 +286,6 @@ export async function contextFromRequest(
   {
     hostURL,
     websiteURL,
-    dbAdapter,
     prisma,
     mediaAdapter,
     urlAdapter,
@@ -758,7 +754,6 @@ export async function contextFromRequest(
 
   const memberContext = new MemberContext({
     loaders,
-    dbAdapter,
     prisma,
     paymentProviders,
     mailContext,
@@ -780,7 +775,6 @@ export async function contextFromRequest(
     prisma,
     memberContext,
     mailContext,
-    dbAdapter,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,

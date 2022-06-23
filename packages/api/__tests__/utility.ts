@@ -23,7 +23,6 @@ import {DefaultSessionTTL} from '../src/db/common'
 import {createUserSession} from '../src/graphql/session/session.mutation'
 
 export interface TestClient {
-  dbAdapter: MongoDBAdapter
   testClientPublic: ApolloServerTestClient
   testClientPrivate: ApolloServerTestClient
 }
@@ -108,11 +107,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     }
   })
 
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en'
-  })
-
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
     token: 'fake',
@@ -152,7 +146,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
-        dbAdapter,
         prisma,
         mediaAdapter,
         mailContextOptions: {
@@ -176,7 +169,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
-        dbAdapter,
         prisma,
         mediaAdapter,
         mailContextOptions: {
@@ -195,7 +187,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   const testClientPublic = createTestClient(apolloServerPublic)
 
   return {
-    dbAdapter,
     testClientPublic,
     testClientPrivate
   }

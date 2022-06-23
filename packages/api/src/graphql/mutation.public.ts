@@ -474,7 +474,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
-      async resolve(root, {email}, {dbAdapter, prisma, generateJWT, mailContext, urlAdapter}) {
+      async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
         const user = await prisma.user.findUnique({
           where: {email}
         })
@@ -641,11 +641,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.',
-      async resolve(
-        root,
-        {input},
-        {authenticateUser, createPaymentWithProvider, loaders, prisma, dbAdapter}
-      ) {
+      async resolve(root, {input}, {authenticateUser, createPaymentWithProvider, loaders, prisma}) {
         const {user} = authenticateUser()
         const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
 

@@ -20,13 +20,11 @@ import {PeerProfileInput} from '../../lib'
 ;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
 

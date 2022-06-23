@@ -12,7 +12,6 @@ import {
   User
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
-import {DBAdapter} from './db/adapter'
 import {unselectPassword} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext, SendMailType} from './mails/mailContext'
@@ -65,7 +64,6 @@ export interface DeactivateSubscriptionForUserProps {
 }
 
 export interface MemberContext {
-  dbAdapter: DBAdapter
   prisma: PrismaClient
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
@@ -91,7 +89,6 @@ export interface MemberContext {
 }
 
 export interface MemberContextProps {
-  readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
@@ -165,7 +162,6 @@ function getNextReminderAndDeactivationDate({
 }
 
 export class MemberContext implements MemberContext {
-  dbAdapter: DBAdapter
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
@@ -173,7 +169,6 @@ export class MemberContext implements MemberContext {
   getLoginUrlForUser: (user: User) => string
 
   constructor(props: MemberContextProps) {
-    this.dbAdapter = props.dbAdapter
     this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
 
@@ -467,7 +462,6 @@ export class MemberContext implements MemberContext {
 
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
-          dbAdapter: this.dbAdapter,
           paymentClient: this.prisma.payment,
           paymentsByID: this.loaders.paymentsByID,
           invoicesByID: this.loaders.invoicesByID,

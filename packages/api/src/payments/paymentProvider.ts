@@ -34,7 +34,6 @@ export interface CheckIntentProps {
 
 export interface UpdatePaymentWithIntentStateProps {
   intentState: IntentState
-  dbAdapter: Context['dbAdapter']
   paymentClient: PrismaClient['payment']
   paymentsByID: Context['loaders']['paymentsByID']
   invoicesByID: Context['loaders']['invoicesByID']
@@ -108,7 +107,6 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   async updatePaymentWithIntentState({
     intentState,
-    dbAdapter,
     paymentClient,
     paymentsByID,
     invoicesByID,
@@ -163,7 +161,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   /**
    * adding or updating paymentProvider customer ID for user
-   * @param dbAdapter
+   * @param userClient
    * @param subscription
    * @param customerID
    * @private
@@ -261,7 +259,6 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
             // TODO: handle errors properly
             await paymentProvider.updatePaymentWithIntentState({
               intentState: paymentStatus,
-              dbAdapter: context.dbAdapter,
               paymentClient: context.prisma.payment,
               paymentsByID: context.loaders.paymentsByID,
               invoicesByID: context.loaders.invoicesByID,

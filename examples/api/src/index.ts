@@ -165,11 +165,6 @@ async function asyncMain() {
     }
   })
 
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.MONGO_URL!,
-    locale: process.env.MONGO_LOCALE ?? 'en'
-  })
-
   const oauth2Providers: Oauth2Provider[] = []
   if (
     process.env.OAUTH_GOOGLE_DISCOVERY_URL &&
@@ -339,7 +334,6 @@ async function asyncMain() {
     hostURL,
     websiteURL,
     mediaAdapter,
-    dbAdapter,
     prisma,
     oauth2Providers,
     mailProvider,

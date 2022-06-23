@@ -4,13 +4,11 @@ import {createGraphQLTestClientWithMongoDB} from '../utility'
 // import {CommentAuthorType, CommentItemType} from '../../lib'
 
 // let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     // testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
 
