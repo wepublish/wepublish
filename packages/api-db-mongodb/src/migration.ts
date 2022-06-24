@@ -9,6 +9,7 @@ import {
   SubscriptionDeactivationReason
 } from '@wepublish/api'
 import {slugify} from './utility'
+import normalizeEmail from 'normalize-email'
 
 export interface Migration {
   readonly version: number
@@ -909,6 +910,64 @@ export const Migrations: Migration[] = [
       if (collections.includes('temp.users')) {
         const tempUser = await db.collection('temp.users')
         await tempUser.rename('temp.users.bak')
+      }
+    }
+  },
+  {
+    // Try to migrate email addressees of users
+    version: 23,
+    async migrate(db) {
+      const userCollection = await db.collection(CollectionName.Users)
+      const subscriptionCollection = await db.collection(CollectionName.Subscriptions)
+      const sessionCollection = await db.collection(CollectionName.Sessions)
+      const users = await userCollection.find().toArray()
+
+      // inform We.Publish operators to remove this manually
+      await userCollection.rename('23-users.bak')
+      const emptyUsers = await db.createCollection(CollectionName.Users, {
+        strict: true
+      })
+
+      type List = {
+        userId: string
+        email: string
+      }
+
+      const listSanitizedUsers: List[] = []
+      for (const user of users) {
+        user.email = normalizeEmail(user.email)
+        const duplicatedMail = listSanitizedUsers.find(element => element.email === user.email)
+
+        // If already a user with normalized mail exist merge them
+        if (duplicatedMail) {
+          // Update userID in subscription table
+          const subscriptions = await subscriptionCollection.find({userID: user._id}).toArray()
+          for (const subscription of subscriptions) {
+            subscription.properties.push({
+              key: 'UserIDChangedByMigration23',
+              value: subscription.userID,
+              public: false
+            })
+            subscription.userID = duplicatedMail.userId
+            await subscriptionCollection.replaceOne({_id: subscription._id}, subscription, {
+              upsert: true
+            })
+          }
+
+          // Update userID in session table
+          const sessions = await sessionCollection.find({userID: user._id}).toArray()
+          for (const session of sessions) {
+            session.user = duplicatedMail.userId
+            await sessionCollection.replaceOne({_id: session._id}, session, {upsert: true})
+          }
+        } else {
+          // If user is unique update mail of user
+          await emptyUsers.insertOne(user)
+          listSanitizedUsers.push({
+            userId: user._id,
+            email: user.email
+          })
+        }
       }
     }
   }
