@@ -20,13 +20,6 @@ import {AppContextProvider} from '../shared/appContext'
 
 import {createStyleRenderer, fetchIntrospectionQueryResultData} from '../shared/utility'
 import {AuthProvider} from '../shared/authContext'
-// import Analytics from 'analytics'
-// import {matomoPlugin} from '@wpkamil/analytics'
-
-// const analytics = Analytics({
-//   app: 'wp-example',
-//   plugins: [matomoPlugin()]
-// })
 
 export interface RenderOptions {
   apiURL: string
@@ -54,9 +47,6 @@ export async function renderApp({
   const styleRenderer = createStyleRenderer()
   const renderedLazyPaths: string[] = []
   const helmetContext = {}
-
-  // analytics.page()
-  console.log('siema')
 
   const ServerApp = (
     <LazyCapture rendered={renderedLazyPaths}>

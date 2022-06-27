@@ -27,7 +27,7 @@
     "@karma.run/react": "^0.1.2",
     "@karma.run/utility": "^0.1.0",
     "@karma.run/webpack": "^0.0.3",
-    "@wpkamil/analytics": "^1.0.11",
+    "@wpkamil/analytics": "^1.0.17",
     "analytics": "^0.8.1",
     "cross-fetch": "^3.0.4",
     "dotenv": "^8.2.0",

@@ -11,6 +11,13 @@ import {LocalStorageKey} from '../utility'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '../authContext'
 import {gql, useMutation} from '@apollo/client'
 import {Login} from './login'
+import Analytics from 'analytics'
+import {matomoPlugin} from '@wpkamil/analytics'
+
+const analytics = Analytics({
+  app: 'wp-example',
+  plugins: [matomoPlugin()]
+})
 
 export function Router() {
   const {current} = useRoute()
@@ -20,6 +27,10 @@ export function Router() {
     if ('scrollRestoration' in history && history.scrollRestoration !== 'manual') {
       history.scrollRestoration = 'manual'
     }
+  }, [])
+
+  useEffect(() => {
+    analytics.page()
   }, [])
 
   // Handle scrolling.
