@@ -95,12 +95,12 @@ export function SettingList() {
   async function handleSettingListUpdate() {
     const allSettings: UpdateSettingArgs[] = []
     allSettings.push(
-      {id: allowGuestComment.id, value: allowGuestComment.value},
-      {id: sendLoginJwtExpiresMin.id, value: sendLoginJwtExpiresMin.value},
-      {id: resetPwdJwtExpiresMin.id, value: resetPwdJwtExpiresMin.value},
-      {id: peeringTimeoutMs.id, value: peeringTimeoutMs.value},
-      {id: invoiceReminderTries.id, value: invoiceReminderTries.value},
-      {id: invoiceReminderFreq.id, value: invoiceReminderFreq.value}
+      {name: SettingName.AllowGuestCommenting, value: allowGuestComment.value},
+      {name: SettingName.SendLoginJwtExpiresMin, value: sendLoginJwtExpiresMin.value},
+      {name: SettingName.ResetPasswordJwtExpiresMin, value: resetPwdJwtExpiresMin.value},
+      {name: SettingName.PeeringTimeoutMs, value: peeringTimeoutMs.value},
+      {name: SettingName.InvoiceReminderMaxTries, value: invoiceReminderTries.value},
+      {name: SettingName.InvoiceReminderFreq, value: invoiceReminderFreq.value}
     )
     await updateSettings({variables: {input: allSettings}})
 

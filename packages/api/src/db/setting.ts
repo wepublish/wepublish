@@ -21,7 +21,7 @@ export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>
 
 export type UpdateSettingArgs<T = unknown> = {
-  id: string
+  name: SettingName
   value: T
 }
 
@@ -35,11 +35,7 @@ export interface SettingRestriction {
 export type OptionalSetting = Setting | null
 
 export interface DBSettingAdapter {
-  updateSettingList(args: UpdateSettingArgs[]): Promise<OptionalSetting[]>
-
   getSetting(name: SettingName): Promise<OptionalSetting>
-  getSettingsByID(ids: readonly string[]): Promise<OptionalSetting[]>
-  getSettingsByName(names: readonly SettingName[]): Promise<OptionalSetting[]>
-
-  getSettings(): Promise<Setting[]>
+  getSettingList(): Promise<Setting[]>
+  updateSettingList(args: UpdateSettingArgs[]): Promise<OptionalSetting[]>
 }

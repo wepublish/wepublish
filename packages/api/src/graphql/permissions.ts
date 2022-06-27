@@ -471,9 +471,9 @@ export const CanGetSettings: Permission = {
   deprecated: false
 }
 
-export const CanUpdateSetting: Permission = {
-  id: 'CAN_UPDATE_SETTING',
-  description: 'Allows to update a setting',
+export const CanUpdateSettings: Permission = {
+  id: 'CAN_UPDATE_SETTINGS',
+  description: 'Allows to update settings',
   deprecated: false
 }
 
@@ -550,7 +550,7 @@ export const AllPermissions: Permission[] = [
   CanGetSubscriptions,
   CanDeleteSubscription,
   CanGetSettings,
-  CanUpdateSetting
+  CanUpdateSettings
 ]
 
 export const EditorPermissions: Permission[] = [

@@ -45,7 +45,7 @@ import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {User} from './db/user'
-import {OptionalSetting, SettingName} from './db/setting'
+import {SettingName} from './db/setting'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import NodeCache from 'node-cache'
 import {logger} from './server'
@@ -88,8 +88,6 @@ export interface DataLoaderContext {
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
 
   readonly mailLogsByID: DataLoader<string, OptionalMailLog>
-  readonly settingsByName: DataLoader<SettingName, OptionalSetting>
-  readonly settingsByID: DataLoader<string, OptionalSetting>
 
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>
@@ -255,9 +253,6 @@ export async function contextFromRequest(
     userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
 
     mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
-
-    settingsByName: new DataLoader(names => dbAdapter.setting.getSettingsByName(names)),
-    settingsByID: new DataLoader(ids => dbAdapter.setting.getSettingsByID(ids)),
 
     peer: peerDataLoader,
     peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>

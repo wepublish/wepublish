@@ -19,44 +19,25 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
 
   async getSetting(name: SettingName): Promise<OptionalSetting> {
     const setting = await this.settings.findOne({name})
-    if (setting) {
-      return {
-        id: setting._id,
-        name: setting.name,
-        value: setting.value,
-        settingRestriction: setting.settingRestriction
-      }
-    } else {
-      return null
+    if (!setting) return null
+    return {
+      id: setting._id,
+      name: setting.name,
+      value: setting.value,
+      settingRestriction: setting.settingRestriction
     }
   }
 
-  async getSettings(): Promise<Setting[]> {
+  async getSettingList(): Promise<Setting[]> {
     const settings = await this.settings.find().toArray()
     return settings.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
-  async getSettingsByName(names: SettingName[]): Promise<OptionalSetting[]> {
-    const settings = await this.settings.find({name: {$in: names as SettingName[]}}).toArray()
-    const settingsMap = Object.fromEntries(
-      settings.map(({_id: id, name, ...setting}) => [{...setting}])
-    )
-    return names.map(name => (settingsMap[name] as Setting) ?? null)
-  }
-
-  async getSettingsByID(ids: string[]): Promise<OptionalSetting[]> {
-    const settings = await this.settings.find({_id: {$in: ids}}).toArray()
-    const settingMap = Object.fromEntries(
-      settings.map(({_id: id, ...setting}) => [id, {id, ...setting}])
-    )
-    return ids.map(id => settingMap[id] ?? null)
-  }
-
   async updateSettingList(args: UpdateSettingArgs[]): Promise<OptionalSetting[]> {
     return Promise.all(
-      args.map(async ({id, value: val}) => {
+      args.map(async ({name, value: val}) => {
         const {value} = await this.settings.findOneAndUpdate(
-          {_id: id},
+          {name: name},
           {
             $set: {
               value: val

@@ -63,7 +63,7 @@ export const GraphQLSettingInput = new GraphQLInputObjectType({
 export const GraphQLUpdateSettingArgs = new GraphQLInputObjectType({
   name: 'UpdateSettingArgs',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    name: {type: GraphQLNonNull(GraphQLSettingName)},
     value: {type: GraphQLNonNull(GraphQLSettingValueType)}
   }
 })

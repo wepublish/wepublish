@@ -1149,24 +1149,21 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     setting: {
       type: GraphQLSetting,
-      args: {id: {type: GraphQLID}, name: {type: GraphQLString}},
-      resolve(root, {id, name}, {authenticate, loaders}) {
+      args: {name: {type: GraphQLString}},
+      resolve(root, {name}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetSettings, roles)
-
-        if ((id == null && name == null) || (id != null && name != null)) {
-          throw new UserInputError('You must provide either `id` or `name`.')
-        }
-
-        return id ? loaders.settingsByID.load(id) : loaders.settingsByName.load(name)
+        if (!name) throw new UserInputError('You must provide setting `name`.')
+        return dbAdapter.setting.getSetting(name)
       }
     },
+
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve(root, {}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetSettings, roles)
-        return dbAdapter.setting.getSettings()
+        return dbAdapter.setting.getSettingList()
       }
     }
   }

@@ -68,7 +68,7 @@ import {
   CanSendJWTLogin,
   CanCreateSubscription,
   CanDeleteSubscription,
-  CanUpdateSetting
+  CanUpdateSettings
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -1167,15 +1167,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
       },
 
-      async resolve(root, {value}, {authenticate, dbAdapter, loaders}) {
+      async resolve(root, {value}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanUpdateSetting, roles)
+        authorise(CanUpdateSettings, roles)
 
-        value.map(async ({id, value: val}: UpdateSettingArgs) => {
-          const fullSetting = await loaders.settingsByID.load(id)
+        value.map(async ({name, value: val}: UpdateSettingArgs) => {
+          const fullSetting = await dbAdapter.setting.getSetting(name)
 
           if (!fullSetting) {
-            throw new NotFound('setting', id)
+            throw new NotFound('setting', name)
           }
 
           const restrictions = fullSetting?.settingRestriction

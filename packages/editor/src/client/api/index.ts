@@ -1688,7 +1688,6 @@ export type QueryPaymentsArgs = {
 
 
 export type QuerySettingArgs = {
-  id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -1953,7 +1952,7 @@ export type UpdatePeerInput = {
 };
 
 export type UpdateSettingArgs = {
-  id: Scalars['ID'];
+  name: SettingName;
   value: Scalars['Value'];
 };
 
