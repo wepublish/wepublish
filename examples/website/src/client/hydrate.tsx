@@ -24,6 +24,13 @@ import {AuthProvider} from '../shared/authContext'
 import {fetch} from 'cross-fetch'
 import {setContext} from '@apollo/client/link/context'
 import {TikTokProvider} from '../shared/atoms/tikTokEmbed'
+import Analytics from 'analytics'
+import {matomoPlugin} from '@wpkamil/analytics'
+
+const analytics = Analytics({
+  app: 'wp-example',
+  plugins: [matomoPlugin()]
+})
 
 export const HotApp = hot(App)
 
@@ -63,6 +70,9 @@ export async function hydrateApp(): Promise<void> {
 
       await preloadLazyComponents(renderedKeys)
       rehydrate(styleRenderer)
+
+      analytics.page()
+      console.log('siema')
 
       ReactDOM.hydrate(
         <AppContextProvider canonicalHost={canonicalHost}>
