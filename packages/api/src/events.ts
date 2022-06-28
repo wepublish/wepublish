@@ -226,9 +226,10 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
 
     // send mails including login link
-    const jwtExpires = Number(
-      (await context.dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))?.value
-    )
+    const jwtExpires =
+      ((await context.dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+        ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+    if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
     const user = await context.dbAdapter.user.getUserByID(subscription.userID)
     if (!user) {
       logger('events').warn(`User not found %s`, subscription.userID)

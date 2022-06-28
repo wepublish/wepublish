@@ -1,13 +1,11 @@
 export type Setting<T = unknown> = {
   id: string
-
   name: SettingName
   value: T | null
   settingRestriction?: SettingRestriction
 }
 
 export enum SettingName {
-  DEFAULT = '',
   ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',

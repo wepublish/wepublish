@@ -22,36 +22,36 @@ export function SettingList() {
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
     value: false,
-    name: SettingName.Default
+    name: SettingName.AllowGuestCommenting
   })
   const [sendLoginJwtExpiresMin, setSendLoginJwtExpiresMin] = useState<Setting>({
     id: '',
     value: 0,
-    name: SettingName.Default
+    name: SettingName.SendLoginJwtExpiresMin
   })
 
   const [resetPwdJwtExpiresMin, setResetPwdJwtExpiresMin] = useState<Setting>({
     id: '',
     value: 0,
-    name: SettingName.Default
+    name: SettingName.ResetPasswordJwtExpiresMin
   })
 
   const [peeringTimeoutMs, setPeeringTimeoutMs] = useState<Setting>({
     id: '',
     value: 0,
-    name: SettingName.Default
+    name: SettingName.PeeringTimeoutMs
   })
 
   const [invoiceReminderTries, setInvoiceReminderTries] = useState<Setting>({
     id: '',
     value: 0,
-    name: SettingName.Default
+    name: SettingName.PeeringTimeoutMs
   })
 
   const [invoiceReminderFreq, setInvoiceReminderFreq] = useState<Setting>({
     id: '',
     value: 0,
-    name: SettingName.Default
+    name: SettingName.InvoiceReminderFreq
   })
 
   useEffect(() => {
@@ -93,15 +93,14 @@ export function SettingList() {
   })
 
   async function handleSettingListUpdate() {
-    const allSettings: UpdateSettingArgs[] = []
-    allSettings.push(
+    const allSettings: UpdateSettingArgs[] = [
       {name: SettingName.AllowGuestCommenting, value: allowGuestComment.value},
-      {name: SettingName.SendLoginJwtExpiresMin, value: sendLoginJwtExpiresMin.value},
+      {name: SettingName.SendLoginJwtExpiresMin, value: sendLoginJwtExpiresMin?.value},
       {name: SettingName.ResetPasswordJwtExpiresMin, value: resetPwdJwtExpiresMin.value},
       {name: SettingName.PeeringTimeoutMs, value: peeringTimeoutMs.value},
       {name: SettingName.InvoiceReminderMaxTries, value: invoiceReminderTries.value},
       {name: SettingName.InvoiceReminderFreq, value: invoiceReminderFreq.value}
-    )
+    ]
     await updateSettings({variables: {input: allSettings}})
 
     toaster.push(
@@ -128,11 +127,11 @@ export function SettingList() {
     loginToken: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        sendLoginJwtExpiresMin.settingRestriction?.minValue ?? 1,
-        sendLoginJwtExpiresMin.settingRestriction?.maxValue ?? 10080,
+        sendLoginJwtExpiresMin?.settingRestriction?.minValue ?? 1,
+        sendLoginJwtExpiresMin?.settingRestriction?.maxValue ?? 10080,
         t('errorMessages.invalidRange', {
-          min: sendLoginJwtExpiresMin.settingRestriction?.minValue ?? 1,
-          max: sendLoginJwtExpiresMin.settingRestriction?.maxValue ?? 10080
+          min: sendLoginJwtExpiresMin?.settingRestriction?.minValue ?? 1,
+          max: sendLoginJwtExpiresMin?.settingRestriction?.maxValue ?? 10080
         })
       ),
     passwordExpire: NumberType()
@@ -180,6 +179,7 @@ export function SettingList() {
   return (
     <>
       <Form
+        disabled={settingListData?.settings.length === 0}
         model={validationModel}
         formValue={{
           loginToken: sendLoginJwtExpiresMin.value,
@@ -285,7 +285,10 @@ export function SettingList() {
             <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
           </InputGroup>
         </Form.Group>
-        <Button type="submit" appearance="primary">
+        <Button
+          type="submit"
+          appearance="primary"
+          disabled={settingListData?.settings.length === 0}>
           {t('settingList.save')}
         </Button>
       </Form>

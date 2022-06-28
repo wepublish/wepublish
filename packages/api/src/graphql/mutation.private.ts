@@ -327,13 +327,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
-        const jwtExpires = (
-          await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN)
-        )?.value
+        const jwtExpires =
+          ((await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes:
-            Number(jwtExpires) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -360,15 +360,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
-        const jwtExpires = (
-          await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN)
-        )?.value
+        const jwtExpires =
+          ((await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes:
-            Number(jwtExpires) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,

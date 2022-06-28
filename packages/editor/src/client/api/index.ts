@@ -1738,7 +1738,6 @@ export type Setting = {
 };
 
 export enum SettingName {
-  Default = 'DEFAULT',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',

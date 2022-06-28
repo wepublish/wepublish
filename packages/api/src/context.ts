@@ -271,9 +271,12 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
-            const peerTimeout = Number(
-              (await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value
-            )
+
+            const peerTimeout =
+              ((await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))
+                ?.value as number) ??
+              process.env.PEERING_TIMEOUT_IN_MS ??
+              3000
             const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
@@ -300,9 +303,11 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
-            const peerTimeout = Number(
-              (await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value
-            )
+            const peerTimeout =
+              ((await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))
+                ?.value as number) ??
+              process.env.PEERING_TIMEOUT_IN_MS ??
+              3000
             const fetcher = createFetcher(
               url.resolve(peer.hostURL, 'admin'),
               peer.token,

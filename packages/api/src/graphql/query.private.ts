@@ -168,9 +168,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreatePeer, roles)
         const link = new URL('/admin', hostURL)
-        const peerTimeout = Number(
-          (await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value
-        )
+        const peerTimeout =
+          ((await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value as number) ??
+          parseInt(process.env.PEERING_TIMEOUT_IN_MS as string)
+        if (!peerTimeout) throw new Error('No value set for PEERING_TIMEOUT_IN_MS')
+
         const fetcher = await createFetcher(link.toString(), token, peerTimeout)
         const schema = await introspectSchema(fetcher)
         const remoteExecutableSchema = await makeRemoteExecutableSchema({

@@ -23,7 +23,6 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
 export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
   values: {
-    DEFAULT: {value: SettingName.DEFAULT},
     ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
     SEND_LOGIN_JWT_EXPIRES_MIN: {value: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN},
     RESET_PASSWORD_JWT_EXPIRES_MIN: {value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN},
