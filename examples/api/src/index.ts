@@ -1,16 +1,13 @@
 #!/usr/bin/env node
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, CommentItemType, Peer} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  articleModelEvents,
   Author,
-  CommentItemType,
   hashPassword,
   JobType,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
-  Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -62,7 +59,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
-    if (comment.itemType === CommentItemType.Article) {
+    if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }
     return `${this.websiteURL}/${item.slug}#${comment.id}`
@@ -400,10 +397,6 @@ async function asyncMain() {
     tracing: true,
     logger,
     challenge
-  })
-
-  articleModelEvents.on('create', async (context, model) => {
-    console.log('New Article created with id', model.id)
   })
 
   // eslint-disable-next-line no-unused-expressions

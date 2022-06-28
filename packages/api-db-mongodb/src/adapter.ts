@@ -1,6 +1,6 @@
 import {MongoClient, Db} from 'mongodb'
 
-import {DBAdapter, SortOrder} from '@wepublish/api'
+import {SortOrder} from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
 import {CollectionName, DBMigration} from './db/schema'
@@ -30,7 +30,7 @@ interface MongoDBAdapterArgs {
   readonly db: Db
 }
 
-export class MongoDBAdapter implements DBAdapter {
+export class MongoDBAdapter {
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db

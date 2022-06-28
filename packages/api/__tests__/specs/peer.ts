@@ -1,22 +1,20 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {
-  CreatePeerInput,
-  CreatePeer,
-  PeerList,
-  Peer,
-  PeerProfile,
-  UpdatePeer,
-  DeletePeer,
-  UpdatePeerProfile
-} from '../api/private'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
+import {
+  CreatePeer,
+  CreatePeerInput,
+  DeletePeer,
+  Peer,
+  PeerList,
+  PeerProfile,
+  PeerProfileInput,
+  UpdatePeer,
+  UpdatePeerProfile
+} from '../api/private'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
-import {PeerProfileInput} from '../../lib'
 
-// Mocking Fetch calls from the "createFetcher" method in context
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 ;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
 let testClientPrivate: ApolloServerTestClient
@@ -174,11 +172,4 @@ describe('Peers', () => {
       expect(res).toMatchSnapshot()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 import {ApolloServer} from 'apollo-server'
@@ -8,12 +8,10 @@ import {URL} from 'url'
 import {AlgebraicCaptchaChallenge} from '../lib'
 import {
   Author,
-  CommentItemType,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
   hashPassword,
-  Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -53,7 +51,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
-    if (comment.itemType === CommentItemType.Article) {
+    if (comment.itemType === CommentItemType.article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }
     return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
@@ -118,6 +116,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     uploadImageFromArrayBuffer: jest.fn(),
     _uploadImage: jest.fn()
   }
+
   if (!adminUser) {
     throw new Error('Could not get admin user')
   }

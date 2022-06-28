@@ -1,16 +1,16 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  UserInput,
+  CreateSession,
   CreateUser,
-  UserList,
-  User,
-  UpdateUser,
-  ResetUserPassword,
   DeleteUser,
-  CreateSession
+  ResetUserPassword,
+  UpdateUser,
+  User,
+  UserInput,
+  UserList
 } from '../api/private'
+
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 
 let testClientPrivate: ApolloServerTestClient
 
@@ -206,11 +206,4 @@ describe('Users', () => {
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

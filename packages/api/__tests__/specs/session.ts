@@ -1,12 +1,12 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CreateSession, Me, CreateSessionWithJwt} from '../api/private'
+import jwt, {SignOptions} from 'jsonwebtoken'
+import {CreateSession, CreateSessionWithJwt, Me} from '../api/private'
 import {
   CreateSession as CreateSessionPublic,
   CreateSessionWithJwt as CreateSessionWithJwtPublic
 } from '../api/public'
-import jwt, {SignOptions} from 'jsonwebtoken'
+
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -129,11 +129,4 @@ describe('Sessions', () => {
 
     // TODO: write test for oauth auth
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

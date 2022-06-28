@@ -1,16 +1,16 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  ArticleInput,
-  CreateArticle,
-  ArticleList,
   Article,
-  UpdateArticle,
+  ArticleInput,
+  ArticleList,
+  CreateArticle,
   DeleteArticle,
   PublishArticle,
-  UnpublishArticle
+  UnpublishArticle,
+  UpdateArticle
 } from '../api/private'
+
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 
 let testClientPrivate: ApolloServerTestClient
 
@@ -229,11 +229,4 @@ describe('Articles', () => {
       articleIds.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

@@ -1,16 +1,16 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  PageInput,
   CreatePage,
-  PageList,
+  DeletePage,
   Page,
-  UpdatePage,
+  PageInput,
+  PageList,
   PublishPage,
   UnpublishPage,
-  DeletePage
+  UpdatePage
 } from '../api/private'
+
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 
 let testClientPrivate: ApolloServerTestClient
 
@@ -343,11 +343,4 @@ describe('Pages', () => {
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })
