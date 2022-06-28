@@ -1,7 +1,4 @@
 import bcrypt from 'bcrypt'
-import {Validator} from 'node-input-validator'
-import normalizeEmail from 'normalize-email'
-
 import {
   ConnectionResult,
   CreateUserArgs,
@@ -43,23 +40,12 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async createUser({input, password}: CreateUserArgs): Promise<OptionalUser> {
-    const email = normalizeEmail(input.email)
-    const validInput = new Validator(input, {
-      email: 'required|email',
-      name: 'required|maxLength:50',
-      firstName: 'maxLength:50',
-      preferredName: 'maxLength:50',
-      active: 'required|boolean'
-    })
-    if (!(await validInput.check())) {
-      throw new Error('Validation Error' + JSON.stringify(validInput.errors))
-    }
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
-        email,
+        email: input.email,
         emailVerifiedAt: null,
         oauth2Accounts: [],
         name: input.name,
@@ -85,7 +71,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async getUser(email: string): Promise<OptionalUser> {
-    email = normalizeEmail(email)
     const user = await this.users.findOne({email})
     if (user) {
       return {
@@ -111,17 +96,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async updateUser({id, input}: UpdateUserArgs): Promise<OptionalUser> {
-    const email = normalizeEmail(input.email)
-    const validInput = new Validator(input, {
-      email: 'required|email',
-      name: 'required|maxLength:50',
-      firstName: 'maxLength:50',
-      preferredName: 'maxLength:50',
-      active: 'required|boolean'
-    })
-    if (!(await validInput.check())) {
-      throw new Error('Validation Error' + JSON.stringify(validInput.errors))
-    }
     const {value} = await this.users.findOneAndUpdate(
       {_id: id},
       {
@@ -133,7 +107,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           address: input.address,
           active: input.active,
           properties: input.properties,
-          email,
+          email: input.email,
           emailVerifiedAt: input.emailVerifiedAt,
           roleIDs: input.roleIDs
         }
@@ -194,7 +168,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
-    email = normalizeEmail(email)
     const user = await this.users.findOne({email})
 
     if (user && (await bcrypt.compare(password, user.password))) {

@@ -9,7 +9,6 @@ import {
   SubscriptionDeactivationReason
 } from '@wepublish/api'
 import {slugify} from './utility'
-import normalizeEmail from 'normalize-email'
 
 export interface Migration {
   readonly version: number
@@ -935,7 +934,7 @@ export const Migrations: Migration[] = [
 
       const listSanitizedUsers: List[] = []
       for (const user of users) {
-        user.email = normalizeEmail(user.email)
+        user.email = user.email.toLowerCase()
         const duplicatedMail = listSanitizedUsers.find(element => element.email === user.email)
 
         // If already a user with normalized mail exist merge them
