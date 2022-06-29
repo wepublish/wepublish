@@ -45,6 +45,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {Toggle} from 'rsuite'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -212,27 +213,82 @@ export function CommentList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('comments.overview.comments')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <CheckboxGroup
-            inline
-            value={filter.states!}
-            onChange={value =>
-              setFilter({
-                ...filter,
-                states: value as CommentState[]
+
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px', gap: '8px', display: 'flex'}}>
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Approved)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Approved]
+                    : states.filter(val => val !== CommentState.Approved)
+                }
               })
-            }>
-            <Checkbox value={CommentState.Approved}>{t('comments.state.approved')}</Checkbox>
-            <Checkbox value={CommentState.PendingApproval}>
-              {t('comments.state.pendingApproval')}
-            </Checkbox>
-            <Checkbox value={CommentState.PendingUserChanges}>
-              {t('comments.state.pendingUserChanges')}
-            </Checkbox>
-            <Checkbox value={CommentState.Rejected}>{t('comments.state.rejected')}</Checkbox>
-          </CheckboxGroup>
+            }
+            checkedChildren={t('comments.state.approved')}
+            unCheckedChildren={t('comments.state.approved')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingApproval)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingApproval]
+                    : states.filter(val => val !== CommentState.PendingApproval)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingApproval')}
+            unCheckedChildren={t('comments.state.pendingApproval')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingUserChanges)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingUserChanges]
+                    : states.filter(val => val !== CommentState.PendingUserChanges)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingUserChanges')}
+            unCheckedChildren={t('comments.state.pendingUserChanges')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Rejected)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Rejected]
+                    : states.filter(val => val !== CommentState.Rejected)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.rejected')}
+            unCheckedChildren={t('comments.state.rejected')}
+          />
         </FlexboxGrid.Item>
       </FlexboxGrid>
+
       <div
         style={{
           display: 'flex',
