@@ -31,7 +31,7 @@ export function Router() {
 
   useEffect(() => {
     analytics.page()
-  }, [])
+  }, [current])
 
   // Handle scrolling.
   useEffect(() => {

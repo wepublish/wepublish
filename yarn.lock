@@ -6353,10 +6353,10 @@
     fela-dom "^10.6.1"
     path-to-regexp "^3.0.0"
 
-"@wpkamil/analytics@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/@wpkamil/analytics/-/analytics-1.0.17.tgz#0267166437246f5fe21d7357df18b5e0e0c1276f"
-  integrity sha512-UjFRj7KMYATjiaHdXCElsOH9BomU1sXXSG/82mqacQA9wlbY2pqMMC9czVkB0hMHfLHYomsRUThbJc1ghBcERA==
+"@wpkamil/analytics@^1.0.24":
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/@wpkamil/analytics/-/analytics-1.0.24.tgz#72a301d9a1f1f5552c5ca90d68f82c54e5da89f4"
+  integrity sha512-LK8B6O1pL9K3Y66EqYYFiUIum1t2lNsXPcjhWWZB3QnRuC5l9PRgao7eoZME2rQBYsn0+nm/6sqVuHK9G8IQsQ==
   dependencies:
     "@jonkoops/matomo-tracker" "^0.7.0"
     typescript "^4.7.4"
