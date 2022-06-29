@@ -7,8 +7,6 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
-  Checkbox,
-  CheckboxGroup,
   Dropdown,
   FlexboxGrid,
   IconButton,
@@ -18,7 +16,8 @@ import {
   Panel,
   Table,
   Timeline,
-  toaster
+  toaster,
+  Toggle
 } from 'rsuite'
 import {
   ApproveCommentMutation,
@@ -45,7 +44,6 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {Toggle} from 'rsuite'
 
 const {Column, HeaderCell, Cell} = Table
 
