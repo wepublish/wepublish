@@ -217,7 +217,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         fluid
         model={validationModel}
         style={{height: '100%'}}
-        formValue={{name: name, email: email, password: password}}>
+        formValue={{name, email, password}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
