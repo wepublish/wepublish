@@ -237,8 +237,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscriptionsAsCsv: {
       type: GraphQLString,
       args: {filter: {type: GraphQLSubscriptionFilter}},
-      resolve: (root, {filter}, {prisma: {subscription, user}, authenticate}) =>
-        getSubscriptionsAsCSV(filter, authenticate, subscription, user)
+      resolve: (root, {filter}, {prisma: {subscription}, authenticate}) =>
+        getSubscriptionsAsCSV(filter, authenticate, subscription)
     },
 
     // UserRole

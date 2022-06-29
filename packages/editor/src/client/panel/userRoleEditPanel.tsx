@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {toaster, Message, Button, CheckPicker, Drawer, Form} from 'rsuite'
+import {toaster, Message, Button, CheckPicker, Drawer, Form, Schema} from 'rsuite'
 
 import {
   Permission,
@@ -112,35 +112,49 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     }
   }
 
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-        </Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        style={{height: '100%'}}
+        formValue={{name: name}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('userRoles.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={isDisabled}
+              data-testid="saveButton">
+              {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('userRoles.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <Form fluid={true}>
-          <Form.Group>
-            <Form.ControlLabel>{t('userRoles.panels.name')}</Form.ControlLabel>
+        <Drawer.Body>
+          <Form.Group controlId="name">
+            <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
             <Form.Control
-              name={t('userRoles.panels.name')}
+              name="name"
               value={name}
               disabled={isDisabled}
               onChange={(value: string) => setName(value)}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="description">
             <Form.ControlLabel>{t('userRoles.panels.description')}</Form.ControlLabel>
             <Form.Control
               name={t('userRoles.panels.description')}
@@ -167,8 +181,8 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
               }}
             />
           </Form.Group>
-        </Form>
-      </Drawer.Body>
+        </Drawer.Body>
+      </Form>
     </>
   )
 }

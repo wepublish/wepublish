@@ -143,7 +143,7 @@ export function ImageList() {
           minHeight={600}
           data={images}
           rowHeight={100}
-          autoHeight={true}
+          autoHeight
           loading={isLoading}
           wordWrap
           className={'displayThreeLinesOnly'}>

@@ -182,7 +182,7 @@ export function Login() {
       {!loadingOAuth2 && (
         <>
           <Form
-            fluid={true}
+            fluid
             style={{
               display: 'flex',
               flexDirection: 'column',
