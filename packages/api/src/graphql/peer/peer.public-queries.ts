@@ -1,15 +1,21 @@
-import {UserInputError} from '../../error'
+import {DisabledPeerError, UserInputError} from '../../error'
 import {Context} from '../../context'
 
-export const getPeerByIdOrSlug = (
+export const getPeerByIdOrSlug = async (
   id: string | null,
   slug: string | null,
-  peer: Context['loaders']['peer'],
+  peerClient: Context['loaders']['peer'],
   peerBySlug: Context['loaders']['peerBySlug']
 ) => {
   if ((!id && !slug) || (id && slug)) {
     throw new UserInputError('You must provide either `id` or `slug`.')
   }
 
-  return id ? peer.load(id) : peerBySlug.load(slug!)
+  const peer = id ? await peerClient.load(id) : await peerBySlug.load(slug!)
+
+  if (peer?.isDisabled) {
+    throw new DisabledPeerError()
+  }
+
+  return peer
 }

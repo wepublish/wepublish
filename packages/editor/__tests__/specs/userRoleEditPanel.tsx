@@ -211,21 +211,24 @@ describe('User Role Edit Panel', () => {
       permissionListQuery
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, getByTestId, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
     )
     await actWait()
     const initialRender = asFragment()
+    const nameInput = getByLabelText('userRoles.panels.name*')
+    const descriptionInput = getByLabelText('userRoles.panels.description')
+    const saveButton = getByTestId('saveButton')
 
-    fireEvent.change(container.querySelector('input[name="userRoles.panels.name"]')!, {
+    fireEvent.change(nameInput, {
       target: {value: userRole.name}
     })
-    fireEvent.change(container.querySelector('input[name="userRoles.panels.description"]')!, {
+    fireEvent.change(descriptionInput, {
       target: {value: userRole.description}
     })
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

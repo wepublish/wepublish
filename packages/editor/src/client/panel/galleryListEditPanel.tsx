@@ -43,7 +43,7 @@ export function GalleryListEditPanel({
         <Drawer.Title>{t('blocks.imageGallery.panels.editGallery')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} onClick={() => onSave?.(images.map(({value}) => value))}>
+          <Button appearance="primary" onClick={() => onSave?.(images.map(({value}) => value))}>
             {t('blocks.imageGallery.panels.save')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
@@ -85,7 +85,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => onChange?.({...value, image: null})}
         />
-        <Form fluid={true}>
+        <Form fluid>
           <Form.Group>
             <Form.ControlLabel>{t('blocks.imageGallery.panels.caption')}</Form.ControlLabel>
             <Form.Control

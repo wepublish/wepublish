@@ -121,7 +121,9 @@ export async function renderMarkup(opts: RenderOptions) {
     new Set(bundles.reduce((acc, file) => [...acc, ...file], []))
   ).filter(url => url !== clientEntryFile)
 
-  const scriptElements = bundleSet.map(url => <script async src={`${staticHost}/${url}`}></script>)
+  const scriptElements = bundleSet.map((url, index) => (
+    <script key={index} async src={`${staticHost}/${url}`}></script>
+  ))
 
   return {
     markup:

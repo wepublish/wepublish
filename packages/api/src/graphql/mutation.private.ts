@@ -352,7 +352,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         const user = await prisma.user.findUnique({
-          where: {email: email}
+          where: {email}
         })
         if (!user) throw new NotFound('User', email)
 

@@ -34,15 +34,15 @@ type ArticleRevision {
 
   revision    Int
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @db.Date //@updatedAt
-  publishAt   DateTime? @db.Date
-  publishedAt DateTime? @db.Date
+  updatedAt   DateTime?
+  publishAt   DateTime?
+  publishedAt DateTime?
 }
 
 model Article {
   id         String           @id @default(cuid()) @map("_id")
   createdAt  DateTime         @default(now())
-  modifiedAt DateTime         @db.Date //@updatedAt
+  modifiedAt DateTime         @updatedAt
   published  ArticleRevision?
   pending    ArticleRevision?
   draft      ArticleRevision?
@@ -74,7 +74,7 @@ type AuthorsLinks {
 model Author {
   id         String         @id @default(cuid()) @map("_id")
   createdAt  DateTime       @default(now())
-  modifiedAt DateTime       @db.Date //@updatedAt
+  modifiedAt DateTime       @updatedAt
   name       String
   slug       String         @unique(map: "slug_1")
   jobTitle   String?
@@ -104,9 +104,9 @@ model Image {
   focalPoint  ImagesFocalPoint?
   format      String
   license     String?
-  link        String
+  link        String?
   mimeType    String
-  modifiedAt  DateTime          @db.Date //@updatedAt
+  modifiedAt  DateTime          @updatedAt
   source      String?
   tags        String[]
   title       String?
@@ -121,6 +121,7 @@ model Image {
   @@index([modifiedAt], map: "modifiedAt_-1")
   @@index([title], map: "title_1")
   @@index([tags], map: "tags_1")
+  @@map("images")
 }
 
 enum CommentItemType {
@@ -148,7 +149,7 @@ enum CommentState {
 model Comment {
   id              String                  @id @default(cuid()) @map("_id")
   createdAt       DateTime                @default(now())
-  modifiedAt      DateTime                @db.Date // @updatedAt
+  modifiedAt      DateTime // @updatedAt
   userID          String?
   itemID          String
   itemType        CommentItemType
@@ -167,7 +168,7 @@ model Comment {
 
 type InvoiceItem {
   createdAt   DateTime @default(now())
-  modifiedAt  DateTime @db.Date // @updatedAt
+  modifiedAt  DateTime // @updatedAt
   name        String
   description String?
   quantity    Int
@@ -177,14 +178,14 @@ type InvoiceItem {
 model Invoice {
   id                        String        @id @default(cuid()) @map("_id")
   createdAt                 DateTime      @default(now())
-  modifiedAt                DateTime      @db.Date // @updatedAt
+  modifiedAt                DateTime // @updatedAt
   mail                      String
-  dueAt                     DateTime      @db.Date
+  dueAt                     DateTime
   subscriptionID            String
   description               String?
-  paidAt                    DateTime?     @db.Date
-  canceledAt                DateTime?     @db.Date
-  sentReminderAt            DateTime?     @db.Date
+  paidAt                    DateTime?
+  canceledAt                DateTime?
+  sentReminderAt            DateTime?
   items                     InvoiceItem[]
   userID                    String?
   manuallySetAsPaidByUserId String?
@@ -200,13 +201,13 @@ enum MailLogState {
   delivered  @map("delivered")
   deferred   @map("deferred")
   bounced    @map("bounced")
-  rejected   @map("rejecte")
+  rejected   @map("rejected")
 }
 
 model MailLog {
   id             String       @id @default(cuid()) @map("_id")
   createdAt      DateTime     @default(now())
-  modifiedAt     DateTime     @db.Date // @updatedAt
+  modifiedAt     DateTime // @updatedAt
   recipient      String
   subject        String
   state          MailLogState
@@ -233,7 +234,7 @@ type AvailablePaymentMethod {
 model MemberPlan {
   id                      String                   @id @default(cuid()) @map("_id")
   createdAt               DateTime                 @default(now())
-  modifiedAt              DateTime                 @db.Date // @updatedAt
+  modifiedAt              DateTime // @updatedAt
   name                    String
   slug                    String
   tags                    String[]
@@ -268,7 +269,7 @@ type NavigationLink {
 model Navigation {
   id         String           @id @default(cuid()) @map("_id")
   createdAt  DateTime         @default(now())
-  modifiedAt DateTime         @db.Date //@updatedAt
+  modifiedAt DateTime         @updatedAt
   key        String           @unique(map: "key_1")
   links      NavigationLink[]
   name       String
@@ -282,9 +283,9 @@ model Navigation {
 type PageRevision {
   revision               Int
   createdAt              DateTime           @default(now())
-  updatedAt              DateTime?          @db.Date //@updatedAt
-  publishedAt            DateTime?          @db.Date
-  publishAt              DateTime?          @db.Date
+  updatedAt              DateTime?
+  publishedAt            DateTime?
+  publishAt              DateTime?
   slug                   String
   title                  String
   description            String?
@@ -300,7 +301,7 @@ type PageRevision {
 model Page {
   id         String        @id @default(cuid()) @map("_id")
   createdAt  DateTime      @default(now())
-  modifiedAt DateTime      @db.Date //@updatedAt
+  modifiedAt DateTime      @updatedAt
   published  PageRevision?
   pending    PageRevision?
   draft      PageRevision?
@@ -319,7 +320,7 @@ model Page {
 model PaymentMethod {
   id                String   @id @default(cuid()) @map("_id")
   createdAt         DateTime @default(now())
-  modifiedAt        DateTime @db.Date //@updatedAt
+  modifiedAt        DateTime @updatedAt
   name              String
   slug              String
   description       String
@@ -345,7 +346,7 @@ enum PaymentState {
 model Payment {
   id              String       @id @default(cuid()) @map("_id")
   createdAt       DateTime     @default(now())
-  modifiedAt      DateTime     @db.Date //@updatedAt
+  modifiedAt      DateTime     @updatedAt
   invoiceID       String
   state           PaymentState
   paymentMethodID String
@@ -377,7 +378,7 @@ model PeerProfile {
 model Peer {
   id         String   @id @default(cuid()) @map("_id")
   createdAt  DateTime @default(now())
-  modifiedAt DateTime @db.Date //@updatedAt
+  modifiedAt DateTime @updatedAt
   name       String
   slug       String   @unique(map: "slug_1")
   hostURL    String
@@ -390,7 +391,7 @@ model Peer {
 model Token {
   id         String   @id @default(cuid()) @map("_id")
   createdAt  DateTime @default(now())
-  modifiedAt DateTime @db.Date //@updatedAt
+  modifiedAt DateTime @updatedAt
   name       String   @unique(map: "name_1")
   token      String
   roleIDs    String[]
@@ -401,7 +402,7 @@ model Token {
 model Session {
   id        String   @id @default(cuid()) @map("_id")
   createdAt DateTime @default(now())
-  expiresAt DateTime @db.Date
+  expiresAt DateTime
   token     String   @unique(map: "token_1")
   userID    String
 
@@ -414,8 +415,8 @@ model Session {
 type SubscriptionPeriod {
   id                 String
   createdAt          DateTime           @default(now())
-  startsAt           DateTime           @db.Date
-  endsAt             DateTime           @db.Date
+  startsAt           DateTime
+  endsAt             DateTime
   paymentPeriodicity PaymentPeriodicity
   amount             Float
   invoiceID          String
@@ -428,21 +429,21 @@ enum SubscriptionDeactivationReason {
 }
 
 type SubscriptionDeactivation {
-  date   DateTime                       @db.Date
+  date   DateTime
   reason SubscriptionDeactivationReason
 }
 
 model Subscription {
   id                 String                    @id @default(cuid()) @map("_id")
   createdAt          DateTime                  @default(now())
-  modifiedAt         DateTime                  @db.Date //@updatedAt
+  modifiedAt         DateTime                  @updatedAt
   userID             String
   memberPlanID       String
   paymentPeriodicity PaymentPeriodicity
   monthlyAmount      Float
   autoRenew          Boolean
-  startsAt           DateTime                  @db.Date
-  paidUntil          DateTime?                 @db.Date
+  startsAt           DateTime
+  paidUntil          DateTime?
   periods            SubscriptionPeriod[]
   paymentMethodID    String
   properties         MetadataProperty[]
@@ -487,9 +488,9 @@ type PaymentProviderCustomer {
 model User {
   id                       String                    @id @default(cuid()) @map("_id")
   createdAt                DateTime                  @default(now())
-  modifiedAt               DateTime                  @db.Date //@updatedAt
+  modifiedAt               DateTime                  @updatedAt
   email                    String                    @unique(map: "email_1")
-  emailVerifiedAt          DateTime?                 @db.Date
+  emailVerifiedAt          DateTime?
   name                     String
   firstName                String?
   preferredName            String?
@@ -497,7 +498,7 @@ model User {
   password                 String
   oauth2Accounts           UserOAuth2Account[]
   active                   Boolean
-  lastLogin                DateTime?                 @db.Date
+  lastLogin                DateTime?
   properties               MetadataProperty[]
   roleIDs                  String[]
   paymentProviderCustomers PaymentProviderCustomer[]
@@ -512,7 +513,7 @@ model User {
 model UserRole {
   id            String   @id @map("_id")
   createdAt     DateTime @default(now())
-  modifiedAt    DateTime @db.Date //@updatedAt
+  modifiedAt    DateTime @updatedAt
   description   String?
   name          String   @unique(map: "name_1")
   permissionIDs String[]

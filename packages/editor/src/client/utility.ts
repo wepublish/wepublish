@@ -155,19 +155,13 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   return firstOperation.name.value
 }
 
-// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): Record<string, unknown> {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: Record<string, unknown>, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      return Object.assign(previousValue, {
-        [key
-          .toLowerCase()
-          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
-          .trim()]: value.trim()
-      })
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
     }
     return previousValue
   }, {})

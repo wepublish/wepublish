@@ -31,7 +31,7 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
-  private readonly opts: WepublishServerOpts
+  private opts: WepublishServerOpts
 
   constructor(opts: Omit<WepublishServerOpts, 'prisma'>) {
     const prisma = new PrismaClient({

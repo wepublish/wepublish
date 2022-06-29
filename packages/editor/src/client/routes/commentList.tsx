@@ -240,7 +240,7 @@ export function CommentList() {
           marginTop: '20px'
         }}>
         <Table
-          autoHeight={true}
+          autoHeight
           rowClassName={rowData => {
             switch (rowData?.state) {
               case CommentState.Approved:
