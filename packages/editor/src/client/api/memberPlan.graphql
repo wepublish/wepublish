@@ -24,8 +24,8 @@ fragment FullMemberPlan on MemberPlan {
 }
 
 
-query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
         nodes {
             ...FullMemberPlan
         }

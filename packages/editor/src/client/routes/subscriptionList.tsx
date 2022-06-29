@@ -75,8 +75,8 @@ export function SubscriptionList() {
   const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
       filter,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     },
@@ -86,8 +86,8 @@ export function SubscriptionList() {
   useEffect(() => {
     refetch({
       filter,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })

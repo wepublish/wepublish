@@ -1,25 +1,25 @@
 import {PageBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
+import {MetadataProperty} from '@prisma/client'
 
 // TODO: Remove arg interfaces in favor of explicit arguments.
 
 export interface PageData {
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
   readonly slug: string
 
   readonly title: string
-  readonly description?: string
+  readonly description?: string | null
   readonly tags: string[]
 
   readonly properties: MetadataProperty[]
 
-  readonly imageID?: string
+  readonly imageID?: string | null
 
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
-  readonly socialMediaImageID?: string
+  readonly socialMediaTitle?: string | null
+  readonly socialMediaDescription?: string | null
+  readonly socialMediaImageID?: string | null
 
   readonly blocks: PageBlock[]
 }
@@ -46,14 +46,14 @@ export interface PageRevision extends PageData {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly publishAt?: Date
+  readonly publishAt?: Date | null
 }
 
 export interface PublicPage extends PageData {
   readonly id: string
 
-  readonly updatedAt: Date
-  readonly publishedAt: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
   readonly blocks: PageBlock[]
 }
@@ -77,36 +77,17 @@ export enum PageSort {
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
 }
-
-export interface GetPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
-}
-
-export interface GetPublishedPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PublishedPageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
-}
-
 export interface GetPageHistoryArgs {
   readonly id: string
 }
 
-export interface PageInput extends PageData {}
-
 export interface CreatePageArgs {
-  readonly input: PageInput
+  readonly input: PageData
 }
 
 export interface UpdatePageArgs {
   readonly id: string
-  readonly input: PageInput
+  readonly input: PageData
 }
 
 export interface DeletePageArgs {
@@ -134,14 +115,4 @@ export interface DBPageAdapter {
   publishPage(args: PublishPageArgs): Promise<OptionalPage>
   unpublishPage(args: UnpublishPageArgs): Promise<OptionalPage>
   deletePage(args: DeletePageArgs): Promise<boolean | null>
-
-  getPagesByID(ids: readonly string[]): Promise<OptionalPage[]>
-  getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublicPage[]>
-  getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublicPage[]>
-
-  getPages(args: GetPagesArgs): Promise<ConnectionResult<Page>>
-  getPublishedPages(args: GetPublishedPagesArgs): Promise<ConnectionResult<PublicPage>>
-
-  // TODO: Implement page history
-  // getPageHistory(args: GetPageHistoryArgs): Promise<OptionalPageHistory>
 }

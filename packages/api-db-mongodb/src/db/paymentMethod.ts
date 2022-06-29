@@ -52,63 +52,6 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
     return {id: outId, ...data}
   }
 
-  async getPaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods.find({_id: {$in: ids}}).toArray()
-    const paymentMethodsMap = Object.fromEntries(
-      paymentMethods.map(({_id: id, ...paymentMethod}) => [id, {id, ...paymentMethod}])
-    )
-
-    return ids.map(id => paymentMethodsMap[id] ?? null)
-  }
-
-  async getPaymentMethodsBySlug(slugs: string[]): Promise<OptionalPaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods.find({slug: {$in: slugs}}).toArray()
-    const paymentMethodsMap = Object.fromEntries(
-      paymentMethods.map(({_id: id, slug, ...paymentMethod}) => [
-        slug,
-        {id, slug, ...paymentMethod}
-      ])
-    )
-
-    return slugs.map(slug => paymentMethodsMap[slug] ?? null)
-  }
-
-  async getPaymentMethods(): Promise<PaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods.find().sort({createAd: -1}).toArray()
-    return paymentMethods.map(({_id: id, ...data}) => ({id, ...data}))
-  }
-
-  async getActivePaymentMethods(): Promise<PaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods
-      .find({active: true})
-      .sort({createdAt: -1})
-      .toArray()
-    return paymentMethods.map(({_id: id, ...data}) => ({id, ...data}))
-  }
-
-  async getActivePaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods.find({_id: {$in: ids}, active: true}).toArray()
-    const paymentMethodsMap = Object.fromEntries(
-      paymentMethods.map(({_id: id, ...paymentMethod}) => [id, {id, ...paymentMethod}])
-    )
-
-    return ids.map(id => paymentMethodsMap[id] ?? null)
-  }
-
-  async getActivePaymentMethodsBySlug(slugs: string[]): Promise<OptionalPaymentMethod[]> {
-    const paymentMethods = await this.paymentMethods
-      .find({slug: {$in: slugs}, active: true})
-      .toArray()
-    const paymentMethodsMap = Object.fromEntries(
-      paymentMethods.map(({_id: id, slug, ...paymentMethod}) => [
-        slug,
-        {id, slug, ...paymentMethod}
-      ])
-    )
-
-    return slugs.map(slug => paymentMethodsMap[slug] ?? null)
-  }
-
   async deletePaymentMethod(id: string): Promise<string | null> {
     const {deletedCount} = await this.paymentMethods.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null

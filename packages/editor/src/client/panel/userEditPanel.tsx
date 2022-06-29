@@ -91,7 +91,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   } = useUserRoleListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 200 // TODO: Pagination
+      take: 200 // TODO: Pagination
     }
   })
 
@@ -217,7 +217,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         fluid
         model={validationModel}
         style={{height: '100%'}}
-        formValue={{name: name, email: email, password: password}}>
+        formValue={{name, email, password}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}

@@ -826,114 +826,6 @@ Object {
           "systemRole": true,
         },
         Object {
-          "description": "Editor Role",
-          "id": Any<String>,
-          "name": "Editor",
-          "permissions": Array [
-            Object {
-              "deprecated": false,
-              "description": "Allows to get all comments",
-              "id": "CAN_GET_COMMENTS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to take an action on comment",
-              "id": "CAN_TAKE_COMMENT_ACTION",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to create authors",
-              "id": "CAN_CREATE_AUTHOR",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get author",
-              "id": "CAN_GET_AUTHOR",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to all authors",
-              "id": "CAN_GET_AUTHORS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to create images",
-              "id": "CAN_CREATE_IMAGE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get image",
-              "id": "CAN_GET_IMAGE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get all images",
-              "id": "CAN_GET_IMAGES",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to create articles",
-              "id": "CAN_CREATE_ARTICLE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get article",
-              "id": "CAN_GET_ARTICLE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get all articles",
-              "id": "CAN_GET_ARTICLES",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to publish articles",
-              "id": "CAN_PUBLISH_ARTICLE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get preview links for articles",
-              "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to create Pages",
-              "id": "CAN_CREATE_PAGE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get Page",
-              "id": "CAN_GET_PAGE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get all Pages",
-              "id": "CAN_GET_PAGES",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to publish Pages",
-              "id": "CAN_PUBLISH_PAGE",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get peer",
-              "id": "CAN_GET_PEER",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get all peers",
-              "id": "CAN_GET_PEERS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to login editor",
-              "id": "CAN_LOGIN_EDITOR",
-            },
-          ],
-          "systemRole": true,
-        },
-        Object {
           "description": "Administrator Role",
           "id": Any<String>,
           "name": "Admin",
@@ -1292,6 +1184,114 @@ Object {
               "deprecated": false,
               "description": "Allows to delete a subscription",
               "id": "CAN_DELETE_SUBSCRIPTION",
+            },
+          ],
+          "systemRole": true,
+        },
+        Object {
+          "description": "Editor Role",
+          "id": Any<String>,
+          "name": "Editor",
+          "permissions": Array [
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create authors",
+              "id": "CAN_CREATE_AUTHOR",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get author",
+              "id": "CAN_GET_AUTHOR",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to all authors",
+              "id": "CAN_GET_AUTHORS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create images",
+              "id": "CAN_CREATE_IMAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get image",
+              "id": "CAN_GET_IMAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all images",
+              "id": "CAN_GET_IMAGES",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create articles",
+              "id": "CAN_CREATE_ARTICLE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get article",
+              "id": "CAN_GET_ARTICLE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all articles",
+              "id": "CAN_GET_ARTICLES",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to publish articles",
+              "id": "CAN_PUBLISH_ARTICLE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get preview links for articles",
+              "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create Pages",
+              "id": "CAN_CREATE_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get Page",
+              "id": "CAN_GET_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all Pages",
+              "id": "CAN_GET_PAGES",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to publish Pages",
+              "id": "CAN_PUBLISH_PAGE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get peer",
+              "id": "CAN_GET_PEER",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all peers",
+              "id": "CAN_GET_PEERS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to login editor",
+              "id": "CAN_LOGIN_EDITOR",
             },
           ],
           "systemRole": true,

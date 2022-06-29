@@ -48,8 +48,12 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
       type: GraphQLUser,
-      async resolve({userID}, args, {dbAdapter}) {
-        return dbAdapter.user.getUserByID(userID)
+      async resolve({userID}, args, {prisma}) {
+        return prisma.user.findUnique({
+          where: {
+            id: userID
+          }
+        })
       }
     },
     memberPlan: {

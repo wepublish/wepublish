@@ -38,23 +38,14 @@ fragment FullComment on Comment {
 }
 
 query CommentList(
-  $after: ID
-  $before: ID
-  $first: Int
-  $last: Int
+  $filter: CommentFilter
+  $cursor: ID
+  $take: Int
   $skip: Int
   $order: SortOrder
   $sort: CommentSort
 ) {
-  comments(
-    after: $after
-    before: $before
-    first: $first
-    last: $last
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
+  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullComment
     }

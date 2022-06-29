@@ -1,5 +1,4 @@
 import {RichTextNode} from '../graphql/richText'
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
 export enum PaymentPeriodicity {
   Monthly = 'monthly',
@@ -29,7 +28,7 @@ export interface MemberPlan {
   readonly name: string
   readonly slug: string
   readonly tags: string[]
-  readonly imageID?: string
+  readonly imageID?: string | null
   readonly description: RichTextNode[]
   readonly active: boolean
   readonly amountPerMonthMin: number
@@ -73,24 +72,8 @@ export interface MemberPlanFilter {
   tags?: string[]
 }
 
-export interface GetMemberPlansArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: MemberPlanFilter
-  sort: MemberPlanSort
-  order: SortOrder
-}
-
 export interface DBMemberPlanAdapter {
   createMemberPlan(args: CreateMemberPlanArgs): Promise<MemberPlan>
   updateMemberPlan(args: UpdateMemberPlanArgs): Promise<OptionalMemberPlan>
   deleteMemberPlan(args: DeleteMemberPlanArgs): Promise<string | null>
-
-  getMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>
-  getMemberPlansBySlug(slugs: readonly string[]): Promise<OptionalMemberPlan[]>
-  getActiveMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>
-  getActiveMemberPlansBySlug(slugs: readonly string[]): Promise<OptionalMemberPlan[]>
-
-  getMemberPlans(args: GetMemberPlansArgs): Promise<ConnectionResult<MemberPlan>>
-  getActiveMemberPlans(args: GetMemberPlansArgs): Promise<ConnectionResult<MemberPlan>>
 }

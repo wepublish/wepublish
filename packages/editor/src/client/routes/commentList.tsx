@@ -1,55 +1,50 @@
+import {ApolloCache} from '@apollo/client'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import CloseIcon from '@rsuite/icons/legacy/Close'
+import EditIcon from '@rsuite/icons/legacy/Edit'
+import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useState} from 'react'
-
-import {
-  CommentListQuery,
-  FullCommentFragment,
-  useCommentListQuery,
-  useApproveCommentMutation,
-  useRequestChangesOnCommentMutation,
-  CommentState,
-  CommentRejectionReason,
-  Comment,
-  useRejectCommentMutation,
-  CommentSort,
-  CommentListDocument,
-  ApproveCommentMutation,
-  RequestChangesOnCommentMutation,
-  RejectCommentMutation
-} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {
-  Timeline,
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  IconButton,
-  Table,
-  Modal,
-  Button,
-  Dropdown,
-  toaster,
-  Message,
-  Panel,
-  Pagination
-} from 'rsuite'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-
 import {useTranslation} from 'react-i18next'
-
+import {
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Dropdown,
+  FlexboxGrid,
+  IconButton,
+  Message,
+  Modal,
+  Pagination,
+  Panel,
+  Table,
+  Timeline,
+  toaster
+} from 'rsuite'
+import {
+  ApproveCommentMutation,
+  Comment,
+  CommentFilter,
+  CommentListDocument,
+  CommentListQuery,
+  CommentRejectionReason,
+  CommentSort,
+  CommentState,
+  FullCommentFragment,
+  RejectCommentMutation,
+  RequestChangesOnCommentMutation,
+  useApproveCommentMutation,
+  useCommentListQuery,
+  useRejectCommentMutation,
+  useRequestChangesOnCommentMutation
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {ApolloCache} from '@apollo/client'
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import CheckIcon from '@rsuite/icons/legacy/Check'
-import ReplyIcon from '@rsuite/icons/legacy/Reply'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -110,7 +105,14 @@ export function CommentList() {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<CommentFilter>({
+    states: [
+      CommentState.Approved,
+      CommentState.PendingApproval,
+      CommentState.PendingUserChanges,
+      CommentState.Rejected
+    ]
+  })
 
   const [comments, setComments] = useState<FullCommentFragment[]>([])
 
@@ -133,10 +135,11 @@ export function CommentList() {
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
   const commentListVariables = {
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    filter
   }
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
@@ -146,10 +149,11 @@ export function CommentList() {
 
   useEffect(() => {
     refetch({
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
-      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+      filter
     })
   }, [filter, page, limit, sortOrder, sortField])
 
@@ -209,12 +213,24 @@ export function CommentList() {
           <h2>{t('comments.overview.comments')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
+          <CheckboxGroup
+            inline
+            value={filter.states!}
+            onChange={value =>
+              setFilter({
+                ...filter,
+                states: value as CommentState[]
+              })
+            }>
+            <Checkbox value={CommentState.Approved}>{t('comments.state.approved')}</Checkbox>
+            <Checkbox value={CommentState.PendingApproval}>
+              {t('comments.state.pendingApproval')}
+            </Checkbox>
+            <Checkbox value={CommentState.PendingUserChanges}>
+              {t('comments.state.pendingUserChanges')}
+            </Checkbox>
+            <Checkbox value={CommentState.Rejected}>{t('comments.state.rejected')}</Checkbox>
+          </CheckboxGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <div

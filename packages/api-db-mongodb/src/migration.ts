@@ -1,14 +1,8 @@
+import {BlockType, BlockWithoutJSON, PaymentProviderCustomer, Subscription} from '@wepublish/api'
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
-import {
-  ArticleBlock,
-  BlockType,
-  PageBlock,
-  PaymentProviderCustomer,
-  Subscription,
-  SubscriptionDeactivationReason
-} from '@wepublish/api'
 import {slugify} from './utility'
+import {SubscriptionDeactivationReason} from '@prisma/client'
 
 export interface Migration {
   readonly version: number
@@ -706,7 +700,7 @@ export const Migrations: Migration[] = [
           {
             $set: {
               'subscription.deactivation.date': '$subscription.deactivatedAt',
-              'subscription.deactivation.reason': SubscriptionDeactivationReason.None
+              'subscription.deactivation.reason': SubscriptionDeactivationReason.none
             }
           },
           {
@@ -836,7 +830,7 @@ export const Migrations: Migration[] = [
 
       for (const article of migrationArticles) {
         if (article.draft) {
-          article.draft.blocks.forEach((block: ArticleBlock) => {
+          article.draft.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -844,7 +838,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.published) {
-          article.published.blocks.forEach((block: ArticleBlock) => {
+          article.published.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -852,7 +846,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (article.pending) {
-          article.pending.blocks.forEach((block: ArticleBlock) => {
+          article.pending.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -867,7 +861,7 @@ export const Migrations: Migration[] = [
 
       for (const page of migrationPages) {
         if (page.draft) {
-          page.draft.blocks.forEach((block: PageBlock) => {
+          page.draft.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -875,7 +869,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.published) {
-          page.published.blocks.forEach((block: PageBlock) => {
+          page.published.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -883,7 +877,7 @@ export const Migrations: Migration[] = [
           })
         }
         if (page.pending) {
-          page.pending.blocks.forEach((block: PageBlock) => {
+          page.pending.blocks.forEach((block: BlockWithoutJSON) => {
             if (block.type === BlockType.Embed) {
               block.height = String(block.height)
               block.width = String(block.width)
@@ -910,6 +904,45 @@ export const Migrations: Migration[] = [
         const tempUser = await db.collection('temp.users')
         await tempUser.rename('temp.users.bak')
       }
+    }
+  },
+  {
+    version: 23,
+    async migrate(db) {
+      const subscriptions = db.collection(CollectionName.Subscriptions)
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 0
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.none
+          }
+        }
+      )
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 1
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.userSelfDeactivated
+          }
+        }
+      )
+
+      subscriptions.updateMany(
+        {
+          'deactivation.reason': 2
+        },
+        {
+          $set: {
+            'deactivation.reason': SubscriptionDeactivationReason.invoiceNotPaid
+          }
+        }
+      )
     }
   }
 ]

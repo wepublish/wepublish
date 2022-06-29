@@ -84,8 +84,8 @@ export function UserList() {
   const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     },
@@ -95,8 +95,8 @@ export function UserList() {
   useEffect(() => {
     refetch({
       filter: filter || undefined,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })

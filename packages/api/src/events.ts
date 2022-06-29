@@ -17,6 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
+import {SubscriptionPeriod} from '@prisma/client'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -186,14 +187,24 @@ invoiceModelEvents.on('update', async (context, model) => {
   }
   // by default a new member subscription mail will be sent.
   let mailTypeToSend = SendMailType.NewMemberSubscription
-  let subscription = await context.dbAdapter.subscription.getSubscriptionByID(model.subscriptionID)
-  if (!subscription) return
+  let subscription = (await context.prisma.subscription.findUnique({
+    where: {
+      id: model.subscriptionID
+    }
+  })) as any
+
+  if (!subscription) {
+    return
+  }
+
   const {periods} = subscription
-  const period = periods.find(period => period.invoiceID === model.id)
+
+  const period = periods.find((period: SubscriptionPeriod) => period.invoiceID === model.id)
   if (!period) {
     logger('events').warn(`No period found for subscription with ID ${subscription.id}.`)
     return
   }
+
   // remove eventual deactivation object from subscription (in case the subscription has been auto-deactivated but the
   // respective invoice was paid later on). Also update the paidUntil field of the subscription
   if (subscription.paidUntil === null || period.endsAt > subscription.paidUntil) {
@@ -205,6 +216,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         deactivation: null
       }
     })
+
     if (!subscription) {
       logger('events').warn(`Could not update Subscription.`)
       return
@@ -216,15 +228,22 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
 
     // send mails including login link
-    const user = await context.dbAdapter.user.getUserByID(subscription.userID)
+    const user = await context.prisma.user.findUnique({
+      where: {
+        id: subscription.userID
+      }
+    })
+
     if (!user) {
       logger('events').warn(`User not found %s`, subscription.userID)
       return
     }
+
     const token = context.generateJWT({
       id: user.id,
       expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
     })
+
     await context.mailContext.sendMail({
       type: mailTypeToSend,
       recipient: user.email,

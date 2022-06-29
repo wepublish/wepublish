@@ -1,5 +1,3 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
-
 export interface UserRoleInput {
   readonly name: string
   readonly description: string
@@ -30,28 +28,17 @@ export interface UserRoleFilter {
 export interface UserRole {
   readonly id: string
   readonly name: string
-  readonly description?: string
+  readonly description?: string | null
   readonly systemRole: boolean
   readonly permissionIDs: string[]
 }
 
 export type OptionalUserRole = UserRole | null
 
-export interface GetUserRolesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: UserRoleFilter
-  readonly sort: UserRoleSort
-  readonly order: SortOrder
-}
-
 export interface DBUserRoleAdapter {
   createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole>
   updateUserRole(args: UpdateUserRoleArgs): Promise<OptionalUserRole>
   deleteUserRole(args: DeleteUserRoleArgs): Promise<string | null>
-  getUserRole(name: string): Promise<OptionalUserRole>
-  getUserRoleByID(id: string): Promise<OptionalUserRole>
-  getUserRolesByID(ids: readonly string[]): Promise<OptionalUserRole[]>
 
-  getUserRoles(args: GetUserRolesArgs): Promise<ConnectionResult<UserRole>>
+  getUserRole(name: string): Promise<OptionalUserRole>
 }

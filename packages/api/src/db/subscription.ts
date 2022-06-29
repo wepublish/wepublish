@@ -1,19 +1,11 @@
-import {
-  ConnectionResult,
-  DateFilter,
-  InputCursor,
-  Limit,
-  MetadataProperty,
-  SortOrder
-} from './common'
-import {MemberPlan, PaymentPeriodicity} from './memberPlan'
-import {PaymentMethod} from './paymentMethod'
-import {User} from './user'
+import {DateFilter} from './common'
+import {MetadataProperty} from '@prisma/client'
+import {PaymentPeriodicity} from './memberPlan'
 
 export enum SubscriptionDeactivationReason {
-  None,
-  UserSelfDeactivated,
-  InvoiceNotPaid
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated',
+  InvoiceNotPaid = 'invoiceNotPaid'
 }
 
 export interface SubscriptionDeactivation {
@@ -52,13 +44,10 @@ export enum SubscriptionSort {
 }
 
 export interface SubscriptionFilter {
-  readonly startsAt?: DateFilter
   readonly startsAtFrom?: DateFilter
   readonly startsAtTo?: DateFilter
-  readonly paidUntil?: DateFilter
   readonly paidUntilFrom?: DateFilter
   readonly paidUntilTo?: DateFilter
-  readonly deactivationDate?: DateFilter
   readonly deactivationDateFrom?: DateFilter
   readonly deactivationDateTo?: DateFilter
   readonly deactivationReason?: SubscriptionDeactivationReason
@@ -91,9 +80,6 @@ export interface Subscription {
   readonly paymentMethodID: string
   readonly properties: MetadataProperty[]
   readonly deactivation: SubscriptionDeactivation | null
-  readonly memberPlan?: MemberPlan
-  readonly paymentMethod?: PaymentMethod
-  readonly user?: User
 }
 
 export interface CreateSubscriptionPeriodArgs {
@@ -126,15 +112,6 @@ export interface SubscriptionPeriodInput {
 
 export type OptionalSubscription = Subscription | null
 
-export interface GetSubscriptionArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: SubscriptionFilter
-  readonly joins?: SubscriptionJoins
-  readonly sort: SubscriptionSort
-  readonly order: SortOrder
-}
-
 export interface DBSubscriptionAdapter {
   createSubscription(args: CreateSubscriptionArgs): Promise<OptionalSubscription>
   updateSubscription(args: UpdateSubscriptionArgs): Promise<OptionalSubscription>
@@ -143,10 +120,4 @@ export interface DBSubscriptionAdapter {
 
   addSubscriptionPeriod(args: CreateSubscriptionPeriodArgs): Promise<OptionalSubscription>
   deleteSubscriptionPeriod(args: DeleteSubscriptionPeriodArgs): Promise<OptionalSubscription>
-
-  getSubscriptionByID(id: string): Promise<OptionalSubscription>
-  getSubscriptionsByID(ids: readonly string[]): Promise<OptionalSubscription[]>
-  getSubscriptionsByUserID(userID: string): Promise<OptionalSubscription[]>
-
-  getSubscriptions(args: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>>
 }

@@ -1,5 +1,3 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
-
 export interface MailLogInput {
   readonly recipient: string
   readonly subject: string
@@ -45,26 +43,14 @@ export interface MailLog {
   readonly recipient: string
   readonly subject: string
   readonly state: MailLogState
-  readonly mailData?: string
+  readonly mailData?: string | null
   readonly mailProviderID: string
 }
 
 export type OptionalMailLog = MailLog | null
 
-export interface GetMailLogsArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: MailLogFilter
-  readonly sort: MailLogSort
-  readonly order: SortOrder
-}
-
 export interface DBMailLogAdapter {
   createMailLog(args: CreateMailLogArgs): Promise<MailLog>
   updateMailLog(args: UpdateMailLogArgs): Promise<OptionalMailLog>
   deleteMailLog(args: DeleteMailLogArgs): Promise<string | null>
-
-  getMailLogsByID(ids: readonly string[]): Promise<OptionalMailLog[]>
-
-  getMailLogs(args: GetMailLogsArgs): Promise<ConnectionResult<MailLog>>
 }

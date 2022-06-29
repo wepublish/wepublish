@@ -56,8 +56,4 @@ export interface DBNavigationAdapter {
   createNavigation(args: CreateNavigationArgs): Promise<Navigation>
   updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
   deleteNavigation(args: DeleteNavigationArgs): Promise<string | null>
-
-  getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]>
-  getNavigationsByKey(key: readonly string[]): Promise<OptionalNavigation[]>
-  getNavigations(): Promise<Navigation[]>
 }

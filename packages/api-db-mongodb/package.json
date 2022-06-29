@@ -38,6 +38,7 @@
     "nanoid": "^2.1.11"
   },
   "devDependencies": {
+    "@prisma/client": "^3.14.0",
     "@types/bcrypt": "^3.0.0",
     "@types/mongodb": "^3.5.0",
     "@types/nanoid": "^2.1.0",

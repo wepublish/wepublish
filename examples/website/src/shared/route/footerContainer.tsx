@@ -24,14 +24,14 @@ export function ArticleFooterContainer({
   id,
   isPeerArticle
 }: ArticleFooterContainerProps) {
-  const first = 4
+  const take = 4
 
   const {data, loading} = useListArticlesQuery({
-    variables: {filter: tags.length >= 1 ? tags : undefined, first: first}
+    variables: {filter: tags.length >= 1 ? tags : undefined, take}
   })
 
   const {data: fallbackData, loading: fallbackLoading} = useListArticlesQuery({
-    variables: {first: first}
+    variables: {take}
   })
 
   const tagArticles = data?.articles.nodes

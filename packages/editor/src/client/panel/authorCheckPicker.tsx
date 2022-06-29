@@ -21,7 +21,7 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
   const [authorsFilter, setAuthorsFilter] = useState('')
 
-  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
+  const authorsVariables = {filter: authorsFilter || undefined, take: 10}
   const {data} = useAuthorListQuery({
     variables: authorsVariables,
     fetchPolicy: 'network-only'
