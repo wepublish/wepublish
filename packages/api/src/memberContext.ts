@@ -200,6 +200,12 @@ export class MemberContext implements MemberContext {
         })
       }
 
+      if (openInvoice) {
+        await this.prisma.invoice.delete({
+          where: {id: openInvoice.id}
+        })
+      }
+
       const finalUpdatedSubscription = await this.prisma.subscription.findUnique({
         where: {id: subscription.id}
       })
