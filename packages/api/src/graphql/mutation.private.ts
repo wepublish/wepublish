@@ -16,7 +16,6 @@ import {
   DuplicatePageSlugError,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
-  InvalidSettingValueError,
   NotActiveError,
   NotFound,
   OAuth2ProviderNotFoundError,
@@ -92,7 +91,8 @@ import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
-import {SettingName, UpdateSettingArgs} from '../db/setting'
+import {SettingName} from '../db/setting'
+import {checkSettingRestrictions} from '../utility'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1167,36 +1167,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
       },
-
       async resolve(root, {value}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanUpdateSettings, roles)
 
-        value.map(async ({name, value: val}: UpdateSettingArgs) => {
+        for (const {name, value: val} of value) {
           const fullSetting = await dbAdapter.setting.getSetting(name)
-
           if (!fullSetting) {
             throw new NotFound('setting', name)
           }
+          const restriction = fullSetting.settingRestriction
+          checkSettingRestrictions(val, restriction)
+        }
 
-          const restrictions = fullSetting?.settingRestriction
-
-          const allowedValues = restrictions?.allowedValues
-            ? restrictions?.allowedValues?.includes(String(val))
-            : true
-          const inputLength =
-            restrictions?.inputLength !== undefined
-              ? restrictions.inputLength >= String(val).length
-              : true
-          const maxValue =
-            restrictions?.maxValue !== undefined ? restrictions.maxValue >= Number(val) : true
-          const minValue =
-            restrictions?.minValue !== undefined ? restrictions.minValue <= Number(val) : true
-
-          if (!allowedValues || !inputLength || !maxValue || !minValue) {
-            throw new InvalidSettingValueError()
-          }
-        })
         return await dbAdapter.setting.updateSettingList(value)
       }
     }

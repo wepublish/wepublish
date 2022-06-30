@@ -27,7 +27,12 @@ export interface SettingRestriction {
   maxValue?: number
   minValue?: number
   inputLength?: number
-  allowedValues?: string[]
+  allowedValues?: AllowedSettingVals
+}
+
+export type AllowedSettingVals = {
+  stringChoice?: string[]
+  boolChoice?: boolean
 }
 
 export type OptionalSetting = Setting | null

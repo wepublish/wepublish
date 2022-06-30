@@ -7,7 +7,8 @@ import {
   GraphQLInputObjectType,
   GraphQLID,
   GraphQLList,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLBoolean
 } from 'graphql'
 
 import {Context} from '../context'
@@ -42,13 +43,21 @@ export const GraphQLSettingRestriction = new GraphQLObjectType({
   }
 })
 
+export const GraphQLAllowedSettingVals = new GraphQLObjectType({
+  name: 'AllowedSettingVals',
+  fields: {
+    stringChoice: {type: GraphQLList(GraphQLString)},
+    boolChoice: {type: GraphQLBoolean}
+  }
+})
+
 export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
   name: 'SettingRestrictionInput',
   fields: {
     maxValue: {type: GraphQLInt},
     minValue: {type: GraphQLInt},
     inputLength: {type: GraphQLInt},
-    allowedValues: {type: GraphQLList(GraphQLString)}
+    allowedValues: {type: GraphQLList(GraphQLAllowedSettingVals)}
   }
 })
 

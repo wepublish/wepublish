@@ -178,6 +178,6 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
 
 export class InvalidSettingValueError extends ApolloError {
   constructor() {
-    super('Invalid data', ErrorCode.InvalidSettingData)
+    super('Invalid setting data', ErrorCode.InvalidSettingData)
   }
 }

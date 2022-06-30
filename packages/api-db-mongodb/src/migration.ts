@@ -929,7 +929,8 @@ export const Migrations: Migration[] = [
       }
       const allowAnonCommenting: CreateSettingArgs<boolean> = {
         name: SettingName.ALLOW_GUEST_COMMENTING,
-        value: false
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
       }
       const sendLoginJWTExpires: CreateSettingArgs<number> = {
         name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN,

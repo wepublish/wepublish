@@ -18,7 +18,7 @@ export class MongoDBSettingAdapter implements DBSettingAdapter {
   }
 
   async getSetting(name: SettingName): Promise<OptionalSetting> {
-    const setting = await this.settings.findOne({name})
+    const setting = await this.settings.findOne({name: name})
     if (!setting) return null
     return {
       id: setting._id,
