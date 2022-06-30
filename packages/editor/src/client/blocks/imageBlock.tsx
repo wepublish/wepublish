@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Drawer, Dropdown, Icon, IconButton, Panel} from 'rsuite'
+import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
@@ -11,6 +11,9 @@ import {ImageRefFragment} from '../api'
 import {ImageBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
+import WrenchIcon from '@rsuite/icons/legacy/Wrench'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import ImageIcon from '@rsuite/icons/legacy/Image'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
@@ -33,8 +36,8 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
   return (
     <>
       <Panel
-        bodyFill={true}
-        bordered={true}
+        bodyFill
+        bordered
         style={{
           height: 300,
           overflow: 'hidden',
@@ -54,14 +57,20 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
               }}>
               <Dropdown
-                renderTitle={() => {
-                  return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-                }}>
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    ref={ref}
+                    icon={<WrenchIcon />}
+                    circle
+                    appearance="subtle"
+                  />
+                )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <Icon icon="image" /> {t('blocks.image.overview.chooseImage')}
+                  <ImageIcon /> {t('blocks.image.overview.chooseImage')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
+                  <PencilIcon /> {t('blocks.image.overview.editImage')}
                 </Dropdown.Item>
                 {/* TODO: Meta sync for metadata image */}
               </Dropdown>
@@ -78,7 +87,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           onChange({...value, caption: e.target.value})
         }}
       />
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -88,7 +97,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}

@@ -1,17 +1,22 @@
 import React, {useState, useEffect} from 'react'
-import {Input, InputGroup, Message} from 'rsuite'
-import {useTranslation} from 'react-i18next'
+import {Form, InputGroup} from 'rsuite'
 
 export interface CurrencyInputProps {
   currency: string
   centAmount: number
   onChange(centAmount: number): void
   disabled?: boolean
+  name: string
 }
 
-export function CurrencyInput({currency, centAmount, disabled, onChange}: CurrencyInputProps) {
+export function CurrencyInput({
+  currency,
+  centAmount,
+  disabled,
+  name,
+  onChange
+}: CurrencyInputProps) {
   const [amount, setAmount] = useState<number | string | any>(centAmount / 100)
-  const [message, setMessage] = useState(false)
 
   useEffect(() => {
     setAmount((centAmount / 100).toFixed(2))
@@ -23,18 +28,16 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
       .replace(',', '.')
       .replace(/^\./, '')
 
-  const {t} = useTranslation()
-
   return (
     <div>
-      <InputGroup>
-        <InputGroup.Addon>{currency}</InputGroup.Addon>
-        <Input
+      {/* <Form.Group> */}
+      <InputGroup inside>
+        <Form.Control
           value={amount as string}
+          name={name}
           disabled={disabled}
-          onChange={amount => {
+          onChange={(amount: string) => {
             amount = toFloat(amount)
-            setMessage(!amount)
             setAmount(amount)
           }}
           onBlur={() => {
@@ -43,8 +46,9 @@ export function CurrencyInput({currency, centAmount, disabled, onChange}: Curren
             }
           }}
         />
+        <InputGroup.Addon>{currency}</InputGroup.Addon>
       </InputGroup>
-      {message ? <Message type="error" description={t('memberPlanList.errorMessage')} /> : ''}
+      {/* </Form.Group> */}
     </div>
   )
 }

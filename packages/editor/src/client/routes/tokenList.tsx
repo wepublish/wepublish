@@ -24,7 +24,18 @@ import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, FlexboxGrid, Icon, List, Loader, IconButton, Drawer, Modal, Alert} from 'rsuite'
+import {
+  Button,
+  FlexboxGrid,
+  List,
+  Loader,
+  IconButton,
+  Drawer,
+  Modal,
+  toaster,
+  Message
+} from 'rsuite'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 
 export function TokenList() {
   const {current} = useRoute()
@@ -54,7 +65,12 @@ export function TokenList() {
 
   useEffect(() => {
     const error = tokenListError?.message ?? deleteTokenError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [tokenListError, deleteTokenError])
 
   useEffect(() => {
@@ -87,7 +103,7 @@ export function TokenList() {
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
-        <List bordered={true} style={{marginTop: '40px'}}>
+        <List bordered style={{marginTop: '40px'}}>
           {tokenListData?.tokens.map((token, index) => (
             <List.Item key={token.name} index={index}>
               <FlexboxGrid>
@@ -97,7 +113,7 @@ export function TokenList() {
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
                   <IconButtonTooltip caption={t('tokenList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       onClick={() => {
@@ -114,8 +130,8 @@ export function TokenList() {
       )}
 
       <Drawer
-        show={isTokenGeneratePanelOpen}
-        onHide={() => {
+        open={isTokenGeneratePanelOpen}
+        onClose={() => {
           dispatch({
             type: RouteActionType.PushRoute,
             route: TokenListRoute.create({})
@@ -132,7 +148,7 @@ export function TokenList() {
         />
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
         </Modal.Header>

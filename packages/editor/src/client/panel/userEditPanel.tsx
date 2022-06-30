@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Alert,
   Button,
   CheckPicker,
-  ControlLabel,
   Drawer,
   Form,
-  FormControl,
-  FormGroup,
+  Message,
   Modal,
   Panel,
+  Schema,
+  toaster,
   Toggle
 } from 'rsuite'
 
@@ -67,8 +66,8 @@ function updateAddressObject(
 
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [preferredName, setPreferredName] = useState('')
+  const [firstName, setFirstName] = useState<string | undefined>()
+  const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
@@ -109,8 +108,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   useEffect(() => {
     if (data?.user) {
       setName(data.user.name)
-      setPreferredName(data.user.preferredName ?? '')
-      setFirstName(data.user.firstName ?? '')
+      setPreferredName(data.user.preferredName ?? undefined)
+      setFirstName(data.user.firstName ?? undefined)
       setEmail(data.user.email)
       setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
       setActive(data.user.active)
@@ -134,7 +133,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       createError?.message ??
       updateError?.message ??
       loadUserRoleError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError, loadUserRoleError])
 
   async function handleSave() {
@@ -189,126 +193,179 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     }
   }
 
+  const {StringType} = Schema.Types
+
+  const validatePassword: any = id
+    ? StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+    : StringType()
+        .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+        .isRequired(t('errorMessages.noPasswordErrorMessage'))
+
+  // Schema used for form validation
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    email: StringType()
+      .isRequired(t('errorMessages.noEmailErrorMessage'))
+      .isEmail(t('errorMessages.invalidEmailErrorMessage')),
+    password: validatePassword
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
-        </Drawer.Title>
-      </Drawer.Header>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        style={{height: '100%'}}
+        formValue={{name: name, email: email, password: password}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
+          </Drawer.Title>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.firstName')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.firstName')}
+          <Drawer.Actions>
+            <Button
+              appearance="primary"
+              disabled={isDisabled}
+              type="submit"
+              data-testid="saveButton">
+              {id ? t('userList.panels.save') : t('userList.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('userList.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
+
+        <Drawer.Body>
+          <Panel>
+            <Form.Group controlId="firstName">
+              <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
+              <Form.Control
+                name="firstName"
                 value={firstName}
                 disabled={isDisabled}
-                onChange={value => setFirstName(value)}
+                onChange={(value: string) => {
+                  setFirstName(value)
+                }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.name')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.name')}
+            </Form.Group>
+            <Form.Group controlId="name">
+              <Form.ControlLabel>{t('userList.panels.name') + '*'}</Form.ControlLabel>
+              <Form.Control
+                name="name"
                 value={name}
                 disabled={isDisabled}
-                onChange={value => setName(value)}
+                onChange={(value: string) => {
+                  setName(value)
+                }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.preferredName')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.preferredName')}</Form.ControlLabel>
+              <Form.Control
+                name="preferredName"
                 value={preferredName}
                 disabled={isDisabled}
-                onChange={value => setPreferredName(value)}
+                onChange={(value: string) => setPreferredName(value)}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.email')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.email')}
+            </Form.Group>
+            <Form.Group controlId="email">
+              <Form.ControlLabel>{t('userList.panels.email') + '*'}</Form.ControlLabel>
+              <Form.Control
+                name="email"
                 value={email}
                 disabled={isDisabled}
-                onChange={value => setEmail(value)}
+                onChange={(value: string) => {
+                  setEmail(value)
+                }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.company')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.company')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.company')}</Form.ControlLabel>
+              <Form.Control
+                name="company"
                 value={address?.company}
                 disabled={isDisabled}
-                onChange={value => updateAddressObject(address, setAddress, 'company', value)}
+                onChange={(value: string) =>
+                  updateAddressObject(address, setAddress, 'company', value)
+                }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.streetAddress')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.streetAddress')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.streetAddress')}</Form.ControlLabel>
+              <Form.Control
+                name="streetAddress"
                 value={address?.streetAddress}
                 disabled={isDisabled}
-                onChange={value => updateAddressObject(address, setAddress, 'streetAddress', value)}
+                onChange={(value: string) =>
+                  updateAddressObject(address, setAddress, 'streetAddress', value)
+                }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.streetAddress2')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.streetAddress2')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.streetAddress2')}</Form.ControlLabel>
+              <Form.Control
+                name="streetAddress2"
                 value={address?.streetAddress2}
                 disabled={isDisabled}
-                onChange={value =>
+                onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'streetAddress2', value)
                 }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.zipCode')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.zipCode')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.zipCode')}</Form.ControlLabel>
+              <Form.Control
+                name="zipCode"
                 value={address?.zipCode}
                 disabled={isDisabled}
-                onChange={value => updateAddressObject(address, setAddress, 'zipCode', value)}
+                onChange={(value: string) =>
+                  updateAddressObject(address, setAddress, 'zipCode', value)
+                }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.city')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.city')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.city')}</Form.ControlLabel>
+              <Form.Control
+                name="city"
                 value={address?.city}
                 disabled={isDisabled}
-                onChange={value => updateAddressObject(address, setAddress, 'city', value)}
+                onChange={(value: string) =>
+                  updateAddressObject(address, setAddress, 'city', value)
+                }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.country')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.country')}
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.country')}</Form.ControlLabel>
+              <Form.Control
+                name="country"
                 value={address?.country}
                 disabled={isDisabled}
-                onChange={value => updateAddressObject(address, setAddress, 'country', value)}
+                onChange={(value: string) =>
+                  updateAddressObject(address, setAddress, 'country', value)
+                }
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.active')}</ControlLabel>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.active')}</Form.ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-            </FormGroup>
+            </Form.Group>
             {!id ? (
-              <FormGroup>
-                <ControlLabel>{t('userList.panels.password')}</ControlLabel>
-                <FormControl
+              <Form.Group controlId="password">
+                <Form.ControlLabel>{t('userList.panels.password') + '*'}</Form.ControlLabel>
+                <Form.Control
                   type="password"
-                  name={t('userList.panels.password')}
+                  name="password"
                   value={password}
                   disabled={isDisabled}
-                  onChange={value => setPassword(value)}
+                  onChange={(value: string) => {
+                    setPassword(value)
+                  }}
                 />
-              </FormGroup>
+              </Form.Group>
             ) : (
-              <FormGroup>
+              <Form.Group>
                 <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
                   {t('userList.panels.resetPassword')}
                 </Button>
@@ -319,62 +376,61 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                   onClick={async () => {
                     try {
                       await sendWebsiteLogin({variables: {email}})
-                      Alert.success(
-                        t('userList.panels.sendWebsiteLoginSuccessMessage', {email}),
-                        2000
+                      toaster.push(
+                        <Message type="success" showIcon closable duration={2000}>
+                          {t('userList.panels.sendWebsiteLoginSuccessMessage', {email})}
+                        </Message>
                       )
                     } catch (error) {
-                      Alert.error(t('userList.panel.sendWebsiteLoginFailureMessage', {error}), 0)
+                      toaster.push(
+                        <Message type="error" showIcon closable duration={0}>
+                          {t('userList.panel.sendWebsiteLoginFailureMessage', {error})}
+                        </Message>
+                      )
                     }
                   }}>
                   {t('userList.panels.sendWebsiteLogin')}
                 </Button>
-              </FormGroup>
+              </Form.Group>
             )}
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
+            <Form.Group>
+              <Form.ControlLabel>{t('userList.panels.userRoles')}</Form.ControlLabel>
               <CheckPicker
-                name={t('userList.panels.userRoles')}
-                block={true}
+                name="userRoles"
+                block
                 value={roles.map(role => role.id)}
                 data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
+                placement={'auto'}
                 onChange={value => {
                   setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
                 }}
               />
-            </FormGroup>
-          </Form>
-        </Panel>
-      </Drawer.Body>
+            </Form.Group>
+          </Panel>
+        </Drawer.Body>
+      </Form>
 
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('userList.panels.save') : t('userList.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('userList.panels.close')}
-        </Button>
-      </Drawer.Footer>
+      {id && (
+        <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
+          <Modal.Header>
+            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          </Modal.Header>
 
-      <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
-        </Modal.Header>
+          <Modal.Body>
+            <ResetUserPasswordPanel
+              userID={id}
+              userName={name}
+              onClose={() => setIsResetUserPasswordOpen(false)}
+            />
+          </Modal.Body>
 
-        <Modal.Body>
-          <ResetUserPasswordPanel
-            userID={id}
-            userName={name}
-            onClose={() => setIsResetUserPasswordOpen(false)}
-          />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer>
+            <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+              {t('userList.panels.cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   )
 }

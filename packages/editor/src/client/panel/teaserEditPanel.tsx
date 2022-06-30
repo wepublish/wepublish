@@ -1,16 +1,6 @@
 import React, {useState} from 'react'
 
-import {
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Panel,
-  Radio,
-  RadioGroup
-} from 'rsuite'
+import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -52,32 +42,63 @@ export function TeaserEditPanel({
     <>
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.editTeaser')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button
+            appearance={'primary'}
+            onClick={() => {
+              onConfirm({
+                ...initialTeaser,
+                style,
+                preTitle: preTitle || undefined,
+                title: title || undefined,
+                lead: lead || undefined,
+                image
+              })
+            }}>
+            {t('articleEditor.panels.confirm')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {closeLabel}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
         {previewForTeaser(initialTeaser)}
         <Panel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
-              <RadioGroup inline value={style} onChange={teaserStyle => setStyle(teaserStyle)}>
+            <Form.Group>
+              <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
+              <RadioGroup
+                inline
+                value={style}
+                onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
                 <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
                 <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
-              <FormControl value={preTitle} onChange={preTitle => setPreTitle(preTitle)} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-              <FormControl value={title} onChange={title => setTitle(title)} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-              <FormControl value={lead} onChange={lead => setLead(lead)} />
-            </FormGroup>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
+              <Form.Control
+                name="pre-title"
+                value={preTitle}
+                onChange={(preTitle: string) => setPreTitle(preTitle)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
+              <Form.Control
+                name="title"
+                value={title}
+                onChange={(title: string) => setTitle(title)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
+              <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
+            </Form.Group>
           </Form>
         </Panel>
 
@@ -90,27 +111,7 @@ export function TeaserEditPanel({
         />
       </Drawer.Body>
 
-      <Drawer.Footer>
-        <Button
-          appearance={'primary'}
-          onClick={() => {
-            onConfirm({
-              ...initialTeaser,
-              style,
-              preTitle: preTitle || undefined,
-              title: title || undefined,
-              lead: lead || undefined,
-              image
-            })
-          }}>
-          {t('articleEditor.panels.confirm')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {closeLabel}
-        </Button>
-      </Drawer.Footer>
-
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -120,7 +121,7 @@ export function TeaserEditPanel({
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
@@ -165,7 +166,7 @@ function previewForTeaser(teaser: Teaser) {
   return (
     <Panel>
       <Panel
-        bordered={true}
+        bordered
         style={{
           height: '200px',
           backgroundSize: 'cover',

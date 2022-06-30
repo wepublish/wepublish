@@ -181,6 +181,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
   async getSubscriptions({
     filter,
+    joins,
     sort,
     order,
     cursor,
@@ -188,7 +189,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   }: GetSubscriptionArgs): Promise<ConnectionResult<Subscription>> {
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
-
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
@@ -215,6 +215,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and = []
     }
 
+    // support for old filters https://github.com/wepublish/wepublish/issues/601 -->
     if (filter?.startsAt !== undefined) {
       const {comparison, date} = filter.startsAt
       textFilter.$and?.push({
@@ -229,6 +230,40 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
         }
       })
     }
+    // <-- support for old filters
+
+    if (filter?.startsAtFrom) {
+      const {comparison, date} = filter.startsAtFrom
+      textFilter.$and?.push({
+        startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.startsAtTo) {
+      const {comparison, date} = filter.startsAtTo
+      textFilter.$and?.push({
+        startsAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.paidUntilFrom) {
+      const {comparison, date} = filter.paidUntilFrom
+      textFilter.$and?.push({
+        paidUntil: {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
+    if (filter?.paidUntilTo) {
+      const {comparison, date} = filter.paidUntilTo
+      textFilter.$and?.push({
+        paidUntil: {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
     if (filter?.deactivationDate !== undefined) {
       const {comparison, date} = filter.deactivationDate
 
@@ -243,6 +278,26 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       }
     }
 
+    if (filter?.deactivationDateFrom !== undefined) {
+      const {comparison, date} = filter.deactivationDateFrom
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
+    if (filter?.deactivationDateTo !== undefined) {
+      const {comparison, date} = filter.deactivationDateTo
+
+      textFilter.$and?.push({
+        'deactivation.date': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+
     if (filter?.deactivationReason !== undefined) {
       const reason = filter.deactivationReason
 
@@ -255,13 +310,76 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       textFilter.$and?.push({autoRenew: {$eq: filter.autoRenew}})
     }
 
+    if (filter?.paymentPeriodicity) {
+      textFilter.$and?.push({paymentPeriodicity: {$eq: filter.paymentPeriodicity}})
+    }
+
+    if (filter?.paymentMethodID) {
+      textFilter.$and?.push({paymentMethodID: {$eq: filter.paymentMethodID}})
+    }
+
+    if (filter?.memberPlanID) {
+      textFilter.$and?.push({memberPlanID: {$eq: filter.memberPlanID}})
+    }
+
+    if (filter?.userID) {
+      textFilter.$and?.push({userID: {$eq: filter.userID}})
+    }
+
+    // join related collections
+    let preparedJoins: any = []
+    // member plan join
+    if (joins?.joinMemberPlan) {
+      preparedJoins = [
+        {
+          $lookup: {
+            from: CollectionName.MemberPlans,
+            localField: 'memberPlanID',
+            foreignField: '_id',
+            as: 'memberPlan'
+          }
+        },
+        {$unwind: '$memberPlan'}
+      ]
+    }
+    // payment method join
+    if (joins?.joinPaymentMethod) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.PaymentMethods,
+            localField: 'paymentMethodID',
+            foreignField: '_id',
+            as: 'paymentMethod'
+          }
+        },
+        {$unwind: '$paymentMethod'}
+      ]
+    }
+    // user join
+    if (joins?.joinUser) {
+      preparedJoins = [
+        ...preparedJoins,
+        {
+          $lookup: {
+            from: CollectionName.Users,
+            localField: 'userID',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
+        {$unwind: '$user'}
+      ]
+    }
+
     const [totalCount, subscriptions] = await Promise.all([
       this.subscriptions.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
 
       this.subscriptions
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .aggregate([...preparedJoins], {collation: {locale: this.locale, strength: 2}})
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})

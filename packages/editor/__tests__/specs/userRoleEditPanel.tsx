@@ -1,15 +1,14 @@
-import React from 'react'
-import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {
-  UserRoleDocument,
-  PermissionListDocument,
-  CreateUserRoleDocument
-} from '../../src/client/api'
-import {mount} from 'enzyme'
-
-import {updateWrapper} from '../utils'
-import {act} from 'react-dom/test-utils'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+import {fireEvent, render} from '@testing-library/react'
+import React from 'react'
+import snapshotDiff from 'snapshot-diff'
+import {
+  CreateUserRoleDocument,
+  PermissionListDocument,
+  UserRoleDocument
+} from '../../src/client/api'
+import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
+import {actWait} from '../utils'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -113,28 +112,26 @@ const permissions = [
 describe('User Role Edit Panel', () => {
   test('should render', async () => {
     const mocks = [permissionListQuery]
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('UserRoleEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should render with role', async () => {
     const mocks = [userRoleDocumentQuery, permissionListQuery]
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel id={'roleId1'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('UserRoleEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should have Toggle sliders disabled with System Role', async () => {
@@ -168,15 +165,14 @@ describe('User Role Edit Panel', () => {
       }
     }
     const mocks = [userRoleDocumentQuery, permissionListQuery]
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel id={'roleId1'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('UserRoleEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should allow a new role to be created', async () => {
@@ -215,25 +211,25 @@ describe('User Role Edit Panel', () => {
       permissionListQuery
     ]
 
-    const wrapper = mount(
+    const {asFragment, getByTestId, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
+    const nameInput = getByLabelText('userRoles.panels.name*')
+    const descriptionInput = getByLabelText('userRoles.panels.description')
+    const saveButton = getByTestId('saveButton')
 
-    act(() => {
-      wrapper
-        .find('input[name="userRoles.panels.name"]')
-        .simulate('change', {target: {value: userRole.name}})
-      wrapper
-        .find('input[name="userRoles.panels.description"]')
-        .simulate('change', {target: {value: userRole.description}})
+    fireEvent.change(nameInput, {
+      target: {value: userRole.name}
     })
+    fireEvent.change(descriptionInput, {
+      target: {value: userRole.description}
+    })
+    fireEvent.click(saveButton)
 
-    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
-
-    const panel = wrapper.find('UserRoleEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 })

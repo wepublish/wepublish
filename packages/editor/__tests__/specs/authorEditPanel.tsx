@@ -1,24 +1,22 @@
-import React from 'react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
-import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
-import {mount} from 'enzyme'
-
-import {act} from 'react-dom/test-utils'
-import {updateWrapper} from '../utils'
+import {fireEvent, render} from '@testing-library/react'
+import React from 'react'
+import snapshotDiff from 'snapshot-diff'
+import {AuthorDocument, CreateAuthorDocument} from '../../src/client/api'
 import {createDefaultValue} from '../../src/client/blocks/richTextBlock/richTextBlock'
+import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
+import {actWait} from '../utils'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Author Edit Panel', () => {
   test('should render', () => {
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
     )
-    const panel = wrapper.find('AuthorEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should render with ID', async () => {
@@ -48,30 +46,30 @@ describe('Author Edit Panel', () => {
       }
     ]
 
-    const wrapper = mount(
-      <MockedProvider mocks={mocks} addTypename={true}>
+    const {asFragment} = render(
+      <MockedProvider mocks={mocks} addTypename>
         <AuthorEditPanel id={'fakeId2'} />
       </MockedProvider>
     )
+    await actWait()
 
-    await updateWrapper(wrapper, 100)
-    const panel = wrapper.find('AuthorEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should fill the link field', async () => {
-    const wrapper = mount(
+    const {asFragment, container} = render(
       <MockedProvider addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
-    inputField.props().value = 'abcd'
+    fireEvent.change(container.querySelector('input[placeholder="authors.panels.title"]')!, {
+      target: {value: 'abcd'}
+    })
 
-    const panel = wrapper.find('AuthorEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 
   test('should allow a new author to be created ', async () => {
@@ -113,22 +111,22 @@ describe('Author Edit Panel', () => {
         })
       }
     ]
-    const wrapper = mount(
+    const {asFragment, getByTestId, getByLabelText} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    act(() => {
-      wrapper
-        .find('input[name="authors.panels.name"]')
-        .simulate('change', {target: {value: author.name}})
+    const nameInput = getByLabelText('authors.panels.name*')
+    const saveButton = getByTestId('saveButton')
+
+    fireEvent.change(nameInput, {
+      target: {value: author.name}
     })
+    fireEvent.click(saveButton)
 
-    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
-
-    const panel = wrapper.find('AuthorEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 })

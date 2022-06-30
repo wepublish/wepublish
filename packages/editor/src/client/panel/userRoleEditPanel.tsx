@@ -1,15 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Alert,
-  Button,
-  CheckPicker,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup
-} from 'rsuite'
+import {toaster, Message, Button, CheckPicker, Drawer, Form, Schema} from 'rsuite'
 
 import {
   Permission,
@@ -84,7 +75,12 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
       createError?.message ??
       updateError?.message ??
       loadPermissionError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError, loadPermissionError])
 
   async function handleSave() {
@@ -116,39 +112,63 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     }
   }
 
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-        </Drawer.Title>
-      </Drawer.Header>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        style={{height: '100%'}}
+        formValue={{name: name}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+          </Drawer.Title>
 
-      <Drawer.Body>
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
-            <FormControl
-              name={t('userRoles.panels.name')}
+          <Drawer.Actions>
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={isDisabled}
+              data-testid="saveButton">
+              {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('userRoles.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
+
+        <Drawer.Body>
+          <Form.Group controlId="name">
+            <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
+            <Form.Control
+              name="name"
               value={name}
               disabled={isDisabled}
-              onChange={value => setName(value)}
+              onChange={(value: string) => setName(value)}
             />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
-            <FormControl
+          </Form.Group>
+          <Form.Group controlId="description">
+            <Form.ControlLabel>{t('userRoles.panels.description')}</Form.ControlLabel>
+            <Form.Control
               name={t('userRoles.panels.description')}
               value={description}
               disabled={isDisabled}
-              onChange={value => setDescription(value)}
+              onChange={(value: string) => setDescription(value)}
             />
-          </FormGroup>
+          </Form.Group>
           {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
-          <FormGroup>
-            <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
+          <Form.Group>
+            <Form.ControlLabel>{t('userRoles.panels.permissions')}</Form.ControlLabel>
             <CheckPicker
-              block={true}
+              virtualized
+              block
               disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
               value={permissions.map(per => per.id)}
               data={allPermissions.map(permission => ({
@@ -160,18 +180,9 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
                 setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
               }}
             />
-          </FormGroup>
-        </Form>
-      </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('userRoles.panels.close')}
-        </Button>
-      </Drawer.Footer>
+          </Form.Group>
+        </Drawer.Body>
+      </Form>
     </>
   )
 }

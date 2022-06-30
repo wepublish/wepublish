@@ -10,7 +10,7 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDate, GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 
@@ -43,6 +43,7 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
     mail: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     total: {
       type: GraphQLNonNull(GraphQLInt),
@@ -67,6 +68,7 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
 
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    canceledAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     subscriptionID: {type: GraphQLNonNull(GraphQLID)},
     total: {
@@ -83,7 +85,11 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
 export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
   name: 'InvoiceFilter',
   fields: {
-    mail: {type: GraphQLString}
+    mail: {type: GraphQLString},
+    paidAt: {type: GraphQLDate},
+    canceledAt: {type: GraphQLDate},
+    userID: {type: GraphQLID},
+    subscriptionID: {type: GraphQLID}
   }
 })
 
@@ -111,7 +117,10 @@ export const GraphQLInvoiceItemInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     quantity: {type: GraphQLNonNull(GraphQLInt)},
-    amount: {type: GraphQLNonNull(GraphQLInt)}
+    amount: {type: GraphQLNonNull(GraphQLInt)},
+    total: {type: GraphQLNonNull(GraphQLInt)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })
 
@@ -119,9 +128,10 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   name: 'InvoiceInput',
   fields: {
     mail: {type: GraphQLNonNull(GraphQLString)},
-    userID: {type: GraphQLID},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    subscriptionID: {type: GraphQLID},
+    manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

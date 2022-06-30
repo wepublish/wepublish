@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+import {
+  FullSubscriptionFragment,
+  SubscriptionFilter,
+  SubscriptionSort,
+  useDeleteSubscriptionMutation,
+  useSubscriptionListQuery
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {
   ButtonLink,
   Link,
@@ -7,40 +18,21 @@ import {
   SubscriptionCreateRoute,
   SubscriptionEditRoute,
   SubscriptionListRoute,
-  UserEditRoute,
   useRoute,
   useRouteDispatch
 } from '../route'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
 
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  FullSubscriptionFragment,
-  SubscriptionSort,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery
-} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Message,
-  Modal,
-  Table
-} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder, isTempUser} from '../utility'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
-import {SubscriptionAsCsvModal} from '../panel/ExportSubscriptionsCsvModal'
-
-const {Column, HeaderCell, Cell, Pagination} = Table
+import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
+import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
+import PlusIcon from '@rsuite/icons/legacy/Plus'
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
@@ -64,10 +56,7 @@ export function SubscriptionList() {
   const [editID, setEditID] = useState<string | undefined>(
     current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
   )
-
-  const [filter, setFilter] = useState('')
-
-  const [isExportModalOpen, setExportModalOpen] = useState<boolean>(false)
+  const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
 
@@ -77,13 +66,15 @@ export function SubscriptionList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
-  const {
-    data,
-    refetch,
-    loading: isLoading
-  } = useSubscriptionListQuery({
+  // double check
+  Object.keys(filter).map(el => {
+    if (filter[el as keyof SubscriptionFilter] === null)
+      delete filter[el as keyof SubscriptionFilter]
+  })
+
+  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
     variables: {
-      filter: {},
+      filter,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -94,7 +85,7 @@ export function SubscriptionList() {
 
   useEffect(() => {
     refetch({
-      filter: {},
+      filter,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -127,6 +118,23 @@ export function SubscriptionList() {
     }
   }, [data?.subscriptions])
 
+  /**
+   * UI helper
+   */
+  function userNameView(fullUser: FullSubscriptionFragment): React.ReactFragment {
+    const user = fullUser.user
+    // user deleted
+    if (!user) {
+      return t('subscriptionList.overview.deleted')
+    }
+    return (
+      <>
+        <span>{user.firstName} </span>
+        <span>{user.name}</span>
+      </>
+    )
+  }
+
   return (
     <>
       <FlexboxGrid>
@@ -134,25 +142,25 @@ export function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Button appearance="primary" onClick={() => setExportModalOpen(true)}>
-            {t('userList.overview.exportSubscriptionsCsv')}
-          </Button>
+          <ExportSubscriptionsAsCsv filter={filter} />
           <ButtonLink
             style={{marginLeft: 5}}
             appearance="primary"
             disabled={isLoading}
             route={SubscriptionCreateRoute.create({})}>
+            <PlusIcon style={{marginRight: '5px'}} />
             {t('subscriptionList.overview.newSubscription')}
           </ButtonLink>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <Icon icon="search" />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
+      </FlexboxGrid>
+
+      {/* Filter */}
+      <FlexboxGrid>
+        <SubscriptionListFilter
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+        />
       </FlexboxGrid>
 
       <div
@@ -164,14 +172,20 @@ export function SubscriptionList() {
         <Table
           minHeight={600}
           autoHeight={true}
-          style={{flex: 1}}
+          style={{flex: 1, cursor: 'pointer'}}
           loading={isLoading}
           data={subscriptions}
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
+          }}
+          onRowClick={data => {
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: SubscriptionEditRoute.create({id: data.id})
+            })
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
@@ -206,19 +220,7 @@ export function SubscriptionList() {
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
-              {(rowData: FullSubscriptionFragment) => (
-                <Link
-                  route={
-                    rowData.user
-                      ? UserEditRoute.create({id: rowData.user.id})
-                      : SubscriptionEditRoute.create({id: rowData.id})
-                  }>
-                  {isTempUser(rowData.user?.id) && (
-                    <span>{t('subscriptionList.overview.tempUser')}</span>
-                  )}
-                  {rowData.user?.name || t('subscriptionList.overview.deleted')}
-                </Link>
-              )}
+              {(rowData: FullSubscriptionFragment) => userNameView(rowData)}
             </Cell>
           </Column>
           {/* email */}
@@ -238,7 +240,7 @@ export function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -255,20 +257,27 @@ export function SubscriptionList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.subscriptions.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -295,35 +304,12 @@ export function SubscriptionList() {
         />
       </Drawer>
 
-      <Modal show={isExportModalOpen} onHide={() => setExportModalOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.exportSubscriptions')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <SubscriptionAsCsvModal />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={() => setExportModalOpen(false)} appearance="default">
-            {t('userList.panels.close')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          {currentSubscription && isTempUser(currentSubscription.user?.id) && (
-            <Message
-              showIcon
-              type="warning"
-              description={t('subscriptionList.panels.tempUserWarning')}
-            />
-          )}
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user?.name || t('subscriptionList.panels.unknown')}

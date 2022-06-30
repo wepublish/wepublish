@@ -7,7 +7,7 @@ import 'react-resizable/css/styles.css'
 import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
 import {BlockProps} from '../atoms/blockList'
 import nanoid from 'nanoid'
-import {ButtonToolbar, Drawer, Icon, IconButton, Panel} from 'rsuite'
+import {ButtonToolbar, Drawer, IconButton, Panel} from 'rsuite'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {contentForTeaser} from './teaserGridBlock'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -16,6 +16,12 @@ import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 
 import {useTranslation} from 'react-i18next'
 import i18next from 'i18next'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import FileIcon from '@rsuite/icons/legacy/File'
+import PlusSquareOIcon from '@rsuite/icons/legacy/PlusSquareO'
+import LockIcon from '@rsuite/icons/legacy/Lock'
+import UnlockIcon from '@rsuite/icons/legacy/Unlock'
 
 export function FlexTeaserBlock({
   teaser,
@@ -26,7 +32,7 @@ export function FlexTeaserBlock({
 }: FlexTeaserBlockProps) {
   return (
     <Panel
-      bodyFill={true}
+      bodyFill
       style={{
         cursor: showGrabCursor ? 'grab' : '',
         height: 'inherit',
@@ -52,7 +58,7 @@ export function FlexTeaserBlock({
               }}>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
-                  icon={<Icon icon="file" />}
+                  icon={<FileIcon />}
                   onClick={onChoose}
                   style={{
                     margin: 10
@@ -61,7 +67,7 @@ export function FlexTeaserBlock({
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
-                  icon={<Icon icon="pencil" />}
+                  icon={<PencilIcon />}
                   onClick={onEdit}
                   style={{
                     margin: 10
@@ -70,7 +76,7 @@ export function FlexTeaserBlock({
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton
-                  icon={<Icon icon="trash" />}
+                  icon={<TrashIcon />}
                   onClick={onRemove}
                   style={{
                     margin: 10
@@ -183,7 +189,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
     <>
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
         <IconButton
-          icon={<Icon icon="plus-square-o" />}
+          icon={<PlusSquareOIcon />}
           appearance="primary"
           circle
           size="md"
@@ -225,7 +231,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                     disabled={flexTeaser.alignment.static}
                     block
                     appearance="subtle"
-                    icon={<Icon icon="trash" />}
+                    icon={<TrashIcon />}
                     onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
                   />
                 </IconButtonTooltip>
@@ -239,7 +245,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                 <IconButton
                   block
                   appearance="subtle"
-                  icon={<Icon icon={!flexTeaser.alignment.static ? 'unlock' : 'lock'} />}
+                  icon={flexTeaser.alignment.static ? <LockIcon /> : <UnlockIcon />}
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>
@@ -248,7 +254,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
         ))}
       </GridLayout>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
         {editItem?.teaser && (
           <TeaserEditPanel
             key={editItem.alignment.i}
@@ -261,7 +267,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
           />
         )}
       </Drawer>
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <TeaserSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {

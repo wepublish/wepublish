@@ -1,16 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {
-  Alert,
-  Button,
-  ControlLabel,
-  Form,
-  FormControl,
-  FormGroup,
-  Message,
-  Modal,
-  Slider
-} from 'rsuite'
+import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 
@@ -42,7 +32,11 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
 
   useEffect(() => {
     if (loadError?.message) {
-      Alert.error(loadError.message, 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {loadError.message}
+        </Message>
+      )
     }
   }, [loadError])
 
@@ -53,15 +47,15 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
       </Modal.Header>
 
       <Modal.Body>
-        <Message
-          style={{marginBottom: '20px'}}
-          type="warning"
-          description={t('articleEditor.panels.articlePreviewLinkDesc')}
-        />
+        <Message style={{marginBottom: '20px'}} type="warning">
+          {t('articleEditor.panels.articlePreviewLinkDesc')}
+        </Message>
 
-        <Form fluid={true}>
-          <FormGroup style={{paddingLeft: '20px', paddingRight: '20px'}}>
-            <ControlLabel>{t('articleEditor.panels.articlePreviewLinkHours')}</ControlLabel>
+        <Form fluid>
+          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}}>
+            <Form.ControlLabel>
+              {t('articleEditor.panels.articlePreviewLinkHours')}
+            </Form.ControlLabel>
             <Slider
               value={hours}
               min={6}
@@ -74,11 +68,17 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
               }}
               onChange={value => setHours(value)}
             />
-          </FormGroup>
-          <FormGroup style={{paddingTop: '20px'}}>
-            <ControlLabel>{t('articleEditor.panels.articlePreviewLinkField')}</ControlLabel>
-            <FormControl disabled={isLoading} value={data?.articlePreviewLink} />
-          </FormGroup>
+          </Form.Group>
+          <Form.Group style={{paddingTop: '20px'}}>
+            <Form.ControlLabel>
+              {t('articleEditor.panels.articlePreviewLinkField')}
+            </Form.ControlLabel>
+            <Form.Control
+              name="article-preview-link"
+              disabled={isLoading}
+              value={data?.articlePreviewLink}
+            />
+          </Form.Group>
         </Form>
       </Modal.Body>
 
