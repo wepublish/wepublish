@@ -315,8 +315,7 @@ export class MemberContext implements MemberContext {
     // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
     const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
     // max batch size is 100 given by https://github.com/wepublish/wepublish/blob/master/packages/api-db-mongodb/src/db/defaults.ts#L3
-    const batchSize =
-      !isNaN(maxSubscriptionBatch) && maxSubscriptionBatch < 100 ? maxSubscriptionBatch : 100
+    const batchSize = Math.min(maxSubscriptionBatch, 100) || 100
     let hasMore = true
     let skip = 0
     // if no MAX_AUTO_RENEW_SUBSCRIPTION_BATCH is set, do not consider any max batches
