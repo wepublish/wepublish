@@ -117,6 +117,7 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
+
   return (
     <>
       <FlexboxGrid>
@@ -429,21 +430,18 @@ export function ArticleList() {
                   duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
+                      refetch(articleListVariables)
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         variables: articleListVariables
                       })
 
                       if (!query) return
-
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
                           articles: {
-                            ...query.articles,
-                            nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id
-                            )
+                            ...query.articles
                           }
                         },
                         variables: articleListVariables

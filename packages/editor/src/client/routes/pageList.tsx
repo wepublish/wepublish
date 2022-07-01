@@ -409,6 +409,7 @@ export function PageList() {
                   duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
+                      refetch(pageListVariables)
                       const query = cache.readQuery<PageListQuery>({
                         query: PageListDocument,
                         variables: pageListVariables
@@ -420,8 +421,7 @@ export function PageList() {
                         query: PageListDocument,
                         data: {
                           pages: {
-                            ...query.pages,
-                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
+                            ...query.pages
                           }
                         },
                         variables: pageListVariables
