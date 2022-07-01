@@ -22,9 +22,23 @@ fragment FullUser on User {
     }
     email
     emailVerifiedAt
-
     roles {
         ...FullUserRole
+    }
+    subscriptions {
+        id
+        createdAt
+        modifiedAt
+        paymentPeriodicity
+        monthlyAmount
+        autoRenew
+        startsAt
+        paidUntil
+        properties {
+            key
+            value
+            public
+        }
     }
 }
 

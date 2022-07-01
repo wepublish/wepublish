@@ -1941,6 +1941,7 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
+  subscriptions?: Maybe<Array<Maybe<UserSubscriptions>>>;
 };
 
 export type UserAddress = {
@@ -2023,6 +2024,19 @@ export enum UserSort {
   Name = 'NAME',
   FirstName = 'FIRST_NAME'
 }
+
+export type UserSubscriptions = {
+  __typename?: 'UserSubscriptions';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
+};
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
@@ -3766,7 +3780,14 @@ export type FullUserFragment = (
   )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )> }
+  )>, subscriptions?: Maybe<Array<Maybe<(
+    { __typename?: 'UserSubscriptions' }
+    & Pick<UserSubscriptions, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
+    & { properties: Array<(
+      { __typename?: 'Properties' }
+      & Pick<Properties, 'key' | 'value' | 'public'>
+    )> }
+  )>>> }
 );
 
 export type UserListQueryVariables = Exact<{
@@ -4363,6 +4384,21 @@ export const FullUserFragmentDoc = gql`
   emailVerifiedAt
   roles {
     ...FullUserRole
+  }
+  subscriptions {
+    id
+    createdAt
+    modifiedAt
+    paymentPeriodicity
+    monthlyAmount
+    autoRenew
+    startsAt
+    paidUntil
+    properties {
+      key
+      value
+      public
+    }
   }
 }
     ${FullUserRoleFragmentDoc}`;
