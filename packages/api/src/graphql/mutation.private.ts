@@ -1171,13 +1171,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanUpdateSettings, roles)
 
-        for (const {name, value: val} of value) {
+        for (const {name, value: newVal} of value) {
           const fullSetting = await dbAdapter.setting.getSetting(name)
           if (!fullSetting) {
             throw new NotFound('setting', name)
           }
+          const currentVal = fullSetting.value
           const restriction = fullSetting.settingRestriction
-          checkSettingRestrictions(val, restriction)
+          checkSettingRestrictions(newVal, currentVal, restriction)
         }
 
         return await dbAdapter.setting.updateSettingList(value)
