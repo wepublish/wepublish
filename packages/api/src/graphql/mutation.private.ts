@@ -93,6 +93,7 @@ import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {SettingName} from '../db/setting'
 import {checkSettingRestrictions} from '../utility'
+import {Validator} from '../validator'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -238,6 +239,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         password: {type: GraphQLNonNull(GraphQLString)}
       },
       async resolve(root, {email, password}, {dbAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
@@ -324,6 +327,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {url, email}, {authenticate, dbAdapter, generateJWT, mailContext}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
@@ -357,6 +362,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {url, email},
         {authenticate, dbAdapter, generateJWT, mailContext, urlAdapter}
       ) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
@@ -804,6 +811,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!article) throw new NotFound('article', id)
 
         const articleRevision = Object.assign(
+          {},
           article.draft ?? article.pending ?? article.published,
           {
             slug: '',
@@ -811,6 +819,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             updatedAt: undefined
           }
         )
+
         const output = await dbAdapter.article.createArticle({
           input: {shared: article.shared, ...articleRevision}
         })
@@ -916,7 +925,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!page) throw new NotFound('page', id)
 
-        const pageRevision = Object.assign(page.draft ?? page.pending ?? page.published, {
+        const pageRevision = Object.assign({}, page.draft ?? page.pending ?? page.published, {
           slug: '',
           publishedAt: undefined,
           updatedAt: undefined
