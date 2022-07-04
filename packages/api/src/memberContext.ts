@@ -479,12 +479,12 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
-        const frequency = Number(
-          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))?.value
-        )
-        const maxAttempts = Number(
-          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))?.value
-        )
+        const frequency =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+        const maxAttempts =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
           createdAt: invoice.createdAt,
@@ -669,12 +669,12 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
-        const frequency = Number(
-          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))?.value
-        )
-        const maxAttempts = Number(
-          (await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))?.value
-        )
+        const frequency =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+        const maxAttempts =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
           createdAt: invoice.createdAt,
