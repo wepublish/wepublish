@@ -924,6 +924,9 @@
         "country": "Country"
       }
     },
+    "userEditView": {
+      "loadingUser": "Loading user"
+    },
     "userRoles": {
       "overview": {
         "action": "Action",

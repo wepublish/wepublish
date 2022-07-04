@@ -5,7 +5,7 @@ import {
   Link,
   RouteType,
   UserCreateRoute,
-  UserEditRoute,
+  UserEditViewRoute,
   UserListRoute,
   useRoute,
   useRouteDispatch
@@ -62,11 +62,11 @@ export function UserList() {
   const dispatch = useRouteDispatch()
 
   const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
+    current?.type === RouteType.UserEditView || current?.type === RouteType.UserCreate
   )
 
   const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserEdit ? current.params.id : undefined
+    current?.type === RouteType.UserEditView ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -112,7 +112,7 @@ export function UserList() {
       setEditModalOpen(true)
     }
 
-    if (current?.type === RouteType.UserEdit) {
+    if (current?.type === RouteType.UserEditView) {
       setEditID(current.params.id)
       setEditModalOpen(true)
     }
@@ -208,7 +208,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
+                <Link route={UserEditViewRoute.create({id: rowData.id})}>
                   {rowData.firstName || ''}
                 </Link>
               )}
@@ -218,7 +218,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
+                <Link route={UserEditViewRoute.create({id: rowData.id})}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}

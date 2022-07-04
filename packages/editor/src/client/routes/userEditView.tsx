@@ -1,0 +1,450 @@
+import React, {useEffect, useState} from 'react'
+import {Button, CheckPicker, Col, Form, Grid, Loader, Panel, Row, Schema, Toggle} from 'rsuite'
+import {
+  FullUserRoleFragment,
+  useCreateUserMutation,
+  UserAddress,
+  useUpdateUserMutation,
+  useUserQuery,
+  useUserRoleListQuery
+} from '../api'
+import {RouteType, useRoute} from '../route'
+import {useTranslation} from 'react-i18next'
+import {CreateOrUpdateUserPassword} from '../atoms/user/createOrUpdateUserPassword'
+
+export function UserEditView() {
+  const {t} = useTranslation()
+  const {current} = useRoute()
+
+  // user props
+  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState<string | undefined>()
+  const [preferredName, setPreferredName] = useState<string | undefined>()
+  const [email, setEmail] = useState('')
+  const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
+  const [password, setPassword] = useState('')
+  const [active, setActive] = useState(true)
+  const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const [address, setAddress] = useState<UserAddress | null>(null)
+
+  // getting user id from url param
+  const [id, setId] = useState<string | undefined>(
+    current?.type === RouteType.UserEditView ? current.params.id : undefined
+  )
+  const {
+    data: userRoleData,
+    loading: isUserRoleLoading,
+    error: loadUserRoleError
+  } = useUserRoleListQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      first: 200
+    }
+  })
+
+  /**
+   * fetch user from api
+   */
+  const {data, loading: isLoading, error: loadError} = useUserQuery({
+    variables: {id: id!},
+    fetchPolicy: 'network-only',
+    skip: id === undefined
+  })
+  /**
+   * setup user whenever user data object changes
+   */
+  useEffect(() => {
+    if (data?.user) {
+      console.log('use effect setname', data.user.name)
+      setName(data.user.name)
+      setPreferredName(data.user.preferredName ?? undefined)
+      setFirstName(data.user.firstName ?? undefined)
+      setEmail(data.user.email)
+      setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
+      setActive(data.user.active)
+      setAddress(data.user.address ? data.user.address : null)
+      if (data.user.roles) {
+        // TODO: fix this
+        setRoles(data.user.roles as FullUserRoleFragment[])
+      }
+    }
+  }, [data?.user])
+
+  /**
+   * Setup user roles, whenever user role data object changes
+   */
+  useEffect(() => {
+    if (userRoleData?.userRoles?.nodes) {
+      setUserRoles(userRoleData.userRoles.nodes)
+    }
+  }, [userRoleData?.userRoles])
+
+  const [createUser, {loading: isCreating, error: createError}] = useCreateUserMutation()
+  const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
+
+  const isDisabled =
+    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
+
+  /**
+   * Function to update address object
+   * @param address
+   * @param setAddress
+   * @param key
+   * @param value
+   */
+  function updateAddressObject(
+    address: UserAddress | null,
+    setAddress: React.Dispatch<React.SetStateAction<UserAddress | null>>,
+    key: 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country',
+    value: string | null
+  ) {
+    let addressCopy = Object.assign({}, address)
+    if (!address) {
+      addressCopy = {
+        company: '',
+        streetAddress: '',
+        streetAddress2: '',
+        zipCode: '',
+        city: '',
+        country: ''
+      }
+    }
+    addressCopy[key] = value || ''
+    setAddress(addressCopy)
+  }
+
+  /**
+   * Validation schema
+   */
+  const {StringType} = Schema.Types
+  const validatePassword: any = id
+    ? StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+    : StringType()
+        .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+        .isRequired(t('errorMessages.noPasswordErrorMessage'))
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    email: StringType()
+      .isRequired(t('errorMessages.noEmailErrorMessage'))
+      .isEmail(t('errorMessages.invalidEmailErrorMessage')),
+    password: validatePassword
+  })
+
+  /**
+   * Save or create new user
+   */
+  async function createOrUpdateUser() {
+    if (id && data?.user) {
+      const {data: updateData} = await updateUser({
+        variables: {
+          id,
+          input: {
+            name,
+            firstName,
+            preferredName,
+            email,
+            emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
+            active,
+            properties: data.user.properties.map(({value, key, public: publicValue}) => ({
+              value,
+              key,
+              public: publicValue
+            })),
+            roleIDs: roles.map(role => role.id),
+            address: {
+              company: address?.company ? address.company : '',
+              streetAddress: address?.streetAddress ? address.streetAddress : '',
+              streetAddress2: address?.streetAddress2 ? address.streetAddress2 : '',
+              zipCode: address?.zipCode ? address.zipCode : '',
+              city: address?.city ? address.city : '',
+              country: address?.country ? address.country : ''
+            }
+          }
+        }
+      })
+    } else {
+      const {data: createData} = await createUser({
+        variables: {
+          input: {
+            name,
+            firstName,
+            preferredName,
+            email,
+            emailVerifiedAt: null,
+            active,
+            properties: [],
+            roleIDs: roles.map(role => role.id),
+            address
+          },
+          password
+        }
+      })
+    }
+  }
+
+  /**
+   * UI helpers
+   */
+  function titleView() {
+    if (isDisabled) {
+      return <Loader content={t('userEditView.loadingUser')} />
+    }
+    return data?.user?.name
+  }
+
+  function actionsView() {
+    return (
+      <Button appearance="primary" disabled={isDisabled} type="submit" data-testid="saveButton">
+        {id ? t('userList.panels.save') : t('userList.panels.create')}
+      </Button>
+    )
+  }
+
+  return (
+    <>
+      <Form
+        onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
+        fluid
+        model={validationModel}
+        style={{height: '100%'}}
+        formValue={{name: name, email, password}}>
+        {/* heading */}
+        <Grid style={{width: '100%', paddingBottom: '20px'}}>
+          <Row>
+            {/* title */}
+            <Col xs={12}>
+              <Row>
+                <Col xs={16}>
+                  <h2>{titleView()}</h2>
+                </Col>
+                {/* active / inactive */}
+                <Col xs={8} style={{textAlign: 'end'}}>
+                  <Form.Group>
+                    <Form.ControlLabel>{t('userList.panels.active')}</Form.ControlLabel>
+                    <Toggle
+                      checked={active}
+                      disabled={isDisabled}
+                      onChange={value => setActive(value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Col>
+            {/* actions */}
+            <Col xs={12} style={{textAlign: 'end'}}>
+              {actionsView()}
+            </Col>
+          </Row>
+        </Grid>
+        {/* user form */}
+        <Grid style={{width: '100%'}}>
+          <Row gutter={10}>
+            <Col xs={12}>
+              <Grid fluid>
+                {/* general user data */}
+                <Panel
+                  bordered
+                  header={
+                    <>
+                      <Grid>
+                        <Row>
+                          <Col xs={7}>{t('User data')}</Col>
+                          <Col xs={8} style={{textAlign: 'end'}}></Col>
+                        </Row>
+                      </Grid>
+                    </>
+                  }>
+                  <Row gutter={10}>
+                    {/* first name */}
+                    <Col xs={12}>
+                      <Form.Group controlId="firstName">
+                        <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
+                        <Form.Control
+                          name="firstName"
+                          value={data?.user?.firstName}
+                          disabled={isDisabled}
+                          onChange={(value: string) => {
+                            setFirstName(value)
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* name */}
+                    <Col xs={12}>
+                      <Form.Group controlId="name">
+                        <Form.ControlLabel>{t('userList.panels.name') + '*'}</Form.ControlLabel>
+                        <Form.Control
+                          name="name"
+                          value={name}
+                          disabled={isDisabled}
+                          onChange={(value: string) => {
+                            setName(value)
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* preferred name */}
+                    <Col xs={12}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.preferredName')}</Form.ControlLabel>
+                        <Form.Control
+                          name="preferredName"
+                          value={preferredName}
+                          disabled={isDisabled}
+                          onChange={(value: string) => setPreferredName(value)}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* email */}
+                    <Col xs={12}>
+                      <Form.Group controlId="email">
+                        <Form.ControlLabel>{t('userList.panels.email') + '*'}</Form.ControlLabel>
+                        <Form.Control
+                          name="email"
+                          value={email}
+                          disabled={isDisabled}
+                          onChange={(value: string) => {
+                            setEmail(value)
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* company */}
+                    <Col xs={24}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.company')}</Form.ControlLabel>
+                        <Form.Control
+                          name="company"
+                          value={address?.company}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'company', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* street */}
+                    <Col xs={12}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.streetAddress')}</Form.ControlLabel>
+                        <Form.Control
+                          name="streetAddress"
+                          value={address?.streetAddress}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'streetAddress', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* street 2 */}
+                    <Col xs={12}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.streetAddress2')}</Form.ControlLabel>
+                        <Form.Control
+                          name="streetAddress2"
+                          value={address?.streetAddress2}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'streetAddress2', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* zip */}
+                    <Col xs={8}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.zipCode')}</Form.ControlLabel>
+                        <Form.Control
+                          name="zipCode"
+                          value={address?.zipCode}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'zipCode', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* city */}
+                    <Col xs={16}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.city')}</Form.ControlLabel>
+                        <Form.Control
+                          name="city"
+                          value={address?.city}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'city', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                    {/* country */}
+                    <Col xs={24}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.country')}</Form.ControlLabel>
+                        <Form.Control
+                          name="country"
+                          value={address?.country}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(address, setAddress, 'country', value)
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Panel>
+                {/* roles */}
+                <Panel bordered header={'User roles'} style={{marginTop: '20px'}}>
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.userRoles')}</Form.ControlLabel>
+                        <CheckPicker
+                          name="userRoles"
+                          block
+                          value={roles.map(role => role.id)}
+                          data={userRoles.map(userRole => ({
+                            value: userRole.id,
+                            label: userRole.name
+                          }))}
+                          placement={'auto'}
+                          onChange={value => {
+                            setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Panel>
+                {/* password */}
+                <Panel bordered header={'Password'} style={{marginTop: '20px'}}>
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <CreateOrUpdateUserPassword
+                        userId={id}
+                        password={password}
+                        setPassword={setPassword}
+                        isDisabled={isDisabled}
+                      />
+                    </Col>
+                  </Row>
+                </Panel>
+              </Grid>
+            </Col>
+            {/* subscriptions */}
+            <Col xs={12}>
+              <Grid fluid>
+                <Panel bordered header={'Subscriptions'}>
+                  Todo
+                </Panel>
+              </Grid>
+            </Col>
+          </Row>
+        </Grid>
+      </Form>
+    </>
+  )
+}

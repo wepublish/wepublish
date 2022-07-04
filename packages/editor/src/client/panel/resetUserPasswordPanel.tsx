@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
+import {Button, Form, Notification, Schema, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
 
@@ -33,50 +33,48 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
   })
 
   return (
-    <Panel>
-      <Form
-        fluid
-        model={validationModel}
-        onSubmit={async validationPassed => {
-          if (!userID || !password) {
-            return
-          }
+    <Form
+      fluid
+      model={validationModel}
+      onSubmit={async validationPassed => {
+        if (!userID || !password) {
+          return
+        }
 
-          const {data} = await resetUserPassword({
-            variables: {
-              id: userID,
-              password: password
-            }
-          })
-          if (data?.resetUserPassword) {
-            toaster.push(
-              <Notification
-                type="success"
-                header={t('userList.panels.passwordChangeSuccess')}
-                duration={5000}
-              />,
-              {placement: 'topEnd'}
-            )
-            onClose()
+        const {data} = await resetUserPassword({
+          variables: {
+            id: userID,
+            password: password
           }
-        }}>
-        <Form.Group>
-          <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
-          <Form.Control
-            name="password"
-            disabled={isDisabled}
-            type="password"
-            placeholder={t('userList.panels.password')}
-            errorMessage={updateError?.message}
-            value={password}
-            onChange={(value: string) => setPassword(value)}
-          />
-        </Form.Group>
+        })
+        if (data?.resetUserPassword) {
+          toaster.push(
+            <Notification
+              type="success"
+              header={t('userList.panels.passwordChangeSuccess')}
+              duration={5000}
+            />,
+            {placement: 'topEnd'}
+          )
+          onClose()
+        }
+      }}>
+      <Form.Group>
+        <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
+        <Form.Control
+          name="password"
+          disabled={isDisabled}
+          type="password"
+          placeholder={t('userList.panels.password')}
+          errorMessage={updateError?.message}
+          value={password}
+          onChange={(value: string) => setPassword(value)}
+        />
+      </Form.Group>
 
-        <Button type="submit" disabled={isDisabled} appearance="primary">
-          {t('userList.panels.resetPassword')}
-        </Button>
-      </Form>
-    </Panel>
+      <Button type="submit" disabled={isDisabled} appearance="primary" color="red">
+        {t('userList.panels.resetPassword')}
+      </Button>
+    </Form>
   )
 }
