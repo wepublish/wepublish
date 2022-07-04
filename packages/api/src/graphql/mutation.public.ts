@@ -65,6 +65,7 @@ import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subsc
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import * as crypto from 'crypto'
+import {Validator} from '../validator'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -81,6 +82,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
       async resolve(root, {email, password}, {dbAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
@@ -243,6 +246,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {name, firstName, preferredName, email, address, password, challengeAnswer},
         {dbAdapter, loaders, memberContext, createPaymentWithProvider, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync({name, email, firstName, preferredName})
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -333,6 +338,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {dbAdapter, loaders, memberContext, createPaymentWithProvider, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync({name, email, firstName, preferredName})
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -542,6 +549,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email
 
@@ -606,6 +615,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         "This mutation allows to update the user's data by taking an input of type UserInput.",
       async resolve(root, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
+
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input)
 
         const {name, email, firstName, preferredName, address} = input
         // TODO: implement new email check
