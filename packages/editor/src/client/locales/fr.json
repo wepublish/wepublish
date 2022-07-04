@@ -938,7 +938,11 @@
       "invoiceReminders": "Essais de rappel de facture",
       "invoiceFrequency": "Fréquence des rappels de factures",
       "minutes": "Minutes",
-      "ms": "Millisecondes"
+      "ms": "Millisecondes",
+      "comments": "Commentaires",
+      "login": "Login",
+      "peering": "Peering",
+      "payment": "Paiement"
     }
   }
 }

@@ -6,7 +6,6 @@ fragment FullSetting on Setting {
         maxValue
         minValue
         inputLength
-        allowedValues
     }
 }
 
@@ -19,7 +18,10 @@ query SettingList {
         maxValue
         minValue
         inputLength
-        allowedValues
+        allowedValues {
+            stringChoice
+            boolChoice
+        }
     }
   }
 }

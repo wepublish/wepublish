@@ -1055,7 +1055,11 @@
       "invoiceFrequency": "Invoice reminder frequency",
       "minutes": "minutes",
       "ms": "milliseconds",
-      "days": "days"
+      "days": "days",
+      "comments": "Comments",
+      "login": "Login",
+      "peering": "Peering",
+      "payment": "Payment"
     }
   }
 }
