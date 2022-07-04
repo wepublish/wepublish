@@ -796,7 +796,11 @@
         "resetPassword": "Passwort zurücksetzen",
         "search": "Suchen",
         "unknown": "Unbekannt",
-        "users": "User"
+        "users": "User",
+        "subscriptions": "Abos",
+        "noSubscriptions": "Keine Abos",
+        "oneSubscription": "1 Abo",
+        "amountOfSubscriptions": "{{amount}} Abos"
       },
       "panels": {
         "active": "Aktiv",

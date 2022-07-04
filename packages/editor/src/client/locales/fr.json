@@ -522,7 +522,11 @@
         "resetPassword": "Réinitialiser le mot de passe",
         "search": "Recherche",
         "unknown": "Inconnu",
-        "users": "Utilisateur/Utilisatrices"
+        "users": "Utilisateur/Utilisatrices",
+        "subscriptions": "Abonnements",
+        "noSubscriptions": "Aucun abonnement",
+        "oneSubscription": "1 abonnement",
+        "amountOfSubscriptions": "{{amount}} abonnements"
       }
     },
     "authors": {

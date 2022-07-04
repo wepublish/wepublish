@@ -868,7 +868,11 @@
         "resetPassword": "Reset Password",
         "search": "Search",
         "unknown": "Unknown",
-        "users": "Users"
+        "users": "Users",
+        "subscriptions": "Subscriptions",
+        "noSubscriptions": "No subscriptions",
+        "oneSubscription": "1 subscription",
+        "amountOfSubscriptions": "{{amount}} subscriptions"
       },
       "panels": {
         "csvData": "CSV Data",

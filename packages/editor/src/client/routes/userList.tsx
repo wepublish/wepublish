@@ -127,6 +127,24 @@ export function UserList() {
     }
   }, [data?.users])
 
+  /**
+   * UI helpers
+   */
+  function getSubscriptionCellView(user: FullUserFragment) {
+    const subscriptions = user.subscriptions
+    const totalSubscriptions = subscriptions?.length
+    // one subscription
+    if (subscriptions?.length === 1) {
+      return <>{t('userList.overview.oneSubscription')}</>
+    }
+    // multiple subscriptions
+    if (subscriptions?.length) {
+      return <>{t('userList.overview.amountOfSubscriptions', {amount: totalSubscriptions})}</>
+    }
+    // no subscription
+    return <>{t('userList.overview.noSubscriptions')}</>
+  }
+
   return (
     <>
       <FlexboxGrid>
@@ -209,6 +227,13 @@ export function UserList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('email')}</HeaderCell>
             <Cell dataKey="email" />
+          </Column>
+          {/* subscription */}
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
+            <Cell>
+              {(rowData: FullUserFragment) => <div>{getSubscriptionCellView(rowData)}</div>}
+            </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
