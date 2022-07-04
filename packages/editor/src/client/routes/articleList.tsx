@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
+import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink, useRouteDispatch} from '../route'
 
 import {
   useArticleListQuery,
@@ -42,6 +42,7 @@ import TrashIcon from '@rsuite/icons/legacy/Trash'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -81,6 +82,8 @@ export function ArticleList() {
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
+
+  const dispatch = useRouteDispatch()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -448,7 +451,12 @@ export function ArticleList() {
                       })
                     }
                   }).then(output => {
-                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) {
+                      dispatch({
+                        type: RouteActionType.ReplaceRoute,
+                        route: ArticleEditRoute.create({id: output.data?.duplicateArticle.id})
+                      })
+                    }
                   })
                   break
               }
