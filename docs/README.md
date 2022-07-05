@@ -38,6 +38,7 @@
 * [Setup Commenting](commenting.md)
 * [Email Templates](emailtemplates.md)
 
+
 ## packages/editor
 ### How to call an api endpoint from the UI (.tsx file)?
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
@@ -116,3 +117,4 @@ Within this event another invoice event will be triggered which is handled in `e
 To perform migrations on the database two steps are necessary.
 1. add an object in migrations.ts.
 2. restart the API (yarn watch)
+
