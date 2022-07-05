@@ -1050,7 +1050,7 @@
       "guestCommenting": "Allow guest commenting",
       "loginMinutes": "Login token validity period",
       "passwordToken": "Password reset token validity period",
-      "peerToken": "Peer token validity period",
+      "peerToken": "Peering timeout",
       "invoiceReminders": "Invoice reminder attempts",
       "invoiceFrequency": "Invoice reminder frequency",
       "minutes": "minutes",

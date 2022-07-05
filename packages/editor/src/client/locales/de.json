@@ -942,7 +942,7 @@
       "guestCommenting": "Gastkommentare erlauben",
       "loginMinutes": "Gültigkeitsdauer Login-Token",
       "passwordToken": "Gültigkeitsdauer Passwort-Reset-Token",
-      "peerToken": "Gültigkeitsdauer Peer token",
+      "peerToken": "Peering timeout",
       "invoiceReminders": "Anzahl Rechnungserinnerungen",
       "invoiceFrequency": "Rechnungserinnerungsintervall",
       "minutes": "Minuten",
