@@ -190,7 +190,10 @@ export function UserEditView() {
     if (isDisabled) {
       return <Loader content={t('userEditView.loadingUser')} />
     }
-    return data?.user?.name
+    const user = data?.user
+    const firstName = user?.firstName
+    const lastName = user?.name
+    return firstName ? `${firstName} ${lastName}` : lastName
   }
 
   function actionsView() {
@@ -203,59 +206,47 @@ export function UserEditView() {
 
   return (
     <>
-      <Form
-        onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
-        fluid
-        model={validationModel}
-        style={{height: '100%'}}
-        formValue={{name: name, email, password}}>
-        {/* heading */}
-        <Grid style={{width: '100%', paddingBottom: '20px'}}>
-          <Row>
-            {/* title */}
-            <Col xs={12}>
-              <Row>
-                <Col xs={16}>
-                  <h2>{titleView()}</h2>
-                </Col>
-                {/* active / inactive */}
-                <Col xs={8} style={{textAlign: 'end'}}>
-                  <Form.Group>
-                    <Form.ControlLabel>{t('userList.panels.active')}</Form.ControlLabel>
-                    <Toggle
-                      checked={active}
-                      disabled={isDisabled}
-                      onChange={value => setActive(value)}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Col>
-            {/* actions */}
-            <Col xs={12} style={{textAlign: 'end'}}>
-              {actionsView()}
-            </Col>
-          </Row>
-        </Grid>
-        {/* user form */}
-        <Grid style={{width: '100%'}}>
-          <Row gutter={10}>
-            <Col xs={12}>
-              <Grid fluid>
+      {/* heading */}
+      <Grid style={{width: '100%', paddingBottom: '20px'}}>
+        <Row>
+          {/* title */}
+          <Col xs={12}>
+            <Row>
+              <Col xs={16}>
+                <h2>{titleView()}</h2>
+              </Col>
+            </Row>
+          </Col>
+          {/* actions */}
+          <Col xs={12} style={{textAlign: 'end'}}>
+            {actionsView()}
+          </Col>
+        </Row>
+      </Grid>
+      {/* user form */}
+      <Grid style={{width: '100%'}}>
+        <Row gutter={10}>
+          <Col xs={12}>
+            <Grid fluid>
+              <Form
+                onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
+                fluid
+                model={validationModel}
+                formValue={{name: name, email, password}}>
                 {/* general user data */}
-                <Panel
-                  bordered
-                  header={
-                    <>
-                      <Grid>
-                        <Row>
-                          <Col xs={7}>{t('User data')}</Col>
-                          <Col xs={8} style={{textAlign: 'end'}}></Col>
-                        </Row>
-                      </Grid>
-                    </>
-                  }>
+                <Panel bordered header={t('User data')}>
                   <Row gutter={10}>
+                    {/* active / inactive */}
+                    <Col xs={24} style={{textAlign: 'end'}}>
+                      <Form.Group>
+                        <Form.ControlLabel>{t('userList.panels.active')}</Form.ControlLabel>
+                        <Toggle
+                          checked={active}
+                          disabled={isDisabled}
+                          onChange={value => setActive(value)}
+                        />
+                      </Form.Group>
+                    </Col>
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
@@ -419,32 +410,32 @@ export function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
-                {/* password */}
-                <Panel bordered header={'Password'} style={{marginTop: '20px'}}>
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <CreateOrUpdateUserPassword
-                        userId={id}
-                        password={password}
-                        setPassword={setPassword}
-                        isDisabled={isDisabled}
-                      />
-                    </Col>
-                  </Row>
-                </Panel>
-              </Grid>
-            </Col>
-            {/* subscriptions */}
-            <Col xs={12}>
-              <Grid fluid>
-                <Panel bordered header={'Subscriptions'}>
-                  Todo
-                </Panel>
-              </Grid>
-            </Col>
-          </Row>
-        </Grid>
-      </Form>
+              </Form>
+              {/* password */}
+              <Panel bordered header={'Password'} style={{marginTop: '20px'}}>
+                <Row gutter={10}>
+                  <Col xs={24}>
+                    <CreateOrUpdateUserPassword
+                      userId={id}
+                      password={password}
+                      setPassword={setPassword}
+                      isDisabled={isDisabled}
+                    />
+                  </Col>
+                </Row>
+              </Panel>
+            </Grid>
+          </Col>
+          {/* subscriptions */}
+          <Col xs={12}>
+            <Grid fluid>
+              <Panel bordered header={'Subscriptions'}>
+                Todo
+              </Panel>
+            </Grid>
+          </Col>
+        </Row>
+      </Grid>
     </>
   )
 }

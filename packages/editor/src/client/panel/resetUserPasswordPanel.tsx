@@ -36,17 +36,21 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
     <Form
       fluid
       model={validationModel}
-      onSubmit={async validationPassed => {
+      onSubmit={async (validationPassed, e) => {
+        console.log('1', userID, password)
+        e.preventDefault()
         if (!userID || !password) {
           return
         }
 
+        console.log('2')
         const {data} = await resetUserPassword({
           variables: {
             id: userID,
             password: password
           }
         })
+        console.log('3', data)
         if (data?.resetUserPassword) {
           toaster.push(
             <Notification

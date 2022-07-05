@@ -27,6 +27,7 @@ export function CreateOrUpdateUserPassword({
       return (
         <>
           <ResetUserPasswordPanel
+            userID={userId}
             onClose={() => {
               console.log('closed')
             }}
