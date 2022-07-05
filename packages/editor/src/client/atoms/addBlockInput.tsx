@@ -1,9 +1,8 @@
 import React from 'react'
 
-import {Dropdown, Icon, IconButton} from 'rsuite'
-import {IconNames} from 'rsuite/lib/Icon/Icon'
-import {SVGIcon} from 'rsuite/lib/@types/common'
+import {Dropdown, IconButton} from 'rsuite'
 import {useTranslation} from 'react-i18next'
+import PlusIcon from '@rsuite/icons/legacy/Plus'
 
 export interface MenuProps {
   readonly items: Array<MenuItem>
@@ -13,7 +12,7 @@ export interface MenuProps {
 
 export interface MenuItem {
   readonly id: string
-  readonly icon: IconNames | SVGIcon
+  readonly icon: React.ReactElement
   readonly label: string
 }
 
@@ -34,16 +33,16 @@ export function AddBlockInput({menuItems, subtle, disabled, onMenuItemClick}: Ad
       }}>
       <Dropdown
         disabled={disabled}
-        renderTitle={() => {
-          return <IconButton appearance="primary" icon={<Icon icon="plus" />} circle />
-        }}>
+        renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+          <IconButton {...props} ref={ref} icon={<PlusIcon />} circle appearance="primary" />
+        )}>
         {menuItems.map((item, index) => (
           <Dropdown.Item
             key={index}
             onSelect={event => {
               onMenuItemClick(item)
             }}>
-            <Icon icon={item.icon} /> {t(item.label)}
+            {item.icon} {t(item.label)}
           </Dropdown.Item>
         ))}
       </Dropdown>

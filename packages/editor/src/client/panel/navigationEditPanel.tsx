@@ -1,17 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Panel,
-  Input,
-  SelectPicker,
-  Alert
-} from 'rsuite'
+import {Button, Drawer, Form, Panel, Input, SelectPicker, toaster, Message} from 'rsuite'
 
 import {
   useCreateNavigationMutation,
@@ -144,7 +133,12 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       updateError?.message ??
       pageLoadError?.message ??
       articleLoadError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [loadError, createError, updateError, articleLoadError, pageLoadError])
 
   function unionForNavigationLink(item: ListValue<NavigationLink>): NavigationLinkInput {
@@ -211,32 +205,43 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         <Drawer.Title>
           {id ? t('navigation.panels.editNavigation') : t('navigation.panels.createNavigation')}
         </Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
+            {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('navigation.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('navigation.panels.name')}</ControlLabel>
-              <FormControl
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>{t('navigation.panels.name')}</Form.ControlLabel>
+              <Form.Control
+                name="name"
                 placeholder={t('navigation.panels.name')}
                 value={name}
                 disabled={isDisabled}
-                onChange={value => {
+                onChange={(value: string) => {
                   setName(value)
                 }}
               />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('navigation.panels.key')}</ControlLabel>
-              <FormControl
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('navigation.panels.key')}</Form.ControlLabel>
+              <Form.Control
+                name="key"
                 placeholder={t('navigation.panels.key')}
                 value={key}
                 disabled={isDisabled}
-                onChange={value => {
+                onChange={(value: string) => {
                   setKey(value)
                 }}
               />
-            </FormGroup>
+            </Form.Group>
           </Form>
         </Panel>
         <Panel header={t('authors.panels.links')}>
@@ -255,8 +260,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                   }}
                 />
                 <SelectPicker
-                  block={true}
-                  label={t('navigation.panels.linkType')}
+                  block
+                  virtualized
                   value={value.type}
                   style={{marginBottom: 4}}
                   data={linkTypes}
@@ -267,7 +272,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                 />
                 {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
                   <SelectPicker
-                    block={true}
+                    block
+                    virtualized
                     placeholder={
                       value.type === 'PageNavigationLink'
                         ? t('navigation.panels.selectPage')
@@ -309,15 +315,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           </ListInput>
         </Panel>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {id ? t('navigation.panels.save') : t('navigation.panels.create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('navigation.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }

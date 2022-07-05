@@ -1,11 +1,12 @@
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {
+  ArticleBlock,
+  BlockType,
+  PageBlock,
   PaymentProviderCustomer,
-  removePrefixTempUser,
   Subscription,
-  SubscriptionDeactivationReason,
-  TEMP_USER_PREFIX
+  SubscriptionDeactivationReason
 } from '@wepublish/api'
 import {slugify} from './utility'
 
@@ -719,6 +720,12 @@ export const Migrations: Migration[] = [
     // migrate existing deactivated subscriptions
     version: 18,
     async migrate(db, locale) {
+      // Values required to execute migration
+      const TEMP_USER_PREFIX = '__temp_'
+      const removePrefixTempUser = function removePrefixTempUser(userID: string): string {
+        return userID.replace(TEMP_USER_PREFIX, '')
+      }
+
       // 1. move subscription from user object into new subscription collection
       const users = await db.collection(CollectionName.Users)
       const userWithSubscriptions = await users.find({subscription: {$exists: true}}).toArray()
@@ -796,7 +803,7 @@ export const Migrations: Migration[] = [
       // 4. split existing user collection into new temp.user and user collection
       const tempUserQuery = {email: {$regex: OLD_TEMP_USER_REGEX}}
       const tempUsers = await users.find(tempUserQuery).toArray()
-      const newTempUserCollection = await db.createCollection(CollectionName.TempUsers, {
+      const newTempUserCollection = await db.createCollection('temp.users', {
         strict: true
       })
       if (tempUsers.length) {
@@ -818,6 +825,149 @@ export const Migrations: Migration[] = [
       const images = await db.collection(CollectionName.Images)
       await images.updateMany({}, {$rename: {source: 'link'}})
       await images.updateMany({}, {$rename: {author: 'source'}})
+    }
+  },
+  {
+    // change embed block properties width and height from number to string
+    version: 20,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.published) {
+          article.published.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (article.pending) {
+          article.pending.blocks.forEach((block: ArticleBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.published) {
+          page.published.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        if (page.pending) {
+          page.pending.blocks.forEach((block: PageBlock) => {
+            if (block.type === BlockType.Embed) {
+              block.height = String(block.height)
+              block.width = String(block.width)
+            }
+          })
+        }
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
+    }
+  },
+  {
+    version: 21,
+    async migrate(db, locale) {
+      const invoices = db.collection(CollectionName.Invoices)
+      await invoices.updateMany({}, {$set: {manuallySetAsPaidByUserId: undefined}})
+    }
+  },
+  {
+    // Rename unused temp user collection. For operators to remove manually since the collection not used anymore.
+    version: 22,
+    async migrate(db) {
+      const collections = await db.listCollections().toArray()
+      if (collections.includes('temp.users')) {
+        const tempUser = await db.collection('temp.users')
+        await tempUser.rename('temp.users.bak')
+      }
+    }
+  },
+  {
+    // Try to migrate email addressees of users
+    version: 23,
+    async migrate(db) {
+      const userCollection = await db.collection(CollectionName.Users)
+      const subscriptionCollection = await db.collection(CollectionName.Subscriptions)
+      const sessionCollection = await db.collection(CollectionName.Sessions)
+      const users = await userCollection.find().toArray()
+
+      // inform We.Publish operators to remove this manually
+      await userCollection.rename('23-users.bak')
+      const emptyUsers = await db.createCollection(CollectionName.Users, {
+        strict: true
+      })
+
+      type List = {
+        userId: string
+        email: string
+      }
+
+      const listSanitizedUsers: List[] = []
+      for (const user of users) {
+        user.email = user.email.toLowerCase()
+        const duplicatedMail = listSanitizedUsers.find(element => element.email === user.email)
+
+        // If already a user with normalized mail exist merge them
+        if (duplicatedMail) {
+          // Update userID in subscription table
+          const subscriptions = await subscriptionCollection.find({userID: user._id}).toArray()
+          for (const subscription of subscriptions) {
+            subscription.properties.push({
+              key: 'UserIDChangedByMigration23',
+              value: subscription.userID,
+              public: false
+            })
+            subscription.userID = duplicatedMail.userId
+            await subscriptionCollection.replaceOne({_id: subscription._id}, subscription, {
+              upsert: true
+            })
+          }
+
+          // Update userID in session table
+          const sessions = await sessionCollection.find({userID: user._id}).toArray()
+          for (const session of sessions) {
+            session.user = duplicatedMail.userId
+            await sessionCollection.replaceOne({_id: session._id}, session, {upsert: true})
+          }
+        } else {
+          // If user is unique update mail of user
+          await emptyUsers.insertOne(user)
+          listSanitizedUsers.push({
+            userId: user._id,
+            email: user.email
+          })
+        }
+      }
     }
   }
 ]

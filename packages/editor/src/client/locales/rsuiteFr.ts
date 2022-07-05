@@ -7,26 +7,29 @@ const Calendar = {
   friday: 'Fr',
   saturday: 'Sa',
   ok: 'OK',
-  today: 'Today',
-  yesterday: 'Yesterday',
-  hours: 'Hours',
+  today: "Aujourd'hui",
+  yesterday: 'Hier',
+  hours: 'Heures',
   minutes: 'Minutes',
-  seconds: 'Seconds',
+  seconds: 'Secondes',
   /**
    * Format of the string is based on Unicode Technical Standard #35:
    * https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
    **/
-  formattedMonthPattern: 'MMM YYYY',
-  formattedDayPattern: 'DD MMM YYYY'
+  formattedMonthPattern: 'MMM yyyy',
+  formattedDayPattern: 'dd MMM yyyy'
 }
 
 export default {
   Pagination: {
-    more: 'More',
-    prev: 'Previous',
-    next: 'Next',
-    first: 'First',
-    last: 'Last'
+    first: 'Première',
+    last: 'Dernière',
+    limit: '{0} / page',
+    more: 'Plus',
+    next: 'Suivante',
+    prev: 'Précédente',
+    skip: 'Aller à la page {0}',
+    total: 'Total: {0}'
   },
   Table: {
     emptyMessage: 'Aucune donnée trouvée',
@@ -42,7 +45,7 @@ export default {
   },
   DateRangePicker: {
     ...Calendar,
-    last7Days: 'Last 7 Days'
+    last7Days: '7 derniers jours'
   },
   Picker: {
     noResultsText: 'Aucun résultat trouvé',
@@ -51,15 +54,15 @@ export default {
     checkAll: 'All'
   },
   InputPicker: {
-    newItem: 'New item',
-    createOption: 'Create option "{0}"'
+    newItem: 'Noveau',
+    createOption: 'Créer l\'option "{0}"'
   },
   Uploader: {
     inited: 'Initial',
     progress: 'Uploading',
-    error: 'Error',
-    complete: 'Finished',
-    emptyFile: 'Empty',
+    error: 'Erreur',
+    complete: 'Terminé',
+    emptyFile: 'Vide',
     upload: 'Upload'
   }
 }

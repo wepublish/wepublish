@@ -11,17 +11,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Drawer,
-  Modal,
-  Button
-} from 'rsuite'
+import {FlexboxGrid, IconButton, Input, InputGroup, Table, Drawer, Modal, Button} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
@@ -31,6 +21,8 @@ import {NavigationEditPanel} from '../panel/navigationEditPanel'
 import {RouteActionType} from '@wepublish/karma.run-react'
 
 import {useTranslation} from 'react-i18next'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function NavigationList() {
@@ -97,13 +89,13 @@ export function NavigationList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>
@@ -121,7 +113,7 @@ export function NavigationList() {
               <>
                 <IconButtonTooltip caption={t('navigation.overview.delete')}>
                   <IconButton
-                    icon={<Icon icon="trash" />}
+                    icon={<TrashIcon />}
                     circle
                     size="sm"
                     style={{marginLeft: '5px'}}
@@ -138,9 +130,9 @@ export function NavigationList() {
       </Table>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -166,7 +158,7 @@ export function NavigationList() {
         />
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
         </Modal.Header>

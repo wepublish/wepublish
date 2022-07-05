@@ -5,9 +5,10 @@ import {isFunctionalUpdate} from '@wepublish/karma.run-react'
 import {isValueConstructor, ValueConstructor, UnionToIntersection} from '@karma.run/utility'
 
 import {AddBlockInput} from './addBlockInput'
-import {IconButton, Icon, Panel} from 'rsuite'
-import {IconNames} from 'rsuite/lib/Icon/Icon'
-import {SVGIcon} from 'rsuite/lib/@types/common'
+import {IconButton, Panel} from 'rsuite'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import ArrowUpIcon from '@rsuite/icons/legacy/ArrowUp'
+import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
 
 export interface BlockProps<V = any> {
   value: V
@@ -20,7 +21,7 @@ export type BlockConstructorFn<V = any> = (props: BlockProps<V>) => JSX.Element
 
 export interface BlockCaseProps<V = any> {
   label: string
-  icon: IconNames | SVGIcon
+  icon: React.ReactElement
   defaultValue: ValueConstructor<V>
   field: BlockConstructorFn<V>
 }
@@ -40,7 +41,7 @@ export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
 export interface BlockListItemProps<T extends string = string, V = any> {
   index: number
   value: BlockListValue<T, V>
-  icon: IconNames | SVGIcon
+  icon: React.ReactElement
   autofocus: boolean
   disabled?: boolean
 
@@ -72,7 +73,6 @@ const BlockListItem = memo(function BlockListItem({
     },
     [onChange, index]
   )
-
   return (
     <ListItemWrapper
       icon={icon}
@@ -232,7 +232,7 @@ export function BlockList<V extends BlockListValue>({
 
 interface ListItemWrapperProps {
   children?: ReactNode
-  icon?: IconNames | SVGIcon
+  icon?: React.ReactElement
   disabled?: boolean
 
   onDelete?: () => void
@@ -261,14 +261,14 @@ function ListItemWrapper({
           marginRight: 10
         }}>
         <IconButton
-          icon={<Icon icon="trash" />}
+          icon={<TrashIcon />}
           onClick={onDelete}
           disabled={onDelete == null || disabled}
         />
         <div style={{flexGrow: 1}} />
         <div style={{marginTop: 10, marginBottom: 5}}>
           <IconButton
-            icon={<Icon icon="arrow-up" />}
+            icon={<ArrowUpIcon />}
             onClick={onMoveUp}
             disabled={onMoveUp == null || disabled}
           />
@@ -276,7 +276,7 @@ function ListItemWrapper({
         <div style={{marginBottom: 10}}>
           <IconButton
             title=""
-            icon={<Icon icon="arrow-down" />}
+            icon={<ArrowDownIcon />}
             onClick={onMoveDown}
             disabled={onMoveDown == null || disabled}
           />
@@ -288,7 +288,7 @@ function ListItemWrapper({
           display: 'flex',
           width: '100%'
         }}>
-        <Panel style={{width: '100%'}} bordered={true}>
+        <Panel style={{width: '100%'}} bordered>
           <div style={{padding: 20}}>{children}</div>
         </Panel>
       </div>
@@ -297,10 +297,9 @@ function ListItemWrapper({
           display: 'flex',
           flexDirection: 'column',
           marginLeft: 10,
-          fontSize: 24,
           fill: 'gray'
         }}>
-        {icon && <Icon icon={icon} />}
+        {icon}
       </div>
     </div>
   )

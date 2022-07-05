@@ -1,15 +1,6 @@
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  ControlLabel,
-  DatePicker,
-  Form,
-  FormGroup,
-  Message,
-  Modal,
-  SelectPicker
-} from 'rsuite'
+import {Button, DatePicker, Form, Message, Modal, SelectPicker} from 'rsuite'
 
 import {SubscriptionDeactivationReason} from '../api'
 
@@ -38,10 +29,13 @@ export function UserSubscriptionDeactivatePanel({
 }: SubscriptionDeactivatePanelProps) {
   const {t} = useTranslation()
 
-  const [deactivationDate, setDeactivationDate] = useState(
+  const [deactivationDate, setDeactivationDate] = useState<Date | null>(
     paidUntil ? new Date(paidUntil) : new Date()
   )
-  const [deactivationReason, setDeactivationReason] = useState(null)
+  const [
+    deactivationReason,
+    setDeactivationReason
+  ] = useState<SubscriptionDeactivationReason | null>(null)
 
   return (
     <>
@@ -65,20 +59,21 @@ export function UserSubscriptionDeactivatePanel({
           )}
         </p>
         {!isDeactivated && (
-          <Form style={{marginTop: '20px'}} fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+          <Form style={{marginTop: '20px'}} fluid>
+            <Form.Group>
+              <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
               <DatePicker
                 block
                 placement="auto"
                 value={deactivationDate}
                 onChange={value => setDeactivationDate(value)}
               />
-            </FormGroup>
+            </Form.Group>
 
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
+            <Form.Group>
+              <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</Form.ControlLabel>
               <SelectPicker
+                virtualized
                 searchable={false}
                 data={[
                   {
@@ -99,12 +94,10 @@ export function UserSubscriptionDeactivatePanel({
                 placement="auto"
                 onChange={value => setDeactivationReason(value)}
               />
-            </FormGroup>
-            <Message
-              showIcon
-              type="info"
-              description={t('userSubscriptionEdit.deactivation.help')}
-            />
+            </Form.Group>
+            <Message showIcon type="info">
+              {t('userSubscriptionEdit.deactivation.help')}
+            </Message>
           </Form>
         )}
       </Modal.Body>
@@ -116,7 +109,7 @@ export function UserSubscriptionDeactivatePanel({
           onClick={() =>
             isDeactivated
               ? onReactivate()
-              : onDeactivate({date: deactivationDate, reason: deactivationReason!})
+              : onDeactivate({date: deactivationDate!, reason: deactivationReason!})
           }>
           {t(
             isDeactivated

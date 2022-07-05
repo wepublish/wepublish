@@ -8,7 +8,6 @@ import bodyParser from 'body-parser'
 import {paymentModelEvents} from '../events'
 import {DBAdapter} from '../db/adapter'
 import {OptionalSubscription} from '../db/subscription'
-import {isTempUser, removePrefixTempUser} from '../utility'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -147,7 +146,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }
 
   /**
-   * adding or updating paymentProvider customer ID for user or tempUser
+   * adding or updating paymentProvider customer ID for user
    * @param dbAdapter
    * @param subscription
    * @param customerID
@@ -162,13 +161,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    let user
-    const tempUser = isTempUser(subscription.userID)
-    if (tempUser) {
-      user = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(subscription.userID))
-    } else {
-      user = await dbAdapter.user.getUserByID(subscription.userID)
-    }
+    const user = await dbAdapter.user.getUserByID(subscription.userID)
     if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
 
     const paymentProviderCustomers = user.paymentProviderCustomers.filter(
@@ -179,17 +172,10 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       customerID
     })
 
-    if (tempUser) {
-      await dbAdapter.tempUser.updatePaymentProviderCustomers({
-        userID: user.id,
-        paymentProviderCustomers
-      })
-    } else {
-      await dbAdapter.user.updatePaymentProviderCustomers({
-        userID: user.id,
-        paymentProviderCustomers
-      })
-    }
+    await dbAdapter.user.updatePaymentProviderCustomers({
+      userID: user.id,
+      paymentProviderCustomers
+    })
   }
 }
 
@@ -197,6 +183,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders} = opts
   const paymentProviderWebhookRouter = Router()
 
+  // setup update event listener
   paymentModelEvents.on('update', async (context, model) => {
     if (model.state === PaymentState.Paid) {
       const invoice = await context.loaders.invoicesByID.load(model.invoiceID)
@@ -215,6 +202,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
     }
   })
 
+  // setup webhook routes for each payment provider
   paymentProviders.forEach(paymentProvider => {
     paymentProviderWebhookRouter
       .route(`/${paymentProvider.id}`)
@@ -239,7 +227,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
           }
         } catch (error) {
           logger('paymentProvider').error(
-            error,
+            error as Error,
             'Error during webhook update in paymentProvider %s',
             paymentProvider.id
           )

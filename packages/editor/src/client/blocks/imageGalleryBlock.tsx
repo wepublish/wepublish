@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Drawer, Dropdown, Icon, IconButton, Panel} from 'rsuite'
+import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
 
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
@@ -13,6 +13,13 @@ import {ImageGalleryBlockValue} from './types'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 
 import {useTranslation} from 'react-i18next'
+import ImageIcon from '@rsuite/icons/legacy/Image'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import WrenchIcon from '@rsuite/icons/legacy/Wrench'
+import ListIcon from '@rsuite/icons/legacy/List'
+import ArrowCircleLeftIcon from '@rsuite/icons/legacy/ArrowCircleLeft'
+import ArrowCircleRightIcon from '@rsuite/icons/legacy/ArrowCircleRight'
+import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 
 export function ImageGalleryBlock({
   value,
@@ -84,7 +91,7 @@ export function ImageGalleryBlock({
             flexShrink: 1
           }}>
           <IconButton
-            icon={<Icon icon="list" />}
+            icon={<ListIcon />}
             onClick={() => setGalleryListEditModalOpen(true)}
             disabled={disabled}
           />
@@ -110,7 +117,7 @@ export function ImageGalleryBlock({
             flexShrink: 1
           }}>
           <IconButton
-            icon={<Icon icon="arrow-circle-left" />}
+            icon={<ArrowCircleLeftIcon />}
             onClick={() => setIndex(index => index - 1)}
             disabled={disabled || !hasPrevious}
             style={{
@@ -118,7 +125,7 @@ export function ImageGalleryBlock({
             }}
           />
           <IconButton
-            icon={<Icon icon="arrow-circle-right" />}
+            icon={<ArrowCircleRightIcon />}
             onClick={() => setIndex(index => index + 1)}
             disabled={disabled || !hasNext}
             style={{
@@ -126,15 +133,15 @@ export function ImageGalleryBlock({
             }}
           />
           <IconButton
-            icon={<Icon icon="plus-circle" />}
+            icon={<PlusCircleIcon />}
             onClick={() => setIndex(value.images.length)}
             disabled={disabled || isNewIndex}
           />
         </div>
       </div>
       <Panel
-        bordered={true}
-        bodyFill={true}
+        bordered
+        bodyFill
         style={{
           height: 300,
           overflow: 'hidden',
@@ -154,14 +161,20 @@ export function ImageGalleryBlock({
                 backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
               }}>
               <Dropdown
-                renderTitle={() => {
-                  return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-                }}>
+                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  <IconButton
+                    {...props}
+                    ref={ref}
+                    icon={<WrenchIcon />}
+                    circle
+                    appearance="subtle"
+                  />
+                )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <Icon icon="image" /> {t('blocks.image.overview.chooseImage')}
+                  <ImageIcon /> {t('blocks.image.overview.chooseImage')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
+                  <PencilIcon /> {t('blocks.image.overview.editImage')}
                 </Dropdown.Item>
                 {/* TODO: Meta sync */}
               </Dropdown>
@@ -179,7 +192,7 @@ export function ImageGalleryBlock({
           handleCaptionChange(e.target.value)
         }}
       />
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -189,14 +202,14 @@ export function ImageGalleryBlock({
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
       <Drawer
-        show={isGalleryListEditModalOpen}
+        open={isGalleryListEditModalOpen}
         size={'sm'}
-        onHide={() => setGalleryListEditModalOpen(false)}>
+        onClose={() => setGalleryListEditModalOpen(false)}>
         <GalleryListEditPanel
           initialImages={value.images}
           onSave={images => {

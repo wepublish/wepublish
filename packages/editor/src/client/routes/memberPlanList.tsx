@@ -1,16 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Drawer,
-  Table,
-  Modal,
-  Button,
-  InputGroup,
-  Input
-} from 'rsuite'
+import {FlexboxGrid, IconButton, Drawer, Table, Modal, Button, InputGroup, Input} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -37,6 +27,8 @@ import {
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function MemberPlanList() {
@@ -124,13 +116,13 @@ export function MemberPlanList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
           <Cell>
@@ -148,7 +140,7 @@ export function MemberPlanList() {
               <>
                 <IconButtonTooltip caption={t('memberPlanList.delete')}>
                   <IconButton
-                    icon={<Icon icon="trash" />}
+                    icon={<TrashIcon />}
                     circle
                     size="sm"
                     style={{marginLeft: '5px'}}
@@ -165,9 +157,9 @@ export function MemberPlanList() {
       </Table>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -192,7 +184,7 @@ export function MemberPlanList() {
           }}
         />
       </Drawer>
-      <Modal show={isConfirmationDialogOpen} size={'sm'}>
+      <Modal open={isConfirmationDialogOpen} size={'sm'}>
         <Modal.Header>
           <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
         </Modal.Header>

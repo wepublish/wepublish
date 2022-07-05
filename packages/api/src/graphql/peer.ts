@@ -3,7 +3,8 @@ import {
   GraphQLNonNull,
   GraphQLString,
   GraphQLInputObjectType,
-  GraphQLID
+  GraphQLID,
+  GraphQLBoolean
 } from 'graphql'
 
 import {Peer, PeerProfile} from '../db/peer'
@@ -74,9 +75,10 @@ export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
 export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
   name: 'UpdatePeerInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLString},
+    slug: {type: GraphQLString},
+    hostURL: {type: GraphQLString},
+    isDisabled: {type: GraphQLBoolean},
     token: {type: GraphQLString}
   }
 })
@@ -91,6 +93,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLString)},
+    isDisabled: {type: GraphQLBoolean},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,

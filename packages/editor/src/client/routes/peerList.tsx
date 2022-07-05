@@ -1,24 +1,26 @@
-import {LinkHOCCompatibleProps, RouteActionType} from '@wepublish/karma.run-react'
-import React, {ComponentType, useEffect, useState} from 'react'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {RouteActionType} from '@wepublish/karma.run-react'
+import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
-  Alert,
   Avatar,
   Button,
   Divider,
   Drawer,
   FlexboxGrid,
-  HelpBlock,
-  Icon,
+  Form,
   IconButton,
   List,
-  ListProps,
-  Modal
+  Message,
+  Modal,
+  toaster
 } from 'rsuite'
 import {
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
+  useUpdatePeerMutation,
   usePeerListQuery,
   usePeerProfileQuery
 } from '../api'
@@ -38,8 +40,9 @@ import {
   useRoute,
   useRouteDispatch
 } from '../route'
+import {addOrUpdateOneInArray} from '../utility'
 
-const ListItemLink = routeLink(List.Item as ComponentType<ListProps & LinkHOCCompatibleProps>)
+const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
@@ -73,12 +76,18 @@ export function PeerList() {
   })
 
   const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
+  const [updatePeer, {loading: isUpdating}] = useUpdatePeerMutation()
 
   const {t} = useTranslation()
 
   useEffect(() => {
     const error = peerInfoError?.message ?? peerListError?.message
-    if (error) Alert.error(error, 0)
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
   }, [peerInfoError, peerListError])
 
   useEffect(() => {
@@ -100,14 +109,13 @@ export function PeerList() {
   }, [current])
 
   const peers = peerListData?.peers?.map((peer, index) => {
-    const {id, name, profile, hostURL} = peer
-
+    const {id, name, profile, hostURL, isDisabled} = peer
     return (
       <ListItemLink
         key={name}
         index={index}
-        route={PeerEditRoute.create({id})}
-        style={{cursor: 'pointer'}}>
+        route={isDisabled ? undefined : PeerEditRoute.create({id})}
+        style={{cursor: isDisabled ? 'default' : 'pointer'}}>
         <FlexboxGrid>
           <FlexboxGrid.Item
             colspan={2}
@@ -120,18 +128,48 @@ export function PeerList() {
               alt={profile?.name?.substr(0, 2)}
             />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={21}>
+          <FlexboxGrid.Item colspan={18}>
             <h5>{name}</h5>
             <p>
               {profile && `${profile.name} - `}
               {hostURL}
             </p>
           </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={3}>
+            <Button
+              appearance="primary"
+              disabled={isUpdating}
+              onClick={async e => {
+                e.preventDefault()
+                await updatePeer({
+                  variables: {id, input: {isDisabled: !isDisabled}},
+                  update: cache => {
+                    const query = cache.readQuery<PeerListQuery>({
+                      query: PeerListDocument
+                    })
+
+                    if (!query) return
+
+                    cache.writeQuery({
+                      query: PeerListDocument,
+                      data: {
+                        peers: addOrUpdateOneInArray(query.peers, {
+                          ...peer,
+                          isDisabled: !isDisabled
+                        })
+                      }
+                    })
+                  }
+                })
+              }}>
+              {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
+            </Button>
+          </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
             <IconButtonTooltip caption={t('peerList.overview.delete')}>
               <IconButton
                 disabled={isPeerInfoLoading}
-                icon={<Icon icon="trash" />}
+                icon={<TrashIcon />}
                 circle
                 size="sm"
                 onClick={e => {
@@ -163,7 +201,7 @@ export function PeerList() {
               />
               <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
               <p>{peerInfoData?.peerProfile.hostURL}</p>
-              <HelpBlock>
+              <Form.HelpText>
                 <Trans i18nKey={'peerList.panels.checkOwnPeerProfileHelpBlock'}>
                   text{' '}
                   <a
@@ -172,7 +210,7 @@ export function PeerList() {
                     rel="noreferrer"
                   />
                 </Trans>
-              </HelpBlock>
+              </Form.HelpText>
             </div>
           }
           rightChildren={
@@ -180,8 +218,8 @@ export function PeerList() {
               <IconButtonLink
                 size="lg"
                 appearance="link"
-                icon={<Icon icon="cog" />}
-                circle={true}
+                icon={<CogIcon />}
+                circle
                 route={PeerInfoEditRoute.create({})}
               />
             </IconButtonTooltip>
@@ -214,9 +252,9 @@ export function PeerList() {
       </div>
 
       <Drawer
-        show={isPeerProfileEditModalOpen}
+        open={isPeerProfileEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setPeerProfileEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -235,9 +273,9 @@ export function PeerList() {
       </Drawer>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -259,9 +297,10 @@ export function PeerList() {
             onSave={() => {
               setEditModalOpen(false)
 
-              Alert.success(
-                editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
-                2000
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated')}
+                </Message>
               )
 
               dispatch({
@@ -273,7 +312,7 @@ export function PeerList() {
         )}
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('peerList.panels.deletePeer')}</Modal.Title>
         </Modal.Header>

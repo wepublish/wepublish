@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {PlaceholderInput} from '../atoms/placeholderInput'
-import {Drawer, Icon, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 
@@ -19,6 +19,7 @@ import {IframeEmbed} from './embeds/iframe'
 import {useTranslation} from 'react-i18next'
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
 import {TikTokVideoEmbed} from './embeds/tikTok'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
@@ -35,8 +36,8 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
   return (
     <>
       <Panel
-        bodyFill={true}
-        bordered={true}
+        bodyFill
+        bordered
         style={{
           height: isEmpty ? 300 : undefined,
           padding: 0,
@@ -59,7 +60,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
                 }}>
                 <IconButton
                   size={'lg'}
-                  icon={<Icon icon="pencil" />}
+                  icon={<PencilIcon />}
                   onClick={() => setEmbedDialogOpen(true)}>
                   {t('blocks.embeds.overview.editEmbed')}
                 </IconButton>
@@ -69,7 +70,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
           )}
         </PlaceholderInput>
       </Panel>
-      <Drawer size={'sm'} show={isEmbedDialogOpen} onHide={() => setEmbedDialogOpen(false)}>
+      <Drawer size={'sm'} open={isEmbedDialogOpen} onClose={() => setEmbedDialogOpen(false)}>
         <EmbedEditPanel
           value={value}
           onClose={() => setEmbedDialogOpen(false)}

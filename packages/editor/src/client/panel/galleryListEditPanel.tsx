@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import nanoid from 'nanoid'
 
-import {Button, Drawer, Form, FormGroup, ControlLabel, FormControl} from 'rsuite'
+import {Button, Drawer, Form} from 'rsuite'
 
 import {ListInput, ListValue, FieldProps} from '../atoms/listInput'
 
@@ -12,6 +12,7 @@ import {GalleryImageEdge} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {Textarea} from '../atoms/textarea'
 
 export interface GalleryListEditPanelProps {
   id?: string
@@ -40,6 +41,15 @@ export function GalleryListEditPanel({
     <>
       <Drawer.Header>
         <Drawer.Title>{t('blocks.imageGallery.panels.editGallery')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance="primary" onClick={() => onSave?.(images.map(({value}) => value))}>
+            {t('blocks.imageGallery.panels.save')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('blocks.imageGallery.panels.close')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
@@ -50,15 +60,6 @@ export function GalleryListEditPanel({
           {props => <GalleryListItem {...props} />}
         </ListInput>
       </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'primary'} onClick={() => onSave?.(images.map(({value}) => value))}>
-          {t('blocks.imageGallery.panels.save')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('blocks.imageGallery.panels.close')}
-        </Button>
-      </Drawer.Footer>
     </>
   )
 }
@@ -84,20 +85,21 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => onChange?.({...value, image: null})}
         />
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('blocks.imageGallery.panels.caption')}</ControlLabel>
-            <FormControl
+        <Form fluid>
+          <Form.Group>
+            <Form.ControlLabel>{t('blocks.imageGallery.panels.caption')}</Form.ControlLabel>
+            <Form.Control
+              name="caption"
               rows={1}
-              componentClass="textarea"
+              accepter={Textarea}
               value={caption}
-              onChange={caption => onChange({...value, caption})}
+              onChange={(caption: string) => onChange({...value, caption})}
             />
-          </FormGroup>
+          </Form.Group>
         </Form>
       </div>
 
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
@@ -107,7 +109,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
         />
       </Drawer>
       {image && (
-        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           <ImagedEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}

@@ -70,7 +70,8 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
       slug,
       name,
       token,
-      hostURL
+      hostURL,
+      isDisabled: false
     })
 
     const {_id: id, ...data} = ops[0]
@@ -79,19 +80,22 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
 
   async updatePeer(
     id: string,
-    {hostURL, name, slug, token}: UpdatePeerInput
+    {hostURL, name, slug, token, isDisabled}: UpdatePeerInput
   ): Promise<OptionalPeer> {
+    const toUpdate = {
+      modifiedAt: new Date()
+    } as Record<string, unknown>
+    if (hostURL) toUpdate.hostUrl = hostURL
+    if (name) toUpdate.name = name
+    if (slug) toUpdate.slug = slug
+    token ? (toUpdate.token = token) : (toUpdate.token = '$token')
+    if (isDisabled !== undefined) toUpdate.isDisabled = isDisabled
+
     const {value} = await this.peers.findOneAndUpdate(
       {_id: id},
       [
         {
-          $set: {
-            modifiedAt: new Date(),
-            name: {$literal: name},
-            slug: {$literal: slug},
-            hostURL: {$literal: hostURL},
-            token: token ? {$literal: token} : '$token'
-          } as any
+          $set: toUpdate
         }
       ] as any,
       {returnOriginal: false}

@@ -29,19 +29,22 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {useTranslation} from 'react-i18next'
 import {
   FlexboxGrid,
-  Icon,
   Input,
   InputGroup,
   IconButton,
   Drawer,
   Modal,
   Button,
-  Table
+  Table,
+  Pagination
 } from 'rsuite'
 
-import {DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import EditIcon from '@rsuite/icons/legacy/Edit'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 export function ImageList() {
   const {current} = useRoute()
@@ -130,7 +133,7 @@ export function ImageList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -140,7 +143,7 @@ export function ImageList() {
           minHeight={600}
           data={images}
           rowHeight={100}
-          autoHeight={true}
+          autoHeight
           loading={isLoading}
           wordWrap
           className={'displayThreeLinesOnly'}>
@@ -195,18 +198,22 @@ export function ImageList() {
               {(rowData: ImageRefFragment) => (
                 <>
                   <IconButtonTooltip caption={t('images.overview.edit')}>
-                    <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
-                      <IconButton
-                        icon={<Icon icon="edit" />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                      />
-                    </Link>
+                    <>
+                      {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref */}
+
+                      <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                        <IconButton
+                          icon={<EditIcon />}
+                          circle
+                          size="sm"
+                          style={{marginLeft: '5px'}}
+                        />
+                      </Link>
+                    </>
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('images.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -222,21 +229,29 @@ export function ImageList() {
             </Cell>
           </Column>
         </Table>
+
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
-          total={data?.images.totalCount}
-          displayLength={limit}
-          onChangeLength={limit => setLimit(limit)}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.images.totalCount ?? 0}
           activePage={activePage}
-          onChangePage={setActivePage}
+          onChangePage={page => setActivePage(page)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isUploadModalOpen}
+        open={isUploadModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setUploadModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -261,9 +276,9 @@ export function ImageList() {
         />
       </Drawer>
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -281,7 +296,7 @@ export function ImageList() {
           }}
         />
       </Drawer>
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Title>{t('images.panels.deleteImage')}</Modal.Title>
 
         <Modal.Body>

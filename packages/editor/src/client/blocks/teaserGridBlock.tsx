@@ -7,7 +7,7 @@ import {BlockProps} from '../atoms/blockList'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
 
-import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
+import {IconButton, Drawer, Panel, Avatar} from 'rsuite'
 
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
@@ -19,6 +19,9 @@ import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import FileIcon from '@rsuite/icons/legacy/File'
 
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
@@ -105,7 +108,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
           />
         ))}
       </Grid>
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
         <TeaserEditPanel
           initialTeaser={teasers[editIndex][1]!}
           onClose={() => setEditModalOpen(false)}
@@ -115,7 +118,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
           }}
         />
       </Drawer>
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <TeaserSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
@@ -147,7 +150,7 @@ export function TeaserBlock({
 }: TeaserBlockProps) {
   return (
     <Panel
-      bodyFill={true}
+      bodyFill
       style={{
         cursor: showGrabCursor ? 'grab' : '',
         height: 300,
@@ -172,21 +175,23 @@ export function TeaserBlock({
                 top: 0
               }}>
               <IconButton
-                icon={<Icon icon="file" />}
+                icon={<FileIcon />}
                 onClick={onChoose}
                 style={{
                   margin: 10
                 }}
               />
+              {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
+                <IconButton
+                  icon={<PencilIcon />}
+                  onClick={onEdit}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              ) : null}
               <IconButton
-                icon={<Icon icon="pencil" />}
-                onClick={onEdit}
-                style={{
-                  margin: 10
-                }}
-              />
-              <IconButton
-                icon={<Icon icon="trash" />}
+                icon={<TrashIcon />}
                 onClick={onRemove}
                 style={{
                   margin: 10
@@ -305,7 +310,6 @@ export function TeaserContent({
   const label = labelForTeaserStyle(style)
   const {t} = useTranslation()
   const stateJoin = states?.join(' / ')
-
   return (
     <>
       <div
@@ -331,55 +335,73 @@ export function TeaserContent({
         style={{
           bottom: '0px',
           width: '100%',
+          height: peer && peer.isDisabled === true ? '100%' : 'auto',
           padding: '10px'
         }}>
-        <div
-          style={{
-            marginBottom: 10
-          }}>
-          {preTitle && (
-            <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
-              {preTitle}
-            </Typography>
-          )}
-          <Typography variant="body2" color="white" spacing="small">
-            {title || t('articleEditor.panels.untitled')}
-          </Typography>
-          {lead && (
-            <Typography variant="subtitle1" color="white" ellipsize>
-              {lead}
-            </Typography>
-          )}
-        </div>
-        {peer && (
+        {peer && peer.isDisabled === true ? (
           <div
             style={{
+              height: '100%',
               display: 'flex',
-              marginBottom: 10
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
-            <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
+            <Typography variant="body2" color="white" spacing="small" align="center">
+              {t('articleEditor.panels.peerDisabled')}
+            </Typography>
           </div>
+        ) : (
+          <>
+            {' '}
+            <div
+              style={{
+                marginBottom: 10
+              }}>
+              {preTitle && (
+                <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
+                  {preTitle}
+                </Typography>
+              )}
+              <Typography variant="body2" color="white" spacing="small">
+                {title || t('articleEditor.panels.untitled')}
+              </Typography>
+              {lead && (
+                <Typography variant="subtitle1" color="white" ellipsize>
+                  {lead}
+                </Typography>
+              )}
+            </div>
+            {peer && (
+              <div
+                style={{
+                  display: 'flex',
+                  marginBottom: 10
+                }}>
+                <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
+              </div>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap'
+              }}>
+              <div
+                style={{
+                  flexShrink: 0,
+                  marginRight: 10
+                }}>
+                <Typography variant="subtitle1" color="gray">
+                  {t('articleEditor.panels.teaserStyle', {label})}
+                </Typography>
+              </div>
+              <div style={{flexShrink: 0}}>
+                <Typography variant="subtitle1" color="gray">
+                  {t('articleEditor.panels.status', {stateJoin})}
+                </Typography>
+              </div>
+            </div>
+          </>
         )}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap'
-          }}>
-          <div
-            style={{
-              flexShrink: 0,
-              marginRight: 10
-            }}>
-            <Typography variant="subtitle1" color="gray">
-              {t('articleEditor.panels.teaserStyle', {label})}
-            </Typography>
-          </div>
-          <div style={{flexShrink: 0}}>
-            <Typography variant="subtitle1" color="gray">
-              {t('articleEditor.panels.status', {stateJoin})}
-            </Typography>
-          </div>
-        </div>
       </Overlay>
     </>
   )

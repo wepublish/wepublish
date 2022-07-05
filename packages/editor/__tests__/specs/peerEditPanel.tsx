@@ -1,25 +1,22 @@
-import React from 'react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+import {fireEvent, render} from '@testing-library/react'
+import React from 'react'
+import {CreatePeerDocument, PeerDocument} from '../../src/client/api'
 import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
-import {mount} from 'enzyme'
-
-import {updateWrapper} from '../utils'
-import {act} from 'react-dom/test-utils'
-import {PeerDocument, CreatePeerDocument} from '../../src/client/api'
+import {actWait} from '../utils'
+import snapshotDiff from 'snapshot-diff'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Peer Edit Panel', () => {
   test('should render', async () => {
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider addTypename={false}>
         <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
 
-    const panel = wrapper.find('PeerEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should render with ID', async () => {
@@ -39,6 +36,7 @@ describe('Peer Edit Panel', () => {
                 id: 'peerId1',
                 name: 'Test Peer Name',
                 slug: 'test-peer-name',
+                isDisabled: false,
                 hostURL: 'https://test-url.ch/',
                 profile: {}
               }
@@ -47,15 +45,14 @@ describe('Peer Edit Panel', () => {
         }
       }
     ]
-    const wrapper = mount(
+    const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <PeerEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
 
-    const panel = wrapper.find('PeerEditPanel')
-    expect(panel).toMatchSnapshot()
+    expect(asFragment()).toMatchSnapshot()
   })
 
   test('should be able to generate a new peering', async () => {
@@ -97,35 +94,33 @@ describe('Peer Edit Panel', () => {
       }
     ]
 
-    const wrapper = mount(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <PeerEditPanel hostURL={'localhost:4000'} />
       </MockedProvider>
     )
-    await updateWrapper(wrapper, 100)
+    await actWait()
+    const initialRender = asFragment()
 
-    act(() => {
-      wrapper
-        .find('input[name="peerList.panels.name"]')
-        .simulate('change', {target: {value: peer.name}})
+    const nameInput = getByLabelText('peerList.panels.name*')
+    const urlInput = getByLabelText('peerList.panels.URL*')
+    const tokenInput = getByLabelText('peerList.panels.token*')
+    const saveButton = getByTestId('saveButton')
 
-      wrapper
-        .find('input[name="peerList.panels.URL"]')
-        .simulate('change', {target: {value: peer.hostURL}})
-
-      wrapper
-        .find('input[name="peerList.panels.token"]')
-        .simulate('change', {target: {value: peer.token}})
+    fireEvent.change(nameInput, {
+      target: {value: peer.name}
     })
 
-    await act(async () => {
-      wrapper
-        .find('button[className="rs-btn rs-btn-primary fetchButton rs-btn-disabled"]')
-        .simulate('click')
+    fireEvent.change(urlInput, {
+      target: {value: peer.hostURL}
     })
-    await updateWrapper(wrapper, 100)
 
-    const panel = wrapper.find('PeerEditPanel')
-    expect(panel).toMatchSnapshot()
+    fireEvent.change(tokenInput, {
+      target: {value: peer.token}
+    })
+
+    fireEvent.click(saveButton)
+
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
 })

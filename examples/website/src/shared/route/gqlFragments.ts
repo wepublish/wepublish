@@ -199,6 +199,7 @@ export const peerMetaDataFragment = gql`
   fragment PeerMetaData on Peer {
     id
     slug
+    isDisabled
     profile {
       name
       websiteURL

@@ -53,6 +53,12 @@ query User($id: ID!) {
     }
 }
 
+query Me {
+    me {
+        ...FullUser
+    }
+}
+
 
 mutation CreateUser($input: UserInput!, $password: String!) {
     createUser(input: $input, password: $password) {

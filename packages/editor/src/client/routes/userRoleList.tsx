@@ -16,18 +16,10 @@ import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Drawer,
-  Modal,
-  Button
-} from 'rsuite'
+import {FlexboxGrid, IconButton, Input, InputGroup, Table, Drawer, Modal, Button} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
@@ -96,13 +88,13 @@ export function UserRoleList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
+      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>
@@ -123,7 +115,7 @@ export function UserRoleList() {
             {(rowData: FullUserRoleFragment) => (
               <IconButtonTooltip caption={t('userRoles.overview.delete')}>
                 <IconButton
-                  icon={<Icon icon="trash" />}
+                  icon={<TrashIcon />}
                   disabled={rowData.systemRole}
                   circle
                   size="sm"
@@ -140,8 +132,8 @@ export function UserRoleList() {
       </Table>
 
       <Drawer
-        show={isEditModalOpen}
-        onHide={() => {
+        open={isEditModalOpen}
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -168,7 +160,7 @@ export function UserRoleList() {
           }}
         />
       </Drawer>
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
         </Modal.Header>

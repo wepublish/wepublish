@@ -1,21 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  HelpBlock,
-  Icon,
-  Input,
-  Message,
-  Nav,
-  Panel,
-  TagPicker,
-  Toggle
-} from 'rsuite'
+import {Button, Drawer, Form, Input, Message, Nav, Panel, TagPicker, Toggle} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -26,6 +11,10 @@ import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {generateID} from '../utility'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
+import ListIcon from '@rsuite/icons/legacy/List'
+import {Textarea} from '../atoms/textarea'
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -110,32 +99,38 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.SocialMedia:
         return (
           <Panel>
-            <Form fluid={true}>
-              <FormGroup>
-                <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</ControlLabel>
-                <FormControl
+            <Form fluid>
+              <Form.Group>
+                <Message showIcon type="info">
+                  {t('pageEditor.panels.metadataInfo')}
+                </Message>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
+                <Form.Control
+                  name="social-media-title"
                   value={socialMediaTitle}
-                  onChange={socialMediaTitle => {
+                  onChange={(socialMediaTitle: string) => {
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.socialMediaDescription')}</ControlLabel>
-                <FormControl
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>
+                  {t('pageEditor.panels.socialMediaDescription')}
+                </Form.ControlLabel>
+                <Form.Control
+                  name="social-media-description"
                   rows={5}
-                  componentClass="textarea"
+                  accepter={Textarea}
                   value={socialMediaDescription}
-                  onChange={socialMediaDescription => {
+                  onChange={(socialMediaDescription: string) => {
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.socialMediaImage')}</ControlLabel>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.socialMediaImage')}</Form.ControlLabel>
                 <ChooseEditImage
                   header={''}
                   image={socialMediaImage}
@@ -148,44 +143,54 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   }}
                   removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
                 />
-              </FormGroup>
+              </Form.Group>
             </Form>
           </Panel>
         )
       case MetaDataType.General:
         return (
           <Panel>
-            <Form fluid={true}>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
-                <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
-                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
-                <HelpBlock>{t('pageEditor.panels.titleHelpBlock')}</HelpBlock>
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
-                <FormControl
-                  componentClass="textarea"
-                  value={description}
-                  onChange={description => onChange?.({...value, description})}
+            <Form fluid>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
+                <Form.Control
+                  name="slug"
+                  value={slug}
+                  onChange={(slug: string) => onChange?.({...value, slug})}
                 />
-                <HelpBlock>{t('pageEditor.panels.descriptionHelpBlock')}</HelpBlock>
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
+                <Form.Control
+                  name="title"
+                  value={title}
+                  onChange={(title: string) => onChange?.({...value, title})}
+                />
+                <Form.HelpText>{t('pageEditor.panels.titleHelpBlock')}</Form.HelpText>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
+                <Form.Control
+                  name="description"
+                  accepter={Textarea}
+                  value={description}
+                  onChange={(description: string) => onChange?.({...value, description})}
+                />
+                <Form.HelpText>{t('pageEditor.panels.descriptionHelpBlock')}</Form.HelpText>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
                 <TagPicker
+                  virtualized
                   style={{width: '100%'}}
-                  creatable={true}
+                  creatable
                   value={tags}
                   data={tags.map(tag => ({label: tag, value: tag}))}
                   onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
                 />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.postImage')}</ControlLabel>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.postImage')}</Form.ControlLabel>
                 <ChooseEditImage
                   header={''}
                   image={image}
@@ -198,19 +203,21 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   }}
                   removeImage={() => onChange?.({...value, image: undefined})}
                 />
-              </FormGroup>
+              </Form.Group>
             </Form>
           </Panel>
         )
       case MetaDataType.Properties:
         return (
           <Panel>
-            <Form fluid={true}>
-              <FormGroup>
-                <Message showIcon type="info" description={t('pageEditor.panels.propertiesInfo')} />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('pageEditor.panels.properties')}</ControlLabel>
+            <Form fluid>
+              <Form.Group>
+                <Message showIcon type="info">
+                  {t('pageEditor.panels.propertiesInfo')}
+                </Message>
+              </Form.Group>
+              <Form.Group>
+                <Form.ControlLabel>{t('pageEditor.panels.properties')}</Form.ControlLabel>
                 <ListInput
                   value={metaDataProperties}
                   onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
@@ -238,20 +245,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                           onChange({...value, value: propertyValue})
                         }}
                       />
-                      <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                      <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
                         <Toggle
                           style={{maxWidth: '70px', minWidth: '70px'}}
-                          value={value.public}
                           checkedChildren={t('pageEditor.panels.public')}
                           unCheckedChildren={t('pageEditor.panels.private')}
                           checked={value.public}
                           onChange={isPublic => onChange({...value, public: isPublic})}
                         />
-                      </FormGroup>
+                      </Form.Group>
                     </div>
                   )}
                 </ListInput>
-              </FormGroup>
+              </Form.Group>
             </Form>
           </Panel>
         )
@@ -264,6 +270,12 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     <>
       <Drawer.Header>
         <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
+
+        <Drawer.Actions>
+          <Button appearance="primary" onClick={() => onClose?.()}>
+            {t('pageEditor.panels.saveAndClose')}
+          </Button>
+        </Drawer.Actions>
       </Drawer.Header>
 
       <Drawer.Body>
@@ -272,13 +284,13 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           activeKey={activeKey}
           onSelect={activeKey => setActiveKey(activeKey)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={MetaDataType.General} icon={<Icon icon="cog" />}>
+          <Nav.Item eventKey={MetaDataType.General} icon={<CogIcon />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
+          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<ShareAltIcon />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.Properties} icon={<Icon icon="list" />}>
+          <Nav.Item eventKey={MetaDataType.Properties} icon={<ListIcon />}>
             {t('pageEditor.panels.properties')}
           </Nav.Item>
         </Nav>
@@ -286,13 +298,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
         {currentContent()}
       </Drawer.Body>
 
-      <Drawer.Footer>
-        <Button appearance={'primary'} onClick={() => onClose?.()}>
-          {t('pageEditor.panels.saveAndClose')}
-        </Button>
-      </Drawer.Footer>
-
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -303,9 +309,9 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       </Drawer>
       {(value.image || value.socialMediaImage) && (
         <Drawer
-          show={isEditModalOpen}
+          open={isEditModalOpen}
           size={'sm'}
-          onHide={() => {
+          onClose={() => {
             setEditModalOpen(false)
           }}>
           <ImagedEditPanel

@@ -19,7 +19,6 @@ import {RouteActionType} from '@wepublish/karma.run-react'
 import {useTranslation} from 'react-i18next'
 import {
   FlexboxGrid,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -27,12 +26,19 @@ import {
   Avatar,
   Drawer,
   Modal,
-  Button
+  Button,
+  Pagination
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder
+} from '../utility'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 
-const {Column, HeaderCell, Cell, Pagination} = Table
+const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {
@@ -131,7 +137,7 @@ export function AuthorList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -144,18 +150,18 @@ export function AuthorList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={authors}
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={100} align="left" resizable>
-            <HeaderCell></HeaderCell>
+            <HeaderCell>{}</HeaderCell>
             <Cell style={{padding: 2}}>
               {(rowData: FullAuthorFragment) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
@@ -189,7 +195,7 @@ export function AuthorList() {
                 <>
                   <IconButtonTooltip caption={t('authors.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -206,20 +212,27 @@ export function AuthorList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.authors.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.authors.totalCount}
-          onChangePage={(newPage: number) => setPage(newPage)}
-          onChangeLength={(limit: number) => setLimit(limit)}
+          onChangePage={page => setPage(page)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Drawer
-        show={isEditModalOpen}
+        open={isEditModalOpen}
         size={'sm'}
-        onHide={() => {
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
@@ -245,7 +258,7 @@ export function AuthorList() {
         />
       </Drawer>
 
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('authors.overview.deleteAuthor')}</Modal.Title>
         </Modal.Header>

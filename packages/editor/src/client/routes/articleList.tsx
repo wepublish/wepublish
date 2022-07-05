@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
+import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink, useRouteDispatch} from '../route'
 
 import {
   useArticleListQuery,
@@ -23,16 +23,28 @@ import {
   FlexboxGrid,
   Input,
   InputGroup,
-  Icon,
   IconButton,
   Table,
   Modal,
   Button,
-  Message
+  Message,
+  Pagination
 } from 'rsuite'
-import {DEFAULT_TABLE_PAGE_SIZES, StateColor, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  StateColor,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
-const {Column, HeaderCell, Cell, Pagination} = Table
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import CopyIcon from '@rsuite/icons/legacy/Copy'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import {RouteActionType} from '@wepublish/karma.run-react'
+
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -71,6 +83,8 @@ export function ArticleList() {
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
+  const dispatch = useRouteDispatch()
+
   const articleListVariables = {
     filter: filter || undefined,
     first: limit,
@@ -106,6 +120,7 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
+
   return (
     <>
       <FlexboxGrid>
@@ -124,7 +139,7 @@ export function ArticleList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -138,7 +153,7 @@ export function ArticleList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={articles}
@@ -146,7 +161,7 @@ export function ArticleList() {
           sortType={sortOrder}
           rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
           <Column width={210} align="left" resizable sortable>
@@ -231,7 +246,7 @@ export function ArticleList() {
                 <>
                   <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
                     <IconButton
-                      icon={<Icon icon="btn-off" />}
+                      icon={<BtnOffIcon />}
                       circle
                       disabled={!(rowData.published || rowData.pending)}
                       size="sm"
@@ -245,7 +260,7 @@ export function ArticleList() {
 
                   <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
                     <IconButton
-                      icon={<Icon icon="trash" />}
+                      icon={<TrashIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -258,7 +273,7 @@ export function ArticleList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
                     <IconButton
-                      icon={<Icon icon="copy" />}
+                      icon={<CopyIcon />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}
@@ -271,7 +286,7 @@ export function ArticleList() {
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
                     <IconButton
-                      icon={<Icon icon="eye" />}
+                      icon={<EyeIcon />}
                       circle
                       disabled={!rowData.draft}
                       size="sm"
@@ -287,21 +302,29 @@ export function ArticleList() {
             </Cell>
           </Column>
         </Table>
+
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.articles.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={data?.articles.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
 
       <Modal
-        show={isArticlePreviewLinkOpen}
-        width={'sm'}
-        onHide={() => setArticlePreviewLinkOpen(false)}>
+        open={isArticlePreviewLinkOpen}
+        size={'sm'}
+        onClose={() => setArticlePreviewLinkOpen(false)}>
         {currentArticle && (
           <ArticlePreviewLinkPanel
             props={{id: currentArticle.id}}
@@ -311,9 +334,9 @@ export function ArticleList() {
       </Modal>
 
       <Modal
-        show={isConfirmationDialogOpen}
-        width={'sm'}
-        onHide={() => setConfirmationDialogOpen(false)}>
+        open={isConfirmationDialogOpen}
+        size={'sm'}
+        onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
@@ -359,12 +382,9 @@ export function ArticleList() {
             )}
           </DescriptionList>
 
-          <Message
-            showIcon
-            type="warning"
-            title={t('articleEditor.overview.warningLabel')}
-            description={t('articleEditor.overview.unpublishWarningMessage')}
-          />
+          <Message showIcon type="warning" title={t('articleEditor.overview.warningLabel')}>
+            {t('articleEditor.overview.unpublishWarningMessage')}
+          </Message>
         </Modal.Body>
 
         <Modal.Footer>
@@ -413,28 +433,30 @@ export function ArticleList() {
                   duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
+                      refetch(articleListVariables)
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         variables: articleListVariables
                       })
 
                       if (!query) return
-
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
                           articles: {
-                            ...query.articles,
-                            nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id
-                            )
+                            ...query.articles
                           }
                         },
                         variables: articleListVariables
                       })
                     }
                   }).then(output => {
-                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) {
+                      dispatch({
+                        type: RouteActionType.ReplaceRoute,
+                        route: ArticleEditRoute.create({id: output.data?.duplicateArticle.id})
+                      })
+                    }
                   })
                   break
               }

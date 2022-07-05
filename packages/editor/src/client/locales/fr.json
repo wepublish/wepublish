@@ -446,23 +446,24 @@
         "unknown": "Inconnu",
         "deleted": "Utilisateur supprimé",
         "subscription": "Abonnement",
-        "tempUser": "(Utilisateur temporaire) - ",
         "email": "Email",
-        "memberPlan": "plan de membre"
+        "memberPlan": "plan de membre",
+        "downloadCsv": "Télécharger CSV"
       },
       "filter": {
         "deactivationReason": "Motif désactivation",
         "reasonNone": "Sans",
         "reasonUserSelfDeactivated": "Par l'utilisateur",
-        "reasonInvoiceNotPaid": "Facture impayée"
+        "reasonInvoiceNotPaid": "Facture impayée",
+        "reset": "Réinitialiser filtre",
+        "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
       "panels": {
         "deleteSubscription": "Supprimer l'abonnement ?",
         "name": "Nom",
         "unknown": "Inconnu",
         "cancel": "Annuler",
-        "confirm": "Confirmer",
-        "tempUserWarning": "Cet abonnement a un(e) utilisateur(trice) temporaire qui n'a pas terminé son enregistrement. Si tu supprimes l'abonnement, l'utilisateur(trice) temporaire sera également supprimé(e)."
+        "confirm": "Confirmer"
       }
     },
     "userList": {
@@ -750,8 +751,7 @@
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
-      "selectUser": "Choisir l'utilisateur",
-      "tempUserTitle": "Utilisateur temporaire"
+      "selectUser": "Choisir l'utilisateur"
     },
     "navbar": {
       "languageSwitch": {
@@ -799,7 +799,6 @@
         "editNavigation": "Modifier la navigation",
         "key": "Key",
         "links": "Liens",
-        "linkType": "Type de lien",
         "name": "Nom",
         "page": "Page",
         "save": "Sauvegarder",
@@ -881,6 +880,26 @@
     "save": "Sauvegarder",
     "yes": "Oui",
     "no": "Non",
-    "untitled": "Sans Titre"
+    "untitled": "Sans Titre",
+    "invoice": {
+      "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
+      "invoiceNo": "Facture n",
+      "total": "Montant facturé",
+      "paidAt": "Payée le",
+      "payManually": "Payer manuellement",
+      "areYouSure": "Tu es sûr?",
+      "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été reçu par l'utilisateur. Tu devrais discuter de ton intention avec le comptable.",
+      "userNotLoaded": "Erreur inattendue : tes données d'utilisateur n'ont pas pu être chargées.",
+      "unpaid": "(non payé)",
+      "seeInvoiceHistory": "Voir historique des factures",
+      "panel": {
+        "invoiceHistory": "Historique de facturation",
+        "missingSubscriptionId": "Erreur inattendue : le subscriptionId n'a pas pu être trouvé.",
+        "noInvoices": "Pas de factures."
+      }
+    },
+    "currency": {
+      "chf": "chf"
+    }
   }
 }

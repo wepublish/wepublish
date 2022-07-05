@@ -9,20 +9,26 @@ import {
 } from '../api'
 
 import {
-  Alert,
+  toaster,
+  Message,
   Avatar,
   FlexboxGrid,
-  Icon,
   Input,
   InputGroup,
   Popover,
   SelectPicker,
   Table,
-  Whisper
+  Whisper,
+  Pagination
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {Link} from '../route'
-import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  DEFAULT_MAX_TABLE_PAGES
+} from '../utility'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 
 export function PeerArticleList() {
   const [page, setPage] = useState(1)
@@ -90,11 +96,15 @@ export function PeerArticleList() {
     refetch(listVariables)
   }, [filter, page, limit, sortOrder, sortField, peerFilter])
 
-  const {Column, HeaderCell, Cell, Pagination} = Table
+  const {Column, HeaderCell, Cell} = Table
 
   useEffect(() => {
     if (peerArticleListError) {
-      Alert.error(peerArticleListError!.message, 0)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {peerArticleListError!.message}
+        </Message>
+      )
     }
   }, [peerArticleListError])
 
@@ -109,22 +119,24 @@ export function PeerArticleList() {
           <InputGroup>
             <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
             <InputGroup.Addon>
-              <Icon icon="search" />
+              <SearchIcon />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
       <SelectPicker
+        virtualized
         data={allPeers.map(peer => ({
           value: peer.name,
           label: peer.profile?.name
         }))}
         style={{width: 150, marginTop: 10}}
         placeholder={t('peerArticles.filterByPeer')}
-        searchable={true}
+        searchable
         onSelect={value => setPeerFilter(value)}
-        onClean={() => setPeerFilter('')}></SelectPicker>
+        onClean={() => setPeerFilter('')}
+      />
 
       <div
         style={{
@@ -134,14 +146,14 @@ export function PeerArticleList() {
         }}>
         <Table
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
+            setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
-          data={peerArticles}
+          data={peerArticles as any[]}
           sortColumn={sortField}
           sortType={sortOrder}>
           <Column width={200} align="left" resizable>
@@ -253,13 +265,20 @@ export function PeerArticleList() {
         </Table>
 
         <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={peerArticleListData?.peerArticles?.totalCount ?? 0}
           activePage={page}
-          displayLength={limit}
-          total={peerArticleListData?.peerArticles.totalCount}
           onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
+          onChangeLimit={limit => setLimit(limit)}
         />
       </div>
     </>
