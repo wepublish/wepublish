@@ -1,35 +1,13 @@
 import React, {useEffect, useState} from 'react'
 
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  UserCreateRoute,
-  UserEditViewRoute,
-  UserListRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
+import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table,
-  Pagination
-} from 'rsuite'
+import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table, Pagination} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -58,17 +36,6 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 export function UserList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
-
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserEditView || current?.type === RouteType.UserCreate
-  )
-
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserEditView ? current.params.id : undefined
-  )
-
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
@@ -105,18 +72,6 @@ export function UserList() {
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (current?.type === RouteType.UserCreate) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (current?.type === RouteType.UserEditView) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
-    }
-  }, [current])
 
   useEffect(() => {
     if (data?.users?.nodes) {
@@ -288,36 +243,7 @@ export function UserList() {
         />
       </div>
 
-      <Drawer
-        open={isEditModalOpen}
-        size={'sm'}
-        onClose={() => {
-          setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({}, current ?? undefined)
-          })
-        }}>
-        <UserEditPanel
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
-
+      {/* reset user password */}
       {currentUser?.id && (
         <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
           <Modal.Header>
@@ -340,6 +266,7 @@ export function UserList() {
         </Modal>
       )}
 
+      {/* delete user modal */}
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>

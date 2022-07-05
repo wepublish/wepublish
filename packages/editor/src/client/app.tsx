@@ -71,8 +71,8 @@ export function contentForRoute(route: Route) {
       return <AuthorList />
 
     case RouteType.UserList:
-    case RouteType.UserCreate:
       return <UserList />
+    case RouteType.UserCreate:
     case RouteType.UserEditView:
       return <UserEditView />
 

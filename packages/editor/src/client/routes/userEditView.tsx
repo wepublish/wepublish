@@ -65,7 +65,6 @@ export function UserEditView() {
    */
   useEffect(() => {
     if (data?.user) {
-      console.log('use effect setname', data.user.name)
       setName(data.user.name)
       setPreferredName(data.user.preferredName ?? undefined)
       setFirstName(data.user.firstName ?? undefined)
