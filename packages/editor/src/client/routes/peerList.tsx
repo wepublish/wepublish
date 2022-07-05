@@ -219,7 +219,7 @@ export function PeerList() {
                 size="lg"
                 appearance="link"
                 icon={<CogIcon />}
-                circle={true}
+                circle
                 route={PeerInfoEditRoute.create({})}
               />
             </IconButtonTooltip>

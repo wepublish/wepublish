@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "3.0.0",
+  "version": "3.2.0",
   "description": "We.publish media service",
   "keywords": [
     "images",
@@ -45,7 +45,7 @@
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
     "ts-jest": "^26.3.0",
-    "typescript": "^3.8.3"
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "@wepublish/api": "*"

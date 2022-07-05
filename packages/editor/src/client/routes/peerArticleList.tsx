@@ -140,7 +140,7 @@ export function PeerArticleList() {
         }))}
         style={{width: 150, marginTop: 10}}
         placeholder={t('peerArticles.filterByPeer')}
-        searchable={true}
+        searchable
         onSelect={value => setPeerFilter(value)}
         onClean={() => setPeerFilter('')}
       />
@@ -157,7 +157,7 @@ export function PeerArticleList() {
             setSortField(sortColumn)
           }}
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={peerArticles as any[]}
