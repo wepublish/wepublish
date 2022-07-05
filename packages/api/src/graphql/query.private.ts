@@ -893,7 +893,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         }
       }
     },
-
+    // TODO
     articlePreviewLink: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
