@@ -33,21 +33,21 @@ export const GraphQLSettingName = new GraphQLEnumType({
   }
 })
 
+export const GraphQLAllowedSettingVals = new GraphQLObjectType({
+  name: 'AllowedSettingVals',
+  fields: {
+    stringChoice: {type: GraphQLList(GraphQLString)},
+    boolChoice: {type: GraphQLBoolean}
+  }
+})
+
 export const GraphQLSettingRestriction = new GraphQLObjectType({
   name: 'SettingRestriction',
   fields: {
     maxValue: {type: GraphQLInt},
     minValue: {type: GraphQLInt},
     inputLength: {type: GraphQLInt},
-    allowedValues: {type: GraphQLList(GraphQLString)}
-  }
-})
-
-export const GraphQLAllowedSettingVals = new GraphQLObjectType({
-  name: 'AllowedSettingVals',
-  fields: {
-    stringChoice: {type: GraphQLList(GraphQLString)},
-    boolChoice: {type: GraphQLBoolean}
+    allowedValues: {type: GraphQLAllowedSettingVals}
   }
 })
 

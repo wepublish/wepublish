@@ -27,6 +27,12 @@ export type Scalars = {
   Upload: File;
 };
 
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
+  boolChoice?: Maybe<Scalars['Boolean']>;
+};
+
 export type Article = {
   __typename?: 'Article';
   id: Scalars['ID'];
@@ -1751,7 +1757,7 @@ export type SettingRestriction = {
   maxValue?: Maybe<Scalars['Int']>;
   minValue?: Maybe<Scalars['Int']>;
   inputLength?: Maybe<Scalars['Int']>;
-  allowedValues?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedValues?: Maybe<AllowedSettingVals>;
 };
 
 
@@ -3652,7 +3658,7 @@ export type FullSettingFragment = (
   & Pick<Setting, 'id' | 'name' | 'value'>
   & { settingRestriction?: Maybe<(
     { __typename?: 'SettingRestriction' }
-    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
+    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
   )> }
 );
 
@@ -3666,7 +3672,11 @@ export type SettingListQuery = (
     & Pick<Setting, 'id' | 'name' | 'value'>
     & { settingRestriction?: Maybe<(
       { __typename?: 'SettingRestriction' }
-      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength' | 'allowedValues'>
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+      & { allowedValues?: Maybe<(
+        { __typename?: 'AllowedSettingVals' }
+        & Pick<AllowedSettingVals, 'stringChoice' | 'boolChoice'>
+      )> }
     )> }
   )> }
 );
@@ -4599,7 +4609,6 @@ export const FullSettingFragmentDoc = gql`
     maxValue
     minValue
     inputLength
-    allowedValues
   }
 }
     `;
@@ -7073,7 +7082,10 @@ export const SettingListDocument = gql`
       maxValue
       minValue
       inputLength
-      allowedValues
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
     }
   }
 }

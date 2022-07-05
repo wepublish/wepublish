@@ -456,8 +456,8 @@ Object {
                 },
                 Object {
                   "deprecated": false,
-                  "description": "Allows to update a setting",
-                  "id": "CAN_UPDATE_SETTING",
+                  "description": "Allows to update settings",
+                  "id": "CAN_UPDATE_SETTINGS",
                 },
               ],
               "systemRole": true,
