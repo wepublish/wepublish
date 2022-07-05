@@ -507,6 +507,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const updatedSubscription = await dbAdapter.subscription.updateSubscription({id, input})
         if (!updatedSubscription) throw new NotFound('subscription', id)
 
+        // cancel open invoices if subscription is deactivated
+        if (input.deactivation !== null) {
+          await memberContext.cancelInvoicesForSubscription(id)
+        }
+
         return await memberContext.handleSubscriptionChange({
           subscription: updatedSubscription
         })

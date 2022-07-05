@@ -824,6 +824,21 @@ export class MemberContext implements MemberContext {
     })
   }
 
+  async cancelInvoicesForSubscription(subscriptionID: string) {
+    // Cancel invoices when subscription is canceled
+    const invoices = await this.dbAdapter.invoice.getInvoicesBySubscriptionID(subscriptionID)
+    for (const invoice of invoices) {
+      if (!invoice || invoice.paidAt !== null || invoice.canceledAt !== null) continue
+      await this.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          canceledAt: new Date()
+        }
+      })
+    }
+  }
+
   async deactivateSubscriptionForUser({
     subscriptionID,
     deactivationDate,
@@ -834,6 +849,8 @@ export class MemberContext implements MemberContext {
       logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
     }
+
+    await this.cancelInvoicesForSubscription(subscriptionID)
 
     await this.dbAdapter.subscription.updateSubscription({
       id: subscriptionID,

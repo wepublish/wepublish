@@ -619,6 +619,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
 
+        // cancel open invoices if subscription is deactivated
+        if (input.deactivation !== null) {
+          await memberContext.cancelInvoicesForSubscription(id)
+        }
+
         return await memberContext.handleSubscriptionChange({
           subscription: updateSubscription
         })
