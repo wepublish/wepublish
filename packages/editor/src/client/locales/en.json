@@ -925,7 +925,17 @@
       }
     },
     "userEditView": {
-      "loadingUser": "Loading user"
+      "loadingUser": "Loading user",
+      "userRoles": "User roles",
+      "passwordHeader": "Password",
+      "subscriptionsHeader": "Subscriptions",
+      "successfullyUpdatedUser": "User successfully updated",
+      "errorOnUpdate": "Error while updating the user: {{error}}",
+      "successfullyCreatedUser": "User successfully created",
+      "errorCreatingUser": "User could not be created. Unexpected error: {{error}}"
+    },
+    "createOrUpdateUserPassword": {
+      "unexpectedErrorNoUserFound": "Unexpected Error: no user found"
     },
     "userRoles": {
       "overview": {

@@ -1,5 +1,18 @@
 import React, {useEffect, useState} from 'react'
-import {Button, CheckPicker, Col, Form, Grid, Loader, Panel, Row, Schema, Toggle} from 'rsuite'
+import {
+  Button,
+  CheckPicker,
+  Col,
+  Form,
+  Grid,
+  Loader,
+  Message,
+  Panel,
+  Row,
+  Schema,
+  toaster,
+  Toggle
+} from 'rsuite'
 import {
   FullUserRoleFragment,
   useCreateUserMutation,
@@ -29,14 +42,10 @@ export function UserEditView() {
   const [address, setAddress] = useState<UserAddress | null>(null)
 
   // getting user id from url param
-  const [id, setId] = useState<string | undefined>(
+  const [id] = useState<string | undefined>(
     current?.type === RouteType.UserEditView ? current.params.id : undefined
   )
-  const {
-    data: userRoleData,
-    loading: isUserRoleLoading,
-    error: loadUserRoleError
-  } = useUserRoleListQuery({
+  const {data: userRoleData, loading: isUserRoleLoading} = useUserRoleListQuery({
     fetchPolicy: 'network-only',
     variables: {
       first: 200
@@ -80,8 +89,8 @@ export function UserEditView() {
     }
   }, [userRoleData?.userRoles])
 
-  const [createUser, {loading: isCreating, error: createError}] = useCreateUserMutation()
-  const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
+  const [createUser, {loading: isCreating}] = useCreateUserMutation()
+  const [updateUser, {loading: isUpdating}] = useUpdateUserMutation()
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
@@ -136,50 +145,76 @@ export function UserEditView() {
    */
   async function createOrUpdateUser() {
     if (id && data?.user) {
-      const {data: updateData} = await updateUser({
-        variables: {
-          id,
-          input: {
-            name,
-            firstName,
-            preferredName,
-            email,
-            emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
-            active,
-            properties: data.user.properties.map(({value, key, public: publicValue}) => ({
-              value,
-              key,
-              public: publicValue
-            })),
-            roleIDs: roles.map(role => role.id),
-            address: {
-              company: address?.company ? address.company : '',
-              streetAddress: address?.streetAddress ? address.streetAddress : '',
-              streetAddress2: address?.streetAddress2 ? address.streetAddress2 : '',
-              zipCode: address?.zipCode ? address.zipCode : '',
-              city: address?.city ? address.city : '',
-              country: address?.country ? address.country : ''
+      try {
+        await updateUser({
+          variables: {
+            id,
+            input: {
+              name,
+              firstName,
+              preferredName,
+              email,
+              emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
+              active,
+              properties: data.user.properties.map(({value, key, public: publicValue}) => ({
+                value,
+                key,
+                public: publicValue
+              })),
+              roleIDs: roles.map(role => role.id),
+              address: {
+                company: address?.company ? address.company : '',
+                streetAddress: address?.streetAddress ? address.streetAddress : '',
+                streetAddress2: address?.streetAddress2 ? address.streetAddress2 : '',
+                zipCode: address?.zipCode ? address.zipCode : '',
+                city: address?.city ? address.city : '',
+                country: address?.country ? address.country : ''
+              }
             }
           }
-        }
-      })
+        })
+        toaster.push(
+          <Message type="success" showIcon closable duration={2000}>
+            {t('userEditView.successfullyUpdatedUser')}
+          </Message>
+        )
+      } catch (e) {
+        toaster.push(
+          <Message type="error" showIcon closable duration={2000}>
+            {t('userEditView.errorOnUpdate', {error: e})}
+          </Message>
+        )
+      }
     } else {
-      const {data: createData} = await createUser({
-        variables: {
-          input: {
-            name,
-            firstName,
-            preferredName,
-            email,
-            emailVerifiedAt: null,
-            active,
-            properties: [],
-            roleIDs: roles.map(role => role.id),
-            address
-          },
-          password
-        }
-      })
+      try {
+        await createUser({
+          variables: {
+            input: {
+              name,
+              firstName,
+              preferredName,
+              email,
+              emailVerifiedAt: null,
+              active,
+              properties: [],
+              roleIDs: roles.map(role => role.id),
+              address
+            },
+            password
+          }
+        })
+        toaster.push(
+          <Message type="success" showIcon closable duration={2000}>
+            {t('userEditView.successfullyCreatedUser')}
+          </Message>
+        )
+      } catch (e) {
+        toaster.push(
+          <Message type="error" showIcon closable duration={2000}>
+            {t('userEditView.errorCreatingUser', {error: e})}
+          </Message>
+        )
+      }
     }
   }
 
@@ -206,33 +241,33 @@ export function UserEditView() {
 
   return (
     <>
-      {/* heading */}
-      <Grid style={{width: '100%', paddingBottom: '20px'}}>
-        <Row>
-          {/* title */}
-          <Col xs={12}>
-            <Row>
-              <Col xs={16}>
-                <h2>{titleView()}</h2>
-              </Col>
-            </Row>
-          </Col>
-          {/* actions */}
-          <Col xs={12} style={{textAlign: 'end'}}>
-            {actionsView()}
-          </Col>
-        </Row>
-      </Grid>
-      {/* user form */}
-      <Grid style={{width: '100%'}}>
-        <Row gutter={10}>
-          <Col xs={12}>
-            <Grid fluid>
-              <Form
-                onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
-                fluid
-                model={validationModel}
-                formValue={{name: name, email, password}}>
+      <Form
+        onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
+        fluid
+        model={validationModel}
+        formValue={{name: name, email, password}}>
+        {/* heading */}
+        <Grid style={{width: '100%', paddingBottom: '20px'}}>
+          <Row>
+            {/* title */}
+            <Col xs={12}>
+              <Row>
+                <Col xs={16}>
+                  <h2>{titleView()}</h2>
+                </Col>
+              </Row>
+            </Col>
+            {/* actions */}
+            <Col xs={12} style={{textAlign: 'end'}}>
+              {actionsView()}
+            </Col>
+          </Row>
+        </Grid>
+        {/* user form */}
+        <Grid style={{width: '100%'}}>
+          <Row gutter={10}>
+            <Col xs={12}>
+              <Grid fluid>
                 {/* general user data */}
                 <Panel bordered header={t('User data')}>
                   <Row gutter={10}>
@@ -253,9 +288,10 @@ export function UserEditView() {
                         <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
                         <Form.Control
                           name="firstName"
-                          value={data?.user?.firstName}
+                          value={firstName}
                           disabled={isDisabled}
                           onChange={(value: string) => {
+                            console.log('hallo change', value)
                             setFirstName(value)
                           }}
                         />
@@ -388,7 +424,7 @@ export function UserEditView() {
                   </Row>
                 </Panel>
                 {/* roles */}
-                <Panel bordered header={'User roles'} style={{marginTop: '20px'}}>
+                <Panel bordered header={t('userEditView.userRoles')} style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group>
@@ -410,32 +446,33 @@ export function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
-              </Form>
-              {/* password */}
-              <Panel bordered header={'Password'} style={{marginTop: '20px'}}>
-                <Row gutter={10}>
-                  <Col xs={24}>
-                    <CreateOrUpdateUserPassword
-                      userId={id}
-                      password={password}
-                      setPassword={setPassword}
-                      isDisabled={isDisabled}
-                    />
-                  </Col>
-                </Row>
-              </Panel>
-            </Grid>
-          </Col>
-          {/* subscriptions */}
-          <Col xs={12}>
-            <Grid fluid>
-              <Panel bordered header={'Subscriptions'}>
-                Todo
-              </Panel>
-            </Grid>
-          </Col>
-        </Row>
-      </Grid>
+                {/* password */}
+                <Panel
+                  bordered
+                  header={t('userEditView.passwordHeader')}
+                  style={{marginTop: '20px'}}>
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <CreateOrUpdateUserPassword
+                        user={data?.user}
+                        password={password}
+                        setPassword={setPassword}
+                        isDisabled={isDisabled}
+                      />
+                    </Col>
+                  </Row>
+                </Panel>
+              </Grid>
+            </Col>
+            {/* subscriptions */}
+            <Col xs={12}>
+              <Grid fluid>
+                <Panel bordered header={t('userEditView.subscriptionsHeader')}></Panel>
+              </Grid>
+            </Col>
+          </Row>
+        </Grid>
+      </Form>
     </>
   )
 }
