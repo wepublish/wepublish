@@ -45,6 +45,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
+  console.log('filter: ', filter)
+
   const {
     data: peerArticleListData,
     fetchMore: fetchMorePeerArticles,

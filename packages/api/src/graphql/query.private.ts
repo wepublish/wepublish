@@ -625,6 +625,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id}, {authenticate, loaders}) {
         const {roles} = authenticate()
 
+        console.log('article')
+
         const canGetArticle = isAuthorised(CanGetArticle, roles)
         const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
         if (canGetArticle || canGetSharedArticle) {
@@ -659,7 +661,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
-        console.log(filter)
+        console.log('filter=====>', filter)
         const canGetArticles = isAuthorised(CanGetArticles, roles)
         const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
 
@@ -684,6 +686,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
       resolve(root, {peerID, id}, context, info) {
+        console.log('hello')
         const {authenticate} = context
         const {roles} = authenticate()
 

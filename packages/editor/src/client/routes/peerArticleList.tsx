@@ -121,7 +121,8 @@ export function PeerArticleList() {
               value={filter.title || ''}
               onChange={value => {
                 setFilter({title: value})
-                console.log('peerList', peerArticleListData, listVariables)
+                console.log('article list', peerArticleListData)
+                console.log('filter', listVariables.filter)
               }}
             />
             <InputGroup.Addon>
