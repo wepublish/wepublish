@@ -924,7 +924,7 @@
         "country": "Country"
       }
     },
-    "userEditView": {
+    "userCreateOrEditView": {
       "loadingUser": "Loading user",
       "userRoles": "User roles",
       "passwordHeader": "Password",
@@ -932,7 +932,8 @@
       "successfullyUpdatedUser": "User successfully updated",
       "errorOnUpdate": "Error while updating the user: {{error}}",
       "successfullyCreatedUser": "User successfully created",
-      "errorCreatingUser": "User could not be created. Unexpected error: {{error}}"
+      "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
+      "createNewUser": "Create new user"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unexpected Error: no user found"

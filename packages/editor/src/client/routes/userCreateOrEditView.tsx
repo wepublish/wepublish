@@ -14,6 +14,7 @@ import {
   Toggle
 } from 'rsuite'
 import {
+  FullUserFragment,
   FullUserRoleFragment,
   useCreateUserMutation,
   UserAddress,
@@ -21,17 +22,19 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
-import {RouteType, useRoute} from '../route'
+import {RouteType, UserEditViewRoute, useRoute, useRouteDispatch} from '../route'
 import {useTranslation} from 'react-i18next'
 import {CreateOrUpdateUserPassword} from '../atoms/user/createOrUpdateUserPassword'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
-export function UserEditView() {
+export function UserCreateOrEditView() {
   const {t} = useTranslation()
   const {current} = useRoute()
+  const dispatch = useRouteDispatch()
 
   // user props
   const [name, setName] = useState('')
-  const [firstName, setFirstName] = useState<string | undefined>()
+  const [firstName, setFirstName] = useState<string | undefined | null>()
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
@@ -40,6 +43,7 @@ export function UserEditView() {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [address, setAddress] = useState<UserAddress | null>(null)
+  const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
 
   // getting user id from url param
   const [id] = useState<string | undefined>(
@@ -64,18 +68,18 @@ export function UserEditView() {
    * setup user whenever user data object changes
    */
   useEffect(() => {
-    if (data?.user) {
-      setName(data.user.name)
-      setPreferredName(data.user.preferredName ?? undefined)
-      setFirstName(data.user.firstName ?? undefined)
-      setEmail(data.user.email)
-      setEmailVerifiedAt(data.user.emailVerifiedAt ? new Date(data.user.emailVerifiedAt) : null)
-      setActive(data.user.active)
-      setAddress(data.user.address ? data.user.address : null)
-      if (data.user.roles) {
-        // TODO: fix this
-        setRoles(data.user.roles as FullUserRoleFragment[])
-      }
+    const tmpUser = data?.user
+    if (!tmpUser) return
+    setUser(tmpUser)
+    setFirstName(tmpUser.firstName)
+    setName(tmpUser.name)
+    setPreferredName(tmpUser.preferredName ?? undefined)
+    setEmail(tmpUser.email)
+    setEmailVerifiedAt(tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null)
+    setActive(tmpUser.active)
+    setAddress(tmpUser.address ? tmpUser.address : null)
+    if (tmpUser.roles) {
+      setRoles(tmpUser.roles as FullUserRoleFragment[])
     }
   }, [data?.user])
 
@@ -143,11 +147,11 @@ export function UserEditView() {
    * Save or create new user
    */
   async function createOrUpdateUser() {
-    if (id && data?.user) {
+    if (user) {
       try {
         await updateUser({
           variables: {
-            id,
+            id: user.id,
             input: {
               name,
               firstName,
@@ -155,7 +159,7 @@ export function UserEditView() {
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
               active,
-              properties: data.user.properties.map(({value, key, public: publicValue}) => ({
+              properties: user.properties.map(({value, key, public: publicValue}) => ({
                 value,
                 key,
                 public: publicValue
@@ -174,19 +178,19 @@ export function UserEditView() {
         })
         toaster.push(
           <Message type="success" showIcon closable duration={2000}>
-            {t('userEditView.successfullyUpdatedUser')}
+            {t('userCreateOrEditView.successfullyUpdatedUser')}
           </Message>
         )
       } catch (e) {
         toaster.push(
           <Message type="error" showIcon closable duration={2000}>
-            {t('userEditView.errorOnUpdate', {error: e})}
+            {t('userCreateOrEditView.errorOnUpdate', {error: e})}
           </Message>
         )
       }
     } else {
       try {
-        await createUser({
+        const {data} = await createUser({
           variables: {
             input: {
               name,
@@ -202,15 +206,24 @@ export function UserEditView() {
             password
           }
         })
+        const newUser = data?.createUser
+        if (!newUser) {
+          throw new Error('User id not created')
+        }
+        dispatch({
+          type: RouteActionType.PushRoute,
+          route: UserEditViewRoute.create({id: newUser.id}, current ?? undefined)
+        })
+        setUser(newUser)
         toaster.push(
           <Message type="success" showIcon closable duration={2000}>
-            {t('userEditView.successfullyCreatedUser')}
+            {t('userCreateOrEditView.successfullyCreatedUser')}
           </Message>
         )
       } catch (e) {
         toaster.push(
           <Message type="error" showIcon closable duration={2000}>
-            {t('userEditView.errorCreatingUser', {error: e})}
+            {t('userCreateOrEditView.errorCreatingUser', {error: e})}
           </Message>
         )
       }
@@ -222,9 +235,11 @@ export function UserEditView() {
    */
   function titleView() {
     if (isDisabled) {
-      return <Loader content={t('userEditView.loadingUser')} />
+      return <Loader content={t('userCreateOrEditView.loadingUser')} />
     }
-    const user = data?.user
+    if (!user) {
+      return t('userCreateOrEditView.createNewUser')
+    }
     const firstName = user?.firstName
     const lastName = user?.name
     return firstName ? `${firstName} ${lastName}` : lastName
@@ -233,7 +248,7 @@ export function UserEditView() {
   function actionsView() {
     return (
       <Button appearance="primary" disabled={isDisabled} type="submit" data-testid="saveButton">
-        {id ? t('userList.panels.save') : t('userList.panels.create')}
+        {user ? t('userList.panels.save') : t('userList.panels.create')}
       </Button>
     )
   }
@@ -290,7 +305,6 @@ export function UserEditView() {
                           value={firstName}
                           disabled={isDisabled}
                           onChange={(value: string) => {
-                            console.log('hallo change', value)
                             setFirstName(value)
                           }}
                         />
@@ -423,7 +437,10 @@ export function UserEditView() {
                   </Row>
                 </Panel>
                 {/* roles */}
-                <Panel bordered header={t('userEditView.userRoles')} style={{marginTop: '20px'}}>
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.userRoles')}
+                  style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group>
@@ -448,12 +465,12 @@ export function UserEditView() {
                 {/* password */}
                 <Panel
                   bordered
-                  header={t('userEditView.passwordHeader')}
+                  header={t('userCreateOrEditView.passwordHeader')}
                   style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <CreateOrUpdateUserPassword
-                        user={data?.user}
+                        user={user}
                         password={password}
                         setPassword={setPassword}
                         isDisabled={isDisabled}
@@ -466,7 +483,7 @@ export function UserEditView() {
             {/* subscriptions */}
             <Col xs={12}>
               <Grid fluid>
-                <Panel bordered header={t('userEditView.subscriptionsHeader')}></Panel>
+                <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}></Panel>
               </Grid>
             </Col>
           </Row>
