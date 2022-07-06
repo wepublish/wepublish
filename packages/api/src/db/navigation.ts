@@ -1,3 +1,5 @@
+import {Navigation, NavigationLink as PrismaNavigationLink} from '@prisma/client'
+
 export enum NavigationLinkType {
   Page = 'page',
   Article = 'article',
@@ -24,3 +26,7 @@ export interface ExternalNavigationLink extends BaseNavigationLink {
 }
 
 export type NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
+
+export type NavigationWithLinks = Navigation & {
+  links: PrismaNavigationLink[]
+}

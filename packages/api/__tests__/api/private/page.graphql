@@ -113,7 +113,9 @@ mutation UnpublishPage($id: ID!) {
 }
 
 mutation DeletePage($id: ID!) {
-  deletePage(id: $id)
+  deletePage(id: $id) {
+    ...MutationPage
+  }
 }
 
 query Page($id: ID!) {

@@ -84,5 +84,7 @@ mutation UpdateSubscription($id: ID!, $input: SubscriptionInput!) {
 }
 
 mutation DeleteSubscription($id: ID!) {
-  deleteSubscription(id: $id)
+  deleteSubscription(id: $id) {
+    ...FullSubscription
+  }
 }

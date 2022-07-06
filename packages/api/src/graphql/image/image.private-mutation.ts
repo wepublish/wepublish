@@ -3,7 +3,7 @@ import {FileUpload} from 'graphql-upload'
 import {Context} from '../../context'
 import {authorise, CanCreateImage, CanDeleteImage} from '../permissions'
 
-export const deleteImageById = (
+export const deleteImageById = async (
   id: string,
   authenticate: Context['authenticate'],
   image: PrismaClient['image'],
@@ -12,7 +12,7 @@ export const deleteImageById = (
   const {roles} = authenticate()
   authorise(CanDeleteImage, roles)
 
-  return Promise.all([
+  const [deletedImage] = await Promise.all([
     image.delete({
       where: {
         id
@@ -20,10 +20,17 @@ export const deleteImageById = (
     }),
     mediaAdapter.deleteImage(id)
   ])
+
+  return deletedImage
 }
 
+type CreateImageInput = {
+  file: Promise<FileUpload>
+  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
+} & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt' | 'focalPoint'>
+
 export const createImage = async (
-  input: {file: Promise<FileUpload>} & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt'>,
+  input: CreateImageInput,
   authenticate: Context['authenticate'],
   mediaAdapter: Context['mediaAdapter'],
   imageClient: PrismaClient['image']
@@ -48,8 +55,9 @@ export const createImage = async (
       link,
       license,
 
-      focalPoint,
-      modifiedAt: new Date()
+      focalPoint: {
+        create: focalPoint
+      }
     }
   })
 }

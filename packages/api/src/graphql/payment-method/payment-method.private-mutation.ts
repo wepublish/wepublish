@@ -26,7 +26,7 @@ export const createPaymentMethod = (
   authorise(CanCreatePaymentMethod, roles)
 
   return paymentMethod.create({
-    data: {...input, modifiedAt: new Date()}
+    data: input
   })
 }
 

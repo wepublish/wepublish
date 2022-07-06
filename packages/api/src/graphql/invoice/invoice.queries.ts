@@ -80,12 +80,23 @@ const createCancelledAtFilter = (filter: Partial<InvoiceFilter>): Prisma.Invoice
   return {}
 }
 
+const createSubscriptionFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereInput => {
+  if (filter?.subscriptionID) {
+    return {
+      subscriptionID: filter.subscriptionID
+    }
+  }
+
+  return {}
+}
+
 export const createInvoiceFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereInput => ({
   AND: [
     createUserFilter(filter),
     createMailFilter(filter),
     createPaidAtFilter(filter),
-    createCancelledAtFilter(filter)
+    createCancelledAtFilter(filter),
+    createSubscriptionFilter(filter)
   ]
 })
 
@@ -111,7 +122,10 @@ export const getInvoices = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        items: true
+      }
     })
   ])
 

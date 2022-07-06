@@ -1,9 +1,10 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {hashPassword, unselectPassword} from '../../db/user'
+import {EmailAlreadyInUseError} from '../../error'
 import {SendMailType} from '../../mails/mailContext'
 import {authorise, CanCreateUser, CanDeleteUser, CanResetUserPassword} from '../permissions'
-import {createUser} from './user.mutation'
+import {createUser, CreateUserInput} from './user.mutation'
 
 export const deleteUserById = (
   id: string,
@@ -16,12 +17,13 @@ export const deleteUserById = (
   return user.delete({
     where: {
       id
-    }
+    },
+    select: unselectPassword
   })
 }
 
-export const createAdminUser = (
-  input: Omit<Prisma.UserUncheckedCreateInput, 'modifiedAt'>,
+export const createAdminUser = async (
+  input: CreateUserInput,
   authenticate: Context['authenticate'],
   hashCostFactor: Context['hashCostFactor'],
   user: PrismaClient['user']
@@ -29,23 +31,23 @@ export const createAdminUser = (
   const {roles} = authenticate()
   authorise(CanCreateUser, roles)
 
+  const userExists = await user.findUnique({
+    where: {email: input.email}
+  })
+
+  if (userExists) throw new EmailAlreadyInUseError()
+
   return createUser(input, hashCostFactor, user)
+}
+
+type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
+  properties: Prisma.MetadataPropertyCreateManyUserInput[]
+  address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
 }
 
 export const updateAdminUser = (
   id: string,
-  input: Pick<
-    Prisma.UserUncheckedUpdateInput,
-    | 'name'
-    | 'firstName'
-    | 'preferredName'
-    | 'address'
-    | 'active'
-    | 'properties'
-    | 'email'
-    | 'emailVerifiedAt'
-    | 'roleIDs'
-  >,
+  {properties, address, ...input}: UpdateUserInput,
   authenticate: Context['authenticate'],
   user: PrismaClient['user']
 ) => {
@@ -54,7 +56,26 @@ export const updateAdminUser = (
 
   return user.update({
     where: {id},
-    data: input
+    data: {
+      ...input,
+      address: address
+        ? {
+            upsert: {
+              create: address,
+              update: address
+            }
+          }
+        : undefined,
+      properties: {
+        deleteMany: {
+          userId: id
+        },
+        createMany: {
+          data: properties
+        }
+      }
+    },
+    select: unselectPassword
   })
 }
 

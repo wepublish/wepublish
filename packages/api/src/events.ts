@@ -1,5 +1,6 @@
 import {Invoice, Prisma, SubscriptionPeriod, PrismaClient} from '@prisma/client'
 import {Context} from './context'
+import {unselectPassword} from './db/user'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 
@@ -25,19 +26,29 @@ export const onFindArticle = (prisma: PrismaClient): Prisma.Middleware => async 
           }
         }
       }
+    },
+    include: {
+      pending: true,
+      published: true
     }
   })
 
   await Promise.all(
-    articles.map(({id, pending}) =>
+    articles.map(({id, publishedId, pending}) =>
       prisma.article.update({
         where: {
           id
         },
         data: {
-          modifiedAt: new Date(),
-          pending: null,
-          published: pending
+          published: {
+            delete: Boolean(publishedId),
+            connect: {
+              id: pending!.id
+            }
+          },
+          pending: {
+            disconnect: true
+          }
         }
       })
     )
@@ -68,19 +79,29 @@ export const onFindPage = (prisma: PrismaClient): Prisma.Middleware => async (pa
           }
         }
       }
+    },
+    include: {
+      pending: true,
+      published: true
     }
   })
 
   await Promise.all(
-    pages.map(({id, pending}) =>
+    pages.map(({id, publishedId, pending}) =>
       prisma.page.update({
         where: {
           id
         },
         data: {
-          modifiedAt: new Date(),
-          pending: null,
-          published: pending
+          published: {
+            delete: Boolean(publishedId),
+            connect: {
+              id: pending!.id
+            }
+          },
+          pending: {
+            disconnect: true
+          }
         }
       })
     )
@@ -96,31 +117,34 @@ export const onFindPage = (prisma: PrismaClient): Prisma.Middleware => async (pa
  */
 export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (params, next) => {
   if (params.model !== 'Invoice') {
-    next(params)
-    return
+    return next(params)
   }
 
   if (params.action !== 'update') {
-    next(params)
-    return
+    return next(params)
   }
 
   const model: Invoice = await next(params)
 
   // only activate subscription, if invoice has a paidAt and subscriptionID.
   if (!model.paidAt || !model.subscriptionID) {
-    return
+    return model
   }
 
   let mailTypeToSend = SendMailType.NewMemberSubscription
   let subscription = await context.prisma.subscription.findUnique({
     where: {
       id: model.subscriptionID
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
     }
   })
 
   if (!subscription) {
-    return
+    return model
   }
 
   const {periods} = subscription
@@ -128,7 +152,7 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
 
   if (!period) {
     logger('events').warn(`No period found for subscription with ID ${subscription.id}.`)
-    return
+    return model
   }
 
   // remove eventual deactivation object from subscription (in case the subscription has been auto-deactivated but the
@@ -138,13 +162,20 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
       where: {id: subscription.id},
       data: {
         paidUntil: period.endsAt,
-        deactivation: null
+        deactivation: {
+          delete: Boolean(subscription.deactivation)
+        }
+      },
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true
       }
     })
 
     if (!subscription) {
       logger('events').warn(`Could not update Subscription.`)
-      return
+      return model
     }
 
     // in case of multiple periods we need to send a renewal member subscription instead of the default new member subscription mail
@@ -156,12 +187,13 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
     const user = await context.prisma.user.findUnique({
       where: {
         id: subscription.userID
-      }
+      },
+      select: unselectPassword
     })
 
     if (!user) {
       logger('events').warn(`User not found %s`, subscription.userID)
-      return
+      return model
     }
 
     const token = context.generateJWT({
@@ -179,4 +211,6 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
       }
     })
   }
+
+  return model
 }

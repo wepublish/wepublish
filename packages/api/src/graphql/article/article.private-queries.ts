@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {ArticleFilter, ArticleSort} from '../../db/article'
+import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {NotAuthorisedError, NotFound, UserInputError} from '../../error'
 import {
   authorise,
@@ -17,7 +17,7 @@ export const getArticleById = async (
   id: string,
   authenticate: Context['authenticate'],
   articleLoader: Context['loaders']['articles']
-) => {
+): Promise<ArticleWithRevisions | null> => {
   const {roles} = authenticate()
 
   const canGetArticle = isAuthorised(CanGetArticle, roles)
@@ -43,7 +43,7 @@ export const getArticlePreviewLink = async (
   generateJWT: Context['generateJWT'],
   urlAdapter: Context['urlAdapter'],
   articles: Context['loaders']['articles']
-) => {
+): Promise<string> => {
   const {roles} = authenticate()
   authorise(CanGetArticlePreviewLink, roles)
 

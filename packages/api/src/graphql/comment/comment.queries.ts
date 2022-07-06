@@ -58,7 +58,10 @@ export const getComments = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        revisions: true
+      }
     })
   ])
 

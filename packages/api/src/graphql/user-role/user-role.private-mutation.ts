@@ -34,7 +34,7 @@ export const createUserRole = (
   authorise(CanCreateUserRole, roles)
 
   return userRole.create({
-    data: {...input, systemRole: false, modifiedAt: new Date()}
+    data: {...input, systemRole: false}
   })
 }
 

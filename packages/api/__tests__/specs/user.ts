@@ -10,13 +10,13 @@ import {
   UserList
 } from '../api/private'
 
-import {createGraphQLTestClientWithMongoDB} from '../utility'
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
 let testClientPrivate: ApolloServerTestClient
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
   } catch (error) {
     console.log('Error', error)
@@ -27,11 +27,12 @@ beforeAll(async () => {
 describe('Users', () => {
   describe('can be created/updated/edited/deleted:', () => {
     const ids: string[] = []
-    beforeEach(async () => {
+
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Bruce Wayne',
-        email: `bwayne@mymail${ids.length}.com`,
+        email: generateRandomString(),
         emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
@@ -44,19 +45,20 @@ describe('Users', () => {
           password: 'p@$$w0rd'
         }
       })
-      ids.unshift(res.data?.createUser?.id)
+      ids.unshift(res.data.createUser.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Robin Wayne',
-        email: `rwayne@mymail${ids.length}.com`,
+        email: generateRandomString(),
         emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
         roleIDs: []
       }
+
       const res = await mutate({
         mutation: CreateUser,
         variables: {
@@ -64,14 +66,17 @@ describe('Users', () => {
           password: 'pwd123'
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           createUser: {
-            id: expect.any(String)
+            id: expect.any(String),
+            email: expect.any(String),
+            emailVerifiedAt: expect.any(String)
           }
         }
       })
-      ids.unshift(res.data?.createUser?.id)
+      ids.unshift(res.data.createUser.id)
     })
 
     test('can be read in list', async () => {
@@ -82,21 +87,8 @@ describe('Users', () => {
           take: 100
         }
       })
-      expect(res).toMatchSnapshot({
-        data: {
-          users: {
-            nodes: Array.from({length: ids.length + 1}, () => ({
-              id: expect.any(String)
-            })),
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            },
-            totalCount: expect.any(Number)
-          }
-        }
-      })
-      expect(res.data?.users?.totalCount).toBe(ids.length + 1)
+
+      expect(res.data.users.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -107,10 +99,13 @@ describe('Users', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           user: {
-            id: expect.any(String)
+            id: expect.any(String),
+            email: expect.any(String),
+            emailVerifiedAt: expect.any(String)
           }
         }
       })
@@ -123,7 +118,7 @@ describe('Users', () => {
         variables: {
           input: {
             name: 'Dark Knight',
-            email: 'batman@email.com',
+            email: generateRandomString(),
             emailVerifiedAt: null,
             properties: [],
             active: true,
@@ -132,10 +127,12 @@ describe('Users', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           updateUser: {
-            id: expect.any(String)
+            id: expect.any(String),
+            email: expect.any(String)
           }
         }
       })
@@ -144,17 +141,38 @@ describe('Users', () => {
     test('can reset user password', async () => {
       const {mutate} = testClientPrivate
 
-      const sessionRes = await mutate({
-        mutation: CreateSession,
+      const input: UserInput = {
+        name: 'Robin Wayne',
+        email: generateRandomString(),
+        emailVerifiedAt: new Date().toISOString(),
+        properties: [],
+        active: true,
+        roleIDs: []
+      }
+
+      const createdUser = await mutate({
+        mutation: CreateUser,
         variables: {
-          email: `bwayne@mymail5.com`,
+          input: input,
           password: 'p@$$w0rd'
         }
       })
+
+      const sessionRes = await mutate({
+        mutation: CreateSession,
+        variables: {
+          email: input.email,
+          password: 'p@$$w0rd'
+        }
+      })
+
       expect(sessionRes).toMatchSnapshot({
         data: {
           createSession: {
-            token: expect.any(String)
+            token: expect.any(String),
+            user: expect.objectContaining({
+              email: expect.any(String)
+            })
           }
         }
       })
@@ -162,14 +180,17 @@ describe('Users', () => {
       const resetPwdRes = await mutate({
         mutation: ResetUserPassword,
         variables: {
-          id: ids[0],
+          id: createdUser.data.createUser.id,
           password: 'NewUpdatedPassword321'
         }
       })
+
       expect(resetPwdRes).toMatchSnapshot({
         data: {
           resetUserPassword: {
-            id: expect.any(String)
+            id: expect.any(String),
+            email: expect.any(String),
+            emailVerifiedAt: expect.any(String)
           }
         }
       })
@@ -177,14 +198,18 @@ describe('Users', () => {
       const updatedPwdSession = await mutate({
         mutation: CreateSession,
         variables: {
-          email: `bwayne@mymail5.com`,
+          email: input.email,
           password: 'NewUpdatedPassword321'
         }
       })
+
       expect(updatedPwdSession).toMatchSnapshot({
         data: {
           createSession: {
-            token: expect.any(String)
+            token: expect.any(String),
+            user: expect.objectContaining({
+              email: expect.any(String)
+            })
           }
         }
       })
@@ -198,11 +223,16 @@ describe('Users', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
-          deleteUser: expect.any(String)
+          deleteUser: {
+            id: expect.any(String),
+            email: expect.any(String)
+          }
         }
       })
+
       ids.shift()
     })
   })

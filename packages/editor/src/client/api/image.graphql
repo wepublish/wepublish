@@ -81,5 +81,7 @@ mutation UpdateImage($id: ID!, $input: UpdateImageInput!) {
 }
 
 mutation DeleteImage($id: ID!) {
-  deleteImage(id: $id)
+  deleteImage(id: $id) {
+    ...FullImage
+  }
 }

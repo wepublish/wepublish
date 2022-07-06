@@ -3,7 +3,7 @@ import {URL} from 'url'
 import * as fs from 'fs'
 import {
   ArrayBufferUpload,
-  Image,
+  ImageWithFocalPoint,
   ImageOutput,
   ImageRotation,
   ImageTransformation
@@ -20,7 +20,7 @@ const TEST_URL = 'http://fake.localhost.com/'
 const TEST_INTERNAL_URL = 'http://internal.url.com/'
 const TEST_TOKEN = 'fakeToken1234'
 const TEST_IMAGE_PATH = './__tests__/specs/test.jpg'
-const TEST_UPLOAD_IMAGE: Image = {
+const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   createdAt: new Date(),
   modifiedAt: new Date(),
   tags: [],
@@ -31,7 +31,17 @@ const TEST_UPLOAD_IMAGE: Image = {
   mimeType: 'image/jpeg',
   format: 'testFormat',
   width: 1024,
-  height: 1024
+  height: 1024,
+  focalPoint: {
+    x: null,
+    y: null,
+    imageId: ''
+  },
+  description: null,
+  license: null,
+  link: null,
+  source: null,
+  title: null
 }
 
 const TEST_TRANSFORMATION: ImageTransformation = {
@@ -162,11 +172,12 @@ describe('Karma Media Adapter', () => {
     })
 
     test('GetImageURL should return a string with transformation', async () => {
-      const testImageWithFocal: Image = {
+      const testImageWithFocal: ImageWithFocalPoint = {
         ...TEST_UPLOAD_IMAGE,
         focalPoint: {
           x: 50,
-          y: 50
+          y: 50,
+          imageId: ''
         }
       }
       const imageURL = await karmaMediaAdapter.getImageURL(testImageWithFocal, TEST_TRANSFORMATION)

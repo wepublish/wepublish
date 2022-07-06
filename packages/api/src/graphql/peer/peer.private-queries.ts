@@ -20,7 +20,10 @@ export const getPeerById = async (
   return peer
 }
 
-export const getPeers = (authenticate: Context['authenticate'], peer: PrismaClient['peer']) => {
+export const getPeers = async (
+  authenticate: Context['authenticate'],
+  peer: PrismaClient['peer']
+) => {
   const {roles} = authenticate()
   authorise(CanGetPeers, roles)
 

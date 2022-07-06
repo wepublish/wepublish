@@ -41,13 +41,7 @@ export class Oauth2Server {
   constructor(opts: OAuth2ServerOpts) {
     const app = express()
     this.opts = opts
-    this.prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: this.opts.mongoUrlOauth2
-        }
-      }
-    })
+    this.prisma = new PrismaClient()
     this.prisma.$connect()
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'oauth2'})

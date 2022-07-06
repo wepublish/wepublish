@@ -94,7 +94,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLString)},
-    isDisabled: {type: GraphQLNonNull(GraphQLBoolean)},
+    isDisabled: {type: GraphQLBoolean},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,
@@ -103,8 +103,9 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
           fieldName: 'peerProfile',
           info
         })
+
         // TODO: Improve error handling for invalid tokens WPC-298
-        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
+        return peerProfile?.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }

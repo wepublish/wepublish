@@ -32,13 +32,14 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
       toaster.push(<Message type="error">{t('invoice.userNotLoaded')}</Message>)
       return
     }
+
     // talk with the private api
     const items = prepareInvoiceItemsForApi(invoice.items)
     await updateInvoice({
       variables: {
         updateInvoiceId: invoice.id,
         input: {
-          items,
+          items: items.map(({total, ...item}) => item),
           mail: invoice.mail,
           paidAt: new Date().toISOString(),
           description: invoice.description,

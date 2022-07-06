@@ -46,17 +46,16 @@ export const addPublicComment = async (
   }
 
   // Cleanup
-  const {challenge: _, text, ...prismaInput} = input
+  const {challenge: _, text, ...commentInput} = input
 
   const comment = await commentClient.create({
     data: {
-      ...prismaInput,
-      revisions: [
-        {
-          text,
-          createdAt: new Date()
+      ...commentInput,
+      revisions: {
+        create: {
+          text
         }
-      ],
+      },
       userID: user?.user.id,
       authorType,
       state: CommentState.pendingApproval
@@ -93,9 +92,8 @@ export const updatePublicComment = async (
     where: {id},
     data: {
       revisions: {
-        push: {
-          text,
-          createdAt: new Date()
+        create: {
+          text
         }
       },
       state: CommentState.pendingApproval

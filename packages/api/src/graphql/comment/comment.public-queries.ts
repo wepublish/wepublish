@@ -14,6 +14,9 @@ export const getPublicChildrenCommentsByParentId = (
     },
     orderBy: {
       modifiedAt: 'desc'
+    },
+    include: {
+      revisions: true
     }
   })
 
@@ -28,11 +31,14 @@ export const getPublicCommentsForItemById = async (
         {itemID: itemId, state: CommentState.approved, parentID: null},
         userId ? {itemID: itemId, userID: userId, parentID: null} : {}
       ]
+    },
+    include: {
+      revisions: true
     }
   })
 
   return comments.map(({revisions, ...comment}) => ({
-    text: revisions[revisions.length - 1],
+    text: revisions[revisions.length - 1].text,
     ...comment
   }))
 }

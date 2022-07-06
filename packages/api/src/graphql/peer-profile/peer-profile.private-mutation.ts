@@ -13,11 +13,18 @@ export const upsertPeerProfile = async (
   const {roles} = authenticate()
   authorise(CanUpdatePeerProfile, roles)
 
-  const data = await peerProfile.upsert({
-    where: {},
-    create: input as Prisma.PeerProfileUncheckedCreateInput,
-    update: input
-  })
+  const oldProfile = await peerProfile.findFirst({})
+
+  const data = oldProfile
+    ? await peerProfile.update({
+        where: {
+          id: oldProfile.id
+        },
+        data: input
+      })
+    : await peerProfile.create({
+        data: input as Prisma.PeerProfileUncheckedCreateInput
+      })
 
   return {...data, hostURL}
 }

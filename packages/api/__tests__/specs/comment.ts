@@ -5,7 +5,7 @@
 
 beforeAll(async () => {
   try {
-    // const setupClient = await createGraphQLTestClientWithMongoDB()
+    // const setupClient = await createGraphQLTestClientWithPrisma()
     // testClientPrivate = setupClient.testClientPrivate
   } catch (error) {
     console.log('Error', error)

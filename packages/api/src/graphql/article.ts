@@ -74,7 +74,7 @@ export const GraphQLPublicArticleSort = new GraphQLEnumType({
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
   fields: {
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: GraphQLSlug},
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -119,10 +119,10 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
 
     preTitle: {type: GraphQLString},
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},

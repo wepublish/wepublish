@@ -106,6 +106,7 @@ import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
+
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -419,9 +420,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPeerArticleConnection),
       args: {
         cursors: {type: GraphQLString},
+        take: {type: GraphQLInt, defaultValue: 10},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
-        peerFilter: {type: GraphQLString}
+        peerFilter: {type: GraphQLString},
+        filter: {type: GraphQLArticleFilter}
       },
 
       resolve: (root, {sort, order, after, peerFilter}, context, info) =>

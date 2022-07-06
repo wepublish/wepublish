@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise, CanCreatePayment} from '../permissions'
-import {PaymentState, PrismaClient} from '@prisma/client'
+import {Payment, PaymentState, PrismaClient} from '@prisma/client'
 
 export const createPaymentFromInvoice = async (
   input: {
@@ -14,7 +14,7 @@ export const createPaymentFromInvoice = async (
   invoicesByID: Context['loaders']['invoicesByID'],
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
   paymentClient: PrismaClient['payment']
-) => {
+): Promise<Payment> => {
   const {roles} = authenticate()
   authorise(CanCreatePayment, roles)
 
@@ -32,8 +32,7 @@ export const createPaymentFromInvoice = async (
     data: {
       paymentMethodID,
       invoiceID,
-      state: PaymentState.created,
-      modifiedAt: new Date()
+      state: PaymentState.created
     }
   })
 

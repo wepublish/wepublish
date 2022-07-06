@@ -1,14 +1,19 @@
+import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLString
 } from 'graphql'
+import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
+import {SubscriptionSort, SubscriptionWithRelations} from '../db/subscription'
+import {unselectPassword} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -16,14 +21,9 @@ import {
   GraphQLMetadataPropertyPublic,
   GraphQLPageInfo
 } from './common'
-import {Context} from '../context'
-import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
-import {unselectPassword} from '../db/user'
-import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
@@ -81,7 +81,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
   }
 })
 
-export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Context>({
+export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},

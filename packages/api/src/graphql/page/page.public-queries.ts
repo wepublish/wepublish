@@ -23,6 +23,6 @@ export const getPublishedPages = async (
 
   return {
     ...data,
-    nodes: data.nodes.map(({id, published}) => ({id, ...published}))
+    nodes: data.nodes.map(({id, published}) => ({...published, id}))
   }
 }

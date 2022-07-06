@@ -1,6 +1,6 @@
 import {
   MediaAdapter,
-  Image,
+  ImageWithFocalPoint,
   UploadImage,
   ImageTransformation,
   ArrayBufferUpload
@@ -96,7 +96,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    {id, filename, extension, focalPoint}: Image,
+    {id, filename, extension, focalPoint}: ImageWithFocalPoint,
     transformation?: ImageTransformation
   ): Promise<string> {
     filename = filename || 'untitled'
@@ -113,7 +113,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
       if (quality) transformations.push(`q_${quality}`)
 
       if (focalPoint && (width || height)) {
-        transformations.push(`f_${focalPoint.x.toFixed(3)}:${focalPoint.y.toFixed(3)}`)
+        transformations.push(`f_${focalPoint.x?.toFixed(3)}:${focalPoint.y?.toFixed(3)}`)
       }
 
       if (transformations.length > 0) {

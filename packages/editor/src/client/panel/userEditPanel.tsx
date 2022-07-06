@@ -173,7 +173,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             active,
             properties: [],
             roleIDs: roles.map(role => role.id),
-            address
+            address: address ?? null
           },
           password
         }
@@ -242,7 +242,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.company')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.company')}
-                value={address?.company}
+                value={address?.company || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'company', value)
@@ -253,7 +253,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.streetAddress')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.streetAddress')}
-                value={address?.streetAddress}
+                value={address?.streetAddress || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'streetAddress', value)
@@ -264,7 +264,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.streetAddress2')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.streetAddress2')}
-                value={address?.streetAddress2}
+                value={address?.streetAddress2 || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'streetAddress2', value)
@@ -275,7 +275,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.zipCode')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.zipCode')}
-                value={address?.zipCode}
+                value={address?.zipCode || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'zipCode', value)
@@ -286,7 +286,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.city')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.city')}
-                value={address?.city}
+                value={address?.city || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'city', value)
@@ -297,7 +297,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               <Form.ControlLabel>{t('userList.panels.country')}</Form.ControlLabel>
               <Form.Control
                 name={t('userList.panels.country')}
-                value={address?.country}
+                value={address?.country || ''}
                 disabled={isDisabled}
                 onChange={(value: string) =>
                   updateAddressObject(address, setAddress, 'country', value)

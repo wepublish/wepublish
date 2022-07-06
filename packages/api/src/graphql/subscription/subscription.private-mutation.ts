@@ -15,12 +15,21 @@ export const deleteSubscriptionById = (
   return subscription.delete({
     where: {
       id
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
     }
   })
 }
 
+type CreateSubscriptionInput = Prisma.SubscriptionCreateInput & {
+  properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
+}
+
 export const createSubscription = async (
-  input: Omit<Prisma.SubscriptionUncheckedCreateInput, 'modifiedAt'>,
+  {properties, ...input}: CreateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription']
@@ -29,17 +38,34 @@ export const createSubscription = async (
   authorise(CanCreateSubscription, roles)
 
   const subscription = await subscriptionClient.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {
+      ...input,
+      properties: {
+        createMany: {
+          data: properties
+        }
+      }
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
+    }
   })
 
-  await memberContext.renewSubscriptionForUser({subscription: subscription})
+  await memberContext.renewSubscriptionForUser({subscription})
 
   return subscription
 }
 
+type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
+  properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
+  deactivation: Prisma.SubscriptionDeactivationCreateWithoutSubscriptionInput | null
+}
+
 export const updateAdminSubscription = async (
   id: string,
-  input: Omit<Prisma.SubscriptionUncheckedUpdateInput, 'createdAt' | 'modifiedAt'>,
+  {properties, deactivation, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
@@ -54,9 +80,46 @@ export const updateAdminSubscription = async (
     },
     select: unselectPassword
   })
+
   if (!user) throw new Error('Can not update subscription without user')
 
-  const updatedSubscription = await subscriptionClient.update({where: {id}, data: input})
+  const subscription = await subscriptionClient.findUnique({
+    where: {id},
+    include: {
+      deactivation: true
+    }
+  })
+
+  const updatedSubscription = await subscriptionClient.update({
+    where: {id},
+    data: {
+      ...input,
+      deactivation: deactivation
+        ? {
+            upsert: {
+              create: deactivation,
+              update: deactivation
+            }
+          }
+        : {
+            delete: Boolean(subscription?.deactivation)
+          },
+      properties: {
+        deleteMany: {
+          subscriptionId: id
+        },
+        createMany: {
+          data: properties
+        }
+      }
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
+    }
+  })
+
   if (!updatedSubscription) throw new NotFound('subscription', id)
 
   return await memberContext.handleSubscriptionChange({

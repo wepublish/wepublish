@@ -220,7 +220,7 @@ export function contentForTeaser(teaser: Teaser, numColumns?: number) {
           style={teaser.style}
           image={teaser.image ?? teaser.article.latest.image ?? undefined}
           preTitle={teaser.preTitle ?? teaser.article.latest.preTitle ?? undefined}
-          title={teaser.title ?? teaser.article.latest.title}
+          title={teaser.title ?? teaser.article.latest.title ?? ''}
           lead={teaser.lead ?? teaser.article.latest.lead ?? undefined}
           states={states}
           numColumns={numColumns}
@@ -240,7 +240,7 @@ export function contentForTeaser(teaser: Teaser, numColumns?: number) {
           style={teaser.style}
           image={teaser.image ?? teaser.article?.latest.image ?? undefined}
           preTitle={teaser.preTitle ?? teaser.article?.latest.preTitle ?? undefined}
-          title={teaser.title ?? teaser.article?.latest.title}
+          title={teaser.title ?? teaser.article?.latest.title ?? ''}
           lead={teaser.lead ?? teaser.article?.latest.lead ?? undefined}
           states={states}
           peer={teaser.peer}

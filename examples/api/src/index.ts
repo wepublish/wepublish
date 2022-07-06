@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-import {PrismaClient, CommentItemType, Peer} from '@prisma/client'
+import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
   Author,
-  hashPassword,
   JobType,
   MailgunMailProvider,
   Oauth2Provider,
@@ -17,7 +16,6 @@ import {
   URLAdapter,
   WepublishServer
 } from '@wepublish/api'
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -79,7 +77,7 @@ class ExampleURLAdapter implements URLAdapter {
 }
 
 async function asyncMain() {
-  if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+  if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
   const hostURL = process.env.HOST_URL
@@ -104,63 +102,8 @@ async function asyncMain() {
       : undefined
   )
 
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.MONGO_URL!
-      }
-    }
-  })
+  const prisma = new PrismaClient()
   await prisma.$connect()
-
-  await MongoDBAdapter.initialize({
-    url: process.env.MONGO_URL!,
-    locale: process.env.MONGO_LOCALE ?? 'en',
-    seed: async adapter => {
-      const adminUserRoleId =
-        (
-          await prisma.userRole.findUnique({
-            where: {
-              name: 'Admin'
-            }
-          })
-        )?.id ?? 'fake'
-      const editorUserRoleId =
-        (
-          await prisma.userRole.findUnique({
-            where: {
-              name: 'Editor'
-            }
-          })
-        )?.id ?? 'fake'
-
-      await prisma.user.create({
-        data: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          active: true,
-          properties: [],
-          roleIDs: [adminUserRoleId],
-          password: await hashPassword('123'),
-          modifiedAt: new Date()
-        }
-      })
-
-      await prisma.user.create({
-        data: {
-          email: 'editor@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Editor User',
-          active: true,
-          properties: [],
-          roleIDs: [editorUserRoleId],
-          password: await hashPassword('123'),
-          modifiedAt: new Date()
-        }
-      })
-    }
-  })
 
   const oauth2Providers: Oauth2Provider[] = []
   if (

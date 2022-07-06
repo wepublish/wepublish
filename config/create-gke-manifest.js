@@ -29,7 +29,7 @@ const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
 const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
 
-const databaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish`
+const databaseURL = `postgresql://postgres@${GITHUB_REF_SHORT}-postgres-${ENVIRONMENT_NAME}:5432/wepublish?schema=public`
 const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish-oauth2`
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
@@ -56,6 +56,7 @@ async function main() {
   await applyEditor()
   await applyOAuth2()
   await applyMongo()
+  await applyPostgres()
 }
 
 async function applyCertificate() {
@@ -579,7 +580,8 @@ async function  applyApiServer() {
             {
               name: appName,
               image: image,
-              command: ['node', './examples/api/dist/index.js'],
+              command: ['/bin/sh'],
+              args: ['-c', 'yarn migrate && node ./examples/api/dist/index.js'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',
@@ -624,7 +626,7 @@ async function  applyApiServer() {
                 //   )
                 // },
                 {
-                  name: 'MONGO_URL',
+                  name: 'DATABASE_URL',
                   value: databaseURL
                 },
                 {
@@ -1156,7 +1158,7 @@ async function applyOAuth2() {
                   value: `production`
                 },
                 {
-                  name: 'MONGO_URL',
+                  name: 'DATABASE_URL',
                   value: databaseURL
                 },
                 {
@@ -1325,6 +1327,147 @@ async function applyOAuth2() {
     }
   }
   await applyConfig(`ingress-${app}`, ingress)
+}
+
+
+async function applyPostgres() {
+  const app = 'postgres'
+  const port = 5432
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
+
+  const pvc = {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: {
+      name: `${GITHUB_REF_SHORT}-postgres-data`,
+      namespace: NAMESPACE
+    },
+    spec: {
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
+        }
+      }
+    }
+  }
+
+  await applyConfig(`pvc-${app}`, pvc)
+
+  const deployment = {
+    apiVersion: 'apps/v1',
+    kind: 'Deployment',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE,
+      labels: {
+        app: app,
+        slug: GITHUB_REF_SHORT,
+        release: ENVIRONMENT_NAME
+      }
+    },
+    spec: {
+      replicas: 1,
+      selector: {
+        matchLabels: {
+          app: app,
+          slug: GITHUB_REF_SHORT,
+          release: ENVIRONMENT_NAME
+        }
+      },
+      strategy: {
+        type: 'Recreate'
+      },
+      template: {
+        metadata: {
+          name: appName,
+          labels: {
+            app: app,
+            slug: GITHUB_REF_SHORT,
+            release: ENVIRONMENT_NAME
+          }
+        },
+        spec: {
+          containers: [
+            {
+              name: appName,
+              image: 'bitnami/postgresql:latest',
+              env: [
+                {
+                  name: "POSTGRESQL_DATABASE",
+                  value: "wepublish"
+                },
+                {
+                  name: "ALLOW_EMPTY_PASSWORD",
+                  value: "yes"
+                }
+              ],
+              ports: [
+                {
+                  containerPort: port,
+                  protocol: 'TCP'
+                }
+              ],
+              imagePullPolicy: 'IfNotPresent',
+              resources: {
+                requests: {
+                  cpu: '0m',
+                  memory: '128Mi'
+                }
+              },
+              terminationMessagePath: '/dev/termination-log',
+              terminationMessagePolicy: 'File',
+              volumeMounts: [
+                {
+                  name: 'postgres-volume',
+                  mountPath: '/data/db'
+                }
+              ]
+            }
+          ],
+          dnsPolicy: 'ClusterFirst',
+          restartPolicy: 'Always',
+          schedulerName: 'default-scheduler',
+          terminationGracePeriodSeconds: 30,
+          volumes: [
+            {
+              name: 'postgres-volume',
+              persistentVolumeClaim: {
+                claimName: `${GITHUB_REF_SHORT}-postgres-data`,
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  await applyConfig(`deployment-${app}`, deployment)
+
+  const service = {
+    apiVersion: 'v1',
+    kind: 'Service',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE
+    },
+    spec: {
+      ports: [
+        {
+          name: 'http',
+          port: port,
+          protocol: 'TCP',
+          targetPort: port
+        }
+      ],
+      selector: {
+        app: app,
+        slug: GITHUB_REF_SHORT,
+        release: ENVIRONMENT_NAME
+      },
+      type: 'ClusterIP'
+    }
+  }
+  await applyConfig(`service-${app}`, service)
 }
 
 async function applyMongo() {

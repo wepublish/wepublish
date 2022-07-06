@@ -1,4 +1,8 @@
-import {MetadataProperty} from '@prisma/client'
+import {
+  MetadataProperty,
+  Article as PrismaArticle,
+  ArticleRevision as PrismaArticleRevision
+} from '@prisma/client'
 import {ArticleBlock} from './block'
 
 export interface ArticleData {
@@ -86,4 +90,14 @@ export enum ArticleSort {
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
+}
+
+export type ArticleRevisionWithProperties = PrismaArticleRevision & {
+  properties: MetadataProperty[]
+}
+
+export type ArticleWithRevisions = PrismaArticle & {
+  draft: ArticleRevisionWithProperties | null
+  pending: ArticleRevisionWithProperties | null
+  published: ArticleRevisionWithProperties | null
 }

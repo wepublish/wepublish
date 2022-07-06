@@ -1,8 +1,9 @@
-import {Invoice, Payment, PaymentState, PrismaClient, Subscription} from '@prisma/client'
+import {Payment, PaymentState, PrismaClient, Subscription} from '@prisma/client'
 import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {Context, contextFromRequest} from '../context'
+import {InvoiceWithItems} from '../db/invoice'
 import {logger, WepublishServerOpts} from '../server'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
@@ -21,7 +22,7 @@ export interface IntentState {
 
 export interface CreatePaymentIntentProps {
   paymentID: string
-  invoice: Invoice
+  invoice: InvoiceWithItems
   saveCustomer: boolean
   customerID?: string
   successURL?: string
@@ -161,6 +162,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   /**
    * adding or updating paymentProvider customer ID for user
+   *
    * @param userClient
    * @param subscription
    * @param customerID
@@ -178,25 +180,28 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     const user = await userClient.findUnique({
       where: {
         id: subscription.userID
+      },
+      include: {
+        paymentProviderCustomers: true
       }
     })
+
     if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
-
-    const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-      ({paymentProviderID}) => paymentProviderID !== this.id
-    )
-
-    paymentProviderCustomers.push({
-      paymentProviderID: this.id,
-      customerID
-    })
 
     await userClient.update({
       where: {
         id: user.id
       },
       data: {
-        paymentProviderCustomers
+        paymentProviderCustomers: {
+          deleteMany: {
+            paymentProviderID: this.id
+          },
+          create: {
+            paymentProviderID: this.id,
+            customerID
+          }
+        }
       }
     })
   }
@@ -208,20 +213,21 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
 
   prisma.$use(async (params, next) => {
     if (params.model !== 'Payment') {
-      next(params)
-      return
+      return next(params)
     }
 
     if (params.action !== 'update') {
-      next(params)
-      return
+      return next(params)
     }
 
     const model: Payment = await next(params)
 
     if (model.state === PaymentState.paid) {
       const invoice = await prisma.invoice.findUnique({
-        where: {id: model.invoiceID}
+        where: {id: model.invoiceID},
+        include: {
+          items: true
+        }
       })
 
       if (!invoice) {
@@ -229,15 +235,25 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
         return
       }
 
+      const {items, ...invoiceData} = invoice
+
       await prisma.invoice.update({
         where: {id: invoice.id},
         data: {
-          ...invoice,
+          ...invoiceData,
+          items: {
+            deleteMany: {
+              invoiceId: invoiceData.id
+            },
+            create: items
+          },
           paidAt: new Date(),
           canceledAt: null
         }
       })
     }
+
+    return model
   })
 
   // setup webhook routes for each payment provider

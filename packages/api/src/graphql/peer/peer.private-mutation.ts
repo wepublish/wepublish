@@ -26,7 +26,7 @@ export const createPeer = (
   authorise(CanCreatePeer, roles)
 
   return peer.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {...input}
   })
 }
 
@@ -40,7 +40,7 @@ export const updatePeer = (
   authorise(CanCreatePeer, roles)
 
   const nonEmptyInputs = Object.fromEntries(
-    Object.entries(input).filter(([, value]) => !value || value === false)
+    Object.entries(input).filter(([, value]) => value || value === false)
   )
 
   return peer.update({

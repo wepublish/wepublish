@@ -77,6 +77,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     const state = mapStripeEventToPaymentStatue(intent.status)
     if (state !== null && intent.metadata.paymentID !== undefined) {
       let customerID
+
       if (
         intent.setup_future_usage === 'off_session' &&
         intent.customer === null &&
@@ -86,6 +87,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       } else {
         customerID = intent.customer as string
       }
+
       intentStates.push({
         paymentID: intent.metadata.paymentID,
         paymentData: JSON.stringify(intent),
@@ -103,6 +105,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     paymentID
   }: CreatePaymentIntentProps): Promise<Intent> {
     let paymentMethodID: string | null = null
+
     if (customerID) {
       // For an off_session payment the default_payment_method or the default_source of the customer will be used.
       // If both are available the default_payment_method will be used.

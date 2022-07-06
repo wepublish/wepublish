@@ -39,7 +39,7 @@ export interface ArticleMetadataProperty {
 }
 
 export interface ArticleMetadata {
-  readonly slug: string
+  readonly slug?: string | null
   readonly preTitle: string
   readonly title: string
   readonly lead: string
@@ -346,7 +346,7 @@ export function ArticleMetadataPanel({
                     className="slug"
                     value={slug}
                     onChange={(slug: string) => onChange?.({...value, slug})}
-                    onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                    onBlur={() => onChange?.({...value, slug: slug ? slugify(slug) : null})}
                   />
                   <Whisper
                     placement="top"

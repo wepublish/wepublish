@@ -55,7 +55,7 @@ export type ArticleFilter = {
 };
 
 export type ArticleInput = {
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['Slug']>;
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
@@ -95,10 +95,10 @@ export type ArticleRevision = {
   publishedAt?: Maybe<Scalars['DateTime']>;
   hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   seoTitle?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
@@ -588,7 +588,6 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
-  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
 };
@@ -697,7 +696,7 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
-  deletePeer?: Maybe<Scalars['ID']>;
+  deletePeer?: Maybe<Peer>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -707,48 +706,48 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   createToken: CreatedToken;
-  deleteToken?: Maybe<Scalars['String']>;
+  deleteToken?: Maybe<CreatedToken>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
   resetUserPassword?: Maybe<User>;
-  deleteUser?: Maybe<Scalars['String']>;
+  deleteUser?: Maybe<User>;
   createSubscription?: Maybe<Subscription>;
   updateSubscription?: Maybe<Subscription>;
-  deleteSubscription?: Maybe<Scalars['String']>;
+  deleteSubscription?: Maybe<Subscription>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
-  deleteUserRole?: Maybe<Scalars['String']>;
+  deleteUserRole?: Maybe<UserRole>;
   createNavigation?: Maybe<Navigation>;
   updateNavigation?: Maybe<Navigation>;
-  deleteNavigation?: Maybe<Scalars['ID']>;
+  deleteNavigation?: Maybe<Navigation>;
   createAuthor?: Maybe<Author>;
   updateAuthor?: Maybe<Author>;
-  deleteAuthor?: Maybe<Scalars['ID']>;
+  deleteAuthor?: Maybe<Author>;
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
-  deleteImage?: Maybe<Scalars['Boolean']>;
+  deleteImage?: Maybe<Image>;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
-  deleteArticle?: Maybe<Scalars['Boolean']>;
+  deleteArticle?: Maybe<Article>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
   duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
-  deletePage?: Maybe<Scalars['Boolean']>;
+  deletePage?: Maybe<Page>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
   duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<Scalars['ID']>;
+  deleteMemberPlan?: Maybe<MemberPlan>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<Scalars['ID']>;
+  deletePaymentMethod?: Maybe<PaymentMethod>;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
-  deleteInvoice?: Maybe<Scalars['ID']>;
+  deleteInvoice?: Maybe<Invoice>;
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
@@ -1282,7 +1281,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  isDisabled: Scalars['Boolean'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
 };
@@ -1564,9 +1563,11 @@ export type QueryPeerArticleArgs = {
 
 export type QueryPeerArticlesArgs = {
   cursors?: Maybe<Scalars['String']>;
+  take?: Maybe<Scalars['Int']>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
   peerFilter?: Maybe<Scalars['String']>;
+  filter?: Maybe<ArticleFilter>;
 };
 
 
@@ -1915,20 +1916,20 @@ export type User = {
 export type UserAddress = {
   __typename?: 'UserAddress';
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -2172,7 +2173,10 @@ export type DeleteArticleMutationVariables = Exact<{
 
 export type DeleteArticleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteArticle'>
+  & { deleteArticle?: Maybe<(
+    { __typename?: 'Article' }
+    & MutationArticleFragment
+  )> }
 );
 
 export type DuplicateArticleMutationVariables = Exact<{
@@ -2471,7 +2475,10 @@ export type DeleteAuthorMutationVariables = Exact<{
 
 export type DeleteAuthorMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteAuthor'>
+  & { deleteAuthor?: Maybe<(
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  )> }
 );
 
 type FullTeaser_ArticleTeaser_Fragment = (
@@ -2859,7 +2866,10 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteImage'>
+  & { deleteImage?: Maybe<(
+    { __typename?: 'Image' }
+    & FullImageFragment
+  )> }
 );
 
 export type InvoiceFragment = (
@@ -3003,7 +3013,10 @@ export type DeleteMemberPlanMutationVariables = Exact<{
 
 export type DeleteMemberPlanMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteMemberPlan'>
+  & { deleteMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
 );
 
 export type FullNavigationFragment = (
@@ -3087,7 +3100,10 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 export type DeleteNavigationMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteNavigation'>
+  & { deleteNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
 );
 
 export type MutationPageFragment = (
@@ -3218,7 +3234,10 @@ export type DeletePageMutationVariables = Exact<{
 
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePage'>
+  & { deletePage?: Maybe<(
+    { __typename?: 'Page' }
+    & MutationPageFragment
+  )> }
 );
 
 export type DuplicatePageMutationVariables = Exact<{
@@ -3424,7 +3443,10 @@ export type DeletePaymentMethodMutationVariables = Exact<{
 
 export type DeletePaymentMethodMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePaymentMethod'>
+  & { deletePaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
 );
 
 export type FullPeerProfileFragment = (
@@ -3553,7 +3575,10 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePeer'>
+  & { deletePeer?: Maybe<(
+    { __typename?: 'Peer' }
+    & PeerRefFragment
+  )> }
 );
 
 export type FullSubscriptionFragment = (
@@ -3664,7 +3689,10 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteSubscription'>
+  & { deleteSubscription?: Maybe<(
+    { __typename?: 'Subscription' }
+    & FullSubscriptionFragment
+  )> }
 );
 
 export type TokenRefFragment = (
@@ -3703,7 +3731,10 @@ export type DeleteTokenMutationVariables = Exact<{
 
 export type DeleteTokenMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteToken'>
+  & { deleteToken?: Maybe<(
+    { __typename?: 'CreatedToken' }
+    & Pick<CreatedToken, 'id' | 'name' | 'token'>
+  )> }
 );
 
 export type FullUserFragment = (
@@ -3819,7 +3850,10 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUser'>
+  & { deleteUser?: Maybe<(
+    { __typename?: 'User' }
+    & FullUserFragment
+  )> }
 );
 
 export type SendWebsiteLoginMutationVariables = Exact<{
@@ -3927,7 +3961,10 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUserRole'>
+  & { deleteUserRole?: Maybe<(
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  )> }
 );
 
 export const MutationArticleFragmentDoc = gql`
@@ -4794,9 +4831,11 @@ export type UnpublishArticleMutationResult = Apollo.MutationResult<UnpublishArti
 export type UnpublishArticleMutationOptions = Apollo.BaseMutationOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
 export const DeleteArticleDocument = gql`
     mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id)
+  deleteArticle(id: $id) {
+    ...MutationArticle
+  }
 }
-    `;
+    ${MutationArticleFragmentDoc}`;
 export type DeleteArticleMutationFn = Apollo.MutationFunction<DeleteArticleMutation, DeleteArticleMutationVariables>;
 
 /**
@@ -5286,9 +5325,11 @@ export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutat
 export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 export const DeleteAuthorDocument = gql`
     mutation DeleteAuthor($id: ID!) {
-  deleteAuthor(id: $id)
+  deleteAuthor(id: $id) {
+    ...FullAuthor
+  }
 }
-    `;
+    ${FullAuthorFragmentDoc}`;
 export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 
 /**
@@ -5618,9 +5659,11 @@ export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutatio
 export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
 export const DeleteImageDocument = gql`
     mutation DeleteImage($id: ID!) {
-  deleteImage(id: $id)
+  deleteImage(id: $id) {
+    ...FullImage
+  }
 }
-    `;
+    ${FullImageFragmentDoc}`;
 export type DeleteImageMutationFn = Apollo.MutationFunction<DeleteImageMutation, DeleteImageMutationVariables>;
 
 /**
@@ -5879,9 +5922,11 @@ export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberP
 export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
 export const DeleteMemberPlanDocument = gql`
     mutation DeleteMemberPlan($id: ID!) {
-  deleteMemberPlan(id: $id)
+  deleteMemberPlan(id: $id) {
+    ...FullMemberPlan
+  }
 }
-    `;
+    ${FullMemberPlanFragmentDoc}`;
 export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 
 /**
@@ -6046,9 +6091,11 @@ export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigat
 export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
 export const DeleteNavigationDocument = gql`
     mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id)
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
 }
-    `;
+    ${FullNavigationFragmentDoc}`;
 export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 
 /**
@@ -6262,9 +6309,11 @@ export type UnpublishPageMutationResult = Apollo.MutationResult<UnpublishPageMut
 export type UnpublishPageMutationOptions = Apollo.BaseMutationOptions<UnpublishPageMutation, UnpublishPageMutationVariables>;
 export const DeletePageDocument = gql`
     mutation DeletePage($id: ID!) {
-  deletePage(id: $id)
+  deletePage(id: $id) {
+    ...MutationPage
+  }
 }
-    `;
+    ${MutationPageFragmentDoc}`;
 export type DeletePageMutationFn = Apollo.MutationFunction<DeletePageMutation, DeletePageMutationVariables>;
 
 /**
@@ -6603,9 +6652,11 @@ export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaym
 export type UpdatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 export const DeletePaymentMethodDocument = gql`
     mutation DeletePaymentMethod($id: ID!) {
-  deletePaymentMethod(id: $id)
+  deletePaymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
 }
-    `;
+    ${FullPaymentMethodFragmentDoc}`;
 export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 
 /**
@@ -6873,9 +6924,11 @@ export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>
 export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
 export const DeletePeerDocument = gql`
     mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id)
+  deletePeer(id: $id) {
+    ...PeerRef
+  }
 }
-    `;
+    ${PeerRefFragmentDoc}`;
 export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
 
 /**
@@ -7088,9 +7141,11 @@ export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubsc
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
 export const DeleteSubscriptionDocument = gql`
     mutation DeleteSubscription($id: ID!) {
-  deleteSubscription(id: $id)
+  deleteSubscription(id: $id) {
+    ...FullSubscription
+  }
 }
-    `;
+    ${FullSubscriptionFragmentDoc}`;
 export type DeleteSubscriptionMutationFn = Apollo.MutationFunction<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 
 /**
@@ -7188,7 +7243,11 @@ export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutatio
 export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
 export const DeleteTokenDocument = gql`
     mutation DeleteToken($id: ID!) {
-  deleteToken(id: $id)
+  deleteToken(id: $id) {
+    id
+    name
+    token
+  }
 }
     `;
 export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation, DeleteTokenMutationVariables>;
@@ -7439,9 +7498,11 @@ export type ResetUserPasswordMutationResult = Apollo.MutationResult<ResetUserPas
 export type ResetUserPasswordMutationOptions = Apollo.BaseMutationOptions<ResetUserPasswordMutation, ResetUserPasswordMutationVariables>;
 export const DeleteUserDocument = gql`
     mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }
-    `;
+    ${FullUserFragmentDoc}`;
 export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
 
 /**
@@ -7684,9 +7745,11 @@ export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleM
 export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 export const DeleteUserRoleDocument = gql`
     mutation DeleteUserRole($id: ID!) {
-  deleteUserRole(id: $id)
+  deleteUserRole(id: $id) {
+    ...FullUserRole
+  }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 
 /**

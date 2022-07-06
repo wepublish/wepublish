@@ -23,17 +23,16 @@ export const updatePaymentProviderCustomers = async (
   return updateUser.paymentProviderCustomers
 }
 
+type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
+  address: Prisma.UserAddressUncheckedUpdateWithoutUserInput
+}
+
 export const updatePublicUser = async (
-  input: Pick<
-    Prisma.UserUncheckedUpdateInput,
-    'name' | 'email' | 'firstName' | 'preferredName' | 'address'
-  >,
+  {address, name, email, firstName, preferredName}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   userClient: PrismaClient['user']
 ) => {
   const {user} = authenticateUser()
-
-  const {name, email, firstName, preferredName, address} = input
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
@@ -49,7 +48,9 @@ export const updatePublicUser = async (
       name,
       firstName,
       preferredName,
-      address
+      address: {
+        update: address
+      }
     },
     select: unselectPassword
   })

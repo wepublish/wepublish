@@ -1,6 +1,6 @@
-import {Page, Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {PageFilter, PageSort} from '../../db/page'
+import {PageFilter, PageSort, PageWithRevisions} from '../../db/page'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
 export const createPageOrder = (
@@ -136,7 +136,7 @@ export const getPages = async (
   skip: number,
   take: number,
   page: PrismaClient['page']
-): Promise<ConnectionResult<Page>> => {
+): Promise<ConnectionResult<PageWithRevisions>> => {
   const orderBy = createPageOrder(sortedField, getSortOrder(order))
   const where = createPageFilter(filter)
 
@@ -150,7 +150,24 @@ export const getPages = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        draft: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
+          include: {
+            properties: true
+          }
+        },
+        published: {
+          include: {
+            properties: true
+          }
+        }
+      }
     })
   ])
 

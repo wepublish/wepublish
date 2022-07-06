@@ -202,8 +202,8 @@ const createHasAddressFilter = (
   if (filter?.userHasAddress) {
     return {
       user: {
-        address: {
-          isSet: true
+        isNot: {
+          address: null
         }
       }
     }
@@ -253,7 +253,12 @@ export const getSubscriptions = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true
+      }
     })
   ])
 

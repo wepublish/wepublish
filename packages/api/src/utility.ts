@@ -1,11 +1,10 @@
+import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
-
-import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} from 'graphql-tools'
-
+import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import formatISO from 'date-fns/formatISO'
-import {Subscription, User} from '@prisma/client'
+import {SubscriptionWithRelations} from './db/subscription'
+import {UserWithRelations} from './db/user'
 
 export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
@@ -17,7 +16,10 @@ export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
 
 export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
 
-export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription[]) {
+export function mapSubscriptionsAsCsv(
+  users: UserWithRelations[],
+  subscriptions: SubscriptionWithRelations[]
+) {
   let csvStr =
     [
       'id',
@@ -48,6 +50,7 @@ export function mapSubscriptionsAsCsv(users: User[], subscriptions: Subscription
   for (const subscription of subscriptions) {
     const user = users.find(user => user.id === subscription.userID)
     if (!user) continue
+
     csvStr +=
       [
         user.id,

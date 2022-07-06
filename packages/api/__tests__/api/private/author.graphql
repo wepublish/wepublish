@@ -52,5 +52,7 @@ mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
 }
 
 mutation DeleteAuthor($id: ID!) {
-  deleteAuthor(id: $id)
+  deleteAuthor(id: $id) {
+    ...FullAuthor
+  }
 }

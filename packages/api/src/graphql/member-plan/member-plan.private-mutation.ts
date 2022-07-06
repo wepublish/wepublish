@@ -1,8 +1,8 @@
 import {Context} from '../../context'
 import {authorise, CanCreateMemberPlan, CanDeleteMemberPlan} from '../permissions'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {PrismaClient, Prisma} from '@prisma/client'
 
-export const deleteMemberPlanById = (
+export const deleteMemberPlanById = async (
   id: string,
   authenticate: Context['authenticate'],
   memberPlan: PrismaClient['memberPlan']
@@ -13,12 +13,22 @@ export const deleteMemberPlanById = (
   return memberPlan.delete({
     where: {
       id
+    },
+    include: {
+      availablePaymentMethods: true
     }
   })
 }
 
+type CreateMemberPlanInput = Omit<
+  Prisma.MemberPlanUncheckedCreateInput,
+  'availablePaymentMethods' | 'modifiedAt'
+> & {
+  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[]
+}
+
 export const createMemberPlan = (
-  input: Omit<Prisma.MemberPlanUncheckedCreateInput, 'modifiedAt'>,
+  {availablePaymentMethods, ...input}: CreateMemberPlanInput,
   authenticate: Context['authenticate'],
   memberPlan: PrismaClient['memberPlan']
 ) => {
@@ -26,13 +36,30 @@ export const createMemberPlan = (
   authorise(CanCreateMemberPlan, roles)
 
   return memberPlan.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {
+      ...input,
+      availablePaymentMethods: {
+        createMany: {
+          data: availablePaymentMethods
+        }
+      }
+    },
+    include: {
+      availablePaymentMethods: true
+    }
   })
 }
 
-export const updateMemberPlan = (
+type UpdateMemberPlanInput = Omit<
+  Prisma.MemberPlanUncheckedUpdateInput,
+  'availablePaymentMethods' | 'modifiedAt' | 'createdAt'
+> & {
+  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[]
+}
+
+export const updateMemberPlan = async (
   id: string,
-  input: Omit<Prisma.MemberPlanUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  {availablePaymentMethods, ...input}: UpdateMemberPlanInput,
   authenticate: Context['authenticate'],
   memberPlan: PrismaClient['memberPlan']
 ) => {
@@ -41,6 +68,21 @@ export const updateMemberPlan = (
 
   return memberPlan.update({
     where: {id},
-    data: input
+    data: {
+      ...input,
+      availablePaymentMethods: {
+        deleteMany: {
+          memberPlanId: {
+            equals: id
+          }
+        },
+        createMany: {
+          data: availablePaymentMethods
+        }
+      }
+    },
+    include: {
+      availablePaymentMethods: true
+    }
   })
 }
