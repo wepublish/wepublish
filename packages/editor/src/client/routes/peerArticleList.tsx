@@ -123,6 +123,7 @@ export function PeerArticleList() {
                 setFilter({title: value})
                 console.log('article list', peerArticleListData)
                 console.log('filter', listVariables.filter)
+                console.log(filter)
               }}
             />
             <InputGroup.Addon>
