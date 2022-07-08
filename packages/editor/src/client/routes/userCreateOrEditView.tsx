@@ -24,8 +24,9 @@ import {
 } from '../api'
 import {RouteType, UserEditViewRoute, useRoute, useRouteDispatch} from '../route'
 import {useTranslation} from 'react-i18next'
-import {CreateOrUpdateUserPassword} from '../atoms/user/createOrUpdateUserPassword'
+import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
+import {UserSubscriptions} from '../atoms/user/userSubscriptions'
 
 export function UserCreateOrEditView() {
   const {t} = useTranslation()
@@ -469,7 +470,7 @@ export function UserCreateOrEditView() {
                   style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
-                      <CreateOrUpdateUserPassword
+                      <CreateOrEditUserPassword
                         user={user}
                         password={password}
                         setPassword={setPassword}
@@ -483,7 +484,9 @@ export function UserCreateOrEditView() {
             {/* subscriptions */}
             <Col xs={12}>
               <Grid fluid>
-                <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}></Panel>
+                <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
+                  <UserSubscriptions subscriptions={user?.subscriptions} />
+                </Panel>
               </Grid>
             </Col>
           </Row>

@@ -19,7 +19,9 @@ import {
   UserOAuth2Account,
   PaymentPeriodicity,
   SubscriptionPeriod,
-  SubscriptionDeactivation
+  SubscriptionDeactivation,
+  MemberPlan,
+  Invoice
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -155,6 +157,8 @@ export interface DBSubscription {
   paymentMethodID: string
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
+  memberPlan?: MemberPlan
+  invoices?: Invoice[]
 }
 
 export interface DBSession {

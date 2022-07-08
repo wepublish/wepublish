@@ -1941,7 +1941,7 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
-  subscriptions?: Maybe<Array<Maybe<UserSubscriptions>>>;
+  subscriptions: Array<UserSubscriptions>;
 };
 
 export type UserAddress = {
@@ -2036,6 +2036,8 @@ export type UserSubscriptions = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
+  memberPlan: MemberPlan;
+  invoices: Array<Invoice>;
 };
 
 export type VimeoVideoBlock = {
@@ -2969,7 +2971,7 @@ export type UpdateInvoiceMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
+  & Pick<MemberPlan, 'id' | 'name' | 'description' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2978,7 +2980,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -3780,14 +3782,20 @@ export type FullUserFragment = (
   )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>, subscriptions?: Maybe<Array<Maybe<(
+  )>, subscriptions: Array<(
     { __typename?: 'UserSubscriptions' }
     & Pick<UserSubscriptions, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
     & { properties: Array<(
       { __typename?: 'Properties' }
       & Pick<Properties, 'key' | 'value' | 'public'>
+    )>, memberPlan: (
+      { __typename?: 'MemberPlan' }
+      & MemberPlanRefFragment
+    ), invoices: Array<(
+      { __typename?: 'Invoice' }
+      & InvoiceFragment
     )> }
-  )>>> }
+  )> }
 );
 
 export type UserListQueryVariables = Exact<{
@@ -4357,6 +4365,40 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  modifiedAt
+  createdAt
+}
+    `;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -4399,9 +4441,17 @@ export const FullUserFragmentDoc = gql`
       value
       public
     }
+    memberPlan {
+      ...MemberPlanRef
+    }
+    invoices {
+      ...Invoice
+    }
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4470,27 +4520,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  modifiedAt
-  createdAt
-}
-    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -4564,21 +4593,8 @@ export const FullPaymentMethodFragmentDoc = gql`
   active
 }
     ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
-  description
   tags
   amountPerMonthMin
   availablePaymentMethods {

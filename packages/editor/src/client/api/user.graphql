@@ -1,3 +1,6 @@
+#import './invoice.graphql'
+#import './memberPlan.graphql'
+
 fragment FullUser on User {
     id
     createdAt
@@ -38,6 +41,12 @@ fragment FullUser on User {
             key
             value
             public
+        }
+        memberPlan {
+            ...MemberPlanRef
+        }
+        invoices {
+            ...Invoice
         }
     }
 }
