@@ -29,25 +29,32 @@ fragment FullUser on User {
         ...FullUserRole
     }
     subscriptions {
-        id
-        createdAt
-        modifiedAt
-        paymentPeriodicity
-        monthlyAmount
-        autoRenew
-        startsAt
-        paidUntil
-        properties {
-            key
-            value
-            public
-        }
-        memberPlan {
-            ...MemberPlanRef
-        }
-        invoices {
-            ...Invoice
-        }
+        ...UserSubscription
+    }
+}
+
+fragment UserSubscription on UserSubscription {
+    id
+    createdAt
+    modifiedAt
+    paymentPeriodicity
+    monthlyAmount
+    autoRenew
+    startsAt
+    paidUntil
+    properties {
+        key
+        value
+        public
+    }
+    deactivation {
+        ...Deactivation
+    }
+    memberPlan {
+        ...MemberPlanRef
+    }
+    invoices {
+        ...Invoice
     }
 }
 

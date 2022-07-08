@@ -1941,7 +1941,7 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
-  subscriptions: Array<UserSubscriptions>;
+  subscriptions: Array<UserSubscription>;
 };
 
 export type UserAddress = {
@@ -2025,8 +2025,8 @@ export enum UserSort {
   FirstName = 'FIRST_NAME'
 }
 
-export type UserSubscriptions = {
-  __typename?: 'UserSubscriptions';
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -2036,6 +2036,7 @@ export type UserSubscriptions = {
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
+  deactivation?: Maybe<SubscriptionDeactivation>;
   memberPlan: MemberPlan;
   invoices: Array<Invoice>;
 };
@@ -3783,18 +3784,26 @@ export type FullUserFragment = (
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
   )>, subscriptions: Array<(
-    { __typename?: 'UserSubscriptions' }
-    & Pick<UserSubscriptions, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
-    & { properties: Array<(
-      { __typename?: 'Properties' }
-      & Pick<Properties, 'key' | 'value' | 'public'>
-    )>, memberPlan: (
-      { __typename?: 'MemberPlan' }
-      & MemberPlanRefFragment
-    ), invoices: Array<(
-      { __typename?: 'Invoice' }
-      & InvoiceFragment
-    )> }
+    { __typename?: 'UserSubscription' }
+    & UserSubscriptionFragment
+  )> }
+);
+
+export type UserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
+  & { properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, deactivation?: Maybe<(
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  )>, memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & MemberPlanRefFragment
+  ), invoices: Array<(
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
   )> }
 );
 
@@ -4365,6 +4374,12 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
@@ -4399,6 +4414,34 @@ export const InvoiceFragmentDoc = gql`
   createdAt
 }
     `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -4428,30 +4471,11 @@ export const FullUserFragmentDoc = gql`
     ...FullUserRole
   }
   subscriptions {
-    id
-    createdAt
-    modifiedAt
-    paymentPeriodicity
-    monthlyAmount
-    autoRenew
-    startsAt
-    paidUntil
-    properties {
-      key
-      value
-      public
-    }
-    memberPlan {
-      ...MemberPlanRef
-    }
-    invoices {
-      ...Invoice
-    }
+    ...UserSubscription
   }
 }
     ${FullUserRoleFragmentDoc}
-${MemberPlanRefFragmentDoc}
-${InvoiceFragmentDoc}`;
+${UserSubscriptionFragmentDoc}`;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4613,12 +4637,6 @@ export const MetadataPropertyFragmentDoc = gql`
   key
   value
   public
-}
-    `;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
 }
     `;
 export const FullSubscriptionFragmentDoc = gql`

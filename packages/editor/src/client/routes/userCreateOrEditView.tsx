@@ -26,7 +26,7 @@ import {RouteType, UserEditViewRoute, useRoute, useRouteDispatch} from '../route
 import {useTranslation} from 'react-i18next'
 import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
-import {UserSubscriptions} from '../atoms/user/userSubscriptions'
+import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 
 export function UserCreateOrEditView() {
   const {t} = useTranslation()
@@ -485,7 +485,7 @@ export function UserCreateOrEditView() {
             <Col xs={12}>
               <Grid fluid>
                 <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
-                  <UserSubscriptions subscriptions={user?.subscriptions} />
+                  <UserSubscriptionsList subscriptions={user?.subscriptions} />
                 </Panel>
               </Grid>
             </Col>

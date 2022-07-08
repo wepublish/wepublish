@@ -17,6 +17,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPublicPayment} from './payment'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLInvoice} from './invoice'
+import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -47,8 +48,8 @@ export const GraphQLOAuth2Account = new GraphQLObjectType({
   }
 })
 
-const GraphQLUserSubscriptions = new GraphQLObjectType({
-  name: 'UserSubscriptions',
+const GraphQLUserSubscription = new GraphQLObjectType({
+  name: 'UserSubscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
@@ -59,6 +60,7 @@ const GraphQLUserSubscriptions = new GraphQLObjectType({
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    deactivation: {type: GraphQLSubscriptionDeactivation},
     memberPlan: {
       type: GraphQLNonNull(GraphQLMemberPlan)
     },
@@ -102,7 +104,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
     },
     subscriptions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserSubscriptions))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserSubscription))),
       resolve({id}, args, {dbAdapter}) {
         return dbAdapter.subscription.getSubscriptionsByUserID(id)
       }
