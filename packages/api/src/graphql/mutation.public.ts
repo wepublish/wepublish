@@ -67,6 +67,7 @@ import {GraphQLMetadataPropertyPublicInput} from './common'
 import * as crypto from 'crypto'
 import {getUserForCredentials} from './user/user.queries'
 import {Invoice, Subscription} from '@prisma/client'
+import {revokeSessionByToken} from './session/session.mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -152,10 +153,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
       description: 'This mutation revokes and deletes the active session.',
-      async resolve(root, _, {authenticateUser, dbAdapter}) {
-        const session = authenticateUser()
-        return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
+        revokeSessionByToken(authenticateUser, session)
     },
 
     // Comment

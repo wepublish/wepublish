@@ -26,15 +26,23 @@ import {
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {deleteArticleById} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
+import {deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
+import {deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {deleteInvoiceById} from './invoice/invoice.private-mutation'
+import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
+import {deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
+import {deletePageById} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {deletePaymentMethodById} from './payment-method/payment-method.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
   GraphQLCreatePeerInput,
@@ -43,6 +51,7 @@ import {
   GraphQLPeerProfileInput,
   GraphQLUpdatePeerInput
 } from './peer'
+import {deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
@@ -59,19 +68,6 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanDeleteArticle,
-  CanDeleteAuthor,
-  CanDeleteImage,
-  CanDeleteInvoice,
-  CanDeleteMemberPlan,
-  CanDeleteNavigation,
-  CanDeletePage,
-  CanDeletePaymentMethod,
-  CanDeletePeer,
-  CanDeleteSubscription,
-  CanDeleteToken,
-  CanDeleteUser,
-  CanDeleteUserRole,
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
@@ -80,10 +76,16 @@ import {
   CanUpdatePeerProfile
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
+import {revokeSessionByToken} from './session/session.mutation'
+import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
+import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
+import {deleteUserRoleById} from './user-role/user-role.private-mutation'
+import {deleteUserById} from './user/user.private-mutation'
 import {getUserForCredentials} from './user/user.queries'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
@@ -213,12 +215,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePeer: {
       type: GraphQLID,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePeer, roles)
-
-        return dbAdapter.peer.deletePeer(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
+        deletePeerById(id, authenticate, peer)
     },
 
     // Session
@@ -293,19 +291,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     revokeSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-        return dbAdapter.session.deleteUserSessionByID(user, id)
-      }
+      resolve: (root, {id}, {authenticateUser, prisma: {session}}) =>
+        revokeSessionById(id, authenticateUser, session)
     },
 
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      async resolve(root, _, {authenticateUser, dbAdapter}) {
-        const session = authenticateUser()
-        return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
-      }
+      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
+        revokeSessionByToken(authenticateUser, session)
     },
 
     sessions: {
@@ -398,12 +392,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteToken: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteToken, roles)
-
-        return dbAdapter.token.deleteToken(id)
-      }
+      resolve: (root, {id}, {authenticate, prisma: {token}}) =>
+        deleteTokenById(id, authenticate, token)
     },
 
     // User
@@ -464,12 +454,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteUser, roles)
-        await dbAdapter.user.deleteUser({id})
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {user}}) =>
+        deleteUserById(id, authenticate, user)
     },
 
     // Subscriptions
@@ -531,14 +517,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteSubscription, roles)
-
-        await dbAdapter.subscription.deleteSubscription({id})
-
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
+        deleteSubscriptionById(id, authenticate, subscription)
     },
 
     // UserRole
@@ -572,12 +552,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteUserRole, roles)
-        await dbAdapter.userRole.deleteUserRole({id})
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {userRole}}) =>
+        deleteUserRoleById(id, authenticate, userRole)
     },
 
     // Navigation
@@ -618,11 +594,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteNavigation, roles)
-        return await dbAdapter.navigation.deleteNavigation({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {navigation}}) =>
+        deleteNavigationById(id, authenticate, navigation)
     },
 
     // Author
@@ -656,12 +629,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteAuthor, roles)
-        await dbAdapter.author.deleteAuthor({id})
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {author}}) =>
+        deleteAuthorById(id, authenticate, author)
     },
 
     // Image
@@ -714,13 +683,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteImage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, mediaAdapter, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteImage, roles)
-
-        await mediaAdapter.deleteImage(id)
-        return dbAdapter.image.deleteImage({id})
-      }
+      resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
+        deleteImageById(id, authenticate, image, mediaAdapter)
     },
 
     // Article
@@ -759,11 +723,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteArticle: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteArticle, roles)
-        return dbAdapter.article.deleteArticle({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
+        deleteArticleById(id, authenticate, article)
     },
 
     publishArticle: {
@@ -860,11 +821,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePage, roles)
-        return dbAdapter.page.deletePage({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {page}}) =>
+        deletePageById(id, authenticate, page)
     },
 
     publishPage: {
@@ -974,12 +932,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteMemberPlan, roles)
-        await dbAdapter.memberPlan.deleteMemberPlan({id})
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {memberPlan}}) =>
+        deleteMemberPlanById(id, authenticate, memberPlan)
     },
 
     // PaymentMethod
@@ -1021,12 +975,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePaymentMethod, roles)
-        await dbAdapter.paymentMethod.deletePaymentMethod(id)
-        return id
-      }
+      resolve: (root, {id}, {authenticate, prisma: {paymentMethod}}) =>
+        deletePaymentMethodById(id, authenticate, paymentMethod)
     },
 
     // Invoice
@@ -1109,11 +1059,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteInvoice, roles)
-        return await dbAdapter.invoice.deleteInvoice({id})
-      }
+      resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
+        deleteInvoiceById(id, authenticate, invoice)
     },
 
     approveComment: {

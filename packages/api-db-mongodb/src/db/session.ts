@@ -50,11 +50,6 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
     }
   }
 
-  async deleteUserSessionByToken(token: string): Promise<boolean> {
-    const {deletedCount} = await this.sessions.deleteOne({token})
-    return deletedCount === 1
-  }
-
   async extendUserSessionByToken(token: string): Promise<OptionalUserSession> {
     const {value} = await this.sessions.findOneAndUpdate(
       {token},
@@ -79,10 +74,5 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
       user,
       roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
     }
-  }
-
-  async deleteUserSessionByID(user: User, id: string): Promise<boolean> {
-    const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
-    return deletedCount === 1
   }
 }

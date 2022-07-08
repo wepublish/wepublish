@@ -276,11 +276,6 @@ Object {
                 },
                 Object {
                   "deprecated": false,
-                  "description": "Allows to delete tokens",
-                  "id": "CAN_DELETE_TOKEN",
-                },
-                Object {
-                  "deprecated": false,
                   "description": "Allows to create an user",
                   "id": "CAN_CREATE_USER",
                 },

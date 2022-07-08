@@ -39,10 +39,6 @@ export interface NavigationInput {
   links: NavigationLink[]
 }
 
-export interface DeleteNavigationArgs {
-  id: string
-}
-
 export interface UpdateNavigationArgs {
   id: string
   input: NavigationInput
@@ -55,5 +51,4 @@ export interface CreateNavigationArgs {
 export interface DBNavigationAdapter {
   createNavigation(args: CreateNavigationArgs): Promise<Navigation>
   updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
-  deleteNavigation(args: DeleteNavigationArgs): Promise<string | null>
 }

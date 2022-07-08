@@ -33,7 +33,4 @@ export interface DBSessionAdapter {
   createUserSession(user: User): Promise<OptionalUserSession>
   // The extensions will be as long as sessionTTL inside the DBSessionAdapter
   extendUserSessionByToken(token: string): Promise<OptionalUserSession>
-
-  deleteUserSessionByID(user: User, id: string): Promise<boolean>
-  deleteUserSessionByToken(token: string): Promise<boolean>
 }

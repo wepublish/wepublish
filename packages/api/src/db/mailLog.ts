@@ -14,10 +14,6 @@ export interface UpdateMailLogArgs {
   readonly input: MailLogInput
 }
 
-export interface DeleteMailLogArgs {
-  readonly id: string
-}
-
 export enum MailLogSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -52,5 +48,4 @@ export type OptionalMailLog = MailLog | null
 export interface DBMailLogAdapter {
   createMailLog(args: CreateMailLogArgs): Promise<MailLog>
   updateMailLog(args: UpdateMailLogArgs): Promise<OptionalMailLog>
-  deleteMailLog(args: DeleteMailLogArgs): Promise<string | null>
 }

@@ -1,9 +1,8 @@
 import React from 'react'
-
 import {ArticleFooter} from '../navigation/articleFooter'
-import {relatedArticlesAdapter} from './articleAdapter'
-import {Author, Peer, ArticleMeta, Comment} from '../types'
 import {useListArticlesQuery} from '../query'
+import {ArticleMeta, Author, Comment, Peer} from '../types'
+import {relatedArticlesAdapter} from './articleAdapter'
 
 export interface ArticleFooterContainerProps {
   readonly tags: string[]

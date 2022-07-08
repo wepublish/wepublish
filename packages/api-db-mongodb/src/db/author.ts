@@ -2,7 +2,6 @@ import {
   Author,
   CreateAuthorArgs,
   DBAuthorAdapter,
-  DeleteAuthorArgs,
   OptionalAuthor,
   UpdateAuthorArgs
 } from '@wepublish/api'
@@ -53,10 +52,5 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
 
     const {_id: outID, ...author} = value
     return {id: outID, ...author}
-  }
-
-  async deleteAuthor({id}: DeleteAuthorArgs): Promise<string | null> {
-    const {deletedCount} = await this.authors.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

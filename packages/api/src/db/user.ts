@@ -10,10 +10,6 @@ export interface UpdateUserArgs {
   readonly input: UserInput
 }
 
-export interface DeleteUserArgs {
-  readonly id: string
-}
-
 export interface ResetUserPasswordArgs {
   readonly id: string
   readonly password: string
@@ -75,12 +71,6 @@ export interface UserOAuth2AccountArgs {
   readonly oauth2Account: UserOAuth2Account
 }
 
-export interface DeleteUserOAuth2AccountArgs {
-  readonly userID: string
-  readonly provider: string
-  readonly providerAccountId: string
-}
-
 export interface User {
   readonly id: string
   readonly createdAt: Date
@@ -130,12 +120,10 @@ export type OptionalUser = User | null
 export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
-  deleteUser(args: DeleteUserArgs): Promise<string | null>
 
   resetUserPassword(args: ResetUserPasswordArgs): Promise<OptionalUser>
 
   addOAuth2Account(args: UserOAuth2AccountArgs): Promise<OptionalUser>
-  deleteOAuth2Account(args: DeleteUserOAuth2AccountArgs): Promise<OptionalUser>
 
   updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
 }

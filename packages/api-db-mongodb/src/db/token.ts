@@ -22,9 +22,4 @@ export class MongoDBTokenAdapter implements DBTokenAdapter {
     const {_id: id, ...data} = ops[0]
     return {id, ...data}
   }
-
-  async deleteToken(id: string): Promise<string | null> {
-    const {deletedCount} = await this.tokens.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
-  }
 }

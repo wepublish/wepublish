@@ -190,11 +190,6 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to delete tokens",
-          "id": "CAN_DELETE_TOKEN",
-        },
-        Object {
-          "deprecated": false,
           "description": "Allows to create an user",
           "id": "CAN_CREATE_USER",
         },
@@ -612,11 +607,6 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to delete tokens",
-              "id": "CAN_DELETE_TOKEN",
-            },
-            Object {
-              "deprecated": false,
               "description": "Allows to create an user",
               "id": "CAN_CREATE_USER",
             },
@@ -1009,11 +999,6 @@ Object {
               "deprecated": false,
               "description": "Allows to get all tokens",
               "id": "CAN_GET_TOKENS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to delete tokens",
-              "id": "CAN_DELETE_TOKEN",
             },
             Object {
               "deprecated": false,
@@ -1531,11 +1516,6 @@ Object {
         "deprecated": false,
         "description": "Allows to get all tokens",
         "id": "CAN_GET_TOKENS",
-      },
-      Object {
-        "deprecated": false,
-        "description": "Allows to delete tokens",
-        "id": "CAN_DELETE_TOKEN",
       },
       Object {
         "deprecated": false,

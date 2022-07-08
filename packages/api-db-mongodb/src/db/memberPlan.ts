@@ -1,7 +1,6 @@
 import {
   CreateMemberPlanArgs,
   DBMemberPlanAdapter,
-  DeleteMemberPlanArgs,
   MemberPlan,
   OptionalMemberPlan,
   UpdateMemberPlanArgs
@@ -57,10 +56,5 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
 
     const {_id: outID, ...memberPlan} = value
     return {id: outID, ...memberPlan}
-  }
-
-  async deleteMemberPlan({id}: DeleteMemberPlanArgs): Promise<string | null> {
-    const {deletedCount} = await this.memberPlans.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

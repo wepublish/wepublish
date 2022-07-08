@@ -1,10 +1,4 @@
-import {
-  CreateImageArgs,
-  DBImageAdapter,
-  DeleteImageArgs,
-  OptionalImage,
-  UpdateImageArgs
-} from '@wepublish/api'
+import {CreateImageArgs, DBImageAdapter, OptionalImage, UpdateImageArgs} from '@wepublish/api'
 import {Collection, Db} from 'mongodb'
 import {CollectionName, DBImage} from './schema'
 
@@ -67,10 +61,5 @@ export class MongoDBImageAdapter implements DBImageAdapter {
 
     const {_id: outID, ...image} = value
     return {id: outID, ...image}
-  }
-
-  async deleteImage({id}: DeleteImageArgs): Promise<boolean | null> {
-    const {deletedCount} = await this.images.deleteOne({_id: id})
-    return deletedCount !== 0 ? true : null
   }
 }

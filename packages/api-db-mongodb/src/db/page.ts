@@ -1,7 +1,6 @@
 import {
   CreatePageArgs,
   DBPageAdapter,
-  DeletePageArgs,
   OptionalPage,
   Page,
   PublishPageArgs,
@@ -92,11 +91,6 @@ export class MongoDBPageAdapter implements DBPageAdapter {
 
     const {_id: outID, ...page} = value
     return {id: outID, ...page}
-  }
-
-  async deletePage({id}: DeletePageArgs): Promise<boolean | null> {
-    const {deletedCount} = await this.pages.deleteOne({_id: id})
-    return deletedCount !== 0 ? true : null
   }
 
   async publishPage({

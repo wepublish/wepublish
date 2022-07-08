@@ -2,7 +2,6 @@ import {
   Article,
   CreateArticleArgs,
   DBArticleAdapter,
-  DeleteArticleArgs,
   OptionalArticle,
   PublishArticleArgs,
   UnpublishArticleArgs,
@@ -105,11 +104,6 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
     const {_id: outID, ...article} = value
     return {id: outID, ...article}
-  }
-
-  async deleteArticle({id}: DeleteArticleArgs): Promise<boolean | null> {
-    const {deletedCount} = await this.articles.deleteOne({_id: id})
-    return deletedCount !== 0 ? true : null
   }
 
   async publishArticle({

@@ -12,5 +12,4 @@ export interface TokenInput {
 
 export interface DBTokenAdapter {
   createToken(input: TokenInput): Promise<Token>
-  deleteToken(id: string): Promise<string | null>
 }

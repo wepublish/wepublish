@@ -1,7 +1,6 @@
 import {
   CreatePaymentArgs,
   DBPaymentAdapter,
-  DeletePaymentArgs,
   OptionalPayment,
   Payment,
   UpdatePaymentArgs
@@ -55,10 +54,5 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
 
     const {_id: outID, ...payment} = value
     return {id: outID, ...payment}
-  }
-
-  async deletePayment({id}: DeletePaymentArgs): Promise<string | null> {
-    const {deletedCount} = await this.payment.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

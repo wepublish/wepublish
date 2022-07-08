@@ -1,7 +1,6 @@
 import {
   CreateMailLogArgs,
   DBMailLogAdapter,
-  DeleteMailLogArgs,
   MailLog,
   OptionalMailLog,
   UpdateMailLogArgs
@@ -51,10 +50,5 @@ export class MongoDBMailLogAdapter implements DBMailLogAdapter {
 
     const {_id: outID, ...mailLog} = value
     return {id: outID, ...mailLog}
-  }
-
-  async deleteMailLog({id}: DeleteMailLogArgs): Promise<string | null> {
-    const {deletedCount} = await this.mailLog.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
   }
 }

@@ -88,9 +88,4 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     const {_id: outID, ...data} = value
     return {id: outID, ...data}
   }
-
-  async deletePeer(id: string): Promise<string | null> {
-    const {deletedCount} = await this.peers.deleteOne({_id: id})
-    return deletedCount !== 0 ? id : null
-  }
 }
