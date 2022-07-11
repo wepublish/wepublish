@@ -7,3 +7,11 @@ export const GraphQLAuthProvider = new GraphQLObjectType({
     url: {type: GraphQLNonNull(GraphQLString)}
   }
 })
+
+export const GraphQLJWTToken = new GraphQLObjectType({
+  name: 'JWTToken',
+  fields: {
+    token: {type: GraphQLNonNull(GraphQLString)},
+    expiresAt: {type: GraphQLNonNull(GraphQLString)}
+  }
+})

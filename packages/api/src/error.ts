@@ -174,3 +174,9 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
     super(msg, ErrorCode.UserSubscriptionAlreadyDeactivated)
   }
 }
+
+export class GivenTokeExpiryToLongError extends ApolloError {
+  constructor() {
+    super(`Given token expiry is to long!`)
+  }
+}

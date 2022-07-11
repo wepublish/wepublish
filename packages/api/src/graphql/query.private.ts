@@ -21,7 +21,7 @@ import {UserInputError} from 'apollo-server-express'
 import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
-import {GraphQLAuthProvider} from './auth'
+import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 
 import {
   GraphQLArticleConnection,
@@ -104,7 +104,8 @@ import {
   CanGetPagePreviewLink,
   CanCreatePeer,
   CanGetSubscriptions,
-  CanGetSubscription
+  CanGetSubscription,
+  CanLoginAsOtherUser
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -116,7 +117,13 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {DisabledPeerError, NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
+import {
+  DisabledPeerError,
+  GivenTokeExpiryToLongError,
+  NotAuthorisedError,
+  NotFound,
+  PeerTokenInvalidError
+} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
@@ -185,6 +192,30 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           throw new PeerTokenInvalidError(link.toString())
         } else {
           return await markResultAsProxied(remoteAnswer)
+        }
+      }
+    },
+
+    createJWTForUser: {
+      type: GraphQLJWTToken,
+      args: {
+        userId: {type: GraphQLNonNull(GraphQLString)},
+        expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT}, info) {
+        const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
+        const {roles} = authenticate()
+        authorise(CanLoginAsOtherUser, roles)
+        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) {
+          throw new GivenTokeExpiryToLongError()
+        }
+        const expiresAt = new Date(
+          new Date().getTime() + expiresInMinutes * 60 * 1000
+        ).toISOString()
+        const token = generateJWT({id: userId, expiresInMinutes})
+        return {
+          token,
+          expiresAt
         }
       }
     },
