@@ -702,13 +702,13 @@
     "userCreateOrEditView": {
       "passwordHeader": "Mots de passe & accès",
       "userDataTitle": "Données utilisateur",
-      "loadingUser": "Loading User",
-      "subscriptionsHeader": "Subscriptions",
-      "successfullyUpdatedUser": "User successfully updated",
-      "errorOnUpdate": "Error while updating the user: {{error}}",
-      "successfullyCreatedUser": "User successfully created",
-      "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
-      "createNewUser": "Create new user",
+      "loadingUser": "Chargement utilisateur",
+      "subscriptionsHeader": "Abonnements",
+      "successfullyUpdatedUser": "Utilisateur mis à jour avec succès",
+      "errorOnUpdate": "Erreur lors de la mise à jour de l'utilisateur: {{error}}",
+      "successfullyCreatedUser": "Utilisateur créé avec succès",
+      "errorCreatingUser": "L'utilisateur n'a pas pu être créé. Erreur inattendue: {{error}}",
+      "createNewUser": "Créer nouvel utilisateur",
       "saveAndClose": "Enregistrer & fermer",
       "createAndClose": "Créer & fermer",
       "csvData": "Données CSV",
@@ -760,10 +760,35 @@
     },
     "userSubscriptionList": {
       "deactivationReason": {
-        "None": "None",
-        "InvoiceNotPaid": "Invoice not paid",
-        "UserSelfDeactivated": "User self deactivation"
-      }
+        "None": "Aucune",
+        "InvoiceNotPaid": "Facture non payée",
+        "UserSelfDeactivated": "Désactivation de l'utilisateur"
+      },
+      "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
+      "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",
+      "noDeactivation": "Pas de désactivation.",
+      "paidUntil": "Payé jusqu'au {{date}}",
+      "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
+      "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante.",
+      "invoiceNr": "N° de facture {{invoiceId}}",
+      "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
+      "editSubscription": "Modifier l'abonnement",
+      "aboDetails": "Détails de l'abonnement",
+      "subscriptionCreatedAt": "Créé le {{date}}",
+      "subscriptionStartsAt": "L'abonnement débute le {{date}}",
+      "paymentPeriodicity": "Périodicité des paiements : {{paymentPeriodicity}}",
+      "monthlyAmount": "Montant mensuel : {{monthlyAmount}} CHF",
+      "periods": "Périodes",
+      "periodCreatedAt": "Créé le {{date}}",
+      "periodStartsAt": "Valable de {{date}}",
+      "periodEndsAt": "jusqu'à {{date}}",
+      "periodAmount": "Montant : {{amount}} CHF",
+      "invoiceUnpaid": "non payée",
+      "invoicePaid": "payée"
+    },
+    "createOrEditUserPassword": {
+      "sendLoginLink": "Envoyer le lien de login par e-mail ?",
+      "sendLoginLinkContent": "Veux-tu envoyer à {{email}} un lien avec lequel {{firstName}} {{name}} peut se connecter avec ses privilèges existants ?"
     },
     "userSubscriptionEdit": {
       "memberPlanMonthlyAmount": "Montant mensuel (CHF)",

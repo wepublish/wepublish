@@ -971,7 +971,32 @@
         "None": "None",
         "InvoiceNotPaid": "Invoice not paid",
         "UserSelfDeactivated": "User self deactivation"
-      }
+      },
+      "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
+      "deactivationString": "Deactivated at {{date}}. Reason: {{reason}}",
+      "noDeactivation": "No deactivation.",
+      "paidUntil": "Paid until {{date}}",
+      "noAutoRenew": "Subscription expires, no automatic renewal",
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
+      "invoiceNr": "Invoice No. {{invoiceId}}",
+      "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
+      "editSubscription": "Edit Subscription",
+      "aboDetails": "Subscription details",
+      "subscriptionCreatedAt": "Created at {{date}}",
+      "subscriptionStartsAt": "Subscription starts at {{date}}",
+      "paymentPeriodicity": "Payment periodicity: {{paymentPeriodicity}}",
+      "monthlyAmount": "Monthly amount: {{monthlyAmount}} CHF",
+      "periods": "Periods",
+      "periodCreatedAt": "Created at {{date}}",
+      "periodStartsAt": "Starts at {{date}}",
+      "periodEndsAt": "until {{date}}",
+      "periodAmount": "Amount: {{amount}} CHF",
+      "invoiceUnpaid": "unpaid",
+      "invoicePaid": "paid"
+    },
+    "createOrEditUserPassword": {
+      "sendLoginLink": "Send login link by email?",
+      "sendLoginLinkContent": "Do you want to send {{email}} a link that {{firstName}} {{name}} can use to log in with his existing permissions?"
     },
     "userSubscriptionEdit": {
       "active": "Active",

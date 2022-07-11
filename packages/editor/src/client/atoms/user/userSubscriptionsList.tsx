@@ -72,7 +72,7 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
         date: new Intl.DateTimeFormat('de-CH').format(new Date(subscription.paidUntil))
       })
     }
-    return t('userSubscriptionList.notPaid')
+    return t('userSubscriptionList.invoiceUnpaid')
   }
 
   function paymentPeriodicity(subscription: UserSubscriptionFragment) {

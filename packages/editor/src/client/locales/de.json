@@ -900,7 +900,6 @@
       "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
       "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
       "noDeactivation": "Keine Deaktivierung.",
-      "notPaid": "Nicht bezahlt",
       "paidUntil": "Bezahlt bis am {{date}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden.",
