@@ -180,3 +180,9 @@ export class GivenTokeExpiryToLongError extends ApolloError {
     super(`Given token expiry is to long!`)
   }
 }
+
+export class UserIdNotFound extends ApolloError {
+  constructor() {
+    super(`Given user ID not valid!`)
+  }
+}

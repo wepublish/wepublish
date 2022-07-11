@@ -122,7 +122,8 @@ import {
   GivenTokeExpiryToLongError,
   NotAuthorisedError,
   NotFound,
-  PeerTokenInvalidError
+  PeerTokenInvalidError,
+  UserIdNotFound
 } from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
@@ -202,13 +203,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         userId: {type: GraphQLNonNull(GraphQLString)},
         expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
       },
-      async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT}, info) {
+      async resolve(
+        root,
+        {userId, expiresInMinutes},
+        {authenticate, generateJWT, dbAdapter},
+        info
+      ) {
         const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
         const {roles} = authenticate()
         authorise(CanLoginAsOtherUser, roles)
-        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) {
-          throw new GivenTokeExpiryToLongError()
-        }
+        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) throw new GivenTokeExpiryToLongError()
+
+        const user = await dbAdapter.user.getUserByID(userId)
+        if (!user) throw new UserIdNotFound()
+
         const expiresAt = new Date(
           new Date().getTime() + expiresInMinutes * 60 * 1000
         ).toISOString()
