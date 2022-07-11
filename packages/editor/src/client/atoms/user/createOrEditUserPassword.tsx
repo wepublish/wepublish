@@ -19,7 +19,8 @@ export function CreateOrEditUserPassword({
   isDisabled
 }: CreateOrUpdateuserPasswordProps) {
   const {t} = useTranslation()
-  const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
+  const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState<boolean>(false)
+  const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false)
   const [sendWebsiteLogin] = useSendWebsiteLoginMutation()
 
   async function sendLoginLink() {
@@ -33,6 +34,8 @@ export function CreateOrEditUserPassword({
     }
     try {
       await sendWebsiteLogin({variables: {email: user.email}})
+      // close modal
+      setSendLoginModalOpen(false)
       toaster.push(
         <Message type="success" showIcon closable duration={2000}>
           {t('userList.panels.sendWebsiteLoginSuccessMessage', {email: user.email})}
@@ -65,7 +68,7 @@ export function CreateOrEditUserPassword({
               color="red"
               style={{marginLeft: '20px'}}
               disabled={isDisabled || !user.email || !user.active}
-              onClick={sendLoginLink}>
+              onClick={() => setSendLoginModalOpen(true)}>
               <Send style={{marginRight: '5px'}} />
               {t('userList.panels.sendWebsiteLogin')}
             </Button>
@@ -118,10 +121,35 @@ export function CreateOrEditUserPassword({
     )
   }
 
+  function sendLoginLinkModal() {
+    return (
+      <>
+        <Modal open={sendLoginModalOpen} onClose={() => setSendLoginModalOpen(false)}>
+          <Modal.Header>
+            <Modal.Title>Login-Link per E-Mail versenden?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Willst Du {user?.email} einen Link senden, mit der sich {user?.firstName} {user.name}{' '}
+            mit den bestehenden Rechten einloggen kann?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button appearance="primary" onClick={sendLoginLink}>
+              {t('userList.panels.sendWebsiteLogin')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+    )
+  }
+
   return (
     <>
       {createOrResetPasswordView()}
       {resetPasswordModal()}
+      {sendLoginLinkModal()}
     </>
   )
 }

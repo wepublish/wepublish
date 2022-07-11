@@ -255,7 +255,12 @@ export function UserCreateOrEditView() {
    */
   function titleView() {
     if (isDisabled) {
-      return <Loader content={t('userCreateOrEditView.loadingUser')} />
+      return (
+        <>
+          <Loader style={{marginRight: '5px'}} />
+          {t('userCreateOrEditView.loadingUser')}
+        </>
+      )
     }
     if (!user) {
       return t('userCreateOrEditView.createNewUser')
@@ -315,7 +320,7 @@ export function UserCreateOrEditView() {
           </Row>
         </Grid>
         {/* user form */}
-        <Grid style={{width: '100%'}}>
+        <Grid style={{width: '100%', paddingLeft: '0px'}}>
           <Row gutter={10}>
             <Col xs={12}>
               <Grid fluid>
@@ -519,7 +524,7 @@ export function UserCreateOrEditView() {
             </Col>
             {/* subscriptions */}
             <Col xs={12}>
-              <Grid fluid>
+              <Grid fluid style={{paddingRight: '0px'}}>
                 <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
                   <UserSubscriptionsList subscriptions={user?.subscriptions} />
                 </Panel>
