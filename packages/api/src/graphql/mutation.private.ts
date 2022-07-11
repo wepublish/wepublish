@@ -412,9 +412,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLUserInput)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve(root, {input, password}, {authenticate, dbAdapter}) {
+      async resolve(root, {input, password}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input, {allowUnknown: true})
         return dbAdapter.user.createUser({input, password})
       }
     },
@@ -425,9 +427,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserInput)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input, {allowUnknown: true})
         return dbAdapter.user.updateUser({id, input})
       }
     },
