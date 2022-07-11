@@ -2,7 +2,11 @@ import React from 'react'
 import {Divider, FlexboxGrid} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {newSubscriptionButton} from '../../routes/subscriptionList'
-import {PaymentPeriodicity, UserSubscriptionFragment} from '../../api'
+import {
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason,
+  UserSubscriptionFragment
+} from '../../api'
 import {Calendar, Creative, Exit, Off, PieChart, Reload} from '@rsuite/icons'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 
@@ -20,15 +24,41 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     if (subscription.autoRenew) {
       return (
         <>
-          <Reload style={{marginRight: '5px'}} /> Subscription wird automatisch erneuert
+          <Reload style={{marginRight: '5px'}} /> Subscription wird automatisch erneuert.{' '}
+          {getDeactivationString(subscription)}
         </>
       )
     }
+    // subscription is not auto renewed
     return (
       <>
-        <Off style={{marginRight: '5px'}} /> Subscription läuft aus
+        <Off style={{marginRight: '5px'}} /> Subscription läuft aus, keine Auto-Erneuerung.
       </>
     )
+  }
+
+  function getDeactivationString(subscription: UserSubscriptionFragment) {
+    const deactivation = subscription.deactivation
+    if (deactivation) {
+      return (
+        <>
+          Gekündet am {new Intl.DateTimeFormat('de-CH').format(new Date(deactivation.date))}. Grund:{' '}
+          {getDeactivationReasonHumanReadable(deactivation.reason)}
+        </>
+      )
+    }
+    return <>Keine Deaktivierung.</>
+  }
+
+  function getDeactivationReasonHumanReadable(deactivationReason: SubscriptionDeactivationReason) {
+    switch (deactivationReason) {
+      case SubscriptionDeactivationReason.None:
+        return t('userSubscriptionList.deactivationReason.None')
+      case SubscriptionDeactivationReason.InvoiceNotPaid:
+        return t('userSubscriptionList.deactivationReason.InvoiceNotPaid')
+      case SubscriptionDeactivationReason.UserSelfDeactivated:
+        return t('userSubscriptionList.deactivationReason.UserSelfDeactivated')
+    }
   }
 
   function paidUntilView(subscription: UserSubscriptionFragment) {
@@ -94,11 +124,13 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
             </FlexboxGrid.Item>
             {/* auto renewal */}
             <FlexboxGrid.Item colspan={24}>{autoRenewalView(subscription)}</FlexboxGrid.Item>
+            {/* deactivation */}
+            <FlexboxGrid.Item colspan={24}>...</FlexboxGrid.Item>
           </FlexboxGrid>
           <FlexboxGrid.Item colspan={24}>
-            Todo: periods, deactivation, invoices, translations, margins/paddings - [ ]
-            UserEditPanel löschen => Tests anpassen - [ ] user.ts => line 61 & 66 => wie kann man
-            resolvers mit context passen, damit man die daten so laden kann? => performance...
+            Todo: periods, invoices, translations, margins/paddings - [ ] UserEditPanel löschen =>
+            Tests anpassen - [ ] user.ts => line 61 & 66 => wie kann man resolvers mit context
+            passen, damit man die daten so laden kann? => performance... Speichern & Schliessen
           </FlexboxGrid.Item>
           <Divider />
         </>

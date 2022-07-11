@@ -1015,6 +1015,13 @@
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
     },
+    "userSubscriptionList": {
+      "deactivationReason": {
+        "None": "None",
+        "InvoiceNotPaid": "Invoice not paid",
+        "UserSelfDeactivated": "User self deactivation"
+      }
+    },
     "errorMessages": {
       "noFirstNameErrorMessage": "Please enter a firstname",
       "noNameErrorMessage": "Please enter a name",
