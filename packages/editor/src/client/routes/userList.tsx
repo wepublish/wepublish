@@ -247,7 +247,7 @@ export function UserList() {
       {currentUser?.id && (
         <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
           <Modal.Header>
-            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+            <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -260,7 +260,7 @@ export function UserList() {
 
           <Modal.Footer>
             <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-              {t('userList.panels.cancel')}
+              {t('userCreateOrEditView.cancel')}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -269,13 +269,13 @@ export function UserList() {
       {/* delete user modal */}
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
+          <Modal.Title>{t('userCreateOrEditView.deleteUser')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <DescriptionList>
-            <DescriptionListItem label={t('userList.panels.name')}>
-              {currentUser?.name || t('userList.panels.Unknown')}
+            <DescriptionListItem label={t('userCreateOrEditView.name')}>
+              {currentUser?.name || t('userCreateOrEditView.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
@@ -294,10 +294,10 @@ export function UserList() {
               refetch()
             }}
             color="red">
-            {t('userList.panels.confirm')}
+            {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+            {t('userCreateOrEditView.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

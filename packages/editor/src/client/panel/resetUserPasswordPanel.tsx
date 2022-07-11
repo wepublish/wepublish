@@ -55,7 +55,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
           toaster.push(
             <Notification
               type="success"
-              header={t('userList.panels.passwordChangeSuccess')}
+              header={t('userCreateOrEditView.passwordChangeSuccess')}
               duration={5000}
             />,
             {placement: 'topEnd'}
@@ -64,12 +64,14 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
         }
       }}>
       <Form.Group>
-        <Form.ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</Form.ControlLabel>
+        <Form.ControlLabel>
+          {t('userCreateOrEditView.resetPasswordFor', {userName})}
+        </Form.ControlLabel>
         <Form.Control
           name="password"
           disabled={isDisabled}
           type="password"
-          placeholder={t('userList.panels.password')}
+          placeholder={t('userCreateOrEditView.password')}
           errorMessage={updateError?.message}
           value={password}
           onChange={(value: string) => setPassword(value)}
@@ -77,7 +79,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
       </Form.Group>
 
       <Button type="submit" disabled={isDisabled} appearance="primary" color="red">
-        {t('userList.panels.resetPassword')}
+        {t('userCreateOrEditView.resetPassword')}
       </Button>
     </Form>
   )

@@ -38,7 +38,7 @@ export function CreateOrEditUserPassword({
       setSendLoginModalOpen(false)
       toaster.push(
         <Message type="success" showIcon closable duration={2000}>
-          {t('userList.panels.sendWebsiteLoginSuccessMessage', {email: user.email})}
+          {t('userCreateOrEditView.sendWebsiteLoginSuccessMessage', {email: user.email})}
         </Message>
       )
     } catch (error) {
@@ -61,7 +61,7 @@ export function CreateOrEditUserPassword({
           <Form.Group>
             <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
               <Reload style={{marginRight: '5px'}} />
-              {t('userList.panels.resetPassword')}
+              {t('userCreateOrEditView.resetPassword')}
             </Button>
             <Button
               appearance="primary"
@@ -70,7 +70,7 @@ export function CreateOrEditUserPassword({
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}>
               <Send style={{marginRight: '5px'}} />
-              {t('userList.panels.sendWebsiteLogin')}
+              {t('userCreateOrEditView.sendWebsiteLogin')}
             </Button>
           </Form.Group>
         </>
@@ -80,7 +80,7 @@ export function CreateOrEditUserPassword({
     // create new password form
     return (
       <Form.Group controlId="password">
-        <Form.ControlLabel>{t('userList.panels.password') + '*'}</Form.ControlLabel>
+        <Form.ControlLabel>{t('userCreateOrEditView.password') + '*'}</Form.ControlLabel>
         <Form.Control
           type="password"
           name="password"
@@ -101,7 +101,7 @@ export function CreateOrEditUserPassword({
     return (
       <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+          <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -114,7 +114,7 @@ export function CreateOrEditUserPassword({
 
         <Modal.Footer>
           <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+            {t('userCreateOrEditView.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -126,18 +126,21 @@ export function CreateOrEditUserPassword({
       <>
         <Modal open={sendLoginModalOpen} onClose={() => setSendLoginModalOpen(false)}>
           <Modal.Header>
-            <Modal.Title>Login-Link per E-Mail versenden?</Modal.Title>
+            <Modal.Title>{t('createOrEditUserPassword.sendLoginLink')}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Willst Du {user?.email} einen Link senden, mit der sich {user?.firstName} {user.name}{' '}
-            mit den bestehenden Rechten einloggen kann?
+            {t('createOrEditUserPassword.sendLoginLinkContent', {
+              email: user?.email,
+              firstName: user?.firstName,
+              name: user?.name
+            })}
           </Modal.Body>
           <Modal.Footer>
             <Button appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
               {t('cancel')}
             </Button>
             <Button appearance="primary" onClick={sendLoginLink}>
-              {t('userList.panels.sendWebsiteLogin')}
+              {t('userCreateOrEditView.sendWebsiteLogin')}
             </Button>
           </Modal.Footer>
         </Modal>

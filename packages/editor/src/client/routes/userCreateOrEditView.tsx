@@ -280,7 +280,7 @@ export function UserCreateOrEditView() {
           type="submit"
           data-testid="saveButton"
           style={{marginRight: '10px'}}>
-          {user ? t('userList.panels.save') : t('userList.panels.create')}
+          {user ? t('userCreateOrEditView.save') : t('userCreateOrEditView.create')}
         </Button>
         {/* save and close button */}
         <Button
@@ -289,7 +289,7 @@ export function UserCreateOrEditView() {
           type="submit"
           data-testid="saveButton"
           onClick={() => setCloseAfterSave(true)}>
-          {user ? t('userList.panels.saveAndClose') : t('userList.panels.createAndClose')}
+          {user ? t('userCreateOrEditView.saveAndClose') : t('userCreateOrEditView.createAndClose')}
         </Button>
       </>
     )
@@ -325,12 +325,12 @@ export function UserCreateOrEditView() {
             <Col xs={12}>
               <Grid fluid>
                 {/* general user data */}
-                <Panel bordered header={t('User data')}>
+                <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
                   <Row gutter={10}>
                     {/* active / inactive */}
                     <Col xs={24} style={{textAlign: 'end'}}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.active')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
                           checked={active}
                           disabled={isDisabled}
@@ -341,7 +341,7 @@ export function UserCreateOrEditView() {
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
-                        <Form.ControlLabel>{t('userList.panels.firstName')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.firstName')}</Form.ControlLabel>
                         <Form.Control
                           name="firstName"
                           value={firstName}
@@ -355,7 +355,9 @@ export function UserCreateOrEditView() {
                     {/* name */}
                     <Col xs={12}>
                       <Form.Group controlId="name">
-                        <Form.ControlLabel>{t('userList.panels.name') + '*'}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.name') + '*'}
+                        </Form.ControlLabel>
                         <Form.Control
                           name="name"
                           value={name}
@@ -369,7 +371,9 @@ export function UserCreateOrEditView() {
                     {/* preferred name */}
                     <Col xs={12}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.preferredName')}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.preferredName')}
+                        </Form.ControlLabel>
                         <Form.Control
                           name="preferredName"
                           value={preferredName}
@@ -381,7 +385,9 @@ export function UserCreateOrEditView() {
                     {/* email */}
                     <Col xs={12}>
                       <Form.Group controlId="email">
-                        <Form.ControlLabel>{t('userList.panels.email') + '*'}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.email') + '*'}
+                        </Form.ControlLabel>
                         <Form.Control
                           name="email"
                           value={email}
@@ -395,7 +401,7 @@ export function UserCreateOrEditView() {
                     {/* company */}
                     <Col xs={24}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.company')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.company')}</Form.ControlLabel>
                         <Form.Control
                           name="company"
                           value={address?.company}
@@ -409,7 +415,9 @@ export function UserCreateOrEditView() {
                     {/* street */}
                     <Col xs={12}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.streetAddress')}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.streetAddress')}
+                        </Form.ControlLabel>
                         <Form.Control
                           name="streetAddress"
                           value={address?.streetAddress}
@@ -423,7 +431,9 @@ export function UserCreateOrEditView() {
                     {/* street 2 */}
                     <Col xs={12}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.streetAddress2')}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.streetAddress2')}
+                        </Form.ControlLabel>
                         <Form.Control
                           name="streetAddress2"
                           value={address?.streetAddress2}
@@ -437,7 +447,7 @@ export function UserCreateOrEditView() {
                     {/* zip */}
                     <Col xs={8}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.zipCode')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.zipCode')}</Form.ControlLabel>
                         <Form.Control
                           name="zipCode"
                           value={address?.zipCode}
@@ -451,7 +461,7 @@ export function UserCreateOrEditView() {
                     {/* city */}
                     <Col xs={16}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.city')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.city')}</Form.ControlLabel>
                         <Form.Control
                           name="city"
                           value={address?.city}
@@ -465,7 +475,7 @@ export function UserCreateOrEditView() {
                     {/* country */}
                     <Col xs={24}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.country')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
                         <Form.Control
                           name="country"
                           value={address?.country}
@@ -486,7 +496,7 @@ export function UserCreateOrEditView() {
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group>
-                        <Form.ControlLabel>{t('userList.panels.userRoles')}</Form.ControlLabel>
+                        <Form.ControlLabel>{t('userCreateOrEditView.userRoles')}</Form.ControlLabel>
                         <CheckPicker
                           name="userRoles"
                           block

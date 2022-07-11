@@ -50,7 +50,7 @@ export const newSubscriptionButton = ({
   t
 }: {
   isLoading?: boolean
-  t: TFunction<'translatio  n'>
+  t: TFunction<'translation'>
 }) => {
   return (
     <ButtonLink

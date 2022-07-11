@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Divider, FlexboxGrid, Panel} from 'rsuite'
+import {Divider, FlexboxGrid, Panel} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {newSubscriptionButton} from '../../routes/subscriptionList'
 import {
@@ -26,7 +26,8 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     if (subscription.autoRenew) {
       return (
         <>
-          <Reload style={{marginRight: '5px'}} /> Subscription wird automatisch erneuert.{' '}
+          <Reload style={{marginRight: '5px'}} />{' '}
+          {t('userSubscriptionList.subscriptionIsAutoRenewed')}.&nbsp;
           {getDeactivationString(subscription)}
         </>
       )
@@ -34,7 +35,7 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     // subscription is not auto renewed
     return (
       <>
-        <Off style={{marginRight: '5px'}} /> Subscription läuft aus, keine Auto-Erneuerung.
+        <Off style={{marginRight: '5px'}} /> {t('userSubscriptionList.noAutoRenew')}.
       </>
     )
   }
@@ -44,12 +45,14 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     if (deactivation) {
       return (
         <>
-          Gekündet am {new Intl.DateTimeFormat('de-CH').format(new Date(deactivation.date))}. Grund:{' '}
-          {getDeactivationReasonHumanReadable(deactivation.reason)}
+          {t('userSubscriptionList.deactivationString', {
+            date: new Intl.DateTimeFormat('de-CH').format(new Date(deactivation.date)),
+            reason: getDeactivationReasonHumanReadable(deactivation.reason)
+          })}
         </>
       )
     }
-    return <>Keine Deaktivierung.</>
+    return t('userSubscriptionList.noDeactivation')
   }
 
   function getDeactivationReasonHumanReadable(deactivationReason: SubscriptionDeactivationReason) {
@@ -65,13 +68,11 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
 
   function paidUntilView(subscription: UserSubscriptionFragment) {
     if (subscription.paidUntil) {
-      return (
-        <>
-          Bezahlt bis am {new Intl.DateTimeFormat('de-CH').format(new Date(subscription.paidUntil))}
-        </>
-      )
+      return t('userSubscriptionList.paidUntil', {
+        date: new Intl.DateTimeFormat('de-CH').format(new Date(subscription.paidUntil))
+      })
     }
-    return <>Nicht bezahlt</>
+    return t('userSubscriptionList.notPaid')
   }
 
   function paymentPeriodicity(subscription: UserSubscriptionFragment) {
@@ -92,13 +93,15 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
   function getInvoiceView(subscription: UserSubscriptionFragment, invoiceId: string) {
     const invoice = subscription.invoices.find(invoice => invoice.id === invoiceId)
     if (!invoice) {
-      return <>Unerwarteter Fehler: Rechnung nicht vorhanden</>
+      return t('userSubscriptionList.unexpectedErrorNoInvoice')
     }
     return (
       <div>
-        Rechnung Nr. {invoice.id}{' '}
+        {t('userSubscriptionList.invoiceNr', {invoiceId: invoice.id})} &nbsp;
         <b style={invoice.paidAt ? {color: 'green'} : {color: 'red'}}>
-          {invoice.paidAt ? 'bezahlt' : 'offen'}
+          {invoice.paidAt
+            ? t('userSubscriptionList.invoicePaid')
+            : t('userSubscriptionList.invoiceUnpaid')}
         </b>
       </div>
     )
@@ -112,7 +115,10 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
             {/* member plan name */}
             <FlexboxGrid.Item colspan={18} style={{alignSelf: 'center'}}>
               <h5>
-                {subscription.memberPlan.name} / Nr. {subscription.id}
+                {t('userSubscriptionList.subscriptionTitle', {
+                  memberPlanName: subscription.memberPlan.name,
+                  subscriptionId: subscription.id
+                })}
               </h5>
             </FlexboxGrid.Item>
             {/* edit subscription */}
@@ -120,7 +126,7 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
               <ButtonLink
                 appearance="ghost"
                 route={SubscriptionEditRoute.create({id: subscription.id})}>
-                <EditIcon /> Abo bearbeiten
+                <EditIcon /> {t('userSubscriptionList.editSubscription')}
               </ButtonLink>
             </FlexboxGrid.Item>
             {/* subscription details */}
@@ -128,28 +134,38 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
               <FlexboxGrid>
                 {/* subscription details title */}
                 <FlexboxGrid.Item colspan={24} style={{marginLeft: '20px'}}>
-                  <h6>Abo-Details</h6>
+                  <h6>{t('userSubscriptionList.aboDetails')}</h6>
                 </FlexboxGrid.Item>
                 <Panel bordered style={{marginTop: '5px'}}>
                   {/* created at */}
                   <FlexboxGrid.Item colspan={24}>
-                    <Calendar style={{marginRight: '5px'}} /> Erstellt{' '}
-                    {new Intl.DateTimeFormat('de-CH').format(new Date(subscription.createdAt))}
+                    <Calendar style={{marginRight: '5px'}} />
+                    {t('userSubscriptionList.subscriptionCreatedAt', {
+                      date: new Intl.DateTimeFormat('de-CH').format(
+                        new Date(subscription.createdAt)
+                      )
+                    })}
                   </FlexboxGrid.Item>
                   {/* starts at */}
                   <FlexboxGrid.Item colspan={24}>
-                    <Creative style={{marginRight: '5px'}} /> Abo startet am{' '}
-                    {new Intl.DateTimeFormat('de-CH').format(new Date(subscription.startsAt))}
+                    <Creative style={{marginRight: '5px'}} />
+                    {t('userSubscriptionList.subscriptionStartsAt', {
+                      date: new Intl.DateTimeFormat('de-CH').format(new Date(subscription.startsAt))
+                    })}
                   </FlexboxGrid.Item>
                   {/* payment periodicity */}
                   <FlexboxGrid.Item colspan={24}>
-                    <PieChart style={{marginRight: '5px'}} /> Zahlungsperiodizität:{' '}
-                    {paymentPeriodicity(subscription)}
+                    <PieChart style={{marginRight: '5px'}} />
+                    {t('userSubscriptionList.paymentPeriodicity', {
+                      paymentPeriodicity: paymentPeriodicity(subscription)
+                    })}
                   </FlexboxGrid.Item>
                   {/* monthly amount */}
                   <FlexboxGrid.Item colspan={24}>
-                    <CreditCardIcon style={{marginRight: '5px'}} /> Monatlicher Betrag:{' '}
-                    {(subscription.monthlyAmount / 100).toFixed(2)} CHF
+                    <CreditCardIcon style={{marginRight: '5px'}} />
+                    {t('userSubscriptionList.monthlyAmount', {
+                      monthlyAmount: (subscription.monthlyAmount / 100).toFixed(2)
+                    })}
                   </FlexboxGrid.Item>
                   {/* paid until */}
                   <FlexboxGrid.Item colspan={24}>
@@ -165,7 +181,7 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
               <FlexboxGrid>
                 {/* periods title */}
                 <FlexboxGrid.Item colspan={24} style={{marginLeft: '20px'}}>
-                  <h6>Perioden</h6>
+                  <h6>{t('userSubscriptionList.periods')}</h6>
                 </FlexboxGrid.Item>
                 {/* iterate periods */}
                 <FlexboxGrid.Item
@@ -173,23 +189,33 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
                   style={{maxHeight: '400px', overflowY: 'auto', marginTop: '5px'}}>
                   {subscription.periods.map(period => {
                     return (
-                      <Panel bordered style={{marginBottom: '10px'}}>
+                      <Panel key={period.id} bordered style={{marginBottom: '10px'}}>
                         <FlexboxGrid>
                           {/* period created at */}
                           <FlexboxGrid.Item colspan={24}>
-                            Erstellt am{' '}
-                            {new Intl.DateTimeFormat('de-CH').format(new Date(period.createdAt))}
+                            {t('userSubscriptionList.periodCreatedAt', {
+                              date: new Intl.DateTimeFormat('de-CH').format(
+                                new Date(period.createdAt)
+                              )
+                            })}
                           </FlexboxGrid.Item>
                           {/* period from to dates */}
                           <FlexboxGrid.Item colspan={24}>
-                            Gültig von{' '}
-                            {new Intl.DateTimeFormat('de-CH').format(new Date(period.startsAt))}
+                            {t('userSubscriptionList.periodStartsAt', {
+                              date: new Intl.DateTimeFormat('de-CH').format(
+                                new Date(period.startsAt)
+                              )
+                            })}
                             <ArrowRightLine style={{margin: '0px 5px'}} />
-                            bis {new Intl.DateTimeFormat('de-CH').format(new Date(period.endsAt))}
+                            {t('userSubscriptionList.periodEndsAt', {
+                              date: new Intl.DateTimeFormat('de-CH').format(new Date(period.endsAt))
+                            })}
                           </FlexboxGrid.Item>
                           {/* amount */}
                           <FlexboxGrid.Item colspan={24}>
-                            Betrag: {(period.amount / 100).toFixed(2)} CHF
+                            {t('userSubscriptionList.periodAmount', {
+                              amount: (period.amount / 100).toFixed(2)
+                            })}
                           </FlexboxGrid.Item>
                           {/* related invoice */}
                           <FlexboxGrid.Item colspan={24}>

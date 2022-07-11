@@ -205,9 +205,9 @@ describe('User Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    const nameInput = getByLabelText('userList.panels.name*')
-    const emailInput = getByLabelText('userList.panels.email*')
-    const passwordInput = getByLabelText('userList.panels.password*')
+    const nameInput = getByLabelText('userCreateOrEditView.name*')
+    const emailInput = getByLabelText('userCreateOrEditView.email*')
+    const passwordInput = getByLabelText('userCreateOrEditView.password*')
 
     const saveButton = getByTestId('saveButton')
 
