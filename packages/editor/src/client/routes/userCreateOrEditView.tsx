@@ -22,7 +22,7 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
-import {RouteType, UserEditViewRoute, useRoute, useRouteDispatch} from '../route'
+import {RouteType, UserEditViewRoute, UserListRoute, useRoute, useRouteDispatch} from '../route'
 import {useTranslation} from 'react-i18next'
 import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
@@ -32,6 +32,7 @@ export function UserCreateOrEditView() {
   const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
+  const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
 
   // user props
   const [name, setName] = useState('')
@@ -182,6 +183,14 @@ export function UserCreateOrEditView() {
             {t('userCreateOrEditView.successfullyUpdatedUser')}
           </Message>
         )
+        console.log('close after save', closeAfterSave)
+        // go back to user list
+        if (closeAfterSave) {
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserListRoute.create({})
+          })
+        }
       } catch (e) {
         toaster.push(
           <Message type="error" showIcon closable duration={2000}>
@@ -211,16 +220,26 @@ export function UserCreateOrEditView() {
         if (!newUser) {
           throw new Error('User id not created')
         }
-        dispatch({
-          type: RouteActionType.PushRoute,
-          route: UserEditViewRoute.create({id: newUser.id}, current ?? undefined)
-        })
-        setUser(newUser)
+        // notify user
         toaster.push(
           <Message type="success" showIcon closable duration={2000}>
             {t('userCreateOrEditView.successfullyCreatedUser')}
           </Message>
         )
+        // go back to user list
+        if (closeAfterSave) {
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserListRoute.create({})
+          })
+        } else {
+          // stay in view and edit user
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserEditViewRoute.create({id: newUser.id}, current ?? undefined)
+          })
+          setUser(newUser)
+        }
       } catch (e) {
         toaster.push(
           <Message type="error" showIcon closable duration={2000}>
@@ -248,9 +267,26 @@ export function UserCreateOrEditView() {
 
   function actionsView() {
     return (
-      <Button appearance="primary" disabled={isDisabled} type="submit" data-testid="saveButton">
-        {user ? t('userList.panels.save') : t('userList.panels.create')}
-      </Button>
+      <>
+        {/* save button */}
+        <Button
+          appearance="ghost"
+          disabled={isDisabled}
+          type="submit"
+          data-testid="saveButton"
+          style={{marginRight: '10px'}}>
+          {user ? t('userList.panels.save') : t('userList.panels.create')}
+        </Button>
+        {/* save and close button */}
+        <Button
+          appearance="primary"
+          disabled={isDisabled}
+          type="submit"
+          data-testid="saveButton"
+          onClick={() => setCloseAfterSave(true)}>
+          {user ? t('userList.panels.saveAndClose') : t('userList.panels.createAndClose')}
+        </Button>
+      </>
     )
   }
 
