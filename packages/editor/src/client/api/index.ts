@@ -1802,6 +1802,17 @@ export type SubscriptionInput = {
   deactivation?: Maybe<SubscriptionDeactivationInput>;
 };
 
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  startsAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
 export enum SubscriptionSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
@@ -2037,6 +2048,7 @@ export type UserSubscription = {
   paidUntil?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
   deactivation?: Maybe<SubscriptionDeactivation>;
+  periods: Array<SubscriptionPeriod>;
   memberPlan: MemberPlan;
   invoices: Array<Invoice>;
 };
@@ -3792,7 +3804,10 @@ export type FullUserFragment = (
 export type UserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
   & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
-  & { properties: Array<(
+  & { periods: Array<(
+    { __typename?: 'SubscriptionPeriod' }
+    & Pick<SubscriptionPeriod, 'id' | 'amount' | 'createdAt' | 'endsAt' | 'invoiceID' | 'paymentPeriodicity' | 'startsAt'>
+  )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
   )>, deactivation?: Maybe<(
@@ -4424,6 +4439,15 @@ export const UserSubscriptionFragmentDoc = gql`
   autoRenew
   startsAt
   paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
   properties {
     key
     value

@@ -17,7 +17,13 @@ import {
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 
-import {CollectionName, DBInvoice, DBMemberPlan, DBSubscription} from './schema'
+import {
+  CollectionName,
+  DBInvoice,
+  DBMemberPlan,
+  DBSubscription,
+  DBSubscriptionPeriod
+} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 import nanoid from 'nanoid'
@@ -204,7 +210,7 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
       })
       .toArray()
     // transform database _id to return object id (wtf!)
-    return subscriptions.map(({_id: id, memberPlan, invoices, ...data}) => {
+    return subscriptions.map(({_id: id, memberPlan, invoices, periods, ...data}) => {
       if (memberPlan) {
         delete Object.assign((memberPlan as unknown) as DBMemberPlan, {
           id: ((memberPlan as unknown) as DBMemberPlan)._id
@@ -216,7 +222,13 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
           ...data
         }))
       }
-      return {id, memberPlan, invoices, ...data}
+      if (periods && periods.length) {
+        periods = ((periods as unknown) as DBSubscriptionPeriod[]).map(({_id: id, ...data}) => ({
+          id,
+          ...data
+        }))
+      }
+      return {id, memberPlan, invoices, periods, ...data}
     })
   }
 

@@ -18,6 +18,7 @@ import {GraphQLPublicPayment} from './payment'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
+import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -61,6 +62,9 @@ const GraphQLUserSubscription = new GraphQLObjectType({
     paidUntil: {type: GraphQLDateTime},
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
     deactivation: {type: GraphQLSubscriptionDeactivation},
+    periods: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscriptionPeriod)))
+    },
     memberPlan: {
       type: GraphQLNonNull(GraphQLMemberPlan)
     },

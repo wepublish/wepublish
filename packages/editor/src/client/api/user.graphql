@@ -42,6 +42,15 @@ fragment UserSubscription on UserSubscription {
     autoRenew
     startsAt
     paidUntil
+    periods {
+        id
+        amount
+        createdAt
+        endsAt
+        invoiceID
+        paymentPeriodicity
+        startsAt
+    }
     properties {
         key
         value
