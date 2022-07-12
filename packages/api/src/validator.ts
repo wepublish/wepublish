@@ -5,7 +5,7 @@ export class Validator {
     return Joi.object({
       email: Joi.string().email().required(),
       name: Joi.string().max(50).required(),
-      firstname: Joi.string().max(50),
+      firstName: Joi.string().max(50),
       preferredName: Joi.string().max(50)
     })
   }
