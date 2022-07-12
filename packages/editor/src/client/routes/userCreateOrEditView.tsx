@@ -286,7 +286,7 @@ export function UserCreateOrEditView() {
           appearance="primary"
           disabled={isDisabled}
           type="submit"
-          data-testid="saveButton"
+          data-testid="saveAndCloseButton"
           onClick={() => setCloseAfterSave(true)}>
           {user ? t('userCreateOrEditView.saveAndClose') : t('userCreateOrEditView.createAndClose')}
         </Button>

@@ -1,10 +1,11 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {render} from '@testing-library/react'
+import {fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
-import {UserRoleListDocument} from '../../src/client/api'
+import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
 import {UserCreateOrEditView} from '../../src/client/routes/userCreateOrEditView'
 import {actWait} from '../utils'
 import {RouteProvider} from '../../src/client/route'
+import snapshotDiff from 'snapshot-diff'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -50,7 +51,7 @@ const userRoleListDocumentQuery = {
   }
 }
 
-/* const userDocumentQuery = {
+const userDocumentQuery = {
   request: {
     query: UserDocument,
     variables: {
@@ -86,7 +87,7 @@ const userRoleListDocumentQuery = {
       }
     }
   })
-} */
+}
 
 describe('User create or edit view', () => {
   test('should render', async () => {
@@ -102,14 +103,15 @@ describe('User create or edit view', () => {
 
     expect(asFragment()).toMatchSnapshot()
   })
-})
 
-/* test('should render with ID', async () => {
+  test('should render with ID', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
-        <UserCreateOrEditView id={'fakeId3'} />
+        <RouteProvider>
+          <UserCreateOrEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -122,7 +124,9 @@ describe('User create or edit view', () => {
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserCreateOrEditView />
+        <RouteProvider>
+          <UserCreateOrEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -140,18 +144,17 @@ describe('User create or edit view', () => {
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
-        <UserCreateOrEditView id={'fakeId3'} />
+        <RouteProvider>
+          <UserCreateOrEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
     const initialRender = asFragment()
 
     fireEvent.click(await screen.findByRole('combobox'))
-    fireEvent.click(
-      await screen.findByRole('checkbox', {
-        checked: true
-      })
-    )
+    const checkboxLabels = await screen.findAllByRole('checkbox', {checked: false})
+    fireEvent.click(checkboxLabels[checkboxLabels.length - 1])
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
@@ -202,7 +205,9 @@ describe('User create or edit view', () => {
 
     const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserCreateOrEditView />
+        <RouteProvider>
+          <UserCreateOrEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -230,4 +235,4 @@ describe('User create or edit view', () => {
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
-}) */
+})
