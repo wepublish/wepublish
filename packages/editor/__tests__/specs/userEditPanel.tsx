@@ -1,10 +1,10 @@
-/* import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+import {render} from '@testing-library/react'
 import React from 'react'
-import snapshotDiff from 'snapshot-diff'
-import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
-import {UserEditPanel} from '../../src/client/panel/userEditPanel'
+import {UserRoleListDocument} from '../../src/client/api'
+import {UserCreateOrEditView} from '../../src/client/routes/userCreateOrEditView'
 import {actWait} from '../utils'
+import {RouteProvider} from '../../src/client/route'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -50,7 +50,7 @@ const userRoleListDocumentQuery = {
   }
 }
 
-const userDocumentQuery = {
+/* const userDocumentQuery = {
   request: {
     query: UserDocument,
     variables: {
@@ -86,27 +86,30 @@ const userDocumentQuery = {
       }
     }
   })
-}
+} */
 
-describe('User Edit Panel', () => {
+describe('User create or edit view', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <RouteProvider>
+          <UserCreateOrEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
 
     expect(asFragment()).toMatchSnapshot()
   })
+})
 
-  test('should render with ID', async () => {
+/* test('should render with ID', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
-        <UserEditPanel id={'fakeId3'} />
+        <UserCreateOrEditView id={'fakeId3'} />
       </MockedProvider>
     )
     await actWait()
@@ -119,7 +122,7 @@ describe('User Edit Panel', () => {
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <UserCreateOrEditView />
       </MockedProvider>
     )
     await actWait()
@@ -137,7 +140,7 @@ describe('User Edit Panel', () => {
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
-        <UserEditPanel id={'fakeId3'} />
+        <UserCreateOrEditView id={'fakeId3'} />
       </MockedProvider>
     )
     await actWait()
@@ -199,7 +202,7 @@ describe('User Edit Panel', () => {
 
     const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <UserCreateOrEditView />
       </MockedProvider>
     )
     await actWait()
