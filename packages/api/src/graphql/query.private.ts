@@ -822,6 +822,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           })
         )
 
+        console.log('line 825 ', filter)
         const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
         const cursors = Object.fromEntries(
           articles.map((result, index) => [peers[index].id, result?.pageInfo.endCursor ?? null])
