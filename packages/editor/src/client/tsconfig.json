@@ -6,7 +6,7 @@
     "outDir": "../../dist/client",
     "module": "esnext",
     "types": ["@types/jest", "@types/resize-observer-browser"],
-    "lib": ["DOM", "DOM.Iterable", "ES2017", "ESNext.Array"]
+    "lib": ["DOM", "DOM.Iterable", "ES2019"]
   },
   "references": [{"path": "../shared"}]
 }

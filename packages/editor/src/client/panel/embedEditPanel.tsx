@@ -108,7 +108,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         <Drawer.Title>{t('blocks.embeds.panels.editEmbed')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isEmpty} onClick={() => onConfirm(embed)}>
+          <Button appearance="primary" disabled={isEmpty} onClick={() => onConfirm(embed)}>
             {t('blocks.embeds.panels.confirm')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
