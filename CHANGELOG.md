@@ -1,6 +1,6 @@
 # Change Log
 
-## 4.0.0-alpha.0 (2022-06-23)
+## 4.0.0 (2022-07-12)
 
 #### :boom: Breaking Change
 * `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
