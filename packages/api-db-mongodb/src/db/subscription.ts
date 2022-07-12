@@ -17,13 +17,7 @@ import {
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 
-import {
-  CollectionName,
-  DBInvoice,
-  DBMemberPlan,
-  DBSubscription,
-  DBSubscriptionPeriod
-} from './schema'
+import {CollectionName, DBSubscription} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 import nanoid from 'nanoid'
@@ -181,55 +175,8 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
   }
 
   async getSubscriptionsByUserID(userID: string): Promise<OptionalSubscription[]> {
-    const subscriptions = await this.subscriptions
-      .aggregate([
-        {
-          $lookup: {
-            from: CollectionName.MemberPlans,
-            localField: 'memberPlanID',
-            foreignField: '_id',
-            as: 'memberPlan'
-          }
-        },
-        {$unwind: '$memberPlan'},
-        {
-          $lookup: {
-            from: CollectionName.Invoices,
-            localField: '_id',
-            foreignField: 'subscriptionID',
-            as: 'invoices'
-          }
-        }
-      ])
-      .match({
-        $and: [
-          {
-            userID: {$eq: userID}
-          }
-        ]
-      })
-      .toArray()
-    // transform database _id to return object id (wtf!)
-    return subscriptions.map(({_id: id, memberPlan, invoices, periods, ...data}) => {
-      if (memberPlan) {
-        delete Object.assign((memberPlan as unknown) as DBMemberPlan, {
-          id: ((memberPlan as unknown) as DBMemberPlan)._id
-        })._id
-      }
-      if (invoices) {
-        invoices = ((invoices as unknown) as DBInvoice[]).map(({_id: id, ...data}) => ({
-          id,
-          ...data
-        }))
-      }
-      if (periods && periods.length) {
-        periods = ((periods as unknown) as DBSubscriptionPeriod[]).map(({_id: id, ...data}) => ({
-          id,
-          ...data
-        }))
-      }
-      return {id, memberPlan, invoices, periods, ...data}
-    })
+    const subscriptions = await this.subscriptions.find({userID: {$eq: userID}}).toArray()
+    return subscriptions.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
   async getSubscriptions({

@@ -19,6 +19,8 @@ import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
+import {Subscription} from '../db/subscription'
+import {createProxyingResolver} from '../utility'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -49,7 +51,7 @@ export const GraphQLOAuth2Account = new GraphQLObjectType({
   }
 })
 
-const GraphQLUserSubscription = new GraphQLObjectType({
+const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'UserSubscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
@@ -66,10 +68,16 @@ const GraphQLUserSubscription = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscriptionPeriod)))
     },
     memberPlan: {
-      type: GraphQLNonNull(GraphQLMemberPlan)
+      type: GraphQLNonNull(GraphQLMemberPlan),
+      resolve({memberPlanID}, args, {dbAdapter}) {
+        return dbAdapter.memberPlan.getMemberPlanById(memberPlanID) // by subscription
+      }
     },
     invoices: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoice)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoice))),
+      resolve({id}, args, {dbAdapter}) {
+        return dbAdapter.invoice.getInvoicesBySubscriptionID(id)
+      }
     }
   }
 })
@@ -109,9 +117,9 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     },
     subscriptions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserSubscription))),
-      resolve({id}, args, {dbAdapter}) {
+      resolve: createProxyingResolver(({id}, _, {dbAdapter}) => {
         return dbAdapter.subscription.getSubscriptionsByUserID(id)
-      }
+      })
     }
   }
 })

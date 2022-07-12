@@ -183,7 +183,6 @@ export function UserCreateOrEditView() {
             {t('userCreateOrEditView.successfullyUpdatedUser')}
           </Message>
         )
-        console.log('close after save', closeAfterSave)
         // go back to user list
         if (closeAfterSave) {
           dispatch({
