@@ -1,7 +1,7 @@
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import {PaymentPeriodicity, SortOrder} from './api'
+import {PaymentPeriodicity, SortOrder, UserRole} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
 import Maybe from 'graphql/tsutils/Maybe'
@@ -229,4 +229,11 @@ export function getImgMinSizeToCompress(): number {
     document.getElementById(ElementID.Settings)!.textContent!
   )
   return imgMinSizeToCompress
+}
+
+export function authorise(roles: UserRole[] | undefined, permissionID: string): boolean {
+  if (!roles) return false
+  return roles
+    ?.map(role => role.permissions.some(permission => permission.id === permissionID))
+    .includes(true)
 }
