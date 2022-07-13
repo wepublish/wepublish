@@ -258,7 +258,7 @@ export function SettingList() {
             <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
-                name="peeringTimeoutMs"
+                name="peeringTimeout"
                 accepter={InputNumber}
                 value={peeringTimeoutMs.value}
                 onChange={(value: number) => {
