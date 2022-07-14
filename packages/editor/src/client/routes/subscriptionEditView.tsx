@@ -35,21 +35,27 @@ import {
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
-import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
+import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
-import {InvoiceListPanel} from './invoiceListPanel'
+import {InvoiceListPanel} from '../panel/invoiceListPanel'
 import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
+import {RouteType, useRoute} from '../route'
 
 export interface SubscriptionEditPanelProps {
-  id?: string
   onClose?(): void
   onSave?(subscription: FullSubscriptionFragment): void
 }
 
-export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
+export function SubscriptionEditView({onClose, onSave}: SubscriptionEditPanelProps) {
   const {t} = useTranslation()
+  const {current} = useRoute()
+
+  // getting subscription id from url param
+  const [id] = useState<string | undefined>(
+    current?.type === RouteType.UserEditView ? current.params.id : undefined
+  )
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
   const [user, setUser] = useState<FullUserFragment | null>()

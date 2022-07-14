@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
-import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+import {Button, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
 import {
   FullSubscriptionFragment,
   SubscriptionFilter,
@@ -10,14 +10,12 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {
   ButtonLink,
   Link,
   RouteType,
   SubscriptionCreateRoute,
   SubscriptionEditRoute,
-  SubscriptionListRoute,
   useRoute,
   useRouteDispatch
 } from '../route'
@@ -286,36 +284,6 @@ export function SubscriptionList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </div>
-
-      <Drawer
-        open={isEditModalOpen}
-        size={'sm'}
-        onClose={() => {
-          setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: SubscriptionListRoute.create({}, current ?? undefined)
-          })
-        }}>
-        <SubscriptionEditPanel
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: SubscriptionListRoute.create({}, current ?? undefined)
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: SubscriptionListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
