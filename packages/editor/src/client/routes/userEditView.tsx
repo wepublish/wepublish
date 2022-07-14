@@ -37,7 +37,7 @@ import {RouteActionType} from '@wepublish/karma.run-react'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ArrowLeftLine} from '@rsuite/icons'
 
-export function UserCreateOrEditView() {
+export function UserEditView() {
   const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()

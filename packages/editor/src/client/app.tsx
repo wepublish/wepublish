@@ -33,7 +33,7 @@ import {useTranslation} from 'react-i18next'
 import {AuthContext} from './authContext'
 import {RouteActionType} from '@wepublish/karma.run-react'
 import {SubscriptionList} from './routes/subscriptionList'
-import {UserCreateOrEditView} from './routes/userCreateOrEditView'
+import {UserEditView} from './routes/userEditView'
 import {SubscriptionEditView} from './routes/subscriptionEditView'
 
 export function contentForRoute(route: Route) {
@@ -75,7 +75,7 @@ export function contentForRoute(route: Route) {
       return <UserList />
     case RouteType.UserCreate:
     case RouteType.UserEditView:
-      return <UserCreateOrEditView />
+      return <UserEditView />
 
     case RouteType.SubscriptionList:
       return <SubscriptionList />

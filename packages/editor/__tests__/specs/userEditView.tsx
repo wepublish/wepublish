@@ -2,7 +2,7 @@ import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
-import {UserCreateOrEditView} from '../../src/client/routes/userCreateOrEditView'
+import {UserEditView} from '../../src/client/routes/userEditView'
 import {actWait} from '../utils'
 import {RouteProvider} from '../../src/client/route'
 import snapshotDiff from 'snapshot-diff'
@@ -89,13 +89,13 @@ const userDocumentQuery = {
   })
 }
 
-describe('User create or edit view', () => {
+describe('User edit view', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouteProvider>
-          <UserCreateOrEditView />
+          <UserEditView />
         </RouteProvider>
       </MockedProvider>
     )
@@ -110,7 +110,7 @@ describe('User create or edit view', () => {
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
         <RouteProvider>
-          <UserCreateOrEditView />
+          <UserEditView />
         </RouteProvider>
       </MockedProvider>
     )
@@ -125,7 +125,7 @@ describe('User create or edit view', () => {
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouteProvider>
-          <UserCreateOrEditView />
+          <UserEditView />
         </RouteProvider>
       </MockedProvider>
     )
@@ -145,7 +145,7 @@ describe('User create or edit view', () => {
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename>
         <RouteProvider>
-          <UserCreateOrEditView />
+          <UserEditView />
         </RouteProvider>
       </MockedProvider>
     )
@@ -206,7 +206,7 @@ describe('User create or edit view', () => {
     const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouteProvider>
-          <UserCreateOrEditView />
+          <UserEditView />
         </RouteProvider>
       </MockedProvider>
     )

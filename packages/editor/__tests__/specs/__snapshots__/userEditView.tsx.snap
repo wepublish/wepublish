@@ -1,67 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`User create or edit view should allow a new user to be created 1`] = `
+exports[`User edit view should allow a new user to be created 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
 
-@@ -49,33 +49,52 @@
-              <div
-                class=\\"rs-col rs-col-xs-16\\"
-                role=\\"gridcell\\"
-              >
-                <h2>
--                 userCreateOrEditView.createNewUser
+@@ -43,32 +43,51 @@
+            <div
+              class=\\"rs-col rs-col-xs-16\\"
+              role=\\"gridcell\\"
+            >
+              <h2>
+-               userCreateOrEditView.createNewUser
++               <div
++                 class=\\"rs-loader-wrapper rs-loader-speed-normal\\"
++                 role=\\"progressbar\\"
++                 style=\\"margin-right: 5px;\\"
++               >
 +                 <div
-+                   class=\\"rs-loader-wrapper rs-loader-speed-normal\\"
-+                   role=\\"progressbar\\"
-+                   style=\\"margin-right: 5px;\\"
++                   class=\\"rs-loader\\"
 +                 >
-+                   <div
-+                     class=\\"rs-loader\\"
-+                   >
-+                     <span
-+                       class=\\"rs-loader-spin\\"
-+                     />
-+                   </div>
++                   <span
++                     class=\\"rs-loader-spin\\"
++                   />
 +                 </div>
-+                 userCreateOrEditView.loadingUser
-                </h2>
-              </div>
++               </div>
++               userCreateOrEditView.loadingUser
+              </h2>
             </div>
           </div>
-          <div
-            class=\\"rs-col rs-col-xs-12\\"
-            role=\\"gridcell\\"
-            style=\\"text-align: end;\\"
+        </div>
+        <div
+          class=\\"rs-flex-box-grid-item rs-flex-box-grid-item-12\\"
+          style=\\"text-align: right;\\"
+        >
+          <button
+-           class=\\"rs-btn rs-btn-ghost\\"
++           class=\\"rs-btn rs-btn-ghost rs-btn-loading\\"
+            data-testid=\\"saveButton\\"
+            style=\\"margin-right: 10px;\\"
+            type=\\"submit\\"
           >
-            <button
--             class=\\"rs-btn rs-btn-ghost\\"
-+             class=\\"rs-btn rs-btn-ghost rs-btn-loading\\"
-              data-testid=\\"saveButton\\"
-              style=\\"margin-right: 10px;\\"
-              type=\\"submit\\"
++           <span
++             class=\\"rs-btn-spin\\"
++           />
+            userCreateOrEditView.create
+          </button>
+          <button
+-           class=\\"rs-btn rs-btn-primary\\"
++           class=\\"rs-btn rs-btn-primary rs-btn-loading\\"
+            data-testid=\\"saveAndCloseButton\\"
+            type=\\"submit\\"
+          >
++           <span
++             class=\\"rs-btn-spin\\"
++           />
+            userCreateOrEditView.createAndClose
+            <span
+              class=\\"rs-ripple-pond\\"
             >
-+             <span
-+               class=\\"rs-btn-spin\\"
-+             />
-              userCreateOrEditView.create
-            </button>
-            <button
--             class=\\"rs-btn rs-btn-primary\\"
-+             class=\\"rs-btn rs-btn-primary rs-btn-loading\\"
-              data-testid=\\"saveAndCloseButton\\"
-              type=\\"submit\\"
-            >
-+             <span
-+               class=\\"rs-btn-spin\\"
-+             />
-              userCreateOrEditView.createAndClose
               <span
-                class=\\"rs-ripple-pond\\"
-              >
-                <span
-@@ -136,18 +155,19 @@
+@@ -128,18 +147,19 @@
                           class=\\"rs-form-control-label\\"
                         >
                           userCreateOrEditView.active
@@ -83,7 +82,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                           />
                           <span
                             class=\\"rs-toggle-presentation\\"
-@@ -180,10 +200,11 @@
+@@ -172,10 +192,11 @@
                         >
                           <input
                             aria-describedby=\\"firstName-help-text\\"
@@ -95,7 +94,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -211,14 +232,15 @@
+@@ -203,14 +224,15 @@
                         >
                           <input
                             aria-describedby=\\"name-help-text\\"
@@ -112,7 +111,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -238,10 +260,11 @@
+@@ -230,10 +252,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -124,7 +123,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -268,14 +291,15 @@
+@@ -260,14 +283,15 @@
                         >
                           <input
                             aria-describedby=\\"email-help-text\\"
@@ -141,7 +140,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -295,10 +319,11 @@
+@@ -287,10 +311,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -153,7 +152,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -321,10 +346,11 @@
+@@ -313,10 +338,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -165,7 +164,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -347,10 +373,11 @@
+@@ -339,10 +365,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -177,7 +176,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -373,10 +400,11 @@
+@@ -365,10 +392,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -189,7 +188,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -399,10 +427,11 @@
+@@ -391,10 +419,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -201,7 +200,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -425,10 +454,11 @@
+@@ -417,10 +446,11 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -213,7 +212,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                             value=\\"\\"
                           />
                         </div>
-@@ -555,14 +585,15 @@
+@@ -547,14 +577,15 @@
                         >
                           <input
                             aria-describedby=\\"password-help-text\\"
@@ -232,12 +231,12 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                   </div>"
 `;
 
-exports[`User create or edit view should allow user role to be added 1`] = `
+exports[`User edit view should allow user role to be added 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
 
-@@ -469,11 +469,11 @@
+@@ -461,11 +461,11 @@
                           class=\\"rs-form-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -250,7 +249,7 @@ exports[`User create or edit view should allow user role to be added 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -483,17 +483,54 @@
+@@ -475,17 +475,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -311,12 +310,12 @@ exports[`User create or edit view should allow user role to be added 1`] = `
                               class=\\"rs-picker-toggle-caret rs-icon\\""
 `;
 
-exports[`User create or edit view should allow user role to be removed 1`] = `
+exports[`User edit view should allow user role to be removed 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
 
-@@ -469,11 +469,11 @@
+@@ -461,11 +461,11 @@
                           class=\\"rs-form-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -329,7 +328,7 @@ exports[`User create or edit view should allow user role to be removed 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -483,17 +483,54 @@
+@@ -475,17 +475,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -390,93 +389,85 @@ exports[`User create or edit view should allow user role to be removed 1`] = `
                               class=\\"rs-picker-toggle-caret rs-icon\\""
 `;
 
-exports[`User create or edit view should render 1`] = `
+exports[`User edit view should render 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="rs-grid-container"
-      role="grid"
-      style="width: 100%; padding-bottom: 20px;"
+      class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      style="padding-right: 5px; padding-bottom: 20px;"
     >
       <div
-        class="rs-row"
-        role="row"
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
       >
         <div
-          class="rs-col rs-col-xs-12"
-          role="gridcell"
+          class="rs-row"
+          role="row"
         >
           <div
-            class="rs-row"
-            role="row"
+            class="rs-col rs-col-xs-2"
+            role="gridcell"
+            style="padding-top: 3px;"
           >
-            <div
-              class="rs-col rs-col-xs-2"
-              role="gridcell"
-              style="padding-top: 3px;"
+            <a
+              href="/users"
             >
-              <a
-                href="/users"
-              >
-                <h1>
-                  <svg
-                    aria-hidden="true"
-                    aria-label="arrow left line"
-                    class="rs-icon"
-                    data-category="direction"
-                    fill="currentColor"
-                    focusable="false"
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    width="1em"
-                  >
-                    <path
-                      d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
-                    />
-                  </svg>
-                </h1>
-              </a>
-            </div>
-            <div
-              class="rs-col rs-col-xs-16"
-              role="gridcell"
-            >
-              <h2>
-                userCreateOrEditView.createNewUser
-              </h2>
-            </div>
+              <h1>
+                <svg
+                  aria-hidden="true"
+                  aria-label="arrow left line"
+                  class="rs-icon"
+                  data-category="direction"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                >
+                  <path
+                    d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
+                  />
+                </svg>
+              </h1>
+            </a>
+          </div>
+          <div
+            class="rs-col rs-col-xs-16"
+            role="gridcell"
+          >
+            <h2>
+              userCreateOrEditView.createNewUser
+            </h2>
           </div>
         </div>
-        <div
-          class="rs-col rs-col-xs-12"
-          role="gridcell"
-          style="text-align: end;"
+      </div>
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+        style="text-align: right;"
+      >
+        <button
+          class="rs-btn rs-btn-ghost"
+          data-testid="saveButton"
+          style="margin-right: 10px;"
+          type="submit"
         >
-          <button
-            class="rs-btn rs-btn-ghost"
-            data-testid="saveButton"
-            style="margin-right: 10px;"
-            type="submit"
+          userCreateOrEditView.create
+        </button>
+        <button
+          class="rs-btn rs-btn-primary"
+          data-testid="saveAndCloseButton"
+          type="submit"
+        >
+          userCreateOrEditView.createAndClose
+          <span
+            class="rs-ripple-pond"
           >
-            userCreateOrEditView.create
-          </button>
-          <button
-            class="rs-btn rs-btn-primary"
-            data-testid="saveAndCloseButton"
-            type="submit"
-          >
-            userCreateOrEditView.createAndClose
             <span
-              class="rs-ripple-pond"
-            >
-              <span
-                class="rs-ripple"
-              />
-            </span>
-          </button>
-        </div>
+              class="rs-ripple"
+            />
+          </span>
+        </button>
       </div>
     </div>
     <div
@@ -1033,93 +1024,85 @@ exports[`User create or edit view should render 1`] = `
 </DocumentFragment>
 `;
 
-exports[`User create or edit view should render with ID 1`] = `
+exports[`User edit view should render with ID 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="rs-grid-container"
-      role="grid"
-      style="width: 100%; padding-bottom: 20px;"
+      class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      style="padding-right: 5px; padding-bottom: 20px;"
     >
       <div
-        class="rs-row"
-        role="row"
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
       >
         <div
-          class="rs-col rs-col-xs-12"
-          role="gridcell"
+          class="rs-row"
+          role="row"
         >
           <div
-            class="rs-row"
-            role="row"
+            class="rs-col rs-col-xs-2"
+            role="gridcell"
+            style="padding-top: 3px;"
           >
-            <div
-              class="rs-col rs-col-xs-2"
-              role="gridcell"
-              style="padding-top: 3px;"
+            <a
+              href="/users"
             >
-              <a
-                href="/users"
-              >
-                <h1>
-                  <svg
-                    aria-hidden="true"
-                    aria-label="arrow left line"
-                    class="rs-icon"
-                    data-category="direction"
-                    fill="currentColor"
-                    focusable="false"
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    width="1em"
-                  >
-                    <path
-                      d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
-                    />
-                  </svg>
-                </h1>
-              </a>
-            </div>
-            <div
-              class="rs-col rs-col-xs-16"
-              role="gridcell"
-            >
-              <h2>
-                userCreateOrEditView.createNewUser
-              </h2>
-            </div>
+              <h1>
+                <svg
+                  aria-hidden="true"
+                  aria-label="arrow left line"
+                  class="rs-icon"
+                  data-category="direction"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                >
+                  <path
+                    d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
+                  />
+                </svg>
+              </h1>
+            </a>
+          </div>
+          <div
+            class="rs-col rs-col-xs-16"
+            role="gridcell"
+          >
+            <h2>
+              userCreateOrEditView.createNewUser
+            </h2>
           </div>
         </div>
-        <div
-          class="rs-col rs-col-xs-12"
-          role="gridcell"
-          style="text-align: end;"
+      </div>
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+        style="text-align: right;"
+      >
+        <button
+          class="rs-btn rs-btn-ghost"
+          data-testid="saveButton"
+          style="margin-right: 10px;"
+          type="submit"
         >
-          <button
-            class="rs-btn rs-btn-ghost"
-            data-testid="saveButton"
-            style="margin-right: 10px;"
-            type="submit"
+          userCreateOrEditView.create
+        </button>
+        <button
+          class="rs-btn rs-btn-primary"
+          data-testid="saveAndCloseButton"
+          type="submit"
+        >
+          userCreateOrEditView.createAndClose
+          <span
+            class="rs-ripple-pond"
           >
-            userCreateOrEditView.create
-          </button>
-          <button
-            class="rs-btn rs-btn-primary"
-            data-testid="saveAndCloseButton"
-            type="submit"
-          >
-            userCreateOrEditView.createAndClose
             <span
-              class="rs-ripple-pond"
-            >
-              <span
-                class="rs-ripple"
-              />
-            </span>
-          </button>
-        </div>
+              class="rs-ripple"
+            />
+          </span>
+        </button>
       </div>
     </div>
     <div

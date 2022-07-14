@@ -13,10 +13,8 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {
   ButtonLink,
   Link,
-  RouteType,
   SubscriptionCreateRoute,
   SubscriptionEditRoute,
-  useRoute,
   useRouteDispatch
 } from '../route'
 import {
@@ -64,16 +62,8 @@ export const newSubscriptionButton = ({
 }
 
 export function SubscriptionList() {
-  const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.SubscriptionEdit || current?.type === RouteType.SubscriptionCreate
-  )
-
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
-  )
   const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -114,18 +104,6 @@ export function SubscriptionList() {
   const [deleteSubscription, {loading: isDeleting}] = useDeleteSubscriptionMutation()
 
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (current?.type === RouteType.SubscriptionCreate) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (current?.type === RouteType.SubscriptionEdit) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
-    }
-  }, [current])
 
   useEffect(() => {
     if (data?.subscriptions?.nodes) {
