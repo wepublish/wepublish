@@ -181,6 +181,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
+        if (!article) throw new NotFound('Article', id ?? slug ?? token)
 
         return article
       }
@@ -284,6 +285,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
             )
           }
         }
+        if (!page) throw new NotFound('Page', id ?? slug ?? token)
 
         return page
       }
