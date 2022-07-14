@@ -31,17 +31,17 @@ import {
   usePaymentMethodListQuery,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation
-} from '../api'
+} from '../../api'
 import {useTranslation} from 'react-i18next'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES} from '../utility'
-import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
-import {CurrencyInput} from '../atoms/currencyInput'
-import {InvoiceListPanel} from '../panel/invoiceListPanel'
+import {DescriptionList, DescriptionListItem} from '../../atoms/descriptionList'
+import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
+import {UserSubscriptionDeactivatePanel} from '../../panel/userSubscriptionDeactivatePanel'
+import {CurrencyInput} from '../../atoms/currencyInput'
+import {InvoiceListPanel} from '../../panel/invoiceListPanel'
 import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
-import {UserSearch} from '../atoms/searchAndFilter/userSearch'
-import {RouteType, useRoute} from '../route'
+import {UserSearch} from '../../atoms/searchAndFilter/userSearch'
+import {RouteType, useRoute} from '../../route'
 
 export interface SubscriptionEditPanelProps {
   onClose?(): void

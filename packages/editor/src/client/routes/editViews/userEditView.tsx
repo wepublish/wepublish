@@ -22,7 +22,7 @@ import {
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery
-} from '../api'
+} from '../../api'
 import {
   Link,
   RouteType,
@@ -30,11 +30,11 @@ import {
   UserListRoute,
   useRoute,
   useRouteDispatch
-} from '../route'
+} from '../../route'
 import {useTranslation} from 'react-i18next'
-import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
+import {CreateOrEditUserPassword} from '../../atoms/user/createOrEditUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
-import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
+import {UserSubscriptionsList} from '../../atoms/user/userSubscriptionsList'
 import {ArrowLeftLine} from '@rsuite/icons'
 
 export function UserEditView() {

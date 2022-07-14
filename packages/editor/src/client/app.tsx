@@ -33,8 +33,8 @@ import {useTranslation} from 'react-i18next'
 import {AuthContext} from './authContext'
 import {RouteActionType} from '@wepublish/karma.run-react'
 import {SubscriptionList} from './routes/subscriptionList'
-import {UserEditView} from './routes/userEditView'
-import {SubscriptionEditView} from './routes/subscriptionEditView'
+import {UserEditView} from './routes/editViews/userEditView'
+import {SubscriptionEditView} from './routes/editViews/subscriptionEditView'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
