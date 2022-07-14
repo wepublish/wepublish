@@ -358,7 +358,7 @@ export function UserCreateOrEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.firstName')}</Form.ControlLabel>
                         <Form.Control
                           name="firstName"
-                          value={firstName}
+                          value={firstName || ''}
                           disabled={isDisabled}
                           onChange={(value: string) => {
                             setFirstName(value)
@@ -374,7 +374,7 @@ export function UserCreateOrEditView() {
                         </Form.ControlLabel>
                         <Form.Control
                           name="name"
-                          value={name}
+                          value={name || ''}
                           disabled={isDisabled}
                           onChange={(value: string) => {
                             setName(value)
@@ -390,7 +390,7 @@ export function UserCreateOrEditView() {
                         </Form.ControlLabel>
                         <Form.Control
                           name="preferredName"
-                          value={preferredName}
+                          value={preferredName || ''}
                           disabled={isDisabled}
                           onChange={(value: string) => setPreferredName(value)}
                         />
@@ -418,7 +418,7 @@ export function UserCreateOrEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.company')}</Form.ControlLabel>
                         <Form.Control
                           name="company"
-                          value={address?.company}
+                          value={address?.company || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'company', value)
@@ -434,7 +434,7 @@ export function UserCreateOrEditView() {
                         </Form.ControlLabel>
                         <Form.Control
                           name="streetAddress"
-                          value={address?.streetAddress}
+                          value={address?.streetAddress || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'streetAddress', value)
@@ -450,7 +450,7 @@ export function UserCreateOrEditView() {
                         </Form.ControlLabel>
                         <Form.Control
                           name="streetAddress2"
-                          value={address?.streetAddress2}
+                          value={address?.streetAddress2 || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'streetAddress2', value)
@@ -464,7 +464,7 @@ export function UserCreateOrEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.zipCode')}</Form.ControlLabel>
                         <Form.Control
                           name="zipCode"
-                          value={address?.zipCode}
+                          value={address?.zipCode || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'zipCode', value)
@@ -478,7 +478,7 @@ export function UserCreateOrEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.city')}</Form.ControlLabel>
                         <Form.Control
                           name="city"
-                          value={address?.city}
+                          value={address?.city || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'city', value)
@@ -492,7 +492,7 @@ export function UserCreateOrEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
                         <Form.Control
                           name="country"
-                          value={address?.country}
+                          value={address?.country || ''}
                           disabled={isDisabled}
                           onChange={(value: string) =>
                             updateAddressObject(address, setAddress, 'country', value)
