@@ -41,6 +41,7 @@ import CogIcon from '@rsuite/icons/legacy/Cog'
 import GlobeIcon from '@rsuite/icons/legacy/Globe'
 import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 import {useTranslation} from 'react-i18next'
+import {PermissionControl} from './atoms/permissionControl'
 
 export interface BaseProps {
   children?: ReactNode
@@ -121,108 +122,139 @@ export function Base({children}: BaseProps) {
               />
 
               <Nav>
-                <NavItemLink
-                  icon={<FileTextIcon />}
-                  route={ArticleListRoute.create({})}
-                  active={
-                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
-                  }>
-                  {t('navbar.articles')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_ARTICLES'}>
+                  <NavItemLink
+                    icon={<FileTextIcon />}
+                    route={ArticleListRoute.create({})}
+                    active={
+                      current?.type === RouteType.ArticleList || current?.type === RouteType.Index
+                    }>
+                    {t('navbar.articles')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<FileTextOIcon />}
-                  route={PeerArticleListRoute.create({})}
-                  active={current?.type === RouteType.PeerArticleList}>
-                  {t('navbar.peerArticles')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_PEER_ARTICLES'}>
+                  <NavItemLink
+                    icon={<FileTextOIcon />}
+                    route={PeerArticleListRoute.create({})}
+                    active={current?.type === RouteType.PeerArticleList}>
+                    {t('navbar.peerArticles')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<FrameIcon />}
-                  route={PageListRoute.create({})}
-                  active={current?.type === RouteType.PageList}>
-                  {t('navbar.pages')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_PAGES'}>
+                  <NavItemLink
+                    icon={<FrameIcon />}
+                    route={PageListRoute.create({})}
+                    active={current?.type === RouteType.PageList}>
+                    {t('navbar.pages')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<CommentIcon />}
-                  route={CommentListRoute.create({})}
-                  active={current?.type === RouteType.CommentList}>
-                  {t('navbar.comments')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_COMMENTS'}>
+                  <NavItemLink
+                    icon={<CommentIcon />}
+                    route={CommentListRoute.create({})}
+                    active={current?.type === RouteType.CommentList}>
+                    {t('navbar.comments')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<ImageIcon />}
-                  route={ImageListRoute.create({})}
-                  active={current?.type === RouteType.ImageList}>
-                  {t('navbar.imageLibrary')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_IMAGES'}>
+                  <NavItemLink
+                    icon={<ImageIcon />}
+                    route={ImageListRoute.create({})}
+                    active={current?.type === RouteType.ImageList}>
+                    {t('navbar.imageLibrary')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<BarsIcon />}
-                  route={NavigationListRoute.create({})}
-                  active={current?.type === RouteType.NavigationList}>
-                  {t('navbar.navigations')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_NAVIGATIONS'}>
+                  <NavItemLink
+                    icon={<BarsIcon />}
+                    route={NavigationListRoute.create({})}
+                    active={current?.type === RouteType.NavigationList}>
+                    {t('navbar.navigations')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<PeopleGroupIcon />}
-                  route={AuthorListRoute.create({})}
-                  active={current?.type === RouteType.AuthorList}>
-                  {t('navbar.authors')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_AUTHORS'}>
+                  <NavItemLink
+                    icon={<PeopleGroupIcon />}
+                    route={AuthorListRoute.create({})}
+                    active={current?.type === RouteType.AuthorList}>
+                    {t('navbar.authors')}
+                  </NavItemLink>
+                </PermissionControl>
 
-                <Dropdown eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.UserList}
-                    icon={<UserCircleIcon />}
-                    route={UserListRoute.create({})}>
-                    {t('navbar.users')}
-                  </DropdownItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_USERS'}>
+                  <Dropdown
+                    eventKey={'1'}
+                    title={t('navbar.usersAndMembers')}
+                    icon={<PeoplesIcon />}>
+                    <DropdownItemLink
+                      active={current?.type === RouteType.UserList}
+                      icon={<UserCircleIcon />}
+                      route={UserListRoute.create({})}>
+                      {t('navbar.users')}
+                    </DropdownItemLink>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.UserRoleList}
-                    icon={<CharacterAuthorizeIcon />}
-                    route={UserRoleListRoute.create({})}>
-                    {t('navbar.userRoles')}
-                  </DropdownItemLink>
+                    <PermissionControl requiredPermission={'CAN_GET_USER_ROLES'}>
+                      <DropdownItemLink
+                        active={current?.type === RouteType.UserRoleList}
+                        icon={<CharacterAuthorizeIcon />}
+                        route={UserRoleListRoute.create({})}>
+                        {t('navbar.userRoles')}
+                      </DropdownItemLink>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.SubscriptionList}
-                    icon={<MehOIcon />}
-                    route={SubscriptionListRoute.create({})}>
-                    {t('navbar.subscriptions')}
-                  </DropdownItemLink>
+                    <PermissionControl requiredPermission={'CAN_GET_SUBSCRIPTIONS'}>
+                      <DropdownItemLink
+                        active={current?.type === RouteType.SubscriptionList}
+                        icon={<MehOIcon />}
+                        route={SubscriptionListRoute.create({})}>
+                        {t('navbar.subscriptions')}
+                      </DropdownItemLink>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.MemberPlanList}
-                    icon={<IdCardIcon />}
-                    route={MemberPlanListRoute.create({})}>
-                    {t('navbar.memberPlans')}
-                  </DropdownItemLink>
+                    <PermissionControl requiredPermission={'CAN_GET_MEMBER_PLANS'}>
+                      <DropdownItemLink
+                        active={current?.type === RouteType.MemberPlanList}
+                        icon={<IdCardIcon />}
+                        route={MemberPlanListRoute.create({})}>
+                        {t('navbar.memberPlans')}
+                      </DropdownItemLink>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.PaymentMethodList}
-                    icon={<CreditCardIcon />}
-                    route={PaymentMethodListRoute.create({})}>
-                    {t('navbar.paymentMethods')}
-                  </DropdownItemLink>
-                </Dropdown>
+                    <PermissionControl requiredPermission={'CAN_GET_PAYMENT_METHODS'}>
+                      <DropdownItemLink
+                        active={current?.type === RouteType.PaymentMethodList}
+                        icon={<CreditCardIcon />}
+                        route={PaymentMethodListRoute.create({})}>
+                        {t('navbar.paymentMethods')}
+                      </DropdownItemLink>
+                    </PermissionControl>
+                  </Dropdown>
+                </PermissionControl>
 
-                <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.PeerList}
-                    icon={<ShareIcon />}
-                    route={PeerListRoute.create({})}>
-                    {t('navbar.peers')}
-                  </DropdownItemLink>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.TokenList}
-                    icon={<KeyIcon />}
-                    route={TokenListRoute.create({})}>
-                    {t('navbar.tokens')}
-                  </DropdownItemLink>
-                </Dropdown>
+                <PermissionControl requiredPermission={'CAN_GET_PEERS'}>
+                  <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
+                    <DropdownItemLink
+                      active={current?.type === RouteType.PeerList}
+                      icon={<ShareIcon />}
+                      route={PeerListRoute.create({})}>
+                      {t('navbar.peers')}
+                    </DropdownItemLink>
+                    <PermissionControl requiredPermission={'CAN_GET_TOKENS'}>
+                      <DropdownItemLink
+                        active={current?.type === RouteType.TokenList}
+                        icon={<KeyIcon />}
+                        route={TokenListRoute.create({})}>
+                        {t('navbar.tokens')}
+                      </DropdownItemLink>
+                    </PermissionControl>
+                  </Dropdown>
+                </PermissionControl>
               </Nav>
             </Sidenav.Body>
           </Sidenav>

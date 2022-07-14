@@ -3,11 +3,13 @@ import {useQuery, gql} from '@apollo/client'
 
 import {LocalStorageKey} from './utility'
 import {usePageVisibility} from 'react-page-visibility'
+import {UserRole} from './api'
 
 export interface AuthContextState {
   readonly session?: {
     readonly email: string
     readonly sessionToken: string
+    readonly roles?: UserRole[]
   }
 }
 
@@ -22,6 +24,7 @@ export interface AuthDispatchLoginAction {
   readonly type: AuthDispatchActionType.Login
   readonly email: string
   readonly sessionToken: string
+  readonly sessionRoles?: UserRole[]
 }
 
 export interface AuthDispatchLogoutAction {
@@ -44,7 +47,8 @@ export function authReducer(
       return {
         session: {
           email: action.email,
-          sessionToken: action.sessionToken
+          sessionToken: action.sessionToken,
+          roles: action.sessionRoles
         }
       }
 
@@ -57,6 +61,12 @@ const MeQuery = gql`
   {
     me {
       email
+      roles {
+        id
+        permissions {
+          id
+        }
+      }
     }
   }
 `
@@ -87,7 +97,8 @@ export function AuthProvider({children}: AuthProviderProps) {
       dispatch({
         type: AuthDispatchActionType.Login,
         email,
-        sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+        sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!,
+        sessionRoles: data.me.roles
       })
     } else {
       dispatch({
