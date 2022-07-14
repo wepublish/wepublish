@@ -230,3 +230,19 @@ export function getImgMinSizeToCompress(): number {
   )
   return imgMinSizeToCompress
 }
+
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never
+
+export type ValueConstructor<T> = T | (() => T)
+
+export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
+  return typeof value === 'function'
+}
+
+export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is (value: T) => T {
+  return typeof value === 'function'
+}

@@ -1,4 +1,4 @@
-import {PublicArticle} from './db/article'
+import {PublicArticle, Article} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'
@@ -6,7 +6,7 @@ import {Peer} from './db/peer'
 
 export interface URLAdapter {
   getPublicArticleURL(article: PublicArticle): string
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string
+  getPeeredArticleURL(peer: Peer, article: Article): string
   getPublicPageURL(page: PublicPage): string
   getAuthorURL(author: Author): string
   getArticlePreviewURL(token: string): string

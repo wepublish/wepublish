@@ -36,7 +36,6 @@
     "test": "node -r dotenv/config ./node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@karma.run/utility": "^0.1.0",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",
     "apollo-server-express": "2.25.3",

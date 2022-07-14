@@ -165,4 +165,5 @@ export function App() {
 
   return <CustomProvider locale={lng}>{GetComponents(current)}</CustomProvider>
 }
+
 export const HotApp = hot(App)

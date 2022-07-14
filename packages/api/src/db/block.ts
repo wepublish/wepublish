@@ -1,4 +1,4 @@
-import {MapDiscriminatedUnion} from '@karma.run/utility'
+import {MapDiscriminatedUnion} from '../utility'
 import {RichTextNode} from '../graphql/richText'
 
 export enum BlockType {

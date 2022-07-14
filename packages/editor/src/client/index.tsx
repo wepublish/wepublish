@@ -11,7 +11,8 @@ import {initI18N} from './i18n'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
-import {RouteProvider} from './route'
+// import {RouteProvider} from './route'
+import {BrowserRouter} from 'react-router-dom'
 import {AuthProvider} from './authContext'
 import {LocalStorageKey} from './utility'
 import {TwitterProvider} from './blocks/embeds/twitter'
@@ -112,15 +113,20 @@ const onDOMContentLoaded = async () => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <RouteProvider>
+        <BrowserRouter>
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <HotApp />
+                {/* <HotApp /> */}
+                <Routes>
+                  <Route path="/" element={<App />} />
+                  <Route path="expenses" element={<Expenses />} />
+                  <Route path="invoices" element={<Invoices />} />
+                </Routes>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>
-        </RouteProvider>
+        </BrowserRouter>
       </AuthProvider>
     </ApolloProvider>,
     document.getElementById(ElementID.ReactRoot)

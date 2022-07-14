@@ -246,3 +246,27 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
     return countRichtextChars(charLength, node.children)
   }, blocksCharLength)
 }
+
+export type DiscriminateUnion<T, K extends keyof T, V extends T[K]> = T extends Record<K, V>
+  ? T
+  : never
+
+export type MapDiscriminatedUnion<T extends Record<K, string>, K extends keyof T> = {
+  [V in T[K]]: DiscriminateUnion<T, K, V>
+}
+
+export function isObject<T>(unknown: unknown): unknown is Record<any, T> {
+  return typeof unknown === 'object' && unknown != null && !Array.isArray(unknown)
+}
+
+export function isArray<T>(unknown: unknown): unknown is T[] {
+  return Array.isArray(unknown)
+}
+
+export function isString(unknown: unknown): unknown is string {
+  return typeof unknown === 'string'
+}
+
+export function isBoolean(unknown: unknown): unknown is boolean {
+  return typeof unknown === 'boolean'
+}

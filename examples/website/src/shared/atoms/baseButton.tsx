@@ -1,7 +1,7 @@
 import React, {ReactNode, MouseEventHandler} from 'react'
 
 import {cssRule, CSSRule, useStyle} from '@karma.run/react'
-import {toArray} from '@karma.run/utility'
+import {toArray} from '../utility'
 
 export interface ButtonProps {
   readonly href?: string
