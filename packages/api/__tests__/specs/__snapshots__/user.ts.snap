@@ -449,6 +449,11 @@ Object {
                   "description": "Allows to delete a subscription",
                   "id": "CAN_DELETE_SUBSCRIPTION",
                 },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to login as other user",
+                  "id": "CAN_LOGIN_AS_OTHER_USER",
+                },
               ],
               "systemRole": true,
             },
