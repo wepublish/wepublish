@@ -22,11 +22,19 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
-import {RouteType, UserEditViewRoute, UserListRoute, useRoute, useRouteDispatch} from '../route'
+import {
+  Link,
+  RouteType,
+  UserEditViewRoute,
+  UserListRoute,
+  useRoute,
+  useRouteDispatch
+} from '../route'
 import {useTranslation} from 'react-i18next'
 import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
+import {ArrowLeftLine} from '@rsuite/icons'
 
 export function UserCreateOrEditView() {
   const {t} = useTranslation()
@@ -275,7 +283,7 @@ export function UserCreateOrEditView() {
         {/* save button */}
         <Button
           appearance="ghost"
-          disabled={isDisabled}
+          loading={isDisabled}
           type="submit"
           data-testid="saveButton"
           style={{marginRight: '10px'}}>
@@ -284,7 +292,7 @@ export function UserCreateOrEditView() {
         {/* save and close button */}
         <Button
           appearance="primary"
-          disabled={isDisabled}
+          loading={isDisabled}
           type="submit"
           data-testid="saveAndCloseButton"
           onClick={() => setCloseAfterSave(true)}>
@@ -307,6 +315,13 @@ export function UserCreateOrEditView() {
             {/* title */}
             <Col xs={12}>
               <Row>
+                <Col xs={2} style={{paddingTop: '3px'}}>
+                  <Link route={UserListRoute.create({})}>
+                    <h1>
+                      <ArrowLeftLine />
+                    </h1>
+                  </Link>
+                </Col>
                 <Col xs={16}>
                   <h2>{titleView()}</h2>
                 </Col>

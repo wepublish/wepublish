@@ -56,6 +56,7 @@ export const newSubscriptionButton = ({
     <ButtonLink
       style={{marginLeft: 5}}
       appearance="primary"
+      color="green"
       disabled={isLoading}
       route={SubscriptionCreateRoute.create({})}>
       <PlusIcon style={{marginRight: '5px'}} />
