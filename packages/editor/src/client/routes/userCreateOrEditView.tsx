@@ -3,6 +3,7 @@ import {
   Button,
   CheckPicker,
   Col,
+  FlexboxGrid,
   Form,
   Grid,
   Loader,
@@ -310,29 +311,27 @@ export function UserCreateOrEditView() {
         model={validationModel}
         formValue={{name: name, email, password}}>
         {/* heading */}
-        <Grid style={{width: '100%', paddingBottom: '20px'}}>
-          <Row>
-            {/* title */}
-            <Col xs={12}>
-              <Row>
-                <Col xs={2} style={{paddingTop: '3px'}}>
-                  <Link route={UserListRoute.create({})}>
-                    <h1>
-                      <ArrowLeftLine />
-                    </h1>
-                  </Link>
-                </Col>
-                <Col xs={16}>
-                  <h2>{titleView()}</h2>
-                </Col>
-              </Row>
-            </Col>
-            {/* actions */}
-            <Col xs={12} style={{textAlign: 'end'}}>
-              {actionsView()}
-            </Col>
-          </Row>
-        </Grid>
+        <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+          {/* title */}
+          <FlexboxGrid.Item colspan={12}>
+            <Row>
+              <Col xs={2} style={{paddingTop: '3px'}}>
+                <Link route={UserListRoute.create({})}>
+                  <h1>
+                    <ArrowLeftLine />
+                  </h1>
+                </Link>
+              </Col>
+              <Col xs={16}>
+                <h2>{titleView()}</h2>
+              </Col>
+            </Row>
+          </FlexboxGrid.Item>
+          {/* actions */}
+          <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
+            {actionsView()}
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
         {/* user form */}
         <Grid style={{width: '100%', paddingLeft: '0px'}}>
           <Row gutter={10}>
