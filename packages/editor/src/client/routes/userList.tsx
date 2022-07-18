@@ -4,7 +4,7 @@ import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
+import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 
 import {useTranslation} from 'react-i18next'
 import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table, Pagination} from 'rsuite'
@@ -251,7 +251,7 @@ export function UserList() {
           </Modal.Header>
 
           <Modal.Body>
-            <ResetUserPasswordPanel
+            <ResetUserPasswordForm
               userID={currentUser?.id}
               userName={currentUser?.name}
               onClose={() => setIsResetUserPasswordOpen(false)}

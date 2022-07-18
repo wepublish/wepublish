@@ -161,16 +161,6 @@ export interface DBSubscription {
   invoices?: Invoice[]
 }
 
-export interface DBSubscriptionPeriod {
-  readonly _id: any
-  readonly createdAt: Date
-  readonly startsAt: Date
-  readonly endsAt: Date
-  readonly paymentPeriodicity: PaymentPeriodicity
-  readonly amount: number
-  readonly invoiceID: string
-}
-
 export interface DBSession {
   _id: any
 

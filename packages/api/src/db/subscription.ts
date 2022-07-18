@@ -92,10 +92,10 @@ export interface Subscription {
   readonly paymentMethodID: string
   readonly properties: MetadataProperty[]
   readonly deactivation: SubscriptionDeactivation | null
-  readonly memberPlan?: MemberPlan | null
+  readonly memberPlan?: MemberPlan
   readonly paymentMethod?: PaymentMethod
   readonly user?: User
-  readonly invoices?: Invoice[] | null
+  readonly invoices?: Invoice[]
 }
 
 export interface CreateSubscriptionPeriodArgs {

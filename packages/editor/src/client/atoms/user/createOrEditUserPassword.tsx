@@ -3,7 +3,7 @@ import {Button, Form, Message, Modal, toaster} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {Reload, Send} from '@rsuite/icons'
-import {ResetUserPasswordPanel} from '../../panel/resetUserPasswordPanel'
+import {ResetUserPasswordForm} from './resetUserPasswordForm'
 
 interface CreateOrUpdateuserPasswordProps {
   user?: FullUserFragment | null
@@ -105,7 +105,7 @@ export function CreateOrEditUserPassword({
         </Modal.Header>
 
         <Modal.Body>
-          <ResetUserPasswordPanel
+          <ResetUserPasswordForm
             userID={userId}
             userName={userName}
             onClose={() => setIsResetUserPasswordOpen(false)}
