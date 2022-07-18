@@ -504,6 +504,7 @@
       "authors": "Autor*innen",
       "comments": "Kommentare",
       "imageLibrary": "Bilder",
+      "settings": "Einstellungen",
       "languageSwitch": {
         "close": "Schliessen",
         "currentLanguage": "Englisch",
@@ -945,6 +946,28 @@
         "date": "Deaktivierung"
       }
     },
+    "errorMessages": {
+      "noFirstNameErrorMessage": "Bitte Vornamen eingeben",
+      "noNameErrorMessage": "Bitte Namen eingeben",
+      "noEmailErrorMessage": "Bitte E-Mail eingeben",
+      "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
+      "noUrlErrorMessage": "Bitte URL eingeben",
+      "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
+      "noImageErrorMessage": "Bild fehlt",
+      "noCallToActionTextErrorMessage": "Bitte erfasse einen Call-To-Action-Text",
+      "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
+      "noAmountErrorMessage": "Der Betrag ist 5 CHF, wenn Du nichts eingibst",
+      "noPasswordErrorMessage": "Bitte Passwort eingeben",
+      "passwordTooShortErrorMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
+      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungs-Anbieter ein",
+      "noMemberPlanErrorMessage": "Bitte gib den Member-Plan ein",
+      "noPaymentPeriodicityErrorMessage": "Bitte gib die Bezahl-Periodizität ein",
+      "noPaymentMethodErrorMessage": "Bitte gib eine Bezahl-Methode ein",
+      "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
+      "noTokenErrorMessage": "Bitte gib den Token ein",
+      "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
+      "required": "Dieses Feld ist erforderlich"
+    },
     "invoice": {
       "manuallyPaidByAdmin": "Durch Administrator als bezahlt markiert.",
       "invoiceNo": "Rechnung Nr.",
@@ -964,6 +987,26 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Einstellungen",
+      "successMessage": "Einstellungen erfolgreich aktualisiert!",
+      "successTitle": "Gespeichert",
+      "save": "Speichern",
+      "errorTitle": "Fehler",
+      "editSettings": "Einstellungen ändern",
+      "guestCommenting": "Gastkommentare erlauben",
+      "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
+      "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
+      "peerToken": "Peering timeout",
+      "invoiceReminders": "Anzahl Rechnungserinnerungen",
+      "invoiceFrequency": "Rechnungserinnerungsintervall",
+      "minutes": "Minuten",
+      "ms": "Milisekunden",
+      "comments": "Kommentare",
+      "login": "Login",
+      "peering": "Peering",
+      "payment": "Zahlung"
     }
   }
 }
