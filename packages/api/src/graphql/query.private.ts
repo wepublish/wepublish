@@ -841,12 +841,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         // Filter peered articles
         console.log('filter l. 843', filter)
         if (filter.title) {
-          // const filtered:[Object] = peerArticles.filter(article => article.article.latest.title.includes(filter.title))
+          const filtered: any = peerArticles.filter(article =>
+            article.article.latest.title.includes(filter.title)
+          )
           console.log(
             'filtered peereArticles ',
             peerArticles.filter(article => article.article.latest.title.includes(filter.title))
           )
-          // return filtered
+          return filtered
         }
 
         switch (sort) {

@@ -16,7 +16,8 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  AlgebraicCaptchaChallenge
+  AlgebraicCaptchaChallenge,
+  Article
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -49,7 +50,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+  getPeeredArticleURL(peer: Peer, article: Article): string {
     return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 
