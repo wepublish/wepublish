@@ -12,7 +12,7 @@ interface CreateOrUpdateuserPasswordProps {
   isDisabled: boolean
 }
 
-export function CreateOrEditUserPassword({
+export function EditUserPassword({
   user,
   password,
   setPassword,

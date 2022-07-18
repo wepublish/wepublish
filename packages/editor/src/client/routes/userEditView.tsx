@@ -32,12 +32,12 @@ import {
   useRouteDispatch
 } from '../route'
 import {useTranslation} from 'react-i18next'
-import {CreateOrEditUserPassword} from '../atoms/user/createOrEditUserPassword'
+import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {RouteActionType} from '@wepublish/karma.run-react'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ArrowLeftLine} from '@rsuite/icons'
 
-export function UserCreateOrEditView() {
+export function UserEditView() {
   const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
@@ -534,7 +534,7 @@ export function UserCreateOrEditView() {
                   style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
-                      <CreateOrEditUserPassword
+                      <EditUserPassword
                         user={user}
                         password={password}
                         setPassword={setPassword}
