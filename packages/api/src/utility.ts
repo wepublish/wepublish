@@ -218,8 +218,8 @@ export async function delegateToPeerSchema(
   context: Context,
   opts: Omit<IDelegateToSchemaOptions, 'schema'>
 ) {
-  console.log('opts', opts)
-  console.log('opts.info.variableValues', opts.info.variableValues)
+  // console.log('opts', opts)
+  // console.log('opts.info.variableValues', opts.info.variableValues)
 
   const schema = fetchAdminEndpoint
     ? await context.loaders.peerAdminSchema.load(peerID)

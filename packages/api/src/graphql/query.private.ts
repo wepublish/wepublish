@@ -822,7 +822,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           })
         )
 
-        console.log('line 825 ', filter)
         const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
         const cursors = Object.fromEntries(
           articles.map((result, index) => [peers[index].id, result?.pageInfo.endCursor ?? null])
@@ -838,6 +837,17 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
+
+        // Filter peered articles
+        console.log('filter l. 843', filter)
+        if (filter.title) {
+          // const filtered:[Object] = peerArticles.filter(article => article.article.latest.title.includes(filter.title))
+          console.log(
+            'filtered peereArticles ',
+            peerArticles.filter(article => article.article.latest.title.includes(filter.title))
+          )
+          // return filtered
+        }
 
         switch (sort) {
           case ArticleSort.CreatedAt:
