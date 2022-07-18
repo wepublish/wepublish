@@ -16,6 +16,7 @@ import {MailContext, SendMailType} from './mails/mailContext'
 import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {PaymentMethod} from './db/paymentMethod'
+import {SettingName} from './db/setting'
 
 export interface HandleSubscriptionChangeProps {
   subscription: Subscription
@@ -122,6 +123,8 @@ export function calculateAmountForPeriodicity(
 interface GetNextReminderAndDeactivationDateProps {
   sentReminderAt: Date
   createdAt: Date
+  frequency: number
+  maxAttempts: number
 }
 
 interface ReminderAndDeactivationDate {
@@ -131,10 +134,12 @@ interface ReminderAndDeactivationDate {
 
 function getNextReminderAndDeactivationDate({
   sentReminderAt,
-  createdAt
+  createdAt,
+  frequency,
+  maxAttempts
 }: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
-  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') || 3
-  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') || 5
+  const invoiceReminderFrequencyInDays = frequency || 3
+  const invoiceReminderMaxTries = maxAttempts || 5
 
   const nextReminder = new Date(
     sentReminderAt.getTime() +
@@ -235,7 +240,7 @@ export class MemberContext implements MemberContext {
       ) {
         const period = periods[periods.length - 1]
         const invoice = await this.dbAdapter.invoice.getInvoiceByID(period.invoiceID)
-        // only return the invoice if it hasn't been canceled. Otherwise
+        // only return the invoice if it hasn't been canceled. Otherwise,
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
           return invoice
@@ -312,12 +317,17 @@ export class MemberContext implements MemberContext {
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
     const subscriptionsPaidUntil: Subscription[] = []
+    // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
+    const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
+    // max batch size is 100 given by https://github.com/wepublish/wepublish/blob/master/packages/api-db-mongodb/src/db/defaults.ts#L3
+    const batchSize = Math.min(maxSubscriptionBatch, 100) || 100
     let hasMore = true
     let skip = 0
-    while (hasMore) {
+    // if no MAX_AUTO_RENEW_SUBSCRIPTION_BATCH is set, do not consider any max batches
+    while (hasMore && (isNaN(maxSubscriptionBatch) || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
+        limit: {count: batchSize, type: LimitType.First, skip},
         order: SortOrder.Ascending,
         sort: SubscriptionSort.CreatedAt,
         filter: {
@@ -328,17 +338,17 @@ export class MemberContext implements MemberContext {
       })
 
       hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
+      skip += batchSize
       subscriptionsPaidUntil.push(...subscriptions.nodes)
     }
 
     const subscriptionPaidNull: Subscription[] = []
     hasMore = true
     skip = 0
-    while (hasMore) {
+    while (hasMore && (isNaN(maxSubscriptionBatch) || skip < maxSubscriptionBatch)) {
       const subscriptions = await this.dbAdapter.subscription.getSubscriptions({
         cursor: InputCursor(),
-        limit: {count: 100, type: LimitType.First, skip},
+        limit: {count: batchSize, type: LimitType.First, skip},
         order: SortOrder.Ascending,
         sort: SubscriptionSort.CreatedAt,
         filter: {
@@ -349,7 +359,7 @@ export class MemberContext implements MemberContext {
       })
 
       hasMore = subscriptions.pageInfo.hasNextPage
-      skip += 100
+      skip += batchSize
       subscriptionPaidNull.push(...subscriptions.nodes)
     }
 
@@ -474,9 +484,17 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequency =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+        const maxAttempts =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
@@ -656,9 +674,17 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequency =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_FREQ))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+        const maxAttempts =
+          ((await this.dbAdapter.setting.getSetting(SettingName.INVOICE_REMINDER_MAX_TRIES))
+            ?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
@@ -773,6 +799,21 @@ export class MemberContext implements MemberContext {
     })
   }
 
+  async cancelInvoicesForSubscription(subscriptionID: string) {
+    // Cancel invoices when subscription is canceled
+    const invoices = await this.dbAdapter.invoice.getInvoicesBySubscriptionID(subscriptionID)
+    for (const invoice of invoices) {
+      if (!invoice || invoice.paidAt !== null || invoice.canceledAt !== null) continue
+      await this.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          canceledAt: new Date()
+        }
+      })
+    }
+  }
+
   async deactivateSubscriptionForUser({
     subscriptionID,
     deactivationDate,
@@ -783,6 +824,8 @@ export class MemberContext implements MemberContext {
       logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
     }
+
+    await this.cancelInvoicesForSubscription(subscriptionID)
 
     await this.dbAdapter.subscription.updateSubscription({
       id: subscriptionID,

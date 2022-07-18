@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-
 import {
   ConnectionResult,
   CreateUserArgs,
