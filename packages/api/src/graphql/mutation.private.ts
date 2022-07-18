@@ -66,7 +66,8 @@ import {
   CanUpdatePeerProfile,
   CanSendJWTLogin,
   CanCreateSubscription,
-  CanDeleteSubscription
+  CanDeleteSubscription,
+  CanUpdateSettings
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -89,6 +90,9 @@ import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
 import {SendMailType} from '../mails/mailContext'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
+import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
+import {SettingName} from '../db/setting'
+import {checkSettingRestrictions} from '../utility'
 import {Validator} from '../validator'
 
 function mapTeaserUnionMap(value: any) {
@@ -328,9 +332,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
+        const jwtExpires =
+          ((await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -359,11 +367,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
+        const jwtExpires =
+          ((await dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+        if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new NotFound('User', email)
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -1162,8 +1175,35 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           rejectionReason
         })
       }
+    },
+
+    // Settings
+    // ==========
+
+    updateSettingList: {
+      type: GraphQLList(GraphQLSetting),
+      args: {
+        value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
+      },
+      async resolve(root, {value}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanUpdateSettings, roles)
+
+        for (const {name, value: newVal} of value) {
+          const fullSetting = await dbAdapter.setting.getSetting(name)
+          if (!fullSetting) {
+            throw new NotFound('setting', name)
+          }
+          const currentVal = fullSetting.value
+          const restriction = fullSetting.settingRestriction
+          checkSettingRestrictions(newVal, currentVal, restriction)
+        }
+
+        return await dbAdapter.setting.updateSettingList(value)
+      }
     }
-    // Image
-    // =====
   }
+
+  // Image
+  // =====
 })

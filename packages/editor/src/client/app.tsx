@@ -33,6 +33,7 @@ import {useTranslation} from 'react-i18next'
 import {AuthContext} from './authContext'
 import {RouteActionType} from '@wepublish/karma.run-react'
 import {SubscriptionList} from './routes/subscriptionList'
+import {SettingList} from './routes/settingList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -101,6 +102,9 @@ export function contentForRoute(route: Route) {
 
     case RouteType.PeerArticleList:
       return <PeerArticleList />
+
+    case RouteType.SettingList:
+      return <SettingList />
 
     case RouteType.NotFound:
       return <ArticleList />
