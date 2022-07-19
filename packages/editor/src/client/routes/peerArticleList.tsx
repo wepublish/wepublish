@@ -29,8 +29,9 @@ import {
   DEFAULT_MAX_TABLE_PAGES
 } from '../utility'
 import SearchIcon from '@rsuite/icons/legacy/Search'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function PeerArticleList() {
+function PeerArticleList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('publishedAt')
@@ -284,3 +285,8 @@ export function PeerArticleList() {
     </>
   )
 }
+
+const CheckedPermissionPeerArticleList = createCheckedPermissionComponent(
+  'CAN_GET_PEER   _ARTICLES'
+)(PeerArticleList)
+export {CheckedPermissionPeerArticleList as PeerArticleList}

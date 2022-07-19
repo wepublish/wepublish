@@ -1,16 +1,35 @@
-import React, {ReactElement} from 'react'
+import React, {ComponentType, PropsWithChildren} from 'react'
 import {AuthContext} from '../authContext'
-import {authorise} from '../utility'
 
 interface PermissionControlProps {
-  children: ReactElement
   requiredPermission: string
 }
 
-export function PermissionControl({children, requiredPermission}: PermissionControlProps) {
+export function PermissionControl({
+  children,
+  requiredPermission
+}: PropsWithChildren<PermissionControlProps>) {
   return (
     <AuthContext.Consumer>
-      {value => <>{authorise(value.session?.roles, requiredPermission) ? children : null}</>}
+      {value => (
+        <>
+          {value.session?.roles?.some(role =>
+            role.permissions.some(permission => permission.id === requiredPermission)
+          )
+            ? children
+            : null}
+        </>
+      )}
     </AuthContext.Consumer>
+  )
+}
+
+export const createCheckedPermissionComponent = <P extends Record<string, unknown>>(
+  permission: string
+) => (ControlledComponent: ComponentType<P>) => (props: P) => {
+  return (
+    <PermissionControl requiredPermission={permission}>
+      <ControlledComponent {...props} />
+    </PermissionControl>
   )
 }
