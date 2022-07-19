@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`User create or edit view should allow a new user to be created 1`] = `
+exports[`User edit view should allow a new user to be created 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
@@ -231,7 +231,7 @@ exports[`User create or edit view should allow a new user to be created 1`] = `
                   </div>"
 `;
 
-exports[`User create or edit view should allow user role to be added 1`] = `
+exports[`User edit view should allow user role to be added 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
@@ -310,7 +310,7 @@ exports[`User create or edit view should allow user role to be added 1`] = `
                               class=\\"rs-picker-toggle-caret rs-icon\\""
 `;
 
-exports[`User create or edit view should allow user role to be removed 1`] = `
+exports[`User edit view should allow user role to be removed 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
@@ -389,7 +389,7 @@ exports[`User create or edit view should allow user role to be removed 1`] = `
                               class=\\"rs-picker-toggle-caret rs-icon\\""
 `;
 
-exports[`User create or edit view should render 1`] = `
+exports[`User edit view should render 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"
@@ -1024,7 +1024,7 @@ exports[`User create or edit view should render 1`] = `
 </DocumentFragment>
 `;
 
-exports[`User create or edit view should render with ID 1`] = `
+exports[`User edit view should render with ID 1`] = `
 <DocumentFragment>
   <form
     class="rs-form rs-form-vertical rs-form-fluid"

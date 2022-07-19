@@ -165,7 +165,7 @@ export function UserEditView() {
             id: user.id,
             input: {
               name,
-              firstName,
+              firstName: firstName || undefined,
               preferredName,
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
@@ -357,7 +357,7 @@ export function UserEditView() {
                         <Form.ControlLabel>{t('userCreateOrEditView.firstName')}</Form.ControlLabel>
                         <Form.Control
                           name="firstName"
-                          value={firstName || ''}
+                          value={firstName || undefined}
                           disabled={isDisabled}
                           onChange={(value: string) => {
                             setFirstName(value)

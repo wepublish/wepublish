@@ -89,7 +89,7 @@ const userDocumentQuery = {
   })
 }
 
-describe('User create or edit view', () => {
+describe('User edit view', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const {asFragment} = render(
