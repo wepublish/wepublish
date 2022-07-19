@@ -1,0 +1,1660 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User edit view should allow a new user to be created 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -43,32 +43,51 @@
+            <div
+              class=\\"rs-col rs-col-xs-16\\"
+              role=\\"gridcell\\"
+            >
+              <h2>
+-               userCreateOrEditView.createNewUser
++               <div
++                 class=\\"rs-loader-wrapper rs-loader-speed-normal\\"
++                 role=\\"progressbar\\"
++                 style=\\"margin-right: 5px;\\"
++               >
++                 <div
++                   class=\\"rs-loader\\"
++                 >
++                   <span
++                     class=\\"rs-loader-spin\\"
++                   />
++                 </div>
++               </div>
++               userCreateOrEditView.loadingUser
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div
+          class=\\"rs-flex-box-grid-item rs-flex-box-grid-item-12\\"
+          style=\\"text-align: right;\\"
+        >
+          <button
+-           class=\\"rs-btn rs-btn-ghost\\"
++           class=\\"rs-btn rs-btn-ghost rs-btn-loading\\"
+            data-testid=\\"saveButton\\"
+            style=\\"margin-right: 10px;\\"
+            type=\\"submit\\"
+          >
++           <span
++             class=\\"rs-btn-spin\\"
++           />
+            userCreateOrEditView.create
+          </button>
+          <button
+-           class=\\"rs-btn rs-btn-primary\\"
++           class=\\"rs-btn rs-btn-primary rs-btn-loading\\"
+            data-testid=\\"saveAndCloseButton\\"
+            type=\\"submit\\"
+          >
++           <span
++             class=\\"rs-btn-spin\\"
++           />
+            userCreateOrEditView.createAndClose
+            <span
+              class=\\"rs-ripple-pond\\"
+            >
+              <span
+@@ -128,18 +147,19 @@
+                          class=\\"rs-form-control-label\\"
+                        >
+                          userCreateOrEditView.active
+                        </label>
+                        <label
+-                         class=\\"rs-toggle rs-toggle-checked\\"
++                         class=\\"rs-toggle rs-toggle-checked rs-toggle-disabled\\"
+                        >
+                          <input
+                            aria-checked=\\"true\\"
+-                           aria-disabled=\\"false\\"
++                           aria-disabled=\\"true\\"
+                            aria-label=\\"Open\\"
+                            checked=\\"\\"
+                            class=\\"rs-toggle-input\\"
++                           disabled=\\"\\"
+                            role=\\"switch\\"
+                            type=\\"checkbox\\"
+                          />
+                          <span
+                            class=\\"rs-toggle-presentation\\"
+@@ -172,10 +192,11 @@
+                        >
+                          <input
+                            aria-describedby=\\"firstName-help-text\\"
+                            aria-labelledby=\\"firstName-control-label\\"
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            id=\\"firstName\\"
+                            name=\\"firstName\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+@@ -203,14 +224,15 @@
+                        >
+                          <input
+                            aria-describedby=\\"name-help-text\\"
+                            aria-labelledby=\\"name-control-label\\"
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            id=\\"name\\"
+                            name=\\"name\\"
+                            type=\\"text\\"
+-                           value=\\"\\"
++                           value=\\"Testing Müller\\"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+@@ -230,10 +252,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"preferredName\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -260,14 +283,15 @@
+                        >
+                          <input
+                            aria-describedby=\\"email-help-text\\"
+                            aria-labelledby=\\"email-control-label\\"
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            id=\\"email\\"
+                            name=\\"email\\"
+                            type=\\"text\\"
+-                           value=\\"\\"
++                           value=\\"testing@mueller.com\\"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+@@ -287,10 +311,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"company\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -313,10 +338,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"streetAddress\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -339,10 +365,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"streetAddress2\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -365,10 +392,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"zipCode\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -391,10 +419,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"city\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -417,10 +446,11 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            name=\\"country\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+                        </div>
+@@ -547,14 +577,15 @@
+                        >
+                          <input
+                            aria-describedby=\\"password-help-text\\"
+                            aria-labelledby=\\"password-control-label\\"
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            id=\\"password\\"
+                            name=\\"password\\"
+                            type=\\"password\\"
+-                           value=\\"\\"
++                           value=\\"superSecret\\"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>"
+`;
+
+exports[`User edit view should allow user role to be added 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -461,11 +461,11 @@
+                          class=\\"rs-form-control-label\\"
+                        >
+                          userCreateOrEditView.userRoles
+                        </label>
+                        <div
+-                         class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable\\"
++                         class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable\\"
+                        >
+                          <div
+                            aria-expanded=\\"false\\"
+                            aria-haspopup=\\"listbox\\"
+                            class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
+@@ -475,17 +475,54 @@
+                            <input
+                              aria-hidden=\\"true\\"
+                              class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
+                              readonly=\\"\\"
+                              tabindex=\\"-1\\"
+-                             value=\\"\\"
++                             value=\\"roleId2\\"
+                            />
++                           <span
++                             class=\\"rs-picker-toggle-value\\"
++                           >
++                             <span
++                               class=\\"rs-picker-value-list\\"
++                               title=\\"Role 2\\"
++                             >
+                                <span
+-                             aria-placeholder=\\"Select\\"
+-                             class=\\"rs-picker-toggle-placeholder\\"
++                                 class=\\"rs-picker-value-item\\"
++                               >
++                                 Role 2
++                               </span>
++                             </span>
++                             <span
++                               class=\\"rs-picker-value-count\\"
++                               title=\\"1\\"
++                             >
++                               1
++                             </span>
++                           </span>
++                           <span
++                             aria-label=\\"Clear\\"
++                             class=\\"rs-picker-toggle-clean rs-btn-close\\"
++                             role=\\"button\\"
++                             tabindex=\\"-1\\"
++                             title=\\"Clear\\"
++                           >
++                             <svg
++                               aria-hidden=\\"true\\"
++                               aria-label=\\"close\\"
++                               class=\\"rs-icon\\"
++                               data-category=\\"application\\"
++                               fill=\\"currentColor\\"
++                               focusable=\\"false\\"
++                               height=\\"1em\\"
++                               viewBox=\\"0 0 16 16\\"
++                               width=\\"1em\\"
+                              >
+-                             Select
++                               <path
++                                 d=\\"M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z\\"
++                               />
++                             </svg>
+                            </span>
+                            <svg
+                              aria-hidden=\\"true\\"
+                              aria-label=\\"angle down\\"
+                              class=\\"rs-picker-toggle-caret rs-icon\\""
+`;
+
+exports[`User edit view should allow user role to be removed 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -461,11 +461,11 @@
+                          class=\\"rs-form-control-label\\"
+                        >
+                          userCreateOrEditView.userRoles
+                        </label>
+                        <div
+-                         class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable\\"
++                         class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-has-value rs-picker-cleanable rs-picker-block rs-picker-countable\\"
+                        >
+                          <div
+                            aria-expanded=\\"false\\"
+                            aria-haspopup=\\"listbox\\"
+                            class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
+@@ -475,17 +475,54 @@
+                            <input
+                              aria-hidden=\\"true\\"
+                              class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
+                              readonly=\\"\\"
+                              tabindex=\\"-1\\"
+-                             value=\\"\\"
++                             value=\\"roleId2\\"
+                            />
++                           <span
++                             class=\\"rs-picker-toggle-value\\"
++                           >
++                             <span
++                               class=\\"rs-picker-value-list\\"
++                               title=\\"Role 2\\"
++                             >
+                                <span
+-                             aria-placeholder=\\"Select\\"
+-                             class=\\"rs-picker-toggle-placeholder\\"
++                                 class=\\"rs-picker-value-item\\"
++                               >
++                                 Role 2
++                               </span>
++                             </span>
++                             <span
++                               class=\\"rs-picker-value-count\\"
++                               title=\\"1\\"
++                             >
++                               1
++                             </span>
++                           </span>
++                           <span
++                             aria-label=\\"Clear\\"
++                             class=\\"rs-picker-toggle-clean rs-btn-close\\"
++                             role=\\"button\\"
++                             tabindex=\\"-1\\"
++                             title=\\"Clear\\"
++                           >
++                             <svg
++                               aria-hidden=\\"true\\"
++                               aria-label=\\"close\\"
++                               class=\\"rs-icon\\"
++                               data-category=\\"application\\"
++                               fill=\\"currentColor\\"
++                               focusable=\\"false\\"
++                               height=\\"1em\\"
++                               viewBox=\\"0 0 16 16\\"
++                               width=\\"1em\\"
+                              >
+-                             Select
++                               <path
++                                 d=\\"M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z\\"
++                               />
++                             </svg>
+                            </span>
+                            <svg
+                              aria-hidden=\\"true\\"
+                              aria-label=\\"angle down\\"
+                              class=\\"rs-picker-toggle-caret rs-icon\\""
+`;
+
+exports[`User edit view should render 1`] = `
+<DocumentFragment>
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
+  >
+    <div
+      class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      style="padding-right: 5px; padding-bottom: 20px;"
+    >
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+      >
+        <div
+          class="rs-row"
+          role="row"
+        >
+          <div
+            class="rs-col rs-col-xs-2"
+            role="gridcell"
+            style="padding-top: 3px;"
+          >
+            <a
+              href="/users"
+            >
+              <h1>
+                <svg
+                  aria-hidden="true"
+                  aria-label="arrow left line"
+                  class="rs-icon"
+                  data-category="direction"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                >
+                  <path
+                    d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
+                  />
+                </svg>
+              </h1>
+            </a>
+          </div>
+          <div
+            class="rs-col rs-col-xs-16"
+            role="gridcell"
+          >
+            <h2>
+              userCreateOrEditView.createNewUser
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+        style="text-align: right;"
+      >
+        <button
+          class="rs-btn rs-btn-ghost"
+          data-testid="saveButton"
+          style="margin-right: 10px;"
+          type="submit"
+        >
+          userCreateOrEditView.create
+        </button>
+        <button
+          class="rs-btn rs-btn-primary"
+          data-testid="saveAndCloseButton"
+          type="submit"
+        >
+          userCreateOrEditView.createAndClose
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="rs-grid-container"
+      role="grid"
+      style="width: 100%; padding-left: 0px;"
+    >
+      <div
+        class="rs-row"
+        role="row"
+        style="margin-left: -5px; margin-right: -5px;"
+      >
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+          style="padding-left: 5px; padding-right: 5px;"
+        >
+          <div
+            class="rs-grid-container-fluid"
+            role="grid"
+          >
+            <div
+              class="rs-panel rs-panel-bordered"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.userDataTitle
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="text-align: end; padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.active
+                      </label>
+                      <label
+                        class="rs-toggle rs-toggle-checked"
+                      >
+                        <input
+                          aria-checked="true"
+                          aria-disabled="false"
+                          aria-label="Open"
+                          checked=""
+                          class="rs-toggle-input"
+                          role="switch"
+                          type="checkbox"
+                        />
+                        <span
+                          class="rs-toggle-presentation"
+                        >
+                          <span
+                            class="rs-toggle-inner"
+                          />
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="firstName"
+                        id="firstName-control-label"
+                      >
+                        userCreateOrEditView.firstName
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="firstName-help-text"
+                          aria-labelledby="firstName-control-label"
+                          class="rs-input"
+                          id="firstName"
+                          name="firstName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="name"
+                        id="name-control-label"
+                      >
+                        userCreateOrEditView.name*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="name-help-text"
+                          aria-labelledby="name-control-label"
+                          class="rs-input"
+                          id="name"
+                          name="name"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.preferredName
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="preferredName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="email"
+                        id="email-control-label"
+                      >
+                        userCreateOrEditView.email*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="email-help-text"
+                          aria-labelledby="email-control-label"
+                          class="rs-input"
+                          id="email"
+                          name="email"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.company
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="company"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.streetAddress
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="streetAddress"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.streetAddress2
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="streetAddress2"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-8"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.zipCode
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="zipCode"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-16"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.city
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="city"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.country
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="country"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.userRoles
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.userRoles
+                      </label>
+                      <div
+                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+                      >
+                        <div
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
+                          class="rs-picker-toggle rs-btn rs-btn-default"
+                          role="combobox"
+                          tabindex="0"
+                        >
+                          <input
+                            aria-hidden="true"
+                            class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                            readonly=""
+                            tabindex="-1"
+                            value=""
+                          />
+                          <span
+                            aria-placeholder="Select"
+                            class="rs-picker-toggle-placeholder"
+                          >
+                            Select
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            aria-label="angle down"
+                            class="rs-picker-toggle-caret rs-icon"
+                            data-category="legacy"
+                            fill="currentColor"
+                            focusable="false"
+                            height="1em"
+                            viewBox="0 0 21 32"
+                            width="1em"
+                          >
+                            <path
+                              d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.passwordHeader
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="password"
+                        id="password-control-label"
+                      >
+                        userCreateOrEditView.password*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="password-help-text"
+                          aria-labelledby="password-control-label"
+                          class="rs-input"
+                          id="password"
+                          name="password"
+                          type="password"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+          style="padding-left: 5px; padding-right: 5px;"
+        >
+          <div
+            class="rs-grid-container-fluid"
+            role="grid"
+            style="padding-right: 0px;"
+          >
+            <div
+              class="rs-panel rs-panel-bordered"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.subscriptionsHeader
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  style="margin-top: 20px;"
+                >
+                  <a
+                    class="rs-btn rs-btn-primary rs-btn-green"
+                    href="/subscription/create"
+                    style="margin-left: 5px;"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      aria-label="plus"
+                      class="rs-icon"
+                      data-category="legacy"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      style="margin-right: 5px;"
+                      viewBox="0 0 14 14"
+                      width="1em"
+                    >
+                      <path
+                        d="M7 0a1 1 0 011 1v12a1 1 0 01-2 0V1a1 1 0 011-1z"
+                      />
+                      <path
+                        d="M1 6h12a1 1 0 010 2H1a1 1 0 010-2z"
+                      />
+                    </svg>
+                    subscriptionList.overview.newSubscription
+                    <span
+                      class="rs-ripple-pond"
+                    >
+                      <span
+                        class="rs-ripple"
+                      />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`User edit view should render with ID 1`] = `
+<DocumentFragment>
+  <form
+    class="rs-form rs-form-vertical rs-form-fluid"
+  >
+    <div
+      class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      style="padding-right: 5px; padding-bottom: 20px;"
+    >
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+      >
+        <div
+          class="rs-row"
+          role="row"
+        >
+          <div
+            class="rs-col rs-col-xs-2"
+            role="gridcell"
+            style="padding-top: 3px;"
+          >
+            <a
+              href="/users"
+            >
+              <h1>
+                <svg
+                  aria-hidden="true"
+                  aria-label="arrow left line"
+                  class="rs-icon"
+                  data-category="direction"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                >
+                  <path
+                    d="M9.707 5.707L7.415 8l2.292 2.293a.999.999 0 11-1.414 1.414l-3-3a.99.99 0 01-.277-.531l-.014-.117v-.118a.997.997 0 01.291-.648l3-3a.999.999 0 111.414 1.414z"
+                  />
+                </svg>
+              </h1>
+            </a>
+          </div>
+          <div
+            class="rs-col rs-col-xs-16"
+            role="gridcell"
+          >
+            <h2>
+              userCreateOrEditView.createNewUser
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
+        style="text-align: right;"
+      >
+        <button
+          class="rs-btn rs-btn-ghost"
+          data-testid="saveButton"
+          style="margin-right: 10px;"
+          type="submit"
+        >
+          userCreateOrEditView.create
+        </button>
+        <button
+          class="rs-btn rs-btn-primary"
+          data-testid="saveAndCloseButton"
+          type="submit"
+        >
+          userCreateOrEditView.createAndClose
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="rs-grid-container"
+      role="grid"
+      style="width: 100%; padding-left: 0px;"
+    >
+      <div
+        class="rs-row"
+        role="row"
+        style="margin-left: -5px; margin-right: -5px;"
+      >
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+          style="padding-left: 5px; padding-right: 5px;"
+        >
+          <div
+            class="rs-grid-container-fluid"
+            role="grid"
+          >
+            <div
+              class="rs-panel rs-panel-bordered"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.userDataTitle
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="text-align: end; padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.active
+                      </label>
+                      <label
+                        class="rs-toggle rs-toggle-checked"
+                      >
+                        <input
+                          aria-checked="true"
+                          aria-disabled="false"
+                          aria-label="Open"
+                          checked=""
+                          class="rs-toggle-input"
+                          role="switch"
+                          type="checkbox"
+                        />
+                        <span
+                          class="rs-toggle-presentation"
+                        >
+                          <span
+                            class="rs-toggle-inner"
+                          />
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="firstName"
+                        id="firstName-control-label"
+                      >
+                        userCreateOrEditView.firstName
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="firstName-help-text"
+                          aria-labelledby="firstName-control-label"
+                          class="rs-input"
+                          id="firstName"
+                          name="firstName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="name"
+                        id="name-control-label"
+                      >
+                        userCreateOrEditView.name*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="name-help-text"
+                          aria-labelledby="name-control-label"
+                          class="rs-input"
+                          id="name"
+                          name="name"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.preferredName
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="preferredName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="email"
+                        id="email-control-label"
+                      >
+                        userCreateOrEditView.email*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="email-help-text"
+                          aria-labelledby="email-control-label"
+                          class="rs-input"
+                          id="email"
+                          name="email"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.company
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="company"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.streetAddress
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="streetAddress"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.streetAddress2
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="streetAddress2"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-8"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.zipCode
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="zipCode"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-16"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.city
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="city"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.country
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          class="rs-input"
+                          name="country"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.userRoles
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                      >
+                        userCreateOrEditView.userRoles
+                      </label>
+                      <div
+                        class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+                      >
+                        <div
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
+                          class="rs-picker-toggle rs-btn rs-btn-default"
+                          role="combobox"
+                          tabindex="0"
+                        >
+                          <input
+                            aria-hidden="true"
+                            class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                            readonly=""
+                            tabindex="-1"
+                            value=""
+                          />
+                          <span
+                            aria-placeholder="Select"
+                            class="rs-picker-toggle-placeholder"
+                          >
+                            Select
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            aria-label="angle down"
+                            class="rs-picker-toggle-caret rs-icon"
+                            data-category="legacy"
+                            fill="currentColor"
+                            focusable="false"
+                            height="1em"
+                            viewBox="0 0 21 32"
+                            width="1em"
+                          >
+                            <path
+                              d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.passwordHeader
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="password"
+                        id="password-control-label"
+                      >
+                        userCreateOrEditView.password*
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="password-help-text"
+                          aria-labelledby="password-control-label"
+                          class="rs-input"
+                          id="password"
+                          name="password"
+                          type="password"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+          style="padding-left: 5px; padding-right: 5px;"
+        >
+          <div
+            class="rs-grid-container-fluid"
+            role="grid"
+            style="padding-right: 0px;"
+          >
+            <div
+              class="rs-panel rs-panel-bordered"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.subscriptionsHeader
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  style="margin-top: 20px;"
+                >
+                  <a
+                    class="rs-btn rs-btn-primary rs-btn-green"
+                    href="/subscription/create"
+                    style="margin-left: 5px;"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      aria-label="plus"
+                      class="rs-icon"
+                      data-category="legacy"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      style="margin-right: 5px;"
+                      viewBox="0 0 14 14"
+                      width="1em"
+                    >
+                      <path
+                        d="M7 0a1 1 0 011 1v12a1 1 0 01-2 0V1a1 1 0 011-1z"
+                      />
+                      <path
+                        d="M1 6h12a1 1 0 010 2H1a1 1 0 010-2z"
+                      />
+                    </svg>
+                    subscriptionList.overview.newSubscription
+                    <span
+                      class="rs-ripple-pond"
+                    >
+                      <span
+                        class="rs-ripple"
+                      />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</DocumentFragment>
+`;

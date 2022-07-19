@@ -20,25 +20,12 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from '../db/subscription'
+import {Subscription, SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
-
-export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
-  name: 'SubscriptionDeactivationReason',
-  values: {
-    NONE: {value: SubscriptionDeactivationReason.None},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.UserSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.InvoiceNotPaid}
-  }
-})
-
-export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
-  name: 'SubscriptionDeactivation',
-  fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
-  }
-})
+import {
+  GraphQLSubscriptionDeactivation,
+  GraphQLSubscriptionDeactivationReason
+} from './subscriptionDeactivation'
 
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
