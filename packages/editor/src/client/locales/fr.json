@@ -774,7 +774,8 @@
       "users": "Utilisateur/Utilisatrices",
       "usersAndMembers": "Utilisateur/Utilisatrices et membres",
       "myPeerInfo": "Mon profil pair",
-      "peers": "Peers"
+      "peers": "Peers",
+      "settings": "Paramètres"
     },
     "navigation": {
       "overview": {
@@ -881,6 +882,28 @@
     "yes": "Oui",
     "no": "Non",
     "untitled": "Sans Titre",
+    "errorMessages": {
+      "noFirstNameErrorMessage": "Please enter a firstname",
+      "noNameErrorMessage": "Please enter a name",
+      "noEmailErrorMessage": "Please enter an email address",
+      "invalidEmailErrorMessage": "Please enter a valid email address",
+      "noUrlErrorMessage": "Please enter a url",
+      "invalidUrlErrorMessage": "Please enter a valid url",
+      "noImageErrorMessage": "Please enter an image",
+      "noCallToActionTextErrorMessage": "Please enter a call to action text",
+      "noCallToActionImageErrorMessage": "Please enter a call to action image",
+      "noAmountErrorMessage": "Default amount will be set to 5.00 CHF if empty",
+      "noPasswordErrorMessage": "Please enter a password",
+      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "noPaymentProviderErrorMessage": "Please enter a payment provider",
+      "noMemberPlanErrorMessage": "Please enter a member plan",
+      "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
+      "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
+      "noUserErrorMessage": "Please select a user",
+      "noTokenErrorMessage": "Please enter a token",
+      "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
+      "required": "Ce champ est requis"
+    },
     "invoice": {
       "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
       "invoiceNo": "Facture n",
@@ -900,6 +923,26 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Paramètres",
+      "successMessage": "Mise à jour des paramètres réussie!",
+      "successTitle": "Enregistré",
+      "save": "Sauvegarder",
+      "errorTitle": "Erreur",
+      "editSettings": "Modifier les paramètres",
+      "guestCommenting": "Autoriser les commentaires des invités",
+      "loginMinutes": "Durée de validité du token d'authentification-Email",
+      "passwordToken": "Durée de validité du jeton de réinitialisation du mot de passe-Email",
+      "peerToken": "Peering timeout",
+      "invoiceReminders": "Essais de rappel de facture",
+      "invoiceFrequency": "Fréquence des rappels de factures",
+      "minutes": "Minutes",
+      "ms": "Millisecondes",
+      "comments": "Commentaires",
+      "login": "Login",
+      "peering": "Peering",
+      "payment": "Paiement"
     }
   }
 }

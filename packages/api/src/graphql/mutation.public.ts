@@ -1,3 +1,5 @@
+import {Invoice, Subscription} from '@prisma/client'
+import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -7,12 +9,11 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
 import {Issuer} from 'openid-client'
-
-import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
-
+import {CommentAuthorType, CommentState} from '../db/comment'
+import {SettingName} from '../db/setting'
+import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
@@ -34,8 +35,28 @@ import {
   UserNotFoundError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {SendMailType} from '../mails/mailContext'
+import {logger} from '../server'
+import {
+  countRichtextChars,
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  MAX_COMMENT_LENGTH,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
+} from '../utility'
+import {Validator} from '../validator'
+import {
+  GraphQLChallengeInput,
+  GraphQLPublicComment,
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput
+} from './comment'
+import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPublicSessionWithToken} from './session'
+import {revokeSessionByToken} from './session/session.mutation'
+import {GraphQLSlug} from './slug'
+import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {
   GraphQLMemberRegistration,
   GraphQLMemberRegistrationAndPayment,
@@ -45,29 +66,7 @@ import {
   GraphQLPublicUserInput,
   GraphQLUserAddressInput
 } from './user'
-import {
-  GraphQLChallengeInput,
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment'
-import {CommentAuthorType, CommentState} from '../db/comment'
-import {
-  countRichtextChars,
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
-  MAX_COMMENT_LENGTH,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND
-} from '../utility'
-import {SendMailType} from '../mails/mailContext'
-import {GraphQLSlug} from './slug'
-import {logger} from '../server'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
-import {SubscriptionDeactivationReason} from '../db/subscription'
-import {GraphQLMetadataPropertyPublicInput} from './common'
-import * as crypto from 'crypto'
 import {getUserForCredentials} from './user/user.queries'
-import {Invoice, Subscription} from '@prisma/client'
-import {revokeSessionByToken} from './session/session.mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -84,6 +83,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
       async resolve(root, {email, password}, {dbAdapter, prisma}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
         const user = await getUserForCredentials(email, password, prisma.user)
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
@@ -163,7 +164,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, prisma, challenge, loaders}) {
         const user = optionalAuthenticateUser()
         let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
@@ -175,8 +176,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
+
+          const guestCanCommentSetting = await prisma.setting.findUnique({
+            where: {name: SettingName.ALLOW_GUEST_COMMENTING}
+          })
+          const guestCanComment =
+            guestCanCommentSetting?.value ?? process.env.ENABLE_ANONYMOUS_COMMENTS === 'true'
+
+          if (!guestCanComment) {
             throw new AnonymousCommentsDisabledError()
+          }
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
@@ -259,6 +268,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {name, firstName, preferredName, email, address, password, challengeAnswer},
         {dbAdapter, prisma, loaders, memberContext, createPaymentWithProvider, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -353,6 +367,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {dbAdapter, prisma, loaders, memberContext, challenge, createPaymentWithProvider}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -566,9 +585,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, prisma, generateJWT, mailContext, urlAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
+
         const user = await prisma.user.findUnique({
           where: {email}
         })
+
         if (!user) return email
 
         const lastSendTimeStamp = user.properties.find(
@@ -586,10 +609,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           return email
         }
 
+        const resetPwdSetting = await prisma.setting.findUnique({
+          where: {name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN}
+        })
+        const resetPwd =
+          (resetPwdSetting?.value as number) ??
+          parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
+
+        if (!resetPwd) {
+          throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
+        }
+
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: resetPwd
         })
+
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
@@ -602,6 +637,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = user.properties.filter(
           property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
         )
+
         properties.push({
           key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
           public: false,
@@ -632,6 +668,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         "This mutation allows to update the user's data by taking an input of type UserInput.",
       async resolve(root, {input}, {authenticateUser, prisma, dbAdapter}) {
         const {user} = authenticateUser()
+
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
         const {name, email, firstName, preferredName, address} = input
         // TODO: implement new email check
@@ -739,6 +778,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        // cancel open invoices if subscription is deactivated
+        if (input.deactivation !== null) {
+          await memberContext.cancelInvoicesForSubscription(id)
+        }
 
         return await memberContext.handleSubscriptionChange({
           subscription: updateSubscription as Subscription

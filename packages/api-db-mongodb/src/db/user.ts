@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import {
   CreateUserArgs,
   DBUserAdapter,
@@ -9,7 +10,6 @@ import {
   UserOAuth2Account,
   UserOAuth2AccountArgs
 } from '@wepublish/api'
-import bcrypt from 'bcrypt'
 import {Collection, Db, MongoError} from 'mongodb'
 import {MongoErrorCode} from '../utility'
 import {CollectionName, DBUser} from './schema'

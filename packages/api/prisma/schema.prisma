@@ -521,3 +521,14 @@ model UserRole {
 
   @@map("users.roles")
 }
+
+model Setting {
+  id                 String   @id @map("_id")
+  createdAt          DateTime @default(now())
+  modifiedAt         DateTime @updatedAt
+  name               String   @unique
+  value              Json
+  settingRestriction Json
+
+  @@map("settings")
+}
