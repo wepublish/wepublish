@@ -43,12 +43,12 @@ export const createPageOrder = (
 
 const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.title) {
-    const containsTitle = {
+    const containsTitle: Prisma.PageRevisionNullableCompositeFilter = {
       is: {
         title: {
-          contains: filter.title
-        },
-        mode: 'insensitive'
+          contains: filter.title,
+          mode: 'insensitive'
+        }
       }
     }
 

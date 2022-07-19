@@ -1,8 +1,14 @@
-import {BlockType, BlockWithoutJSON, PaymentProviderCustomer, Subscription} from '@wepublish/api'
+import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
+import {
+  BlockType,
+  BlockWithoutJSON,
+  CreateSettingArgs,
+  PaymentProviderCustomer,
+  SettingName
+} from '@wepublish/api'
 import {Db} from 'mongodb'
 import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {slugify} from './utility'
-import {SubscriptionDeactivationReason} from '@prisma/client'
 
 export interface Migration {
   readonly version: number
@@ -907,7 +913,115 @@ export const Migrations: Migration[] = [
     }
   },
   {
+    // Try to migrate email addressees of users
     version: 23,
+    async migrate(db) {
+      const userCollection = await db.collection(CollectionName.Users)
+      const subscriptionCollection = await db.collection(CollectionName.Subscriptions)
+      const sessionCollection = await db.collection(CollectionName.Sessions)
+      const users = await userCollection.find().toArray()
+
+      // inform We.Publish operators to remove this manually
+      await userCollection.rename('23-users.bak')
+      const emptyUsers = await db.createCollection(CollectionName.Users, {
+        strict: true
+      })
+
+      type List = {
+        userId: string
+        email: string
+      }
+
+      const listSanitizedUsers: List[] = []
+      for (const user of users) {
+        user.email = user.email.toLowerCase()
+        const duplicatedMail = listSanitizedUsers.find(element => element.email === user.email)
+
+        // If already a user with normalized mail exist merge them
+        if (duplicatedMail) {
+          // Update userID in subscription table
+          const subscriptions = await subscriptionCollection.find({userID: user._id}).toArray()
+          for (const subscription of subscriptions) {
+            subscription.properties.push({
+              key: 'UserIDChangedByMigration23',
+              value: subscription.userID,
+              public: false
+            })
+            subscription.userID = duplicatedMail.userId
+            await subscriptionCollection.replaceOne({_id: subscription._id}, subscription, {
+              upsert: true
+            })
+          }
+
+          // Update userID in session table
+          const sessions = await sessionCollection.find({userID: user._id}).toArray()
+          for (const session of sessions) {
+            session.user = duplicatedMail.userId
+            await sessionCollection.replaceOne({_id: session._id}, session, {upsert: true})
+          }
+        } else {
+          // If user is unique update mail of user
+          await emptyUsers.insertOne(user)
+          listSanitizedUsers.push({
+            userId: user._id,
+            email: user.email
+          })
+        }
+      }
+    }
+  },
+  {
+    // add settings category
+    version: 24,
+    async migrate(db, locale) {
+      const settingsDoc = await db.createCollection(CollectionName.Settings, {
+        strict: true
+      })
+
+      const peeringTimeout: CreateSettingArgs<number> = {
+        name: SettingName.PEERING_TIMEOUT_MS,
+        value: 3000,
+        settingRestriction: {minValue: 1000, maxValue: 10000}
+      }
+      const allowAnonCommenting: CreateSettingArgs<boolean> = {
+        name: SettingName.ALLOW_GUEST_COMMENTING,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+      const sendLoginJWTExpires: CreateSettingArgs<number> = {
+        name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN,
+        value: 10080,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
+
+      const resetPwdExpires: CreateSettingArgs<number> = {
+        name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN,
+        value: 1440,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
+      const invoiceReminderFreq: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_FREQ,
+        value: 3,
+        settingRestriction: {minValue: 0, maxValue: 30}
+      }
+      const invoiceReminderTries: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_MAX_TRIES,
+        value: 5,
+        settingRestriction: {minValue: 0, maxValue: 10}
+      }
+
+      await settingsDoc.insertMany([
+        peeringTimeout,
+        allowAnonCommenting,
+        sendLoginJWTExpires,
+        resetPwdExpires,
+        invoiceReminderFreq,
+        invoiceReminderTries
+      ])
+    }
+  },
+  {
+    version: 25,
     async migrate(db) {
       const subscriptions = db.collection(CollectionName.Subscriptions)
 

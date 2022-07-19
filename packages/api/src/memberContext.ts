@@ -1,10 +1,12 @@
 import {Invoice, MemberPlan, MetadataProperty, PrismaClient, Subscription} from '@prisma/client'
 import {DataLoaderContext} from './context'
 import {DBAdapter} from './db/adapter'
+import {MaxResultsPerPage} from './db/common'
 import {OptionalInvoice} from './db/invoice'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {PaymentState} from './db/payment'
 import {PaymentMethod} from './db/paymentMethod'
+import {SettingName} from './db/setting'
 import {SubscriptionDeactivationReason} from './db/subscription'
 import {PaymentProviderCustomer, User} from './db/user'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
@@ -124,6 +126,8 @@ export function calculateAmountForPeriodicity(
 interface GetNextReminderAndDeactivationDateProps {
   sentReminderAt: Date
   createdAt: Date
+  frequency: number
+  maxAttempts: number
 }
 
 interface ReminderAndDeactivationDate {
@@ -133,10 +137,12 @@ interface ReminderAndDeactivationDate {
 
 function getNextReminderAndDeactivationDate({
   sentReminderAt,
-  createdAt
+  createdAt,
+  frequency,
+  maxAttempts
 }: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
-  const invoiceReminderFrequencyInDays = parseInt(process.env.INVOICE_REMINDER_FREQ ?? '') || 3
-  const invoiceReminderMaxTries = parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '') || 5
+  const invoiceReminderFrequencyInDays = frequency || 3
+  const invoiceReminderMaxTries = maxAttempts || 5
 
   const nextReminder = new Date(
     sentReminderAt.getTime() +
@@ -197,6 +203,12 @@ export class MemberContext implements MemberContext {
         await this.dbAdapter.subscription.deleteSubscriptionPeriod({
           subscriptionID: subscription.id,
           periodID: periodToDelete.id
+        })
+      }
+
+      if (openInvoice) {
+        await this.prisma.invoice.delete({
+          where: {id: openInvoice.id}
         })
       }
 
@@ -330,8 +342,13 @@ export class MemberContext implements MemberContext {
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
     const subscriptionsPaidUntil: Subscription[] = []
+    // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
+    const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
+    const batchSize = Math.min(maxSubscriptionBatch, MaxResultsPerPage) || MaxResultsPerPage
+
     let hasMore = true
     let cursor: string | null = null
+
     while (hasMore) {
       const subscriptions: Subscription[] = await this.prisma.subscription.findMany({
         where: {
@@ -345,7 +362,7 @@ export class MemberContext implements MemberContext {
           createdAt: 'asc'
         },
         skip: cursor ? 1 : 0,
-        take: 100,
+        take: batchSize,
         cursor: cursor
           ? {
               id: cursor
@@ -372,7 +389,7 @@ export class MemberContext implements MemberContext {
           createdAt: 'asc'
         },
         skip: cursor ? 1 : 0,
-        take: 100,
+        take: batchSize,
         cursor: cursor
           ? {
               id: cursor
@@ -520,9 +537,24 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequencySetting = await this.prisma.setting.findUnique({
+          where: {name: SettingName.INVOICE_REMINDER_FREQ}
+        })
+        const frequency =
+          (frequencySetting?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+
+        const maxAttemptsSetting = await this.prisma.setting.findUnique({
+          where: {name: SettingName.INVOICE_REMINDER_MAX_TRIES}
+        })
+        const maxAttempts =
+          (maxAttemptsSetting?.value as number) ??
+          parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
+
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
@@ -711,9 +743,24 @@ export class MemberContext implements MemberContext {
       }
 
       if (invoice.sentReminderAt) {
+        const frequencySetting = await this.prisma.setting.findUnique({
+          where: {name: SettingName.INVOICE_REMINDER_FREQ}
+        })
+        const frequency =
+          (frequencySetting?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
+
+        const maxAttemptsSetting = await this.prisma.setting.findUnique({
+          where: {name: SettingName.INVOICE_REMINDER_MAX_TRIES}
+        })
+        const maxAttempts =
+          (maxAttemptsSetting?.value as number) ??
+          parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
+
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt
+          createdAt: invoice.createdAt,
+          frequency: frequency,
+          maxAttempts: maxAttempts
         })
 
         if (nextReminder > today) {
@@ -837,6 +884,26 @@ export class MemberContext implements MemberContext {
     })
   }
 
+  async cancelInvoicesForSubscription(subscriptionID: string) {
+    // Cancel invoices when subscription is canceled
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        subscriptionID: subscriptionID
+      }
+    })
+
+    for (const invoice of invoices) {
+      if (!invoice || invoice.paidAt !== null || invoice.canceledAt !== null) continue
+      await this.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          canceledAt: new Date()
+        }
+      })
+    }
+  }
+
   async deactivateSubscriptionForUser({
     subscriptionID,
     deactivationDate,
@@ -850,6 +917,8 @@ export class MemberContext implements MemberContext {
       logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
     }
+
+    await this.cancelInvoicesForSubscription(subscriptionID)
 
     await this.dbAdapter.subscription.updateSubscription({
       id: subscriptionID,

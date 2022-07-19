@@ -18,6 +18,7 @@ import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
 import {SubscriptionPeriod} from '@prisma/client'
+import {Setting, SettingName} from './db/setting'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -72,6 +73,9 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 export type UserRoleModelEventsEmitter = TypedEmitter<ModelEvents<UserRole>>
 export const userRoleModelEvents = new EventEmitter() as UserRoleModelEventsEmitter
 
+export type SettingModelEventsEmitter = TypedEmitter<ModelEvents<Setting>>
+export const settingModelEvents = new EventEmitter() as SettingModelEventsEmitter
+
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
@@ -87,6 +91,7 @@ export type EventsEmitter =
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
+  | SettingModelEventsEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -167,6 +172,11 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'userRole',
     methods: ['create', 'update', 'delete'],
     eventEmitter: userRoleModelEvents
+  },
+  {
+    key: 'setting',
+    methods: ['update'],
+    eventEmitter: settingModelEvents
   }
 ]
 
@@ -228,6 +238,16 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
 
     // send mails including login link
+    const jwtSetting = await context.prisma.setting.findUnique({
+      where: {name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN}
+    })
+    const jwtExpires =
+      (jwtSetting?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+
+    if (!jwtExpires) {
+      throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+    }
+
     const user = await context.prisma.user.findUnique({
       where: {
         id: subscription.userID
@@ -241,7 +261,7 @@ invoiceModelEvents.on('update', async (context, model) => {
 
     const token = context.generateJWT({
       id: user.id,
-      expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+      expiresInMinutes: jwtExpires
     })
 
     await context.mailContext.sendMail({

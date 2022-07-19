@@ -150,7 +150,7 @@ export function AuthorList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1}}
           loading={isLoading}
           data={authors}

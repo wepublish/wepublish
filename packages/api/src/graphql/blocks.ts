@@ -518,8 +518,8 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   fields: {
     url: {type: GraphQLString},
     title: {type: GraphQLString},
-    width: {type: GraphQLString},
-    height: {type: GraphQLString},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt},
     styleCustom: {type: GraphQLString},
     sandbox: {type: GraphQLString}
   },
@@ -757,8 +757,8 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   fields: {
     url: {type: GraphQLString},
     title: {type: GraphQLString},
-    width: {type: GraphQLString},
-    height: {type: GraphQLString},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt},
     styleCustom: {type: GraphQLString},
     sandbox: {type: GraphQLString}
   }

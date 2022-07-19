@@ -1,5 +1,121 @@
 # Change Log
 
+## 4.0.0 (2022-07-12)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* `editor`
+  * [#565](https://github.com/wepublish/wepublish/pull/565) F/wpc 667 form validation ([@camilleory](https://github.com/camilleory))
+
+#### :memo: Documentation
+* [#624](https://github.com/wepublish/wepublish/pull/624) documentation for validation ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## v3.2.0 (2022-06-23)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#598](https://github.com/wepublish/wepublish/pull/598) WPC-640 Disable peer ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#590](https://github.com/wepublish/wepublish/pull/590) WPC-665 set paidAt manually (invoice history) ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#611](https://github.com/wepublish/wepublish/pull/611) fix(editor): pagination translation broken and max pages ([@Itrulia](https://github.com/Itrulia))
+  * [#612](https://github.com/wepublish/wepublish/pull/612) fix: autoRenew filter ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#613](https://github.com/wepublish/wepublish/pull/613) test(editor): replace enzyme with @testing-library/react to fix tests ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* `api-db-mongodb`, `api`, `editor`
+  * [#610](https://github.com/wepublish/wepublish/pull/610) WPC 679 remove tmp user ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* `editor`
+  * [#613](https://github.com/wepublish/wepublish/pull/613) test(editor): replace enzyme with @testing-library/react to fix tests ([@Itrulia](https://github.com/Itrulia))
+  * [#584](https://github.com/wepublish/wepublish/pull/584) feat(editor): upgrade rsuite ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Karl Merkli ([@Itrulia](https://github.com/Itrulia))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+
+## 3.1.0 (2022-06-09)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api`
+  * [#587](https://github.com/wepublish/wepublish/pull/587) b/WPC-691: Own pending comment wrong data structure ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api-db-mongodb`, `api`, `editor`
+  * [#545](https://github.com/wepublish/wepublish/pull/545) WPC-657: As a publisher, when uploading an image, i want the metadata automatically captured ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api`, `editor`
+  * [#583](https://github.com/wepublish/wepublish/pull/583) WPC-103 Subscription filters ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#545](https://github.com/wepublish/wepublish/pull/545) WPC-657: As a publisher, when uploading an image, i want the metadata automatically captured ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#566](https://github.com/wepublish/wepublish/pull/566) b/WPC-670 Allow to edit user address in editor ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :bug: Bug Fix
+* `api-db-mongodb`, `api`
+  * [#587](https://github.com/wepublish/wepublish/pull/587) b/WPC-691: Own pending comment wrong data structure ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#582](https://github.com/wepublish/wepublish/pull/582) feat(editor): umlaute should also add an additional e in slugify ([@Itrulia](https://github.com/Itrulia))
+  * [#579](https://github.com/wepublish/wepublish/pull/579) fix(editor): unnecessary recalcs in  useUnsavedChangesDialog ([@Itrulia](https://github.com/Itrulia))
+  * [#566](https://github.com/wepublish/wepublish/pull/566) b/WPC-670 Allow to edit user address in editor ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#567](https://github.com/wepublish/wepublish/pull/567) If user with a subscription gets deleted, the subscription list breaks ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api-db-mongodb`, `api`, `editor`
+  * [#568](https://github.com/wepublish/wepublish/pull/568) WPC-686-Wrong auto-generated Maybe-Tags ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`
+  * [#600](https://github.com/wepublish/wepublish/pull/600) bug fix do not return canceled invoices in renewSubscriptionForUser ([@roosnic1](https://github.com/roosnic1))
+  * [#599](https://github.com/wepublish/wepublish/pull/599) bugfix: added missing canceledAt field in graphQL publicInvoice ([@roosnic1](https://github.com/roosnic1))
+  * [#588](https://github.com/wepublish/wepublish/pull/588) FormatISO dates while generating csv ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#597](https://github.com/wepublish/wepublish/pull/597) fix sorting for subscriptions query ([@roosnic1](https://github.com/roosnic1))
+  * [#595](https://github.com/wepublish/wepublish/pull/595) bugfix for missing variable in the sendMail command ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`
+  * [#602](https://github.com/wepublish/wepublish/pull/602) WPC-728 tmp user bug ([@michael-scheurer](https://github.com/michael-scheurer))
+  * [#596](https://github.com/wepublish/wepublish/pull/596) fix for the mongodb adpater to use the skip function for getInvoices ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`, `editor`
+  * [#605](https://github.com/wepublish/wepublish/pull/605) fix: bring back filters (paidUntil and startsAt) ([@antkiewiczk](https://github.com/antkiewiczk))
+* `api`
+  * [#603](https://github.com/wepublish/wepublish/pull/603) bug(api): get all subscriptions and invoices in memberContext ([@roosnic1](https://github.com/roosnic1))
+  * [#586](https://github.com/wepublish/wepublish/pull/586) b/WPC-690-Missing-CommentState-Type-in-GraphQL-Schema ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :nail_care: Polish
+* `api-db-mongodb`, `api`, `editor`
+  * [#581](https://github.com/wepublish/wepublish/pull/581) refactor(api-db-mongodb/api/editor): remove ts-ignores ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#557](https://github.com/wepublish/wepublish/pull/557) WPC-671: Caching and background autorefresh of remote content  ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#580](https://github.com/wepublish/wepublish/pull/580) refactor(editor): eliminate side effect when importing i18n ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#578](https://github.com/wepublish/wepublish/pull/578) feat: add .nvmrc with latest 12.x.x node version ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Karl Merkli ([@Itrulia](https://github.com/Itrulia))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## v3.0.0 (2022-05-09)
 
 #### :boom: Breaking Change

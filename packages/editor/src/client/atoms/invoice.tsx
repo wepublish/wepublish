@@ -116,7 +116,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
   return (
     <>
-      <Panel bordered={true} header={invoiceHeaderView()}>
+      <Panel bordered header={invoiceHeaderView()}>
         <p>{invoice.description}</p>
         <p>
           {t('invoice.total')} {(invoice.total / 100).toFixed(2)} {t('currency.chf')}

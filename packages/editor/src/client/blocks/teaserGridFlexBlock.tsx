@@ -32,7 +32,7 @@ export function FlexTeaserBlock({
 }: FlexTeaserBlockProps) {
   return (
     <Panel
-      bodyFill={true}
+      bodyFill
       style={{
         cursor: showGrabCursor ? 'grab' : '',
         height: 'inherit',

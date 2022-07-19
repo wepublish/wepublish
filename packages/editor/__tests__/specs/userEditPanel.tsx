@@ -105,7 +105,7 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
+      <MockedProvider mocks={mocks} addTypename>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )
@@ -136,7 +136,7 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
+      <MockedProvider mocks={mocks} addTypename>
         <UserEditPanel id={'fakeId3'} />
       </MockedProvider>
     )
@@ -197,7 +197,7 @@ describe('User Edit Panel', () => {
       userRoleListDocumentQuery
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
@@ -205,19 +205,25 @@ describe('User Edit Panel', () => {
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.name"]')!, {
+    const nameInput = getByLabelText('userList.panels.name*')
+    const emailInput = getByLabelText('userList.panels.email*')
+    const passwordInput = getByLabelText('userList.panels.password*')
+
+    const saveButton = getByTestId('saveButton')
+
+    fireEvent.change(nameInput, {
       target: {value: user.name}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.email"]')!, {
+    fireEvent.change(emailInput, {
       target: {value: user.email}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.password"]')!, {
+    fireEvent.change(passwordInput, {
       target: {value: user.password}
     })
 
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

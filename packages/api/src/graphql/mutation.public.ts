@@ -11,6 +11,7 @@ import {
 } from 'graphql'
 import {Context} from '../context'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {SettingName} from '../db/setting'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {
   AnonymousCommentError,
@@ -36,6 +37,7 @@ import {
   MAX_COMMENT_LENGTH,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND
 } from '../utility'
+import {Validator} from '../validator'
 import {
   GraphQLChallengeInput,
   GraphQLPublicComment,
@@ -125,7 +127,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, prisma, challenge, loaders}) {
         const user = optionalAuthenticateUser()
         let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
@@ -137,8 +139,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
+
+          const guestCanCommentSetting = await prisma.setting.findUnique({
+            where: {name: SettingName.ALLOW_GUEST_COMMENTING}
+          })
+          const guestCanComment =
+            guestCanCommentSetting?.value ?? process.env.ENABLE_ANONYMOUS_COMMENTS === 'true'
+
+          if (!guestCanComment) {
             throw new AnonymousCommentsDisabledError()
+          }
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
@@ -221,21 +231,34 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {name, firstName, preferredName, email, address, password, challengeAnswer},
         {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
+
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
         })
-        if (!challengeValidationResult.valid)
+
+        if (!challengeValidationResult.valid) {
           throw new CommentAuthenticationError(challengeValidationResult.message)
+        }
 
         const userExists = await prisma.user.findUnique({
           where: {
             email
           }
         })
-        if (userExists) throw new EmailAlreadyInUseError()
 
-        if (!password) password = crypto.randomBytes(48).toString('base64')
+        if (userExists) {
+          throw new EmailAlreadyInUseError()
+        }
+
+        if (!password) {
+          password = crypto.randomBytes(48).toString('base64')
+        }
 
         const user = await createUser(
           {
@@ -327,6 +350,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           createPaymentWithProvider
         }
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -543,9 +571,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, prisma, generateJWT, mailContext, urlAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
+
         const user = await prisma.user.findUnique({
           where: {email}
         })
+
         if (!user) return email
 
         const lastSendTimeStamp = user.properties.find(
@@ -563,10 +595,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           return email
         }
 
+        const resetPwdSetting = await prisma.setting.findUnique({
+          where: {name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN}
+        })
+        const resetPwd =
+          (resetPwdSetting?.value as number) ??
+          parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
+
+        if (!resetPwd) {
+          throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
+        }
+
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: resetPwd
         })
+
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
@@ -579,6 +623,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = user.properties.filter(
           property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
         )
+
         properties.push({
           key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
           public: false,
@@ -609,6 +654,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         "This mutation allows to update the user's data by taking an input of type UserInput.",
       async resolve(root, {input}, {authenticateUser, prisma, dbAdapter}) {
         const {user} = authenticateUser()
+
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
         const {name, email, firstName, preferredName, address} = input
         // TODO: implement new email check
@@ -716,6 +764,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        // cancel open invoices if subscription is deactivated
+        if (input.deactivation !== null) {
+          await memberContext.cancelInvoicesForSubscription(id)
+        }
 
         return await memberContext.handleSubscriptionChange({
           subscription: updateSubscription as Subscription

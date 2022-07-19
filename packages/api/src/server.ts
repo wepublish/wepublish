@@ -1,18 +1,15 @@
-import express, {Application, NextFunction, Request, Response} from 'express'
-
 import {ApolloServer} from 'apollo-server-express'
-
-import {contextFromRequest, ContextOptions} from './context'
-import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
-import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
-import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
-
-import {methodsToProxy, PublishableModelEvents} from './events'
-import {JobType, runJob} from './jobs'
+import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import TypedEmitter from 'typed-emitter'
+import {contextFromRequest, ContextOptions} from './context'
+import {methodsToProxy, PublishableModelEvents} from './events'
+import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
+import {JobType, runJob} from './jobs'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
+import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
 
 let serverLogger: pino.Logger
 

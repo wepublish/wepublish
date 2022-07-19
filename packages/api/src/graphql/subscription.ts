@@ -125,7 +125,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     paymentMethodID: {type: GraphQLString},
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
-    userHasAddress: {type: GraphQLBoolean}
+    userHasAddress: {type: GraphQLBoolean},
+    userID: {type: GraphQLID}
   }
 })
 

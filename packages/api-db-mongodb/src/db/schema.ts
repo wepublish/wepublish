@@ -18,7 +18,9 @@ import {
   UserOAuth2Account,
   PaymentPeriodicity,
   SubscriptionPeriod,
-  SubscriptionDeactivation
+  SubscriptionDeactivation,
+  SettingRestriction,
+  SettingName
 } from '@wepublish/api'
 import {MetadataProperty} from '@prisma/client'
 
@@ -51,7 +53,9 @@ export enum CollectionName {
   Invoices = 'invoices',
   Payments = 'payments',
 
-  MailLog = 'mail.log'
+  MailLog = 'mail.log',
+
+  Settings = 'settings'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -82,7 +86,7 @@ export interface DBPeer {
 
   name: string
   slug: string
-  isDisabled: boolean
+  isDisabled?: boolean
   hostURL: string
   token: string
 }
@@ -420,4 +424,12 @@ export interface DBMailLog {
   state: MailLogState
   mailProviderID: string
   mailData?: string | null
+}
+
+export interface DBSetting<T> {
+  _id: any
+
+  name: SettingName
+  value: T | null
+  settingRestriction?: SettingRestriction
 }

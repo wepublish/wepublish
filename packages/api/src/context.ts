@@ -33,10 +33,11 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
-import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/common'
+import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
 import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
+import {SettingName} from './db/setting'
 import {User} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
@@ -161,6 +162,7 @@ interface PeerQueryParams {
   readonly query: string
   readonly operationName: string | undefined
   readonly token: string
+  readonly timeout: number
 }
 
 interface PeerCacheValue {
@@ -563,8 +565,15 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
-
-            const fetcher = createFetcher(peer.hostURL, peer.token)
+            const peerTimeout =
+              ((
+                await prisma.setting.findUnique({
+                  where: {name: SettingName.PEERING_TIMEOUT_MS}
+                })
+              )?.value as number) ||
+              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              3000
+            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
               schema: await introspectSchema(fetcher),
@@ -590,8 +599,19 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
-
-            const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
+            const peerTimeout =
+              ((
+                await prisma.setting.findUnique({
+                  where: {name: SettingName.PEERING_TIMEOUT_MS}
+                })
+              )?.value as number) ||
+              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              3000
+            const fetcher = createFetcher(
+              url.resolve(peer.hostURL, 'admin'),
+              peer.token,
+              peerTimeout
+            )
 
             return makeRemoteExecutableSchema({
               schema: await introspectSchema(fetcher),
@@ -938,12 +958,10 @@ async function loadFreshData(params: PeerQueryParams) {
   try {
     const abortController = new AbortController()
 
-    const peerTimeOUT = process.env.PEERING_TIMEOUT_IN_MS
-      ? process.env.PEERING_TIMEOUT_IN_MS
-      : '3000'
+    const peerTimeOUT = params.timeout ? params.timeout : 3000
 
     // Since we use auto refresh cache we can safely set the timeout to 3sec
-    setTimeout(() => abortController.abort(), parseInt(peerTimeOUT))
+    setTimeout(() => abortController.abort(), peerTimeOUT)
 
     const fetchResult = await fetch(params.hostURL, {
       method: 'POST',
@@ -978,7 +996,7 @@ async function loadFreshData(params: PeerQueryParams) {
   }
 }
 
-export function createFetcher(hostURL: string, token: string): Fetcher {
+export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
   const data = new DataLoader<
     {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
     any,
@@ -994,7 +1012,8 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
           operationName,
           token,
           cacheKey: '',
-          lastQueried: 0
+          lastQueried: 0,
+          timeout: peerTimeOut
         }
         fetchParams.cacheKey = generateCacheKey(fetchParams)
         const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
