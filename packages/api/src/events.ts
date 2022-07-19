@@ -17,6 +17,7 @@ import {PaymentMethod} from './db/paymentMethod'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {Subscription} from './db/subscription'
+import {Setting, SettingName} from './db/setting'
 
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
@@ -71,6 +72,9 @@ export const userModelEvents = new EventEmitter() as UserModelEventsEmitter
 export type UserRoleModelEventsEmitter = TypedEmitter<ModelEvents<UserRole>>
 export const userRoleModelEvents = new EventEmitter() as UserRoleModelEventsEmitter
 
+export type SettingModelEventsEmitter = TypedEmitter<ModelEvents<Setting>>
+export const settingModelEvents = new EventEmitter() as SettingModelEventsEmitter
+
 export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
@@ -86,6 +90,7 @@ export type EventsEmitter =
   | SubscriptionModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
+  | SettingModelEventsEmitter
 
 type NormalProxyMethods = 'create' | 'update' | 'delete'
 type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
@@ -166,6 +171,11 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'userRole',
     methods: ['create', 'update', 'delete'],
     eventEmitter: userRoleModelEvents
+  },
+  {
+    key: 'setting',
+    methods: ['update'],
+    eventEmitter: settingModelEvents
   }
 ]
 
@@ -216,6 +226,10 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
 
     // send mails including login link
+    const jwtExpires =
+      ((await context.dbAdapter.setting.getSetting(SettingName.SEND_LOGIN_JWT_EXPIRES_MIN))
+        ?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+    if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
     const user = await context.dbAdapter.user.getUserByID(subscription.userID)
     if (!user) {
       logger('events').warn(`User not found %s`, subscription.userID)
@@ -223,7 +237,7 @@ invoiceModelEvents.on('update', async (context, model) => {
     }
     const token = context.generateJWT({
       id: user.id,
-      expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+      expiresInMinutes: jwtExpires
     })
     await context.mailContext.sendMail({
       type: mailTypeToSend,

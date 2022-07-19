@@ -64,6 +64,7 @@ import {logger} from '../server'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
+import {SettingName} from '../db/setting'
 import * as crypto from 'crypto'
 import {Validator} from '../validator'
 
@@ -154,7 +155,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge, loaders}) {
         const user = optionalAuthenticateUser()
         let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
@@ -166,8 +167,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
-            throw new AnonymousCommentsDisabledError()
+          const guestCanComment =
+            (await dbAdapter.setting.getSetting(SettingName.ALLOW_GUEST_COMMENTING))?.value ??
+            process.env.ENABLE_ANONYMOUS_COMMENTS === 'true'
+          if (!guestCanComment) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
@@ -574,10 +577,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           )
           return email
         }
+        const resetPwd =
+          ((await dbAdapter.setting.getSetting(SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+        if (!resetPwd) throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
 
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: resetPwd
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,

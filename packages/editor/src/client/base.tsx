@@ -15,6 +15,7 @@ import {
   PeerListRoute,
   routeLink,
   RouteType,
+  SettingListRoute,
   SubscriptionListRoute,
   TokenListRoute,
   UserListRoute,
@@ -255,6 +256,13 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
                   </Dropdown>
                 </PermissionControl>
+
+                <NavItemLink
+                  active={current?.type === RouteType.SettingList}
+                  icon={<CogIcon />}
+                  route={SettingListRoute.create({})}>
+                  {t('navbar.settings')}
+                </NavItemLink>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -270,7 +278,7 @@ export function Base({children}: BaseProps) {
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"
-                    icon={<CogIcon />}
+                    icon={<BarsIcon />}
                   />
                 )}>
                 <DropdownItemLink route={LogoutRoute.create({})}>
