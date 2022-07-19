@@ -543,6 +543,7 @@
       "articles": "Articles",
       "authors": "Authors",
       "comments": "Comments",
+      "settings": "Settings",
       "imageLibrary": "Image Library",
       "languageSwitch": {
         "close": "Close",
@@ -1015,7 +1016,9 @@
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
       "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
       "noUserErrorMessage": "Please select a user",
-      "noTokenErrorMessage": "Please enter a token"
+      "noTokenErrorMessage": "Please enter a token",
+      "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
+      "required": "This field is required"
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marked as paid by administrator.",
@@ -1036,6 +1039,27 @@
     },
     "currency": {
       "chf": "chf"
+    },
+    "settingList": {
+      "settings": "Settings",
+      "successMessage": "Settings updated successfully!",
+      "successTitle": "Saved",
+      "save": "Save",
+      "errorTitle": "Error",
+      "editSettings": "Edit Settings",
+      "guestCommenting": "Allow guest commenting",
+      "loginMinutes": "Email-Login token validity period",
+      "passwordToken": "Email-Password reset token validity period",
+      "peerToken": "Peering timeout",
+      "invoiceReminders": "Invoice reminder attempts",
+      "invoiceFrequency": "Invoice reminder frequency",
+      "minutes": "minutes",
+      "ms": "milliseconds",
+      "days": "days",
+      "comments": "Comments",
+      "login": "Login",
+      "peering": "Peering",
+      "payment": "Payment"
     }
   }
 }

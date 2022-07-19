@@ -3,8 +3,10 @@ import {CollectionName, DBInvoice, DBPaymentMethod, DBUser} from './db/schema'
 import {
   ArticleBlock,
   BlockType,
+  CreateSettingArgs,
   PageBlock,
   PaymentProviderCustomer,
+  SettingName,
   Subscription,
   SubscriptionDeactivationReason
 } from '@wepublish/api'
@@ -968,6 +970,56 @@ export const Migrations: Migration[] = [
           })
         }
       }
+    }
+  },
+  {
+    // add settings category
+    version: 24,
+    async migrate(db, locale) {
+      const settingsDoc = await db.createCollection(CollectionName.Settings, {
+        strict: true
+      })
+
+      const peeringTimeout: CreateSettingArgs<number> = {
+        name: SettingName.PEERING_TIMEOUT_MS,
+        value: 3000,
+        settingRestriction: {minValue: 1000, maxValue: 10000}
+      }
+      const allowAnonCommenting: CreateSettingArgs<boolean> = {
+        name: SettingName.ALLOW_GUEST_COMMENTING,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+      const sendLoginJWTExpires: CreateSettingArgs<number> = {
+        name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN,
+        value: 10080,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
+
+      const resetPwdExpires: CreateSettingArgs<number> = {
+        name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN,
+        value: 1440,
+        settingRestriction: {minValue: 1, maxValue: 10080}
+      }
+      const invoiceReminderFreq: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_FREQ,
+        value: 3,
+        settingRestriction: {minValue: 0, maxValue: 30}
+      }
+      const invoiceReminderTries: CreateSettingArgs<number> = {
+        name: SettingName.INVOICE_REMINDER_MAX_TRIES,
+        value: 5,
+        settingRestriction: {minValue: 0, maxValue: 10}
+      }
+
+      await settingsDoc.insertMany([
+        peeringTimeout,
+        allowAnonCommenting,
+        sendLoginJWTExpires,
+        resetPwdExpires,
+        invoiceReminderFreq,
+        invoiceReminderTries
+      ])
     }
   }
 ]
