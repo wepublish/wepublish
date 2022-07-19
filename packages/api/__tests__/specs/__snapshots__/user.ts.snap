@@ -451,6 +451,11 @@ Object {
                 },
                 Object {
                   "deprecated": false,
+                  "description": "Allows to login as other user",
+                  "id": "CAN_LOGIN_AS_OTHER_USER",
+                },
+                Object {
+                  "deprecated": false,
                   "description": "Allows to get all settings",
                   "id": "CAN_GET_SETTINGS",
                 },

@@ -176,6 +176,17 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
   }
 }
 
+export class GivenTokeExpiryToLongError extends ApolloError {
+  constructor() {
+    super('Given token expiry is to long!')
+  }
+}
+
+export class UserIdNotFound extends ApolloError {
+  constructor() {
+    super('Given user ID not valid!')
+  }
+}
 export class InvalidSettingValueError extends ApolloError {
   constructor() {
     super('Invalid setting data', ErrorCode.InvalidSettingData)
