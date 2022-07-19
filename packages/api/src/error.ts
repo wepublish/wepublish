@@ -177,12 +177,12 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
 
 export class GivenTokeExpiryToLongError extends ApolloError {
   constructor() {
-    super(`Given token expiry is to long!`)
+    super('Given token expiry is to long!')
   }
 }
 
 export class UserIdNotFound extends ApolloError {
   constructor() {
-    super(`Given user ID not valid!`)
+    super('Given user ID not valid!')
   }
 }
