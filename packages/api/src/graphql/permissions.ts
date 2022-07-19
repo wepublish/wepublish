@@ -465,6 +465,12 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanLoginAsOtherUser: Permission = {
+  id: 'CAN_LOGIN_AS_OTHER_USER',
+  description: 'Allows to login as other user',
+  deprecated: false
+}
+
 export const CanGetSettings: Permission = {
   id: 'CAN_GET_SETTINGS',
   description: 'Allows to get all settings',
@@ -549,6 +555,7 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
+  CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings
 ]
