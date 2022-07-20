@@ -658,7 +658,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
-        console.log('filter=====>', filter)
         const canGetArticles = isAuthorised(CanGetArticles, roles)
         const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
 
@@ -839,16 +838,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         })
 
         // Filter peered articles
-        console.log('filter l. 843', filter)
         if (filter.title) {
-          const filtered: any = peerArticles.filter(article =>
-            article.article.latest.title.includes(filter.title)
-          )
-          console.log(
-            'filtered peereArticles ',
-            peerArticles.filter(article => article.article.latest.title.includes(filter.title))
-          )
-          return filtered
+          peerArticles.filter(article => article.article.latest.title.includes(filter.title))
+          return {
+            nodes: peerArticles.filter(article =>
+              article.article.latest.title.includes(filter.title)
+            ),
+            totalCount: totalCount,
+            pageInfo: {
+              endCursor: base64Encode(JSON.stringify(cursors)),
+              hasNextPage: hasNextPage
+            }
+          }
         }
 
         switch (sort) {

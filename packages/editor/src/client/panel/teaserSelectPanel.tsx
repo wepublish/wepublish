@@ -45,8 +45,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  console.log('filter: ', filter)
-
   const {
     data: peerArticleListData,
     fetchMore: fetchMorePeerArticles,
@@ -64,7 +62,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
-
   const {t} = useTranslation()
 
   useEffect(() => {
