@@ -21,7 +21,8 @@ export enum ErrorCode {
   InternalError = 'InternalError',
   DisabledPeerError = 'DISABLED_PEER_ERROR',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
-  ChallengeFailed = 'ChallengeFailed'
+  ChallengeFailed = 'ChallengeFailed',
+  InvalidSettingData = 'INVALID_SETTING_DATA'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -172,5 +173,22 @@ export class UserSubscriptionAlreadyDeactivated extends ApolloError {
         ? 'Subscription is already canceled'
         : 'Subscription is already marked to be canceled'
     super(msg, ErrorCode.UserSubscriptionAlreadyDeactivated)
+  }
+}
+
+export class GivenTokeExpiryToLongError extends ApolloError {
+  constructor() {
+    super('Given token expiry is to long!')
+  }
+}
+
+export class UserIdNotFound extends ApolloError {
+  constructor() {
+    super('Given user ID not valid!')
+  }
+}
+export class InvalidSettingValueError extends ApolloError {
+  constructor() {
+    super('Invalid setting data', ErrorCode.InvalidSettingData)
   }
 }

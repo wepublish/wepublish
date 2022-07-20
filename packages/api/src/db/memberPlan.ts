@@ -86,6 +86,7 @@ export interface DBMemberPlanAdapter {
   updateMemberPlan(args: UpdateMemberPlanArgs): Promise<OptionalMemberPlan>
   deleteMemberPlan(args: DeleteMemberPlanArgs): Promise<string | null>
 
+  getMemberPlanById(id: string): Promise<OptionalMemberPlan>
   getMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>
   getMemberPlansBySlug(slugs: readonly string[]): Promise<OptionalMemberPlan[]>
   getActiveMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>

@@ -181,6 +181,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
+        if (!article) throw new NotFound('Article', id ?? slug ?? token)
 
         return article
       }
@@ -259,7 +260,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
         let page = id ? await loaders.publicPagesByID.load(id) : null
 
-        if (!page) {
+        if (!page && slug !== undefined) {
           // slug can be empty string
           page = await loaders.publicPagesBySlug.load(slug)
         }
@@ -284,6 +285,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
             )
           }
         }
+        if (!page) throw new NotFound('Page', id ?? slug ?? token)
 
         return page
       }

@@ -22,8 +22,15 @@ export type Scalars = {
   Slug: string;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
+  Value: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
+  boolChoice?: Maybe<Scalars['Boolean']>;
 };
 
 export type Article = {
@@ -752,6 +759,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
 };
 
 
@@ -1059,6 +1067,11 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
 };
 
 export type Navigation = {
@@ -1433,6 +1446,8 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
 };
 
 
@@ -1677,6 +1692,11 @@ export type QueryPaymentsArgs = {
   order?: Maybe<SortOrder>;
 };
 
+
+export type QuerySettingArgs = {
+  name?: Maybe<Scalars['String']>;
+};
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
   quote?: Maybe<Scalars['String']>;
@@ -1713,6 +1733,31 @@ export type SessionWithToken = {
   token: Scalars['String'];
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  value: Scalars['Value'];
+  settingRestriction?: Maybe<SettingRestriction>;
+};
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']>;
+  allowedValues?: Maybe<AllowedSettingVals>;
 };
 
 
@@ -1800,6 +1845,17 @@ export type SubscriptionInput = {
   paymentMethodID: Scalars['String'];
   properties: Array<PropertiesInput>;
   deactivation?: Maybe<SubscriptionDeactivationInput>;
+};
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  startsAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
 };
 
 export enum SubscriptionSort {
@@ -1911,6 +1967,11 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type UpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['Value'];
+};
+
 
 export type UploadImageInput = {
   file: Scalars['Upload'];
@@ -1941,6 +2002,7 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
+  subscriptions: Array<UserSubscription>;
 };
 
 export type UserAddress = {
@@ -2023,6 +2085,24 @@ export enum UserSort {
   Name = 'NAME',
   FirstName = 'FIRST_NAME'
 }
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  periods: Array<SubscriptionPeriod>;
+  memberPlan: MemberPlan;
+  invoices: Array<Invoice>;
+};
+
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
@@ -2955,7 +3035,7 @@ export type UpdateInvoiceMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
+  & Pick<MemberPlan, 'id' | 'name' | 'description' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2964,7 +3044,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -3602,6 +3682,47 @@ export type DeletePeerMutation = (
   & Pick<Mutation, 'deletePeer'>
 );
 
+export type FullSettingFragment = (
+  { __typename?: 'Setting' }
+  & Pick<Setting, 'id' | 'name' | 'value'>
+  & { settingRestriction?: Maybe<(
+    { __typename?: 'SettingRestriction' }
+    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+  )> }
+);
+
+export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingListQuery = (
+  { __typename?: 'Query' }
+  & { settings: Array<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'id' | 'name' | 'value'>
+    & { settingRestriction?: Maybe<(
+      { __typename?: 'SettingRestriction' }
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+      & { allowedValues?: Maybe<(
+        { __typename?: 'AllowedSettingVals' }
+        & Pick<AllowedSettingVals, 'stringChoice' | 'boolChoice'>
+      )> }
+    )> }
+  )> }
+);
+
+export type UpdateSettingListMutationVariables = Exact<{
+  input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
+}>;
+
+
+export type UpdateSettingListMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSettingList?: Maybe<Array<Maybe<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'value'>
+  )>>> }
+);
+
 export type FullSubscriptionFragment = (
   { __typename?: 'Subscription' }
   & Pick<Subscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
@@ -3766,6 +3887,30 @@ export type FullUserFragment = (
   )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
+  )>, subscriptions: Array<(
+    { __typename?: 'UserSubscription' }
+    & UserSubscriptionFragment
+  )> }
+);
+
+export type UserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
+  & { periods: Array<(
+    { __typename?: 'SubscriptionPeriod' }
+    & Pick<SubscriptionPeriod, 'id' | 'amount' | 'createdAt' | 'endsAt' | 'invoiceID' | 'paymentPeriodicity' | 'startsAt'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, deactivation?: Maybe<(
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  )>, memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & MemberPlanRefFragment
+  ), invoices: Array<(
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
   )> }
 );
 
@@ -4336,6 +4481,83 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  modifiedAt
+  createdAt
+}
+    `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -4364,8 +4586,12 @@ export const FullUserFragmentDoc = gql`
   roles {
     ...FullUserRole
   }
+  subscriptions {
+    ...UserSubscription
+  }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${UserSubscriptionFragmentDoc}`;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4434,27 +4660,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  modifiedAt
-  createdAt
-}
-    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -4508,6 +4713,18 @@ export const MutationPageFragmentDoc = gql`
   }
 }
     `;
+export const FullSettingFragmentDoc = gql`
+    fragment FullSetting on Setting {
+  id
+  name
+  value
+  settingRestriction {
+    maxValue
+    minValue
+    inputLength
+  }
+}
+    `;
 export const FullPaymentProviderFragmentDoc = gql`
     fragment FullPaymentProvider on PaymentProvider {
   id
@@ -4528,21 +4745,8 @@ export const FullPaymentMethodFragmentDoc = gql`
   active
 }
     ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
-  description
   tags
   amountPerMonthMin
   availablePaymentMethods {
@@ -4561,12 +4765,6 @@ export const MetadataPropertyFragmentDoc = gql`
   key
   value
   public
-}
-    `;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
 }
     `;
 export const FullSubscriptionFragmentDoc = gql`
@@ -6968,6 +7166,84 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const SettingListDocument = gql`
+    query SettingList {
+  settings {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+      }
+export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+        }
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
+export const UpdateSettingListDocument = gql`
+    mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
+  updateSettingList(value: $input) {
+    value
+  }
+}
+    `;
+export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+
+/**
+ * __useUpdateSettingListMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
+      }
+export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
+export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
+export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
