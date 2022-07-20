@@ -6371,6 +6371,14 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wepublish/analytics@1.0.0-alpha.0":
+  version "1.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@wepublish/analytics/-/analytics-1.0.0-alpha.0.tgz#b2a1cbc52b05febf5881717a6adce05fa76c02aa"
+  integrity sha512-2/OrKG6gBg4pS2ZXFrp546Q0OQC0nXNkr50ERrQyMgWVvYS9qUNxcPO0sgX971xIbTVsnLJF3Axw0/Jf1FDoeQ==
+  dependencies:
+    "@jonkoops/matomo-tracker" "^0.7.0"
+    typescript "^4.7.4"
+
 "@wepublish/karma.run-react@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@wepublish/karma.run-react/-/karma.run-react-0.2.0.tgz#159f364e3a91cce08ec61a03b773cb03f29eb2e3"
@@ -6381,14 +6389,6 @@
     fela "^10.6.1"
     fela-dom "^10.6.1"
     path-to-regexp "^3.0.0"
-
-"@wpkamil/analytics@1.0.39":
-  version "1.0.39"
-  resolved "https://registry.yarnpkg.com/@wpkamil/analytics/-/analytics-1.0.39.tgz#e9a464aba90e5d1ca7e88efbc7ae2352845b1447"
-  integrity sha512-JDK4thA1XiAQzQwUmYsMEtqCmUdauQPJ5CjKUZuxb3x2PuFQkqKEwsWidPGFTWJPY1dlDW5y+Ec4OzRDcOdV/w==
-  dependencies:
-    "@jonkoops/matomo-tracker" "^0.7.0"
-    typescript "^4.7.4"
 
 "@wry/context@^0.6.0":
   version "0.6.0"
