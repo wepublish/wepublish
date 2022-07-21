@@ -13,8 +13,8 @@ export enum LocalStorageKey {
   SessionToken = 'sessionToken'
 }
 
-export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
-  if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
+export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
+  if (typeof window !== 'object') return {isLoaded: false, isLoading: false, load: () => {}}
 
   const scriptRef = useRef<HTMLScriptElement | null>(null)
 
@@ -99,7 +99,7 @@ export function convertMSToDHMS(milliseconds: number) {
 
   minute = minute % 60
 
-  let day = Math.floor(hour / 24)
+  const day = Math.floor(hour / 24)
 
   hour = hour % 24
 
