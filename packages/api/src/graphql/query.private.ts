@@ -886,10 +886,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
 
-        if (filter.title !== undefined) {
-          peerArticles.filter(article => article.title === filter.title)
-        }
-
         switch (sort) {
           case ArticleSort.CreatedAt:
             peerArticles.sort(
