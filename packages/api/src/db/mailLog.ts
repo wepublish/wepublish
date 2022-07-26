@@ -6,9 +6,6 @@ export interface MailLogInput {
   readonly mailProviderID: string
 }
 
-export interface CreateMailLogArgs {
-  readonly input: MailLogInput
-}
 export interface UpdateMailLogArgs {
   readonly id: string
   readonly input: MailLogInput
@@ -46,6 +43,5 @@ export interface MailLog {
 export type OptionalMailLog = MailLog | null
 
 export interface DBMailLogAdapter {
-  createMailLog(args: CreateMailLogArgs): Promise<MailLog>
   updateMailLog(args: UpdateMailLogArgs): Promise<OptionalMailLog>
 }

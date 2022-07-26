@@ -44,11 +44,6 @@ export interface UpdateNavigationArgs {
   input: NavigationInput
 }
 
-export interface CreateNavigationArgs {
-  input: NavigationInput
-}
-
 export interface DBNavigationAdapter {
-  createNavigation(args: CreateNavigationArgs): Promise<Navigation>
   updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
 }

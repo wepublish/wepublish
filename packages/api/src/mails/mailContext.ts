@@ -1,9 +1,8 @@
-import {BaseMailProvider} from './mailProvider'
-import {DBAdapter} from '../db/adapter'
+import {PrismaClient} from '@prisma/client'
+import Email from 'email-templates'
 import {MailLogState} from '../db/mailLog'
 import {logger} from '../server'
-
-import Email from 'email-templates'
+import {BaseMailProvider} from './mailProvider'
 
 export enum SendMailType {
   LoginLink,
@@ -42,7 +41,7 @@ export interface MailContextOptions {
 
 export interface MailContext {
   mailProvider: BaseMailProvider | null
-  dbAdapter: DBAdapter
+  prisma: PrismaClient
 
   email: Email
   mailTemplateMaps: MailTemplateMap[]
@@ -55,12 +54,11 @@ export interface MailContext {
 
 export interface MailContextProps extends MailContextOptions {
   readonly mailProvider?: BaseMailProvider
-  readonly dbAdapter: DBAdapter
+  readonly prisma: PrismaClient
 }
 
 export class MailContext implements MailContext {
   mailProvider: BaseMailProvider | null
-  dbAdapter: DBAdapter
 
   email: Email
 
@@ -71,7 +69,7 @@ export class MailContext implements MailContext {
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider ?? null
-    this.dbAdapter = props.dbAdapter
+    this.prisma = props.prisma
 
     this.defaultFromAddress = props.defaultFromAddress
     this.defaultReplyToAddress = props.defaultReplyToAddress
@@ -100,12 +98,13 @@ export class MailContext implements MailContext {
         ? await this.email.renderAll(mailTemplate.localTemplate, data)
         : undefined
 
-    const mailLog = await this.dbAdapter.mailLog.createMailLog({
-      input: {
+    const mailLog = await this.prisma.mailLog.create({
+      data: {
         state: MailLogState.Submitted,
         subject: mailView?.subject ?? mailTemplate.subject ?? 'N/A',
         recipient: recipient,
-        mailProviderID: this.mailProvider?.id ?? 'N/A'
+        mailProviderID: this.mailProvider?.id ?? 'N/A',
+        modifiedAt: new Date()
       }
     })
 

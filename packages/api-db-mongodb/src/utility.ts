@@ -6,10 +6,6 @@ export function generateID() {
   return nanoid(IDAlphabet, 16)
 }
 
-export function generateToken() {
-  return nanoid(IDAlphabet, 32)
-}
-
 export function base64Encode(str: string): string {
   return Buffer.from(str).toString('base64')
 }

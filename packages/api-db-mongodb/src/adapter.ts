@@ -11,7 +11,6 @@ import {MongoDBSessionAdapter} from './db/session'
 import {MongoDBAuthorAdapter} from './db/author'
 import {MongoDBNavigationAdapter} from './db/navigation'
 import {MongoDBImageAdapter} from './db/image'
-import {MongoDBTokenAdapter} from './db/token'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
@@ -68,7 +67,6 @@ export class MongoDBAdapter implements DBAdapter {
   readonly userRole: MongoDBUserRoleAdapter
   readonly subscription: MongoDBSubscriptionAdapter
   readonly session: MongoDBSessionAdapter
-  readonly token: MongoDBTokenAdapter
   readonly navigation: MongoDBNavigationAdapter
   readonly author: MongoDBAuthorAdapter
   readonly image: MongoDBImageAdapter
@@ -104,7 +102,6 @@ export class MongoDBAdapter implements DBAdapter {
     this.userRole = new MongoDBUserRoleAdapter(db)
     this.subscription = new MongoDBSubscriptionAdapter(db)
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
-    this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)
     this.comment = new MongoDBCommentAdapter(db)
     this.author = new MongoDBAuthorAdapter(db)

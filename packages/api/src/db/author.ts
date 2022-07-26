@@ -28,10 +28,6 @@ export interface AuthorInput {
 
 export type OptionalAuthor = Author | null
 
-export interface CreateAuthorArgs {
-  input: AuthorInput
-}
-
 export interface UpdateAuthorArgs {
   id: string
   input: AuthorInput
@@ -48,6 +44,5 @@ export interface AuthorFilter {
 }
 
 export interface DBAuthorAdapter {
-  createAuthor(args: CreateAuthorArgs): Promise<Author>
   updateAuthor(args: UpdateAuthorArgs): Promise<OptionalAuthor>
 }

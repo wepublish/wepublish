@@ -50,7 +50,6 @@ export const getRemotePeerProfile = async (
     schema,
     fetcher
   })
-
   const remoteAnswer = await delegateToSchema({
     info,
     fieldName: 'peerProfile',

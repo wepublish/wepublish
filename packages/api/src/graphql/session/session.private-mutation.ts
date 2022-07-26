@@ -1,5 +1,5 @@
-import {Context} from '../../context'
 import {PrismaClient} from '@prisma/client'
+import {Context} from '../../context'
 
 export const revokeSessionById = (
   id: string,

@@ -1,8 +1,11 @@
 #!/usr/bin/env node
+import {PrismaClient} from '@prisma/client'
 import {
+  AlgebraicCaptchaChallenge,
   articleModelEvents,
   Author,
   CommentItemType,
+  hashPassword,
   JobType,
   MailgunMailProvider,
   Oauth2Provider,
@@ -15,24 +18,21 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer,
-  AlgebraicCaptchaChallenge
+  WepublishServer
 } from '@wepublish/api'
-
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
-
-import {URL} from 'url'
-import {SlackMailProvider} from './SlackMailProvider'
+import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import bodyParser from 'body-parser'
+import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
-import pinoStackdriver from 'pino-stackdriver'
 import {createWriteStream} from 'pino-sentry'
+import pinoStackdriver from 'pino-stackdriver'
+import * as process from 'process'
+import {URL} from 'url'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-import path from 'path'
-import * as process from 'process'
+import {SlackMailProvider} from './SlackMailProvider'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -107,37 +107,60 @@ async function asyncMain() {
       : undefined
   )
 
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.MONGO_URL!
+      }
+    }
+  })
+  await prisma.$connect()
+
   await MongoDBAdapter.initialize({
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-      const editorUserRole = await adapter.userRole.getUserRole('Editor')
-      const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
+      const adminUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Admin'
+            }
+          })
+        )?.id ?? 'fake'
+      const editorUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Editor'
+            }
+          })
+        )?.id ?? 'fake'
 
-      await adapter.user.createUser({
-        input: {
+      await prisma.user.create({
+        data: {
           email: 'dev@wepublish.ch',
           emailVerifiedAt: new Date(),
           name: 'Dev User',
           active: true,
           properties: [],
-          roleIDs: [adminUserRoleId]
-        },
-        password: '123'
+          roleIDs: [adminUserRoleId],
+          password: await hashPassword('123'),
+          modifiedAt: new Date()
+        }
       })
 
-      await adapter.user.createUser({
-        input: {
+      await prisma.user.create({
+        data: {
           email: 'editor@wepublish.ch',
           emailVerifiedAt: new Date(),
           name: 'Editor User',
           active: true,
           properties: [],
-          roleIDs: [editorUserRoleId]
-        },
-        password: '123'
+          roleIDs: [editorUserRoleId],
+          password: await hashPassword('123'),
+          modifiedAt: new Date()
+        }
       })
     }
   })
@@ -317,7 +340,7 @@ async function asyncMain() {
     websiteURL,
     mediaAdapter,
     dbAdapter,
-    mongoUrl: process.env.MONGO_URL!,
+    prisma,
     oauth2Providers,
     mailProvider,
     mailContextOptions: {

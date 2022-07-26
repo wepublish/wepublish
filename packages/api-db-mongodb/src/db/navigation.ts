@@ -1,10 +1,4 @@
-import {
-  DBNavigationAdapter,
-  UpdateNavigationArgs,
-  OptionalNavigation,
-  Navigation,
-  CreateNavigationArgs
-} from '@wepublish/api'
+import {DBNavigationAdapter, UpdateNavigationArgs, OptionalNavigation} from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
 import {CollectionName, DBNavigation} from './schema'
@@ -15,26 +9,6 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
 
   constructor(db: Db) {
     this.navigations = db.collection(CollectionName.Navigations)
-  }
-
-  async createNavigation({input}: CreateNavigationArgs): Promise<Navigation> {
-    try {
-      const {ops} = await this.navigations.insertOne({
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        name: input.name,
-        key: input.key,
-        links: input.links
-      })
-      const {_id: id, ...navigation} = ops[0]
-      return {id, ...navigation}
-    } catch (err) {
-      if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
-        throw new Error('"key" already exists!')
-      }
-
-      throw err
-    }
   }
 
   async updateNavigation({id, input}: UpdateNavigationArgs): Promise<OptionalNavigation> {

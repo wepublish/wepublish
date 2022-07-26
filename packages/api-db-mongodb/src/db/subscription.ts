@@ -1,5 +1,4 @@
 import {
-  CreateSubscriptionArgs,
   CreateSubscriptionPeriodArgs,
   DBSubscriptionAdapter,
   DeleteSubscriptionPeriodArgs,
@@ -15,27 +14,6 @@ export class MongoDBSubscriptionAdapter implements DBSubscriptionAdapter {
 
   constructor(db: Db) {
     this.subscriptions = db.collection(CollectionName.Subscriptions)
-  }
-
-  async createSubscription({input}: CreateSubscriptionArgs): Promise<OptionalSubscription> {
-    const {ops} = await this.subscriptions.insertOne({
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      userID: input.userID,
-      memberPlanID: input.memberPlanID,
-      paymentMethodID: input.paymentMethodID,
-      monthlyAmount: input.monthlyAmount,
-      autoRenew: input.autoRenew,
-      startsAt: input.startsAt,
-      paymentPeriodicity: input.paymentPeriodicity,
-      properties: input.properties,
-      deactivation: input.deactivation,
-      paidUntil: input.paidUntil,
-      periods: []
-    })
-
-    const {_id: id, ...data} = ops[0]
-    return {id, ...data}
   }
 
   async updateSubscription({id, input}: UpdateSubscriptionArgs): Promise<OptionalSubscription> {

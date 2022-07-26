@@ -1,9 +1,11 @@
 import {MetadataProperty} from '@prisma/client'
+import bcrypt from 'bcrypt'
+import {DefaultBcryptHashCostFactor} from './common'
 
-export interface CreateUserArgs {
-  readonly input: UserInput
-  readonly password: string
-}
+export const hashPassword = async (
+  password: string,
+  bcryptHashCostFactor: number = DefaultBcryptHashCostFactor
+) => bcrypt.hash(password, bcryptHashCostFactor)
 
 export interface UpdateUserArgs {
   readonly id: string
@@ -118,7 +120,6 @@ export interface UpdatePaymentProviderCustomerArgs {
 export type OptionalUser = User | null
 
 export interface DBUserAdapter {
-  createUser(args: CreateUserArgs): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
 
   resetUserPassword(args: ResetUserPasswordArgs): Promise<OptionalUser>

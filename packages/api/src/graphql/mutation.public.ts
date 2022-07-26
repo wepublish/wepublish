@@ -9,7 +9,6 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {Issuer} from 'openid-client'
 import {Context} from '../context'
 import {CommentAuthorType, CommentState} from '../db/comment'
 import {SettingName} from '../db/setting'
@@ -22,17 +21,12 @@ import {
   CommentLengthError,
   EmailAlreadyInUseError,
   InternalError,
-  InvalidCredentialsError,
-  InvalidOAuth2TokenError,
   MonthlyAmountNotEnough,
-  NotActiveError,
   NotAuthenticatedError,
   NotAuthorisedError as NotAuthorizedError,
   NotFound,
-  OAuth2ProviderNotFoundError,
   PaymentConfigurationNotAllowed,
   UserInputError,
-  UserNotFoundError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {SendMailType} from '../mails/mailContext'
@@ -54,7 +48,13 @@ import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPublicSessionWithToken} from './session'
-import {revokeSessionByToken} from './session/session.mutation'
+import {
+  createJWTSession,
+  createOAuth2Session,
+  createSession,
+  createUserSession,
+  revokeSessionByToken
+} from './session/session.mutation'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {
@@ -66,7 +66,7 @@ import {
   GraphQLPublicUserInput,
   GraphQLUserAddressInput
 } from './user'
-import {getUserForCredentials} from './user/user.queries'
+import {createUser} from './user/user.mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -80,16 +80,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
-      async resolve(root, {email, password}, {dbAdapter, prisma}) {
-        email = email.toLowerCase()
-        await Validator.login().validateAsync({email}, {allowUnknown: true})
-        const user = await getUserForCredentials(email, password, prisma.user)
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
+        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
@@ -97,20 +89,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         jwt: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        'This mutation allows to create a user session with JSON Web Token by taking the JSON Web Token as an input and returns a session with token',
-      async resolve(root, {jwt}, {dbAdapter, prisma, verifyJWT}) {
-        const userID = verifyJWT(jwt)
-
-        const user = await prisma.user.findUnique({
-          where: {id: userID}
-        })
-
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
+        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
@@ -120,34 +100,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         code: {type: GraphQLNonNull(GraphQLString)},
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
-      description:
-        'This mutation allows to create user session with OAuth2 code by taking the name, code and redirect Uri as an input and returns a session with token.',
-      async resolve(root, {name, code, redirectUri}, {dbAdapter, prisma, oauth2Providers}) {
-        const provider = oauth2Providers.find(provider => provider.name === name)
-        if (!provider) throw new OAuth2ProviderNotFoundError()
-        const issuer = await Issuer.discover(provider.discoverUrl)
-        const client = new issuer.Client({
-          client_id: provider.clientId,
-          client_secret: provider.clientKey,
-          redirect_uris: provider.redirectUri,
-          response_types: ['code']
-        })
-        const token = await client.callback(redirectUri, {code})
-        if (!token.access_token) throw new InvalidOAuth2TokenError()
-
-        const userInfo = await client.userinfo(token.access_token)
-        if (!userInfo.email) throw new Error('UserInfo did not return an email')
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: userInfo.email
-          }
-        })
-        if (!user) throw new UserNotFoundError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
+        createOAuth2Session(
+          name,
+          code,
+          redirectUri,
+          sessionTTL,
+          oauth2Providers,
+          prisma.session,
+          prisma.user,
+          prisma.userRole
+        )
     },
 
     revokeActiveSession: {
@@ -266,31 +229,39 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {name, firstName, preferredName, email, address, password, challengeAnswer},
-        {dbAdapter, prisma, loaders, memberContext, createPaymentWithProvider, challenge}
+        {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
         email = email.toLowerCase()
         await Validator.createUser().validateAsync(
           {name, email, firstName, preferredName},
           {allowUnknown: true}
         )
+
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
         })
-        if (!challengeValidationResult.valid)
+
+        if (!challengeValidationResult.valid) {
           throw new CommentAuthenticationError(challengeValidationResult.message)
+        }
 
         const userExists = await prisma.user.findUnique({
           where: {
             email
           }
         })
-        if (userExists) throw new EmailAlreadyInUseError()
 
-        if (!password) password = crypto.randomBytes(48).toString('base64')
+        if (userExists) {
+          throw new EmailAlreadyInUseError()
+        }
 
-        const user = await dbAdapter.user.createUser({
-          input: {
+        if (!password) {
+          password = crypto.randomBytes(48).toString('base64')
+        }
+
+        const user = await createUser(
+          {
             name,
             firstName,
             preferredName,
@@ -300,15 +271,19 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             active: true,
             properties: [],
             roleIDs: [],
-            paymentProviderCustomers: []
+            paymentProviderCustomers: [],
+            password
           },
-          password
-        })
+          hashCostFactor,
+          prisma.user
+        )
+
         if (!user) {
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await dbAdapter.session.createUserSession(user)
+
+        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
 
         return {
           user,
@@ -365,7 +340,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           failureURL,
           challengeAnswer
         },
-        {dbAdapter, prisma, loaders, memberContext, challenge, createPaymentWithProvider}
+        {
+          sessionTTL,
+          hashCostFactor,
+          prisma,
+          loaders,
+          memberContext,
+          challenge,
+          createPaymentWithProvider
+        }
       ) {
         email = email.toLowerCase()
         await Validator.createUser().validateAsync(
@@ -417,8 +400,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!password) password = crypto.randomBytes(48).toString('base64')
 
-        const user = await dbAdapter.user.createUser({
-          input: {
+        const user = await createUser(
+          {
             name,
             firstName,
             preferredName,
@@ -428,20 +411,23 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             active: true,
             properties: [],
             roleIDs: [],
-            paymentProviderCustomers: []
+            paymentProviderCustomers: [],
+            password
           },
-          password
-        })
+          hashCostFactor,
+          prisma.user
+        )
+
         if (!user) {
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-        const session = await dbAdapter.session.createUserSession(user)
 
+        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const subscription = await memberContext.createSubscription(
-          dbAdapter,
+          prisma.subscription,
           user.id,
           paymentMethod,
           paymentPeriodicity,
@@ -509,7 +495,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           successURL,
           failureURL
         },
-        {dbAdapter, loaders, memberContext, createPaymentWithProvider, authenticateUser}
+        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
         // authenticate user
         const {user} = authenticateUser()
@@ -544,7 +530,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const subscription = await memberContext.createSubscription(
-          dbAdapter,
+          prisma.subscription,
           user.id,
           paymentMethod,
           paymentPeriodicity,
