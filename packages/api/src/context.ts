@@ -519,9 +519,9 @@ function generateCacheKey(params: PeerQueryParams) {
       // Hash function doesn't have to be crypto safe, just fast!
       .createHash('md5')
       .update(
-        `${JSON.stringify(params.hostURL)}${JSON.stringify(
-          params.variables?._v0_id
-        )}${JSON.stringify(params.query)}`
+        `${JSON.stringify(params.hostURL)}${JSON.stringify(params.variables)}${JSON.stringify(
+          params.query
+        )}`
       )
       .digest('hex')
   )

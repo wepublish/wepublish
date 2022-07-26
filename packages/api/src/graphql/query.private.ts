@@ -837,21 +837,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
         })
 
-        // Filter peered articles
-        if (filter.title) {
-          peerArticles.filter(article => article.article.latest.title.includes(filter.title))
-          return {
-            nodes: peerArticles.filter(article =>
-              article.article.latest.title.includes(filter.title)
-            ),
-            totalCount: totalCount,
-            pageInfo: {
-              endCursor: base64Encode(JSON.stringify(cursors)),
-              hasNextPage: hasNextPage
-            }
-          }
-        }
-
         switch (sort) {
           case ArticleSort.CreatedAt:
             peerArticles.sort(
