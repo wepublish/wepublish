@@ -13,7 +13,7 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument} from '../utility'
+import {authorise, getOperationNameFromDocument} from '../utility'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -21,6 +21,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
 import {FormInstance} from 'rsuite/esm/Form'
+import {PermissionControl} from '../atoms/permissionControl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -30,6 +31,7 @@ export interface ImageEditPanelProps {
 }
 
 export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
+  const isAuthorized = authorise('CAN_UPDATE_PEER_PROFILE')
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
@@ -50,7 +52,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving
+  const isDisabled = isLoading || isSaving || !isAuthorized
 
   const {t} = useTranslation()
 
@@ -134,6 +136,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
+        disabled={isDisabled}
         ref={form}
         model={validationModel}
         style={{height: '100%'}}
@@ -148,9 +151,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer.Header>
           <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
           <Drawer.Actions>
-            <Button appearance="primary" disabled={isDisabled} type="submit">
-              {t('peerList.panels.save')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_UPDATE_PEER_PROFILE'}>
+              <Button appearance="primary" disabled={isDisabled} type="submit">
+                {t('peerList.panels.save')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('peerList.panels.close')}
             </Button>
@@ -194,6 +199,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             <Form.Group>
               <Form.ControlLabel>{t('peerList.panels.themeColor')}</Form.ControlLabel>
               <ColorPicker
+                disabled={isDisabled}
                 setColor={color => {
                   setThemeColor(color)
                 }}
@@ -203,6 +209,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             <Form.Group>
               <Form.ControlLabel>{t('peerList.panels.themeFontColor')}</Form.ControlLabel>
               <ColorPicker
+                disabled={isDisabled}
                 setColor={color => {
                   setThemeFontColor(color)
                 }}
@@ -225,6 +232,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   value={callToActionText}
                   onChange={setCallToActionText}
                   accepter={RichTextBlock}
+                  disabled={isDisabled}
                 />
               </Form.Group>
               <Form.Group>
@@ -309,3 +317,5 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PEER_PROFILE', true)(PeerInfoEditPanel)
+// export {CheckedPermissionComponent as PeerInfoEditPanel}

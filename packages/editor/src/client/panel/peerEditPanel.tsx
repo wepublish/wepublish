@@ -12,11 +12,12 @@ import {
   useRemotePeerProfileQuery
 } from '../api'
 
-import {slugify, getOperationNameFromDocument} from '../utility'
+import {slugify, getOperationNameFromDocument, authorise} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -27,6 +28,7 @@ export interface PeerEditPanelProps {
 }
 
 export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
+  const isAuthorized = authorise('CAN_CREATE_PEER')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
@@ -137,6 +139,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     <>
       <Form
         fluid
+        disabled={!isAuthorized}
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
         formValue={{name: name, url: urlString, token: token}}
@@ -147,13 +150,15 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              type="submit"
-              appearance="primary"
-              data-testid="saveButton"
-              disabled={isDisabled}>
-              {id ? t('peerList.panels.save') : t('peerList.panels.create')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_CREATE_PEER'}>
+              <Button
+                type="submit"
+                appearance="primary"
+                data-testid="saveButton"
+                disabled={isDisabled}>
+                {id ? t('peerList.panels.save') : t('peerList.panels.create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('peerList.panels.close')}
             </Button>
@@ -194,7 +199,11 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
                 }}
               />
             </Form.Group>
-            <Button className="fetchButton" appearance="primary" onClick={() => handleFetch()}>
+            <Button
+              disabled={!isAuthorized}
+              className="fetchButton"
+              appearance="primary"
+              onClick={() => handleFetch()}>
               {t('peerList.panels.getRemote')}
             </Button>
           </Panel>
@@ -263,3 +272,6 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     </>
   )
 }
+
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PEERS', true)(PeerEditPanel)
+// export {CheckedPermissionComponent as PeerEditPanel}

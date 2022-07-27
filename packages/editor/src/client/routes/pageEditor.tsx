@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 
 import {RouteActionType} from '@wepublish/karma.run-react'
 
@@ -33,6 +33,8 @@ import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
 import SaveIcon from '@rsuite/icons/legacy/Save'
 import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
+import {AuthContext} from '../authContext'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -110,6 +112,10 @@ export function PageEditor({id}: PageEditorProps) {
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const isAuthorized = useContext(AuthContext)?.session?.roles?.some(role =>
+    role.permissions.some(permission => permission.id === 'CAN_CREATE_PAGE')
+  )
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -339,18 +345,20 @@ export function PageEditor({id}: PageEditorProps) {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<SaveIcon />}
-                      disabled={isDisabled}
-                      onClick={() => handleSave()}>
-                      {t('pageEditor.overview.create')}
-                    </IconButton>
+                    <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+                      <IconButton
+                        style={{
+                          marginLeft: '10px'
+                        }}
+                        size={'lg'}
+                        icon={<SaveIcon />}
+                        disabled={isDisabled}
+                        onClick={() => handleSave()}>
+                        {t('pageEditor.overview.create')}
+                      </IconButton>
+                    </PermissionControl>
                   ) : (
-                    <>
+                    <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -363,47 +371,53 @@ export function PageEditor({id}: PageEditorProps) {
                           {t('pageEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <Badge
-                        className={
-                          pageData?.page?.draft || !pageData?.page?.published ? 'unsaved' : 'saved'
-                        }>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
-                          size={'lg'}
-                          icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
-                          onClick={() => {
-                            setPublishDialogOpen(true)
-                          }}>
-                          {t('pageEditor.overview.publish')}
-                        </IconButton>
-                      </Badge>
-                    </>
+                      <PermissionControl requiredPermission={'CAN_PUBLISH_PAGE'}>
+                        <Badge
+                          className={
+                            pageData?.page?.draft || !pageData?.page?.published
+                              ? 'unsaved'
+                              : 'saved'
+                          }>
+                          <IconButton
+                            style={{
+                              marginLeft: '10px'
+                            }}
+                            size={'lg'}
+                            icon={<CloudUploadIcon />}
+                            disabled={isDisabled}
+                            onClick={() => {
+                              setPublishDialogOpen(true)
+                            }}>
+                            {t('pageEditor.overview.publish')}
+                          </IconButton>
+                        </Badge>
+                      </PermissionControl>
+                    </PermissionControl>
                   )}
                 </div>
               }
               rightChildren={
-                <IconButtonLink
-                  disabled={hasChanged || !id}
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<EyeIcon />}
-                  onClick={e => {
-                    previewLinkFetch({
-                      variables: {
-                        id: id!,
-                        hours: 1
-                      }
-                    })
-                  }}>
-                  {t('pageEditor.overview.preview')}
-                </IconButtonLink>
+                <PermissionControl requiredPermission={'CAN_GET_PAGE_PREVIEW_LINK'}>
+                  <IconButtonLink
+                    disabled={hasChanged || !id}
+                    style={{marginTop: '4px'}}
+                    size={'lg'}
+                    icon={<EyeIcon />}
+                    onClick={e => {
+                      previewLinkFetch({
+                        variables: {
+                          id: id!,
+                          hours: 1
+                        }
+                      })
+                    }}>
+                    {t('pageEditor.overview.preview')}
+                  </IconButtonLink>
+                </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
+          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled || !isAuthorized}>
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
@@ -439,3 +453,7 @@ export function PageEditor({id}: PageEditorProps) {
     </>
   )
 }
+
+// const CheckedPermissionComponent = createCheckedPermissionComponent(
+//   "CAN_GET_PAGE", true)(PageEditor)
+// export {CheckedPermissionComponent as PageEditor}

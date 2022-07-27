@@ -42,6 +42,7 @@ import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import {RouteActionType} from '@wepublish/karma.run-react'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -64,7 +65,7 @@ function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
   }
 }
 
-export function PageList() {
+function PageList() {
   const {t} = useTranslation()
 
   const [filter, setFilter] = useState('')
@@ -126,11 +127,16 @@ export function PageList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('pages.overview.pages')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink appearance="primary" disabled={isLoading} route={PageCreateRoute.create({})}>
-            {t('pages.overview.newPage')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <ButtonLink
+              appearance="primary"
+              disabled={isLoading}
+              route={PageCreateRoute.create({})}>
+              {t('pages.overview.newPage')}
+            </ButtonLink>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -230,59 +236,69 @@ export function PageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
-                    <IconButton
-                      icon={<BtnOffIcon />}
-                      circle
-                      disabled={!(rowData.published || rowData.pending)}
-                      size="sm"
-                      onClick={e => {
-                        setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Delete)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
-                    <IconButton
-                      icon={<CopyIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentPage(rowData)
-                        setConfirmAction(ConfirmAction.Duplicate)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl requiredPermission={'CAN_PUBLISH_PAGE'}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                      <IconButton
+                        icon={<BtnOffIcon />}
+                        circle
+                        disabled={!(rowData.published || rowData.pending)}
+                        size="sm"
+                        onClick={e => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
 
-                  <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
-                    <IconButton
-                      icon={<EyeIcon />}
-                      disabled={!rowData.draft}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentPage(rowData)
-                        setPagePreviewLinkOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl requiredPermission={'CAN_DELETE_PAGE'}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Delete)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
+                      <IconButton
+                        icon={<CopyIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Duplicate)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl requiredPermission={'CAN_GET_PAGE_PREVIEW_LINK'}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
+                      <IconButton
+                        icon={<EyeIcon />}
+                        disabled={!rowData.draft}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setPagePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -454,3 +470,6 @@ export function PageList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PAGES', true)(PageList)
+export {CheckedPermissionComponent as PageList}

@@ -286,7 +286,8 @@ function PeerArticleList() {
   )
 }
 
-const CheckedPermissionPeerArticleList = createCheckedPermissionComponent(
-  'CAN_GET_PEER   _ARTICLES'
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PEER_ARTICLES',
+  true
 )(PeerArticleList)
-export {CheckedPermissionPeerArticleList as PeerArticleList}
+export {CheckedPermissionComponent as PeerArticleList}

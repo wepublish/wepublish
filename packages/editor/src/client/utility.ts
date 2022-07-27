@@ -1,10 +1,11 @@
 import nanoid from 'nanoid'
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import {PaymentPeriodicity, SortOrder} from './api'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
 import Maybe from 'graphql/tsutils/Maybe'
+import {AuthContext} from './authContext'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -229,4 +230,10 @@ export function getImgMinSizeToCompress(): number {
     document.getElementById(ElementID.Settings)!.textContent!
   )
   return imgMinSizeToCompress
+}
+
+export function authorise(permissionID: string) {
+  return useContext(AuthContext)?.session?.roles?.some(role =>
+    role.permissions.some(permission => permission.id === permissionID)
+  )
 }

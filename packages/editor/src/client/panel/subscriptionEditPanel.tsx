@@ -556,3 +556,5 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_SUBSCRIPTION', true)(SubscriptionEditPanel)
+// export {CheckedPermissionComponent as SubscriptionEditPanel}

@@ -43,10 +43,11 @@ import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utilit
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import EditIcon from '@rsuite/icons/legacy/Edit'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function ImageList() {
+function ImageList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
   const [images, setImages] = useState<FullImageFragment[]>([])
@@ -124,11 +125,16 @@ export function ImageList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('images.overview.imageLibrary')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink appearance="primary" disabled={isLoading} route={ImageUploadRoute.create({})}>
-            {t('images.overview.uploadImage')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <ButtonLink
+              appearance="primary"
+              disabled={isLoading}
+              route={ImageUploadRoute.create({})}>
+              {t('images.overview.uploadImage')}
+            </ButtonLink>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -197,33 +203,37 @@ export function ImageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ImageRefFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('images.overview.edit')}>
-                    <>
-                      {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref */}
+                  <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+                    <IconButtonTooltip caption={t('images.overview.edit')}>
+                      <>
+                        {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref */}
 
-                      <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
-                        <IconButton
-                          icon={<EditIcon />}
-                          circle
-                          size="sm"
-                          style={{marginLeft: '5px'}}
-                        />
-                      </Link>
-                    </>
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('images.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={event => {
-                        event.preventDefault()
-                        setCurrentImage(rowData)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                        <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                          <IconButton
+                            icon={<EditIcon />}
+                            circle
+                            size="sm"
+                            style={{marginLeft: '5px'}}
+                          />
+                        </Link>
+                      </>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl requiredPermission={'CAN_DELETE_IMAGE'}>
+                    <IconButtonTooltip caption={t('images.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={event => {
+                          event.preventDefault()
+                          setCurrentImage(rowData)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -349,3 +359,9 @@ export function ImageList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_IMAGES',
+  true
+)(ImageList)
+export {CheckedPermissionComponent as ImageList}

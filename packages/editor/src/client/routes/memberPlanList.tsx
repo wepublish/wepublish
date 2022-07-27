@@ -29,9 +29,10 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
-export function MemberPlanList() {
+function MemberPlanList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
@@ -104,14 +105,16 @@ export function MemberPlanList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('memberPlanList.title')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={MemberPlanCreateRoute.create({})}>
-            {t('memberPlanList.createNew')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl requiredPermission={'CAN_CREATE_MEMBER_PLAN'}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <ButtonLink
+              appearance="primary"
+              disabled={isLoading}
+              route={MemberPlanCreateRoute.create({})}>
+              {t('memberPlanList.createNew')}
+            </ButtonLink>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -137,7 +140,7 @@ export function MemberPlanList() {
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
-              <>
+              <PermissionControl requiredPermission={'CAN_DELETE_MEMBER_PLAN'}>
                 <IconButtonTooltip caption={t('memberPlanList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -150,7 +153,7 @@ export function MemberPlanList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -243,3 +246,9 @@ export function MemberPlanList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_MEMBER_PLANS',
+  true
+)(MemberPlanList)
+export {CheckedPermissionComponent as MemberPlanList}

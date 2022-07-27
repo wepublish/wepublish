@@ -75,3 +75,5 @@ export function InvoiceListPanel({
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_INVOICES', true)(InvoiceListPanel)
+// export {CheckedPermissionComponent as InvoiceListPanel}

@@ -178,3 +178,5 @@ export function PublishPagePanel({
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_PUBLISH_PAGE')(PublishPagePanel)
+// export {CheckedPermissionComponent as PublishPagePanel}

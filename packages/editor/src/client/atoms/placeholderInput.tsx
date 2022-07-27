@@ -13,12 +13,14 @@ export interface PlaceholderInputProps {
    * Called when the add button is clicked.
    */
   onAddClick?: () => void
+
+  disabled?: boolean
 }
 
 /**
  * A placeholder for a block.
  */
-export function PlaceholderInput({children, onAddClick}: PlaceholderInputProps) {
+export function PlaceholderInput({children, onAddClick, disabled}: PlaceholderInputProps) {
   if (children) {
     return <>{children}</>
   }
@@ -36,6 +38,7 @@ export function PlaceholderInput({children, onAddClick}: PlaceholderInputProps) 
         backgroundColor: '#f7f9fa'
       }}>
       <IconButton
+        disabled={disabled}
         size={'sm'}
         icon={<PlusCircleIcon />}
         onClick={() => onAddClick && onAddClick()}

@@ -1109,6 +1109,9 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Payment"
+    },
+    "permissions": {
+      "noAccess": "You have insuffient permission to access this content"
     }
   }
 }

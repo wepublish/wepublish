@@ -8,7 +8,7 @@ import {
   ImageRefFragment,
   ImageListDocument
 } from '../api'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
+import {authorise, getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 import {Link} from '../route'
 
@@ -19,6 +19,7 @@ import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from '
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 import {ImageMetaData} from './imageUploadAndEditPanel'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -66,7 +67,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
   })
 
   const [isLoading, setLoading] = useState(true)
-  const isDisabled = isLoading || isUpdating || isUploading
+  const isAuthorized = authorise('CAN_CREATE_IMAGE')
+  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
   const isUpload = file !== undefined
 
   const {t} = useTranslation()
@@ -257,9 +259,11 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance={'primary'} disabled={isDisabled} type="submit">
-              {isUpload ? t('images.panels.upload') : t('images.panels.save')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+              <Button appearance={'primary'} disabled={isDisabled} type="submit">
+                {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
             </Button>
@@ -394,3 +398,6 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     </>
   )
 }
+
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_IMAGE', true)(ImagedEditPanel)
+// export {CheckedPermissionComponent as ImageEditPanel}

@@ -169,3 +169,6 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     </>
   )
 }
+
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_CREATE_IMAGE', true)(ImageSelectPanel)
+// export {CheckedPermissionComponent as ImageSelectPanel}

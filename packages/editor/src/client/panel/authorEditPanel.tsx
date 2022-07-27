@@ -29,13 +29,14 @@ import {
   AuthorListDocument
 } from '../api'
 
-import {slugify, generateID, getOperationNameFromDocument} from '../utility'
+import {slugify, generateID, getOperationNameFromDocument, authorise} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import LinkIcon from '@rsuite/icons/legacy/Link'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -57,6 +58,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  const isAuthorized = authorise('CAN_CREATE_AUTHOR')
+
   const {data, loading: isLoading, error: loadError} = useAuthorQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
@@ -69,7 +72,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+  const isDisabled =
+    isLoading || isCreating || isUpdating || loadError !== undefined || !isAuthorized
 
   const {t} = useTranslation()
 
@@ -164,13 +168,15 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              appearance="primary"
-              disabled={isDisabled}
-              type="submit"
-              data-testid="saveButton">
-              {id ? t('authors.panels.save') : t('authors.panels.create')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_CREATE_AUTHOR'}>
+              <Button
+                appearance="primary"
+                disabled={isDisabled}
+                type="submit"
+                data-testid="saveButton">
+                {id ? t('authors.panels.save') : t('authors.panels.create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('authors.panels.close')}
             </Button>
@@ -218,6 +224,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Panel>
             <Panel header={t('authors.panels.links')} className="authorLinks">
               <ListInput
+                disabled={isDisabled}
                 value={links}
                 onChange={links => {
                   setLinks(links)
@@ -252,7 +259,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Panel>
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
-                <RichTextBlock value={bio} onChange={value => setBio(value)} />
+                <RichTextBlock
+                  disabled={isDisabled}
+                  value={bio}
+                  onChange={value => setBio(value)}
+                />
               </div>
             </Panel>
           </PanelGroup>
@@ -279,3 +290,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent(
+//   "CAN_GET_AUTHOR", true)(AuthorEditPanel)
+// export {CheckedPermissionComponent as AuthorEditPanel}

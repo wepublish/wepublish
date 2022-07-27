@@ -26,9 +26,10 @@ import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 import {FlexboxGrid, IconButton, Drawer, Table, Modal, Button} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
-export function PaymentMethodList() {
+function PaymentMethodList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
@@ -104,7 +105,7 @@ export function PaymentMethodList() {
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
-              <>
+              <PermissionControl requiredPermission={'CAN_DELETE_PAYMENT_METHOD'}>
                 <IconButtonTooltip caption={t('paymentMethodList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -117,7 +118,7 @@ export function PaymentMethodList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -191,3 +192,9 @@ export function PaymentMethodList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PAYMENT_METHODS',
+  true
+)(PaymentMethodList)
+export {CheckedPermissionComponent as PaymentMethodList}

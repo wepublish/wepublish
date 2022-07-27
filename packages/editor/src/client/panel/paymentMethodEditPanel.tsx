@@ -12,7 +12,8 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {slugify} from '../utility'
+import {authorise, slugify} from '../utility'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -23,6 +24,8 @@ export interface PaymentMethodEditPanelProps {
 
 export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_PAYMENT_METHOD')
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -61,7 +64,8 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     isUpdating ||
     isLoadingPaymentProvider ||
     loadError !== undefined ||
-    loadPaymentProviderError !== undefined
+    loadPaymentProviderError !== undefined ||
+    !isAuthorized
 
   useEffect(() => {
     if (data?.paymentMethod) {
@@ -150,13 +154,15 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              appearance="primary"
-              disabled={isDisabled}
-              type="submit"
-              onClick={() => handleSave()}>
-              {id ? t('save') : t('create')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_CREATE_PAYMENT_METHOD'}>
+              <Button
+                appearance="primary"
+                disabled={isDisabled}
+                type="submit"
+                onClick={() => handleSave()}>
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
             </Button>
@@ -191,6 +197,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
               <Form.Control
                 name="paymentProvider"
                 virtualized
+                disabled={isDisabled}
                 value={paymentProvider?.id}
                 data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
@@ -218,3 +225,6 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     </>
   )
 }
+
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PAYMENT_METHOD', true)(PaymentMethodEditPanel)
+// export {CheckedPermissionComponent as PaymentMethodEditPanel}

@@ -487,7 +487,8 @@ function ArticleList() {
   )
 }
 
-const CheckedPermissionArticleList = createCheckedPermissionComponent('CAN_GET_ARTICLES')(
-  ArticleList
-)
-export {CheckedPermissionArticleList as ArticleList}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_ARTICLES',
+  true
+)(ArticleList)
+export {CheckedPermissionComponent as ArticleList}

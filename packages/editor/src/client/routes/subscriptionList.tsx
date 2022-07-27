@@ -32,6 +32,7 @@ import {RouteActionType} from '@wepublish/karma.run-react'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
@@ -65,7 +66,7 @@ export const newSubscriptionButton = ({
   )
 }
 
-export function SubscriptionList() {
+function SubscriptionList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
@@ -163,7 +164,9 @@ export function SubscriptionList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
-          {newSubscriptionButton({isLoading, t})}
+          <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+            {newSubscriptionButton({isLoading, t})}
+          </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
@@ -354,3 +357,8 @@ export function SubscriptionList() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_SUBSCRIPTIONS',
+  true
+)(SubscriptionList)
+export {CheckedPermissionComponent as SubscriptionList}

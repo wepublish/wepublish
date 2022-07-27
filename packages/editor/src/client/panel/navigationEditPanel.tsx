@@ -16,8 +16,9 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {generateID, getOperationNameFromDocument} from '../utility'
+import {authorise, generateID, getOperationNameFromDocument} from '../utility'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -35,6 +36,7 @@ export interface NavigationLink {
 }
 
 export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
+  const isAuthorized = authorise('CAN_CREATE_NAVIGATION')
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
   const [navigationLinks, setNavigationLinks] = useState<ListValue<NavigationLink>[]>([])
@@ -86,7 +88,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     loadError !== undefined ||
     pageLoadError !== undefined ||
     isLoadingArticleData ||
-    articleLoadError !== undefined
+    articleLoadError !== undefined ||
+    !isAuthorized
 
   const {t} = useTranslation()
 
@@ -207,9 +210,11 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('navigation.panels.save') : t('navigation.panels.create')}
-          </Button>
+          <PermissionControl requiredPermission={'CAN_CREATE_NAVIGATION'}>
+            <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
+              {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+            </Button>
+          </PermissionControl>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
             {t('navigation.panels.close')}
           </Button>
@@ -246,6 +251,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </Panel>
         <Panel header={t('authors.panels.links')}>
           <ListInput
+            disabled={isDisabled}
             value={navigationLinks}
             onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
             defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
@@ -318,3 +324,5 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     </>
   )
 }
+// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_NAVIGATIONS', true)(NavigationEditPanel)
+// export {CheckedPermissionComponent as NavigationEditPanel}
