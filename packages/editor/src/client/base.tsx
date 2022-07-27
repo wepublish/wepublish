@@ -317,7 +317,8 @@ export function Base({children}: BaseProps) {
             paddingTop: '60px',
             paddingBottom: '60px',
             paddingLeft: '40px',
-            paddingRight: '40px'
+            paddingRight: '40px',
+            overflowY: 'scroll'
           }}>
           {children}
         </Container>

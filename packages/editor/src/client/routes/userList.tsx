@@ -1,35 +1,13 @@
 import React, {useEffect, useState} from 'react'
 
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  UserCreateRoute,
-  UserEditRoute,
-  UserListRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
+import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {UserEditPanel} from '../panel/userEditPanel'
-import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
+import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table,
-  Pagination
-} from 'rsuite'
+import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table, Pagination} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -58,17 +36,6 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 export function UserList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
-
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
-  )
-
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserEdit ? current.params.id : undefined
-  )
-
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
@@ -107,18 +74,6 @@ export function UserList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current?.type === RouteType.UserCreate) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (current?.type === RouteType.UserEdit) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
-    }
-  }, [current])
-
-  useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes)
       if (data.users.totalCount + 9 < page * limit) {
@@ -126,6 +81,24 @@ export function UserList() {
       }
     }
   }, [data?.users])
+
+  /**
+   * UI helpers
+   */
+  function getSubscriptionCellView(user: FullUserFragment) {
+    const subscriptions = user.subscriptions
+    const totalSubscriptions = subscriptions?.length
+    // one subscription
+    if (subscriptions?.length === 1) {
+      return <>{t('userList.overview.oneSubscription')}</>
+    }
+    // multiple subscriptions
+    if (subscriptions?.length) {
+      return <>{t('userList.overview.amountOfSubscriptions', {amount: totalSubscriptions})}</>
+    }
+    // no subscription
+    return <>{t('userList.overview.noSubscriptions')}</>
+  }
 
   return (
     <>
@@ -190,7 +163,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
+                <Link route={UserEditViewRoute.create({id: rowData.id})}>
                   {rowData.firstName || ''}
                 </Link>
               )}
@@ -200,7 +173,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
+                <Link route={UserEditViewRoute.create({id: rowData.id})}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}
@@ -209,6 +182,13 @@ export function UserList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('email')}</HeaderCell>
             <Cell dataKey="email" />
+          </Column>
+          {/* subscription */}
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
+            <Cell>
+              {(rowData: FullUserFragment) => <div>{getSubscriptionCellView(rowData)}</div>}
+            </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
@@ -263,44 +243,15 @@ export function UserList() {
         />
       </div>
 
-      <Drawer
-        open={isEditModalOpen}
-        size={'sm'}
-        onClose={() => {
-          setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({}, current ?? undefined)
-          })
-        }}>
-        <UserEditPanel
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
-
+      {/* reset user password */}
       {currentUser?.id && (
         <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
           <Modal.Header>
-            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+            <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <ResetUserPasswordPanel
+            <ResetUserPasswordForm
               userID={currentUser?.id}
               userName={currentUser?.name}
               onClose={() => setIsResetUserPasswordOpen(false)}
@@ -309,21 +260,22 @@ export function UserList() {
 
           <Modal.Footer>
             <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-              {t('userList.panels.cancel')}
+              {t('userCreateOrEditView.cancel')}
             </Button>
           </Modal.Footer>
         </Modal>
       )}
 
+      {/* delete user modal */}
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
+          <Modal.Title>{t('userCreateOrEditView.deleteUser')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <DescriptionList>
-            <DescriptionListItem label={t('userList.panels.name')}>
-              {currentUser?.name || t('userList.panels.Unknown')}
+            <DescriptionListItem label={t('userCreateOrEditView.name')}>
+              {currentUser?.name || t('userCreateOrEditView.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
@@ -342,10 +294,10 @@ export function UserList() {
               refetch()
             }}
             color="red">
-            {t('userList.panels.confirm')}
+            {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+            {t('userCreateOrEditView.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

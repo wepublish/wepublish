@@ -20,6 +20,8 @@ import {
   PaymentPeriodicity,
   SubscriptionPeriod,
   SubscriptionDeactivation,
+  MemberPlan,
+  Invoice,
   SettingRestriction,
   SettingName
 } from '@wepublish/api'
@@ -159,6 +161,8 @@ export interface DBSubscription {
   paymentMethodID: string
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
+  memberPlan?: MemberPlan
+  invoices?: Invoice[]
 }
 
 export interface DBSession {

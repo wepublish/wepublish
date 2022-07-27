@@ -326,6 +326,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                       }))}
                       onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
                       block
+                      placement="auto"
                     />
                   </Form.Group>
                   <Form.Group>
@@ -344,6 +345,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                         })
                       }}
                       block
+                      placement="auto"
                     />
                   </Form.Group>
                 </Form>
