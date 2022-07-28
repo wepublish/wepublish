@@ -7,7 +7,6 @@ export interface PaymentMethod {
   description: string
   paymentProviderID: string
   active: boolean
-  // usable(): boolean
 }
 
 export type OptionalPaymentMethod = PaymentMethod | null
@@ -20,16 +19,11 @@ export interface PaymentMethodInput {
   active: boolean
 }
 
-export interface CreatePaymentMethodArgs {
-  input: PaymentMethodInput
-}
-
 export interface UpdatePaymentMethodArgs {
   id: string
   input: PaymentMethodInput
 }
 
 export interface DBPaymentMethodAdapter {
-  createPaymentMethod(args: CreatePaymentMethodArgs): Promise<PaymentMethod>
   updatePaymentMethod(args: UpdatePaymentMethodArgs): Promise<OptionalPaymentMethod>
 }

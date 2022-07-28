@@ -1,8 +1,6 @@
 import {
-  CreatePageArgs,
   DBPageAdapter,
   OptionalPage,
-  Page,
   PublishPageArgs,
   UnpublishPageArgs,
   UpdatePageArgs
@@ -15,27 +13,6 @@ export class MongoDBPageAdapter implements DBPageAdapter {
 
   constructor(db: Db) {
     this.pages = db.collection(CollectionName.Pages)
-  }
-
-  async createPage({input}: CreatePageArgs): Promise<Page> {
-    const {...data} = input
-    const {ops} = await this.pages.insertOne({
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-
-      draft: {
-        revision: 0,
-        createdAt: new Date(),
-        ...data
-      },
-
-      pending: null,
-      published: null
-    })
-
-    const {_id: id, ...page} = ops[0]
-
-    return {id, ...page}
   }
 
   async updatePage({id, input}: UpdatePageArgs): Promise<OptionalPage> {

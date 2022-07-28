@@ -26,9 +26,6 @@ export interface SubscriptionInput {
   readonly deactivation: SubscriptionDeactivation | null
 }
 
-export interface CreateSubscriptionArgs {
-  readonly input: SubscriptionInput
-}
 export interface UpdateSubscriptionArgs {
   readonly id: string
   readonly input: SubscriptionInput
@@ -109,7 +106,6 @@ export interface SubscriptionPeriodInput {
 export type OptionalSubscription = Subscription | null
 
 export interface DBSubscriptionAdapter {
-  createSubscription(args: CreateSubscriptionArgs): Promise<OptionalSubscription>
   updateSubscription(args: UpdateSubscriptionArgs): Promise<OptionalSubscription>
   updateUserID(subscriptionID: string, userID: string): Promise<OptionalSubscription>
 

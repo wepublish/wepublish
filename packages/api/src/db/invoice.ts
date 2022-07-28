@@ -39,10 +39,6 @@ export interface InvoiceInput {
   items: InvoiceItem[]
 }
 
-export interface CreateInvoiceArgs {
-  input: InvoiceInput
-}
-
 export interface UpdateInvoiceArgs {
   id: string
   input: InvoiceInput
@@ -63,6 +59,5 @@ export interface InvoiceFilter {
 }
 
 export interface DBInvoiceAdapter {
-  createInvoice(args: CreateInvoiceArgs): Promise<Invoice>
   updateInvoice(args: UpdateInvoiceArgs): Promise<OptionalInvoice>
 }

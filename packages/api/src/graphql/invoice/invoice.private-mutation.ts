@@ -1,6 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanDeleteInvoice} from '../permissions'
-import {PrismaClient} from '@prisma/client'
+import {authorise, CanDeleteInvoice, CanCreateInvoice} from '../permissions'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 export const deleteInvoiceById = (
   id: string,
@@ -14,5 +14,18 @@ export const deleteInvoiceById = (
     where: {
       id
     }
+  })
+}
+
+export const createInvoice = (
+  input: Omit<Prisma.InvoiceUncheckedCreateInput, 'modifiedAt'>,
+  authenticate: Context['authenticate'],
+  invoice: PrismaClient['invoice']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateInvoice, roles)
+
+  return invoice.create({
+    data: {...input, modifiedAt: new Date()}
   })
 }

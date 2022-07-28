@@ -1,16 +1,12 @@
 import {
   DBPeerAdapter,
-  PeerProfile,
   OptionalPeer,
-  Peer,
+  PeerProfile,
   PeerProfileInput,
-  UpdatePeerInput,
-  CreatePeerInput
+  UpdatePeerInput
 } from '@wepublish/api'
-
 import {Collection, Db} from 'mongodb'
-
-import {CollectionName, DBPeerProfile, DBPeer} from './schema'
+import {CollectionName, DBPeer, DBPeerProfile} from './schema'
 
 export class MongoDBPeerAdapter implements DBPeerAdapter {
   private peerProfiles: Collection<DBPeerProfile>
@@ -43,21 +39,6 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     )
 
     return value!
-  }
-
-  async createPeer({name, slug, hostURL, token}: CreatePeerInput): Promise<Peer> {
-    const {ops} = await this.peers.insertOne({
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      slug,
-      name,
-      token,
-      hostURL,
-      isDisabled: false
-    })
-
-    const {_id: id, ...data} = ops[0]
-    return {id, ...data}
   }
 
   async updatePeer(

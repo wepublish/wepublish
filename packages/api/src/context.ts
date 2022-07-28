@@ -33,6 +33,7 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DBAdapter} from './db/adapter'
 import {OptionalPublicArticle} from './db/article'
+import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {OptionalPublicPage} from './db/page'
 import {PaymentState} from './db/payment'
 import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
@@ -113,6 +114,8 @@ export interface OAuth2Clients {
 export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
+  readonly sessionTTL: number
+  readonly hashCostFactor: number
 
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
@@ -170,6 +173,8 @@ interface PeerCacheValue {
 export interface ContextOptions {
   readonly hostURL: string
   readonly websiteURL: string
+  readonly sessionTTL?: number
+  readonly hashCostFactor?: number
 
   readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
@@ -293,7 +298,9 @@ export async function contextFromRequest(
     mailProvider,
     mailContextOptions,
     paymentProviders,
-    challenge
+    challenge,
+    sessionTTL,
+    hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -742,7 +749,7 @@ export async function contextFromRequest(
   }
 
   const mailContext = new MailContext({
-    dbAdapter,
+    prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
     defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
@@ -797,6 +804,8 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
+    sessionTTL: sessionTTL ?? DefaultSessionTTL,
+    hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
     async getOauth2Clients() {
       return await Promise.all(
@@ -875,11 +884,12 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
-      const payment = await dbAdapter.payment.createPayment({
-        input: {
+      const payment = await prisma.payment.create({
+        data: {
           paymentMethodID,
           invoiceID: invoice.id,
-          state: PaymentState.Created
+          state: PaymentState.Created,
+          modifiedAt: new Date()
         }
       })
 

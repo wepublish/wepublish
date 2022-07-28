@@ -8,44 +8,40 @@ import {
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {Issuer} from 'openid-client'
 import {Context} from '../context'
-import {ArticleRevision} from '../db/article'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {CommentState} from '../db/comment'
-import {PageRevision} from '../db/page'
-import {PaymentState} from '../db/payment'
 import {SettingName, SettingRestriction} from '../db/setting'
-import {
-  DuplicatePageSlugError,
-  InvalidCredentialsError,
-  InvalidOAuth2TokenError,
-  NotActiveError,
-  NotFound,
-  OAuth2ProviderNotFoundError,
-  UserNotFoundError
-} from '../error'
+import {DuplicatePageSlugError, NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {checkSettingRestrictions} from '../utility'
 import {Validator} from '../validator'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {deleteArticleById} from './article/article.private-mutation'
+import {
+  createArticle,
+  deleteArticleById,
+  duplicateArticle
+} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
-import {deleteAuthorById} from './author/author.private-mutation'
+import {createAuthor, deleteAuthorById} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
-import {deleteImageById} from './image/image.private-mutation'
+import {createImage, deleteImageById} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {deleteInvoiceById} from './invoice/invoice.private-mutation'
-import {deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
+import {createInvoice, deleteInvoiceById} from './invoice/invoice.private-mutation'
+import {createMemberPlan, deleteMemberPlanById} from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
-import {deleteNavigationById} from './navigation/navigation.private-mutation'
+import {createNavigation, deleteNavigationById} from './navigation/navigation.private-mutation'
 import {GraphQLPage, GraphQLPageInput} from './page'
-import {deletePageById} from './page/page.private-mutation'
+import {createPage, deletePageById, duplicatePage} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
-import {deletePaymentMethodById} from './payment-method/payment-method.private-mutation'
+import {
+  createPaymentMethod,
+  deletePaymentMethodById
+} from './payment-method/payment-method.private-mutation'
+import {createPaymentFromInvoice} from './payment/payment.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {
   GraphQLCreatePeerInput,
@@ -54,7 +50,7 @@ import {
   GraphQLPeerProfileInput,
   GraphQLUpdatePeerInput
 } from './peer'
-import {deletePeerById} from './peer/peer.private-mutation'
+import {createPeer, deletePeerById} from './peer/peer.private-mutation'
 import {
   authorise,
   CanCreateArticle,
@@ -64,11 +60,9 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
-  CanCreatePayment,
   CanCreatePaymentMethod,
   CanCreatePeer,
   CanCreateSubscription,
-  CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
   CanPublishArticle,
@@ -80,18 +74,25 @@ import {
   CanUpdateSettings
 } from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
-import {revokeSessionByToken} from './session/session.mutation'
+import {
+  createJWTSession,
+  createOAuth2Session,
+  createSession,
+  revokeSessionByToken
+} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
-import {deleteSubscriptionById} from './subscription/subscription.private-mutation'
+import {
+  createSubscription,
+  deleteSubscriptionById
+} from './subscription/subscription.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {deleteTokenById} from './token/token.private-mutation'
+import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
-import {deleteUserRoleById} from './user-role/user-role.private-mutation'
-import {deleteUserById} from './user/user.private-mutation'
-import {getUserForCredentials} from './user/user.queries'
+import {createUserRole, deleteUserRoleById} from './user-role/user-role.private-mutation'
+import {createAdminUser, deleteUserById} from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 function mapTeaserUnionMap(value: any) {
@@ -193,13 +194,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPeer: {
       type: GraphQLNonNull(GraphQLPeer),
       args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePeer, roles)
-
-        // TODO: Check if valid peer?
-        return dbAdapter.peer.createPeer(input)
-      }
+      resolve: (root, {input}, {authenticate, prisma: {peer}}) =>
+        createPeer(input, authenticate, peer)
     },
 
     updatePeer: {
@@ -233,12 +229,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {email, password}, {dbAdapter, prisma}) {
-        const user = await getUserForCredentials(email, password, prisma.user)
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
+        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
@@ -246,16 +238,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         jwt: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {jwt}, {dbAdapter, prisma, verifyJWT}) {
-        const userID = verifyJWT(jwt)
-
-        const user = await prisma.user.findUnique({
-          where: {id: userID}
-        })
-        if (!user) throw new InvalidCredentialsError()
-        if (!user.active) throw new NotActiveError()
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
+        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
@@ -265,32 +249,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         code: {type: GraphQLNonNull(GraphQLString)},
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {name, code, redirectUri}, {dbAdapter, prisma, oauth2Providers}) {
-        const provider = oauth2Providers.find(provider => provider.name === name)
-        if (!provider) throw new OAuth2ProviderNotFoundError()
-
-        const issuer = await Issuer.discover(provider.discoverUrl)
-        const client = new issuer.Client({
-          client_id: provider.clientId,
-          client_secret: provider.clientKey,
-          redirect_uris: provider.redirectUri,
-          response_types: ['code']
-        })
-
-        const token = await client.callback(redirectUri, {code})
-        if (!token.access_token) throw new InvalidOAuth2TokenError()
-
-        const userInfo = await client.userinfo(token.access_token)
-        if (!userInfo.email) throw new Error('UserInfo did not return an email')
-
-        const user = await prisma.user.findUnique({
-          where: {email: userInfo.email}
-        })
-        if (!user) throw new UserNotFoundError()
-        if (!user.active) throw new NotActiveError()
-
-        return await dbAdapter.session.createUserSession(user)
-      }
+      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
+        createOAuth2Session(
+          name,
+          code,
+          redirectUri,
+          sessionTTL,
+          oauth2Providers,
+          prisma.session,
+          prisma.user,
+          prisma.userRole
+        )
     },
 
     revokeSession: {
@@ -415,13 +384,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createToken: {
       type: GraphQLNonNull(GraphQLCreatedToken),
       args: {input: {type: GraphQLNonNull(GraphQLTokenInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateToken, roles)
-
-        // TODO: Receive roleIDs from input
-        return dbAdapter.token.createToken({...input, roleIDs: ['peer']})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {token}}) =>
+        createToken({...input, roleIDs: ['peer']}, authenticate, token)
     },
 
     deleteToken: {
@@ -440,13 +404,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLUserInput)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {input, password}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUser, roles)
-        input.email = input.email.toLowerCase()
-        await Validator.createUser().validateAsync(input, {allowUnknown: true})
-        return dbAdapter.user.createUser({input, password})
-      }
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
     },
 
     updateUser: {
@@ -505,24 +464,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      async resolve(root, {input}, {authenticate, prisma, dbAdapter, memberContext}) {
-        const {roles} = authenticate()
-        authorise(CanCreateSubscription, roles)
-
-        const subscription = await dbAdapter.subscription.createSubscription({input})
-        if (!subscription) throw new Error('Subscription not created.')
-
-        // create invoice
-        const userId = subscription.userID
-        const user = await prisma.user.findUnique({
-          where: {id: userId}
-        })
-        if (!user) throw new Error('User of subscription not found.')
-
-        // instantly create a new invoice fo the user
-        await memberContext.renewSubscriptionForUser({subscription: subscription as Subscription})
-        return subscription
-      }
+      resolve: (root, {input}, {authenticate, prisma: {subscription}, memberContext}) =>
+        createSubscription(input, authenticate, memberContext, subscription)
     },
 
     updateSubscription: {
@@ -571,11 +514,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createUserRole: {
       type: GraphQLUserRole,
       args: {input: {type: GraphQLNonNull(GraphQLUserRoleInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateUserRole, roles)
-        return dbAdapter.userRole.createUserRole({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {userRole}}) =>
+        createUserRole(input, authenticate, userRole)
     },
 
     updateUserRole: {
@@ -606,14 +546,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createNavigation: {
       type: GraphQLNavigation,
       args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateNavigation, roles)
-
-        return dbAdapter.navigation.createNavigation({
-          input: {...input, links: input.links.map(mapNavigationLinkInput)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {navigation}}) =>
+        createNavigation(
+          {
+            ...input,
+            links: input.links.map(mapNavigationLinkInput)
+          },
+          authenticate,
+          navigation
+        )
     },
 
     updateNavigation: {
@@ -648,11 +589,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createAuthor: {
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateAuthor, roles)
-        return dbAdapter.author.createAuthor({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {author}}) =>
+        createAuthor(input, authenticate, author)
     },
 
     updateAuthor: {
@@ -683,32 +621,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     uploadImage: {
       type: GraphQLImage,
       args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
-      async resolve(root, {input}, {authenticate, mediaAdapter, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateImage, roles)
-
-        const {file, filename, title, description, tags, source, link, license, focalPoint} = input
-
-        const {id, ...image} = await mediaAdapter.uploadImage(file)
-
-        return dbAdapter.image.createImage({
-          id,
-          input: {
-            ...image,
-
-            filename: filename ?? image.filename,
-            title,
-            description,
-            tags,
-
-            source,
-            link,
-            license,
-
-            focalPoint
-          }
-        })
-      }
+      resolve: (root, {input}, {authenticate, mediaAdapter, prisma: {image}}) =>
+        createImage(input, authenticate, mediaAdapter, image)
     },
 
     updateImage: {
@@ -737,14 +651,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: GraphQLNonNull(GraphQLArticle),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateArticle, roles)
-
-        return dbAdapter.article.createArticle({
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {article}}) =>
+        createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
     },
 
     updateArticle: {
@@ -807,27 +715,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {dbAdapter, loaders}) {
-        const article = await loaders.articles.load(id)
-
-        if (!article) throw new NotFound('article', id)
-
-        const articleRevision: ArticleRevision = Object.assign(
-          {},
-          article.draft ?? article.pending ?? article.published,
-          {
-            slug: '',
-            publishedAt: undefined,
-            updatedAt: undefined
-          }
-        )
-
-        const output = await dbAdapter.article.createArticle({
-          input: {shared: article.shared, ...articleRevision}
-        })
-
-        return output
-      }
+      resolve: (root, {id}, {authenticate, prisma: {article}, loaders: {articles}}) =>
+        duplicateArticle(id, authenticate, articles, article)
     },
 
     // Page
@@ -836,14 +725,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPage: {
       type: GraphQLNonNull(GraphQLPage),
       args: {input: {type: GraphQLNonNull(GraphQLPageInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePage, roles)
-
-        return dbAdapter.page.createPage({
-          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
-        })
-      }
+      resolve: (root, {input}, {authenticate, prisma: {page}}) =>
+        createPage({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
     },
 
     updatePage: {
@@ -919,24 +802,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {dbAdapter, loaders}) {
-        const page = await loaders.pages.load(id)
-
-        if (!page) throw new NotFound('page', id)
-
-        const pageRevision: PageRevision = Object.assign(
-          {},
-          page.draft ?? page.pending ?? page.published,
-          {
-            slug: '',
-            publishedAt: undefined,
-            updatedAt: undefined
-          }
-        )
-        const output = await dbAdapter.page.createPage({input: {...pageRevision}})
-
-        return output
-      }
+      resolve: (root, {id}, {prisma: {page}, loaders: {pages}, authenticate}) =>
+        duplicatePage(id, authenticate, pages, page)
     },
 
     // MemberPlan
@@ -945,18 +812,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createMemberPlan: {
       type: GraphQLMemberPlan,
       args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateMemberPlan, roles)
-
-        if (input.minimumDuration < 0) {
-          throw new Error('Input.minimumDuration can not be < 0')
-        } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
-          throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
-        }
-
-        return dbAdapter.memberPlan.createMemberPlan({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {memberPlan}}) =>
+        createMemberPlan(input, authenticate, memberPlan)
     },
 
     updateMemberPlan: {
@@ -989,14 +846,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePaymentMethod, roles)
-
-        // TODO: check if payment method exists and is active
-
-        return dbAdapter.paymentMethod.createPaymentMethod({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {paymentMethod}}) =>
+        createPaymentMethod(input, authenticate, paymentMethod)
     },
 
     updatePaymentMethod: {
@@ -1030,60 +881,27 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createInvoice: {
       type: GraphQLInvoice,
       args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateInvoice, roles)
-        return dbAdapter.invoice.createInvoice({input})
-      }
+      resolve: (root, {input}, {authenticate, prisma: {invoice}}) =>
+        createInvoice(input, authenticate, invoice)
     },
 
     createPaymentFromInvoice: {
       type: GraphQLPayment,
       args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      async resolve(root, {input}, {authenticate, loaders, paymentProviders, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePayment, roles)
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
-        const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
-        const paymentProvider = paymentProviders.find(
-          pp => pp.id === paymentMethod?.paymentProviderID
+      resolve: (
+        root,
+        {input},
+        {authenticate, loaders, paymentProviders, dbAdapter, prisma: {payment}}
+      ) =>
+        createPaymentFromInvoice(
+          input,
+          authenticate,
+          paymentProviders,
+          loaders.invoicesByID,
+          loaders.paymentMethodsByID,
+          dbAdapter,
+          payment
         )
-
-        const invoice = await loaders.invoicesByID.load(invoiceID)
-
-        if (!invoice || !paymentProvider) {
-          throw new Error('Invalid data') // TODO: better error handling
-        }
-
-        const payment = await dbAdapter.payment.createPayment({
-          input: {
-            paymentMethodID,
-            invoiceID,
-            state: PaymentState.Created
-          }
-        })
-
-        const intent = await paymentProvider.createIntent({
-          paymentID: payment.id,
-          invoice,
-          saveCustomer: true,
-          successURL,
-          failureURL
-        })
-
-        return await dbAdapter.payment.updatePayment({
-          id: payment.id,
-          input: {
-            state: intent.state,
-            intentID: intent.intentID,
-            intentData: intent.intentData,
-            intentSecret: intent.intentSecret,
-            paymentData: intent.paymentData,
-            paymentMethodID: payment.paymentMethodID,
-            invoiceID: payment.invoiceID
-          }
-        })
-      }
     },
 
     updateInvoice: {
@@ -1190,7 +1008,4 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     }
   }
-
-  // Image
-  // =====
 })

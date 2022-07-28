@@ -1,6 +1,4 @@
 import {
-  Article,
-  CreateArticleArgs,
   DBArticleAdapter,
   OptionalArticle,
   PublishArticleArgs,
@@ -15,29 +13,6 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
   constructor(db: Db) {
     this.articles = db.collection(CollectionName.Articles)
-  }
-
-  async createArticle({input}: CreateArticleArgs): Promise<Article> {
-    const {shared, ...data} = input
-    const {ops} = await this.articles.insertOne({
-      shared,
-
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-
-      draft: {
-        revision: 0,
-        createdAt: new Date(),
-        ...data
-      },
-
-      pending: null,
-      published: null
-    })
-
-    const {_id: id, ...article} = ops[0]
-
-    return {id, ...article}
   }
 
   async updateArticle({id, input}: UpdateArticleArgs): Promise<OptionalArticle> {

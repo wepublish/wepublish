@@ -7,7 +7,6 @@ import {DBArticleAdapter} from './article'
 import {DBCommentAdapter} from './comment'
 import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
-import {DBTokenAdapter} from './token'
 import {DBUserRoleAdapter} from './userRole'
 import {DBMemberPlanAdapter} from './memberPlan'
 import {DBPaymentMethodAdapter} from './paymentMethod'
@@ -23,7 +22,6 @@ export interface DBAdapter {
   readonly subscription: DBSubscriptionAdapter
   readonly userRole: DBUserRoleAdapter
   readonly session: DBSessionAdapter
-  readonly token: DBTokenAdapter
   readonly navigation: DBNavigationAdapter
   readonly author: DBAuthorAdapter
   readonly image: DBImageAdapter

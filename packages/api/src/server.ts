@@ -1,19 +1,15 @@
-import express, {Application, NextFunction, Request, Response} from 'express'
-
 import {ApolloServer} from 'apollo-server-express'
-
-import {contextFromRequest, ContextOptions} from './context'
-import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
-import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
-import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
-
-import {methodsToProxy, PublishableModelEvents} from './events'
-import {JobType, runJob} from './jobs'
+import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import TypedEmitter from 'typed-emitter'
-import {PrismaClient} from '@prisma/client'
+import {contextFromRequest, ContextOptions} from './context'
+import {methodsToProxy, PublishableModelEvents} from './events'
+import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
+import {JobType, runJob} from './jobs'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
+import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
 
 let serverLogger: pino.Logger
 
@@ -22,7 +18,6 @@ export function logger(moduleName: string): pino.Logger {
 }
 
 export interface WepublishServerOpts extends ContextOptions {
-  readonly mongoUrl: string
   readonly playground?: boolean
   readonly introspection?: boolean
   readonly tracing?: boolean
@@ -31,20 +26,10 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
-  private opts: WepublishServerOpts
 
-  constructor(opts: Omit<WepublishServerOpts, 'prisma'>) {
-    const prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: opts.mongoUrl
-        }
-      }
-    })
-    prisma.$connect()
-
+  constructor(private readonly opts: WepublishServerOpts) {
     // @TODO: move into cron job
-    prisma.$use(async (args, next) => {
+    this.opts.prisma.$use(async (args, next) => {
       if (!(args.model === 'Article' && args.action.startsWith('find'))) {
         return next(args)
       }
@@ -54,7 +39,7 @@ export class WepublishServer {
         return next(args)
       }
 
-      const articles = await prisma.article.findMany({
+      const articles = await this.opts.prisma.article.findMany({
         where: {
           pending: {
             is: {
@@ -70,7 +55,7 @@ export class WepublishServer {
 
       await Promise.all(
         articles.map(({id, pending}) =>
-          prisma.article.update({
+          this.opts.prisma.article.update({
             where: {
               id
             },
@@ -87,7 +72,7 @@ export class WepublishServer {
     })
 
     // @TODO: move into cron job
-    prisma.$use(async (args, next) => {
+    this.opts.prisma.$use(async (args, next) => {
       if (!(args.model === 'Page' && args.action.startsWith('find'))) {
         return next(args)
       }
@@ -97,7 +82,7 @@ export class WepublishServer {
         return next(args)
       }
 
-      const pages = await prisma.page.findMany({
+      const pages = await this.opts.prisma.page.findMany({
         where: {
           pending: {
             is: {
@@ -113,7 +98,7 @@ export class WepublishServer {
 
       await Promise.all(
         pages.map(({id, pending}) =>
-          prisma.page.update({
+          this.opts.prisma.page.update({
             where: {
               id
             },
@@ -129,7 +114,6 @@ export class WepublishServer {
       return next(args)
     })
 
-    this.opts = {...opts, prisma}
     const app = express()
 
     const {dbAdapter} = opts

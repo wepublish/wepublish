@@ -12,13 +12,15 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  OptionalUserSession,
+  hashPassword,
   Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
   URLAdapter
 } from '../src'
+import {DefaultSessionTTL} from '../src/db/common'
+import {createUserSession} from '../src/graphql/session/session.mutation'
 
 export interface TestClient {
   dbAdapter: MongoDBAdapter
@@ -69,32 +71,6 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   }
   let adminUser
 
-  await MongoDBAdapter.initialize({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en',
-    seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-
-      adminUser = await adapter.user.createUser({
-        input: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          roleIDs: [adminUserRoleId],
-          active: true,
-          properties: []
-        },
-        password: '123'
-      })
-    }
-  })
-
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en'
-  })
-
   const prisma = new PrismaClient({
     datasources: {
       db: {
@@ -103,6 +79,39 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     }
   })
   await prisma.$connect()
+
+  await MongoDBAdapter.initialize({
+    url: process.env.TEST_MONGO_URL!,
+    locale: 'en',
+    seed: async () => {
+      const adminUserRoleId =
+        (
+          await prisma.userRole.findUnique({
+            where: {
+              name: 'Admin'
+            }
+          })
+        )?.id ?? 'fake'
+
+      adminUser = await prisma.user.create({
+        data: {
+          email: 'dev@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Dev User',
+          roleIDs: [adminUserRoleId],
+          active: true,
+          properties: [],
+          password: await hashPassword('123'),
+          modifiedAt: new Date()
+        }
+      })
+    }
+  })
+
+  const dbAdapter = await MongoDBAdapter.connect({
+    url: process.env.TEST_MONGO_URL!,
+    locale: 'en'
+  })
 
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
@@ -119,7 +128,12 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     throw new Error('Could not get admin user')
   }
 
-  const userSession: OptionalUserSession = await dbAdapter.session.createUserSession(adminUser)
+  const userSession = await createUserSession(
+    adminUser,
+    DefaultSessionTTL,
+    prisma.session,
+    prisma.userRole
+  )
 
   const request: any = {
     headers: {
