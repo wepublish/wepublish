@@ -34,13 +34,14 @@ import {
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES} from '../utility'
+import {ALL_PAYMENT_PERIODICITIES, authorise} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
 import {InvoiceListPanel} from './invoiceListPanel'
 import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
+import {PermissionControl} from '../atoms/permissionControl'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -50,6 +51,8 @@ export interface SubscriptionEditPanelProps {
 
 export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_SUBSCRIPTION')
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
   const [user, setUser] = useState<FullUserFragment | null>()
@@ -169,7 +172,8 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     loadError !== undefined ||
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined
+    paymentMethodLoadError !== undefined ||
+    !isAuthorized
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -374,9 +378,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
-              {id ? t('save') : t('create')}
-            </Button>
+            <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+              <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
             </Button>
@@ -508,12 +514,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         </Drawer.Body>
 
         <Drawer.Footer>
-          <Button
-            appearance={'primary'}
-            disabled={isDisabled || isDeactivated}
-            onClick={() => handleSave()}>
-            {id ? t('save') : t('create')}
-          </Button>
+          <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+            <Button
+              appearance={'primary'}
+              disabled={isDisabled || isDeactivated}
+              onClick={() => handleSave()}>
+              {id ? t('save') : t('create')}
+            </Button>
+          </PermissionControl>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
             {t('close')}
           </Button>

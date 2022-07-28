@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {ButtonLink, Link, UserCreateRoute} from '../route'
+import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'

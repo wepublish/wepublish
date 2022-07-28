@@ -256,13 +256,14 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
                   </Dropdown>
                 </PermissionControl>
-
-                <NavItemLink
-                  active={current?.type === RouteType.SettingList}
-                  icon={<CogIcon />}
-                  route={SettingListRoute.create({})}>
-                  {t('navbar.settings')}
-                </NavItemLink>
+                <PermissionControl requiredPermission={'CAN_GET_SETTINGS'}>
+                  <NavItemLink
+                    active={current?.type === RouteType.SettingList}
+                    icon={<CogIcon />}
+                    route={SettingListRoute.create({})}>
+                    {t('navbar.settings')}
+                  </NavItemLink>
+                </PermissionControl>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
