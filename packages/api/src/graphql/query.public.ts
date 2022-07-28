@@ -219,7 +219,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
         let page = id ? await loaders.publicPagesByID.load(id) : null
 
-        if (!page) {
+        if (!page && slug !== undefined) {
           // slug can be empty string
           page = await loaders.publicPagesBySlug.load(slug)
         }
@@ -244,6 +244,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
             )
           }
         }
+        if (!page) throw new NotFound('Page', id ?? slug ?? token)
 
         return page
       }

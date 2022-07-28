@@ -10,6 +10,7 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
+import {SettingName} from '../db/setting'
 import {
   CommentAuthenticationError,
   EmailAlreadyInUseError,
@@ -23,6 +24,7 @@ import {
 import {SendMailType} from '../mails/mailContext'
 import {logger} from '../server'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
+import {Validator} from '../validator'
 import {
   GraphQLChallengeInput,
   GraphQLPublicComment,
@@ -119,8 +121,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment}, challenge}) =>
-        addPublicComment(input, optionalAuthenticateUser, challenge, comment)
+      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment, setting}, challenge}) =>
+        addPublicComment(input, optionalAuthenticateUser, challenge, setting, comment)
     },
 
     updateComment: {
@@ -153,21 +155,34 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {name, firstName, preferredName, email, address, password, challengeAnswer},
         {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
+
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
         })
-        if (!challengeValidationResult.valid)
+
+        if (!challengeValidationResult.valid) {
           throw new CommentAuthenticationError(challengeValidationResult.message)
+        }
 
         const userExists = await prisma.user.findUnique({
           where: {
             email
           }
         })
-        if (userExists) throw new EmailAlreadyInUseError()
 
-        if (!password) password = crypto.randomBytes(48).toString('base64')
+        if (userExists) {
+          throw new EmailAlreadyInUseError()
+        }
+
+        if (!password) {
+          password = crypto.randomBytes(48).toString('base64')
+        }
 
         const user = await createUser(
           {
@@ -259,6 +274,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           createPaymentWithProvider
         }
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -475,9 +495,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
+
         const user = await prisma.user.findUnique({
           where: {email}
         })
+
         if (!user) return email
 
         const lastSendTimeStamp = user.properties.find(
@@ -495,10 +519,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           return email
         }
 
+        const resetPwdSetting = await prisma.setting.findUnique({
+          where: {name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN}
+        })
+        const resetPwd =
+          (resetPwdSetting?.value as number) ??
+          parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
+
+        if (!resetPwd) {
+          throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
+        }
+
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: resetPwd
         })
+
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
           recipient: user.email,
@@ -511,6 +547,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = user.properties.filter(
           property => property?.key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
         )
+
         properties.push({
           key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
           public: false,

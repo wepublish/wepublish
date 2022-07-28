@@ -2,6 +2,7 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {hashPassword, unselectPassword} from '../../db/user'
 import {SendMailType} from '../../mails/mailContext'
+import {Validator} from '../../validator'
 import {authorise, CanCreateUser, CanDeleteUser, CanResetUserPassword} from '../permissions'
 import {createUser} from './user.mutation'
 
@@ -32,7 +33,7 @@ export const createAdminUser = (
   return createUser(input, hashCostFactor, user)
 }
 
-export const updateAdminUser = (
+export const updateAdminUser = async (
   id: string,
   input: Pick<
     Prisma.UserUncheckedUpdateInput,
@@ -51,6 +52,9 @@ export const updateAdminUser = (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateUser, roles)
+
+  input.email = input.email ? (input.email as string).toLowerCase() : input.email
+  await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
   return user.update({
     where: {id},

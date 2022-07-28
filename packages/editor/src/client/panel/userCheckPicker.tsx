@@ -29,7 +29,7 @@ export function UserCheckPicker({list, onChange}: UserCheckPickerProps) {
 
   return (
     <CheckPicker
-      cleanable={true}
+      cleanable
       value={list.map(user => user.id)}
       data={foundUsers.map(user => ({value: user.id, label: user.name}))}
       onSearch={searchKeyword => {

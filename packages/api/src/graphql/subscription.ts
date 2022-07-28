@@ -1,14 +1,19 @@
+import {Subscription} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLString
 } from 'graphql'
+import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
+import {SubscriptionSort} from '../db/subscription'
+import {unselectPassword} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -16,31 +21,13 @@ import {
   GraphQLMetadataPropertyPublic,
   GraphQLPageInfo
 } from './common'
-import {Context} from '../context'
-import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {SubscriptionSort} from '../db/subscription'
+import {
+  GraphQLSubscriptionDeactivation,
+  GraphQLSubscriptionDeactivationReason
+} from './subscriptionDeactivation'
 import {GraphQLUser} from './user'
-import {unselectPassword} from '../db/user'
-import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
-
-export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
-  name: 'SubscriptionDeactivationReason',
-  values: {
-    NONE: {value: SubscriptionDeactivationReason.none},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.userSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.invoiceNotPaid}
-  }
-})
-
-export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
-  name: 'SubscriptionDeactivation',
-  fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
-  }
-})
 
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
@@ -128,7 +115,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     paymentMethodID: {type: GraphQLString},
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
-    userHasAddress: {type: GraphQLBoolean}
+    userHasAddress: {type: GraphQLBoolean},
+    userID: {type: GraphQLID}
   }
 })
 

@@ -59,7 +59,7 @@ export function UserSubscriptionDeactivatePanel({
           )}
         </p>
         {!isDeactivated && (
-          <Form style={{marginTop: '20px'}} fluid={true}>
+          <Form style={{marginTop: '20px'}} fluid>
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
               <DatePicker

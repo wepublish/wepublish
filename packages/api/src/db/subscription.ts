@@ -19,4 +19,11 @@ export interface SubscriptionFilter {
   readonly memberPlanID?: string
   readonly paymentPeriodicity?: PaymentPeriodicity
   readonly userHasAddress?: boolean
+  readonly userID?: string
+}
+
+export interface SubscriptionJoins {
+  readonly joinMemberPlan?: boolean
+  readonly joinPaymentMethod?: boolean
+  readonly joinUser?: boolean
 }

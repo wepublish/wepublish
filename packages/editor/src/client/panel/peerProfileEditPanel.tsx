@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
-import {Button, Drawer, Panel, Form, toaster, Message} from 'rsuite'
+import {Button, Drawer, Panel, Form, toaster, Message, Schema} from 'rsuite'
 
 import {
   usePeerProfileQuery,
@@ -13,14 +13,14 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument, validateURL} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
-import {FormControlUrl} from '../atoms/formControlUrl'
+import {FormInstance} from 'rsuite/esm/Form'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -42,7 +42,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
-  const [validCallToActionURL, setValidCallToActionURL] = useState(true)
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -51,7 +50,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving || validCallToActionURL
+  const isDisabled = isLoading || isSaving
 
   const {t} = useTranslation()
 
@@ -82,15 +81,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       )
   }, [fetchError, saveError])
 
-  useEffect(() => {
-    const checkCallToActionURL = async () => {
-      const isValidTextURL = validateURL(callToActionTextURL)
-      const isValidImageURL = validateURL(callToActionImageURL)
-      setValidCallToActionURL(!(isValidTextURL && isValidImageURL))
-    }
-    checkCallToActionURL()
-  }, [callToActionTextURL, callToActionImageURL])
-
   async function handleSave() {
     await updateSettings({
       variables: {
@@ -114,44 +104,91 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     onClose?.()
   }
 
+  const form = useRef<FormInstance>(null)
+  const {StringType, ObjectType} = Schema.Types
+
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    // Validation for richText - not needed for now
+    // callToActionText: ArrayType().of(
+    //   ObjectType().shape({
+    //     children: ArrayType().of(
+    //       ObjectType().shape({
+    //         text: StringType().isRequired(t('errorMessages.noCallToActionTextErrorMessage'))
+    //       })
+    //     )
+    //   })
+    // ),
+    callToActionTextURL: StringType()
+      .isURL(t('errorMessages.invalidUrlErrorMessage'))
+      .isRequired(t('errorMessages.noUrlErrorMessage')),
+    callToActionImage: ObjectType().isRequired(t('errorMessages.noCallToActionImageErrorMessage')),
+    callToActionImageURL: StringType()
+      .isURL(t('errorMessages.invalidUrlErrorMessage'))
+      .isRequired(t('errorMessages.noUrlErrorMessage')),
+    profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        ref={form}
+        model={validationModel}
+        style={{height: '100%'}}
+        formValue={{
+          name: name,
+          callToActionText: callToActionText,
+          callToActionImage: callToActionImage,
+          callToActionTextURL: callToActionTextURL,
+          callToActionImageURL: callToActionImageURL,
+          profileImg: logoImage?.id
+        }}>
+        <Drawer.Header>
+          <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
+          <Drawer.Actions>
+            <Button appearance="primary" disabled={isDisabled} type="submit">
+              {t('peerList.panels.save')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('peerList.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-        <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-            {t('peerList.panels.save')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('peerList.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        <Drawer.Body>
+          <Panel bodyFill header={t('peerList.panels.image') + '*'}>
+            <ChooseEditImage
+              image={logoImage}
+              header={''}
+              top={0}
+              left={20}
+              disabled={isLoading}
+              openChooseModalOpen={() => {
+                setIsLogoChange(true)
+                setChooseModalOpen(true)
+              }}
+              openEditModalOpen={() => {
+                setIsLogoChange(true)
+                setEditModalOpen(true)
+              }}
+              removeImage={() => setLogoImage(undefined)}
+            />
+            <Form.Group
+            // style={{height: '45px'}}
+            >
+              <Form.Control
+                style={{display: 'none'}}
+                name="profileImg"
+                value={logoImage?.id || ''}
+              />
+            </Form.Group>
+          </Panel>
 
-      <Drawer.Body>
-        <Panel bodyFill header={t('peerList.panels.image')}>
-          <ChooseEditImage
-            image={logoImage}
-            header={''}
-            top={0}
-            left={20}
-            disabled={isLoading}
-            openChooseModalOpen={() => {
-              setIsLogoChange(true)
-              setChooseModalOpen(true)
-            }}
-            openEditModalOpen={() => {
-              setIsLogoChange(true)
-              setEditModalOpen(true)
-            }}
-            removeImage={() => setLogoImage(undefined)}
-          />
-        </Panel>
-        <Panel header={t('peerList.panels.information')}>
-          <Form fluid={true}>
+          <Panel header={t('peerList.panels.information')}>
             <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.name')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
             </Form.Group>
             <Form.Group>
@@ -183,10 +220,15 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}>
               <Form.Group>
                 <Form.ControlLabel>{t('peerList.panels.text')}</Form.ControlLabel>
-                <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+                <Form.Control
+                  name="callToActionText"
+                  value={callToActionText}
+                  onChange={setCallToActionText}
+                  accepter={RichTextBlock}
+                />
               </Form.Group>
               <Form.Group>
-                <FormControlUrl
+                <Form.Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
                   value={callToActionTextURL}
@@ -195,7 +237,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               </Form.Group>
             </div>
             <br />
-            <Form.ControlLabel>{t('peerList.panels.callToActionImage')}</Form.ControlLabel>
+            <Form.ControlLabel>{t('peerList.panels.callToActionImage') + '*'}</Form.ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -204,7 +246,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 marginTop: '4px'
               }}>
               <Form.Group>
-                <Form.ControlLabel>{t('peerList.panels.image')}</Form.ControlLabel>
+                <Form.ControlLabel>{t('peerList.panels.image') + '*'}</Form.ControlLabel>
                 <ChooseEditImage
                   image={callToActionImage}
                   header={''}
@@ -221,9 +263,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   }}
                   removeImage={() => setCallToActionImage(undefined)}
                 />
+                <Form.Control
+                  name="callToActionImage"
+                  value={callToActionImage?.filename}
+                  style={{display: 'none'}}
+                />
               </Form.Group>
               <Form.Group>
-                <FormControlUrl
+                <Form.Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
                   value={callToActionImageURL}
@@ -234,28 +281,31 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 </Message>
               </Form.Group>
             </div>
-          </Form>
-        </Panel>
-      </Drawer.Body>
+          </Panel>
+        </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
-        <ImageSelectPanel
-          onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
-            setChooseModalOpen(false)
-            isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
-          }}
-        />
-      </Drawer>
-
-      <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-        {(logoImage || callToActionImage) && (
-          <ImagedEditPanel
-            id={isLogoChange ? logoImage?.id : callToActionImage?.id}
-            onClose={() => setEditModalOpen(false)}
+        <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+          <ImageSelectPanel
+            onClose={() => setChooseModalOpen(false)}
+            onSelect={value => {
+              setChooseModalOpen(false)
+              isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
+              setTimeout(() => {
+                form.current?.check?.()
+              }, 500)
+            }}
           />
-        )}
-      </Drawer>
+        </Drawer>
+
+        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+          {(logoImage || callToActionImage) && (
+            <ImagedEditPanel
+              id={isLogoChange ? logoImage?.id : callToActionImage?.id}
+              onClose={() => setEditModalOpen(false)}
+            />
+          )}
+        </Drawer>
+      </Form>
     </>
   )
 }

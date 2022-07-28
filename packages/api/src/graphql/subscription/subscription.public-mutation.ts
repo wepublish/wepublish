@@ -6,7 +6,12 @@ export const updatePublicSubscription = async (
   id: string,
   input: Pick<
     Prisma.SubscriptionUncheckedUpdateInput,
-    'memberPlanID' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'paymentMethodID'
+    | 'memberPlanID'
+    | 'paymentPeriodicity'
+    | 'monthlyAmount'
+    | 'autoRenew'
+    | 'paymentMethodID'
+    | 'deactivation'
   >,
   authenticateUser: Context['authenticateUser'],
   memberContext: Context['memberContext'],
@@ -59,6 +64,11 @@ export const updatePublicSubscription = async (
   })
 
   if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+  // cancel open invoices if subscription is deactivated
+  if (input.deactivation !== null) {
+    await memberContext.cancelInvoicesForSubscription(id)
+  }
 
   return await memberContext.handleSubscriptionChange({
     subscription: updateSubscription

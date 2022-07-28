@@ -8,6 +8,7 @@ import {URL} from 'url'
 import {AlgebraicCaptchaChallenge} from '../lib'
 import {
   Author,
+  CommentItemType,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,

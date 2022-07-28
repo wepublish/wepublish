@@ -10,6 +10,7 @@ import {
 } from '../../error'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
 import {CommentState, PrismaClient, Prisma, CommentAuthorType, Comment} from '@prisma/client'
+import {SettingName} from '../../db/setting'
 
 export const addPublicComment = async (
   input: {text: string; challenge: {challengeID: string; challengeSolution: number}} & Omit<
@@ -18,6 +19,7 @@ export const addPublicComment = async (
   >,
   optionalAuthenticateUser: Context['optionalAuthenticateUser'],
   challenge: Context['challenge'],
+  settingsClient: PrismaClient['setting'],
   commentClient: PrismaClient['comment']
 ) => {
   const user = optionalAuthenticateUser()
@@ -31,7 +33,16 @@ export const addPublicComment = async (
   // Challenge
   if (!user) {
     authorType = CommentAuthorType.guestUser
-    if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true') throw new AnonymousCommentsDisabledError()
+
+    const guestCanCommentSetting = await settingsClient.findUnique({
+      where: {name: SettingName.ALLOW_GUEST_COMMENTING}
+    })
+    const guestCanComment =
+      guestCanCommentSetting?.value ?? process.env.ENABLE_ANONYMOUS_COMMENTS === 'true'
+
+    if (!guestCanComment) {
+      throw new AnonymousCommentsDisabledError()
+    }
 
     if (!input.guestUsername) throw new AnonymousCommentError()
     if (!input.challenge) throw new ChallengeMissingCommentError()

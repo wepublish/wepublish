@@ -2,6 +2,7 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {hashPassword, unselectPassword} from '../../db/user'
 import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
+import {Validator} from '../../validator'
 
 export const updatePaymentProviderCustomers = async (
   paymentProviderCustomers: Prisma.UserUncheckedUpdateInput['paymentProviderCustomers'],
@@ -33,7 +34,10 @@ export const updatePublicUser = async (
 ) => {
   const {user} = authenticateUser()
 
+  input.email = input.email ? (input.email as string).toLowerCase() : input.email
   const {name, email, firstName, preferredName, address} = input
+
+  await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({

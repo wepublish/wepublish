@@ -221,7 +221,6 @@ export interface TeaserGridFlexBlock {
 }
 
 export type ArticleBlock =
-  | EmbedBlock
   | RichTextBlock
   | ImageBlock
   | ImageGalleryBlock
@@ -229,6 +228,7 @@ export type ArticleBlock =
   | QuoteBlock
   | ListicleBlock
   | LinkPageBreakBlock
+  | EmbedBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

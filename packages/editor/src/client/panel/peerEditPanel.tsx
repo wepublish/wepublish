@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {toaster, Message, Button, Drawer, Form, Panel} from 'rsuite'
+import {toaster, Message, Button, Drawer, Form, Panel, Schema} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -49,8 +49,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
   const {refetch: fetchRemote} = useRemotePeerProfileQuery({skip: true})
 
-  const isDisabled = isLoading || isCreating || isUpdating || !profile || !name
-
+  const isDisabled = isLoading || isCreating || isUpdating
   const {t} = useTranslation()
 
   async function handleFetch() {
@@ -124,128 +123,143 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
     onSave?.()
   }
 
+  // Schema used for form validation
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+    url: StringType()
+      .isRequired(t('errorMessages.noUrlErrorMessage'))
+      .isURL(t('errorMessages.invalidUrlErrorMessage')),
+    token: StringType().isRequired(t('errorMessages.noTokenErrorMessage'))
+  })
+
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
-        </Drawer.Title>
+      <Form
+        fluid
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        model={validationModel}
+        formValue={{name: name, url: urlString, token: token}}
+        style={{height: '100%'}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('peerList.panels.save') : t('peerList.panels.create')}
-          </Button>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('peerList.panels.close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          <Drawer.Actions>
+            <Button
+              type="submit"
+              appearance="primary"
+              data-testid="saveButton"
+              disabled={isDisabled}>
+              {id ? t('peerList.panels.save') : t('peerList.panels.create')}
+            </Button>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('peerList.panels.close')}
+            </Button>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.name')}</Form.ControlLabel>
+        <Drawer.Body>
+          <Panel>
+            <Form.Group controlId="name">
+              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={name}
-                name={t('peerList.panels.name')}
+                name="name"
                 onChange={(value: string) => {
                   setName(value)
                   setSlug(slugify(value))
                 }}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.URL')}</Form.ControlLabel>
+            <Form.Group controlId="url">
+              <Form.ControlLabel>{t('peerList.panels.URL') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={urlString}
-                name={t('peerList.panels.URL')}
+                name="url"
                 onChange={(value: string) => {
                   setURLString(value)
                 }}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.token')}</Form.ControlLabel>
+            <Form.Group controlId="token">
+              <Form.ControlLabel>{t('peerList.panels.token') + '*'}</Form.ControlLabel>
               <Form.Control
                 value={token}
-                name={t('peerList.panels.token')}
+                name="token"
                 placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
                 onChange={(value: string) => {
                   setToken(value)
                 }}
               />
             </Form.Group>
-            <Button
-              className="fetchButton"
-              appearance={'primary'}
-              disabled={!urlString || !token}
-              onClick={() => handleFetch()}>
+            <Button className="fetchButton" appearance="primary" onClick={() => handleFetch()}>
               {t('peerList.panels.getRemote')}
             </Button>
-          </Form>
-        </Panel>
-        {profile && (
-          <Panel header={t('peerList.panels.information')}>
-            <ChooseEditImage disabled image={profile?.logo} />
-            <DescriptionList>
-              <DescriptionListItem label={t('peerList.panels.name')}>
-                {profile?.name}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <p>{profile?.themeColor}</p>
-                  <div
-                    style={{
-                      backgroundColor: profile?.themeColor,
-                      width: '30px',
-                      height: '20px',
-                      padding: '5px',
-                      marginLeft: '5px',
-                      border: '1px solid #575757'
-                    }}
-                  />
-                </div>
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <p>{profile?.themeFontColor}</p>
-                  <div
-                    style={{
-                      backgroundColor: profile?.themeFontColor,
-                      width: '30px',
-                      height: '20px',
-                      padding: '5px',
-                      marginLeft: '5px',
-                      border: '1px solid #575757'
-                    }}
-                  />
-                </div>
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.callToActionText')}>
-                {!!profile?.callToActionText && (
-                  <RichTextBlock
-                    disabled
-                    displayOnly
-                    // TODO: remove this
-                    onChange={console.log}
-                    value={profile?.callToActionText}
-                  />
-                )}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
-                {profile?.callToActionURL}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
-                <img src={profile?.callToActionImage?.thumbURL || undefined} />
-              </DescriptionListItem>
-              <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
-                {profile?.callToActionImageURL}
-              </DescriptionListItem>
-            </DescriptionList>
           </Panel>
-        )}
-      </Drawer.Body>
+          {profile && (
+            <Panel header={t('peerList.panels.information')}>
+              <ChooseEditImage disabled image={profile?.logo} />
+              <DescriptionList>
+                <DescriptionListItem label={t('peerList.panels.name')}>
+                  {profile?.name}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.themeColor')}>
+                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <p>{profile?.themeColor}</p>
+                    <div
+                      style={{
+                        backgroundColor: profile?.themeColor,
+                        width: '30px',
+                        height: '20px',
+                        padding: '5px',
+                        marginLeft: '5px',
+                        border: '1px solid #575757'
+                      }}
+                    />
+                  </div>
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
+                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <p>{profile?.themeFontColor}</p>
+                    <div
+                      style={{
+                        backgroundColor: profile?.themeFontColor,
+                        width: '30px',
+                        height: '20px',
+                        padding: '5px',
+                        marginLeft: '5px',
+                        border: '1px solid #575757'
+                      }}
+                    />
+                  </div>
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionText')}>
+                  {!!profile?.callToActionText && (
+                    <RichTextBlock
+                      disabled
+                      displayOnly
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={profile?.callToActionText}
+                    />
+                  )}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
+                  {profile?.callToActionURL}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
+                  <img src={profile?.callToActionImage?.thumbURL || undefined} />
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
+                  {profile?.callToActionImageURL}
+                </DescriptionListItem>
+              </DescriptionList>
+            </Panel>
+          )}
+        </Drawer.Body>
+      </Form>
     </>
   )
 }

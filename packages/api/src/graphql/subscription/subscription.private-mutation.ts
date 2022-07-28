@@ -59,6 +59,11 @@ export const updateAdminSubscription = async (
   const updatedSubscription = await subscriptionClient.update({where: {id}, data: input})
   if (!updatedSubscription) throw new NotFound('subscription', id)
 
+  // cancel open invoices if subscription is deactivated
+  if (input.deactivation !== null) {
+    await memberContext.cancelInvoicesForSubscription(id)
+  }
+
   return await memberContext.handleSubscriptionChange({
     subscription: updatedSubscription
   })

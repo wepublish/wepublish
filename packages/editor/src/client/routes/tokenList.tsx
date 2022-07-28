@@ -103,7 +103,7 @@ export function TokenList() {
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
-        <List bordered={true} style={{marginTop: '40px'}}>
+        <List bordered style={{marginTop: '40px'}}>
           {tokenListData?.tokens.map((token, index) => (
             <List.Item key={token.name} index={index}>
               <FlexboxGrid>

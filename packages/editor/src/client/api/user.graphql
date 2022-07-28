@@ -1,3 +1,6 @@
+#import './invoice.graphql'
+#import './memberPlan.graphql'
+
 fragment FullUser on User {
   id
   createdAt
@@ -22,9 +25,45 @@ fragment FullUser on User {
   }
   email
   emailVerifiedAt
-
   roles {
     ...FullUserRole
+  }
+  subscriptions {
+    ...UserSubscription
+  }
+}
+
+fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
   }
 }
 

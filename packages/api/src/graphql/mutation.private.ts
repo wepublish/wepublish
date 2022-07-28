@@ -1,4 +1,4 @@
-import {CommentState} from '@prisma/client'
+import {CommentState, Prisma} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -10,9 +10,11 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {unselectPassword} from '../db/user'
+import {SettingName, SettingRestriction, UpdateSettingArgs} from '../db/setting'
 import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
+import {checkSettingRestrictions} from '../utility'
+import {Validator} from '../validator'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
   createArticle,
@@ -69,7 +71,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {authorise, CanSendJWTLogin} from './permissions'
+import {authorise, CanSendJWTLogin, CanUpdateSettings} from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -79,6 +81,7 @@ import {
 } from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
+import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
   createSubscription,
@@ -290,15 +293,28 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
+
         const user = await prisma.user.findUnique({
-          where: {email},
-          select: unselectPassword
+          where: {email}
         })
         if (!user) throw new NotFound('User', email)
 
+        const jwtExpiresSetting = await prisma.setting.findUnique({
+          where: {name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN}
+        })
+        const jwtExpires =
+          (jwtExpiresSetting?.value as number) ??
+          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+
+        if (!jwtExpires) {
+          throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+        }
+
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
 
         await mailContext.sendMail({
@@ -319,19 +335,34 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {email}, {authenticate, prisma, generateJWT, mailContext, urlAdapter}) {
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, prisma, generateJWT, mailContext, urlAdapter}
+      ) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
-        const user = await prisma.user.findUnique({
-          where: {email: email},
-          select: unselectPassword
+        const jwtExpiresSetting = await prisma.setting.findUnique({
+          where: {name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN}
         })
+        const jwtExpires =
+          (jwtExpiresSetting?.value as number) ??
+          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+
+        if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+
+        const user = await prisma.user.findUnique({
+          where: {email}
+        })
+
         if (!user) throw new NotFound('User', email)
 
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: jwtExpires
         })
 
         await mailContext.sendMail({
@@ -828,8 +859,47 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           authenticate,
           comment
         )
+    },
+
+    // Settings
+    // ==========
+
+    updateSettingList: {
+      type: GraphQLList(GraphQLSetting),
+      args: {
+        value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
+      },
+      async resolve(root, {value}, {authenticate, prisma}) {
+        const {roles} = authenticate()
+        authorise(CanUpdateSettings, roles)
+
+        for (const {name, value: newVal} of value) {
+          const fullSetting = await prisma.setting.findUnique({
+            where: {name}
+          })
+
+          if (!fullSetting) {
+            throw new NotFound('setting', name)
+          }
+
+          const currentVal = fullSetting.value
+          const restriction = fullSetting.settingRestriction
+          checkSettingRestrictions(newVal, currentVal, restriction as SettingRestriction)
+        }
+
+        return prisma.$transaction(
+          (value as UpdateSettingArgs[]).map(({name, value: val}) =>
+            prisma.setting.update({
+              where: {
+                name
+              },
+              data: {
+                value: val as Prisma.InputJsonValue
+              }
+            })
+          )
+        )
+      }
     }
-    // Image
-    // =====
   }
 })

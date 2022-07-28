@@ -166,7 +166,7 @@ function previewForTeaser(teaser: Teaser) {
   return (
     <Panel>
       <Panel
-        bordered={true}
+        bordered
         style={{
           height: '200px',
           backgroundSize: 'cover',

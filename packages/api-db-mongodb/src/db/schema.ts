@@ -1,11 +1,4 @@
 import {
-  ArticleBlock,
-  NavigationLink,
-  PageBlock,
-  RichTextNode,
-  CommentRevision
-} from '@wepublish/api'
-import {
   AvailablePaymentMethod,
   CommentAuthorType,
   CommentItemType,
@@ -23,6 +16,13 @@ import {
   UserAddress,
   UserOAuth2Account
 } from '@prisma/client'
+import {
+  ArticleBlock,
+  CommentRevision,
+  NavigationLink,
+  PageBlock,
+  RichTextNode
+} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -53,7 +53,9 @@ export enum CollectionName {
   Invoices = 'invoices',
   Payments = 'payments',
 
-  MailLog = 'mail.log'
+  MailLog = 'mail.log',
+
+  Settings = 'settings'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -84,7 +86,7 @@ export interface DBPeer {
 
   name: string
   slug: string
-  isDisabled: boolean
+  isDisabled?: boolean
   hostURL: string
   token: string
 }
