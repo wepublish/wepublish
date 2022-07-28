@@ -52,7 +52,7 @@ export const getAdminPeerArticles = async (
             cursor: cursors ? cursors[peer.id] : undefined,
             // needed for versions before prisma
             after: cursors ? base64Encode(cursors[peer.id]) : undefined,
-            first: 50
+            take: 50
           },
           transforms: [
             new ExtractField({

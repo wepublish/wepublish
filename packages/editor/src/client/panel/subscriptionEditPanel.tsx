@@ -328,7 +328,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     return (
       <FlexboxGrid>
         <FlexboxGrid.Item style={{paddingRight: '10px'}}>
-          <Button color="green" appearance="primary" onClick={() => setIsInvoiceListOpen(true)}>
+          <Button
+            color="green"
+            appearance="primary"
+            onClick={() => setIsInvoiceListOpen(true)}
+            style={{marginTop: '10px'}}>
             <FileIcon style={{marginRight: '10px'}} />
             {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
           </Button>
@@ -496,6 +500,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
                   setPaymentMethod(paymentMethods.find(pm => pm.id === value))
                 }
                 accepter={SelectPicker}
+                placement="auto"
               />
             </Form.Group>
           </Panel>

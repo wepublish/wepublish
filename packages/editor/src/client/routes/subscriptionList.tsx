@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
 import {
   FullSubscriptionFragment,
@@ -43,6 +43,26 @@ function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | nu
     default:
       return null
   }
+}
+
+export const newSubscriptionButton = ({
+  isLoading,
+  t
+}: {
+  isLoading?: boolean
+  t: TFunction<'translation'>
+}) => {
+  return (
+    <ButtonLink
+      style={{marginLeft: 5}}
+      appearance="primary"
+      color="green"
+      disabled={isLoading}
+      route={SubscriptionCreateRoute.create({})}>
+      <PlusIcon style={{marginRight: '5px'}} />
+      {t('subscriptionList.overview.newSubscription')}
+    </ButtonLink>
+  )
 }
 
 export function SubscriptionList() {
@@ -143,14 +163,7 @@ export function SubscriptionList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
-          <ButtonLink
-            style={{marginLeft: 5}}
-            appearance="primary"
-            disabled={isLoading}
-            route={SubscriptionCreateRoute.create({})}>
-            <PlusIcon style={{marginRight: '5px'}} />
-            {t('subscriptionList.overview.newSubscription')}
-          </ButtonLink>
+          {newSubscriptionButton({isLoading, t})}
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
@@ -171,7 +184,7 @@ export function SubscriptionList() {
         }}>
         <Table
           minHeight={600}
-          autoHeight={true}
+          autoHeight
           style={{flex: 1, cursor: 'pointer'}}
           loading={isLoading}
           data={subscriptions}
