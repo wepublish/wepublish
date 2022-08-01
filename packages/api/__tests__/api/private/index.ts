@@ -18,8 +18,17 @@ export type Scalars = {
   Color: string
   RichText: Node[]
   Slug: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any
+  Value: any
   /** The `Upload` scalar type represents a file upload. */
   Upload: File
+}
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals'
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>
+  boolChoice?: Maybe<Scalars['Boolean']>
 }
 
 export type Article = {
@@ -232,6 +241,7 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
@@ -255,6 +265,7 @@ export type BlockInput = {
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>
   polisConversation?: Maybe<PolisConversationBlockInput>
+  tikTokVideo?: Maybe<TikTokVideoBlockInput>
   bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
@@ -265,6 +276,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
+  guestUsername?: Maybe<Scalars['String']>
   user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
@@ -550,9 +562,9 @@ export type Invoice = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   mail: Scalars['String']
-  user?: Maybe<User>
   description?: Maybe<Scalars['String']>
   paidAt?: Maybe<Scalars['DateTime']>
+  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>
   items: Array<InvoiceItem>
   total: Scalars['Int']
 }
@@ -566,13 +578,18 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   mail?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['Date']>
+  canceledAt?: Maybe<Scalars['Date']>
+  userID?: Maybe<Scalars['ID']>
+  subscriptionID?: Maybe<Scalars['ID']>
 }
 
 export type InvoiceInput = {
   mail: Scalars['String']
-  userID?: Maybe<Scalars['ID']>
   description?: Maybe<Scalars['String']>
   paidAt?: Maybe<Scalars['DateTime']>
+  subscriptionID?: Maybe<Scalars['ID']>
+  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>
   items: Array<InvoiceItemInput>
 }
 
@@ -592,12 +609,21 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>
   quantity: Scalars['Int']
   amount: Scalars['Int']
+  total: Scalars['Int']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
 }
 
 export enum InvoiceSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
   PaidAt = 'PAID_AT'
+}
+
+export type JwtToken = {
+  __typename?: 'JWTToken'
+  token: Scalars['String']
+  expiresAt: Scalars['String']
 }
 
 export type LinkPageBreakBlock = {
@@ -658,6 +684,7 @@ export type MemberPlan = {
   slug: Scalars['String']
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
+  tags?: Maybe<Array<Scalars['String']>>
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
@@ -673,6 +700,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>
   active?: Maybe<Scalars['Boolean']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type MemberPlanInput = {
@@ -680,6 +708,7 @@ export type MemberPlanInput = {
   slug: Scalars['String']
   imageID?: Maybe<Scalars['ID']>
   description?: Maybe<Scalars['RichText']>
+  tags?: Maybe<Array<Scalars['String']>>
   active: Scalars['Boolean']
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
@@ -708,10 +737,11 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
-  updateUserSubscription?: Maybe<UserSubscription>
   resetUserPassword?: Maybe<User>
   deleteUser?: Maybe<Scalars['String']>
-  deleteUserSubscription?: Maybe<Scalars['String']>
+  createSubscription?: Maybe<Subscription>
+  updateSubscription?: Maybe<Subscription>
+  deleteSubscription?: Maybe<Scalars['String']>
   createUserRole?: Maybe<UserRole>
   updateUserRole?: Maybe<UserRole>
   deleteUserRole?: Maybe<Scalars['String']>
@@ -749,6 +779,7 @@ export type Mutation = {
   approveComment: Comment
   rejectComment: Comment
   requestChangesOnComment: Comment
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -814,11 +845,6 @@ export type MutationUpdateUserArgs = {
   input: UserInput
 }
 
-export type MutationUpdateUserSubscriptionArgs = {
-  userID: Scalars['ID']
-  input: UserSubscriptionInput
-}
-
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID']
   password: Scalars['String']
@@ -829,8 +855,17 @@ export type MutationDeleteUserArgs = {
   id: Scalars['ID']
 }
 
-export type MutationDeleteUserSubscriptionArgs = {
-  userID: Scalars['ID']
+export type MutationCreateSubscriptionArgs = {
+  input: SubscriptionInput
+}
+
+export type MutationUpdateSubscriptionArgs = {
+  id: Scalars['ID']
+  input: SubscriptionInput
+}
+
+export type MutationDeleteSubscriptionArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationCreateUserRoleArgs = {
@@ -996,6 +1031,10 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID']
   rejectionReason: CommentRejectionReason
+}
+
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>
 }
 
 export type Navigation = {
@@ -1227,6 +1266,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   slug: Scalars['String']
+  isDisabled?: Maybe<Scalars['Boolean']>
   hostURL: Scalars['String']
   profile?: Maybe<PeerProfile>
 }
@@ -1330,6 +1370,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query'
   remotePeerProfile?: Maybe<PeerProfile>
+  createJWTForUser?: Maybe<JwtToken>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1338,6 +1379,8 @@ export type Query = {
   authProviders: Array<AuthProvider>
   user?: Maybe<User>
   users: UserConnection
+  subscription?: Maybe<Subscription>
+  subscriptions: SubscriptionConnection
   subscriptionsAsCsv?: Maybe<Scalars['String']>
   userRole?: Maybe<UserRole>
   userRoles: UserRoleConnection
@@ -1354,7 +1397,6 @@ export type Query = {
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
   peerArticles: PeerArticleConnection
-  filterByPeerPeerArticles: PeerArticleConnection
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
@@ -1368,11 +1410,18 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+  setting?: Maybe<Setting>
+  settings: Array<Setting>
 }
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String']
   token: Scalars['String']
+}
+
+export type QueryCreateJwtForUserArgs = {
+  userId: Scalars['String']
+  expiresInMinutes: Scalars['Int']
 }
 
 export type QueryPeerArgs = {
@@ -1396,6 +1445,25 @@ export type QueryUsersArgs = {
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
   order?: Maybe<SortOrder>
+}
+
+export type QuerySubscriptionArgs = {
+  id: Scalars['ID']
+}
+
+export type QuerySubscriptionsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<SubscriptionFilter>
+  sort?: Maybe<SubscriptionSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: Maybe<SubscriptionFilter>
 }
 
 export type QueryUserRoleArgs = {
@@ -1485,17 +1553,9 @@ export type QueryPeerArticlesArgs = {
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
+  peerFilter?: Maybe<Scalars['String']>
   last?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
-}
-
-export type QueryFilterByPeerPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  filter?: Maybe<ArticleFilter>
-  sort?: Maybe<ArticleSort>
-  order?: Maybe<SortOrder>
-  peer?: Maybe<Scalars['String']>
 }
 
 export type QueryArticlePreviewLinkArgs = {
@@ -1570,6 +1630,10 @@ export type QueryPaymentsArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QuerySettingArgs = {
+  name?: Maybe<Scalars['String']>
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
@@ -1607,6 +1671,31 @@ export type SessionWithToken = {
   expiresAt: Scalars['DateTime']
 }
 
+export type Setting = {
+  __typename?: 'Setting'
+  id: Scalars['ID']
+  name: SettingName
+  value: Scalars['Value']
+  settingRestriction?: Maybe<SettingRestriction>
+}
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction'
+  maxValue?: Maybe<Scalars['Int']>
+  minValue?: Maybe<Scalars['Int']>
+  inputLength?: Maybe<Scalars['Int']>
+  allowedValues?: Maybe<AllowedSettingVals>
+}
+
 export enum SortOrder {
   Ascending = 'ASCENDING',
   Descending = 'DESCENDING'
@@ -1621,10 +1710,92 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String']
 }
 
+export type Subscription = {
+  __typename?: 'Subscription'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  user?: Maybe<User>
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  properties: Array<Properties>
+  deactivation?: Maybe<SubscriptionDeactivation>
+}
+
+export type SubscriptionConnection = {
+  __typename?: 'SubscriptionConnection'
+  nodes: Array<Subscription>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type SubscriptionDeactivation = {
+  __typename?: 'SubscriptionDeactivation'
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
+}
+
+export type SubscriptionDeactivationInput = {
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
+}
+
 export enum SubscriptionDeactivationReason {
   None = 'NONE',
   UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
   InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
+export type SubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>
+  paidUntil?: Maybe<DateFilter>
+  startsAtFrom?: Maybe<DateFilter>
+  startsAtTo?: Maybe<DateFilter>
+  paidUntilFrom?: Maybe<DateFilter>
+  paidUntilTo?: Maybe<DateFilter>
+  deactivationDateFrom?: Maybe<DateFilter>
+  deactivationDateTo?: Maybe<DateFilter>
+  deactivationReason?: Maybe<SubscriptionDeactivationReason>
+  autoRenew?: Maybe<Scalars['Boolean']>
+  paymentMethodID?: Maybe<Scalars['String']>
+  memberPlanID?: Maybe<Scalars['String']>
+  paymentPeriodicity?: Maybe<PaymentPeriodicity>
+  userHasAddress?: Maybe<Scalars['Boolean']>
+  userID?: Maybe<Scalars['ID']>
+}
+
+export type SubscriptionInput = {
+  userID: Scalars['ID']
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethodID: Scalars['String']
+  properties: Array<PropertiesInput>
+  deactivation?: Maybe<SubscriptionDeactivationInput>
+}
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod'
+  id: Scalars['ID']
+  invoiceID: Scalars['ID']
+  amount: Scalars['Int']
+  createdAt: Scalars['DateTime']
+  startsAt: Scalars['DateTime']
+  endsAt: Scalars['DateTime']
+  paymentPeriodicity: PaymentPeriodicity
+}
+
+export enum SubscriptionSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
@@ -1659,6 +1830,17 @@ export enum TeaserStyle {
   Default = 'DEFAULT',
   Light = 'LIGHT',
   Text = 'TEXT'
+}
+
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock'
+  videoID: Scalars['String']
+  userID: Scalars['String']
+}
+
+export type TikTokVideoBlockInput = {
+  videoID: Scalars['String']
+  userID: Scalars['String']
 }
 
 export type TitleBlock = {
@@ -1713,10 +1895,16 @@ export type UpdateImageInput = {
 }
 
 export type UpdatePeerInput = {
-  name: Scalars['String']
-  slug: Scalars['String']
-  hostURL: Scalars['String']
+  name?: Maybe<Scalars['String']>
+  slug?: Maybe<Scalars['String']>
+  hostURL?: Maybe<Scalars['String']>
+  isDisabled?: Maybe<Scalars['Boolean']>
   token?: Maybe<Scalars['String']>
+}
+
+export type UpdateSettingArgs = {
+  name: SettingName
+  value: Scalars['Value']
 }
 
 export type UploadImageInput = {
@@ -1737,18 +1925,18 @@ export type User = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
-  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
   lastLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
   roles: Array<UserRole>
-  subscription?: Maybe<UserSubscription>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
+  subscriptions: Array<UserSubscription>
 }
 
 export type UserAddress = {
@@ -1780,14 +1968,13 @@ export type UserConnection = {
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
-  subscription?: Maybe<UserSubscriptionFilter>
 }
 
 export type UserInput = {
   name: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
   email: Scalars['String']
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
-  firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
   active: Scalars['Boolean']
@@ -1829,49 +2016,25 @@ export enum UserRoleSort {
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  Name = 'NAME',
+  FirstName = 'FIRST_NAME'
 }
 
 export type UserSubscription = {
   __typename?: 'UserSubscription'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  properties: Array<Properties>
+  deactivation?: Maybe<SubscriptionDeactivation>
+  periods: Array<SubscriptionPeriod>
   memberPlan: MemberPlan
-  paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
-  autoRenew: Scalars['Boolean']
-  startsAt: Scalars['DateTime']
-  paidUntil?: Maybe<Scalars['DateTime']>
-  paymentMethod: PaymentMethod
-  deactivation?: Maybe<UserSubscriptionDeactivation>
-}
-
-export type UserSubscriptionDeactivation = {
-  __typename?: 'UserSubscriptionDeactivation'
-  date: Scalars['DateTime']
-  reason: SubscriptionDeactivationReason
-}
-
-export type UserSubscriptionDeactivationInput = {
-  date: Scalars['DateTime']
-  reason: SubscriptionDeactivationReason
-}
-
-export type UserSubscriptionFilter = {
-  startsAt?: Maybe<DateFilter>
-  paidUntil?: Maybe<DateFilter>
-  deactivationDate?: Maybe<DateFilter>
-  deactivationReason?: Maybe<SubscriptionDeactivationReason>
-  autoRenew?: Maybe<Scalars['Boolean']>
-}
-
-export type UserSubscriptionInput = {
-  memberPlanID: Scalars['String']
-  paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
-  autoRenew: Scalars['Boolean']
-  startsAt: Scalars['DateTime']
-  paidUntil?: Maybe<Scalars['DateTime']>
-  paymentMethodID: Scalars['String']
-  deactivation?: Maybe<UserSubscriptionDeactivationInput>
+  invoices: Array<Invoice>
 }
 
 export type VimeoVideoBlock = {
@@ -2074,6 +2237,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -2236,6 +2400,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
+type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
 type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
@@ -2283,6 +2449,7 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -2457,6 +2624,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -2575,6 +2743,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({
                   __typename?: 'PolisConversationBlock'
                 } & FullBlock_PolisConversationBlock_Fragment)
+              | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -2602,7 +2771,10 @@ export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
     callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
   }
 
-export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
+export type PeerRefFragment = {__typename?: 'Peer'} & Pick<
+  Peer,
+  'id' | 'name' | 'isDisabled' | 'slug' | 'hostURL'
+>
 
 export type PeerWithProfileFragment = {__typename?: 'Peer'} & {
   profile?: Maybe<{__typename?: 'PeerProfile'} & FullPeerProfileFragment>
@@ -3012,6 +3184,7 @@ export const PeerRef = gql`
   fragment PeerRef on Peer {
     id
     name
+    isDisabled
     slug
     hostURL
   }

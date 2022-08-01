@@ -41,7 +41,7 @@ import {InvoiceListPanel} from './invoiceListPanel'
 import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -49,7 +49,7 @@ export interface SubscriptionEditPanelProps {
   onSave?(subscription: FullSubscriptionFragment): void
 }
 
-export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
+function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
   const {t} = useTranslation()
 
   const isAuthorized = authorise('CAN_CREATE_SUBSCRIPTION')
@@ -564,5 +564,8 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_SUBSCRIPTION', true)(SubscriptionEditPanel)
-// export {CheckedPermissionComponent as SubscriptionEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_SUBSCRIPTION',
+  true
+)(SubscriptionEditPanel)
+export {CheckedPermissionComponent as SubscriptionEditPanel}

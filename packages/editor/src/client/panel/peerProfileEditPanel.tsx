@@ -21,7 +21,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
 import {FormInstance} from 'rsuite/esm/Form'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -30,7 +30,7 @@ export interface ImageEditPanelProps {
   onSave?(): void
 }
 
-export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
+function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const isAuthorized = authorise('CAN_UPDATE_PEER_PROFILE')
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -295,7 +295,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={(value: any) => {
               setChooseModalOpen(false)
               isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
               setTimeout(() => {
@@ -317,5 +317,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PEER_PROFILE', true)(PeerInfoEditPanel)
-// export {CheckedPermissionComponent as PeerInfoEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PEER_PROFILE',
+  true
+)(PeerInfoEditPanel)
+export {CheckedPermissionComponent as PeerInfoEditPanel}

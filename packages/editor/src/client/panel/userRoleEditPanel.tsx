@@ -13,7 +13,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {authorise} from '../utility'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface UserRoleEditPanelProps {
   id?: string
@@ -22,7 +22,7 @@ export interface UserRoleEditPanelProps {
   onSave?(userRole: FullUserRoleFragment): void
 }
 
-export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
+function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
   const isAuthorized = authorise('CAN_CREATE_USER_ROLE')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -193,5 +193,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_USER_ROLE')(UserRoleEditPanel)
-// export {CheckedPermissionComponent as UserRoleEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_USER_ROLE')(
+  UserRoleEditPanel
+)
+export {CheckedPermissionComponent as UserRoleEditPanel}

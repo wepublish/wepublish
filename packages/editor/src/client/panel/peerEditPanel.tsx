@@ -17,7 +17,7 @@ import {slugify, getOperationNameFromDocument, authorise} from '../utility'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -27,7 +27,7 @@ export interface PeerEditPanelProps {
   onSave?(): void
 }
 
-export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
+function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const isAuthorized = authorise('CAN_CREATE_PEER')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -273,5 +273,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PEERS', true)(PeerEditPanel)
-// export {CheckedPermissionComponent as PeerEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PEERS',
+  true
+)(PeerEditPanel)
+export {CheckedPermissionComponent as PeerEditPanel}

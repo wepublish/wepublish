@@ -32,7 +32,7 @@ import ListIcon from '@rsuite/icons/legacy/List'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -73,12 +73,7 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({
-  value,
-  infoData,
-  onClose,
-  onChange
-}: ArticleMetadataPanelProps) {
+function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -585,6 +580,8 @@ export function ArticleMetadataPanel({
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent(
-//   "CAN_GET_ARTICLE", true)(ArticleMetadataPanel)
-// export {CheckedPermissionComponent as ArticleMetadataPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_ARTICLE',
+  true
+)(ArticleMetadataPanel)
+export {CheckedPermissionComponent as ArticleMetadataPanel}

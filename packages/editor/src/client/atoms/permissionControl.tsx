@@ -30,12 +30,14 @@ export function PermissionControl({
   )
 }
 
-export const createCheckedPermissionComponent = <P extends Record<string, unknown>>(
-  permission: string,
-  showMessage?: boolean
-) => (ControlledComponent: ComponentType<P>) => (props: P) => {
+export const createCheckedPermissionComponent = (permission: string, showMessage?: boolean) => <
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P extends object
+>(
+  ControlledComponent: ComponentType<P>
+) => (props: P) => {
   return (
-    <PermissionControl requiredPermission={permission} showMessage={showMessage ?? false}>
+    <PermissionControl requiredPermission={permission} showMessage={showMessage}>
       <ControlledComponent {...props} />
     </PermissionControl>
   )

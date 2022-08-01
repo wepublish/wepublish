@@ -149,6 +149,7 @@ export type Block =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | PolisConversationBlock
+  | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
   | LinkPageBreakBlock
@@ -157,17 +158,30 @@ export type Block =
   | TeaserGridBlock
   | TeaserGridFlexBlock
 
+export type Challenge = {
+  __typename?: 'Challenge'
+  challenge?: Maybe<Scalars['String']>
+  challengeID?: Maybe<Scalars['String']>
+  validUntil?: Maybe<Scalars['String']>
+}
+
+export type ChallengeInput = {
+  challengeID: Scalars['String']
+  challengeSolution: Scalars['String']
+}
+
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
   parentID?: Maybe<Scalars['ID']>
+  guestUsername?: Maybe<Scalars['String']>
   user?: Maybe<User>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
   children?: Maybe<Array<Maybe<Comment>>>
   text: Scalars['RichText']
-  state: Scalars['String']
+  state: CommentState
   rejectionReason?: Maybe<Scalars['String']>
   modifiedAt: Scalars['DateTime']
 }
@@ -180,6 +194,8 @@ export enum CommentAuthorType {
 
 export type CommentInput = {
   parentID?: Maybe<Scalars['ID']>
+  guestUsername?: Maybe<Scalars['String']>
+  challenge?: Maybe<ChallengeInput>
   itemID: Scalars['ID']
   itemType: CommentItemType
   text: Scalars['RichText']
@@ -188,6 +204,13 @@ export type CommentInput = {
 export enum CommentItemType {
   Article = 'Article',
   Page = 'Page'
+}
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export type CommentUpdateInput = {
@@ -310,7 +333,9 @@ export type Invoice = {
   mail: Scalars['String']
   description?: Maybe<Scalars['String']>
   paidAt?: Maybe<Scalars['DateTime']>
+  canceledAt?: Maybe<Scalars['DateTime']>
   items: Array<InvoiceItem>
+  subscriptionID: Scalars['ID']
   total: Scalars['Int']
 }
 
@@ -358,6 +383,7 @@ export type MemberPlan = {
   slug: Scalars['String']
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
+  tags?: Maybe<Array<Scalars['String']>>
   amountPerMonthMin: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
 }
@@ -372,6 +398,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>
   active?: Maybe<Scalars['Boolean']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export enum MemberPlanSort {
@@ -405,8 +432,12 @@ export type Mutation = {
    * CommentUpdateInput which contains the ID of the comment you want to update and the new text.
    */
   updateComment: Comment
+  /** This mutation allows to register a new member, */
+  registerMember: Registration
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
-  registerMemberAndReceivePayment: Payment
+  registerMemberAndReceivePayment: RegistrationAndPayment
+  /** Allows authenticated users to create additional subscriptions */
+  createSubscription: Payment
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
@@ -422,9 +453,9 @@ export type Mutation = {
    * type UserSubscription and throws an error if the user doesn't already have a
    * subscription. Updating user subscriptions will set deactivation to null
    */
-  updateUserSubscription?: Maybe<UserSubscription>
-  /** This mutation allows to cancel the user's subscription. The deactivation date will be either paidUntil or now */
-  cancelUserSubscription?: Maybe<UserSubscription>
+  updateUserSubscription?: Maybe<Subscription>
+  /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
+  cancelUserSubscription?: Maybe<Subscription>
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -454,11 +485,23 @@ export type MutationUpdateCommentArgs = {
   input: CommentUpdateInput
 }
 
+export type MutationRegisterMemberArgs = {
+  name: Scalars['String']
+  firstName?: Maybe<Scalars['String']>
+  preferredName?: Maybe<Scalars['String']>
+  email: Scalars['String']
+  address?: Maybe<UserAddressInput>
+  password?: Maybe<Scalars['String']>
+  challengeAnswer: ChallengeInput
+}
+
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
   firstName?: Maybe<Scalars['String']>
   preferredName?: Maybe<Scalars['String']>
   email: Scalars['String']
+  address?: Maybe<UserAddressInput>
+  password?: Maybe<Scalars['String']>
   memberPlanID?: Maybe<Scalars['ID']>
   memberPlanSlug?: Maybe<Scalars['Slug']>
   autoRenew: Scalars['Boolean']
@@ -466,6 +509,21 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   monthlyAmount: Scalars['Int']
   paymentMethodID?: Maybe<Scalars['ID']>
   paymentMethodSlug?: Maybe<Scalars['Slug']>
+  subscriptionProperties?: Maybe<Array<PublicPropertiesInput>>
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
+  challengeAnswer: ChallengeInput
+}
+
+export type MutationCreateSubscriptionArgs = {
+  memberPlanID?: Maybe<Scalars['ID']>
+  memberPlanSlug?: Maybe<Scalars['Slug']>
+  autoRenew: Scalars['Boolean']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  paymentMethodID?: Maybe<Scalars['ID']>
+  paymentMethodSlug?: Maybe<Scalars['Slug']>
+  subscriptionProperties?: Maybe<Array<PublicPropertiesInput>>
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
@@ -484,7 +542,12 @@ export type MutationUpdatePasswordArgs = {
 }
 
 export type MutationUpdateUserSubscriptionArgs = {
-  input: UserSubscriptionInput
+  id: Scalars['ID']
+  input: SubscriptionInput
+}
+
+export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationUpdatePaymentProviderCustomersArgs = {
@@ -621,6 +684,7 @@ export type Peer = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   slug: Scalars['String']
+  isDisabled?: Maybe<Scalars['Boolean']>
   hostURL: Scalars['String']
   profile?: Maybe<PeerProfile>
 }
@@ -668,6 +732,11 @@ export type PublicProperties = {
   value: Scalars['String']
 }
 
+export type PublicPropertiesInput = {
+  key: Scalars['String']
+  value: Scalars['String']
+}
+
 export type PublishedPageFilter = {
   tags?: Maybe<Array<Scalars['String']>>
 }
@@ -703,14 +772,18 @@ export type Query = {
   authProviders: Array<AuthProvider>
   /** This query returns the user. */
   me?: Maybe<User>
-  /** This query returns the invoices. */
+  /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>
+  /** This query returns the subscriptions of the authenticated user. */
+  subscriptions: Array<Subscription>
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>
   /** This query returns the member plans. */
   memberPlans: MemberPlanConnection
   /** This mutation will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>
+  /** This query generates a challenge which can be used to access protected endpoints. */
+  challenge: Challenge
 }
 
 export type QueryPeerArgs = {
@@ -805,6 +878,19 @@ export type QuoteBlock = {
   author?: Maybe<Scalars['String']>
 }
 
+export type Registration = {
+  __typename?: 'Registration'
+  user: User
+  session: UserSession
+}
+
+export type RegistrationAndPayment = {
+  __typename?: 'RegistrationAndPayment'
+  payment: Payment
+  user: User
+  session: UserSession
+}
+
 export type RichTextBlock = {
   __typename?: 'RichTextBlock'
   richText: Scalars['RichText']
@@ -828,10 +914,39 @@ export type SoundCloudTrackBlock = {
   trackID: Scalars['String']
 }
 
+export type Subscription = {
+  __typename?: 'Subscription'
+  id: Scalars['ID']
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  properties: Array<PublicProperties>
+  deactivation?: Maybe<SubscriptionDeactivation>
+}
+
+export type SubscriptionDeactivation = {
+  __typename?: 'SubscriptionDeactivation'
+  date: Scalars['DateTime']
+  reason: SubscriptionDeactivationReason
+}
+
 export enum SubscriptionDeactivationReason {
   None = 'NONE',
   UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
   InvoiceNotPaid = 'INVOICE_NOT_PAID'
+}
+
+export type SubscriptionInput = {
+  id: Scalars['ID']
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  paymentMethodID: Scalars['String']
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
@@ -853,6 +968,12 @@ export enum TeaserStyle {
   Text = 'TEXT'
 }
 
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock'
+  videoID: Scalars['String']
+  userID: Scalars['String']
+}
+
 export type TitleBlock = {
   __typename?: 'TitleBlock'
   title?: Maybe<Scalars['String']>
@@ -869,11 +990,10 @@ export type User = {
   __typename?: 'User'
   id: Scalars['String']
   name: Scalars['String']
-  email: Scalars['String']
   firstName?: Maybe<Scalars['String']>
+  email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
-  subscription?: Maybe<UserSubscription>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
 }
@@ -899,36 +1019,17 @@ export type UserAddressInput = {
 
 export type UserInput = {
   name: Scalars['String']
-  email: Scalars['String']
   firstName?: Maybe<Scalars['String']>
+  email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
 }
 
-export type UserSubscription = {
-  __typename?: 'UserSubscription'
-  memberPlan: MemberPlan
-  paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
-  autoRenew: Scalars['Boolean']
-  startsAt: Scalars['DateTime']
-  paidUntil?: Maybe<Scalars['DateTime']>
-  paymentMethod: PaymentMethod
-  deactivation?: Maybe<UserSubscriptionDeactivation>
-}
-
-export type UserSubscriptionDeactivation = {
-  __typename?: 'UserSubscriptionDeactivation'
-  date: Scalars['DateTime']
-  reason: SubscriptionDeactivationReason
-}
-
-export type UserSubscriptionInput = {
-  memberPlanID: Scalars['String']
-  paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
-  autoRenew: Scalars['Boolean']
-  paymentMethodID: Scalars['String']
+export type UserSession = {
+  __typename?: 'UserSession'
+  token: Scalars['String']
+  createdAt: Scalars['DateTime']
+  expiresAt: Scalars['DateTime']
 }
 
 export type VimeoVideoBlock = {
@@ -998,6 +1099,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1048,6 +1150,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1181,6 +1284,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
+type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
 type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
@@ -1227,6 +1332,7 @@ export type FullBlockFragment =
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
   | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -1238,7 +1344,7 @@ export type FullBlockFragment =
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
   'itemID' | 'itemType' | 'text' | 'parentID'
-> & {user: {__typename?: 'User'} & Pick<User, 'id'>}
+> & {user?: Maybe<{__typename?: 'User'} & Pick<User, 'id'>>}
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput
@@ -1328,6 +1434,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
           | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
+          | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)

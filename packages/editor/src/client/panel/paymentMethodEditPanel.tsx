@@ -13,7 +13,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {authorise, slugify} from '../utility'
-import {PermissionControl} from '../atoms/permissionControl'
+import {PermissionControl, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -22,7 +22,7 @@ export interface PaymentMethodEditPanelProps {
   onSave?(paymentMethod: FullPaymentMethodFragment): void
 }
 
-export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
+function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
   const {t} = useTranslation()
 
   const isAuthorized = authorise('CAN_CREATE_PAYMENT_METHOD')
@@ -226,5 +226,8 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PAYMENT_METHOD', true)(PaymentMethodEditPanel)
-// export {CheckedPermissionComponent as PaymentMethodEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PAYMENT_METHOD',
+  true
+)(PaymentMethodEditPanel)
+export {CheckedPermissionComponent as PaymentMethodEditPanel}

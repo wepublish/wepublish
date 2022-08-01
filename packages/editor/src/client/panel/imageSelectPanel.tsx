@@ -20,6 +20,7 @@ import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImagedEditPanel} from './imageEditPanel'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -28,7 +29,7 @@ export interface ImageSelectPanelProps {
 
 const ImagesPerPage = 20
 
-export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
+function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('')
 
   const [file, setFile] = useState<File | null>(null)
@@ -82,7 +83,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImagedEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
+    return (
+      <ImagedEditPanel
+        onClose={onClose}
+        file={file}
+        onSave={(image: ImageRefFragment) => onSelect(image)}
+      />
+    )
   }
 
   return (
@@ -170,5 +177,8 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_CREATE_IMAGE', true)(ImageSelectPanel)
-// export {CheckedPermissionComponent as ImageSelectPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_IMAGE',
+  true
+)(ImageSelectPanel)
+export {CheckedPermissionComponent as ImageSelectPanel}

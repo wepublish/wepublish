@@ -47,7 +47,7 @@ import EyeIcon from '@rsuite/icons/legacy/Eye'
 import SaveIcon from '@rsuite/icons/legacy/Save'
 import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
 import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {AuthContext} from '../authContext'
 
 export interface ArticleEditorProps {
@@ -59,7 +59,7 @@ const InitialArticleBlocks: BlockValue[] = [
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
 
-export function ArticleEditor({id}: ArticleEditorProps) {
+function ArticleEditor({id}: ArticleEditorProps) {
   const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
     fetchPolicy: 'no-cache'
   })
@@ -619,6 +619,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent(
-//   "CAN_GET_ARTICLE", true)(ArticleEditor)
-// export {CheckedPermissionComponent as ArticleEditor}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_ARTICLE',
+  true
+)(ArticleEditor)
+export {CheckedPermissionComponent as ArticleEditor}

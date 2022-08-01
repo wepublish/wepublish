@@ -19,7 +19,7 @@ import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from '
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 import {ImageMetaData} from './imageUploadAndEditPanel'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -30,7 +30,7 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -399,5 +399,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_IMAGE', true)(ImagedEditPanel)
-// export {CheckedPermissionComponent as ImageEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_IMAGE',
+  true
+)(ImagedEditPanel)
+export {CheckedPermissionComponent as ImagedEditPanel}

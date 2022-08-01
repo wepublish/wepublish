@@ -18,7 +18,7 @@ import {
 import {useTranslation} from 'react-i18next'
 import {authorise, generateID, getOperationNameFromDocument} from '../utility'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -35,7 +35,7 @@ export interface NavigationLink {
   url?: string
 }
 
-export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
+function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const isAuthorized = authorise('CAN_CREATE_NAVIGATION')
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
@@ -324,5 +324,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_NAVIGATIONS', true)(NavigationEditPanel)
-// export {CheckedPermissionComponent as NavigationEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_NAVIGATIONS',
+  true
+)(NavigationEditPanel)
+export {CheckedPermissionComponent as NavigationEditPanel}

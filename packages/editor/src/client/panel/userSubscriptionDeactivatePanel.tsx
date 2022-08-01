@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, DatePicker, Form, Message, Modal, SelectPicker} from 'rsuite'
 
 import {SubscriptionDeactivationReason} from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface DeactivateSubscription {
   date: Date
@@ -19,7 +20,7 @@ export interface SubscriptionDeactivatePanelProps {
   onClose(): void
 }
 
-export function UserSubscriptionDeactivatePanel({
+function UserSubscriptionDeactivatePanel({
   isDeactivated,
   displayName,
   paidUntil,
@@ -125,5 +126,8 @@ export function UserSubscriptionDeactivatePanel({
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_CREATE_SUBSCRIPTION', true)(UserSubscriptionDeactivationPanel)
-// export {CheckedPermissionComponent as UserSubscriptionDeactivationPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_CREATE_SUBSCRIPTION',
+  true
+)(UserSubscriptionDeactivatePanel)
+export {CheckedPermissionComponent as UserSubscriptionDeactivatePanel}

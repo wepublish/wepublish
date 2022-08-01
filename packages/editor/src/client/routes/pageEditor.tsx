@@ -34,13 +34,13 @@ import SaveIcon from '@rsuite/icons/legacy/Save'
 import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import {AuthContext} from '../authContext'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface PageEditorProps {
   readonly id?: string
 }
 
-export function PageEditor({id}: PageEditorProps) {
+function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
 
   const [previewLinkFetch, {data}] = usePagePreviewLinkLazyQuery({
@@ -429,7 +429,7 @@ export function PageEditor({id}: PageEditorProps) {
             handleSave()
             setMetaDrawerOpen(false)
           }}
-          onChange={value => {
+          onChange={(value: React.SetStateAction<PageMetadata>) => {
             setMetadata(value)
             setChanged(true)
           }}
@@ -454,6 +454,8 @@ export function PageEditor({id}: PageEditorProps) {
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent(
-//   "CAN_GET_PAGE", true)(PageEditor)
-// export {CheckedPermissionComponent as PageEditor}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PAGE',
+  true
+)(PageEditor)
+export {CheckedPermissionComponent as PageEditor}

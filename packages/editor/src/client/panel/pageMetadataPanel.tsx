@@ -15,7 +15,7 @@ import CogIcon from '@rsuite/icons/legacy/Cog'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import ListIcon from '@rsuite/icons/legacy/List'
 import {Textarea} from '../atoms/textarea'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -44,7 +44,7 @@ export interface PageMetadataPanelProps {
   onChange?(value: PageMetadata): void
 }
 
-export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
+function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
   const {
     title,
     description,
@@ -305,7 +305,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={(value: ImageRefFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -328,6 +328,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   )
 }
 
-// const CheckedPermissionComponent = createCheckedPermissionComponent(
-//   "CAN_GET_PAGE", true)(PageMetadataPanel)
-// export {CheckedPermissionComponent as PageMetadataPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_PAGE',
+  true
+)(PageMetadataPanel)
+export {CheckedPermissionComponent as PageMetadataPanel}

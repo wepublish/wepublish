@@ -45,7 +45,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -54,7 +54,7 @@ export interface MemberPlanEditPanelProps {
   onSave?(author: FullMemberPlanFragment): void
 }
 
-export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
+function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
   const {t} = useTranslation()
   const isAuthorized = authorise('CAN_CREATE_MEMBER_PLAN')
 
@@ -369,7 +369,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={(value: ImageRefFragment) => {
               setChooseModalOpen(false)
               handleImageChange(value)
             }}
@@ -388,5 +388,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_MEMBER_PLANS', true)(MemberPlanEditPanel)
-// export {CheckedPermissionComponent as MemberPlanEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_MEMBER_PLANS',
+  true
+)(MemberPlanEditPanel)
+export {CheckedPermissionComponent as MemberPlanEditPanel}

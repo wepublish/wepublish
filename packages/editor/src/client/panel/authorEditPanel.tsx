@@ -36,7 +36,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import LinkIcon from '@rsuite/icons/legacy/Link'
-import {PermissionControl} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -45,7 +45,7 @@ export interface AuthorEditPanelProps {
   onSave?(author: FullAuthorFragment): void
 }
 
-export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
+function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
@@ -273,7 +273,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={(value: ImageRefFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -290,6 +290,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     </>
   )
 }
-// const CheckedPermissionComponent = createCheckedPermissionComponent(
-//   "CAN_GET_AUTHOR", true)(AuthorEditPanel)
-// export {CheckedPermissionComponent as AuthorEditPanel}
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_AUTHOR',
+  true
+)(AuthorEditPanel)
+export {CheckedPermissionComponent as AuthorEditPanel}
