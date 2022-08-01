@@ -1,6 +1,10 @@
+import PlusIcon from '@rsuite/icons/legacy/Plus'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+
 import {
   FullSubscriptionFragment,
   SubscriptionFilter,
@@ -10,28 +14,15 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
+import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  SubscriptionCreateRoute,
-  SubscriptionEditRoute,
-  SubscriptionListRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import {RouteActionType} from '@wepublish/karma.run-react'
-import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
-import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 const {Column, HeaderCell, Cell} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
@@ -53,29 +44,27 @@ export const newSubscriptionButton = ({
   t: TFunction<'translation'>
 }) => {
   return (
-    <ButtonLink
-      style={{marginLeft: 5}}
-      appearance="primary"
-      color="green"
-      disabled={isLoading}
-      route={SubscriptionCreateRoute.create({})}>
-      <PlusIcon style={{marginRight: '5px'}} />
-      {t('subscriptionList.overview.newSubscription')}
-    </ButtonLink>
+    <Link to="/subscriptions/create">
+      <Button style={{marginLeft: 5}} appearance="primary" color="green" disabled={isLoading}>
+        <PlusIcon style={{marginRight: '5px'}} />
+        {t('subscriptionList.overview.newSubscription')}
+      </Button>
+    </Link>
   )
 }
 
 export function SubscriptionList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.SubscriptionEdit || current?.type === RouteType.SubscriptionCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.SubscriptionEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
+
   const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -118,16 +107,16 @@ export function SubscriptionList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current?.type === RouteType.SubscriptionCreate) {
+    if (isCreateRoute) {
       setEditID(undefined)
       setEditModalOpen(true)
     }
 
-    if (current?.type === RouteType.SubscriptionEdit) {
-      setEditID(current.params.id)
+    if (isEditRoute) {
+      setEditID(id)
       setEditModalOpen(true)
     }
-  }, [current])
+  }, [location])
 
   useEffect(() => {
     if (data?.subscriptions?.nodes) {
@@ -195,10 +184,7 @@ export function SubscriptionList() {
             setSortField(sortColumn)
           }}
           onRowClick={data => {
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: SubscriptionEditRoute.create({id: data.id})
-            })
+            navigate(`/subscriptions/edit/${data.id}`)
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
@@ -223,9 +209,7 @@ export function SubscriptionList() {
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <Cell dataKey={'subscription'}>
               {(rowData: FullSubscriptionFragment) => (
-                <Link route={SubscriptionEditRoute.create({id: rowData.id})}>
-                  {rowData.memberPlan.name}
-                </Link>
+                <Link to={`/subscription/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
               )}
             </Cell>
           </Column>
@@ -292,27 +276,18 @@ export function SubscriptionList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: SubscriptionListRoute.create({}, current ?? undefined)
-          })
+          navigate('/subscriptions')
         }}>
         <SubscriptionEditPanel
           id={editID!}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: SubscriptionListRoute.create({}, current ?? undefined)
-            })
+            navigate('/subscriptions')
           }}
           onSave={() => {
             setEditModalOpen(false)
             refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: SubscriptionListRoute.create({}, current ?? undefined)
-            })
+            navigate('/subscriptions')
           }}
         />
       </Drawer>

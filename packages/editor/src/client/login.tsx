@@ -1,43 +1,37 @@
-import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
-
-import {LoginTemplate} from './atoms/loginTemplate'
-
-import {
-  useRouteDispatch,
-  matchRoute,
-  useRoute,
-  IndexRoute,
-  LoginRoute,
-  IconButtonLink
-} from './route'
-import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
-
-import {LocalStorageKey} from './utility'
-import {Logo} from './logo'
-import {
-  useCreateSessionWithOAuth2CodeMutation,
-  useCreateSessionWithJwtMutation,
-  useCreateSessionMutation,
-  useGetAuthProvidersQuery,
-  FullUserRoleFragment
-} from './api'
-
-import {useTranslation} from 'react-i18next'
-import {Button, Form, Divider, toaster, Message} from 'rsuite'
-import GoogleIcon from '@rsuite/icons/legacy/Google'
 import FacebookIcon from '@rsuite/icons/legacy/Facebook'
-import TwitterIcon from '@rsuite/icons/legacy/Twitter'
+import GoogleIcon from '@rsuite/icons/legacy/Google'
 import SpaceShuttleIcon from '@rsuite/icons/legacy/SpaceShuttle'
+import TwitterIcon from '@rsuite/icons/legacy/Twitter'
+import React, {FormEvent, useContext, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
+import {Button, Divider, Form, IconButton, Message, toaster} from 'rsuite'
+
+import {
+  FullUserRoleFragment,
+  useCreateSessionMutation,
+  useCreateSessionWithJwtMutation,
+  useCreateSessionWithOAuth2CodeMutation,
+  useGetAuthProvidersQuery
+} from './api'
+import {LoginTemplate} from './atoms/loginTemplate'
+import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
+import {Logo} from './logo'
+import {LocalStorageKey} from './utility'
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const {current} = useRoute()
+  // const {current} = useRoute()
+  const location = useLocation()
+  const path = location.pathname.substring(1)
+  console.log('location', location)
+  console.log('path', path)
 
   const authDispatch = useContext(AuthDispatchContext)
-  const routeDispatch = useRouteDispatch()
+  // const routeDispatch = useRouteDispatch()
+  const navigate = useNavigate()
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
@@ -58,75 +52,6 @@ export function Login() {
   })
 
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
-      authenticateWithJWT({
-        variables: {
-          jwt: current.query.jwt
-        }
-      })
-        .then((response: any) => {
-          const {
-            token: sessionToken,
-            user: {email: responseEmail, roles}
-          } = response.data.createSessionWithJWT
-
-          authenticateUser(sessionToken, responseEmail, roles)
-        })
-        .catch(error => {
-          console.warn('auth error', error)
-          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
-        })
-    } else if (current !== null && current.params !== null && current.query && current.query.code) {
-      // TODO: fix this
-      const provider = (current as RouteInstance).params.provider
-      const {code} = current!.query
-      authenticateWithOAuth2Code({
-        variables: {
-          redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
-          name: provider,
-          code
-        }
-      })
-        .then((response: any) => {
-          const {
-            token: sessionToken,
-            user: {email: responseEmail, roles}
-          } = response.data.createSessionWithOAuth2Code
-
-          authenticateUser(sessionToken, responseEmail, roles)
-        })
-        .catch(() => {
-          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
-        })
-    }
-  }, [current])
-
-  useEffect(() => {
-    const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
-    if (error)
-      toaster.push(
-        <Message type="error" showIcon closable duration={0}>
-          {error}
-        </Message>
-      )
-  }, [errorLogin, errorOAuth2, errorJWT])
-
-  async function login(e: FormEvent) {
-    e.preventDefault()
-
-    const response = await authenticate({variables: {email, password}})
-
-    if (!response.data?.createSession) return
-
-    const {
-      token: sessionToken,
-      user: {email: responseEmail, roles}
-    } = response.data.createSession
-
-    authenticateUser(sessionToken, responseEmail, roles)
-  }
 
   function authenticateUser(
     sessionToken: string,
@@ -154,14 +79,89 @@ export function Login() {
       sessionToken
     })
 
-    if (current!.query && current!.query.next) {
-      const route = matchRoute(location.origin + current!.query.next)
-      if (route) {
-        routeDispatch({type: RouteActionType.ReplaceRoute, route})
-        return
-      }
-    }
-    routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
+    // TODO update this thing to react-router based solution
+    // if (current!.query && current!.query.next) {
+    //   const route = matchRoute(location.origin + current!.query.next)
+    //   if (route) {
+    //     // routeDispatch({type: RouteActionType.ReplaceRoute, route})
+    //     navigate(route, {replace: true})
+    //     return
+    //   }
+    // }
+    // routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
+    navigate('/', {replace: true})
+  }
+
+  // TODO update this thing to react-router based solution
+  // useEffect(() => {
+  //   if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
+  //     authenticateWithJWT({
+  //       variables: {
+  //         jwt: current.query.jwt
+  //       }
+  //     })
+  //       .then((response: any) => {
+  //         const {
+  //           token: sessionToken,
+  //           user: {email: responseEmail, roles}
+  //         } = response.data.createSessionWithJWT
+
+  //         authenticateUser(sessionToken, responseEmail, roles)
+  //       })
+  //       .catch(error => {
+  //         console.warn('auth error', error)
+  //         // routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+  //         navigate('/login', {replace: true})
+  //       })
+  //   } else if (current !== null && current.params !== null && current.query && current.query.code) {
+  //     // TODO: fix this
+  //     const provider = (current as RouteInstance).params.provider
+  //     const {code} = current!.query
+  //     authenticateWithOAuth2Code({
+  //       variables: {
+  //         redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
+  //         name: provider,
+  //         code
+  //       }
+  //     })
+  //       .then((response: any) => {
+  //         const {
+  //           token: sessionToken,
+  //           user: {email: responseEmail, roles}
+  //         } = response.data.createSessionWithOAuth2Code
+
+  //         authenticateUser(sessionToken, responseEmail, roles)
+  //       })
+  //       .catch(() => {
+  //         // routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+  //         navigate('/login', {replace: true})
+  //       })
+  //   }
+  // }, [current])
+
+  useEffect(() => {
+    const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error}
+        </Message>
+      )
+  }, [errorLogin, errorOAuth2, errorJWT])
+
+  async function login(e: FormEvent) {
+    e.preventDefault()
+
+    const response = await authenticate({variables: {email, password}})
+
+    if (!response.data?.createSession) return
+
+    const {
+      token: sessionToken,
+      user: {email: responseEmail, roles}
+    } = response.data.createSession
+
+    authenticateUser(sessionToken, responseEmail, roles)
   }
 
   function getAuthLogo(name: string): React.ReactElement {
@@ -218,14 +218,15 @@ export function Login() {
               <Divider />
               {providerData.authProviders.map(
                 (provider: {url: string; name: string}, index: number) => (
-                  <IconButtonLink
-                    style={{marginBottom: 10}}
-                    key={index}
-                    appearance="subtle"
-                    href={provider.url}
-                    icon={getAuthLogo(provider.name)}>
-                    {provider.name}
-                  </IconButtonLink>
+                  <Link to={provider.url} key={index}>
+                    <IconButton
+                      style={{marginBottom: 10}}
+                      appearance="subtle"
+                      // href={provider.url}
+                      icon={getAuthLogo(provider.name)}>
+                      {provider.name}
+                    </IconButton>
+                  </Link>
                 )
               )}
             </>

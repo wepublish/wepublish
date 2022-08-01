@@ -1,16 +1,5 @@
 import React, {useState, useEffect} from 'react'
 
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  TokenListRoute,
-  TokenGenerateRoute,
-  ButtonLink
-} from '../route'
-
 import {
   useTokenListQuery,
   useDeleteTokenMutation,
@@ -21,7 +10,7 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 
 import {getOperationNameFromDocument} from '../utility'
-import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
+// import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -30,20 +19,21 @@ import {
   List,
   Loader,
   IconButton,
-  Drawer,
+  // Drawer,
   Modal,
   toaster,
   Message
 } from 'rsuite'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {Link} from 'react-router-dom'
 
 export function TokenList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  // const {current} = useRoute()
+  // const dispatch = useRouteDispatch()
 
-  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
-    current?.type === RouteType.TokenGenerate
-  )
+  // const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
+  //   current?.type === RouteType.TokenGenerate
+  // )
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
@@ -73,17 +63,17 @@ export function TokenList() {
       )
   }, [tokenListError, deleteTokenError])
 
-  useEffect(() => {
-    switch (current?.type) {
-      case RouteType.TokenGenerate:
-        setTokenGeneratePanelOpen(true)
-        break
+  // useEffect(() => {
+  //   switch (current?.type) {
+  //     case RouteType.TokenGenerate:
+  //       setTokenGeneratePanelOpen(true)
+  //       break
 
-      default:
-        setTokenGeneratePanelOpen(false)
-        break
-    }
-  }, [current])
+  //     default:
+  //       setTokenGeneratePanelOpen(false)
+  //       break
+  //   }
+  // }, [current])
 
   return (
     <>
@@ -92,12 +82,15 @@ export function TokenList() {
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isTokenListLoading}
-            route={TokenGenerateRoute.create({})}>
-            {t('tokenList.overview.generateToken')}
-          </ButtonLink>
+          <Link to="/tokens/generate">
+            <Button
+              appearance="primary"
+              disabled={isTokenListLoading}
+              // route={TokenGenerateRoute.create({})}
+            >
+              {t('tokenList.overview.generateToken')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
       </FlexboxGrid>
       {isTokenListLoading ? (
@@ -129,7 +122,7 @@ export function TokenList() {
         </List>
       )}
 
-      <Drawer
+      {/* <Drawer
         open={isTokenGeneratePanelOpen}
         onClose={() => {
           dispatch({
@@ -146,7 +139,7 @@ export function TokenList() {
             })
           }}
         />
-      </Drawer>
+      </Drawer> */}
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

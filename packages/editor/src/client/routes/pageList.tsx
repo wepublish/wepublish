@@ -1,47 +1,42 @@
-import React, {useEffect, useState} from 'react'
-
-import {Link, PageCreateRoute, PageEditRoute, ButtonLink, useRouteDispatch} from '../route'
-
-import {
-  PageRefFragment,
-  usePageListQuery,
-  useDeletePageMutation,
-  useUnpublishPageMutation,
-  useDuplicatePageMutation,
-  PageListDocument,
-  PageListQuery,
-  PageSort
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  Table,
-  IconButton,
-  Modal,
-  Button,
-  Message,
-  Pagination
-} from 'rsuite'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  StateColor,
-  mapTableSortTypeToGraphQLSortOrder,
-  DEFAULT_MAX_TABLE_PAGES
-} from '../utility'
-import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
+import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import {RouteActionType} from '@wepublish/karma.run-react'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate} from 'react-router-dom'
+import {
+  Button,
+  FlexboxGrid,
+  IconButton,
+  Input,
+  InputGroup,
+  Message,
+  Modal,
+  Pagination,
+  Table
+} from 'rsuite'
+
+import {
+  PageListDocument,
+  PageListQuery,
+  PageRefFragment,
+  PageSort,
+  useDeletePageMutation,
+  useDuplicatePageMutation,
+  usePageListQuery,
+  useUnpublishPageMutation
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  StateColor
+} from '../utility'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -66,6 +61,7 @@ function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
 
 export function PageList() {
   const {t} = useTranslation()
+  const navigate = useNavigate()
 
   const [filter, setFilter] = useState('')
 
@@ -83,8 +79,6 @@ export function PageList() {
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
   const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
-
-  const dispatch = useRouteDispatch()
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -127,9 +121,11 @@ export function PageList() {
           <h2>{t('pages.overview.pages')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink appearance="primary" disabled={isLoading} route={PageCreateRoute.create({})}>
-            {t('pages.overview.newPage')}
-          </ButtonLink>
+          <Link to="/pages/create">
+            <Button appearance="primary" disabled={isLoading}>
+              {t('pages.overview.newPage')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
@@ -190,7 +186,7 @@ export function PageList() {
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => (
-                <Link route={PageEditRoute.create({id: rowData.id})}>
+                <Link to={`/pages/edit/${rowData.id}`}>
                   {rowData.latest.title || t('pages.overview.untitled')}
                 </Link>
               )}
@@ -432,10 +428,7 @@ export function PageList() {
                     }
                   }).then(output => {
                     if (output.data) {
-                      dispatch({
-                        type: RouteActionType.ReplaceRoute,
-                        route: PageEditRoute.create({id: output.data?.duplicatePage.id})
-                      })
+                      navigate(`/pages/edit/${output.data?.duplicatePage.id}`, {replace: true})
                     }
                   })
                   break

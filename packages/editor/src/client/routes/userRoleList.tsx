@@ -1,40 +1,31 @@
-import React, {useState, useEffect} from 'react'
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  UserRoleCreateRoute,
-  UserRoleListRoute,
-  ButtonLink,
-  UserRoleEditRoute,
-  Link
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
-import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, IconButton, Input, InputGroup, Table, Drawer, Modal, Button} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+
+import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
+
+const {Column, HeaderCell, Cell} = Table
 
 export function UserRoleList() {
   const {t} = useTranslation()
 
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserRoleEdit || current?.type === RouteType.UserRoleCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserRoleEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const [filter, setFilter] = useState('')
 
@@ -45,7 +36,7 @@ export function UserRoleList() {
   const {data, refetch, loading: isLoading} = useUserRoleListQuery({
     variables: {
       filter: filter || undefined,
-      first: 200 // TODO: Pagination
+      first: 200
     },
     fetchPolicy: 'network-only'
   })
@@ -53,16 +44,16 @@ export function UserRoleList() {
   const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
 
   useEffect(() => {
-    if (current?.type === RouteType.UserRoleCreate) {
+    if (isCreateRoute) {
       setEditID(undefined)
       setEditModalOpen(true)
     }
 
-    if (current?.type === RouteType.UserRoleEdit) {
-      setEditID(current.params.id)
+    if (isEditRoute) {
+      setEditID(id)
       setEditModalOpen(true)
     }
-  }, [current])
+  }, [location])
 
   useEffect(() => {
     if (data?.userRoles?.nodes) {
@@ -77,12 +68,11 @@ export function UserRoleList() {
           <h2>{t('userRoles.overview.userRoles')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={UserRoleCreateRoute.create({})}>
-            {t('userRoles.overview.newUserRole')}
-          </ButtonLink>
+          <Link to="/userroles/create">
+            <Button appearance="primary" disabled={isLoading}>
+              {t('userRoles.overview.newUserRole')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
@@ -99,7 +89,7 @@ export function UserRoleList() {
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullUserRoleFragment) => (
-              <Link route={UserRoleEditRoute.create({id: rowData.id})}>
+              <Link to={`/userroles/edit/${rowData.id}`}>
                 {rowData.name || t('userRoles.overview.untitled')}
               </Link>
             )}
@@ -135,31 +125,23 @@ export function UserRoleList() {
         open={isEditModalOpen}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserRoleListRoute.create({}, current ?? undefined)
-          })
+          navigate('/userroles')
         }}
         size={'sm'}>
         <UserRoleEditPanel
           id={editID!}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserRoleListRoute.create({}, current ?? undefined)
-            })
+            navigate('/userroles')
           }}
           onSave={() => {
             setEditModalOpen(false)
             refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserRoleListRoute.create({}, current ?? undefined)
-            })
+            navigate('/userroles')
           }}
         />
       </Drawer>
+
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>

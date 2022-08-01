@@ -1,13 +1,12 @@
 import CogIcon from '@rsuite/icons/legacy/Cog'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import {RouteActionType} from '@wepublish/karma.run-react'
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
   Avatar,
   Button,
   Divider,
-  Drawer,
+  // Drawer,
   FlexboxGrid,
   Form,
   IconButton,
@@ -27,39 +26,29 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
-import {PeerEditPanel} from '../panel/peerEditPanel'
-import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
-import {
-  IconButtonLink,
-  PeerCreateRoute,
-  PeerEditRoute,
-  PeerInfoEditRoute,
-  PeerListRoute,
-  routeLink,
-  RouteType,
-  useRoute,
-  useRouteDispatch
-} from '../route'
+// import {PeerEditPanel} from '../panel/peerEditPanel'
+// import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {addOrUpdateOneInArray} from '../utility'
+import {Link} from 'react-router-dom'
 
-const ListItemLink = routeLink(List.Item)
-const ButtonLink = routeLink(Button)
+// const ListItemLink = routeLink(List.Item)
+// const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 
 export function PeerList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  // const {current} = useRoute()
+  // const dispatch = useRouteDispatch()
 
-  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
-    current?.type === RouteType.PeerProfileEdit
-  )
+  // const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
+  //   current?.type === RouteType.PeerProfileEdit
+  // )
 
-  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
+  // const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.AuthorEdit ? current.params.id : undefined
-  )
+  // const [editID, setEditID] = useState<string | undefined>(
+  //   current?.type === RouteType.AuthorEdit ? current.params.id : undefined
+  // )
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPeer, setCurrentPeer] = useState<Peer>()
@@ -90,98 +79,96 @@ export function PeerList() {
       )
   }, [peerInfoError, peerListError])
 
-  useEffect(() => {
-    switch (current?.type) {
-      case RouteType.PeerProfileEdit:
-        setPeerProfileEditModalOpen(true)
-        break
+  // useEffect(() => {
+  //   switch (current?.type) {
+  //     case RouteType.PeerProfileEdit:
+  //       setPeerProfileEditModalOpen(true)
+  //       break
 
-      case RouteType.PeerCreate:
-        setEditID(undefined)
-        setEditModalOpen(true)
-        break
+  //     case RouteType.PeerCreate:
+  //       setEditID(undefined)
+  //       setEditModalOpen(true)
+  //       break
 
-      case RouteType.PeerEdit:
-        setEditID(current.params.id)
-        setEditModalOpen(true)
-        break
-    }
-  }, [current])
+  //     case RouteType.PeerEdit:
+  //       setEditID(current.params.id)
+  //       setEditModalOpen(true)
+  //       break
+  //   }
+  // }, [current])
 
   const peers = peerListData?.peers?.map((peer, index) => {
     const {id, name, profile, hostURL, isDisabled} = peer
     return (
-      <ListItemLink
-        key={name}
-        index={index}
-        route={isDisabled ? undefined : PeerEditRoute.create({id})}
-        style={{cursor: isDisabled ? 'default' : 'pointer'}}>
-        <FlexboxGrid>
-          <FlexboxGrid.Item
-            colspan={2}
-            style={{
-              textAlign: 'center'
-            }}>
-            <Avatar
-              circle
-              src={profile?.logo?.squareURL || undefined}
-              alt={profile?.name?.substr(0, 2)}
-            />
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={18}>
-            <h5>{name}</h5>
-            <p>
-              {profile && `${profile.name} - `}
-              {hostURL}
-            </p>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={3}>
-            <Button
-              appearance="primary"
-              disabled={isUpdating}
-              onClick={async e => {
-                e.preventDefault()
-                await updatePeer({
-                  variables: {id, input: {isDisabled: !isDisabled}},
-                  update: cache => {
-                    const query = cache.readQuery<PeerListQuery>({
-                      query: PeerListDocument
-                    })
-
-                    if (!query) return
-
-                    cache.writeQuery({
-                      query: PeerListDocument,
-                      data: {
-                        peers: addOrUpdateOneInArray(query.peers, {
-                          ...peer,
-                          isDisabled: !isDisabled
-                        })
-                      }
-                    })
-                  }
-                })
+      <Link to={isDisabled ? undefined : `/peering/edit/${id}`} index={index} key={name}>
+        <List.Item style={{cursor: isDisabled ? 'default' : 'pointer'}}>
+          <FlexboxGrid>
+            <FlexboxGrid.Item
+              colspan={2}
+              style={{
+                textAlign: 'center'
               }}>
-              {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
-            </Button>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-            <IconButtonTooltip caption={t('peerList.overview.delete')}>
-              <IconButton
-                disabled={isPeerInfoLoading}
-                icon={<TrashIcon />}
+              <Avatar
                 circle
-                size="sm"
-                onClick={e => {
-                  e.preventDefault()
-                  setConfirmationDialogOpen(true)
-                  setCurrentPeer(peer)
-                }}
+                src={profile?.logo?.squareURL || undefined}
+                alt={profile?.name?.substr(0, 2)}
               />
-            </IconButtonTooltip>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </ListItemLink>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item colspan={18}>
+              <h5>{name}</h5>
+              <p>
+                {profile && `${profile.name} - `}
+                {hostURL}
+              </p>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item colspan={3}>
+              <Button
+                appearance="primary"
+                disabled={isUpdating}
+                onClick={async e => {
+                  e.preventDefault()
+                  await updatePeer({
+                    variables: {id, input: {isDisabled: !isDisabled}},
+                    update: cache => {
+                      const query = cache.readQuery<PeerListQuery>({
+                        query: PeerListDocument
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery({
+                        query: PeerListDocument,
+                        data: {
+                          peers: addOrUpdateOneInArray(query.peers, {
+                            ...peer,
+                            isDisabled: !isDisabled
+                          })
+                        }
+                      })
+                    }
+                  })
+                }}>
+                {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
+              </Button>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
+              <IconButtonTooltip caption={t('peerList.overview.delete')}>
+                <IconButton
+                  disabled={isPeerInfoLoading}
+                  icon={<TrashIcon />}
+                  circle
+                  size="sm"
+                  onClick={e => {
+                    e.preventDefault()
+                    setConfirmationDialogOpen(true)
+                    setCurrentPeer(peer)
+                  }}
+                />
+              </IconButtonTooltip>
+            </FlexboxGrid.Item>
+          </FlexboxGrid>
+        </List.Item>
+      </Link>
     )
   })
 
@@ -215,13 +202,15 @@ export function PeerList() {
           }
           rightChildren={
             <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
-              <IconButtonLink
-                size="lg"
-                appearance="link"
-                icon={<CogIcon />}
-                circle
-                route={PeerInfoEditRoute.create({})}
-              />
+              <Link to="/peering/profile/edit">
+                <IconButton
+                  size="lg"
+                  appearance="link"
+                  icon={<CogIcon />}
+                  circle
+                  // route={PeerInfoEditRoute.create({})}
+                />
+              </Link>
             </IconButtonTooltip>
           }
         />
@@ -235,12 +224,15 @@ export function PeerList() {
           <h2>{t('peerList.overview.peers')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isPeerListLoading}
-            route={PeerCreateRoute.create({})}>
-            {t('peerList.overview.newPeer')}
-          </ButtonLink>
+          <Link to="/peering/create">
+            <Button
+              appearance="primary"
+              disabled={isPeerListLoading}
+              // route={PeerCreateRoute.create({})}
+            >
+              {t('peerList.overview.newPeer')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <div style={{marginTop: '20px'}}>
@@ -251,7 +243,7 @@ export function PeerList() {
         ) : null}
       </div>
 
-      <Drawer
+      {/* <Drawer
         open={isPeerProfileEditModalOpen}
         size={'sm'}
         onClose={() => {
@@ -270,9 +262,9 @@ export function PeerList() {
             })
           }}
         />
-      </Drawer>
+      </Drawer> */}
 
-      <Drawer
+      {/* <Drawer
         open={isEditModalOpen}
         size={'sm'}
         onClose={() => {
@@ -310,7 +302,7 @@ export function PeerList() {
             }}
           />
         )}
-      </Drawer>
+      </Drawer> */}
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
