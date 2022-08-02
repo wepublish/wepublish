@@ -1,4 +1,3 @@
-/* eslint i18next/no-literal-string: [0] */
 import 'rsuite/styles/index.less'
 import './global.less'
 

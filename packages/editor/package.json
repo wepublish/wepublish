@@ -194,7 +194,8 @@
             "stack",
             "backdrop",
             "data-testid",
-            "to"
+            "to",
+            "path"
           ],
           "ignoreComponent": [
             "code"
