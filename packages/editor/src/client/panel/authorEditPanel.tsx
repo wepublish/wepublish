@@ -36,6 +36,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import LinkIcon from '@rsuite/icons/legacy/Link'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -181,7 +182,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           <PanelGroup>
             <Panel>
               <Form.Group controlId="name">
-                <Form.ControlLabel>{t('authors.panels.name') + '*'}</Form.ControlLabel>
+                <Form.ControlLabel>
+                  {toggleRequiredLabel(t('authors.panels.name'))}
+                </Form.ControlLabel>
+
                 <Form.Control
                   name="name"
                   value={name}
