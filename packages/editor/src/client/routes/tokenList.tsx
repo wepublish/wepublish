@@ -1,42 +1,37 @@
-import React, {useState, useEffect} from 'react'
-
-import {
-  useTokenListQuery,
-  useDeleteTokenMutation,
-  TokenRefFragment,
-  TokenListDocument
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {getOperationNameFromDocument} from '../utility'
-// import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
-
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
+  Drawer,
   FlexboxGrid,
+  IconButton,
   List,
   Loader,
-  IconButton,
-  // Drawer,
+  Message,
   Modal,
-  toaster,
-  Message
+  toaster
 } from 'rsuite'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import {Link} from 'react-router-dom'
+
+import {
+  TokenListDocument,
+  TokenRefFragment,
+  useDeleteTokenMutation,
+  useTokenListQuery
+} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
+import {getOperationNameFromDocument} from '../utility'
 
 export function TokenList() {
-  // const {current} = useRoute()
-  // const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  // const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
-  //   current?.type === RouteType.TokenGenerate
-  // )
+  const isGenerateRoute = location.pathname.includes('generate')
 
+  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(isGenerateRoute)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
   const {
@@ -63,17 +58,11 @@ export function TokenList() {
       )
   }, [tokenListError, deleteTokenError])
 
-  // useEffect(() => {
-  //   switch (current?.type) {
-  //     case RouteType.TokenGenerate:
-  //       setTokenGeneratePanelOpen(true)
-  //       break
-
-  //     default:
-  //       setTokenGeneratePanelOpen(false)
-  //       break
-  //   }
-  // }, [current])
+  useEffect(() => {
+    if (isGenerateRoute) {
+      setTokenGeneratePanelOpen(true)
+    }
+  }, [location])
 
   return (
     <>
@@ -83,11 +72,7 @@ export function TokenList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Link to="/tokens/generate">
-            <Button
-              appearance="primary"
-              disabled={isTokenListLoading}
-              // route={TokenGenerateRoute.create({})}
-            >
+            <Button appearance="primary" disabled={isTokenListLoading}>
               {t('tokenList.overview.generateToken')}
             </Button>
           </Link>
@@ -122,24 +107,20 @@ export function TokenList() {
         </List>
       )}
 
-      {/* <Drawer
+      <Drawer
         open={isTokenGeneratePanelOpen}
         onClose={() => {
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: TokenListRoute.create({})
-          })
+          setTokenGeneratePanelOpen(false)
+          navigate('/tokens')
         }}
         size={'sm'}>
         <TokenGeneratePanel
           onClose={() => {
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: TokenListRoute.create({})
-            })
+            setTokenGeneratePanelOpen(false)
+            navigate('/tokens')
           }}
         />
-      </Drawer> */}
+      </Drawer>
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

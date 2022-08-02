@@ -222,7 +222,6 @@ export function Login() {
                     <IconButton
                       style={{marginBottom: 10}}
                       appearance="subtle"
-                      // href={provider.url}
                       icon={getAuthLogo(provider.name)}>
                       {provider.name}
                     </IconButton>

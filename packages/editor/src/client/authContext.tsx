@@ -1,8 +1,8 @@
-import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {useQuery, gql} from '@apollo/client'
+import {gql, useQuery} from '@apollo/client'
+import React, {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
+import {usePageVisibility} from 'react-page-visibility'
 
 import {LocalStorageKey} from './utility'
-import {usePageVisibility} from 'react-page-visibility'
 
 export interface AuthContextState {
   readonly session?: {

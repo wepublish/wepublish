@@ -193,7 +193,8 @@
             "format",
             "stack",
             "backdrop",
-            "data-testid"
+            "data-testid",
+            "to"
           ],
           "ignoreComponent": [
             "code"
@@ -204,8 +205,8 @@
           ]
         }
       ],
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
+      "simple-import-sort/imports": 1,
+      "simple-import-sort/exports": 1,
       "import/first": 1,
       "import/newline-after-import": 1,
       "import/no-duplicates": 1

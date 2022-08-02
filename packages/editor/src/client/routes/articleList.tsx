@@ -5,7 +5,7 @@ import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {
   Button,
   FlexboxGrid,
@@ -79,11 +79,6 @@ export function ArticleList() {
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
   const navigate = useNavigate()
-  // const location = useLocation()
-
-  // const isCreateRoute = location.pathname.includes('create')
-  // console.log('location', location)
-  // console.log('isCreateRoute', isCreateRoute)
 
   const articleListVariables = {
     filter: filter || undefined,

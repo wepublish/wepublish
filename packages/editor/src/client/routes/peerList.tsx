@@ -2,11 +2,12 @@ import CogIcon from '@rsuite/icons/legacy/Cog'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar,
   Button,
   Divider,
-  // Drawer,
+  Drawer,
   FlexboxGrid,
   Form,
   IconButton,
@@ -15,41 +16,38 @@ import {
   Modal,
   toaster
 } from 'rsuite'
+
 import {
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
-  useUpdatePeerMutation,
   usePeerListQuery,
-  usePeerProfileQuery
+  usePeerProfileQuery,
+  useUpdatePeerMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
-// import {PeerEditPanel} from '../panel/peerEditPanel'
-// import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {PeerEditPanel} from '../panel/peerEditPanel'
+import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {addOrUpdateOneInArray} from '../utility'
-import {Link} from 'react-router-dom'
-
-// const ListItemLink = routeLink(List.Item)
-// const ButtonLink = routeLink(Button)
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 
 export function PeerList() {
-  // const {current} = useRoute()
-  // const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  // const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
-  //   current?.type === RouteType.PeerProfileEdit
-  // )
+  const isCreateRoute = location.pathname.includes('create')
+  const isPeerEditRoute = location.pathname.includes('peering/edit')
+  const isPeerProfileEditRoute = location.pathname.includes('peering/profile/edit')
+  const isAuthorRoute = location.pathname.includes('author')
 
-  // const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
-
-  // const [editID, setEditID] = useState<string | undefined>(
-  //   current?.type === RouteType.AuthorEdit ? current.params.id : undefined
-  // )
-
+  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(isPeerProfileEditRoute)
+  const [isEditModalOpen, setEditModalOpen] = useState(isPeerProfileEditRoute)
+  const [editID, setEditID] = useState<string | undefined>(isAuthorRoute ? id : undefined)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPeer, setCurrentPeer] = useState<Peer>()
 
@@ -79,23 +77,21 @@ export function PeerList() {
       )
   }, [peerInfoError, peerListError])
 
-  // useEffect(() => {
-  //   switch (current?.type) {
-  //     case RouteType.PeerProfileEdit:
-  //       setPeerProfileEditModalOpen(true)
-  //       break
+  useEffect(() => {
+    if (isPeerProfileEditRoute) {
+      setPeerProfileEditModalOpen(true)
+    }
 
-  //     case RouteType.PeerCreate:
-  //       setEditID(undefined)
-  //       setEditModalOpen(true)
-  //       break
+    if (isCreateRoute) {
+      setEditID(undefined)
+      setEditModalOpen(true)
+    }
 
-  //     case RouteType.PeerEdit:
-  //       setEditID(current.params.id)
-  //       setEditModalOpen(true)
-  //       break
-  //   }
-  // }, [current])
+    if (isPeerEditRoute) {
+      setEditID(id)
+      setEditModalOpen(true)
+    }
+  }, [location])
 
   const peers = peerListData?.peers?.map((peer, index) => {
     const {id, name, profile, hostURL, isDisabled} = peer
@@ -203,13 +199,7 @@ export function PeerList() {
           rightChildren={
             <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
               <Link to="/peering/profile/edit">
-                <IconButton
-                  size="lg"
-                  appearance="link"
-                  icon={<CogIcon />}
-                  circle
-                  // route={PeerInfoEditRoute.create({})}
-                />
+                <IconButton size="lg" appearance="link" icon={<CogIcon />} circle />
               </Link>
             </IconButtonTooltip>
           }
@@ -225,11 +215,7 @@ export function PeerList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Link to="/peering/create">
-            <Button
-              appearance="primary"
-              disabled={isPeerListLoading}
-              // route={PeerCreateRoute.create({})}
-            >
+            <Button appearance="primary" disabled={isPeerListLoading}>
               {t('peerList.overview.newPeer')}
             </Button>
           </Link>
@@ -243,36 +229,27 @@ export function PeerList() {
         ) : null}
       </div>
 
-      {/* <Drawer
+      <Drawer
         open={isPeerProfileEditModalOpen}
         size={'sm'}
         onClose={() => {
           setPeerProfileEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: PeerListRoute.create({}, current ?? undefined)
-          })
+          navigate('/peering')
         }}>
         <PeerInfoEditPanel
           onClose={() => {
             setPeerProfileEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PeerListRoute.create({}, current ?? undefined)
-            })
+            navigate('/peering')
           }}
         />
-      </Drawer> */}
+      </Drawer>
 
-      {/* <Drawer
+      <Drawer
         open={isEditModalOpen}
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: PeerListRoute.create({})
-          })
+          navigate('/peering')
         }}>
         {peerInfoData?.peerProfile.hostURL && (
           <PeerEditPanel
@@ -280,29 +257,20 @@ export function PeerList() {
             hostURL={peerInfoData.peerProfile.hostURL}
             onClose={() => {
               setEditModalOpen(false)
-
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PeerListRoute.create({})
-              })
+              navigate('/peering')
             }}
             onSave={() => {
               setEditModalOpen(false)
-
               toaster.push(
                 <Message type="success" showIcon closable duration={2000}>
                   {editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated')}
                 </Message>
               )
-
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PeerListRoute.create({})
-              })
+              navigate('/peering')
             }}
           />
         )}
-      </Drawer> */}
+      </Drawer>
 
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>

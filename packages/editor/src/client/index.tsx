@@ -7,8 +7,6 @@ import {createUploadLink} from 'apollo-upload-client'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-// import {BrowserRouter} from 'react-router-dom'
-// import {BrowserRouter, Route,Routes} from 'react-router-dom'
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
 import {HotApp} from './app'

@@ -1,10 +1,11 @@
+import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import Maybe from 'graphql/tsutils/Maybe'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import {PaymentPeriodicity, SortOrder} from './api'
-import {ClientSettings} from '../shared/types'
+
 import {ElementID} from '../shared/elementID'
-import Maybe from 'graphql/tsutils/Maybe'
+import {ClientSettings} from '../shared/types'
+import {PaymentPeriodicity, SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'

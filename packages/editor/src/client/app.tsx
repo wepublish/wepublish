@@ -2,14 +2,15 @@
 import 'rsuite/styles/index.less'
 import './global.less'
 
+import {gql, useMutation} from '@apollo/client'
 import React, {useContext, useEffect, useState} from 'react'
 import {hot} from 'react-hot-loader/root'
 import {useTranslation} from 'react-i18next'
-import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom'
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {CustomProvider} from 'rsuite'
 import enGB from 'rsuite/locales/en_GB'
 
-import {AuthContext} from './authContext'
+import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Base} from './base'
 import de from './locales/rsuiteDe'
 import fr from './locales/rsuiteFr'
@@ -32,38 +33,31 @@ import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
+import {LocalStorageKey} from './utility'
 
-// function GetComponents(current: any) {
-//   if (current) {
-//     switch (current.type) {
-// case RouteType.Login:
-//   return <Route path={RouteType.Login} element={<PageList />} />
+const LogoutMutation = gql`
+  mutation Logout {
+    revokeActiveSession
+  }
+`
 
-// case RouteType.ArticleCreate:
-// case RouteType.ArticleEdit:
-//   return (
-//     <ArticleEditor
-//       id={current.type === RouteType.ArticleEdit ? current.params.id : undefined}
-//     />
-//   )
+const Logout = () => {
+  const [logout] = useMutation(LogoutMutation)
+  const {session} = useContext(AuthContext)
+  const authDispatch = useContext(AuthDispatchContext)
 
-// case RouteType.PageCreate:
-// case RouteType.PageEdit:
-//   return (
-//     <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
-//   )
+  useEffect(() => {
+    if (session) {
+      logout().catch(error => console.warn('Error logging out ', error))
+      localStorage.removeItem(LocalStorageKey.SessionToken)
+      authDispatch({type: AuthDispatchActionType.Logout})
+    }
+  }, [session])
 
-//       default:
-//         return <Route path={current.type} element={<Base>{contentForRoute(current)}</Base>} />
-//     }
-//   }
-
-//   return null
-// }
+  return <Navigate to="/login" replace />
+}
 
 export function App() {
-  // const navigate = useNavigate()
-
   const {i18n} = useTranslation()
   const [lng, setLang] = useState<Record<string, any>>(enGB)
   const currentLanguageMap = new Map<string, any>([
@@ -77,19 +71,11 @@ export function App() {
   })
 
   const {session} = useContext(AuthContext)
-  // const dispatch = useRouteDispatch()
-
-  // TODO how to use navigate outside Router context?
-  // const navigate = useNavigate()
   useEffect(() => {
-    if (!session) {
-      // dispatch({
-      //   type: RouteActionType.SetCurrentRoute,
-      //   route: LoginRoute.create({})
-      // })
-      // navigate('/login')
+    if (!session && window.location.pathname !== '/login') {
+      window.location.replace('/login')
     }
-  }, [session])
+  }, [])
 
   return (
     <CustomProvider locale={lng}>
@@ -98,12 +84,21 @@ export function App() {
           <Route path="login" element={<Login />} />
           {/* Articles Routes */}
           <Route
+            path="/"
+            element={
+              <Base>
+                <ArticleList />
+              </Base>
+            }
+          />
+          <Route
             path="articles"
             element={
               <Base>
                 <ArticleList />
               </Base>
-            }></Route>
+            }
+          />
           <Route path="articles/create" element={<ArticleEditor />} />
           <Route path="articles/edit/:id" element={<ArticleEditor />} />
           {/* Peer Articles Routes */}
@@ -344,9 +339,41 @@ export function App() {
               </Base>
             }
           />
+          <Route
+            path="peering/create"
+            element={
+              <Base>
+                <PeerList />
+              </Base>
+            }
+          />
+          <Route
+            path="peering/edit/:id"
+            element={
+              <Base>
+                <PeerList />
+              </Base>
+            }
+          />
+          <Route
+            path="peering/profile/edit"
+            element={
+              <Base>
+                <PeerList />
+              </Base>
+            }
+          />
           {/* Tokens Routes */}
           <Route
             path="tokens"
+            element={
+              <Base>
+                <TokenList />
+              </Base>
+            }
+          />
+          <Route
+            path="tokens/generate"
             element={
               <Base>
                 <TokenList />
@@ -362,6 +389,8 @@ export function App() {
               </Base>
             }
           />
+          {/* Logout */}
+          <Route path="logout" element={<Logout />} />
         </Routes>
       </BrowserRouter>
     </CustomProvider>

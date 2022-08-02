@@ -1,55 +1,51 @@
+import {ApolloCache} from '@apollo/client'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import CloseIcon from '@rsuite/icons/legacy/Close'
+import EditIcon from '@rsuite/icons/legacy/Edit'
+import ReplyIcon from '@rsuite/icons/legacy/Reply'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {
-  CommentListQuery,
-  FullCommentFragment,
-  useCommentListQuery,
-  useApproveCommentMutation,
-  useRequestChangesOnCommentMutation,
-  CommentState,
-  CommentRejectionReason,
-  Comment,
-  useRejectCommentMutation,
-  CommentSort,
-  CommentListDocument,
-  ApproveCommentMutation,
-  RequestChangesOnCommentMutation,
-  RejectCommentMutation
-} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {
-  Timeline,
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  IconButton,
-  Table,
-  Modal,
   Button,
   Dropdown,
-  toaster,
+  FlexboxGrid,
+  IconButton,
+  Input,
+  InputGroup,
   Message,
+  Modal,
+  Pagination,
   Panel,
-  Pagination
+  Table,
+  Timeline,
+  toaster
 } from 'rsuite'
 
+import {
+  ApproveCommentMutation,
+  Comment,
+  CommentListDocument,
+  CommentListQuery,
+  CommentRejectionReason,
+  CommentSort,
+  CommentState,
+  FullCommentFragment,
+  RejectCommentMutation,
+  RequestChangesOnCommentMutation,
+  useApproveCommentMutation,
+  useCommentListQuery,
+  useRejectCommentMutation,
+  useRequestChangesOnCommentMutation
+} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-
-import {useTranslation} from 'react-i18next'
-
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {ApolloCache} from '@apollo/client'
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import CheckIcon from '@rsuite/icons/legacy/Check'
-import ReplyIcon from '@rsuite/icons/legacy/Reply'
 
 const {Column, HeaderCell, Cell} = Table
 
