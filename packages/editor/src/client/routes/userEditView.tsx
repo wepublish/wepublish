@@ -29,6 +29,7 @@ import {
 } from '../api'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export function UserEditView() {
   const {t} = useTranslation()
@@ -358,8 +359,9 @@ export function UserEditView() {
                     <Col xs={12}>
                       <Form.Group controlId="name">
                         <Form.ControlLabel>
-                          {t('userCreateOrEditView.name') + '*'}
+                          {toggleRequiredLabel(t('userCreateOrEditView.name'))}
                         </Form.ControlLabel>
+
                         <Form.Control
                           name="name"
                           value={name || ''}
@@ -388,8 +390,9 @@ export function UserEditView() {
                     <Col xs={12}>
                       <Form.Group controlId="email">
                         <Form.ControlLabel>
-                          {t('userCreateOrEditView.email') + '*'}
+                          {toggleRequiredLabel(t('userCreateOrEditView.email'))}
                         </Form.ControlLabel>
+
                         <Form.Control
                           name="email"
                           value={email}

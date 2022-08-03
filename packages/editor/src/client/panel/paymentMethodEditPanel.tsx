@@ -13,6 +13,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {slugify} from '../utility'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -166,7 +167,9 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
         <Drawer.Body>
           <Panel>
             <Form.Group>
-              <Form.ControlLabel>{t('paymentMethodList.name') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.name'))}
+              </Form.ControlLabel>
               <Form.Control
                 name="name"
                 value={name}
@@ -187,7 +190,9 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
               <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
             </Form.Group>
             <Form.Group>
-              <Form.ControlLabel>{t('paymentMethodList.adapter') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+              </Form.ControlLabel>
               <Form.Control
                 name="paymentProvider"
                 virtualized
