@@ -46,6 +46,7 @@ import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -235,7 +236,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
         <Drawer.Body>
           <Panel>
             <Form.Group>
-              <Form.ControlLabel>{t('memberPlanList.name') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>{toggleRequiredLabel(t('memberPlanList.name'))}</Form.ControlLabel>
               <Form.Control
                 name="name"
                 value={name}
@@ -272,7 +273,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
 
             <Form.Group>
               <Form.ControlLabel>
-                {t('memberPlanList.minimumMonthlyAmount') + '*'}
+                {toggleRequiredLabel(t('memberPlanList.minimumMonthlyAmount'))}
               </Form.ControlLabel>
               <CurrencyInput
                 name="currency"

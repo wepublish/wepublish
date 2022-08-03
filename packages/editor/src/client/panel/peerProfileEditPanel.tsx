@@ -22,6 +22,7 @@ import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
 import {FormInstance} from 'rsuite/esm/Form'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -163,7 +164,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         </Drawer.Header>
 
         <Drawer.Body>
-          <Panel bodyFill header={t('peerList.panels.image') + '*'}>
+          <Panel bodyFill header={toggleRequiredLabel(t('peerList.panels.image'))}>
             <ChooseEditImage
               image={logoImage}
               header={''}
@@ -193,7 +194,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
           <Panel header={t('peerList.panels.information')}>
             <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('peerList.panels.name'))}
+              </Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
             </Form.Group>
             <Form.Group>
@@ -245,7 +248,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               </Form.Group>
             </div>
             <br />
-            <Form.ControlLabel>{t('peerList.panels.callToActionImage') + '*'}</Form.ControlLabel>
+            <Form.ControlLabel>
+              {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
+            </Form.ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -254,7 +259,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 marginTop: '4px'
               }}>
               <Form.Group>
-                <Form.ControlLabel>{t('peerList.panels.image') + '*'}</Form.ControlLabel>
+                <Form.ControlLabel>
+                  {toggleRequiredLabel(t('peerList.panels.image'))}
+                </Form.ControlLabel>
                 <ChooseEditImage
                   image={callToActionImage}
                   header={''}

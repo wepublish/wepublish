@@ -18,6 +18,7 @@ import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -132,7 +133,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
     url: StringType()
       .isRequired(t('errorMessages.noUrlErrorMessage'))
       .isURL(t('errorMessages.invalidUrlErrorMessage')),
-    token: StringType().isRequired(t('errorMessages.noTokenErrorMessage'))
+    token: id ? StringType() : StringType().isRequired(t('errorMessages.noTokenErrorMessage'))
   })
 
   return (
@@ -168,7 +169,10 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
         <Drawer.Body>
           <Panel>
             <Form.Group controlId="name">
-              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('peerList.panels.name'))}
+              </Form.ControlLabel>
+
               <Form.Control
                 value={name}
                 name="name"
@@ -179,7 +183,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
               />
             </Form.Group>
             <Form.Group controlId="url">
-              <Form.ControlLabel>{t('peerList.panels.URL') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</Form.ControlLabel>
               <Form.Control
                 value={urlString}
                 name="url"
@@ -189,7 +193,10 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
               />
             </Form.Group>
             <Form.Group controlId="token">
-              <Form.ControlLabel>{t('peerList.panels.token') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('peerList.panels.token'), !id)}
+              </Form.ControlLabel>
+
               <Form.Control
                 value={token}
                 name="token"

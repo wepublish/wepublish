@@ -1,7 +1,7 @@
+import FileIcon from '@rsuite/icons/legacy/File'
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {
-  toaster,
   Button,
   DatePicker,
   Drawer,
@@ -12,9 +12,10 @@ import {
   Panel,
   Schema,
   SelectPicker,
+  toaster,
   Toggle
 } from 'rsuite'
-
+import FormControlLabel from 'rsuite/FormControlLabel'
 import {
   DeactivationFragment,
   FullMemberPlanFragment,
@@ -32,7 +33,7 @@ import {
   useSubscriptionQuery,
   useUpdateSubscriptionMutation
 } from '../api'
-import {useTranslation} from 'react-i18next'
+import {CurrencyInput} from '../atoms/currencyInput'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ALL_PAYMENT_PERIODICITIES, authorise} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
@@ -42,6 +43,7 @@ import FormControlLabel from 'rsuite/FormControlLabel'
 import FileIcon from '@rsuite/icons/legacy/File'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -316,10 +318,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       <Form.Group>
         <FormControlLabel>
           {t('userSubscriptionEdit.payedUntil')}
+
           <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
             ({t('invoice.seeInvoiceHistory')})
           </Button>
         </FormControlLabel>
+
         <DatePicker block value={paidUntil ?? undefined} disabled />
       </Form.Group>
     )
@@ -341,6 +345,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
           </Button>
         </FlexboxGrid.Item>
+
         <FlexboxGrid.Item>
           <Button
             appearance="ghost"
@@ -404,8 +409,9 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           <Panel>
             <Form.Group>
               <Form.ControlLabel>
-                {t('userSubscriptionEdit.selectMemberPlan') + '*'}
+                {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
               </Form.ControlLabel>
+
               <Form.Control
                 block
                 name="memberPlan"
@@ -416,6 +422,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 onChange={(value: any) => setMemberPlan(memberPlans.find(mp => mp.id === value))}
                 accepter={SelectPicker}
               />
+
               {memberPlan && (
                 <Form.HelpText>
                   <DescriptionList>
@@ -426,8 +433,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 </Form.HelpText>
               )}
             </Form.Group>
+
             <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.selectUser') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
+              </Form.ControlLabel>
+
               <UserSearch
                 name="user"
                 user={user}
@@ -436,8 +447,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 }}
               />
             </Form.Group>
+
             <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.monthlyAmount') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
+              </Form.ControlLabel>
+
               <CurrencyInput
                 name="currency"
                 currency="CHF"
@@ -448,10 +463,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />
             </Form.Group>
+
             <Form.Group>
               <Form.ControlLabel>
-                {t('memberPlanList.paymentPeriodicities') + '*'}
+                {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
               </Form.ControlLabel>
+
               <Form.Control
                 virtualized
                 value={paymentPeriodicity}
@@ -466,15 +483,19 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 accepter={SelectPicker}
               />
             </Form.Group>
+
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.autoRenew')}</Form.ControlLabel>
+
               <Toggle
                 checked={autoRenew}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setAutoRenew(value)}
               />
+
               <Form.HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</Form.HelpText>
             </Form.Group>
+
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.startsAt')}</Form.ControlLabel>
               <DatePicker
@@ -485,16 +506,23 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 onChange={value => setStartsAt(value!)}
               />
             </Form.Group>
+
             {subscriptionActionsViewLink()}
+
             <Form.Group>
               <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
             </Form.Group>
+
             <Form.Group>
               <Form.ControlLabel>{t('userSubscriptionEdit.payedUntil')}</Form.ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
             </Form.Group>
+
             <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.paymentMethod') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
+              </Form.ControlLabel>
+
               <Form.Control
                 name="paymentMethod"
                 block

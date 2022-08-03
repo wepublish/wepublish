@@ -14,6 +14,7 @@ import {
 import {useTranslation} from 'react-i18next'
 import {authorise} from '../utility'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface UserRoleEditPanelProps {
   id?: string
@@ -152,7 +153,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
 
         <Drawer.Body>
           <Form.Group controlId="name">
-            <Form.ControlLabel>{t('userRoles.panels.name') + '*'}</Form.ControlLabel>
+            <Form.ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</Form.ControlLabel>
             <Form.Control
               name="name"
               value={name}
