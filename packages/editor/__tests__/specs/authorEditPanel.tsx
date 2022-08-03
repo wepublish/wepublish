@@ -5,16 +5,19 @@ import snapshotDiff from 'snapshot-diff'
 import {AuthorDocument, CreateAuthorDocument} from '../../src/client/api'
 import {createDefaultValue} from '../../src/client/blocks/richTextBlock/richTextBlock'
 import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
-import {actWait} from '../utils'
+import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Author Edit Panel', () => {
   test('should render', () => {
     const {asFragment} = render(
-      <MockedProvider addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     expect(asFragment()).toMatchSnapshot()
   })
@@ -47,9 +50,11 @@ describe('Author Edit Panel', () => {
     ]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename>
-        <AuthorEditPanel id={'fakeId2'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename>
+          <AuthorEditPanel id={'fakeId2'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -58,9 +63,11 @@ describe('Author Edit Panel', () => {
 
   test('should fill the link field', async () => {
     const {asFragment, container} = render(
-      <MockedProvider addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -112,9 +119,11 @@ describe('Author Edit Panel', () => {
       }
     ]
     const {asFragment, getByTestId, getByLabelText} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -128,5 +137,32 @@ describe('Author Edit Panel', () => {
     fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
+  })
+
+  const sessionWithoutPermission = {
+    session: {
+      email: 'user@abc.ch',
+      sessionToken: 'abcdefg',
+      roles: [
+        {
+          id: 'user',
+          description: 'User',
+          name: 'user',
+          systemRole: true,
+          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_GET_AUTHOR')
+        }
+      ]
+    }
+  }
+
+  test('will not render without correct permission', () => {
+    const {asFragment} = render(
+      <AuthContext.Provider value={sessionWithoutPermission}>
+        <MockedProvider addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
+    )
+    expect(asFragment()).toMatchSnapshot()
   })
 })

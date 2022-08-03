@@ -173,3 +173,11 @@ exports[`Token Generate Panel should render 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`Token Generate Panel will not render without correct permission 1`] = `
+<DocumentFragment>
+  <p>
+    permissions.noAccess
+  </p>
+</DocumentFragment>
+`;

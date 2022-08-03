@@ -60,7 +60,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
               </div>
             </div>
             <button
-              class=\\"fetchButton rs-btn rs-btn-primary\\""
+              aria-disabled=\\"false\\""
 `;
 
 exports[`Peer Edit Panel should render 1`] = `
@@ -218,6 +218,7 @@ exports[`Peer Edit Panel should render 1`] = `
             </div>
           </div>
           <button
+            aria-disabled="false"
             class="fetchButton rs-btn rs-btn-primary"
             type="button"
           >
@@ -393,6 +394,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
             </div>
           </div>
           <button
+            aria-disabled="false"
             class="fetchButton rs-btn rs-btn-primary"
             type="button"
           >
@@ -409,5 +411,13 @@ exports[`Peer Edit Panel should render with ID 1`] = `
       </div>
     </div>
   </form>
+</DocumentFragment>
+`;
+
+exports[`Peer Edit Panel will not render without correct permission 1`] = `
+<DocumentFragment>
+  <p>
+    permissions.noAccess
+  </p>
 </DocumentFragment>
 `;

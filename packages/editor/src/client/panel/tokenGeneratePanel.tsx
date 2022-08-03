@@ -77,7 +77,8 @@ function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_CREATE_TOKEN')(
-  TokenGeneratePanel
-)
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_CREATE_TOKEN',
+  true
+)(TokenGeneratePanel)
 export {CheckedPermissionComponent as TokenGeneratePanel}

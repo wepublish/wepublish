@@ -4,16 +4,19 @@ import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 import {CreateTokenDocument} from '../../src/client/api'
 import {TokenGeneratePanel} from '../../src/client/panel/tokenGeneratePanel'
-import {actWait} from '../utils'
+import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Token Generate Panel', () => {
   test('should render', async () => {
     const {asFragment} = render(
-      <MockedProvider addTypename={false}>
-        <TokenGeneratePanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider addTypename={false}>
+          <TokenGeneratePanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -48,9 +51,11 @@ describe('Token Generate Panel', () => {
     ]
 
     const {asFragment, container} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <TokenGeneratePanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <TokenGeneratePanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -62,5 +67,32 @@ describe('Token Generate Panel', () => {
     await actWait()
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
+  })
+
+  const sessionWithoutPermission = {
+    session: {
+      email: 'user@abc.ch',
+      sessionToken: 'abcdefg',
+      roles: [
+        {
+          id: 'user',
+          description: 'User',
+          name: 'user',
+          systemRole: true,
+          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_CREATE_TOKEN')
+        }
+      ]
+    }
+  }
+
+  test('will not render without correct permission', () => {
+    const {asFragment} = render(
+      <AuthContext.Provider value={sessionWithoutPermission}>
+        <MockedProvider addTypename={false}>
+          <TokenGeneratePanel />
+        </MockedProvider>
+      </AuthContext.Provider>
+    )
+    expect(asFragment()).toMatchSnapshot()
   })
 })

@@ -193,7 +193,8 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_USER_ROLE')(
-  UserRoleEditPanel
-)
+const CheckedPermissionComponent = createCheckedPermissionComponent(
+  'CAN_GET_USER_ROLE',
+  true
+)(UserRoleEditPanel)
 export {CheckedPermissionComponent as UserRoleEditPanel}
