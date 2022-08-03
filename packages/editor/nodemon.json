@@ -1,9 +1,5 @@
 {
-  "watch": [
-    "../../node_modules/@karma.run/ui/lib/**/*.js",
-    "../../node_modules/@karma.run/react/lib/**/*.js",
-    "./dist/**/*.js"
-  ],
+  "watch": ["./dist/**/*.js"],
   "delay": 250,
   "ignoreRoot": [".git"]
 }
