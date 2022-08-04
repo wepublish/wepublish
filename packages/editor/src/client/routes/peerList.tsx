@@ -93,10 +93,10 @@ export function PeerList() {
     }
   }, [location])
 
-  const peers = peerListData?.peers?.map((peer, index) => {
+  const peers = peerListData?.peers?.map(peer => {
     const {id, name, profile, hostURL, isDisabled} = peer
     return (
-      <Link to={isDisabled ? undefined : `/peering/edit/${id}`} index={index} key={name}>
+      <Link to={isDisabled ? '#' : `/peering/edit/${id}`} key={name}>
         <List.Item style={{cursor: isDisabled ? 'default' : 'pointer'}}>
           <FlexboxGrid>
             <FlexboxGrid.Item

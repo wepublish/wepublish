@@ -53,7 +53,7 @@ export function ImageList() {
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute)
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute)
 
-  const [editID, setEditID] = useState<string | null>(isEditRoute ? id : null)
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const listVariables = {
     filter: filter || undefined,

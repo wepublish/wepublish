@@ -26,7 +26,7 @@ export interface BaseProps {
   children?: ReactNode
 }
 
-const NavLink = React.forwardRef(({href, children, ...rest}, ref) => (
+const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
   <Link ref={ref} to={href} {...rest}>
     {children}
   </Link>
