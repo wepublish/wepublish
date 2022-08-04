@@ -43,7 +43,7 @@ export interface Article {
 
 export interface PeerArticle {
   peerID: string
-  article: Article
+  article: any
 }
 
 export interface ArticleHistory {
