@@ -11,7 +11,8 @@ import {
   URLAdapter,
   PublicComment,
   CommentItemType,
-  Peer
+  Peer,
+  Article
 } from '../src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
@@ -34,7 +35,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+  getPeeredArticleURL(peer: Peer, article: Article): string {
     return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
   }
 

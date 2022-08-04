@@ -1,4 +1,5 @@
 import {slugify} from '../../src/client/utility'
+
 describe('slugify', () => {
   test.each([
     'text with spaces',
