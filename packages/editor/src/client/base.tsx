@@ -59,7 +59,6 @@ function useStickyState(defaultValue: string, key: string) {
 export function Base({children}: BaseProps) {
   const {pathname} = useLocation()
   const path = pathname.substring(1)
-  console.log('path', path)
 
   const {t, i18n} = useTranslation()
 

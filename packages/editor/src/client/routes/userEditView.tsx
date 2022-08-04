@@ -40,8 +40,6 @@ export function UserEditView() {
 
   const isCreateRoute = location.pathname.includes('create')
   const isEditRoute = location.pathname.includes('edit')
-  console.log('isCreateRoute', isCreateRoute)
-  console.log('isEditRoute', isEditRoute)
 
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
 

@@ -4,7 +4,7 @@ import SpaceShuttleIcon from '@rsuite/icons/legacy/SpaceShuttle'
 import TwitterIcon from '@rsuite/icons/legacy/Twitter'
 import React, {FormEvent, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Divider, Form, IconButton, Message, toaster} from 'rsuite'
 
 import {
@@ -23,14 +23,13 @@ export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  // const {current} = useRoute()
   const location = useLocation()
+  const params = useParams()
   const path = location.pathname.substring(1)
   console.log('location', location)
   console.log('path', path)
 
   const authDispatch = useContext(AuthDispatchContext)
-  // const routeDispatch = useRouteDispatch()
   const navigate = useNavigate()
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
@@ -79,65 +78,58 @@ export function Login() {
       sessionToken
     })
 
-    // TODO update this thing to react-router based solution
-    // if (current!.query && current!.query.next) {
-    //   const route = matchRoute(location.origin + current!.query.next)
-    //   if (route) {
-    //     // routeDispatch({type: RouteActionType.ReplaceRoute, route})
-    //     navigate(route, {replace: true})
-    //     return
-    //   }
-    // }
-    // routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
+    if (params && params.next) {
+      const route = location + params.next
+      if (route) {
+        navigate(route, {replace: true})
+        return
+      }
+    }
     navigate('/', {replace: true})
   }
 
-  // TODO update this thing to react-router based solution
-  // useEffect(() => {
-  //   if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
-  //     authenticateWithJWT({
-  //       variables: {
-  //         jwt: current.query.jwt
-  //       }
-  //     })
-  //       .then((response: any) => {
-  //         const {
-  //           token: sessionToken,
-  //           user: {email: responseEmail, roles}
-  //         } = response.data.createSessionWithJWT
+  useEffect(() => {
+    if (location && location.pathname === '/login/jwt' && params && params.jwt) {
+      const {jwt} = params
+      authenticateWithJWT({
+        variables: {
+          jwt
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail, roles}
+          } = response.data.createSessionWithJWT
 
-  //         authenticateUser(sessionToken, responseEmail, roles)
-  //       })
-  //       .catch(error => {
-  //         console.warn('auth error', error)
-  //         // routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
-  //         navigate('/login', {replace: true})
-  //       })
-  //   } else if (current !== null && current.params !== null && current.query && current.query.code) {
-  //     // TODO: fix this
-  //     const provider = (current as RouteInstance).params.provider
-  //     const {code} = current!.query
-  //     authenticateWithOAuth2Code({
-  //       variables: {
-  //         redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
-  //         name: provider,
-  //         code
-  //       }
-  //     })
-  //       .then((response: any) => {
-  //         const {
-  //           token: sessionToken,
-  //           user: {email: responseEmail, roles}
-  //         } = response.data.createSessionWithOAuth2Code
+          authenticateUser(sessionToken, responseEmail, roles)
+        })
+        .catch(error => {
+          console.warn('auth error', error)
+          navigate('/login', {replace: true})
+        })
+    } else if (location !== null && params && params.code && params.provider) {
+      const {code, provider} = params
+      authenticateWithOAuth2Code({
+        variables: {
+          redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
+          name: provider,
+          code
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail, roles}
+          } = response.data.createSessionWithOAuth2Code
 
-  //         authenticateUser(sessionToken, responseEmail, roles)
-  //       })
-  //       .catch(() => {
-  //         // routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
-  //         navigate('/login', {replace: true})
-  //       })
-  //   }
-  // }, [current])
+          authenticateUser(sessionToken, responseEmail, roles)
+        })
+        .catch(() => {
+          navigate('/login', {replace: true})
+        })
+    }
+  }, [location])
 
   useEffect(() => {
     const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
