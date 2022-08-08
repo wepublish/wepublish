@@ -61,20 +61,19 @@ At this moment we use `git-flow` command for release process. This makes it easy
 
 ### In steps
 1. Starts right after sprint ends (or whatever time we pick)
-2. Identify type of release (`major` | `minor` | `patch`)
+2. Identify type of release (`major` | `minor` | `patch`) by reviewing changelog
+   - `yarn run lerna-changelog`
 3. Create release branch `r/<release-name>` of dev `master`
     - `git flow release start <version>`
-4. Generate changelog `yarn run lerna-changelog`
-5. Create alpha-prerelease, create tag in github and publish new `next` npm
-    - `yarn run lerna version --no-changelog --allow-branch "r/*" --force-git-tag --no-push 3.2.0-alpha.X --yes`
-    - Update description in pull-request
-    - `git push --tags`
-6. Create pull-request as release placeholder
-7. Above 3 steps can be done multiple times
-8. Apply bugfixes if needed
-9. Once release tested and verified we tag and publish final-release
+4. Create alpha-prerelease, create tag in github and publish new `next` npm
+    - `yarn run lerna version --no-changelog --allow-branch "r/*" --force-git-tag <version>-alpha.X --yes`
+    - Create pull-request with changelog as description
+5. Apply bugfixes if needed
+    - Again create new pre-release
+    - Again add changelog into PR description
+6. Once release tested and verified tag and publish final-release
+    - Put generated PR changelog into the `CHANGELOG.md`
     - `git commit -m "c/release <version>"`
-    - `yarn run lerna version --amend --no-changelog --allow-branch "r/*" --force-git-tag --no-push 3.2.0 --yes`
-    - `git push --tags`
-10. Merge release branch back into dev `master` and stable `production`
-    - `git flow release finish <version>`
+    - `yarn run lerna version --amend --no-changelog --allow-branch "r/*" --force-git-tag <version> --yes`
+7. Merge release branch back into dev `master` and stable `production`
+   - `git flow release finish <version>`
