@@ -136,6 +136,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPublish = Boolean(articleData?.article?.draft)
   const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
     ? new Date(publishData?.publishArticle?.pending?.publishAt)
     : articleData?.article?.pending?.publishAt
@@ -538,7 +539,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                           }}
                           size={'lg'}
                           icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
+                          disabled={isDisabled || !canPublish}
+                          title={canPublish ? '' : t('articleEditor.overview.publishDisabled')}
                           onClick={() => {
                             setPublishDialogOpen(true)
                           }}>
