@@ -82,6 +82,7 @@ import {
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
+import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
   createSubscription,
@@ -869,37 +870,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
       },
-      async resolve(root, {value}, {authenticate, prisma}) {
-        const {roles} = authenticate()
-        authorise(CanUpdateSettings, roles)
-
-        for (const {name, value: newVal} of value) {
-          const fullSetting = await prisma.setting.findUnique({
-            where: {name}
-          })
-
-          if (!fullSetting) {
-            throw new NotFound('setting', name)
-          }
-
-          const currentVal = fullSetting.value
-          const restriction = fullSetting.settingRestriction
-          checkSettingRestrictions(newVal, currentVal, restriction as SettingRestriction)
-        }
-
-        return prisma.$transaction(
-          (value as UpdateSettingArgs[]).map(({name, value: val}) =>
-            prisma.setting.update({
-              where: {
-                name
-              },
-              data: {
-                value: val as Prisma.InputJsonValue
-              }
-            })
-          )
-        )
-      }
+      resolve: (root, {value}, {authenticate, prisma}) =>
+        updateSettings(value, authenticate, prisma)
     }
   }
 })
