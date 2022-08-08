@@ -102,6 +102,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(pageData?.page?.draft)
   const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
     ? new Date(publishData?.publishPage?.pending?.publishAt)
     : pageData?.page?.pending?.publishAt
@@ -386,7 +387,7 @@ export function PageEditor({id}: PageEditorProps) {
               }
               rightChildren={
                 <IconButtonLink
-                  disabled={hasChanged || !id}
+                  disabled={hasChanged || !id || !canPreview}
                   style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<EyeIcon />}
@@ -397,7 +398,8 @@ export function PageEditor({id}: PageEditorProps) {
                         hours: 1
                       }
                     })
-                  }}>
+                  }}
+                  title={canPreview ? '' : t('pageEditor.overview.previewDisabled')}>
                   {t('pageEditor.overview.preview')}
                 </IconButtonLink>
               }

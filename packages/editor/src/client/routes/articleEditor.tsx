@@ -136,6 +136,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(articleData?.article?.draft)
   const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
     ? new Date(publishData?.publishArticle?.pending?.publishAt)
     : articleData?.article?.pending?.publishAt
@@ -551,7 +552,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               }
               rightChildren={
                 <IconButtonLink
-                  disabled={hasChanged || !id}
+                  disabled={hasChanged || !id || !canPreview}
                   style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<EyeIcon />}
@@ -562,7 +563,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         hours: 1
                       }
                     })
-                  }}>
+                  }}
+                  title={canPreview ? '' : t('articleEditor.overview.previewDisabled')}>
                   {t('articleEditor.overview.preview')}
                 </IconButtonLink>
               }
