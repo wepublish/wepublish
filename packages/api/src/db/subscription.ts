@@ -9,6 +9,7 @@ import {
 import {MemberPlan, PaymentPeriodicity} from './memberPlan'
 import {PaymentMethod} from './paymentMethod'
 import {User} from './user'
+import {Invoice} from './invoice'
 
 export enum SubscriptionDeactivationReason {
   None,
@@ -94,6 +95,7 @@ export interface Subscription {
   readonly memberPlan?: MemberPlan
   readonly paymentMethod?: PaymentMethod
   readonly user?: User
+  readonly invoices?: Invoice[]
 }
 
 export interface CreateSubscriptionPeriodArgs {

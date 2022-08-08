@@ -64,7 +64,9 @@ import {logger} from '../server'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
 import {SubscriptionDeactivationReason} from '../db/subscription'
 import {GraphQLMetadataPropertyPublicInput} from './common'
+import {SettingName} from '../db/setting'
 import * as crypto from 'crypto'
+import {Validator} from '../validator'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -81,6 +83,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
       async resolve(root, {email, password}, {dbAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
         if (!user.active) throw new NotActiveError()
@@ -151,7 +155,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge}) {
+      async resolve(_, {input}, {optionalAuthenticateUser, dbAdapter, challenge, loaders}) {
         const user = optionalAuthenticateUser()
         let authorType = CommentAuthorType.VerifiedUser
         const commentLength = countRichtextChars(0, input.text)
@@ -163,8 +167,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         // Challenge
         if (!user) {
           authorType = CommentAuthorType.GuestUser
-          if (process.env.ENABLE_ANONYMOUS_COMMENTS !== 'true')
-            throw new AnonymousCommentsDisabledError()
+          const guestCanComment =
+            (await dbAdapter.setting.getSetting(SettingName.ALLOW_GUEST_COMMENTING))?.value ??
+            process.env.ENABLE_ANONYMOUS_COMMENTS === 'true'
+          if (!guestCanComment) throw new AnonymousCommentsDisabledError()
 
           if (!input.guestUsername) throw new AnonymousCommentError()
           if (!input.challenge) throw new ChallengeMissingCommentError()
@@ -243,6 +249,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {name, firstName, preferredName, email, address, password, challengeAnswer},
         {dbAdapter, loaders, memberContext, createPaymentWithProvider, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -333,6 +344,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         },
         {dbAdapter, loaders, memberContext, createPaymentWithProvider, challenge}
       ) {
+        email = email.toLowerCase()
+        await Validator.createUser().validateAsync(
+          {name, email, firstName, preferredName},
+          {allowUnknown: true}
+        )
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -542,6 +558,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {dbAdapter, generateJWT, mailContext, urlAdapter}) {
+        email = email.toLowerCase()
+        await Validator.login().validateAsync({email}, {allowUnknown: true})
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email
 
@@ -559,10 +577,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           )
           return email
         }
+        const resetPwd =
+          ((await dbAdapter.setting.getSetting(SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN))
+            ?.value as number) ?? parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+        if (!resetPwd) throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
 
         const token = generateJWT({
           id: user.id,
-          expiresInMinutes: parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN as string)
+          expiresInMinutes: resetPwd
         })
         await mailContext.sendMail({
           type: SendMailType.LoginLink,
@@ -606,6 +628,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         "This mutation allows to update the user's data by taking an input of type UserInput.",
       async resolve(root, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
+
+        input.email = input.email.toLowerCase()
+        await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
         const {name, email, firstName, preferredName, address} = input
         // TODO: implement new email check
@@ -705,6 +730,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         })
 
         if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        // cancel open invoices if subscription is deactivated
+        if (input.deactivation !== null) {
+          await memberContext.cancelInvoicesForSubscription(id)
+        }
 
         return await memberContext.handleSubscriptionChange({
           subscription: updateSubscription
