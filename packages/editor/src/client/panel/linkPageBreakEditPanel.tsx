@@ -50,7 +50,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
+        <Form fluid>
           <Form.Group>
             <Form.ControlLabel>{t('linkPageBreakEditPanel.style.label')}</Form.ControlLabel>
             <SelectPicker
@@ -124,7 +124,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.targetLabel')}</Form.ControlLabel>
             <RadioGroup
               name="target_radio"
-              inline={true}
+              inline
               onChange={linkTarget => onChange?.({...value, linkTarget: linkTarget as string})}
               value={linkTarget}>
               <Radio value={'_self'}>{t('linkPageBreakEditPanel.link.targetLabelSelf')}</Radio>

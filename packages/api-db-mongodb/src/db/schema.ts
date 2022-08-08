@@ -19,7 +19,11 @@ import {
   UserOAuth2Account,
   PaymentPeriodicity,
   SubscriptionPeriod,
-  SubscriptionDeactivation
+  SubscriptionDeactivation,
+  MemberPlan,
+  Invoice,
+  SettingRestriction,
+  SettingName
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -29,7 +33,6 @@ export enum CollectionName {
   Peers = 'peers',
   Users = 'users',
   UserRoles = 'users.roles',
-  TempUsers = 'temp.users',
   Subscriptions = 'subscriptions',
 
   Sessions = 'sessions',
@@ -52,7 +55,9 @@ export enum CollectionName {
   Invoices = 'invoices',
   Payments = 'payments',
 
-  MailLog = 'mail.log'
+  MailLog = 'mail.log',
+
+  Settings = 'settings'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -83,6 +88,7 @@ export interface DBPeer {
 
   name: string
   slug: string
+  isDisabled?: boolean
   hostURL: string
   token: string
 }
@@ -155,21 +161,8 @@ export interface DBSubscription {
   paymentMethodID: string
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
-}
-
-export interface DBTempUser {
-  _id: any
-
-  createdAt: Date
-  modifiedAt: Date
-
-  name: string
-  firstName?: string
-  preferredName?: string
-  email: string
-
-  address?: UserAddress
-  paymentProviderCustomers: PaymentProviderCustomer[]
+  memberPlan?: MemberPlan
+  invoices?: Invoice[]
 }
 
 export interface DBSession {
@@ -435,4 +428,12 @@ export interface DBMailLog {
   state: MailLogState
   mailProviderID: string
   mailData?: string
+}
+
+export interface DBSetting<T> {
+  _id: any
+
+  name: SettingName
+  value: T | null
+  settingRestriction?: SettingRestriction
 }

@@ -47,7 +47,7 @@ import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
 import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
-import {NotFound} from '../error'
+import {DisabledPeerError, NotFound} from '../error'
 import {Invoice} from '../db/invoice'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLChallenge} from './challenge'
@@ -70,12 +70,17 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPeer,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the peer profile.',
-      resolve(root, {id, slug}, {loaders}) {
+      async resolve(root, {id, slug}, {loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
 
-        return id ? loaders.peer.load(id) : loaders.peerBySlug.load(slug)
+        const peer = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
+
+        if (peer?.isDisabled) {
+          throw new DisabledPeerError()
+        }
+        return peer
       }
     },
 
@@ -151,7 +156,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if (!article && slug) {
           article = await dbAdapter.article.getPublishedArticleBySlug(slug)
         }
-
         if (!article && token) {
           try {
             const articleId = verifyJWT(token)
@@ -167,13 +171,17 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
                 } as PublicArticle)
               : null
           } catch (error) {
-            logger('graphql-query').warn(error, 'Error while verifying token with article id.')
+            logger('graphql-query').warn(
+              error as Error,
+              'Error while verifying token with article id.'
+            )
           }
         }
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
+        if (!article) throw new NotFound('Article', id ?? slug ?? token)
 
         return article
       }
@@ -219,7 +227,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if ((peerID == null && peerSlug == null) || (peerID != null && peerSlug != null)) {
           throw new UserInputError('You must provide either `peerID` or `peerSlug`.')
         }
-
         if (peerSlug) {
           const peer = await loaders.peerBySlug.load(peerSlug)
 
@@ -253,7 +260,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
         let page = id ? await loaders.publicPagesByID.load(id) : null
 
-        if (!page) {
+        if (!page && slug !== undefined) {
           // slug can be empty string
           page = await loaders.publicPagesBySlug.load(slug)
         }
@@ -272,9 +279,13 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
                 } as PublicPage)
               : null
           } catch (error) {
-            logger('graphql-query').warn(error, 'Error while verifying token with page id.')
+            logger('graphql-query').warn(
+              error as Error,
+              'Error while verifying token with page id.'
+            )
           }
         }
+        if (!page) throw new NotFound('Page', id ?? slug ?? token)
 
         return page
       }

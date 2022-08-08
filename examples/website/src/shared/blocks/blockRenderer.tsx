@@ -53,7 +53,6 @@ export interface RenderBlockOptions {
 
 export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   const {authors, publishedAt, updatedAt, articleShareUrl, isArticle, isPeerArticle = false} = opts
-
   if (!block) return null
 
   switch (block.type) {
@@ -163,6 +162,10 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
       break
 
     case TeaserType.PeerArticle:
+      if (article.peer?.isDisabled) {
+        // just don't render any teaser for now - agreed with Laurent
+        return null
+      }
       route = PeerArticleRoute.create({
         peerID: article.peer!.id,
         id: article.id,

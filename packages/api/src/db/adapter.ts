@@ -15,12 +15,11 @@ import {DBInvoiceAdapter} from './invoice'
 import {DBPaymentAdapter} from './payment'
 import {DBMailLogAdapter} from './mailLog'
 import {DBSubscriptionAdapter} from './subscription'
-import {DBTempUserAdapter} from './tempUser'
+import {DBSettingAdapter} from './setting'
 
 export interface DBAdapter {
   readonly peer: DBPeerAdapter
   readonly user: DBUserAdapter
-  readonly tempUser: DBTempUserAdapter
   readonly subscription: DBSubscriptionAdapter
   readonly userRole: DBUserRoleAdapter
   readonly session: DBSessionAdapter
@@ -36,4 +35,5 @@ export interface DBAdapter {
   readonly invoice: DBInvoiceAdapter
   readonly payment: DBPaymentAdapter
   readonly mailLog: DBMailLogAdapter
+  readonly setting: DBSettingAdapter
 }

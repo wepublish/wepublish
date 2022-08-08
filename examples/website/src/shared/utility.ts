@@ -13,8 +13,8 @@ export enum LocalStorageKey {
   SessionToken = 'sessionToken'
 }
 
-export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
-  if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
+export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
+  if (typeof window !== 'object') return {isLoaded: false, isLoading: false, load: () => {}}
 
   const scriptRef = useRef<HTMLScriptElement | null>(null)
 
@@ -99,7 +99,7 @@ export function convertMSToDHMS(milliseconds: number) {
 
   minute = minute % 60
 
-  let day = Math.floor(hour / 24)
+  const day = Math.floor(hour / 24)
 
   hour = hour % 24
 
@@ -119,19 +119,13 @@ export function createStyleRenderer() {
   })
 }
 
-// Converts string of HTML properties into an object for React
 export function transformCssStringToObject(styleCustom: string): object {
   const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: object, currentValue: string) => {
     const [key, value] = currentValue.split(':')
     if (key && value) {
-      return Object.assign(previousValue, {
-        [key
-          .toLowerCase()
-          .replace(/-(.)/gm, ($0, $1) => $1.toUpperCase())
-          .trim()]: value.trim()
-      })
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
     }
     return previousValue
   }, {})

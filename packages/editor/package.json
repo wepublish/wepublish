@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "3.0.0",
+  "version": "4.1.0-alpha.0",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -48,7 +48,7 @@
     "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.3.21",
@@ -90,7 +90,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
     "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-env": "^7.18.6",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.7.4",
     "@graphql-codegen/add": "^2.0.1",
@@ -130,7 +130,7 @@
     "snapshot-diff": "^0.9.0",
     "style-loader": "^1.0.0",
     "ts-jest": "^26.4.1",
-    "typescript": "^3.8.3",
+    "typescript": "^4.6.4",
     "webpack": "^4.41.2",
     "webpack-dev-server": "^3.9.0"
   },
@@ -141,6 +141,9 @@
     "rules": {
       "react/display-name": [
         0
+      ],
+      "react/jsx-boolean-value": [
+        1
       ],
       "react/prop-types": [
         0
@@ -186,7 +189,8 @@
             "fixed",
             "format",
             "stack",
-            "backdrop"
+            "backdrop",
+            "data-testid"
           ],
           "ignoreComponent": [
             "code"

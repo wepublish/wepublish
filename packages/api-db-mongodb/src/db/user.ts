@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-
 import {
   ConnectionResult,
   CreateUserArgs,
@@ -14,7 +13,6 @@ import {
   OptionalUser,
   ResetUserPasswordArgs,
   SortOrder,
-  TempUser,
   UpdatePaymentProviderCustomerArgs,
   UpdateUserArgs,
   User,
@@ -29,7 +27,6 @@ import {CollectionName, DBUser} from './schema'
 import {escapeRegExp, MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
-import * as crypto from 'crypto'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -71,30 +68,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
       throw err
     }
-  }
-
-  /**
-   * For now, a user will be confirmed by a valid payment. When a user has a valid payment, the previously temporary
-   * user is converted to a permanent user.
-   * @param tempUser
-   */
-  public async createUserFromTempUser(tempUser: TempUser): Promise<OptionalUser> {
-    const newUser = await this.createUser({
-      input: {
-        email: tempUser.email,
-        name: tempUser.name,
-        firstName: tempUser.firstName,
-        address: tempUser.address,
-        preferredName: tempUser.preferredName,
-        active: true,
-        roleIDs: [],
-        properties: [],
-        emailVerifiedAt: null,
-        paymentProviderCustomers: tempUser.paymentProviderCustomers
-      },
-      password: crypto.randomBytes(48).toString('base64')
-    })
-    return newUser
   }
 
   async getUser(email: string): Promise<OptionalUser> {
@@ -316,12 +289,32 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
 
     if (filter?.text !== undefined) {
+      const columnsToSearch = [
+        'name',
+        'firstName',
+        'email',
+        'address.streetAddress',
+        'address.zipCode',
+        'address.city'
+      ]
+      const orConditions = []
+      const search = filter?.text
+      const searchTerms = search.split(' ')
+      // iterate user search terms
+      for (const searchTerm of searchTerms) {
+        // iterate columns to be searched
+        for (const column of columnsToSearch) {
+          const orCondition: any = {}
+          orCondition[column] = {
+            $regex: escapeRegExp(searchTerm),
+            $options: 'im'
+          }
+          orConditions.push(orCondition)
+        }
+      }
+
       textFilter.$and?.push({
-        $or: [
-          {name: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {firstName: {$regex: escapeRegExp(filter.text), $options: 'im'}},
-          {email: {$regex: escapeRegExp(filter.text), $options: 'im'}}
-        ]
+        $or: orConditions
       })
     }
 

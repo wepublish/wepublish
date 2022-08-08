@@ -132,7 +132,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
         }
 
       case 'TitleBlock':
-        let value: TitleBlockValue = {
+        const value: TitleBlockValue = {
           type: HeaderType.Default,
           title: block.title,
           lead: block.lead

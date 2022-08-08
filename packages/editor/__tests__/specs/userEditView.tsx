@@ -1,10 +1,11 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
-import snapshotDiff from 'snapshot-diff'
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
-import {UserEditPanel} from '../../src/client/panel/userEditPanel'
+import {UserEditView} from '../../src/client/routes/userEditView'
 import {actWait} from '../utils'
+import {RouteProvider} from '../../src/client/route'
+import snapshotDiff from 'snapshot-diff'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -88,12 +89,14 @@ const userDocumentQuery = {
   })
 }
 
-describe('User Edit Panel', () => {
+describe('User edit view', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <RouteProvider>
+          <UserEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -105,8 +108,10 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
+      <MockedProvider mocks={mocks} addTypename>
+        <RouteProvider>
+          <UserEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -119,7 +124,9 @@ describe('User Edit Panel', () => {
 
     const {asFragment} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <RouteProvider>
+          <UserEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
@@ -136,19 +143,18 @@ describe('User Edit Panel', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
+      <MockedProvider mocks={mocks} addTypename>
+        <RouteProvider>
+          <UserEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
     const initialRender = asFragment()
 
     fireEvent.click(await screen.findByRole('combobox'))
-    fireEvent.click(
-      await screen.findByRole('checkbox', {
-        checked: true
-      })
-    )
+    const checkboxLabels = await screen.findAllByRole('checkbox', {checked: false})
+    fireEvent.click(checkboxLabels[checkboxLabels.length - 1])
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })
@@ -197,27 +203,35 @@ describe('User Edit Panel', () => {
       userRoleListDocumentQuery
     ]
 
-    const {asFragment, container} = render(
+    const {asFragment, getByLabelText, getByTestId} = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <RouteProvider>
+          <UserEditView />
+        </RouteProvider>
       </MockedProvider>
     )
     await actWait()
     const initialRender = asFragment()
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.name"]')!, {
+    const nameInput = getByLabelText('userCreateOrEditView.name*')
+    const emailInput = getByLabelText('userCreateOrEditView.email*')
+    const passwordInput = getByLabelText('userCreateOrEditView.password*')
+
+    const saveButton = getByTestId('saveButton')
+
+    fireEvent.change(nameInput, {
       target: {value: user.name}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.email"]')!, {
+    fireEvent.change(emailInput, {
       target: {value: user.email}
     })
 
-    fireEvent.change(container.querySelector('input[name="userList.panels.password"]')!, {
+    fireEvent.change(passwordInput, {
       target: {value: user.password}
     })
 
-    fireEvent.click(container.querySelector('button.rs-btn.rs-btn-primary')!)
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

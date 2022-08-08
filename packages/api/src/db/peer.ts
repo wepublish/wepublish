@@ -27,6 +27,7 @@ export interface PeerProfileInput {
 export interface BasePeer {
   name: string
   slug: string
+  isDisabled?: boolean
   hostURL: string
 }
 
@@ -43,7 +44,7 @@ export interface CreatePeerInput extends BasePeer {
   token: string
 }
 
-export interface UpdatePeerInput extends BasePeer {
+export interface UpdatePeerInput extends Partial<BasePeer> {
   token?: string
 }
 

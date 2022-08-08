@@ -6,13 +6,21 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLBoolean
+  GraphQLBoolean,
+  GraphQLID
 } from 'graphql'
 import {User, UserSort} from '../db/user'
 import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLPublicPayment} from './payment'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLInvoice} from './invoice'
+import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
+import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
+import {Subscription} from '../db/subscription'
+import {createProxyingResolver} from '../utility'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -40,6 +48,37 @@ export const GraphQLOAuth2Account = new GraphQLObjectType({
     type: {type: GraphQLNonNull(GraphQLString)},
     provider: {type: GraphQLNonNull(GraphQLString)},
     scope: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
+  name: 'UserSubscription',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paidUntil: {type: GraphQLDateTime},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    deactivation: {type: GraphQLSubscriptionDeactivation},
+    periods: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscriptionPeriod)))
+    },
+    memberPlan: {
+      type: GraphQLNonNull(GraphQLMemberPlan),
+      resolve({memberPlanID}, args, {dbAdapter}) {
+        return dbAdapter.memberPlan.getMemberPlanById(memberPlanID) // by subscription
+      }
+    },
+    invoices: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoice))),
+      resolve({id}, args, {dbAdapter}) {
+        return dbAdapter.invoice.getInvoicesBySubscriptionID(id)
+      }
+    }
   }
 })
 
@@ -75,6 +114,12 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     },
     oauth2Accounts: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+    },
+    subscriptions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserSubscription))),
+      resolve: createProxyingResolver(({id}, _, {dbAdapter}) => {
+        return dbAdapter.subscription.getSubscriptionsByUserID(id)
+      })
     }
   }
 })
@@ -173,5 +218,31 @@ export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
   fields: {
     paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
     customerID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLUserSession = new GraphQLObjectType({
+  name: 'UserSession',
+  fields: {
+    token: {type: GraphQLNonNull(GraphQLString)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
+export const GraphQLMemberRegistration = new GraphQLObjectType({
+  name: 'Registration',
+  fields: {
+    user: {type: GraphQLNonNull(GraphQLPublicUser)},
+    session: {type: GraphQLNonNull(GraphQLUserSession)}
+  }
+})
+
+export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
+  name: 'RegistrationAndPayment',
+  fields: {
+    payment: {type: GraphQLNonNull(GraphQLPublicPayment)},
+    user: {type: GraphQLNonNull(GraphQLPublicUser)},
+    session: {type: GraphQLNonNull(GraphQLUserSession)}
   }
 })

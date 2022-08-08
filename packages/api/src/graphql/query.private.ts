@@ -1,19 +1,19 @@
 import {
-  GraphQLObjectType,
+  GraphQLID,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLInt,
-  GraphQLID,
+  GraphQLObjectType,
   GraphQLString,
   Kind
 } from 'graphql'
 
 import {
-  WrapQuery,
+  delegateToSchema,
   ExtractField,
   introspectSchema,
-  delegateToSchema,
-  makeRemoteExecutableSchema
+  makeRemoteExecutableSchema,
+  WrapQuery
 } from 'graphql-tools'
 
 import {UserInputError} from 'apollo-server-express'
@@ -21,31 +21,31 @@ import {UserInputError} from 'apollo-server-express'
 import {Context, createFetcher} from '../context'
 
 import {GraphQLSession} from './session'
-import {GraphQLAuthProvider} from './auth'
+import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 
 import {
-  GraphQLArticleConnection,
-  GraphQLArticleSort,
-  GraphQLArticleFilter,
   GraphQLArticle,
+  GraphQLArticleConnection,
+  GraphQLArticleFilter,
+  GraphQLArticleSort,
   GraphQLPeerArticleConnection
 } from './article'
 
 import {ConnectionResult, InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
-import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
+import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {ImageSort} from '../db/image'
 
 import {
+  GraphQLAuthor,
   GraphQLAuthorConnection,
   GraphQLAuthorFilter,
-  GraphQLAuthorSort,
-  GraphQLAuthor
+  GraphQLAuthorSort
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {User, UserSort} from '../db/user'
+import {UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -57,56 +57,58 @@ import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
 import {
-  delegateToPeerSchema,
-  base64Encode,
   base64Decode,
-  markResultAsProxied,
-  mapSubscriptionsAsCsv
+  base64Encode,
+  delegateToPeerSchema,
+  mapSubscriptionsAsCsv,
+  markResultAsProxied
 } from '../utility'
 
 import {
+  AllPermissions,
   authorise,
-  isAuthorised,
+  CanCreatePeer,
   CanGetArticle,
+  CanGetArticlePreviewLink,
   CanGetArticles,
   CanGetAuthor,
   CanGetAuthors,
+  CanGetComments,
   CanGetImage,
   CanGetImages,
+  CanGetInvoice,
+  CanGetInvoices,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
   CanGetNavigation,
+  CanGetNavigations,
   CanGetPage,
+  CanGetPagePreviewLink,
   CanGetPages,
+  CanGetPayment,
+  CanGetPaymentMethod,
+  CanGetPaymentMethods,
+  CanGetPaymentProviders,
+  CanGetPayments,
+  CanGetPeer,
+  CanGetPeerArticle,
+  CanGetPeerArticles,
+  CanGetPeerProfile,
+  CanGetPeers,
   CanGetPermissions,
+  CanGetSettings,
+  CanGetSharedArticle,
+  CanGetSharedArticles,
+  CanGetSubscription,
+  CanGetSubscriptions,
   CanGetUser,
   CanGetUserRole,
   CanGetUserRoles,
   CanGetUsers,
-  CanGetSharedArticle,
-  CanGetPeerArticle,
-  CanGetPeerArticles,
-  CanGetNavigations,
-  CanGetSharedArticles,
-  CanGetPeerProfile,
-  CanGetPeers,
-  CanGetPeer,
-  AllPermissions,
-  CanGetComments,
-  CanGetMemberPlan,
-  CanGetMemberPlans,
-  CanGetPaymentMethods,
-  CanGetPaymentMethod,
-  CanGetInvoice,
-  CanGetInvoices,
-  CanGetPayment,
-  CanGetPayments,
-  CanGetPaymentProviders,
-  CanGetArticlePreviewLink,
-  CanGetPagePreviewLink,
-  CanCreatePeer,
-  CanGetSubscriptions,
-  CanGetSubscription
+  CanLoginAsOtherUser,
+  isAuthorised
 } from './permissions'
-import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
+import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -116,7 +118,14 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {NotAuthorisedError, NotFound, PeerTokenInvalidError} from '../error'
+import {
+  DisabledPeerError,
+  GivenTokeExpiryToLongError,
+  NotAuthorisedError,
+  NotFound,
+  PeerTokenInvalidError,
+  UserIdNotFound
+} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
@@ -141,13 +150,15 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
-import {Subscription, SubscriptionSort} from '../db/subscription'
+import {Subscription, SubscriptionJoins, SubscriptionSort} from '../db/subscription'
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
   GraphQLSubscriptionSort
 } from './subscription'
+import {GraphQLSetting} from './setting'
+import {SettingName} from '../db/setting'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -161,11 +172,16 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         hostURL: {type: GraphQLNonNull(GraphQLString)},
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(root, {hostURL, token}, {authenticate}, info) {
+      async resolve(root, {hostURL, token}, {authenticate, dbAdapter}, info) {
         const {roles} = authenticate()
         authorise(CanCreatePeer, roles)
         const link = new URL('/admin', hostURL)
-        const fetcher = await createFetcher(link.toString(), token)
+        const peerTimeout =
+          ((await dbAdapter.setting.getSetting(SettingName.PEERING_TIMEOUT_MS))?.value as number) ??
+          parseInt(process.env.PEERING_TIMEOUT_IN_MS as string)
+        if (!peerTimeout) throw new Error('No value set for PEERING_TIMEOUT_IN_MS')
+
+        const fetcher = await createFetcher(link.toString(), token, peerTimeout)
         const schema = await introspectSchema(fetcher)
         const remoteExecutableSchema = await makeRemoteExecutableSchema({
           schema,
@@ -189,6 +205,37 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createJWTForUser: {
+      type: GraphQLJWTToken,
+      args: {
+        userId: {type: GraphQLNonNull(GraphQLString)},
+        expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      async resolve(
+        root,
+        {userId, expiresInMinutes},
+        {authenticate, generateJWT, dbAdapter},
+        info
+      ) {
+        const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
+        const {roles} = authenticate()
+        authorise(CanLoginAsOtherUser, roles)
+        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) throw new GivenTokeExpiryToLongError()
+
+        const user = await dbAdapter.user.getUserByID(userId)
+        if (!user) throw new UserIdNotFound()
+
+        const expiresAt = new Date(
+          new Date().getTime() + expiresInMinutes * 60 * 1000
+        ).toISOString()
+        const token = generateJWT({id: userId, expiresInMinutes})
+        return {
+          token,
+          expiresAt
+        }
+      }
+    },
+
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       async resolve(root, args, {authenticate, hostURL, websiteURL, dbAdapter}) {
@@ -203,6 +250,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetPeers, roles)
+
         return dbAdapter.peer.getPeers()
       }
     },
@@ -210,10 +258,17 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter, loaders}) {
+      async resolve(root, {id}, {authenticate, dbAdapter, loaders}) {
         const {roles} = authenticate()
         authorise(CanGetPeer, roles)
-        return loaders.peer.load(id)
+
+        const peer = await loaders.peer.load(id)
+
+        if (peer?.isDisabled) {
+          throw new DisabledPeerError()
+        }
+
+        return peer
       }
     },
 
@@ -348,14 +403,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     subscriptionsAsCsv: {
       type: GraphQLString,
-      args: {filter: {type: GraphQLSubscriptionFilter}},
+      args: {
+        filter: {type: GraphQLSubscriptionFilter}
+      },
       async resolve(root, {filter}, {dbAdapter, authenticate}) {
         const {roles} = authenticate()
         authorise(CanGetSubscriptions, roles)
         authorise(CanGetUsers, roles)
 
         const subscriptions: Subscription[] = []
-        const users: User[] = []
+        const joins: SubscriptionJoins = {
+          joinMemberPlan: true,
+          joinPaymentMethod: true,
+          joinUser: true
+        }
 
         let hasMore = true
         let afterCursor
@@ -363,6 +424,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           const listResult: ConnectionResult<Subscription> = await dbAdapter.subscription.getSubscriptions(
             {
               filter,
+              joins,
               limit: Limit(100),
               sort: SubscriptionSort.ModifiedAt,
               cursor: InputCursor(afterCursor ?? undefined),
@@ -373,24 +435,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
         }
-
-        hasMore = true
-        afterCursor = undefined
-
-        while (hasMore) {
-          const listResult: ConnectionResult<User> = await dbAdapter.user.getUsers({
-            cursor: InputCursor(afterCursor ?? undefined),
-            filter: {},
-            limit: Limit(100),
-            sort: UserSort.ModifiedAt,
-            order: SortOrder.Descending
-          })
-          users.push(...listResult.nodes)
-          hasMore = listResult.pageInfo.hasNextPage
-          afterCursor = listResult.pageInfo.endCursor
-        }
-
-        return mapSubscriptionsAsCsv(users, subscriptions)
+        return mapSubscriptionsAsCsv(subscriptions)
       }
     },
 
@@ -629,7 +674,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         const canGetArticle = isAuthorised(CanGetArticle, roles)
         const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
-
         if (canGetArticle || canGetSharedArticle) {
           const article = await loaders.articles.load(id)
 
@@ -691,7 +735,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
 
         authorise(CanGetPeerArticle, roles)
-
         return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
       }
     },
@@ -722,9 +765,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
-        const peers = (await dbAdapter.peer.getPeers()).filter(peer =>
-          peerFilter ? peer.name === peerFilter : true
-        )
+        const peers = (await dbAdapter.peer.getPeers())
+          .filter(peer => (peerFilter ? peer.name === peerFilter : true))
+          .filter(peer => !peer.isDisabled)
 
         for (const peer of peers) {
           // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
@@ -1140,6 +1183,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+    // Setting
+    // ======
+
+    setting: {
+      type: GraphQLSetting,
+      args: {name: {type: GraphQLString}},
+      resolve(root, {name}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetSettings, roles)
+        if (!name) throw new UserInputError('You must provide setting `name`.')
+        return dbAdapter.setting.getSetting(name)
+      }
+    },
+
+    settings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      resolve(root, {}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetSettings, roles)
+        return dbAdapter.setting.getSettingList()
       }
     }
   }

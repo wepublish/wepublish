@@ -84,7 +84,6 @@ export function TextTeaser({
   isPeerArticle
 }: TextTeaserProps) {
   const css = useStyle({isSingle})
-
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>

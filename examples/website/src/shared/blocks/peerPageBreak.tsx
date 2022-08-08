@@ -9,10 +9,10 @@ import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
-export const PeerPageBreakStyle = cssRule(isArticle => ({
+export const PeerPageBreakStyle = cssRule((isArticle: boolean) => ({
   backgroundColor: Color.SecondaryLight,
   padding: `${pxToRem(25)} ${pxToRem(125)}`,
-  margin: isArticle && `0 auto ${pxToRem(70)}`,
+  margin: isArticle ? `0 auto ${pxToRem(70)}` : undefined,
   borderTop: `1px solid ${Color.Secondary}`,
   borderBottom: isArticle ? `1px solid ${Color.Secondary}` : `1px solid ${Color.Primary}`,
 

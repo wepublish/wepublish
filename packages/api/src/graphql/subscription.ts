@@ -20,27 +20,12 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {Subscription, SubscriptionDeactivationReason, SubscriptionSort} from '../db/subscription'
+import {Subscription, SubscriptionSort} from '../db/subscription'
 import {GraphQLUser} from './user'
-import {NotFound} from '../error'
-import {isTempUser, removePrefixTempUser} from '../utility'
-
-export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
-  name: 'SubscriptionDeactivationReason',
-  values: {
-    NONE: {value: SubscriptionDeactivationReason.None},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.UserSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.InvoiceNotPaid}
-  }
-})
-
-export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
-  name: 'SubscriptionDeactivation',
-  fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
-  }
-})
+import {
+  GraphQLSubscriptionDeactivation,
+  GraphQLSubscriptionDeactivationReason
+} from './subscriptionDeactivation'
 
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
@@ -51,27 +36,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     user: {
       type: GraphQLUser,
       async resolve({userID}, args, {dbAdapter}) {
-        if (isTempUser(userID)) {
-          const tempUser = await dbAdapter.tempUser.getTempUserByID(removePrefixTempUser(userID))
-          if (!tempUser) throw new NotFound('TempUser', userID)
-          return {
-            id: userID,
-            name: tempUser.name,
-            email: tempUser.email,
-            preferredName: tempUser.preferredName,
-            createdAt: tempUser.createdAt,
-            modifiedAt: tempUser.modifiedAt,
-            active: false,
-            properties: [],
-            emailVerifiedAt: null,
-            lastLogin: null,
-            oauth2Accounts: [],
-            paymentProviderCustomers: [],
-            roleIDs: []
-          }
-        } else {
-          return dbAdapter.user.getUserByID(userID)
-        }
+        return dbAdapter.user.getUserByID(userID)
       }
     },
     memberPlan: {
@@ -143,7 +108,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     paymentMethodID: {type: GraphQLString},
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
-    userHasAddress: {type: GraphQLBoolean}
+    userHasAddress: {type: GraphQLBoolean},
+    userID: {type: GraphQLID}
   }
 })
 
