@@ -606,6 +606,12 @@ export enum InvoiceSort {
   PaidAt = 'PAID_AT'
 }
 
+export type JwtToken = {
+  __typename?: 'JWTToken';
+  token: Scalars['String'];
+  expiresAt: Scalars['String'];
+};
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   text?: Maybe<Scalars['String']>;
@@ -1407,6 +1413,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query';
   remotePeerProfile?: Maybe<PeerProfile>;
+  createJWTForUser?: Maybe<JwtToken>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1454,6 +1461,12 @@ export type Query = {
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+
+export type QueryCreateJwtForUserArgs = {
+  userId: Scalars['String'];
+  expiresInMinutes: Scalars['Int'];
 };
 
 
