@@ -1,46 +1,80 @@
+## Branches
+
+Currently we operate based on a few main branches.
+
+- `master` is our main development branch. This represents our most up-to-date code with latest features included. Master is used as base for any release.
+- `production` represents our latest stable, production-ready code. It is updated after each release (release-branch is merged into production).
+- `<breaking-changes>` contains all the breaking-changes features
+- `f/<feature-name>` are feature branches
+- `r/<release-name>` branch for release processes
+- `b/<bugfix-name>` for bugfixes to release
+- `h/<hotfix-name>` for hotfixes to production
+
+
+## Features
+
+1. Create new branch based on `master`, use `f/<feature-name>` as template for name (you can use Jira ticket name inside)
+2. Commit your code
+3. Push changes
+4. Create pull-request into the `master`
+5. Squash and merge pull-request`
+
+## Breaking change features WIP
+
+1. Create new branch based on `<breaking-changes>`, use `f/<feature-name>` as template for name (you can use Jira ticket name inside)
+2. Commit your code
+3. Push changes
+4. Create pull-request into the `<breaking-changes>`
+5. Squash and merge pull-request`
+6. `<breaking-changes>` is updated with `master` on daily basis
+6. Every X months `<breaking-changes>` branch is merged back to `master` and `major` release is done
+
+
+## Bugfixes
+
+1. Create new branch based on specific release `r/<release-name>` or `master`, use `b/<bugfix-name>` as template for name
+2. Commit your code
+3. Push changes
+4. Create pull-request into the `r/<release-name>` or `master` (depending on the source)
+5. Squash and merge pull-request`
+
+## Production hotfixes
+
+1. Create new branch based on production branch `production`, use `h/<bugfix-name>` as template for name
+2. Commit your code
+3. Push changes
+4. Create pull-request into the `production`
+5. Squash and merge pull-request`
+6. Create new `patch` release
+
 # Releases
 
 ## Versioning
 
-We use semantic versioning to indicate changes within our public API. 
+We use semantic versioning to indicate changes within our public API.
 Major, minor changes within internal private APIs and Editor will be considered as minor or patch.
 We assume all components are used with the same version.
 
 ## Release process
 
-### Alpha pre-release
-Before any major, minor, patch release is made we create an alpha pre-release.
-This is done via command line starting the release process:
-```
-yarn release premajor|preminor|prepatch
-``` 
+At this moment we use `git-flow` command for release process. This makes it easy to have a proper state of dev `master` and stable `production` branches.
 
-Above command will:
-1. Identify next major|minor|patch version (e.g `major 2.12.4 -> 3.0.0`)
-2. Create version branch based on `master` if not exists (e.g. `r/release-3.0.0`)
-3. Create PRERELEASE-CHANGELOG.md
-4. Push your changes to remote branch, create and publish alpha git tag
-5. Create pull-request for the release
-6. Every published tag will trigger npm publish
-
-### Alpha release bump
-
-```
-git checkout r/release-3.0.0
-yarn release prerelease
-```
-
-Above command will:
-1. Add to PRERELEASE-CHANGELOG.md
-2. Push your current branch state to remote branch, create and publish alpha git tag
-3. Every published tag will trigger npm publish
-
-
-### Finalizing release
-
-Once work via pre-releases is done and you want to release actual non-alpha release you need to merge release pull-request into the master branch.
-Above merge will trigger action that will:
-
-1. Add release notes to CHANGELOG.md
-2. Create and publish final git tag
-3. Every published tag will trigger npm publish
+### In steps
+1. Starts right after sprint ends (or whatever time we pick)
+2. Identify type of release (`major` | `minor` | `patch`)
+3. Create release branch `r/<release-name>` of dev `master`
+    - `git flow release start <version>`
+4. Generate changelog `yarn run lerna-changelog`
+5. Create alpha-prerelease, create tag in github and publish new `next` npm
+    - `yarn run lerna version --no-changelog --allow-branch "r/*" --force-git-tag --no-push 3.2.0-alpha.X --yes`
+    - Update description in pull-request
+    - `git push --tags`
+6. Create pull-request as release placeholder
+7. Above 3 steps can be done multiple times
+8. Apply bugfixes if needed
+9. Once release tested and verified we tag and publish final-release
+    - `git commit -m "c/release <version>"`
+    - `yarn run lerna version --amend --no-changelog --allow-branch "r/*" --force-git-tag --no-push 3.2.0 --yes`
+    - `git push --tags`
+10. Merge release branch back into dev `master` and stable `production`
+    - `git flow release finish <version>`
