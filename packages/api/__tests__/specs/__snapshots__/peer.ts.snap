@@ -6,6 +6,7 @@ Object {
     "createPeer": Object {
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
+      "isDisabled": false,
       "name": "Create Peer Test",
       "slug": "test-peer",
     },
@@ -41,6 +42,7 @@ Object {
     "peer": Object {
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
+      "isDisabled": false,
       "name": "Peer Test 3",
       "slug": "test-peer3",
     },
@@ -62,18 +64,21 @@ Object {
       Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
+        "isDisabled": false,
         "name": "Peer Test 2",
         "slug": "test-peer2",
       },
       Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
+        "isDisabled": false,
         "name": "Create Peer Test",
         "slug": "test-peer",
       },
       Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
+        "isDisabled": false,
         "name": "Peer Test 0",
         "slug": "test-peer0",
       },
@@ -95,6 +100,7 @@ Object {
     "updatePeer": Object {
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
+      "isDisabled": false,
       "name": "Updated Peer",
       "slug": "update-peer",
     },
