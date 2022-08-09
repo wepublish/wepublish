@@ -6,10 +6,18 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   NotAuthorisedError,
+  PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
-import {CommentState, PrismaClient, Prisma, CommentAuthorType, Comment} from '@prisma/client'
+import {
+  CommentState,
+  PrismaClient,
+  Prisma,
+  CommentAuthorType,
+  Comment,
+  CommentItemType
+} from '@prisma/client'
 
 export const addPublicComment = async (
   input: {text: string; challenge: {challengeID: string; challengeSolution: number}} & Omit<
@@ -43,6 +51,10 @@ export const addPublicComment = async (
 
     if (!challengeValidationResult.valid)
       throw new CommentAuthenticationError(challengeValidationResult.message)
+  }
+
+  if (input.itemType === CommentItemType.peerArticle && !input.peerId) {
+    throw new PeerIdMissingCommentError()
   }
 
   // Cleanup

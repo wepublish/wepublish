@@ -154,6 +154,10 @@ export function createProxyingResolver<TSource, TContext, TArgs = {[argName: str
 ): GraphQLFieldResolver<TSource, TContext, TArgs> {
   return (source, args, context, info) => {
     if (isSourceProxied(source)) {
+      console.log((source as any).id)
+    }
+
+    if (isSourceProxied(source)) {
       return (source as any)[info.path.key]
     }
 

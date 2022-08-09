@@ -162,6 +162,12 @@ export class ChallengeMissingCommentError extends ApolloError {
   }
 }
 
+export class PeerIdMissingCommentError extends ApolloError {
+  constructor() {
+    super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}
+
 export class PeerTokenInvalidError extends ApolloError {
   constructor(peerUrl: string) {
     super(`Token for peer ${peerUrl} is invalid`, ErrorCode.PeerTokenInvalid)
