@@ -1,5 +1,36 @@
 # Change Log
 
+## 4.1.0 (2022-08-08)
+
+#### :heart: New Feature
+* Other
+  * [#629](https://github.com/wepublish/wepublish/pull/629) Send pageView analytics data in example page ([@antkiewiczk](https://github.com/antkiewiczk))
+* `api-db-mongodb`, `api`, `editor`
+  * [#632](https://github.com/wepublish/wepublish/pull/632) f/WPC-759-subscriptions-inside-user ([@michael-scheurer](https://github.com/michael-scheurer))
+  * [#637](https://github.com/wepublish/wepublish/pull/637) Settings page ([@penk85](https://github.com/penk85))
+* `api`
+  * [#639](https://github.com/wepublish/wepublish/pull/639) F/wpc 776 allow admin to generate login token for other users ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :bug: Bug Fix
+* `api`
+  * [#635](https://github.com/wepublish/wepublish/pull/635) Preview page with token or slug ([@penk85](https://github.com/penk85))
+  * [#638](https://github.com/wepublish/wepublish/pull/638) Fixed lower mail ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#634](https://github.com/wepublish/wepublish/pull/634) B/wpc 770 cancel invoices when deactivating subscription ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#625](https://github.com/wepublish/wepublish/pull/625) b/WPC-765-auto-renew ([@michael-scheurer](https://github.com/michael-scheurer))
+* `api`, `editor`
+  * [#633](https://github.com/wepublish/wepublish/pull/633) Disappearing duplicate page and article ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* `api-db-mongodb`, `api`
+  * [#628](https://github.com/wepublish/wepublish/pull/628) Normalized and validated mail on create and update ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 4
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 4.0.0 (2022-07-12)
 
 #### :boom: Breaking Change
