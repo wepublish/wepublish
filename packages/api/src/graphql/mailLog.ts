@@ -1,5 +1,7 @@
+import {MailLog, MailLogState} from '@prisma/client'
 import {
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -7,14 +9,10 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-
-import {Context} from '../context'
-
-import {MailLog, MailLogState} from '@prisma/client'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
 import {MailLogSort} from '../db/mailLog'
 import {GraphQLPageInfo} from './common'
-import {GraphQLID} from 'graphql'
 
 export const GraphQLMailLogState = new GraphQLEnumType({
   name: 'MailLogState',

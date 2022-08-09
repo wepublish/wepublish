@@ -14,6 +14,7 @@ export interface InvoiceFilter {
   userID?: string
   subscriptionID?: string
 }
+
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[]
 }

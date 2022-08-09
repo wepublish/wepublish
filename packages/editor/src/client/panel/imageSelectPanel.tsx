@@ -98,7 +98,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel bodyFill={true} style={{height: '150px'}}>
+        <Panel bodyFill style={{height: '150px'}}>
           <FileDropInput
             icon={<UploadIcon />}
             text={t('articleEditor.panels.dropImage')}

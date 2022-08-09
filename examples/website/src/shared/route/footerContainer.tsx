@@ -1,9 +1,8 @@
 import React from 'react'
-
 import {ArticleFooter} from '../navigation/articleFooter'
-import {relatedArticlesAdapter} from './articleAdapter'
-import {Author, Peer, ArticleMeta, Comment} from '../types'
 import {useListArticlesQuery} from '../query'
+import {ArticleMeta, Author, Comment, Peer} from '../types'
+import {relatedArticlesAdapter} from './articleAdapter'
 
 export interface ArticleFooterContainerProps {
   readonly tags: string[]
@@ -27,11 +26,11 @@ export function ArticleFooterContainer({
   const take = 4
 
   const {data, loading} = useListArticlesQuery({
-    variables: {filter: tags.length >= 1 ? tags : undefined, take: take}
+    variables: {filter: tags.length >= 1 ? tags : undefined, take}
   })
 
   const {data: fallbackData, loading: fallbackLoading} = useListArticlesQuery({
-    variables: {take: take}
+    variables: {take}
   })
 
   const tagArticles = data?.articles.nodes

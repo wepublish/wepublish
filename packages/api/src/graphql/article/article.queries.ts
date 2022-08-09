@@ -43,11 +43,9 @@ export const createArticleOrder = (
 
 const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.title) {
-    const containsTitle = {
-      is: {
-        title: {
-          contains: filter.title
-        },
+    const containsTitle: Prisma.ArticleRevisionWhereInput = {
+      title: {
+        contains: filter.title,
         mode: 'insensitive'
       }
     }

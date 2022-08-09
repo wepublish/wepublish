@@ -1,5 +1,6 @@
 import {Invoice, Prisma, SubscriptionPeriod, PrismaClient} from '@prisma/client'
 import {Context} from './context'
+import {SettingName} from './db/setting'
 import {unselectPassword} from './db/user'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
@@ -184,6 +185,16 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
     }
 
     // send mails including login link
+    const jwtSetting = await context.prisma.setting.findUnique({
+      where: {name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN}
+    })
+    const jwtExpires =
+      (jwtSetting?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+
+    if (!jwtExpires) {
+      throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
+    }
+
     const user = await context.prisma.user.findUnique({
       where: {
         id: subscription.userID
@@ -198,7 +209,7 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
 
     const token = context.generateJWT({
       id: user.id,
-      expiresInMinutes: parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN as string)
+      expiresInMinutes: jwtExpires
     })
 
     await context.mailContext.sendMail({

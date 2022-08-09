@@ -26,7 +26,7 @@ export const createPeer = (
   authorise(CanCreatePeer, roles)
 
   return peer.create({
-    data: {...input}
+    data: input
   })
 }
 

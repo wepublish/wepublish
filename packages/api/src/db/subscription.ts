@@ -26,6 +26,7 @@ export interface SubscriptionFilter {
   readonly memberPlanID?: string
   readonly paymentPeriodicity?: PaymentPeriodicity
   readonly userHasAddress?: boolean
+  readonly userID?: string
 }
 
 export type SubscriptionWithRelations = Subscription & {

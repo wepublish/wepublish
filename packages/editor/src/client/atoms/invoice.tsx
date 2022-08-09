@@ -3,7 +3,7 @@ import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import CheckIcon from '@rsuite/icons/legacy/Check'
-import {EnvelopeOpen} from '@rsuite/icons/es/icons/legacy'
+import {Email} from '@rsuite/icons'
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -111,13 +111,13 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
     if (invoice.paidAt) {
       return <CheckIcon style={{color: 'green', fontSize: '2em'}} />
     } else {
-      return <EnvelopeOpen style={{color: 'red', fontSize: '2em'}} />
+      return <Email style={{color: 'red', fontSize: '2em'}} />
     }
   }
 
   return (
     <>
-      <Panel bordered={true} header={invoiceHeaderView()}>
+      <Panel bordered header={invoiceHeaderView()}>
         <p>{invoice.description}</p>
         <p>
           {t('invoice.total')} {(invoice.total / 100).toFixed(2)} {t('currency.chf')}

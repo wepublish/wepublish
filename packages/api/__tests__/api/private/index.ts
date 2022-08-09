@@ -1531,11 +1531,6 @@ export type QueryPagePreviewLinkArgs = {
   hours: Scalars['Int']
 }
 
-export type QueryMemberPlanArgs = {
-  id?: Maybe<Scalars['ID']>
-  slug?: Maybe<Scalars['Slug']>
-}
-
 export type QueryMemberPlansArgs = {
   cursor?: Maybe<Scalars['ID']>
   take?: Maybe<Scalars['Int']>
@@ -1830,7 +1825,7 @@ export type User = {
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
-  lastLogin?: Maybe<Scalars['DateTime']>
+  skipLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
   roles: Array<UserRole>
   paymentProviderCustomers: Array<PaymentProviderCustomer>

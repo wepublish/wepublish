@@ -102,7 +102,8 @@ export class MailContext implements MailContext {
         state: MailLogState.submitted,
         subject: mailView?.subject ?? mailTemplate.subject ?? 'N/A',
         recipient: recipient,
-        mailProviderID: this.mailProvider?.id ?? 'N/A'
+        mailProviderID: this.mailProvider?.id ?? 'N/A',
+        modifiedAt: new Date()
       }
     })
 

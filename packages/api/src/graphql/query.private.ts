@@ -19,6 +19,7 @@ import {PaymentSort} from '../db/payment'
 import {SubscriptionSort} from '../db/subscription'
 import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
+import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLArticle,
@@ -32,7 +33,7 @@ import {
   getArticleById,
   getArticlePreviewLink
 } from './article/article.private-queries'
-import {GraphQLAuthProvider} from './auth'
+import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 import {
   GraphQLAuthor,
   GraphQLAuthorConnection,
@@ -86,9 +87,16 @@ import {
 } from './peer-profile/peer-profile.private-queries'
 import {getPeerById, getPeers} from './peer/peer.private-queries'
 import {getPermissions} from './permission/permission.private-queries'
-import {authorise, CanGetPaymentProviders, CanGetPeerArticle} from './permissions'
+import {
+  authorise,
+  CanGetPaymentProviders,
+  CanGetPeerArticle,
+  CanLoginAsOtherUser
+} from './permissions'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
+import {GraphQLSetting} from './setting'
+import {getSetting, getSettings} from './setting/setting.private-queries'
 import {GraphQLSlug} from './slug'
 import {
   GraphQLSubscription,
@@ -106,7 +114,6 @@ import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
-
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -127,8 +134,44 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         hostURL: {type: GraphQLNonNull(GraphQLString)},
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve: (root, {hostURL, token}, {authenticate}, info) =>
-        getRemotePeerProfile(hostURL, token, authenticate, info)
+      resolve: (root, {hostURL, token}, {authenticate, prisma: {setting}}, info) =>
+        getRemotePeerProfile(hostURL, token, authenticate, info, setting)
+    },
+
+    createJWTForUser: {
+      type: GraphQLJWTToken,
+      args: {
+        userId: {type: GraphQLNonNull(GraphQLString)},
+        expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT, prisma}, info) {
+        const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
+        const {roles} = authenticate()
+        authorise(CanLoginAsOtherUser, roles)
+
+        if (expiresInMinutes > THIRTY_DAYS_IN_MIN) {
+          throw new GivenTokeExpiryToLongError()
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {id: userId}
+        })
+
+        if (!user) {
+          throw new UserIdNotFound()
+        }
+
+        const expiresAt = new Date(
+          new Date().getTime() + expiresInMinutes * 60 * 1000
+        ).toISOString()
+
+        const token = generateJWT({id: userId, expiresInMinutes})
+
+        return {
+          token,
+          expiresAt
+        }
+      }
     },
 
     peerProfile: {
@@ -238,8 +281,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscriptionsAsCsv: {
       type: GraphQLString,
       args: {filter: {type: GraphQLSubscriptionFilter}},
-      resolve: (root, {filter}, {prisma: {subscription, user}, authenticate}) =>
-        getSubscriptionsAsCSV(filter, authenticate, subscription, user)
+      resolve: (root, {filter}, {prisma: {subscription}, authenticate}) =>
+        getSubscriptionsAsCSV(filter, authenticate, subscription)
     },
 
     // UserRole
@@ -580,6 +623,21 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {filter, sort, order, cursor, take, skip},
         {authenticate, prisma: {payment}}
       ) => getAdminPayments(filter, sort, order, cursor, skip, take, authenticate, payment)
+    },
+
+    // Setting
+    // ======
+
+    setting: {
+      type: GraphQLSetting,
+      args: {name: {type: GraphQLString}},
+      resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
+        getSetting(name, authenticate, setting)
+    },
+
+    settings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
     }
   }
 })

@@ -35,6 +35,7 @@ export * from './db/invoice'
 export * from './db/payment'
 export * from './db/mailLog'
 export * from './db/subscription'
+export * from './db/setting'
 
 export * from './mediaAdapter'
 export * from './urlAdapter'

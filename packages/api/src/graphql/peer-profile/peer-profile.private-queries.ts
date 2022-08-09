@@ -2,6 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import {GraphQLResolveInfo} from 'graphql'
 import {delegateToSchema, introspectSchema, makeRemoteExecutableSchema} from 'graphql-tools'
 import {Context, createFetcher} from '../../context'
+import {SettingName} from '../../db/setting'
 import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise, CanCreatePeer, CanGetPeerProfile} from '../permissions'
@@ -23,12 +24,27 @@ export const getRemotePeerProfile = async (
   hostURL: string,
   token: string,
   authenticate: Context['authenticate'],
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
+  setting: PrismaClient['setting']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePeer, roles)
   const link = new URL('/admin', hostURL)
-  const fetcher = await createFetcher(link.toString(), token)
+
+  const peerTimeoutSetting = await setting.findUnique({
+    where: {
+      name: SettingName.PEERING_TIMEOUT_MS
+    }
+  })
+
+  const peerTimeout =
+    (peerTimeoutSetting?.value as number) ?? parseInt(process.env.PEERING_TIMEOUT_IN_MS ?? '')
+
+  if (!peerTimeout) {
+    throw new Error('No value set for PEERING_TIMEOUT_IN_MS')
+  }
+
+  const fetcher = await createFetcher(link.toString(), token, peerTimeout)
   const schema = await introspectSchema(fetcher)
   const remoteExecutableSchema = await makeRemoteExecutableSchema({
     schema,

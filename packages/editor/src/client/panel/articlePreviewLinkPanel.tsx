@@ -51,7 +51,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
           {t('articleEditor.panels.articlePreviewLinkDesc')}
         </Message>
 
-        <Form fluid={true}>
+        <Form fluid>
           <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}}>
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}

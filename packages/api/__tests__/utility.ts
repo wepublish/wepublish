@@ -3,6 +3,7 @@ import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
+import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
   AlgebraicCaptchaChallenge,
@@ -18,7 +19,6 @@ import {
 } from '../src'
 import {DefaultSessionTTL} from '../src/db/common'
 import {createUserSession} from '../src/graphql/session/session.mutation'
-import * as crypto from 'crypto'
 
 export interface TestClient {
   testClientPublic: ApolloServerTestClient

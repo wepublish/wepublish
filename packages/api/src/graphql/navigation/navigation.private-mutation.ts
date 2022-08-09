@@ -2,7 +2,7 @@ import {Context} from '../../context'
 import {authorise, CanCreateNavigation, CanDeleteNavigation} from '../permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 
-export const deleteNavigationById = async (
+export const deleteNavigationById = (
   id: string,
   authenticate: Context['authenticate'],
   navigation: PrismaClient['navigation']

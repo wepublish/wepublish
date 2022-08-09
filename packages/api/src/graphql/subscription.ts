@@ -1,4 +1,4 @@
-import {Subscription, SubscriptionDeactivationReason} from '@prisma/client'
+import {Subscription} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
@@ -23,24 +23,11 @@ import {
 } from './common'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {
+  GraphQLSubscriptionDeactivation,
+  GraphQLSubscriptionDeactivationReason
+} from './subscriptionDeactivation'
 import {GraphQLUser} from './user'
-
-export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
-  name: 'SubscriptionDeactivationReason',
-  values: {
-    NONE: {value: SubscriptionDeactivationReason.none},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.userSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.invoiceNotPaid}
-  }
-})
-
-export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
-  name: 'SubscriptionDeactivation',
-  fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
-  }
-})
 
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
@@ -128,7 +115,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     paymentMethodID: {type: GraphQLString},
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
-    userHasAddress: {type: GraphQLBoolean}
+    userHasAddress: {type: GraphQLBoolean},
+    userID: {type: GraphQLID}
   }
 })
 

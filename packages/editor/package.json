@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "3.0.0",
+  "version": "4.1.0",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -90,7 +90,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
     "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-env": "^7.18.6",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.7.4",
     "@graphql-codegen/add": "^2.0.1",
@@ -143,6 +143,9 @@
       "react/display-name": [
         0
       ],
+      "react/jsx-boolean-value": [
+        1
+      ],
       "react/prop-types": [
         0
       ],
@@ -187,7 +190,8 @@
             "fixed",
             "format",
             "stack",
-            "backdrop"
+            "backdrop",
+            "data-testid"
           ],
           "ignoreComponent": [
             "code"

@@ -43,11 +43,9 @@ export const createPageOrder = (
 
 const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.title) {
-    const containsTitle = {
-      is: {
-        title: {
-          contains: filter.title
-        },
+    const containsTitle: Prisma.PageRevisionWhereInput = {
+      title: {
+        contains: filter.title,
         mode: 'insensitive'
       }
     }
