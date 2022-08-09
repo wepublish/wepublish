@@ -53,3 +53,18 @@ export const createImage = async (
     }
   })
 }
+
+export const updateImage = (
+  id: string,
+  input: Omit<Prisma.ImageUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  image: PrismaClient['image']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateImage, roles)
+
+  return image.update({
+    where: {id},
+    data: input
+  })
+}

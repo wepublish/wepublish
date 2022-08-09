@@ -13,7 +13,6 @@ export const createPaymentFromInvoice = async (
   paymentProviders: Context['paymentProviders'],
   invoicesByID: Context['loaders']['invoicesByID'],
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
-  dbAdapter: Context['dbAdapter'],
   paymentClient: PrismaClient['payment']
 ) => {
   const {roles} = authenticate()
@@ -46,9 +45,9 @@ export const createPaymentFromInvoice = async (
     failureURL
   })
 
-  return await dbAdapter.payment.updatePayment({
-    id: payment.id,
-    input: {
+  return await paymentClient.update({
+    where: {id: payment.id},
+    data: {
       state: intent.state,
       intentID: intent.intentID,
       intentData: intent.intentData,

@@ -28,11 +28,6 @@ export interface AuthorInput {
 
 export type OptionalAuthor = Author | null
 
-export interface UpdateAuthorArgs {
-  id: string
-  input: AuthorInput
-}
-
 export enum AuthorSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
@@ -41,8 +36,4 @@ export enum AuthorSort {
 
 export interface AuthorFilter {
   name?: string
-}
-
-export interface DBAuthorAdapter {
-  updateAuthor(args: UpdateAuthorArgs): Promise<OptionalAuthor>
 }

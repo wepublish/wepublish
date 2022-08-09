@@ -29,3 +29,22 @@ export const createPeer = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updatePeer = (
+  id: string,
+  input: Omit<Prisma.PeerUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  peer: PrismaClient['peer']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreatePeer, roles)
+
+  const nonEmptyInputs = Object.fromEntries(
+    Object.entries(input).filter(([, value]) => !value || value === false)
+  )
+
+  return peer.update({
+    where: {id},
+    data: nonEmptyInputs
+  })
+}

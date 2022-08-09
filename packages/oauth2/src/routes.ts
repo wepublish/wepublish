@@ -6,7 +6,7 @@ import {inspect} from 'util'
 
 import * as assert from 'assert'
 import {PrismaClient} from '@prisma/client'
-import bcrypt from 'bcrypt'
+import {getUserForCredentials} from '@wepublish/api'
 
 const body = urlencoded({extended: false})
 
@@ -27,30 +27,6 @@ const debug = (obj: any) =>
       }
     }
   )
-
-export const getUserForCredentials = async (
-  email: string,
-  password: string,
-  userClient: PrismaClient['user']
-) => {
-  const user = await userClient.findUnique({
-    where: {
-      email
-    }
-  })
-
-  if (!user) {
-    return null
-  }
-
-  const theSame = await bcrypt.compare(password, user.password)
-
-  if (!theSame) {
-    return null
-  }
-
-  return user
-}
 
 export function routes(app: Application, provider: Provider, prisma: PrismaClient): void {
   //const { constructor: { errors: { SessionNotFound } } } = provider;

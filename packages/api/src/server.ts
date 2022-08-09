@@ -2,14 +2,13 @@ import {ApolloServer} from 'apollo-server-express'
 import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
-import TypedEmitter from 'typed-emitter'
 import {contextFromRequest, ContextOptions} from './context'
-import {methodsToProxy, PublishableModelEvents} from './events'
+import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
 import {JobType, runJob} from './jobs'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
-import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
+import {MAX_PAYLOAD_SIZE} from './utility'
 
 let serverLogger: pino.Logger
 
@@ -28,138 +27,11 @@ export class WepublishServer {
   private readonly app: Application
 
   constructor(private readonly opts: WepublishServerOpts) {
-    // @TODO: move into cron job
-    this.opts.prisma.$use(async (args, next) => {
-      if (!(args.model === 'Article' && args.action.startsWith('find'))) {
-        return next(args)
-      }
-
-      // skip the call inside this middleware to not create an infinite loop
-      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
-        return next(args)
-      }
-
-      const articles = await this.opts.prisma.article.findMany({
-        where: {
-          pending: {
-            is: {
-              AND: {
-                publishAt: {
-                  lte: new Date()
-                }
-              }
-            }
-          }
-        }
-      })
-
-      await Promise.all(
-        articles.map(({id, pending}) =>
-          this.opts.prisma.article.update({
-            where: {
-              id
-            },
-            data: {
-              modifiedAt: new Date(),
-              pending: null,
-              published: pending
-            }
-          })
-        )
-      )
-
-      return next(args)
-    })
-
-    // @TODO: move into cron job
-    this.opts.prisma.$use(async (args, next) => {
-      if (!(args.model === 'Page' && args.action.startsWith('find'))) {
-        return next(args)
-      }
-
-      // skip the call inside this middleware to not create an infinite loop
-      if (args.args?.where?.pending?.is?.AND?.publishAt?.lte) {
-        return next(args)
-      }
-
-      const pages = await this.opts.prisma.page.findMany({
-        where: {
-          pending: {
-            is: {
-              AND: {
-                publishAt: {
-                  lte: new Date()
-                }
-              }
-            }
-          }
-        }
-      })
-
-      await Promise.all(
-        pages.map(({id, pending}) =>
-          this.opts.prisma.page.update({
-            where: {
-              id
-            },
-            data: {
-              modifiedAt: new Date(),
-              pending: null,
-              published: pending
-            }
-          })
-        )
-      )
-
-      return next(args)
-    })
-
     const app = express()
 
-    const {dbAdapter} = opts
+    this.setupPrismaMiddlewares()
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
-
-    methodsToProxy.forEach(mtp => {
-      if (mtp.key in dbAdapter) {
-        const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
-        mtp.methods.forEach(method => {
-          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, any>
-          const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
-
-          if (methodName in adapter) {
-            adapter[methodName] = new Proxy(adapter[methodName], {
-              // create proxy for method
-              apply: async (target: any, thisArg: any, argArray?: any): Promise<any> => {
-                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
-                setImmediate(async () => {
-                  // make sure event gets executed in the next event loop
-                  try {
-                    logger('server').info('emitting event for %s', methodName)
-                    ;(mtp.eventEmitter as TypedEmitter<PublishableModelEvents<unknown>>).emit(
-                      method,
-                      await contextFromRequest(null, this.opts),
-                      result
-                    ) // execute event emitter
-                  } catch (error) {
-                    logger('server').error(
-                      error as Error,
-                      'error during emitting event for %s',
-                      methodName
-                    )
-                  }
-                })
-                return result // return actual result "Article, Page, User, ..."
-              }
-            })
-          } else {
-            logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
-          }
-        })
-      } else {
-        logger('server').warn('%s does not exist in dbAdapter', mtp.key)
-      }
-    })
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
@@ -242,5 +114,13 @@ export class WepublishServer {
     } catch (error) {
       logger('server').error(error as Error, 'Error while running job "%s"', command)
     }
+  }
+
+  private async setupPrismaMiddlewares(): Promise<void> {
+    this.opts.prisma.$use(onFindArticle(this.opts.prisma))
+    this.opts.prisma.$use(onFindPage(this.opts.prisma))
+
+    const contextWithoutReq = await contextFromRequest(null, this.opts)
+    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }

@@ -1,3 +1,4 @@
+import {MailLogState} from '@prisma/client'
 import crypto from 'crypto'
 import FormData from 'form-data'
 
@@ -8,7 +9,6 @@ import {
   SendMailProps,
   WebhookForSendMailProps
 } from './mailProvider'
-import {MailLogState} from '../db/mailLog'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
@@ -27,13 +27,13 @@ interface VerifyWebhookSignatureProps {
 function mapMailgunEventToMailLogState(event: string): MailLogState | null {
   switch (event) {
     case 'accepted':
-      return MailLogState.Accepted
+      return MailLogState.accepted
     case 'delivered':
-      return MailLogState.Delivered
+      return MailLogState.delivered
     case 'failed':
-      return MailLogState.Bounced
+      return MailLogState.bounced
     case 'rejected':
-      return MailLogState.Rejected
+      return MailLogState.rejected
     default:
       return null
   }

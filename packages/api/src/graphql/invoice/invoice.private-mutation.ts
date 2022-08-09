@@ -29,3 +29,18 @@ export const createInvoice = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updateInvoice = (
+  id: string,
+  input: Omit<Prisma.InvoiceUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  invoice: PrismaClient['invoice']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateInvoice, roles)
+
+  return invoice.update({
+    where: {id},
+    data: input
+  })
+}

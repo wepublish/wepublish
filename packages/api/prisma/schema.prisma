@@ -146,6 +146,13 @@ enum CommentState {
   rejected            @map("rejected")
 }
 
+enum CommentAuthorType {
+  team          @map("team")
+  author        @map("author")
+  verifiedUser  @map("author")
+  guestUser     @map("guestUser")
+}
+
 model Comment {
   id              String                  @id @default(cuid()) @map("_id")
   createdAt       DateTime                @default(now())
@@ -157,6 +164,8 @@ model Comment {
   revisions       CommentsRevisions[]
   rejectionReason CommentRejectionReason?
   state           CommentState
+  authorType      CommentAuthorType
+  guestUsername   String?
 
   user   User?    @relation(fields: [userID], references: [id])
   parent Comment? @relation("CommentRelation", fields: [parentID], references: [id], onDelete: NoAction, onUpdate: NoAction)

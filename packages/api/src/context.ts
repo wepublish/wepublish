@@ -9,8 +9,10 @@ import {
   Page,
   Payment,
   PaymentMethod,
+  PaymentState,
   Peer,
   PrismaClient,
+  User,
   UserRole
 } from '@prisma/client'
 import AbortController from 'abort-controller'
@@ -31,14 +33,12 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {DBAdapter} from './db/adapter'
-import {OptionalPublicArticle} from './db/article'
+import {PublicArticle} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {OptionalPublicPage} from './db/page'
-import {PaymentState} from './db/payment'
-import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
+import {PublicPage} from './db/page'
+import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
-import {User} from './db/user'
+import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
@@ -78,11 +78,11 @@ export interface DataLoaderContext {
   readonly images: DataLoader<string, Image | null>
 
   readonly articles: DataLoader<string, Article | null>
-  readonly publicArticles: DataLoader<string, OptionalPublicArticle>
+  readonly publicArticles: DataLoader<string, PublicArticle | null>
 
   readonly pages: DataLoader<string, Page | null>
-  readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
-  readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+  readonly publicPagesByID: DataLoader<string, PublicPage | null>
+  readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
@@ -117,13 +117,12 @@ export interface Context {
   readonly sessionTTL: number
   readonly hashCostFactor: number
 
-  readonly session: OptionalSession
+  readonly session: Session | null
   readonly loaders: DataLoaderContext
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
 
-  readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -176,7 +175,6 @@ export interface ContextOptions {
   readonly sessionTTL?: number
   readonly hashCostFactor?: number
 
-  readonly dbAdapter: DBAdapter
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -227,7 +225,7 @@ const getSessionByToken = async (
   tokenClient: PrismaClient['token'],
   userClient: PrismaClient['user'],
   userRoleClient: PrismaClient['userRole']
-): Promise<OptionalSession> => {
+): Promise<Session | null> => {
   const [tokenMatch, session] = await Promise.all([
     tokenClient.findFirst({
       where: {
@@ -259,7 +257,8 @@ const getSessionByToken = async (
     const user = await userClient.findUnique({
       where: {
         id: session.userID
-      }
+      },
+      select: unselectPassword
     })
 
     if (!user) return null
@@ -289,7 +288,6 @@ export async function contextFromRequest(
   {
     hostURL,
     websiteURL,
-    dbAdapter,
     prisma,
     mediaAdapter,
     urlAdapter,
@@ -776,7 +774,6 @@ export async function contextFromRequest(
 
   const memberContext = new MemberContext({
     loaders,
-    dbAdapter,
     prisma,
     paymentProviders,
     mailContext,
@@ -798,7 +795,6 @@ export async function contextFromRequest(
     prisma,
     memberContext,
     mailContext,
-    dbAdapter,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
@@ -888,7 +884,7 @@ export async function contextFromRequest(
         data: {
           paymentMethodID,
           invoiceID: invoice.id,
-          state: PaymentState.Created,
+          state: PaymentState.created,
           modifiedAt: new Date()
         }
       })
@@ -901,9 +897,9 @@ export async function contextFromRequest(
         failureURL
       })
 
-      const updatedPayment = await dbAdapter.payment.updatePayment({
-        id: payment.id,
-        input: {
+      const updatedPayment = await prisma.payment.update({
+        where: {id: payment.id},
+        data: {
           state: intent.state,
           intentID: intent.intentID,
           intentData: intent.intentData,

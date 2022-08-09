@@ -29,3 +29,18 @@ export const createMemberPlan = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updateMemberPlan = (
+  id: string,
+  input: Omit<Prisma.MemberPlanUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  memberPlan: PrismaClient['memberPlan']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateMemberPlan, roles)
+
+  return memberPlan.update({
+    where: {id},
+    data: input
+  })
+}

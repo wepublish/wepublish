@@ -29,3 +29,18 @@ export const createNavigation = (
     data: {...input, modifiedAt: new Date()}
   })
 }
+
+export const updateNavigation = (
+  id: string,
+  input: Omit<Prisma.NavigationUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  authenticate: Context['authenticate'],
+  navigation: PrismaClient['navigation']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateNavigation, roles)
+
+  return navigation.update({
+    where: {id},
+    data: input
+  })
+}

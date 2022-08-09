@@ -3,6 +3,7 @@ import nanoid from 'nanoid/generate'
 import {Issuer} from 'openid-client'
 import {Context} from '../../context'
 import {SessionType} from '../../db/session'
+import {unselectPassword} from '../../db/user'
 import {
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
@@ -93,7 +94,8 @@ export const createJWTSession = async (
   const userID = verifyJWT(jwt)
 
   const user = await userClient.findUnique({
-    where: {id: userID}
+    where: {id: userID},
+    select: unselectPassword
   })
   if (!user) throw new InvalidCredentialsError()
   if (!user.active) throw new NotActiveError()
@@ -129,7 +131,8 @@ export const createOAuth2Session = async (
   if (!userInfo.email) throw new Error('UserInfo did not return an email')
 
   const user = await userClient.findUnique({
-    where: {email: userInfo.email}
+    where: {email: userInfo.email},
+    select: unselectPassword
   })
   if (!user) throw new UserNotFoundError()
   if (!user.active) throw new NotActiveError()

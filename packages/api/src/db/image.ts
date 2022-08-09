@@ -1,7 +1,4 @@
-export interface FocalPoint {
-  readonly x: number
-  readonly y: number
-}
+import {Image} from '@prisma/client'
 
 export enum ImageRotation {
   Auto = 'auto',
@@ -25,47 +22,14 @@ export interface ImageTransformation {
   readonly output?: ImageOutput | null
 }
 
-export interface EditableImageComponents {
-  readonly filename?: string | null
-  readonly title?: string | null
-  readonly description?: string | null
-  readonly tags: string[]
-
-  readonly source?: string | null
-  readonly link?: string | null
-  readonly license?: string | null
-
-  readonly focalPoint?: FocalPoint | null
-}
-
-export interface StaticImageComponents {
-  readonly fileSize: number
-  readonly extension: string
-  readonly mimeType: string
-  readonly format: string
-  readonly width: number
-  readonly height: number
-}
-
-export interface Image extends EditableImageComponents, StaticImageComponents {
-  readonly id: string
-  readonly createdAt: Date
-  readonly modifiedAt: Date
-
+export interface ImageWithTransformURL extends Image {
   readonly transformURL?: string | null
 }
 
-export type OptionalImage = Image | null
-
-export interface UploadImage extends StaticImageComponents {
-  readonly id: string
-  readonly filename: string
-}
-
-export interface UpdateImageArgs {
-  readonly id: string
-  readonly input: EditableImageComponents
-}
+export type UploadImage = Pick<
+  Image,
+  'id' | 'filename' | 'fileSize' | 'extension' | 'mimeType' | 'format' | 'width' | 'height'
+>
 
 export enum ImageSort {
   CreatedAt = 'modifiedAt',
@@ -75,8 +39,4 @@ export enum ImageSort {
 export interface ImageFilter {
   readonly title?: string
   readonly tags?: string[]
-}
-
-export interface DBImageAdapter {
-  updateImage(args: UpdateImageArgs): Promise<OptionalImage>
 }

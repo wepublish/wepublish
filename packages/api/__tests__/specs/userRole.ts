@@ -1,25 +1,23 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {
-  UserRoleInput,
-  CreateUserRole,
-  UserRoleList,
-  UserRole,
-  UpdateUserRole,
-  DeleteUserRole,
-  PermissionList
-} from '../api/private'
 import {Permission} from '../../src'
+import {
+  CreateUserRole,
+  DeleteUserRole,
+  PermissionList,
+  UpdateUserRole,
+  UserRole,
+  UserRoleInput,
+  UserRoleList
+} from '../api/private'
+
+import {createGraphQLTestClientWithMongoDB} from '../utility'
 
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -163,11 +161,4 @@ describe('User Roles', () => {
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

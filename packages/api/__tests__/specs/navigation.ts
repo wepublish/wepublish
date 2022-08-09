@@ -1,21 +1,20 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  NavigationInput,
-  CreateNavigation,
-  PageInput,
-  CreatePage,
   ArticleInput,
   CreateArticle,
-  NavigationList,
+  CreateNavigation,
+  CreatePage,
+  DeleteNavigation,
   Navigation,
-  UpdateNavigation,
-  DeleteNavigation
+  NavigationInput,
+  NavigationList,
+  PageInput,
+  UpdateNavigation
 } from '../api/private'
 
+import {createGraphQLTestClientWithMongoDB} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 let pageID: string
 let articleID: string
 
@@ -23,7 +22,6 @@ beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -212,11 +210,4 @@ describe('Navigations', () => {
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

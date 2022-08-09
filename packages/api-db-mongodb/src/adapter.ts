@@ -1,41 +1,17 @@
 import {MongoClient, Db} from 'mongodb'
 
-import {DBAdapter, SortOrder} from '@wepublish/api'
+import {SortOrder} from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
+import {CollectionName, DBMigration} from './db/schema'
 import {generateID} from './utility'
 
-import {MongoDBUserAdapter} from './db/user'
-import {MongoDBPeerAdapter} from './db/peer'
-import {MongoDBSessionAdapter} from './db/session'
-import {MongoDBAuthorAdapter} from './db/author'
-import {MongoDBNavigationAdapter} from './db/navigation'
-import {MongoDBImageAdapter} from './db/image'
-import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
-import {MongoDBCommentAdapter} from './db/comment'
-import {MongoDBArticleAdapter} from './db/article'
-import {MongoDBPageAdapter} from './db/page'
-import {DBMigration, CollectionName} from './db/schema'
-import {MongoDBUserRoleAdapter} from './db/userRole'
-import {MongoDBMemberPlanAdapter} from './db/memberPlan'
-import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
-import {MongoDBInvoiceAdapter} from './db/invoice'
-import {MongoDBPaymentAdapter} from './db/payment'
-import {MongoDBMailLogAdapter} from './db/mailLog'
-import {MongoDBSubscriptionAdapter} from './db/subscription'
-import {MongoDBSettingAdapter} from './db/setting'
-
-export interface MongoDBAdabterCommonArgs {
-  readonly sessionTTL?: number
-  readonly bcryptHashCostFactor?: number
-}
-
-export interface MongoDBAdapterConnectArgs extends MongoDBAdabterCommonArgs {
+export interface MongoDBAdapterConnectArgs {
   readonly url: string
   readonly locale: string
 }
 
-export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterCommonArgs {
+export interface MongoDBAdapterInitializeArgs {
   readonly url: string
   readonly locale: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
@@ -48,72 +24,24 @@ export interface InitializationResult {
   }
 }
 
-interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
+interface MongoDBAdapterArgs {
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db
 }
 
-export class MongoDBAdapter implements DBAdapter {
-  readonly sessionTTL: number
-  readonly bcryptHashCostFactor: number
-
+export class MongoDBAdapter {
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db
 
-  readonly peer: MongoDBPeerAdapter
-  readonly user: MongoDBUserAdapter
-  readonly userRole: MongoDBUserRoleAdapter
-  readonly subscription: MongoDBSubscriptionAdapter
-  readonly session: MongoDBSessionAdapter
-  readonly navigation: MongoDBNavigationAdapter
-  readonly author: MongoDBAuthorAdapter
-  readonly image: MongoDBImageAdapter
-  readonly comment: MongoDBCommentAdapter
-  readonly article: MongoDBArticleAdapter
-  readonly page: MongoDBPageAdapter
-  readonly memberPlan: MongoDBMemberPlanAdapter
-  readonly paymentMethod: MongoDBPaymentMethodAdapter
-  readonly invoice: MongoDBInvoiceAdapter
-  readonly payment: MongoDBPaymentAdapter
-  readonly mailLog: MongoDBMailLogAdapter
-  readonly setting: MongoDBSettingAdapter
-
   // Init
   // ====
 
-  private constructor({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
-    locale,
-    client,
-    db
-  }: MongoDBAdapterArgs) {
-    this.sessionTTL = sessionTTL
-    this.bcryptHashCostFactor = bcryptHashCostFactor
-
+  private constructor({locale, client, db}: MongoDBAdapterArgs) {
     this.locale = locale
     this.client = client
     this.db = db
-
-    this.peer = new MongoDBPeerAdapter(db)
-    this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
-    this.userRole = new MongoDBUserRoleAdapter(db)
-    this.subscription = new MongoDBSubscriptionAdapter(db)
-    this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
-    this.navigation = new MongoDBNavigationAdapter(db)
-    this.comment = new MongoDBCommentAdapter(db)
-    this.author = new MongoDBAuthorAdapter(db)
-    this.image = new MongoDBImageAdapter(db)
-    this.article = new MongoDBArticleAdapter(db)
-    this.page = new MongoDBPageAdapter(db)
-    this.memberPlan = new MongoDBMemberPlanAdapter(db)
-    this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
-    this.invoice = new MongoDBInvoiceAdapter(db)
-    this.payment = new MongoDBPaymentAdapter(db)
-    this.mailLog = new MongoDBMailLogAdapter(db)
-    this.setting = new MongoDBSettingAdapter(db)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {
@@ -128,12 +56,7 @@ export class MongoDBAdapter implements DBAdapter {
     })
   }
 
-  static async connect({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
-    url,
-    locale
-  }: MongoDBAdapterConnectArgs) {
+  static async connect({url, locale}: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
     const db = client.db()
 
@@ -146,8 +69,6 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     return new MongoDBAdapter({
-      sessionTTL,
-      bcryptHashCostFactor,
       client,
       db,
       locale
@@ -162,8 +83,6 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   static async initialize({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
     url,
     locale,
     seed
@@ -188,7 +107,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
+      const adapter = await this.connect({url, locale})
       await seed?.(adapter)
       await adapter.client.close()
     }

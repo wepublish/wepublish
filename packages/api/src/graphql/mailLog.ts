@@ -13,17 +13,18 @@ import {Context} from '../context'
 
 import {GraphQLPageInfo} from './common'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {MailLog, MailLogSort, MailLogState} from '../db/mailLog'
+import {MailLogSort} from '../db/mailLog'
+import {MailLog, MailLogState} from '@prisma/client'
 
 export const GraphQLMailLogState = new GraphQLEnumType({
   name: 'MailLogState',
   values: {
-    SUBMITTED: {value: MailLogState.Submitted},
-    ACCEPTED: {value: MailLogState.Accepted},
-    DELIVERED: {value: MailLogState.Delivered},
-    DEFERRED: {value: MailLogState.Deferred},
-    BOUNCED: {value: MailLogState.Bounced},
-    REJECTED: {value: MailLogState.Rejected}
+    SUBMITTED: {value: MailLogState.submitted},
+    ACCEPTED: {value: MailLogState.accepted},
+    DELIVERED: {value: MailLogState.delivered},
+    DEFERRED: {value: MailLogState.deferred},
+    BOUNCED: {value: MailLogState.bounced},
+    REJECTED: {value: MailLogState.rejected}
   }
 })
 

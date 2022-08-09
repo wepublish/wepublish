@@ -25,7 +25,7 @@ export interface PageData {
 }
 
 // Page State Flow:
-// Draft -> Pending (Optional) -> Published -> History
+// Draft -> Pending (Optional) -> Published
 export interface Page {
   readonly id: string
 
@@ -35,11 +35,6 @@ export interface Page {
   readonly draft: PageRevision | null
   readonly published: PageRevision | null
   readonly pending: PageRevision | null
-}
-
-export interface PageHistory {
-  readonly id: string
-  readonly revisions: PageRevision[]
 }
 
 export interface PageRevision extends PageData {
@@ -76,33 +71,4 @@ export enum PageSort {
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
-}
-export interface GetPageHistoryArgs {
-  readonly id: string
-}
-
-export interface UpdatePageArgs {
-  readonly id: string
-  readonly input: PageData
-}
-
-export interface UnpublishPageArgs {
-  readonly id: string
-}
-
-export interface PublishPageArgs {
-  readonly id: string
-  readonly publishAt?: Date
-  readonly publishedAt?: Date
-  readonly updatedAt?: Date
-}
-
-export type OptionalPage = Page | null
-export type OptionalPublicPage = PublicPage | null
-export type OptionalPageHistory = PageHistory | null
-
-export interface DBPageAdapter {
-  updatePage(args: UpdatePageArgs): Promise<OptionalPage>
-  publishPage(args: PublishPageArgs): Promise<OptionalPage>
-  unpublishPage(args: UnpublishPageArgs): Promise<OptionalPage>
 }

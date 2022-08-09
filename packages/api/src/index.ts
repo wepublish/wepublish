@@ -29,7 +29,6 @@ export * from './db/article'
 export * from './db/comment'
 export * from './db/page'
 export * from './db/common'
-export * from './db/adapter'
 export * from './db/peer'
 export * from './db/memberPlan'
 export * from './db/invoice'
@@ -58,19 +57,4 @@ export * from './mails/mailContext'
 export * from './challenges/challengeProvider'
 export * from './challenges/algebraicCaptchaChallenge'
 
-export {
-  articleModelEvents,
-  authorModelEvents,
-  imageModelEvents,
-  invoiceModelEvents,
-  mailLogModelEvents,
-  memberPlanModelEvents,
-  navigationModelEvents,
-  pageModelEvents,
-  paymentModelEvents,
-  paymentMethodModelEvents,
-  peerModelEvents,
-  userModelEvents,
-  userRoleModelEvents,
-  subscriptionModelEvents
-} from './events'
+export {getUserForCredentials} from './graphql/user/user.queries'

@@ -1,6 +1,5 @@
-import {PrismaClient} from '@prisma/client'
+import {MailLogState, PrismaClient} from '@prisma/client'
 import Email from 'email-templates'
-import {MailLogState} from '../db/mailLog'
 import {logger} from '../server'
 import {BaseMailProvider} from './mailProvider'
 
@@ -100,7 +99,7 @@ export class MailContext implements MailContext {
 
     const mailLog = await this.prisma.mailLog.create({
       data: {
-        state: MailLogState.Submitted,
+        state: MailLogState.submitted,
         subject: mailView?.subject ?? mailTemplate.subject ?? 'N/A',
         recipient: recipient,
         mailProviderID: this.mailProvider?.id ?? 'N/A',

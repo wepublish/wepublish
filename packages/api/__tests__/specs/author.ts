@@ -1,23 +1,21 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  CreateAuthor,
+  Author,
   AuthorInput,
   AuthorList,
-  Author,
-  UpdateAuthor,
-  DeleteAuthor
+  CreateAuthor,
+  DeleteAuthor,
+  UpdateAuthor
 } from '../api/private'
 
+import {createGraphQLTestClientWithMongoDB} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -26,7 +24,7 @@ beforeAll(async () => {
 
 describe('Authors', () => {
   describe('can be created/edited/deleted:', () => {
-    let authorIds: string[] = []
+    const authorIds: string[] = []
     beforeEach(async () => {
       const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
@@ -188,11 +186,4 @@ describe('Authors', () => {
       authorIds.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

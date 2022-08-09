@@ -1,30 +1,28 @@
 import {
-  ArticleBlock,
-  CommentItemType,
+  AvailablePaymentMethod,
   CommentAuthorType,
+  CommentItemType,
   CommentRejectionReason,
   CommentState,
-  AvailablePaymentMethod,
-  FocalPoint,
+  ImagesFocalPoint,
   InvoiceItem,
+  MailLogState,
+  MetadataProperty,
+  PaymentPeriodicity,
+  PaymentProviderCustomer,
+  PaymentState,
+  SubscriptionDeactivation,
+  SubscriptionPeriod,
+  UserAddress,
+  UserOAuth2Account
+} from '@prisma/client'
+import {
+  ArticleBlock,
+  CommentRevision,
   NavigationLink,
   PageBlock,
-  PaymentProviderCustomer,
-  RichTextNode,
-  CommentRevision,
-  MailLogState,
-  PaymentState,
-  UserAddress,
-  UserOAuth2Account,
-  PaymentPeriodicity,
-  SubscriptionPeriod,
-  SubscriptionDeactivation,
-  MemberPlan,
-  Invoice,
-  SettingRestriction,
-  SettingName
+  RichTextNode
 } from '@wepublish/api'
-import {MetadataProperty} from '@prisma/client'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -161,18 +159,6 @@ export interface DBSubscription {
   paymentMethodID: string
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
-  memberPlan?: MemberPlan
-  invoices?: Invoice[]
-}
-
-export interface DBSession {
-  _id: any
-
-  createdAt: Date
-  expiresAt: Date
-
-  userID: string
-  token: string
 }
 
 export interface DBNavigation {
@@ -242,7 +228,7 @@ export interface DBImage {
   link?: string | null
   license?: string | null
 
-  focalPoint?: FocalPoint | null
+  focalPoint?: ImagesFocalPoint | null
 }
 
 export interface DBComment {
@@ -428,12 +414,4 @@ export interface DBMailLog {
   state: MailLogState
   mailProviderID: string
   mailData?: string | null
-}
-
-export interface DBSetting<T> {
-  _id: any
-
-  name: SettingName
-  value: T | null
-  settingRestriction?: SettingRestriction
 }

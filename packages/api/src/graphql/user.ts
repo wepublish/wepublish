@@ -9,17 +9,17 @@ import {
   GraphQLBoolean,
   GraphQLID
 } from 'graphql'
-import {User, UserSort} from '../db/user'
+import {UserSort} from '../db/user'
 import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPublicPayment} from './payment'
+import {Subscription, User} from '@prisma/client'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
-import {GraphQLInvoice} from './invoice'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
-import {Subscription} from '../db/subscription'
+import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 
 export const GraphQLUserAddress = new GraphQLObjectType({

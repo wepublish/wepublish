@@ -410,7 +410,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
           await paymentProvider.updatePaymentWithIntentState({
             intentState,
-            dbAdapter: context.dbAdapter,
+            paymentClient: context.prisma.payment,
             paymentsByID: context.loaders.paymentsByID,
             invoicesByID: context.loaders.invoicesByID,
             subscriptionClient: prisma.subscription,

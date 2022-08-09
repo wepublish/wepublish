@@ -1,9 +1,9 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {UserFilter, UserSort} from '../../db/user'
-import {getSortOrder, SortOrder} from '../queries/sort'
 import bcrypt from 'bcrypt'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {unselectPassword, UserFilter, UserSort} from '../../db/user'
 import {Validator} from '../../validator'
+import {getSortOrder, SortOrder} from '../queries/sort'
 
 export const createUserOrder = (
   field: UserSort,
@@ -106,7 +106,8 @@ export const getUsers = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      select: unselectPassword
     })
   ])
 

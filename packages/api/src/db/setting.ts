@@ -36,7 +36,3 @@ export type AllowedSettingVals = {
 }
 
 export type OptionalSetting = Setting | null
-
-export interface DBSettingAdapter {
-  updateSettingList(args: UpdateSettingArgs[]): Promise<OptionalSetting[]>
-}
