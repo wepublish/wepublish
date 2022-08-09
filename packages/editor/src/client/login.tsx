@@ -151,7 +151,8 @@ export function Login() {
     authDispatch({
       type: AuthDispatchActionType.Login,
       email: responseEmail,
-      sessionToken
+      sessionToken,
+      sessionRoles: userRoles
     })
 
     if (current!.query && current!.query.next) {
