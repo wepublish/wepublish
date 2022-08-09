@@ -102,7 +102,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
-  const canPublish = Boolean(articleData?.article?.draft)
+  const canPublish = Boolean(pageData?.page?.draft)
   const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
     ? new Date(publishData?.publishPage?.pending?.publishAt)
     : pageData?.page?.pending?.publishAt
