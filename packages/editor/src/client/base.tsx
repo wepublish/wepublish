@@ -20,7 +20,7 @@ import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
-import {Container, Dropdown, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
 
 export interface BaseProps {
   children?: ReactNode
@@ -158,64 +158,64 @@ export function Base({children}: BaseProps) {
                   {t('navbar.authors')}
                 </Nav.Item>
 
-                <Dropdown eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
-                  <Dropdown.Item
+                <Nav.Menu eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
+                  <Nav.Item
                     as={NavLink}
                     href="/users"
                     active={path === 'users'}
                     icon={<UserCircleIcon />}>
                     {t('navbar.users')}
-                  </Dropdown.Item>
+                  </Nav.Item>
 
-                  <Dropdown.Item
+                  <Nav.Item
                     as={NavLink}
                     href="/userroles"
                     active={path === 'userroles'}
                     icon={<CharacterAuthorizeIcon />}>
                     {t('navbar.userRoles')}
-                  </Dropdown.Item>
+                  </Nav.Item>
 
-                  <Dropdown.Item
+                  <Nav.Item
                     as={NavLink}
                     href="/subscriptions"
                     active={path === 'subscriptions'}
                     icon={<MehOIcon />}>
                     {t('navbar.subscriptions')}
-                  </Dropdown.Item>
+                  </Nav.Item>
 
-                  <Dropdown.Item
+                  <Nav.Item
                     as={NavLink}
                     href="/memberplans"
                     active={path === 'memberplans'}
                     icon={<IdCardIcon />}>
                     {t('navbar.memberPlans')}
-                  </Dropdown.Item>
+                  </Nav.Item>
 
-                  <Dropdown.Item
+                  <Nav.Item
                     as={NavLink}
                     href="/paymentmethods"
                     active={path === 'paymentmethods'}
                     icon={<CreditCardIcon />}>
                     {t('navbar.paymentMethods')}
-                  </Dropdown.Item>
-                </Dropdown>
+                  </Nav.Item>
+                </Nav.Menu>
 
-                <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
-                  <Dropdown.Item
+                <Nav.Menu title={t('navbar.peering')} icon={<ShareIcon />}>
+                  <Nav.Item
                     as={NavLink}
                     href="/peering"
                     active={path === 'peering'}
                     icon={<ShareIcon />}>
                     {t('navbar.peers')}
-                  </Dropdown.Item>
-                  <Dropdown.Item
+                  </Nav.Item>
+                  <Nav.Item
                     as={NavLink}
                     href="/tokens"
                     active={path === 'tokens'}
                     icon={<KeyIcon />}>
                     {t('navbar.tokens')}
-                  </Dropdown.Item>
-                </Dropdown>
+                  </Nav.Item>
+                </Nav.Menu>
 
                 <Nav.Item
                   as={NavLink}
@@ -229,7 +229,7 @@ export function Base({children}: BaseProps) {
           </Sidenav>
           <Navbar appearance="default" className="nav-toggle">
             <Nav>
-              <Dropdown
+              <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
@@ -242,13 +242,13 @@ export function Base({children}: BaseProps) {
                     icon={<BarsIcon />}
                   />
                 )}>
-                <Dropdown.Item as={NavLink} href="/logout">
+                <Nav.Item as={NavLink} href="/logout">
                   {t('navbar.logout')}
-                </Dropdown.Item>
-              </Dropdown>
+                </Nav.Item>
+              </Nav.Menu>
             </Nav>
             <Nav>
-              <Dropdown
+              <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
@@ -262,14 +262,14 @@ export function Base({children}: BaseProps) {
                   />
                 )}>
                 {AVAILABLE_LANG.map(lang => (
-                  <Dropdown.Item
+                  <Nav.Item
                     key={lang.id}
                     onSelect={() => setUILanguage(lang.id)}
                     active={lang.id === uiLanguage}>
                     {lang.name}
-                  </Dropdown.Item>
+                  </Nav.Item>
                 ))}
-              </Dropdown>
+              </Nav.Menu>
             </Nav>
           </Navbar>
         </Sidebar>

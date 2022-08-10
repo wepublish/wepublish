@@ -8,7 +8,7 @@ export interface AuthContextState {
   readonly session?: {
     readonly email: string
     readonly sessionToken: string
-  }
+  } | null
 }
 
 export const AuthContext = createContext<AuthContextState>({})
@@ -20,8 +20,10 @@ export enum AuthDispatchActionType {
 
 export interface AuthDispatchLoginAction {
   readonly type: AuthDispatchActionType.Login
-  readonly email: string
-  readonly sessionToken: string
+  readonly payload: {
+    readonly email: string
+    readonly sessionToken: string
+  } | null
 }
 
 export interface AuthDispatchLogoutAction {
@@ -42,14 +44,11 @@ export function authReducer(
   switch (action.type) {
     case AuthDispatchActionType.Login:
       return {
-        session: {
-          email: action.email,
-          sessionToken: action.sessionToken
-        }
+        session: action.payload
       }
 
     case AuthDispatchActionType.Logout:
-      return {}
+      return {session: null}
   }
 }
 
@@ -83,18 +82,19 @@ export function AuthProvider({children}: AuthProviderProps) {
   useEffect(() => {
     if (data?.me) {
       const {email} = data.me
-
       dispatch({
         type: AuthDispatchActionType.Login,
-        email,
-        sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+        payload: {
+          email,
+          sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+        }
       })
-    } else {
+    } else if (!loading) {
       dispatch({
         type: AuthDispatchActionType.Logout
       })
     }
-  }, [data?.me, error])
+  }, [data, error, loading])
 
   return loading ? null : (
     <AuthDispatchContext.Provider value={dispatch}>

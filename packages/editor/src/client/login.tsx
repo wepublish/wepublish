@@ -19,15 +19,19 @@ import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Logo} from './logo'
 import {LocalStorageKey} from './utility'
 
+function useQuery() {
+  const {search} = useLocation()
+  return React.useMemo(() => new URLSearchParams(search), [search])
+}
+
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const location = useLocation()
   const params = useParams()
-  const path = location.pathname.substring(1)
-  console.log('location', location)
-  console.log('path', path)
+  const query = useQuery()
+  const next = query.get('next')
 
   const authDispatch = useContext(AuthDispatchContext)
   const navigate = useNavigate()
@@ -74,16 +78,15 @@ export function Login() {
 
     authDispatch({
       type: AuthDispatchActionType.Login,
-      email: responseEmail,
-      sessionToken
+      payload: {
+        email: responseEmail,
+        sessionToken
+      }
     })
 
-    if (params && params.next) {
-      const route = location + params.next
-      if (route) {
-        navigate(route, {replace: true})
-        return
-      }
+    if (next) {
+      navigate(next, {replace: true})
+      return
     }
     navigate('/', {replace: true})
   }

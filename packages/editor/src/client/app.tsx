@@ -70,13 +70,12 @@ export function App() {
   })
 
   const {session} = useContext(AuthContext)
+
   useEffect(() => {
-    console.log('session1', session)
-    if (!session && window.location.pathname !== '/login') {
-      console.log('session2', session)
-      window.location.replace('/login')
+    if (session === null && window.location.pathname !== '/login') {
+      window.location.href = `/login?next=${window.location.pathname}`
     }
-  }, [])
+  }, [session])
 
   return (
     <CustomProvider locale={lng}>
