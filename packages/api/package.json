@@ -36,6 +36,10 @@
     "test:prepare": "node -r dotenv/config ../../node_modules/.bin/prisma migrate reset --force",
     "test": "yarn test:prepare && node -r dotenv/config  ./node_modules/.bin/jest"
   },
+  "prisma": {
+    "schema": "prisma/schema.prisma",
+    "seed": "npx ts-node __tests__/seed.ts"
+  },
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
     "@prisma/client": "^3.14.0",

@@ -32,7 +32,7 @@ describe('Users', () => {
       const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Bruce Wayne',
-        email: generateRandomString(),
+        email: `${generateRandomString()}@wepublish.ch`,
         emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
@@ -45,6 +45,7 @@ describe('Users', () => {
           password: 'p@$$w0rd'
         }
       })
+
       ids.unshift(res.data.createUser.id)
     })
 
@@ -52,7 +53,7 @@ describe('Users', () => {
       const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Robin Wayne',
-        email: generateRandomString(),
+        email: `${generateRandomString()}@wepublish.ch`,
         emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,
@@ -118,7 +119,7 @@ describe('Users', () => {
         variables: {
           input: {
             name: 'Dark Knight',
-            email: generateRandomString(),
+            email: `${generateRandomString()}@wepublish.ch`,
             emailVerifiedAt: null,
             properties: [],
             active: true,
@@ -143,7 +144,7 @@ describe('Users', () => {
 
       const input: UserInput = {
         name: 'Robin Wayne',
-        email: generateRandomString(),
+        email: `${generateRandomString()}@wepublish.ch`,
         emailVerifiedAt: new Date().toISOString(),
         properties: [],
         active: true,

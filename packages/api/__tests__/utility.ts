@@ -11,7 +11,6 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  hashPassword,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -70,45 +69,9 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
   const prisma = new PrismaClient()
   await prisma.$connect()
 
-  const adminRole = await prisma.userRole.upsert({
-    where: {
-      id: 'admin'
-    },
-    create: {
-      id: 'admin',
-      systemRole: true,
-      name: 'Admin',
-      description: 'Administrator Role',
-      permissionIDs: []
-    },
-    update: {
-      id: 'admin',
-      systemRole: true,
-      name: 'Admin',
-      description: 'Administrator Role',
-      permissionIDs: []
-    }
-  })
-
-  const adminUser = await prisma.user.upsert({
+  const adminUser = await prisma.user.findUnique({
     where: {
       email: 'dev@wepublish.ch'
-    },
-    create: {
-      email: 'dev@wepublish.ch',
-      emailVerifiedAt: new Date(),
-      name: 'Dev User',
-      roleIDs: [adminRole.id],
-      active: true,
-      password: await hashPassword('123')
-    },
-    update: {
-      email: 'dev@wepublish.ch',
-      emailVerifiedAt: new Date(),
-      name: 'Dev User',
-      roleIDs: [adminRole.id],
-      active: true,
-      password: await hashPassword('123')
     }
   })
 
@@ -124,12 +87,8 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
     _uploadImage: jest.fn()
   }
 
-  if (!adminUser) {
-    throw new Error('Could not get admin user')
-  }
-
   const userSession = await createUserSession(
-    adminUser,
+    adminUser!,
     DefaultSessionTTL,
     prisma.session,
     prisma.userRole
