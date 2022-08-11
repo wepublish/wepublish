@@ -19,7 +19,7 @@
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
     "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
-    "watch": "run-p --print-label watch:*",
+    "watch": "yarn migrate && run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
     "setup:root": "shx cp .env.example .env",
     "start:docker": "docker compose up --detach mongo mongo-express database pgadmin media",
