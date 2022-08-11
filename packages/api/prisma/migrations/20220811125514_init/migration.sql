@@ -11,7 +11,7 @@ CREATE TYPE "CommentState" AS ENUM ('approved', 'pendingApproval', 'pendingUserC
 CREATE TYPE "CommentAuthorType" AS ENUM ('team', 'author', 'verifiedUser', 'guestUser');
 
 -- CreateEnum
-CREATE TYPE "MailLogState" AS ENUM ('submitted', 'accepted', 'delivered', 'deferred', 'bounced', 'rejecte');
+CREATE TYPE "MailLogState" AS ENUM ('submitted', 'accepted', 'delivered', 'deferred', 'bounced', 'rejected');
 
 -- CreateEnum
 CREATE TYPE "PaymentPeriodicity" AS ENUM ('monthly', 'quarterly', 'biannual', 'yearly');
@@ -188,7 +188,7 @@ CREATE TABLE "invoices" (
     "canceledAt" TIMESTAMP(3),
     "sentReminderAt" TIMESTAMP(3),
     "manuallySetAsPaidByUserId" TEXT,
-    "subscriptionID" TEXT NOT NULL,
+    "subscriptionID" TEXT,
     "userID" TEXT,
 
     CONSTRAINT "invoices_pkey" PRIMARY KEY ("id")
@@ -501,6 +501,18 @@ CREATE TABLE "users.roles" (
     CONSTRAINT "users.roles_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "settings" (
+    "_id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "modifiedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "value" JSONB NOT NULL,
+    "settingRestriction" JSONB NOT NULL,
+
+    CONSTRAINT "settings_pkey" PRIMARY KEY ("_id")
+);
+
 -- CreateIndex
 CREATE INDEX "articles.revisions_publishAt_idx" ON "articles.revisions"("publishAt");
 
@@ -645,6 +657,9 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "users.roles_name_key" ON "users.roles"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "settings_name_key" ON "settings"("name");
+
 -- AddForeignKey
 ALTER TABLE "properties" ADD CONSTRAINT "properties_articleRevisionId_fkey" FOREIGN KEY ("articleRevisionId") REFERENCES "articles.revisions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -682,10 +697,10 @@ ALTER TABLE "comments.revisions" ADD CONSTRAINT "comments.revisions_commentId_fk
 ALTER TABLE "comments" ADD CONSTRAINT "comments_userID_fkey" FOREIGN KEY ("userID") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "invoices.items" ADD CONSTRAINT "invoices.items_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "invoices.items" ADD CONSTRAINT "invoices.items_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "invoices" ADD CONSTRAINT "invoices_subscriptionID_fkey" FOREIGN KEY ("subscriptionID") REFERENCES "subscriptions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "invoices" ADD CONSTRAINT "invoices_subscriptionID_fkey" FOREIGN KEY ("subscriptionID") REFERENCES "subscriptions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "invoices" ADD CONSTRAINT "invoices_userID_fkey" FOREIGN KEY ("userID") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -718,10 +733,10 @@ ALTER TABLE "peerProfiles" ADD CONSTRAINT "peerProfiles_logoID_fkey" FOREIGN KEY
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userID_fkey" FOREIGN KEY ("userID") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "subscriptions.periods" ADD CONSTRAINT "subscriptions.periods_invoiceID_fkey" FOREIGN KEY ("invoiceID") REFERENCES "invoices"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subscriptions.periods" ADD CONSTRAINT "subscriptions.periods_invoiceID_fkey" FOREIGN KEY ("invoiceID") REFERENCES "invoices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "subscriptions.periods" ADD CONSTRAINT "subscriptions.periods_subscriptionId_fkey" FOREIGN KEY ("subscriptionId") REFERENCES "subscriptions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subscriptions.periods" ADD CONSTRAINT "subscriptions.periods_subscriptionId_fkey" FOREIGN KEY ("subscriptionId") REFERENCES "subscriptions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "subscriptions.deactivation-reasons" ADD CONSTRAINT "subscriptions.deactivation-reasons_subscriptionID_fkey" FOREIGN KEY ("subscriptionID") REFERENCES "subscriptions"("id") ON DELETE CASCADE ON UPDATE CASCADE;

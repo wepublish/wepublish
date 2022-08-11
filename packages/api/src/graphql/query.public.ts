@@ -376,7 +376,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!invoice) {
+        if (!invoice || !invoice.subscriptionID) {
           throw new NotFound('Invoice', id)
         }
 

@@ -138,7 +138,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     // get invoice and subscription joins out of the payment
     const invoice = await invoicesByID.load(payment.invoiceID)
 
-    if (!invoice) {
+    if (!invoice || !invoice.subscriptionID) {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
     }
 

@@ -454,7 +454,7 @@ export class MemberContext implements MemberContext {
     for (const invoice of openInvoices) {
       const subscription = await this.prisma.subscription.findUnique({
         where: {
-          id: invoice.subscriptionID
+          id: invoice.subscriptionID ?? ''
         }
       })
 
@@ -575,7 +575,7 @@ export class MemberContext implements MemberContext {
     for (const invoice of openInvoices) {
       const subscription = await this.prisma.subscription.findUnique({
         where: {
-          id: invoice.subscriptionID
+          id: invoice.subscriptionID ?? ''
         }
       })
 
@@ -799,7 +799,7 @@ export class MemberContext implements MemberContext {
     for (const invoice of openInvoices) {
       const subscription = await this.prisma.subscription.findUnique({
         where: {
-          id: invoice.subscriptionID
+          id: invoice.subscriptionID ?? ''
         }
       })
 
@@ -890,6 +890,10 @@ export class MemberContext implements MemberContext {
     replyToAddress
   }: SendReminderForInvoiceProps): Promise<void> {
     const today = new Date()
+
+    if (!invoice.subscriptionID) {
+      throw new NotFound('Invoice', invoice.id)
+    }
 
     const subscription = await this.prisma.subscription.findUnique({
       where: {

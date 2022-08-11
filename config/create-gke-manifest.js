@@ -6,7 +6,6 @@ try {
   require('dotenv').config()
 } catch (e) {}
 
-
 const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
 
 let ENVIRONMENT_NAME = 'development'
@@ -14,7 +13,11 @@ if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_N
   ENVIRONMENT_NAME = 'production'
 }
 
-const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME.substring(0,12))
+const GITHUB_REF_SHORT = slugify(
+  !BRANCH_NAME
+    ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1)
+    : BRANCH_NAME.substring(0, 12)
+)
 
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
@@ -36,7 +39,6 @@ const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/m
 
 const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
 
-
 const mediaAppName = `${GITHUB_REF_SHORT}-media-${ENVIRONMENT_NAME}`
 const mediaPort = 4100
 
@@ -45,9 +47,8 @@ main().catch(e => {
   process.exit(1)
 })
 
-
 async function main() {
-  if(ENVIRONMENT_NAME === 'development') {
+  if (ENVIRONMENT_NAME === 'development') {
     await applyCertificate()
   }
   await applyWebsite()
@@ -67,7 +68,7 @@ async function applyCertificate() {
     kind: 'Certificate',
     metadata: {
       name: certName,
-      namespace: NAMESPACE,
+      namespace: NAMESPACE
     },
     spec: {
       secretName: certificateSecretName,
@@ -140,7 +141,7 @@ async function applyWebsite() {
                 }
               }
             },
-            pathType: "Prefix",
+            pathType: 'Prefix',
             path: '/'
           }
         ]
@@ -171,12 +172,16 @@ async function applyWebsite() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(ENVIRONMENT_NAME, {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-        }, {
-          'cert-manager.io/acme-challenge-type': 'dns01',
-          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-        })
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
       }
     },
     spec: {
@@ -329,7 +334,7 @@ async function applyMediaServer() {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", '1Gi')
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
         }
       }
     }
@@ -484,12 +489,16 @@ async function applyMediaServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(ENVIRONMENT_NAME, {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-        }, {
-          'cert-manager.io/acme-challenge-type': 'dns01',
-          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-        })
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
       }
     },
     spec: {
@@ -507,7 +516,7 @@ async function applyMediaServer() {
                     }
                   }
                 },
-                pathType: "Prefix",
+                pathType: 'Prefix',
                 path: '/'
               }
             ]
@@ -525,7 +534,7 @@ async function applyMediaServer() {
   await applyConfig(`ingress-${app}`, ingress)
 }
 
-async function  applyApiServer() {
+async function applyApiServer() {
   const app = 'api'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
@@ -887,12 +896,16 @@ async function  applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(ENVIRONMENT_NAME, {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-        }, {
-          'cert-manager.io/acme-challenge-type': 'dns01',
-          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-        })
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
       }
     },
     spec: {
@@ -910,7 +923,7 @@ async function  applyApiServer() {
                     }
                   }
                 },
-                pathType: "Prefix",
+                pathType: 'Prefix',
                 path: '/'
               }
             ]
@@ -1063,12 +1076,16 @@ async function applyEditor() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(ENVIRONMENT_NAME, {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-        }, {
-          'cert-manager.io/acme-challenge-type': 'dns01',
-          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-        })
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
       }
     },
     spec: {
@@ -1086,7 +1103,7 @@ async function applyEditor() {
                     }
                   }
                 },
-                pathType: "Prefix",
+                pathType: 'Prefix',
                 path: '/'
               }
             ]
@@ -1288,12 +1305,16 @@ async function applyOAuth2() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(ENVIRONMENT_NAME, {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-        }, {
-          'cert-manager.io/acme-challenge-type': 'dns01',
-          'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-        })
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
       }
     },
     spec: {
@@ -1311,7 +1332,7 @@ async function applyOAuth2() {
                     }
                   }
                 },
-                pathType: "Prefix",
+                pathType: 'Prefix',
                 path: '/'
               }
             ]
@@ -1328,7 +1349,6 @@ async function applyOAuth2() {
   }
   await applyConfig(`ingress-${app}`, ingress)
 }
-
 
 async function applyPostgres() {
   const app = 'postgres'
@@ -1391,15 +1411,15 @@ async function applyPostgres() {
           containers: [
             {
               name: appName,
-              image: 'bitnami/postgresql:latest',
+              image: 'bitnami/postgresql:14',
               env: [
                 {
-                  name: "POSTGRESQL_DATABASE",
-                  value: "wepublish"
+                  name: 'POSTGRESQL_DATABASE',
+                  value: 'wepublish'
                 },
                 {
-                  name: "ALLOW_EMPTY_PASSWORD",
-                  value: "yes"
+                  name: 'ALLOW_EMPTY_PASSWORD',
+                  value: 'yes'
                 }
               ],
               ports: [
@@ -1433,7 +1453,7 @@ async function applyPostgres() {
             {
               name: 'postgres-volume',
               persistentVolumeClaim: {
-                claimName: `${GITHUB_REF_SHORT}-postgres-data`,
+                claimName: `${GITHUB_REF_SHORT}-postgres-data`
               }
             }
           ]
@@ -1564,7 +1584,7 @@ async function applyMongo() {
             {
               name: 'mongo-volume',
               persistentVolumeClaim: {
-                claimName: `${GITHUB_REF_SHORT}-mongo-data`,
+                claimName: `${GITHUB_REF_SHORT}-mongo-data`
               }
             }
           ]

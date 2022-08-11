@@ -716,7 +716,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!invoice) throw new NotFound('Invoice', invoiceID)
+        if (!invoice || !invoice.subscriptionID) throw new NotFound('Invoice', invoiceID)
 
         const subscription = await prisma.subscription.findUnique({
           where: {

@@ -234,7 +234,7 @@ model InvoiceItem {
   quantity    Int
   amount      Int
 
-  Invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  Invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
   @@map("invoices.items")
@@ -254,8 +254,8 @@ model Invoice {
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 
-  subscriptionID String
-  subscription   Subscription @relation(fields: [subscriptionID], references: [id], onDelete: Cascade)
+  subscriptionID String?
+  subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   userID String?
   user   User?   @relation(fields: [userID], references: [id])
@@ -272,7 +272,7 @@ enum MailLogState {
   delivered @map("delivered")
   deferred  @map("deferred")
   bounced   @map("bounced")
-  rejected  @map("rejecte")
+  rejected  @map("rejected")
 }
 
 model MailLog {
@@ -526,9 +526,9 @@ model SubscriptionPeriod {
   amount             Float
 
   invoiceID String
-  Invoice   Invoice @relation(fields: [invoiceID], references: [id], onDelete: Cascade)
+  Invoice   Invoice @relation(fields: [invoiceID], references: [id])
 
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   subscriptionId String?
 
   @@map("subscriptions.periods")
