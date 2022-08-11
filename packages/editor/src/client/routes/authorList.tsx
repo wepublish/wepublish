@@ -154,7 +154,7 @@ export function AuthorList() {
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell dataKey="name">
               {(rowData: FullAuthorFragment) => (
-                <Link to={`/author/edit/${rowData.id}`}>
+                <Link to={`/authors/edit/${rowData.id}`}>
                   {rowData.name || t('authors.overview.untitled')}
                 </Link>
               )}

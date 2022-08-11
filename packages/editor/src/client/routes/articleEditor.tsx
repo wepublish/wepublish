@@ -550,16 +550,7 @@ export function ArticleEditor() {
                     disabled={hasChanged || !id}
                     style={{marginTop: '4px'}}
                     size={'lg'}
-                    icon={<EyeIcon />}
-                    // onClick={e => {
-                    //   previewLinkFetch({
-                    //     variables: {
-                    //       id: id!,
-                    //       hours: 1
-                    //     }
-                    //   })
-                    // }}
-                  >
+                    icon={<EyeIcon />}>
                     {t('articleEditor.overview.preview')}
                   </IconButton>
                 </Link>
