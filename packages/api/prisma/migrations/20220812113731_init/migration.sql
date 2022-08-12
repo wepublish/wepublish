@@ -503,14 +503,14 @@ CREATE TABLE "users.roles" (
 
 -- CreateTable
 CREATE TABLE "settings" (
-    "_id" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "value" JSONB NOT NULL,
     "settingRestriction" JSONB NOT NULL,
 
-    CONSTRAINT "settings_pkey" PRIMARY KEY ("_id")
+    CONSTRAINT "settings_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

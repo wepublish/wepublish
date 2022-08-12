@@ -49,7 +49,7 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     total: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
-        return items.reduce((previousValue, currentValue) => {
+        return (items || []).reduce((previousValue, currentValue) => {
           return previousValue + currentValue.quantity * currentValue.amount
         }, 0)
       })
@@ -75,7 +75,7 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Cont
     total: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
-        return items.reduce((previousValue, currentValue) => {
+        return (items || []).reduce((previousValue, currentValue) => {
           return previousValue + currentValue.quantity * currentValue.amount
         }, 0)
       })

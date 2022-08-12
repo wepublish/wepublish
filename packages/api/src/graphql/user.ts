@@ -83,6 +83,9 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
         return prisma.invoice.findMany({
           where: {
             subscriptionID: subscriptionId
+          },
+          include: {
+            items: true
           }
         })
       }
@@ -129,6 +132,11 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
         return prisma.subscription.findMany({
           where: {
             userID: userId
+          },
+          include: {
+            deactivation: true,
+            periods: true,
+            properties: true
           }
         })
       })

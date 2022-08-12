@@ -677,7 +677,7 @@ model UserRole {
 }
 
 model Setting {
-  id                 String   @id @map("_id")
+  id                 String   @id @default(cuid())
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
