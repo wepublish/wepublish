@@ -1,4 +1,8 @@
-import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
+import {
+  MemberPlan as PrismaMemberPlan,
+  PaymentPeriodicity,
+  AvailablePaymentMethod
+} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
 
 export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
@@ -8,18 +12,8 @@ export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
   PaymentPeriodicity.yearly
 ]
 
-export interface MemberPlan {
-  readonly id: string
-  readonly createdAt: Date
-  readonly modifiedAt: Date
-  readonly name: string
-  readonly slug: string
-  readonly tags: string[]
-  readonly imageID?: string | null
+export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
   readonly description: RichTextNode[]
-  readonly active: boolean
-  readonly amountPerMonthMin: number
-  readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
 export enum MemberPlanSort {
@@ -31,4 +25,8 @@ export interface MemberPlanFilter {
   name?: string
   active?: boolean
   tags?: string[]
+}
+
+export type MemberPlanWithPaymentMethods = PrismaMemberPlan & {
+  availablePaymentMethods: AvailablePaymentMethod[]
 }

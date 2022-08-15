@@ -13,12 +13,19 @@ export const deleteNavigationById = (
   return navigation.delete({
     where: {
       id
+    },
+    include: {
+      links: true
     }
   })
 }
 
+type CreateNavigationInput = Omit<Prisma.NavigationUncheckedCreateInput, 'links' | 'modifiedAt'> & {
+  links: Prisma.NavigationLinkUncheckedCreateWithoutNavigationInput[]
+}
+
 export const createNavigation = (
-  input: Omit<Prisma.NavigationUncheckedCreateInput, 'modifiedAt'>,
+  {links, ...input}: CreateNavigationInput,
   authenticate: Context['authenticate'],
   navigation: PrismaClient['navigation']
 ) => {
@@ -26,13 +33,30 @@ export const createNavigation = (
   authorise(CanCreateNavigation, roles)
 
   return navigation.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {
+      ...input,
+      links: {
+        createMany: {
+          data: links
+        }
+      }
+    },
+    include: {
+      links: true
+    }
   })
 }
 
-export const updateNavigation = (
+type UpdateNavigationInput = Omit<
+  Prisma.NavigationUncheckedUpdateInput,
+  'links' | 'modifiedAt' | 'createdAt'
+> & {
+  links: Prisma.NavigationLinkUncheckedCreateWithoutNavigationInput[]
+}
+
+export const updateNavigation = async (
   id: string,
-  input: Omit<Prisma.NavigationUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  {links, ...input}: UpdateNavigationInput,
   authenticate: Context['authenticate'],
   navigation: PrismaClient['navigation']
 ) => {
@@ -41,6 +65,21 @@ export const updateNavigation = (
 
   return navigation.update({
     where: {id},
-    data: input
+    data: {
+      ...input,
+      links: {
+        deleteMany: {
+          navigationId: {
+            equals: id
+          }
+        },
+        createMany: {
+          data: links
+        }
+      }
+    },
+    include: {
+      links: true
+    }
   })
 }

@@ -21,6 +21,9 @@ export const getPublicInvoices = async (
       subscriptionID: {
         in: subscriptions.map(({id}) => id)
       }
+    },
+    include: {
+      items: true
     }
   })
 

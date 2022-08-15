@@ -87,8 +87,8 @@ query ArticleList($filter: String, $cursor: ID, $take: Int) {
   }
 }
 
-query PeerArticleList($filter: String, $cursor: ID, $take: Int) {
-  peerArticles(take: $take, cursor: $cursor, filter: {title: $filter}) {
+query PeerArticleList($filter: String, $cursors: String, $take: Int) {
+  peerArticles(take: $take, cursors: $cursors, filter: {title: $filter}) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -138,7 +138,9 @@ mutation UnpublishArticle($id: ID!) {
 }
 
 mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id)
+  deleteArticle(id: $id) {
+    ...MutationArticle
+  }
 }
 
 query Article($id: ID!) {

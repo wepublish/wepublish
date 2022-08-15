@@ -1,10 +1,12 @@
-import {MemberPlan, PaymentMethod, Subscription, User} from '@prisma/client'
+import {MemberPlan, PaymentMethod} from '@prisma/client'
 import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
 import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
 import {SettingRestriction} from './db/setting'
+import {SubscriptionWithRelations} from './db/subscription'
+import {UserWithRelations} from './db/user'
 import {InvalidSettingValueError} from './error'
 
 export const MAX_COMMENT_LENGTH = 1000
@@ -18,8 +20,8 @@ export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
 export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
 
 export function mapSubscriptionsAsCsv(
-  subscriptions: (Subscription & {
-    user: User
+  subscriptions: (SubscriptionWithRelations & {
+    user: UserWithRelations
     paymentMethod: PaymentMethod
     memberPlan: MemberPlan
   })[]

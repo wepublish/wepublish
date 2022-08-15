@@ -10,7 +10,7 @@ module.exports = {
   },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
-  setupFilesAfterEnv: ['./__tests__/setup.ts', './__tests__/teardown.ts'],
+  setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
   testURL: 'http://localhost/',
   coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],

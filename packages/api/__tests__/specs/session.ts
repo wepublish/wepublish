@@ -6,14 +6,14 @@ import {
   CreateSessionWithJwt as CreateSessionWithJwtPublic
 } from '../api/public'
 
-import {createGraphQLTestClientWithMongoDB} from '../utility'
+import {createGraphQLTestClientWithPrisma} from '../utility'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
   } catch (error) {
@@ -34,7 +34,7 @@ describe('Sessions', () => {
           password: '123'
         }
       })
-      const session = res.data?.createSession
+      const session = res.data.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -68,7 +68,7 @@ describe('Sessions', () => {
         }
       })
 
-      const session = res.data?.createSessionWithJWT
+      const session = res.data.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -87,7 +87,7 @@ describe('Sessions', () => {
           password: '123'
         }
       })
-      const session = res.data?.createSession
+      const session = res.data.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -122,7 +122,7 @@ describe('Sessions', () => {
         }
       })
 
-      const session = res.data?.createSessionWithJWT
+      const session = res.data.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })

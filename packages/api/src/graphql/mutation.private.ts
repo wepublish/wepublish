@@ -1,4 +1,4 @@
-import {CommentState, Prisma} from '@prisma/client'
+import {CommentState} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -10,10 +10,10 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {SettingName, SettingRestriction, UpdateSettingArgs} from '../db/setting'
+import {SettingName} from '../db/setting'
+import {unselectPassword} from '../db/user'
 import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
-import {checkSettingRestrictions} from '../utility'
 import {Validator} from '../validator'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
@@ -71,7 +71,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {authorise, CanSendJWTLogin, CanUpdateSettings} from './permissions'
+import {authorise, CanSendJWTLogin} from './permissions'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -215,7 +215,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deletePeer: {
-      type: GraphQLID,
+      type: GraphQLPeer,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
         deletePeerById(id, authenticate, peer)
@@ -298,7 +298,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         await Validator.login().validateAsync({email})
 
         const user = await prisma.user.findUnique({
-          where: {email}
+          where: {email},
+          select: unselectPassword
         })
         if (!user) throw new NotFound('User', email)
 
@@ -356,7 +357,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
 
         const user = await prisma.user.findUnique({
-          where: {email}
+          where: {email},
+          select: unselectPassword
         })
 
         if (!user) throw new NotFound('User', email)
@@ -390,7 +392,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteToken: {
-      type: GraphQLString,
+      type: GraphQLCreatedToken,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {token}}) =>
         deleteTokenById(id, authenticate, token)
@@ -435,7 +437,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteUser: {
-      type: GraphQLString,
+      type: GraphQLUser,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -473,7 +475,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteSubscription: {
-      type: GraphQLString,
+      type: GraphQLSubscription,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -502,7 +504,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteUserRole: {
-      type: GraphQLString,
+      type: GraphQLUserRole,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -543,7 +545,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteNavigation: {
-      type: GraphQLID,
+      type: GraphQLNavigation,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -572,7 +574,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteAuthor: {
-      type: GraphQLID,
+      type: GraphQLAuthor,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -601,7 +603,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteImage: {
-      type: GraphQLBoolean,
+      type: GraphQLImage,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
         deleteImageById(id, authenticate, image, mediaAdapter)
@@ -624,14 +626,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {article}}) =>
-        updateArticle(id, input, authenticate, article)
+        updateArticle(
+          id,
+          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
+          authenticate,
+          article
+        )
     },
 
     deleteArticle: {
-      type: GraphQLBoolean,
+      type: GraphQLArticle,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
-        deleteArticleById(id, authenticate, article)
+      resolve: (root, {id}, {authenticate, prisma}) => deleteArticleById(id, authenticate, prisma)
     },
 
     publishArticle: {
@@ -679,14 +685,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPageInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {page}}) =>
-        updatePage(id, input, authenticate, page)
+        updatePage(id, {...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
     },
 
     deletePage: {
-      type: GraphQLBoolean,
+      type: GraphQLPage,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {page}}) =>
-        deletePageById(id, authenticate, page)
+      resolve: (root, {id}, {authenticate, prisma}) => deletePageById(id, authenticate, prisma)
     },
 
     publishPage: {
@@ -697,12 +702,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      resolve: (
-        root,
-        {id, publishAt, updatedAt, publishedAt},
-        {authenticate, prisma: {page}, loaders: {publicPagesBySlug}}
-      ) =>
-        publishPage(id, {publishAt, updatedAt, publishedAt}, authenticate, publicPagesBySlug, page)
+      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {page}}) =>
+        publishPage(id, {publishAt, updatedAt, publishedAt}, authenticate, page)
     },
 
     unpublishPage: {
@@ -741,7 +742,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteMemberPlan: {
-      type: GraphQLID,
+      type: GraphQLMemberPlan,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -772,7 +773,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deletePaymentMethod: {
-      type: GraphQLID,
+      type: GraphQLPaymentMethod,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
@@ -815,7 +816,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteInvoice: {
-      type: GraphQLID,
+      type: GraphQLInvoice,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },

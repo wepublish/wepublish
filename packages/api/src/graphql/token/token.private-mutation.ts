@@ -1,6 +1,7 @@
 import {Context} from '../../context'
 import {authorise, CanCreateToken, CanDeleteToken} from '../permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
+import {generateToken} from '../session/session.mutation'
 
 export const deleteTokenById = (
   id: string,
@@ -18,7 +19,7 @@ export const deleteTokenById = (
 }
 
 export const createToken = (
-  input: Omit<Prisma.TokenUncheckedCreateInput, 'modifiedAt'>,
+  input: Omit<Prisma.TokenUncheckedCreateInput, 'token' | 'modifiedAt'>,
   authenticate: Context['authenticate'],
   token: PrismaClient['token']
 ) => {
@@ -26,6 +27,6 @@ export const createToken = (
   authorise(CanCreateToken, roles)
 
   return token.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {...input, token: generateToken()}
   })
 }

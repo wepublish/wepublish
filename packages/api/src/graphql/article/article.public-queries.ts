@@ -26,7 +26,7 @@ export const getPublishedArticles = async (
 
   return {
     ...data,
-    nodes: data.nodes.map(({id, shared, published}) => ({id, shared, ...published}))
+    nodes: data.nodes.map(({id, shared, published}) => ({shared, ...published, id}))
   }
 }
 
@@ -61,14 +61,31 @@ export const getPublishedArticleByIdOrSlug = async (
             }
           }
         ]
+      },
+      include: {
+        draft: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
+          include: {
+            properties: true
+          }
+        },
+        published: {
+          include: {
+            properties: true
+          }
+        }
       }
     })
 
     article = fullArticle
       ? ({
+          ...(fullArticle?.published ?? fullArticle.pending),
           id: fullArticle.id,
-          shared: fullArticle?.shared,
-          ...(fullArticle?.published ?? fullArticle.pending)
+          shared: fullArticle?.shared
         } as PublicArticle)
       : null
   }
@@ -80,9 +97,9 @@ export const getPublishedArticleByIdOrSlug = async (
 
       article = privateArticle?.draft
         ? ({
+            ...privateArticle.draft,
             id: privateArticle.id,
             shared: privateArticle.shared,
-            ...privateArticle.draft,
             updatedAt: new Date(),
             publishedAt: new Date()
           } as PublicArticle)

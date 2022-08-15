@@ -1,39 +1,105 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Page, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
+import {PageWithRevisions} from '../../db/page'
 import {DuplicatePageSlugError, NotFound} from '../../error'
 import {authorise, CanCreatePage, CanDeletePage, CanPublishPage} from '../permissions'
 
-export const deletePageById = (
+export const deletePageById = async (
   id: string,
   authenticate: Context['authenticate'],
-  page: PrismaClient['page']
-) => {
+  prisma: PrismaClient
+): Promise<Page> => {
   const {roles} = authenticate()
   authorise(CanDeletePage, roles)
 
-  return page.delete({
+  const page = await prisma.page.findUnique({
     where: {
       id
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
+
+  if (!page) {
+    throw new NotFound('page', id)
+  }
+
+  await prisma.$transaction([
+    prisma.page.delete({
+      where: {
+        id
+      }
+    }),
+    prisma.pageRevision.deleteMany({
+      where: {
+        id: {
+          in: [page.draftId, page.pendingId, page.publishedId].filter(Boolean) as string[]
+        }
+      }
+    })
+  ])
+
+  return page
 }
 
-export const createPage = (
-  input: Omit<Prisma.PageRevisionCreateInput, 'updatedAt' | 'revision'>,
+type CreatePageInput = Omit<Prisma.PageRevisionCreateInput, 'properties' | 'revision'> & {
+  properties: Prisma.MetadataPropertyCreateManyPageRevisionInput[]
+}
+
+export const createPage = async (
+  input: CreatePageInput,
   authenticate: Context['authenticate'],
   page: PrismaClient['page']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
+  const {properties, ...data} = input
 
   return page.create({
     data: {
       draft: {
-        ...input,
-        revision: 0,
-        updatedAt: new Date()
+        create: {
+          ...data,
+          properties: {
+            createMany: {
+              data: properties
+            }
+          },
+          revision: 0
+        }
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
       },
-      modifiedAt: new Date()
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -43,7 +109,7 @@ export const duplicatePage = async (
   authenticate: Context['authenticate'],
   pages: Context['loaders']['pages'],
   pageClient: PrismaClient['page']
-) => {
+): Promise<PageWithRevisions> => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
 
@@ -52,22 +118,53 @@ export const duplicatePage = async (
     throw new NotFound('page', id)
   }
 
-  const pageRevision = (page.draft ?? page.pending ?? page.published)!
+  const {
+    id: _id,
+    updatedAt: _updatedAt,
+    createdAt: _createdAt,
+    publishedAt: _publishedAt,
+    slug: _slug,
+    properties,
+    ...pageRevision
+  } = (page.draft ?? page.pending ?? page.published)!
+
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
 
   const input: Prisma.PageRevisionCreateInput = {
     ...pageRevision,
-    blocks: pageRevision.blocks as Prisma.JsonValue[],
-    slug: '',
-    revision: 0,
-    publishedAt: null,
-    updatedAt: new Date(),
-    createdAt: new Date()
+    properties: {
+      createMany: {
+        data: duplicatedProperties
+      }
+    }
   }
 
   return pageClient.create({
     data: {
-      draft: input,
-      modifiedAt: new Date()
+      draft: {
+        create: input
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -76,27 +173,110 @@ export const unpublishPage = async (
   id: string,
   authenticate: Context['authenticate'],
   pageClient: PrismaClient['page']
-) => {
+): Promise<PageWithRevisions> => {
   const {roles} = authenticate()
   authorise(CanPublishPage, roles)
 
-  const page = await pageClient.findUnique({where: {id}})
+  const page = await pageClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      pending: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      published: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      }
+    }
+  })
 
-  if (!page) {
+  if (!page || !(page.pending || page.published)) {
     throw new NotFound('page', id)
   }
+
+  const {id: revisionId, properties, ...revision} = (page.pending ?? page.published)!
 
   return pageClient.update({
     where: {id},
     data: {
       draft: {
-        ...(page.pending ?? page.published)!,
-        publishAt: null,
-        publishedAt: null,
-        updatedAt: null
+        upsert: {
+          create: {
+            ...revision,
+            publishAt: null,
+            publishedAt: null,
+            updatedAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          },
+          update: {
+            ...revision,
+            publishAt: null,
+            publishedAt: null,
+            updatedAt: null,
+            properties: {
+              deleteMany: {
+                pageRevisionId: revisionId
+              },
+              createMany: {
+                data: properties
+              }
+            }
+          }
+        }
       },
-      pending: null,
-      published: null
+      pending: {
+        delete: Boolean(page.pendingId)
+      },
+      published: {
+        delete: Boolean(page.publishedId)
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -105,9 +285,8 @@ export const publishPage = async (
   id: string,
   input: Pick<Prisma.PageRevisionCreateInput, 'publishAt' | 'publishedAt' | 'updatedAt'>,
   authenticate: Context['authenticate'],
-  publicPagesBySlug: Context['loaders']['publicPagesBySlug'],
   pageClient: PrismaClient['page']
-) => {
+): Promise<PageWithRevisions | null> => {
   const {roles} = authenticate()
   authorise(CanPublishPage, roles)
 
@@ -115,26 +294,137 @@ export const publishPage = async (
   const publishedAt = input.publishedAt
   const updatedAt = input.updatedAt
 
-  const page = await pageClient.findUnique({where: {id}})
+  const page = await pageClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      pending: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      published: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      }
+    }
+  })
 
   if (!page) throw new NotFound('page', id)
   if (!page.draft) return null
 
-  const publishedPage = await publicPagesBySlug.load(page.draft.slug)
-  if (publishedPage && publishedPage.id !== id)
-    throw new DuplicatePageSlugError(publishedPage.id, publishedPage.slug)
+  const {id: revisionId, properties, ...revision} = page.draft
+
+  const publishedPage = await pageClient.findFirst({
+    where: {
+      OR: [
+        {
+          published: {
+            is: {
+              slug: revision.slug
+            }
+          }
+        },
+        {
+          pending: {
+            is: {
+              slug: revision.slug
+            }
+          }
+        }
+      ]
+    },
+    include: {
+      draft: true,
+      pending: true,
+      published: true
+    }
+  })
+
+  if (publishedPage && publishedPage.id !== id) {
+    throw new DuplicatePageSlugError(
+      publishedPage.id,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (publishedPage.published || publishedPage.pending)!.slug!
+    )
+  }
 
   if (publishAt > new Date()) {
     return pageClient.update({
       where: {id},
       data: {
         pending: {
-          ...page.draft,
-          publishAt: publishAt,
-          publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
-          updatedAt: updatedAt ?? publishAt
+          upsert: {
+            create: {
+              ...revision,
+              publishAt: publishAt,
+              publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
+              updatedAt: updatedAt ?? publishAt,
+              properties: {
+                createMany: {
+                  data: properties
+                }
+              }
+            },
+            update: {
+              ...revision,
+              publishAt: publishAt,
+              publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
+              updatedAt: updatedAt ?? publishAt,
+              properties: {
+                deleteMany: {
+                  pageRevisionId: revisionId
+                },
+                createMany: {
+                  data: properties
+                }
+              }
+            }
+          }
         },
-        draft: null
+        draft: {
+          delete: true
+        }
+      },
+      include: {
+        draft: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
+          include: {
+            properties: true
+          }
+        },
+        published: {
+          include: {
+            properties: true
+          }
+        }
       }
     })
   }
@@ -143,30 +433,91 @@ export const publishPage = async (
     where: {id},
     data: {
       published: {
-        ...page.draft,
-        publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
-        updatedAt: updatedAt ?? publishAt,
-        publishAt: null
+        upsert: {
+          create: {
+            ...revision,
+            publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
+            updatedAt: updatedAt ?? publishAt,
+            publishAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          },
+          update: {
+            ...revision,
+            publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
+            updatedAt: updatedAt ?? publishAt,
+            publishAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          }
+        }
       },
-      pending: null,
-      draft: null
+      pending: {
+        delete: Boolean(page.pendingId)
+      },
+      draft: {
+        delete: true
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
 
+type UpdatePageInput = Omit<Prisma.PageRevisionCreateInput, 'revision' | 'properties'> & {
+  properties: Prisma.MetadataPropertyUncheckedCreateWithoutPageRevisionInput[]
+}
+
 export const updatePage = async (
   id: string,
-  input: Omit<
-    Prisma.PageRevisionCreateInput,
-    'revision' | 'createdAt' | 'updatedAt' | 'publishAt' | 'publishedAt'
-  >,
+  {properties, ...input}: UpdatePageInput,
   authenticate: Context['authenticate'],
   pageClient: PrismaClient['page']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
 
-  const page = await pageClient.findUnique({where: {id}})
+  const page = await pageClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
+    }
+  })
 
   if (!page) {
     throw new NotFound('page', id)
@@ -176,14 +527,66 @@ export const updatePage = async (
     where: {id},
     data: {
       draft: {
-        ...input,
-        revision: page.pending
-          ? page.pending.revision + 1
-          : page.published
-          ? page.published.revision + 1
-          : 0,
-        updatedAt: new Date(),
-        createdAt: page.draft?.createdAt ?? new Date()
+        upsert: {
+          update: {
+            ...input,
+            revision: page.pending
+              ? page.pending.revision + 1
+              : page.published
+              ? page.published.revision + 1
+              : 0,
+            updatedAt: null,
+            createdAt: page.draft?.createdAt ?? new Date(),
+            properties: {
+              deleteMany: {
+                pageRevisionId: page.draft?.id ?? ''
+              },
+              createMany: {
+                data: properties.map(property => ({
+                  key: property.key,
+                  value: property.value,
+                  public: property.public
+                }))
+              }
+            }
+          },
+          create: {
+            ...input,
+            revision: page.pending
+              ? page.pending.revision + 1
+              : page.published
+              ? page.published.revision + 1
+              : 0,
+            updatedAt: null,
+            createdAt: page.draft?.createdAt ?? new Date(),
+            properties: {
+              createMany: {
+                data: properties.map(property => ({
+                  key: property.key,
+                  value: property.value,
+                  public: property.public
+                }))
+              }
+            }
+          }
+        }
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
       }
     }
   })

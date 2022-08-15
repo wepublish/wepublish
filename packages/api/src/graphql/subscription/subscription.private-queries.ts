@@ -1,6 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
+import {unselectPassword} from '../../db/user'
 import {mapSubscriptionsAsCsv} from '../../utility'
 import {authorise, CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '../permissions'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
@@ -16,6 +17,11 @@ export const getSubscriptionById = (
   return subscription.findUnique({
     where: {
       id
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
     }
   })
 }
@@ -51,8 +57,13 @@ export const getSubscriptionsAsCSV = async (
       modifiedAt: 'desc'
     },
     include: {
+      deactivation: true,
+      periods: true,
+      properties: true,
       memberPlan: true,
-      user: true,
+      user: {
+        select: unselectPassword
+      },
       paymentMethod: true
     }
   })

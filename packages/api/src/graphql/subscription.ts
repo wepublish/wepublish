@@ -12,7 +12,7 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
-import {SubscriptionSort} from '../db/subscription'
+import {SubscriptionSort, SubscriptionWithRelations} from '../db/subscription'
 import {unselectPassword} from '../db/user'
 import {
   GraphQLDateFilter,
@@ -68,7 +68,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
   }
 })
 
-export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Context>({
+export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},

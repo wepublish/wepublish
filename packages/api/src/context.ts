@@ -1,12 +1,7 @@
 import {
-  Article,
   Author,
   Image,
-  Invoice,
   MailLog,
-  MemberPlan,
-  Navigation,
-  Page,
   Payment,
   PaymentMethod,
   PaymentState,
@@ -33,9 +28,12 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {PublicArticle} from './db/article'
+import {ArticleWithRevisions, PublicArticle} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {PublicPage} from './db/page'
+import {InvoiceWithItems} from './db/invoice'
+import {MemberPlanWithPaymentMethods} from './db/memberPlan'
+import {NavigationWithLinks} from './db/navigation'
+import {PageWithRevisions, PublicPage} from './db/page'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
 import {unselectPassword} from './db/user'
@@ -69,18 +67,18 @@ fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, Navigation | null>
-  readonly navigationByKey: DataLoader<string, Navigation | null>
+  readonly navigationByID: DataLoader<string, NavigationWithLinks | null>
+  readonly navigationByKey: DataLoader<string, NavigationWithLinks | null>
 
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, Image | null>
 
-  readonly articles: DataLoader<string, Article | null>
+  readonly articles: DataLoader<string, ArticleWithRevisions | null>
   readonly publicArticles: DataLoader<string, PublicArticle | null>
 
-  readonly pages: DataLoader<string, Page | null>
+  readonly pages: DataLoader<string, PageWithRevisions | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
   readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
@@ -94,14 +92,14 @@ export interface DataLoaderContext {
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 
-  readonly memberPlansByID: DataLoader<string, MemberPlan | null>
-  readonly memberPlansBySlug: DataLoader<string, MemberPlan | null>
-  readonly activeMemberPlansByID: DataLoader<string, MemberPlan | null>
-  readonly activeMemberPlansBySlug: DataLoader<string, MemberPlan | null>
+  readonly memberPlansByID: DataLoader<string, MemberPlanWithPaymentMethods | null>
+  readonly memberPlansBySlug: DataLoader<string, MemberPlanWithPaymentMethods | null>
+  readonly activeMemberPlansByID: DataLoader<string, MemberPlanWithPaymentMethods | null>
+  readonly activeMemberPlansBySlug: DataLoader<string, MemberPlanWithPaymentMethods | null>
   readonly paymentMethodsByID: DataLoader<string, PaymentMethod | null>
   readonly activePaymentMethodsByID: DataLoader<string, PaymentMethod | null>
   readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>
-  readonly invoicesByID: DataLoader<string, Invoice | null>
+  readonly invoicesByID: DataLoader<string, InvoiceWithItems | null>
   readonly paymentsByID: DataLoader<string, Payment | null>
 }
 
@@ -197,7 +195,7 @@ export interface SendMailFromProviderProps {
 
 export interface CreatePaymentWithProvider {
   paymentMethodID: string
-  invoice: Invoice
+  invoice: InvoiceWithItems
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
@@ -334,6 +332,9 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            links: true
           }
         }),
         'id'
@@ -347,6 +348,9 @@ export async function contextFromRequest(
             key: {
               in: keys as string[]
             }
+          },
+          include: {
+            links: true
           }
         }),
         'key'
@@ -361,6 +365,9 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            links: true
           }
         }),
         'id'
@@ -374,6 +381,9 @@ export async function contextFromRequest(
             slug: {
               in: slugs as string[]
             }
+          },
+          include: {
+            links: true
           }
         }),
         'slug'
@@ -402,6 +412,23 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            draft: {
+              include: {
+                properties: true
+              }
+            },
+            pending: {
+              include: {
+                properties: true
+              }
+            },
+            published: {
+              include: {
+                properties: true
+              }
+            }
           }
         }),
         'id'
@@ -428,9 +455,21 @@ export async function contextFromRequest(
                   }
                 }
               ]
+            },
+            include: {
+              published: {
+                include: {
+                  properties: true
+                }
+              },
+              pending: {
+                include: {
+                  properties: true
+                }
+              }
             }
           })
-        ).map(({id, shared, published, pending}) => ({id, shared, ...(published || pending!)})),
+        ).map(({id, shared, published, pending}) => ({shared, ...(published || pending!), id})),
         'id'
       )
     ),
@@ -442,6 +481,23 @@ export async function contextFromRequest(
           where: {
             id: {
               in: ids as string[]
+            }
+          },
+          include: {
+            draft: {
+              include: {
+                properties: true
+              }
+            },
+            pending: {
+              include: {
+                properties: true
+              }
+            },
+            published: {
+              include: {
+                properties: true
+              }
             }
           }
         }),
@@ -469,9 +525,21 @@ export async function contextFromRequest(
                   }
                 }
               ]
+            },
+            include: {
+              published: {
+                include: {
+                  properties: true
+                }
+              },
+              pending: {
+                include: {
+                  properties: true
+                }
+              }
             }
           })
-        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        ).map(({id, published, pending}) => ({...(published || pending!), id})),
         'id'
       )
     ),
@@ -501,9 +569,21 @@ export async function contextFromRequest(
                   }
                 }
               ]
+            },
+            include: {
+              published: {
+                include: {
+                  properties: true
+                }
+              },
+              pending: {
+                include: {
+                  properties: true
+                }
+              }
             }
           })
-        ).map(({id, published, pending}) => ({id, ...(published || pending!)})),
+        ).map(({id, published, pending}) => ({...(published || pending!), id})),
         'slug'
       )
     ),
@@ -631,6 +711,9 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            availablePaymentMethods: true
           }
         }),
         'id'
@@ -644,6 +727,9 @@ export async function contextFromRequest(
             slug: {
               in: slugs as string[]
             }
+          },
+          include: {
+            availablePaymentMethods: true
           }
         }),
         'slug'
@@ -658,6 +744,9 @@ export async function contextFromRequest(
               in: ids as string[]
             },
             active: true
+          },
+          include: {
+            availablePaymentMethods: true
           }
         }),
         'id'
@@ -672,6 +761,9 @@ export async function contextFromRequest(
               in: slugs as string[]
             },
             active: true
+          },
+          include: {
+            availablePaymentMethods: true
           }
         }),
         'slug'
@@ -726,6 +818,9 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            items: true
           }
         }),
         'id'
@@ -884,8 +979,7 @@ export async function contextFromRequest(
         data: {
           paymentMethodID,
           invoiceID: invoice.id,
-          state: PaymentState.created,
-          modifiedAt: new Date()
+          state: PaymentState.created
         }
       })
 

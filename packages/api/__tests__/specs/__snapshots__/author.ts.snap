@@ -35,7 +35,7 @@ Object {
         },
       ],
       "name": "John Grisham",
-      "slug": "john-grisham",
+      "slug": Any<String>,
     },
   },
   "errors": undefined,
@@ -51,7 +51,7 @@ Object {
 exports[`Authors can be created/edited/deleted: can be deleted 1`] = `
 Object {
   "data": Object {
-    "deleteAuthor": Any<String>,
+    "deleteAuthor": Any<Object>,
   },
   "errors": undefined,
   "extensions": undefined,
@@ -71,7 +71,7 @@ Object {
         Object {
           "children": Array [
             Object {
-              "text": "Test Bio",
+              "text": "Author Bio Heading",
             },
           ],
           "type": "heading-one",
@@ -79,7 +79,7 @@ Object {
         Object {
           "children": Array [
             Object {
-              "text": "bio text 😀",
+              "text": "author bio text",
             },
           ],
           "type": "paragraph",
@@ -97,135 +97,8 @@ Object {
           "url": "www.link2.ch",
         },
       ],
-      "name": "JRR Tolkien",
-      "slug": "tolkien-3",
-    },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Authors can be created/edited/deleted: can be read in list 1`] = `
-Object {
-  "data": Object {
-    "authors": Object {
-      "nodes": Array [
-        Object {
-          "bio": Array [
-            Object {
-              "children": Array [
-                Object {
-                  "text": "Test Bio",
-                },
-              ],
-              "type": "heading-one",
-            },
-            Object {
-              "children": Array [
-                Object {
-                  "text": "bio text 😀",
-                },
-              ],
-              "type": "paragraph",
-            },
-          ],
-          "id": Any<String>,
-          "image": null,
-          "links": Array [
-            Object {
-              "title": "link 1",
-              "url": "www.link1.ch",
-            },
-            Object {
-              "title": "link 2",
-              "url": "www.link2.ch",
-            },
-          ],
-          "name": "JRR Tolkien",
-          "slug": "tolkien-2",
-        },
-        Object {
-          "bio": Array [
-            Object {
-              "children": Array [
-                Object {
-                  "text": "Author Bio Heading",
-                },
-              ],
-              "type": "heading-one",
-            },
-            Object {
-              "children": Array [
-                Object {
-                  "text": "author bio text",
-                },
-              ],
-              "type": "paragraph",
-            },
-          ],
-          "id": Any<String>,
-          "image": null,
-          "links": Array [
-            Object {
-              "title": "link 1",
-              "url": "www.link1.ch",
-            },
-            Object {
-              "title": "link 2",
-              "url": "www.link2.ch",
-            },
-          ],
-          "name": "John Grisham",
-          "slug": "john-grisham",
-        },
-        Object {
-          "bio": Array [
-            Object {
-              "children": Array [
-                Object {
-                  "text": "Test Bio",
-                },
-              ],
-              "type": "heading-one",
-            },
-            Object {
-              "children": Array [
-                Object {
-                  "text": "bio text 😀",
-                },
-              ],
-              "type": "paragraph",
-            },
-          ],
-          "id": Any<String>,
-          "image": null,
-          "links": Array [
-            Object {
-              "title": "link 1",
-              "url": "www.link1.ch",
-            },
-            Object {
-              "title": "link 2",
-              "url": "www.link2.ch",
-            },
-          ],
-          "name": "JRR Tolkien",
-          "slug": "tolkien-0",
-        },
-      ],
-      "pageInfo": Object {
-        "endCursor": Any<String>,
-        "hasNextPage": false,
-        "hasPreviousPage": false,
-        "startCursor": Any<String>,
-      },
-      "totalCount": Any<Number>,
+      "name": "John Grisham",
+      "slug": Any<String>,
     },
   },
   "errors": undefined,
@@ -242,7 +115,24 @@ exports[`Authors can be created/edited/deleted: can be updated 1`] = `
 Object {
   "data": Object {
     "updateAuthor": Object {
-      "bio": null,
+      "bio": Array [
+        Object {
+          "children": Array [
+            Object {
+              "text": "Author Bio Heading",
+            },
+          ],
+          "type": "heading-one",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "text": "author bio text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
       "id": Any<String>,
       "image": null,
       "links": Array [
@@ -252,7 +142,7 @@ Object {
         },
       ],
       "name": "Jane Austen",
-      "slug": "j-austen",
+      "slug": Any<String>,
     },
   },
   "errors": undefined,

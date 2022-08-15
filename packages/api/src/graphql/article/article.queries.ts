@@ -1,5 +1,5 @@
-import {Article, Prisma, PrismaClient} from '@prisma/client'
-import {ArticleFilter, ArticleSort} from '../../db/article'
+import {Prisma, PrismaClient} from '@prisma/client'
+import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -43,12 +43,10 @@ export const createArticleOrder = (
 
 const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.title) {
-    const containsTitle: Prisma.ArticleRevisionNullableCompositeFilter = {
-      is: {
-        title: {
-          contains: filter.title,
-          mode: 'insensitive'
-        }
+    const containsTitle: Prisma.ArticleRevisionWhereInput = {
+      title: {
+        contains: filter.title,
+        mode: 'insensitive'
       }
     }
 
@@ -130,14 +128,14 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
-    const hasTags = {
+    const hasAuthors = {
       is: {
-        authorIDs: {hasSome: filter.tags}
+        authorIDs: {hasSome: filter.authors}
       }
     }
 
     return {
-      OR: [{draft: hasTags}, {pending: hasTags}, {published: hasTags}]
+      OR: [{draft: hasAuthors}, {pending: hasAuthors}, {published: hasAuthors}]
     }
   }
 
@@ -164,7 +162,7 @@ export const getArticles = async (
   skip: number,
   take: number,
   article: PrismaClient['article']
-): Promise<ConnectionResult<Article>> => {
+): Promise<ConnectionResult<ArticleWithRevisions>> => {
   const orderBy = createArticleOrder(sortedField, getSortOrder(order))
   const where = createArticleFilter(filter)
 
@@ -178,7 +176,24 @@ export const getArticles = async (
       skip: skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy: orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        draft: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
+          include: {
+            properties: true
+          }
+        },
+        published: {
+          include: {
+            properties: true
+          }
+        }
+      }
     })
   ])
 

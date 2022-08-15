@@ -30,6 +30,9 @@ export const getNavigations = (
   return navigation.findMany({
     orderBy: {
       createdAt: 'desc'
+    },
+    include: {
+      links: true
     }
   })
 }

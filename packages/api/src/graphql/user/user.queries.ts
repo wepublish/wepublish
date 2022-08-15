@@ -1,7 +1,7 @@
-import {Prisma, PrismaClient, User} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {unselectPassword, UserFilter, UserSort} from '../../db/user'
+import {unselectPassword, UserFilter, UserSort, UserWithRelations} from '../../db/user'
 import {Validator} from '../../validator'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -92,7 +92,7 @@ export const getUsers = async (
   skip: number,
   take: number,
   user: PrismaClient['user']
-): Promise<ConnectionResult<User>> => {
+): Promise<ConnectionResult<UserWithRelations>> => {
   const orderBy = createUserOrder(sortedField, getSortOrder(order))
   const where = createUserFilter(filter)
 
@@ -141,6 +141,12 @@ export const getUserForCredentials = async (
   const user = await userClient.findUnique({
     where: {
       email
+    },
+    include: {
+      address: true,
+      oauth2Accounts: true,
+      paymentProviderCustomers: true,
+      properties: true
     }
   })
 

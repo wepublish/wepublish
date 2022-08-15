@@ -1,19 +1,36 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {hashPassword} from '../../db/user'
+import {hashPassword, unselectPassword} from '../../db/user'
 import {Context} from '../../context'
 import {Validator} from '../../validator'
 
+export type CreateUserInput = Prisma.UserUncheckedCreateInput &
+  Partial<{
+    properties: Prisma.MetadataPropertyUncheckedCreateWithoutUserInput[]
+    address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
+  }>
+
 export const createUser = async (
-  input: Omit<Prisma.UserUncheckedCreateInput, 'modifiedAt'>,
+  {properties, address, password, ...input}: CreateUserInput,
   hashCostFactor: Context['hashCostFactor'],
   user: PrismaClient['user']
 ) => {
-  const {password, ...data} = input
   const hashedPassword = await hashPassword(password, hashCostFactor)
-  data.email = input.email.toLowerCase()
+  input.email = input.email.toLowerCase()
   await Validator.createUser().validateAsync(input, {allowUnknown: true})
 
   return user.create({
-    data: {...data, password: hashedPassword, modifiedAt: new Date()}
+    data: {
+      ...input,
+      password: hashedPassword,
+      properties: {
+        createMany: {
+          data: properties ?? []
+        }
+      },
+      address: {
+        create: address ?? {}
+      }
+    },
+    select: unselectPassword
   })
 }

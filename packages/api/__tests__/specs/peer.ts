@@ -14,14 +14,14 @@ import {
 } from '../api/private'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
 
-import {createGraphQLTestClientWithMongoDB} from '../utility'
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 ;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
 let testClientPrivate: ApolloServerTestClient
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
   } catch (error) {
     console.log('Error', error)
@@ -33,11 +33,11 @@ beforeAll(async () => {
 describe('Peers', () => {
   describe('can be created/edited/deleted:', () => {
     const ids: string[] = []
-    beforeEach(async () => {
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const input: CreatePeerInput = {
         name: `Peer Test ${ids.length}`,
-        slug: `test-peer${ids.length}`,
+        slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: `token${ids.length}`
       }
@@ -47,14 +47,14 @@ describe('Peers', () => {
           input: input
         }
       })
-      ids.unshift(res.data?.createPeer?.id)
+      ids.unshift(res.data.createPeer?.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const input: CreatePeerInput = {
         name: 'Create Peer Test',
-        slug: 'test-peer',
+        slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: 'testTokenABC123'
       }
@@ -67,11 +67,12 @@ describe('Peers', () => {
       expect(res).toMatchSnapshot({
         data: {
           createPeer: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
-      ids.unshift(res.data?.createPeer?.id)
+      ids.unshift(res.data.createPeer?.id)
     })
 
     test('can be read in list', async () => {
@@ -79,14 +80,8 @@ describe('Peers', () => {
       const res = await query({
         query: PeerList
       })
-      expect(res).toMatchSnapshot({
-        data: {
-          peers: Array.from({length: ids.length}, () => ({
-            id: expect.any(String)
-          }))
-        }
-      })
-      expect(res.data?.peers?.length).toBe(ids.length)
+
+      expect(res.data.peers).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -100,7 +95,8 @@ describe('Peers', () => {
       expect(res).toMatchSnapshot({
         data: {
           peer: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
@@ -113,17 +109,19 @@ describe('Peers', () => {
         variables: {
           input: {
             name: 'Updated Peer',
-            slug: 'update-peer',
+            slug: generateRandomString(),
             hostURL: 'https://new-host-url.ch/',
             token: 'newTestTokenABC123'
           },
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           updatePeer: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
@@ -137,11 +135,14 @@ describe('Peers', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
-          deletePeer: expect.any(String)
+          deletePeer: expect.any(Object)
         }
       })
+      expect(res.data.deletePeer.id).toBe(ids[0])
+
       ids.shift()
     })
 
@@ -163,12 +164,14 @@ describe('Peers', () => {
         callToActionText: [{text: 'rich text call to action'}],
         callToActionURL: 'calltoactionurl.ch/'
       }
+
       const res = await mutate({
         mutation: UpdatePeerProfile,
         variables: {
           input: input
         }
       })
+
       expect(res).toMatchSnapshot()
     })
   })

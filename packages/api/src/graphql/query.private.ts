@@ -463,9 +463,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPeerArticleConnection),
       args: {
         cursors: {type: GraphQLString},
+        take: {type: GraphQLInt, defaultValue: 10},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
-        peerFilter: {type: GraphQLString}
+        peerFilter: {type: GraphQLString},
+        filter: {type: GraphQLArticleFilter}
       },
 
       resolve: (root, {sort, order, after, peerFilter}, context, info) =>

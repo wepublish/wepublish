@@ -103,8 +103,9 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
           fieldName: 'peerProfile',
           info
         })
+
         // TODO: Improve error handling for invalid tokens WPC-298
-        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
+        return peerProfile?.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }

@@ -26,11 +26,11 @@ export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
   fields: {
     company: {type: GraphQLString},
-    streetAddress: {type: GraphQLNonNull(GraphQLString)},
+    streetAddress: {type: GraphQLString},
     streetAddress2: {type: GraphQLString},
-    zipCode: {type: GraphQLNonNull(GraphQLString)},
-    city: {type: GraphQLNonNull(GraphQLString)},
-    country: {type: GraphQLNonNull(GraphQLString)}
+    zipCode: {type: GraphQLString},
+    city: {type: GraphQLString},
+    country: {type: GraphQLString}
   }
 })
 
@@ -83,6 +83,9 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
         return prisma.invoice.findMany({
           where: {
             subscriptionID: subscriptionId
+          },
+          include: {
+            items: true
           }
         })
       }
@@ -114,7 +117,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     roles: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole))),
       resolve({roleIDs}, args, {loaders}) {
-        return Promise.all(roleIDs.map((roleID: string) => loaders.userRolesByID.load(roleID)))
+        return Promise.all(roleIDs.map(roleID => loaders.userRolesByID.load(roleID)))
       }
     },
     paymentProviderCustomers: {
@@ -129,6 +132,11 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
         return prisma.subscription.findMany({
           where: {
             userID: userId
+          },
+          include: {
+            deactivation: true,
+            periods: true,
+            properties: true
           }
         })
       })
@@ -186,11 +194,11 @@ export const GraphQLUserAddressInput = new GraphQLInputObjectType({
   name: 'UserAddressInput',
   fields: {
     company: {type: GraphQLString},
-    streetAddress: {type: GraphQLNonNull(GraphQLString)},
+    streetAddress: {type: GraphQLString},
     streetAddress2: {type: GraphQLString},
-    zipCode: {type: GraphQLNonNull(GraphQLString)},
-    city: {type: GraphQLNonNull(GraphQLString)},
-    country: {type: GraphQLNonNull(GraphQLString)}
+    zipCode: {type: GraphQLString},
+    city: {type: GraphQLString},
+    country: {type: GraphQLString}
   }
 })
 

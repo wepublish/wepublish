@@ -1,4 +1,6 @@
+import {Comment, CommentAuthorType, CommentState, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
+import {SettingName} from '../../db/setting'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
@@ -9,8 +11,6 @@ import {
   UserInputError
 } from '../../error'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
-import {CommentState, PrismaClient, Prisma, CommentAuthorType, Comment} from '@prisma/client'
-import {SettingName} from '../../db/setting'
 
 export const addPublicComment = async (
   input: {text: string; challenge: {challengeID: string; challengeSolution: number}} & Omit<
@@ -57,17 +57,16 @@ export const addPublicComment = async (
   }
 
   // Cleanup
-  const {challenge: _, text, ...prismaInput} = input
+  const {challenge: _, text, ...commentInput} = input
 
   const comment = await commentClient.create({
     data: {
-      ...prismaInput,
-      revisions: [
-        {
-          text,
-          createdAt: new Date()
+      ...commentInput,
+      revisions: {
+        create: {
+          text
         }
-      ],
+      },
       userID: user?.user.id,
       authorType,
       state: CommentState.pendingApproval
@@ -104,9 +103,8 @@ export const updatePublicComment = async (
     where: {id},
     data: {
       revisions: {
-        push: {
-          text,
-          createdAt: new Date()
+        create: {
+          text
         }
       },
       state: CommentState.pendingApproval

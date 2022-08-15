@@ -1,42 +1,107 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Article, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
+import {ArticleWithRevisions} from '../../db/article'
 import {DuplicateArticleSlugError, NotFound} from '../../error'
 import {authorise, CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '../permissions'
 
-export const deleteArticleById = (
+export const deleteArticleById = async (
   id: string,
   authenticate: Context['authenticate'],
-  article: PrismaClient['article']
-) => {
+  prisma: PrismaClient
+): Promise<Article> => {
   const {roles} = authenticate()
   authorise(CanDeleteArticle, roles)
 
-  return article.delete({
+  const article = await prisma.article.findUnique({
     where: {
       id
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
+
+  if (!article) {
+    throw new NotFound('article', id)
+  }
+
+  await prisma.$transaction([
+    prisma.article.delete({
+      where: {
+        id
+      }
+    }),
+    prisma.articleRevision.deleteMany({
+      where: {
+        id: {
+          in: [article.draftId, article.pendingId, article.publishedId].filter(Boolean) as string[]
+        }
+      }
+    })
+  ])
+
+  return article
 }
 
-export const createArticle = (
-  input: Pick<Prisma.ArticleUncheckedCreateInput, 'shared'> &
-    Omit<Prisma.ArticleRevisionCreateInput, 'updatedAt' | 'revision'>,
+type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
+  Omit<Prisma.ArticleRevisionCreateInput, 'properties' | 'revision'> & {
+    properties: Prisma.MetadataPropertyCreateManyArticleRevisionInput[]
+  }
+
+export const createArticle = async (
+  input: CreateArticleInput,
   authenticate: Context['authenticate'],
   article: PrismaClient['article']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
-  const {shared, ...data} = input
+  const {shared, properties, ...data} = input
 
   return article.create({
     data: {
       shared,
       draft: {
-        ...data,
-        revision: 0,
-        updatedAt: new Date()
+        create: {
+          ...data,
+          properties: {
+            createMany: {
+              data: properties
+            }
+          },
+          revision: 0
+        }
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
       },
-      modifiedAt: new Date()
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -46,7 +111,7 @@ export const duplicateArticle = async (
   authenticate: Context['authenticate'],
   articles: Context['loaders']['articles'],
   articleClient: PrismaClient['article']
-) => {
+): Promise<ArticleWithRevisions> => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
 
@@ -55,23 +120,54 @@ export const duplicateArticle = async (
     throw new NotFound('article', id)
   }
 
-  const articleRevision = (article.draft ?? article.pending ?? article.published)!
+  const {
+    id: _id,
+    updatedAt: _updatedAt,
+    createdAt: _createdAt,
+    publishedAt: _publishedAt,
+    slug: _slug,
+    properties,
+    ...articleRevision
+  } = (article.draft ?? article.pending ?? article.published)!
+
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
 
   const input: Prisma.ArticleRevisionCreateInput = {
     ...articleRevision,
-    blocks: articleRevision.blocks as Prisma.JsonValue[],
-    slug: '',
-    revision: 0,
-    publishedAt: null,
-    updatedAt: new Date(),
-    createdAt: new Date()
+    properties: {
+      createMany: {
+        data: duplicatedProperties
+      }
+    }
   }
 
   return articleClient.create({
     data: {
       shared: article.shared,
-      draft: input,
-      modifiedAt: new Date()
+      draft: {
+        create: input
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -80,27 +176,110 @@ export const unpublishArticle = async (
   id: string,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article']
-) => {
+): Promise<ArticleWithRevisions> => {
   const {roles} = authenticate()
   authorise(CanPublishArticle, roles)
 
-  const article = await articleClient.findUnique({where: {id}})
+  const article = await articleClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      pending: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      published: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      }
+    }
+  })
 
   if (!article) {
     throw new NotFound('article', id)
   }
 
+  const {id: revisionId, properties, ...revision} = (article.pending ?? article.published)!
+
   return articleClient.update({
     where: {id},
     data: {
       draft: {
-        ...(article.pending ?? article.published)!,
-        publishAt: null,
-        publishedAt: null,
-        updatedAt: null
+        upsert: {
+          create: {
+            ...revision,
+            publishAt: null,
+            publishedAt: null,
+            updatedAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          },
+          update: {
+            ...revision,
+            publishAt: null,
+            publishedAt: null,
+            updatedAt: null,
+            properties: {
+              deleteMany: {
+                articleRevisionId: revisionId
+              },
+              createMany: {
+                data: properties
+              }
+            }
+          }
+        }
       },
-      pending: null,
-      published: null
+      pending: {
+        delete: Boolean(article.pendingId)
+      },
+      published: {
+        delete: Boolean(article.publishedId)
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
@@ -110,7 +289,7 @@ export const publishArticle = async (
   input: Pick<Prisma.ArticleRevisionCreateInput, 'publishAt' | 'publishedAt' | 'updatedAt'>,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article']
-) => {
+): Promise<ArticleWithRevisions | null> => {
   const {roles} = authenticate()
   authorise(CanPublishArticle, roles)
 
@@ -118,10 +297,49 @@ export const publishArticle = async (
   const publishedAt = input.publishedAt
   const updatedAt = input.updatedAt
 
-  const article = await articleClient.findUnique({where: {id}})
+  const article = await articleClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      pending: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      },
+      published: {
+        include: {
+          properties: {
+            select: {
+              key: true,
+              value: true,
+              public: true
+            }
+          }
+        }
+      }
+    }
+  })
 
   if (!article) throw new NotFound('article', id)
   if (!article.draft) return null
+
+  const {id: revisionId, properties, ...revision} = article.draft
 
   const publishedArticle = await articleClient.findFirst({
     where: {
@@ -129,18 +347,23 @@ export const publishArticle = async (
         {
           published: {
             is: {
-              slug: article.draft.slug
+              slug: revision.slug
             }
           }
         },
         {
           pending: {
             is: {
-              slug: article.draft.slug
+              slug: revision.slug
             }
           }
         }
       ]
+    },
+    include: {
+      draft: true,
+      pending: true,
+      published: true
     }
   })
 
@@ -157,12 +380,54 @@ export const publishArticle = async (
       where: {id},
       data: {
         pending: {
-          ...article.draft,
-          publishAt: publishAt,
-          publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
-          updatedAt: updatedAt ?? publishAt
+          upsert: {
+            create: {
+              ...revision,
+              publishAt: publishAt,
+              publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
+              updatedAt: updatedAt ?? publishAt,
+              properties: {
+                createMany: {
+                  data: properties
+                }
+              }
+            },
+            update: {
+              ...revision,
+              publishAt: publishAt,
+              publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
+              updatedAt: updatedAt ?? publishAt,
+              properties: {
+                deleteMany: {
+                  articleRevisionId: revisionId
+                },
+                createMany: {
+                  data: properties
+                }
+              }
+            }
+          }
         },
-        draft: null
+        draft: {
+          delete: true
+        }
+      },
+      include: {
+        draft: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
+          include: {
+            properties: true
+          }
+        },
+        published: {
+          include: {
+            properties: true
+          }
+        }
       }
     })
   }
@@ -171,30 +436,92 @@ export const publishArticle = async (
     where: {id},
     data: {
       published: {
-        ...article.draft,
-        publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
-        updatedAt: updatedAt ?? publishAt,
-        publishAt: null
+        upsert: {
+          create: {
+            ...revision,
+            publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
+            updatedAt: updatedAt ?? publishAt,
+            publishAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          },
+          update: {
+            ...revision,
+            publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
+            updatedAt: updatedAt ?? publishAt,
+            publishAt: null,
+            properties: {
+              createMany: {
+                data: properties
+              }
+            }
+          }
+        }
       },
-      pending: null,
-      draft: null
+      pending: {
+        delete: Boolean(article.pendingId)
+      },
+      draft: {
+        delete: true
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
     }
   })
 }
 
+type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
+  Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties'> & {
+    properties: Prisma.MetadataPropertyUncheckedCreateWithoutArticleRevisionInput[]
+  }
+
 export const updateArticle = async (
   id: string,
-  input: Omit<
-    Prisma.ArticleRevisionCreateInput,
-    'revision' | 'createdAt' | 'updatedAt' | 'publishAt' | 'publishedAt'
-  >,
+  {properties, shared, ...input}: UpdateArticleInput,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
 
-  const article = await articleClient.findUnique({where: {id}})
+  const article = await articleClient.findUnique({
+    where: {id},
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
+      }
+    }
+  })
 
   if (!article) {
     throw new NotFound('article', id)
@@ -203,15 +530,68 @@ export const updateArticle = async (
   return articleClient.update({
     where: {id},
     data: {
+      shared,
       draft: {
-        ...input,
-        revision: article.pending
-          ? article.pending.revision + 1
-          : article.published
-          ? article.published.revision + 1
-          : 0,
-        updatedAt: new Date(),
-        createdAt: article.draft?.createdAt ?? new Date()
+        upsert: {
+          update: {
+            ...input,
+            revision: article.pending
+              ? article.pending.revision + 1
+              : article.published
+              ? article.published.revision + 1
+              : 0,
+            updatedAt: null,
+            createdAt: article.draft?.createdAt ?? new Date(),
+            properties: {
+              deleteMany: {
+                articleRevisionId: article.draft?.id ?? ''
+              },
+              createMany: {
+                data: properties.map(property => ({
+                  key: property.key,
+                  value: property.value,
+                  public: property.public
+                }))
+              }
+            }
+          },
+          create: {
+            ...input,
+            revision: article.pending
+              ? article.pending.revision + 1
+              : article.published
+              ? article.published.revision + 1
+              : 0,
+            updatedAt: null,
+            createdAt: article.draft?.createdAt ?? new Date(),
+            properties: {
+              createMany: {
+                data: properties.map(property => ({
+                  key: property.key,
+                  value: property.value,
+                  public: property.public
+                }))
+              }
+            }
+          }
+        }
+      }
+    },
+    include: {
+      draft: {
+        include: {
+          properties: true
+        }
+      },
+      pending: {
+        include: {
+          properties: true
+        }
+      },
+      published: {
+        include: {
+          properties: true
+        }
       }
     }
   })

@@ -129,7 +129,9 @@ mutation ResetUserPassword($id: ID!, $password: String!) {
 }
 
 mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }
 
 mutation SendWebsiteLogin($email: String!) {

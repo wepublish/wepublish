@@ -1,18 +1,16 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
+import * as crypto from 'crypto'
 import {URL} from 'url'
-import {AlgebraicCaptchaChallenge} from '../lib'
 import {
+  AlgebraicCaptchaChallenge,
   Author,
-  CommentItemType,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  hashPassword,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -63,46 +61,17 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> {
-  if (!process.env.TEST_MONGO_URL) {
-    throw new Error('TEST_MONGO_URL not defined')
+export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not defined')
   }
-  let adminUser
 
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.TEST_MONGO_URL!
-      }
-    }
-  })
+  const prisma = new PrismaClient()
   await prisma.$connect()
 
-  await MongoDBAdapter.initialize({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en',
-    seed: async () => {
-      const adminUserRoleId =
-        (
-          await prisma.userRole.findUnique({
-            where: {
-              name: 'Admin'
-            }
-          })
-        )?.id ?? 'fake'
-
-      adminUser = await prisma.user.create({
-        data: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          roleIDs: [adminUserRoleId],
-          active: true,
-          properties: [],
-          password: await hashPassword('123'),
-          modifiedAt: new Date()
-        }
-      })
+  const adminUser = await prisma.user.findUnique({
+    where: {
+      email: 'dev@wepublish.ch'
     }
   })
 
@@ -118,12 +87,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     _uploadImage: jest.fn()
   }
 
-  if (!adminUser) {
-    throw new Error('Could not get admin user')
-  }
-
   const userSession = await createUserSession(
-    adminUser,
+    adminUser!,
     DefaultSessionTTL,
     prisma.session,
     prisma.userRole
@@ -191,3 +156,5 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     testClientPrivate
   }
 }
+
+export const generateRandomString = () => crypto.randomBytes(20).toString('hex')

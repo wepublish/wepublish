@@ -154,7 +154,9 @@ mutation UnpublishArticle($id: ID!) {
 }
 
 mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id)
+  deleteArticle(id: $id) {
+    ...MutationArticle
+  }
 }
 
 mutation DuplicateArticle($id: ID!) {

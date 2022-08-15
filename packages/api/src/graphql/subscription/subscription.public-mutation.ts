@@ -6,13 +6,8 @@ export const updatePublicSubscription = async (
   id: string,
   input: Pick<
     Prisma.SubscriptionUncheckedUpdateInput,
-    | 'memberPlanID'
-    | 'paymentPeriodicity'
-    | 'monthlyAmount'
-    | 'autoRenew'
-    | 'paymentMethodID'
-    | 'deactivation'
-  >,
+    'memberPlanID' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'paymentMethodID'
+  > & {deactivation: Prisma.SubscriptionDeactivationUncheckedUpdateInput},
   authenticateUser: Context['authenticateUser'],
   memberContext: Context['memberContext'],
   activeMemberPlansByID: Context['loaders']['activeMemberPlansByID'],
@@ -22,7 +17,10 @@ export const updatePublicSubscription = async (
   const {user} = authenticateUser()
 
   const subscription = await subscriptionClient.findUnique({
-    where: {id}
+    where: {id},
+    include: {
+      deactivation: true
+    }
   })
 
   if (!subscription) throw new NotFound('subscription', id)
@@ -40,7 +38,10 @@ export const updatePublicSubscription = async (
 
   if (
     !memberPlan.availablePaymentMethods.some(apm => {
-      if (apm.forceAutoRenewal && !autoRenew) return false
+      if (apm.forceAutoRenewal && !autoRenew) {
+        return false
+      }
+
       return (
         apm.paymentPeriodicities.includes(paymentPeriodicity as PaymentPeriodicity) &&
         apm.paymentMethodIDs.includes(paymentMethodID as string)
@@ -59,7 +60,14 @@ export const updatePublicSubscription = async (
       monthlyAmount,
       autoRenew,
       paymentMethodID,
-      deactivation: null
+      deactivation: {
+        delete: Boolean(subscription.deactivation)
+      }
+    },
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
     }
   })
 

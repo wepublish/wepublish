@@ -231,8 +231,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
             page = privatePage?.draft
               ? ({
-                  id: privatePage.id,
                   ...privatePage.draft,
+                  id: privatePage.id,
                   updatedAt: new Date(),
                   publishedAt: new Date()
                 } as PublicPage)
@@ -316,6 +316,11 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         return await prisma.subscription.findMany({
           where: {
             userID: user.id
+          },
+          include: {
+            deactivation: true,
+            periods: true,
+            properties: true
           }
         })
       }
@@ -365,10 +370,13 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         const invoice = await prisma.invoice.findUnique({
           where: {
             id
+          },
+          include: {
+            items: true
           }
         })
 
-        if (!invoice) {
+        if (!invoice || !invoice.subscriptionID) {
           throw new NotFound('Invoice', id)
         }
 
@@ -425,6 +433,9 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         return await prisma.invoice.findUnique({
           where: {
             id
+          },
+          include: {
+            items: true
           }
         })
       }

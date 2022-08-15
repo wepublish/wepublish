@@ -17,8 +17,12 @@ export const deleteAuthorById = (
   })
 }
 
+type CreateAuthorInput = Omit<Prisma.AuthorUncheckedCreateInput, 'links' | 'modifiedAt'> & {
+  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
+}
+
 export const createAuthor = (
-  input: Omit<Prisma.AuthorUncheckedCreateInput, 'modifiedAt'>,
+  {links, ...input}: CreateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
@@ -26,13 +30,28 @@ export const createAuthor = (
   authorise(CanCreateAuthor, roles)
 
   return author.create({
-    data: {...input, modifiedAt: new Date()}
+    data: {
+      ...input,
+      links: {
+        create: links
+      }
+    },
+    include: {
+      links: true
+    }
   })
+}
+
+type UpdateAuthorInput = Omit<
+  Prisma.AuthorUncheckedUpdateInput,
+  'links' | 'modifiedAt' | 'createdAt'
+> & {
+  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
 }
 
 export const updateAuthor = (
   id: string,
-  input: Omit<Prisma.AuthorUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  {links, ...input}: UpdateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
@@ -41,6 +60,19 @@ export const updateAuthor = (
 
   return author.update({
     where: {id},
-    data: input
+    data: {
+      ...input,
+      links: {
+        deleteMany: {
+          authorId: {
+            equals: id
+          }
+        },
+        create: links
+      }
+    },
+    include: {
+      links: true
+    }
   })
 }

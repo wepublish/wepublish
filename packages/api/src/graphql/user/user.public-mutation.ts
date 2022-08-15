@@ -24,24 +24,27 @@ export const updatePaymentProviderCustomers = async (
   return updateUser.paymentProviderCustomers
 }
 
+type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
+  address: Prisma.UserAddressUncheckedUpdateWithoutUserInput
+}
+
 export const updatePublicUser = async (
-  input: Pick<
-    Prisma.UserUncheckedUpdateInput,
-    'name' | 'email' | 'firstName' | 'preferredName' | 'address'
-  >,
+  {address, name, email, firstName, preferredName}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   userClient: PrismaClient['user']
 ) => {
   const {user} = authenticateUser()
 
-  input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  const {name, email, firstName, preferredName, address} = input
+  email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().validateAsync(
+    {address, name, email, firstName, preferredName},
+    {allowUnknown: true}
+  )
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
-      where: {email: email as string}
+      where: {email}
     })
 
     if (userExists) throw new EmailAlreadyInUseError()
@@ -53,7 +56,9 @@ export const updatePublicUser = async (
       name,
       firstName,
       preferredName,
-      address
+      address: {
+        update: address
+      }
     },
     select: unselectPassword
   })

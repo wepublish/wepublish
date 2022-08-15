@@ -4,15 +4,15 @@ import {Oauth2Server} from '@wepublish/oauth2'
 import path from 'path'
 
 async function asyncMain() {
-  if (!process.env.OAUTH_MONGODB_URI) {
-    throw new Error('No OAUTH_MONGODB_URI defined in ENV')
+  if (!process.env.OAUTH_DATABASE_URI) {
+    throw new Error('No OAUTH_DATABASE_URI defined in ENV')
   }
 
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4200
   const address = process.env.ADDRESS || 'localhost'
 
-  if (!process.env.MONGO_URL) {
-    throw new Error('No MONGO_URL defined in ENV')
+  if (!process.env.DATABASE_URL) {
+    throw new Error('No DATABASE_URL defined in ENV')
   }
 
   if (!process.env.JWKS_KEYS) {
@@ -33,7 +33,7 @@ async function asyncMain() {
   const oauth2Server = new Oauth2Server({
     issuer: process.env.ISSUER ?? `http://localhost:${PORT}`,
     debug: true,
-    mongoUrlOauth2: process.env.OAUTH_MONGODB_URI,
+    mongoUrlOauth2: process.env.OAUTH_DATABASE_URI,
     clientID: process.env.OAUTH_CLIENT_ID,
     clientSecret: process.env.OAUTH_CLIENT_SECRET,
     grantTypes: process.env.OAUTH_GRANT_TYPES.split(','),

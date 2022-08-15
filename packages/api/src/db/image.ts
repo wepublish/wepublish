@@ -1,4 +1,4 @@
-import {Image} from '@prisma/client'
+import {FocalPoint, Image} from '@prisma/client'
 
 export enum ImageRotation {
   Auto = 'auto',
@@ -40,3 +40,5 @@ export interface ImageFilter {
   readonly title?: string
   readonly tags?: string[]
 }
+
+export type ImageWithFocalPoint = Image & {focalPoint: FocalPoint}

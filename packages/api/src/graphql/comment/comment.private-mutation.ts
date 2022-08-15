@@ -13,6 +13,9 @@ export const takeActionOnComment = (
 
   return comment.update({
     where: {id},
-    data: input
+    data: input,
+    include: {
+      revisions: true
+    }
   })
 }

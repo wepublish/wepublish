@@ -1,6 +1,13 @@
+import {
+  PaymentProviderCustomer,
+  Prisma,
+  User,
+  UserAddress,
+  UserOAuth2Account,
+  MetadataProperty
+} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {DefaultBcryptHashCostFactor} from './common'
-import {Prisma} from '@prisma/client'
 
 export const hashPassword = async (
   password: string,
@@ -39,4 +46,11 @@ export const unselectPassword: Record<
   active: true,
   lastLogin: true,
   roleIDs: true
+}
+
+export type UserWithRelations = User & {
+  address: UserAddress | null
+  properties: MetadataProperty[]
+  oauth2Accounts: UserOAuth2Account[]
+  paymentProviderCustomers: PaymentProviderCustomer[]
 }

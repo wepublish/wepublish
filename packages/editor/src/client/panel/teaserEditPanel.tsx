@@ -143,7 +143,7 @@ function previewForTeaser(teaser: Teaser) {
       type = 'Article'
       imageURL = teaser.article.latest.image?.previewURL ?? undefined
       preTitle = teaser.article.latest.preTitle ?? undefined
-      title = teaser.article.latest.title
+      title = teaser.article.latest.title ?? undefined
       lead = teaser.article.latest.lead ?? undefined
       break
 
@@ -151,7 +151,7 @@ function previewForTeaser(teaser: Teaser) {
       type = 'Peer Article'
       imageURL = teaser.article?.latest.image?.previewURL ?? undefined
       preTitle = teaser.article?.latest.preTitle ?? undefined
-      title = teaser.article?.latest.title
+      title = teaser.article?.latest.title ?? undefined
       lead = teaser.article?.latest.lead ?? undefined
       break
 
