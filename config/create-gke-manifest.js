@@ -1179,7 +1179,7 @@ async function applyOAuth2() {
                   value: databaseURL
                 },
                 {
-                  name: 'OAUTH_MONGODB_URI',
+                  name: 'OAUTH_DATABASE_URI',
                   value: oauthDatabaseURL
                 },
                 {
