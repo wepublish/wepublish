@@ -33,13 +33,17 @@ import {
   useUpdateSubscriptionMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES, authorise} from '../utility'
+import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
 import {InvoiceListPanel} from './invoiceListPanel'
 import FileIcon from '@rsuite/icons/legacy/File'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface SubscriptionEditPanelProps {
@@ -380,7 +384,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
               <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
                 {id ? t('save') : t('create')}
               </Button>
@@ -539,7 +543,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
         </Drawer.Body>
 
         <Drawer.Footer>
-          <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
             <Button
               appearance={'primary'}
               disabled={isDisabled || isDeactivated}
@@ -589,8 +593,10 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_SUBSCRIPTION',
-  true
-)(SubscriptionEditPanel)
+  'CAN_GET_SUBSCRIPTIONS',
+  'CAN_CREATE_SUBSCRIPTION',
+  'CAN_DELETE_SUBSCRIPTION'
+])(SubscriptionEditPanel)
 export {CheckedPermissionComponent as SubscriptionEditPanel}

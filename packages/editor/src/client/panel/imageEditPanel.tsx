@@ -8,7 +8,7 @@ import {
   ImageRefFragment,
   ImageListDocument
 } from '../api'
-import {authorise, getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 import {Link} from '../route'
 
@@ -19,7 +19,11 @@ import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from '
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import imageCompression from 'browser-image-compression'
 import {ImageMetaData} from './imageUploadAndEditPanel'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -259,7 +263,7 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
               <Button appearance={'primary'} disabled={isDisabled} type="submit">
                 {isUpload ? t('images.panels.upload') : t('images.panels.save')}
               </Button>
@@ -399,8 +403,10 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_IMAGE',
-  true
-)(ImagedEditPanel)
+  'CAN_GET_IMAGES',
+  'CAN_DELETE_IMAGE',
+  'CAN_CREATE_IMAGE'
+])(ImagedEditPanel)
 export {CheckedPermissionComponent as ImagedEditPanel}

@@ -127,7 +127,7 @@ function PageList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('pages.overview.pages')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -236,7 +236,7 @@ function PageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_PUBLISH_PAGE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
                       <IconButton
                         icon={<BtnOffIcon />}
@@ -252,7 +252,7 @@ function PageList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_DELETE_PAGE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -268,7 +268,7 @@ function PageList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
                       <IconButton
                         icon={<CopyIcon />}
@@ -284,7 +284,7 @@ function PageList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_GET_PAGE_PREVIEW_LINK'}>
+                  <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
                       <IconButton
                         icon={<EyeIcon />}
@@ -471,5 +471,12 @@ function PageList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PAGES', true)(PageList)
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAGES',
+  'CAN_GET_PAGE',
+  'CAN_CREATE_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_PUBLISH_PAGE',
+  'CAN_GET_PAGE_PREVIEW_LINK'
+])(PageList)
 export {CheckedPermissionComponent as PageList}

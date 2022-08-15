@@ -77,7 +77,7 @@ function UserRoleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('userRoles.overview.userRoles')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_USER_ROLE'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -116,7 +116,7 @@ function UserRoleList() {
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
-              <PermissionControl requiredPermission={'CAN_DELETE_USER_ROLE'}>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
                 <IconButtonTooltip caption={t('userRoles.overview.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -202,8 +202,10 @@ function UserRoleList() {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_USER_ROLES',
-  true
-)(UserRoleList)
+  'CAN_GET_USER_ROLE',
+  'CAN_CREATE_USER_ROLE',
+  'CAN_DELETE_USER_ROLE'
+])(UserRoleList)
 export {CheckedPermissionComponent as UserRoleList}

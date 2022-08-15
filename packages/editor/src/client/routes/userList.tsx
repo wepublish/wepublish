@@ -107,7 +107,7 @@ function UserList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_USER'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               style={{marginLeft: 5}}
@@ -198,7 +198,7 @@ function UserList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullUserFragment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_RESET_USER_PASSWORD'}>
+                  <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
                     <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
                       <IconButton
                         icon={<LockIcon />}
@@ -212,7 +212,7 @@ function UserList() {
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
-                  <PermissionControl requiredPermission={'CAN_DELETE_USER'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_USER']}>
                     <IconButtonTooltip caption={t('userList.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -312,5 +312,11 @@ function UserList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_USERS', true)(UserList)
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USERS',
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_RESET_USER_PASSWORD'
+])(UserList)
 export {CheckedPermissionComponent as UserList}

@@ -137,7 +137,7 @@ function PeerList() {
             </p>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={3}>
-            <PermissionControl requiredPermission={'CAN_CREATE_PEER'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
               <Button
                 appearance="primary"
                 disabled={isUpdating}
@@ -169,7 +169,7 @@ function PeerList() {
             </PermissionControl>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-            <PermissionControl requiredPermission={'CAN_DELETE_PEER'}>
+            <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
               <IconButtonTooltip caption={t('peerList.overview.delete')}>
                 <IconButton
                   disabled={isPeerInfoLoading}
@@ -194,7 +194,7 @@ function PeerList() {
     <>
       <h5>{t('peerList.overview.myPeerProfile')}</h5>
       <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
-        <PermissionControl requiredPermission={'CAN_GET_PEER_PROFILE'}>
+        <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
           <NavigationBar
             centerChildren={
               <div style={{textAlign: 'center'}}>
@@ -220,7 +220,7 @@ function PeerList() {
               </div>
             }
             rightChildren={
-              <PermissionControl requiredPermission={'CAN_UPDATE_PEER_PROFILE'}>
+              <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
                 <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
                   <IconButtonLink
                     size="lg"
@@ -367,5 +367,10 @@ function PeerList() {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_GET_PEERS', true)(PeerList)
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PEERS',
+  'CAN_GET_PEER',
+  'CAN_DELETE_PEER',
+  'CAN_CREATE_PEER'
+])(PeerList)
 export {CheckedPermissionComponent as PeerList}

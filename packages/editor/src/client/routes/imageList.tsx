@@ -125,7 +125,7 @@ function ImageList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('images.overview.imageLibrary')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -203,7 +203,7 @@ function ImageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ImageRefFragment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_CREATE_IMAGE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.edit')}>
                       <>
                         {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref */}
@@ -219,7 +219,7 @@ function ImageList() {
                       </>
                     </IconButtonTooltip>
                   </PermissionControl>
-                  <PermissionControl requiredPermission={'CAN_DELETE_IMAGE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -360,8 +360,10 @@ function ImageList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_IMAGES',
-  true
-)(ImageList)
+  'CAN_GET_IMAGE',
+  'CAN_DELETE_IMAGE',
+  'CAN_CREATE_IMAGE'
+])(ImageList)
 export {CheckedPermissionComponent as ImageList}

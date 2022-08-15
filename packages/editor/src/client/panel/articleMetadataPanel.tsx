@@ -20,7 +20,7 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {authorise, generateID, slugify} from '../utility'
+import {generateID, slugify} from '../utility'
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
@@ -32,7 +32,11 @@ import ListIcon from '@rsuite/icons/legacy/List'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -521,7 +525,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_ARTICLE'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
               <Button appearance="primary" type="submit">
                 {t('articleEditor.panels.saveAndClose')}
               </Button>
@@ -580,8 +584,12 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLE',
-  true
-)(ArticleMetadataPanel)
+  'CAN_GET_ARTICLES',
+  'CAN_GET_ARTICLES',
+  'CAN_DELETE_ARTICLE',
+  'CAN_PUBLISH_ARTICLE',
+  'CAN_CREATE_ARTICLE'
+])(ArticleMetadataPanel)
 export {CheckedPermissionComponent as ArticleMetadataPanel}

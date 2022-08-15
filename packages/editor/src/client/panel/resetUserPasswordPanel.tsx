@@ -81,7 +81,7 @@ function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPasswordPa
     </Panel>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent('CAN_RESET_USER_PASSWORD')(
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_RESET_USER_PASSWORD'])(
   ResetUserPasswordPanel
 )
 export {CheckedPermissionComponent as ResetUserPasswordPanel}

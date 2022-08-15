@@ -36,8 +36,7 @@ import {
   generateID,
   getOperationNameFromDocument,
   slugify,
-  ALL_PAYMENT_PERIODICITIES,
-  authorise
+  ALL_PAYMENT_PERIODICITIES
 } from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
@@ -45,7 +44,11 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface MemberPlanEditPanelProps {
@@ -223,7 +226,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_MEMBER_PLAN'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
               <Button appearance="primary" disabled={isDisabled} type="submit">
                 {id ? t('save') : t('create')}
               </Button>
@@ -389,8 +392,10 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_MEMBER_PLANS',
-  true
-)(MemberPlanEditPanel)
+  'CAN_GET_MEMBER_PLAN',
+  'CAN_CREATE_MEMBER_PLAN',
+  'CAN_DELETE_MEMBER_PLAN'
+])(MemberPlanEditPanel)
 export {CheckedPermissionComponent as MemberPlanEditPanel}

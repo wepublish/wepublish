@@ -29,14 +29,18 @@ import {
   AuthorListDocument
 } from '../api'
 
-import {slugify, generateID, getOperationNameFromDocument, authorise} from '../utility'
+import {slugify, generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import LinkIcon from '@rsuite/icons/legacy/Link'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface AuthorEditPanelProps {
@@ -169,7 +173,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_AUTHOR'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
               <Button
                 appearance="primary"
                 disabled={isDisabled}
@@ -294,8 +298,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_AUTHOR',
-  true
-)(AuthorEditPanel)
+  'CAN_GET_AUTHOR',
+  'CAN_CREATE_AUTHOR',
+  'CAN_DELETE_AUTHOR'
+])(AuthorEditPanel)
 export {CheckedPermissionComponent as AuthorEditPanel}

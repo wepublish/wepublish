@@ -105,7 +105,7 @@ function PaymentMethodList() {
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
-              <PermissionControl requiredPermission={'CAN_DELETE_PAYMENT_METHOD'}>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('paymentMethodList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -193,8 +193,10 @@ function PaymentMethodList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAYMENT_METHODS',
-  true
-)(PaymentMethodList)
+  'CAN_GET_PAYMENT_METHOD',
+  'CAN_CREATE_PAYMENT_METHOD',
+  'CAN_DELETE_PAYMENT_METHOD'
+])(PaymentMethodList)
 export {CheckedPermissionComponent as PaymentMethodList}

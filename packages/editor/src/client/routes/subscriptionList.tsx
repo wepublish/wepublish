@@ -164,7 +164,7 @@ function SubscriptionList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
-          <PermissionControl requiredPermission={'CAN_CREATE_SUBSCRIPTION'}>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
             {newSubscriptionButton({isLoading, t})}
           </PermissionControl>
         </FlexboxGrid.Item>
@@ -357,8 +357,10 @@ function SubscriptionList() {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_SUBSCRIPTIONS',
-  true
-)(SubscriptionList)
+  'CAN_GET_SUBSCRIPTION',
+  'CAN_CREATE_SUBSCRIPTION',
+  'CAN_DELETE_SUBSCRIPTION'
+])(SubscriptionList)
 export {CheckedPermissionComponent as SubscriptionList}

@@ -21,8 +21,11 @@ import {
 } from '../api'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {authorise} from '../utility'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+  authorise
+} from '../atoms/permissionControl'
 
 function SettingList() {
   const {t} = useTranslation()
@@ -313,7 +316,7 @@ function SettingList() {
           </Form.Group>
         </Panel>
 
-        <PermissionControl requiredPermission={'CAN_UPDATE_SETTINGS'}>
+        <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
           <Button type="submit" appearance="primary" disabled={isDisabled}>
             {t('settingList.save')}
           </Button>
@@ -323,8 +326,8 @@ function SettingList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_SETTINGS',
-  true
-)(SettingList)
+  'CAN_UPDATE_SETTINGS'
+])(SettingList)
 export {CheckedPermissionComponent as SettingList}

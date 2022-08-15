@@ -312,7 +312,7 @@ function CommentList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: Comment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_TAKE_COMMENT_ACTION'}>
+                  <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
                     <IconButtonTooltip caption={t('comments.overview.approve')}>
                       <IconButton
                         icon={<CheckIcon />}
@@ -575,8 +575,8 @@ function CommentList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_COMMENTS',
-  true
-)(CommentList)
+  'CAN_TAKE_COMMENT_ACTION'
+])(CommentList)
 export {CheckedPermissionComponent as CommentList}

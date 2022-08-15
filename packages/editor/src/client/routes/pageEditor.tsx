@@ -345,7 +345,7 @@ function PageEditor({id}: PageEditorProps) {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <IconButton
                         style={{
                           marginLeft: '10px'
@@ -358,7 +358,7 @@ function PageEditor({id}: PageEditorProps) {
                       </IconButton>
                     </PermissionControl>
                   ) : (
-                    <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -371,7 +371,7 @@ function PageEditor({id}: PageEditorProps) {
                           {t('pageEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <PermissionControl requiredPermission={'CAN_PUBLISH_PAGE'}>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
                         <Badge
                           className={
                             pageData?.page?.draft || !pageData?.page?.published
@@ -397,7 +397,7 @@ function PageEditor({id}: PageEditorProps) {
                 </div>
               }
               rightChildren={
-                <PermissionControl requiredPermission={'CAN_GET_PAGE_PREVIEW_LINK'}>
+                <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                   <IconButtonLink
                     disabled={hasChanged || !id}
                     style={{marginTop: '4px'}}
@@ -454,8 +454,12 @@ function PageEditor({id}: PageEditorProps) {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAGE',
-  true
-)(PageEditor)
+  'CAN_GET_PAGES',
+  'CAN_CREATE_PAGE',
+  'CAN_PUBLISH_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_GET_PAGE_PREVIEW_LINK'
+])(PageEditor)
 export {CheckedPermissionComponent as PageEditor}

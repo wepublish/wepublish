@@ -105,7 +105,7 @@ function MemberPlanList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('memberPlanList.title')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_MEMBER_PLAN'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -140,7 +140,7 @@ function MemberPlanList() {
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
-              <PermissionControl requiredPermission={'CAN_DELETE_MEMBER_PLAN'}>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('memberPlanList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -247,8 +247,10 @@ function MemberPlanList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_MEMBER_PLANS',
-  true
-)(MemberPlanList)
+  'CAN_GET_MEMBER_PLAN',
+  'CAN_CREATE_MEMBER_PLAN',
+  'CAN_DELETE_MEMBER_PLAN'
+])(MemberPlanList)
 export {CheckedPermissionComponent as MemberPlanList}

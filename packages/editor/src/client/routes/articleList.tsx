@@ -128,7 +128,7 @@ function ArticleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('articles.overview.articles')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_ARTICLE'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -247,7 +247,7 @@ function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_PUBLISH_ARTICLE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
                       <IconButton
                         icon={<BtnOffIcon />}
@@ -263,7 +263,7 @@ function ArticleList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_DELETE_ARTICLE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -279,7 +279,7 @@ function ArticleList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_CREATE_ARTICLE'}>
+                  <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
                       <IconButton
                         icon={<CopyIcon />}
@@ -295,7 +295,7 @@ function ArticleList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl requiredPermission={'CAN_GET_ARTICLE_PREVIEW_LINK'}>
+                  <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
                       <IconButton
                         icon={<EyeIcon />}
@@ -487,8 +487,10 @@ function ArticleList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLES',
-  true
-)(ArticleList)
+  'CAN_GET_ARTICLE',
+  'CAN_CREATE_ARTICLE',
+  'CAN_DELETE_ARTICLE'
+])(ArticleList)
 export {CheckedPermissionComponent as ArticleList}

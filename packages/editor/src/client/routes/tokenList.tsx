@@ -92,7 +92,7 @@ function TokenList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_TOKEN'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -114,7 +114,7 @@ function TokenList() {
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <PermissionControl requiredPermission={'CAN_DELETE_TOKEN'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
                     <IconButtonTooltip caption={t('tokenList.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -180,8 +180,9 @@ function TokenList() {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_CREATE_TOKEN',
   'CAN_GET_TOKENS',
-  true
-)(TokenList)
+  'CAN_DELETE_TOKEN'
+])(TokenList)
 export {CheckedPermissionComponent as TokenList}

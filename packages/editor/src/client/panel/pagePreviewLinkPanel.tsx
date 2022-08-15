@@ -91,8 +91,7 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
-  'CAN_GET_PAGE_PREVIEW_LINK',
-  true
-)(PagePreviewLinkPanel)
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_GET_PAGE_PREVIEW_LINK'])(
+  PagePreviewLinkPanel
+)
 export {CheckedPermissionComponent as PagePreviewLinkPanel}

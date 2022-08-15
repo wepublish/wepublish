@@ -1111,7 +1111,8 @@
       "payment": "Payment"
     },
     "permissions": {
-      "noAccess": "You have insuffient permission to access this content"
+      "noAccess": "You have insufficient permission to access this content.",
+      "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}"
     }
   }
 }

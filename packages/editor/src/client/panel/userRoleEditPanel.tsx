@@ -12,8 +12,11 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {authorise} from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+  authorise
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface UserRoleEditPanelProps {
@@ -136,7 +139,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_USER_ROLE'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
               <Button
                 type="submit"
                 appearance="primary"
@@ -194,8 +197,10 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_USER_ROLE',
-  true
-)(UserRoleEditPanel)
+  'CAN_GET_USER_ROLES',
+  'CAN_CREATE_USER_ROLE',
+  'CAN_DELETE_USER_ROLE'
+])(UserRoleEditPanel)
 export {CheckedPermissionComponent as UserRoleEditPanel}

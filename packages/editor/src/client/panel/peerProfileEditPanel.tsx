@@ -13,7 +13,7 @@ import {
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
-import {authorise, getOperationNameFromDocument} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
@@ -21,7 +21,11 @@ import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
 import {useTranslation} from 'react-i18next'
 import {FormInstance} from 'rsuite/esm/Form'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
@@ -152,7 +156,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer.Header>
           <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_UPDATE_PEER_PROFILE'}>
+            <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
               <Button appearance="primary" disabled={isDisabled} type="submit">
                 {t('peerList.panels.save')}
               </Button>
@@ -324,8 +328,8 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PEER_PROFILE',
-  true
-)(PeerInfoEditPanel)
+  'CAN_UPDATE_PEER_PROFILE'
+])(PeerInfoEditPanel)
 export {CheckedPermissionComponent as PeerInfoEditPanel}

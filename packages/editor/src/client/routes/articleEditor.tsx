@@ -507,7 +507,7 @@ function ArticleEditor({id}: ArticleEditorProps) {
                     {t('articleEditor.overview.metadata')}
                   </IconButton>
                   {isNew && createData == null ? (
-                    <PermissionControl requiredPermission={'CAN_CREATE_ARTICLE'}>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <IconButton
                         style={{
                           marginLeft: '10px'
@@ -520,7 +520,7 @@ function ArticleEditor({id}: ArticleEditorProps) {
                       </IconButton>
                     </PermissionControl>
                   ) : (
-                    <PermissionControl requiredPermission={'CAN_CREATE_ARTICLE'}>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -533,7 +533,7 @@ function ArticleEditor({id}: ArticleEditorProps) {
                           {t('articleEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <PermissionControl requiredPermission={'CAN_PUBLISH_ARTICLE'}>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                         <Badge
                           className={
                             articleData?.article?.draft || !articleData?.article?.published
@@ -559,7 +559,7 @@ function ArticleEditor({id}: ArticleEditorProps) {
                 </div>
               }
               rightChildren={
-                <PermissionControl requiredPermission={'CAN_GET_ARTICLE_PREVIEW_LINK'}>
+                <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                   <IconButtonLink
                     disabled={hasChanged || !id}
                     style={{marginTop: '4px'}}
@@ -619,8 +619,10 @@ function ArticleEditor({id}: ArticleEditorProps) {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLE',
-  true
-)(ArticleEditor)
+  'CAN_GET_ARTICLES',
+  'CAN_CREATE_ARTICLE',
+  'CAN_DELETE_ARTICLE'
+])(ArticleEditor)
 export {CheckedPermissionComponent as ArticleEditor}

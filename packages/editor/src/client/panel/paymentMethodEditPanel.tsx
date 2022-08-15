@@ -12,8 +12,12 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {authorise, slugify} from '../utility'
-import {PermissionControl, createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {slugify} from '../utility'
+import {
+  PermissionControl,
+  createCheckedPermissionComponent,
+  authorise
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PaymentMethodEditPanelProps {
@@ -155,7 +159,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_PAYMENT_METHOD'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
               <Button
                 appearance="primary"
                 disabled={isDisabled}
@@ -231,8 +235,10 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAYMENT_METHOD',
-  true
-)(PaymentMethodEditPanel)
+  'CAN_GET_PAYMENT_METHODS',
+  'CAN_CREATE_PAYMENT_METHOD',
+  'CAN_DELETE_PAYMENT_METHOD'
+])(PaymentMethodEditPanel)
 export {CheckedPermissionComponent as PaymentMethodEditPanel}

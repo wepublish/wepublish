@@ -10,12 +10,16 @@ import {MetaDataType} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {authorise, generateID} from '../utility'
+import {generateID} from '../utility'
 import CogIcon from '@rsuite/icons/legacy/Cog'
 import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import ListIcon from '@rsuite/icons/legacy/List'
 import {Textarea} from '../atoms/textarea'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -270,7 +274,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
 
         <Drawer.Actions>
-          <PermissionControl requiredPermission={'CAN_CREATE_PAGE'}>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
             <Button appearance="primary" onClick={() => onClose?.()}>
               {t('pageEditor.panels.saveAndClose')}
             </Button>
@@ -328,8 +332,11 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAGE',
-  true
-)(PageMetadataPanel)
+  'CAN_GET_PAGES',
+  'CAN_CREATE_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_PUBLISH_PAGE'
+])(PageMetadataPanel)
 export {CheckedPermissionComponent as PageMetadataPanel}

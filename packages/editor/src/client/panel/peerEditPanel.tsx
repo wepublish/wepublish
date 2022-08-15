@@ -12,12 +12,16 @@ import {
   useRemotePeerProfileQuery
 } from '../api'
 
-import {slugify, getOperationNameFromDocument, authorise} from '../utility'
+import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PeerEditPanelProps {
@@ -151,7 +155,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl requiredPermission={'CAN_CREATE_PEER'}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
               <Button
                 type="submit"
                 appearance="primary"
@@ -280,8 +284,10 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PEERS',
-  true
-)(PeerEditPanel)
+  'CAN_GET_PEER',
+  'CAN_CREATE_PEER',
+  'CAN_DELETE_PEER'
+])(PeerEditPanel)
 export {CheckedPermissionComponent as PeerEditPanel}

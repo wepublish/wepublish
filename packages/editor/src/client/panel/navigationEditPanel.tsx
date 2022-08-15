@@ -16,9 +16,13 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {authorise, generateID, getOperationNameFromDocument} from '../utility'
+import {generateID, getOperationNameFromDocument} from '../utility'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -210,7 +214,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
         </Drawer.Title>
 
         <Drawer.Actions>
-          <PermissionControl requiredPermission={'CAN_CREATE_NAVIGATION'}>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
             <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
               {id ? t('navigation.panels.save') : t('navigation.panels.create')}
             </Button>
@@ -324,8 +328,10 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     </>
   )
 }
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_NAVIGATIONS',
-  true
-)(NavigationEditPanel)
+  'CAN_GET_NAVIGATION',
+  'CAN_CREATE_NAVIGATION',
+  'CAN_DELETE_NAVIGATION'
+])(NavigationEditPanel)
 export {CheckedPermissionComponent as NavigationEditPanel}

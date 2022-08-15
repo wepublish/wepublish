@@ -77,7 +77,7 @@ function NavigationList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('navigation.overview.navigations')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_NAVIGATION'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               disabled={isLoading}
@@ -114,7 +114,7 @@ function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <PermissionControl requiredPermission={'CAN_DELETE_NAVIGATION'}>
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
                   <IconButtonTooltip caption={t('navigation.overview.delete')}>
                     <IconButton
                       icon={<TrashIcon />}
@@ -200,8 +200,10 @@ function NavigationList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_NAVIGATIONS',
-  true
-)(NavigationList)
+  'CAN_GET_NAVIGATION',
+  'CAN_CREATE_NAVIGATION',
+  'CAN_DELETE_NAVIGATION'
+])(NavigationList)
 export {CheckedPermissionComponent as NavigationList}

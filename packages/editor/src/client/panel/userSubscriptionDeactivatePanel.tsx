@@ -126,8 +126,8 @@ function UserSubscriptionDeactivatePanel({
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_SUBSCRIPTION',
-  true
-)(UserSubscriptionDeactivatePanel)
+  'CAN_DELETE_SUBSCRIPTION'
+])(UserSubscriptionDeactivatePanel)
 export {CheckedPermissionComponent as UserSubscriptionDeactivatePanel}

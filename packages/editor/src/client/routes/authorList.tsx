@@ -126,7 +126,7 @@ function AuthorList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('authors.overview.authors')}</h2>
         </FlexboxGrid.Item>
-        <PermissionControl requiredPermission={'CAN_CREATE_AUTHOR'}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <ButtonLink
               appearance="primary"
@@ -196,7 +196,7 @@ function AuthorList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <PermissionControl requiredPermission={'CAN_DELETE_AUTHOR'}>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                     <IconButtonTooltip caption={t('authors.overview.delete')}>
                       <IconButton
                         icon={<TrashIcon />}
@@ -303,8 +303,10 @@ function AuthorList() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
+const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_AUTHORS',
-  true
-)(AuthorList)
+  'CAN_GET_AUTHOR',
+  'CAN_DELETE_AUTHOR',
+  'CAN_CREATE_AUTHOR'
+])(AuthorList)
 export {CheckedPermissionComponent as AuthorList}

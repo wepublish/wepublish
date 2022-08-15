@@ -123,7 +123,15 @@ export function Base({children}: BaseProps) {
               />
 
               <Nav>
-                <PermissionControl requiredPermission={'CAN_GET_ARTICLES'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_ARTICLES',
+                    'CAN_GET_ARTICLE',
+                    'CAN_CREATE_ARTICLE',
+                    'CAN_DELETE_ARTICLE',
+                    'CAN_PUBLISH_ARTICLE'
+                  ]}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<FileTextIcon />}
                     route={ArticleListRoute.create({})}
@@ -134,7 +142,9 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_PEER_ARTICLES'}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_PEER_ARTICLES', 'CAN_GET_PEER_ARTICLE']}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<FileTextOIcon />}
                     route={PeerArticleListRoute.create({})}
@@ -143,7 +153,15 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_PAGES'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_PAGES',
+                    'CAN_GET_PAGE',
+                    'CAN_CREATE_PAGE',
+                    'CAN_DELETE_PAGE',
+                    'CAN_PUBLISH_PAGE'
+                  ]}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<FrameIcon />}
                     route={PageListRoute.create({})}
@@ -152,7 +170,9 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_COMMENTS'}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_COMMENTS', 'CAN_TAKE_COMMENT_ACTION']}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<CommentIcon />}
                     route={CommentListRoute.create({})}
@@ -161,7 +181,14 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_IMAGES'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_IMAGES',
+                    'CAN_GET_IMAGE',
+                    'CAN_CREATE_IMAGE',
+                    'CAN_DELETE_IMAGE'
+                  ]}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<ImageIcon />}
                     route={ImageListRoute.create({})}
@@ -170,7 +197,14 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_NAVIGATIONS'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_NAVIGATIONS',
+                    'CAN_GET_NAVIGATION',
+                    'CAN_CREATE_NAVIGATION',
+                    'CAN_DELETE_NAVIGATION'
+                  ]}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<BarsIcon />}
                     route={NavigationListRoute.create({})}
@@ -179,7 +213,14 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_AUTHORS'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_AUTHORS',
+                    'CAN_GET_AUTHOR',
+                    'CAN_CREATE_AUTHOR',
+                    'CAN_DELETE_AUTHOR'
+                  ]}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     icon={<PeopleGroupIcon />}
                     route={AuthorListRoute.create({})}
@@ -188,7 +229,29 @@ export function Base({children}: BaseProps) {
                   </NavItemLink>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_USERS'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_USERS',
+                    'CAN_GET_USER',
+                    'CAN_CREATE_USER',
+                    'CAN_DELETE_USER',
+                    'CAN_CREATE_USER_ROLE',
+                    'CAN_GET_USER_ROLE',
+                    'CAN_GET_USER_ROLES',
+                    'CAN_DELETE_USER_ROLE',
+                    'CAN_CREATE_SUBSCRIPTION',
+                    'CAN_GET_SUBSCRIPTIONS',
+                    'CAN_GET_SUBSCRIPTION',
+                    'CAN_DELETE_SUBSCRIPTION',
+                    'CAN_GET_MEMBER_PLAN',
+                    'CAN_GET_MEMBER_PLANS',
+                    'CAN_CREATE_MEMBER_PLAN',
+                    'CAN_DELETE_MEMBER_PLAN',
+                    'CAN_CREATE_PAYMENT_METHOD',
+                    'CAN_GET_PAYMENT_METHODS',
+                    'CAN_DELETE_PAYMENT_METHOD'
+                  ]}
+                  showRejectionMessage={false}>
                   <Dropdown
                     eventKey={'1'}
                     title={t('navbar.usersAndMembers')}
@@ -200,7 +263,14 @@ export function Base({children}: BaseProps) {
                       {t('navbar.users')}
                     </DropdownItemLink>
 
-                    <PermissionControl requiredPermission={'CAN_GET_USER_ROLES'}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_USER_ROLES',
+                        'CAN_GET_USER_ROLE',
+                        'CAN_CREATE_USER_ROLE',
+                        'CAN_DELETE_USER_ROLE'
+                      ]}
+                      showRejectionMessage={false}>
                       <DropdownItemLink
                         active={current?.type === RouteType.UserRoleList}
                         icon={<CharacterAuthorizeIcon />}
@@ -209,7 +279,14 @@ export function Base({children}: BaseProps) {
                       </DropdownItemLink>
                     </PermissionControl>
 
-                    <PermissionControl requiredPermission={'CAN_GET_SUBSCRIPTIONS'}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_SUBSCRIPTIONS',
+                        'CAN_GET_SUBSCRIPTION',
+                        'CAN_CREATE_SUBSCRIPTION',
+                        'CAN_DELETE_SUBSCRIPTION'
+                      ]}
+                      showRejectionMessage={false}>
                       <DropdownItemLink
                         active={current?.type === RouteType.SubscriptionList}
                         icon={<MehOIcon />}
@@ -218,7 +295,13 @@ export function Base({children}: BaseProps) {
                       </DropdownItemLink>
                     </PermissionControl>
 
-                    <PermissionControl requiredPermission={'CAN_GET_MEMBER_PLANS'}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_MEMBER_PLANS',
+                        'CAN_GET_MEMBER_PLAN',
+                        'CAN_CREATE_MEMBER_PLAN',
+                        'CAN_DELETE_MEMBER_PLAN'
+                      ]}>
                       <DropdownItemLink
                         active={current?.type === RouteType.MemberPlanList}
                         icon={<IdCardIcon />}
@@ -227,7 +310,14 @@ export function Base({children}: BaseProps) {
                       </DropdownItemLink>
                     </PermissionControl>
 
-                    <PermissionControl requiredPermission={'CAN_GET_PAYMENT_METHODS'}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_PAYMENT_METHODS',
+                        'CAN_GET_PAYMENT_METHOD',
+                        'CAN_CREATE_PAYMENT_METHOD',
+                        'CAN_DELETE_PAYMENT_METHOD'
+                      ]}
+                      showRejectionMessage={false}>
                       <DropdownItemLink
                         active={current?.type === RouteType.PaymentMethodList}
                         icon={<CreditCardIcon />}
@@ -238,7 +328,13 @@ export function Base({children}: BaseProps) {
                   </Dropdown>
                 </PermissionControl>
 
-                <PermissionControl requiredPermission={'CAN_GET_PEERS'}>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_PEERS',
+                    'CAN_GET_PEER',
+                    'CAN_CREATE_PEER',
+                    'CAN_DELETE_PEER'
+                  ]}>
                   <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
                     <DropdownItemLink
                       active={current?.type === RouteType.PeerList}
@@ -246,7 +342,13 @@ export function Base({children}: BaseProps) {
                       route={PeerListRoute.create({})}>
                       {t('navbar.peers')}
                     </DropdownItemLink>
-                    <PermissionControl requiredPermission={'CAN_GET_TOKENS'}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TOKENS',
+                        'CAN_CREATE_TOKEN',
+                        'CAN_DELETE_TOKEN'
+                      ]}
+                      showRejectionMessage={false}>
                       <DropdownItemLink
                         active={current?.type === RouteType.TokenList}
                         icon={<KeyIcon />}
@@ -256,7 +358,9 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
                   </Dropdown>
                 </PermissionControl>
-                <PermissionControl requiredPermission={'CAN_GET_SETTINGS'}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}
+                  showRejectionMessage={false}>
                   <NavItemLink
                     active={current?.type === RouteType.SettingList}
                     icon={<CogIcon />}

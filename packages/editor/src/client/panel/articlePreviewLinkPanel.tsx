@@ -92,8 +92,7 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(
-  'CAN_GET_ARTICLE_PREVIEW_LINK',
-  true
-)(ArticlePreviewLinkPanel)
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLE_PREVIEW_LINK'
+])(ArticlePreviewLinkPanel)
 export {CheckedPermissionComponent as ArticlePreviewLinkPanel}
