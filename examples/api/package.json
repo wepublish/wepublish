@@ -23,8 +23,8 @@
     "@karma.run/media-image-sharp": "^0.2.0",
     "@karma.run/media-storage-local": "^0.1.4",
     "@wepublish/api": "*",
-    "@wepublish/api-db-mongodb": "*",
     "@wepublish/api-media-karma": "*",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cross-fetch": "^3.0.6",
     "graphql": "^14.6.0",
@@ -35,6 +35,7 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^12.6.8",
     "@types/pino": "^6.3.5",
     "@types/pino-multi-stream": "^5.1.0",

@@ -75,5 +75,7 @@ mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
 }
 
 mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id)
+  deletePeer(id: $id) {
+    ...PeerRef
+  }
 }

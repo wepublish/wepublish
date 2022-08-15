@@ -1,9 +1,4 @@
-import {
-  AvailablePaymentMethod,
-  MemberPlan,
-  MemberPlanSort,
-  PaymentPeriodicity
-} from '../db/memberPlan'
+import {MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -23,14 +18,15 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    MONTHLY: {value: PaymentPeriodicity.Monthly},
-    QUARTERLY: {value: PaymentPeriodicity.Quarterly},
-    BIANNUAL: {value: PaymentPeriodicity.Biannual},
-    YEARLY: {value: PaymentPeriodicity.Yearly}
+    MONTHLY: {value: PaymentPeriodicity.monthly},
+    QUARTERLY: {value: PaymentPeriodicity.quarterly},
+    BIANNUAL: {value: PaymentPeriodicity.biannual},
+    YEARLY: {value: PaymentPeriodicity.yearly}
   }
 })
 
@@ -40,9 +36,19 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
     fields: {
       paymentMethods: {
         type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
-        async resolve({paymentMethodIDs}, args, {dbAdapter}) {
-          const paymentMethods = await dbAdapter.paymentMethod.getPaymentMethods()
-          return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
+        async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
+          const paymentMethods = await paymentMethod.findMany({
+            where: {
+              id: {
+                in: paymentMethodIDs
+              }
+            },
+            orderBy: {
+              createdAt: 'desc'
+            }
+          })
+
+          return paymentMethods
         }
       },
       paymentPeriodicities: {
@@ -61,9 +67,20 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
   fields: {
     paymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPaymentMethod))),
-      async resolve({paymentMethodIDs}, args, {dbAdapter}) {
-        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
-        return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
+      async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
+        const paymentMethods = await paymentMethod.findMany({
+          where: {
+            id: {
+              in: paymentMethodIDs
+            },
+            active: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        })
+
+        return paymentMethods
       }
     },
     paymentPeriodicities: {

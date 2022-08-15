@@ -1,5 +1,5 @@
+import {UserRole} from '@prisma/client'
 import {NotAuthorisedError} from '../error'
-import {UserRole} from '../db/userRole'
 
 export interface Permission {
   id: string
@@ -520,7 +520,6 @@ export const AllPermissions: Permission[] = [
   CanCreateToken,
   CanDeleteToken,
   CanGetTokens,
-  CanDeleteToken,
   CanCreateUser,
   CanResetUserPassword,
   CanGetUser,

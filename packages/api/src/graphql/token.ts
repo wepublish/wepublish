@@ -7,8 +7,8 @@ import {
 } from 'graphql'
 
 import {Context} from '../context'
-import {Token} from '../db/token'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {Token} from '@prisma/client'
 
 export const GraphQLTokenInput = new GraphQLInputObjectType({
   name: 'TokenInput',
