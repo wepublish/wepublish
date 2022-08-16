@@ -3,7 +3,6 @@ import CheckIcon from '@rsuite/icons/legacy/Check'
 import CloseIcon from '@rsuite/icons/legacy/Close'
 import EditIcon from '@rsuite/icons/legacy/Edit'
 import ReplyIcon from '@rsuite/icons/legacy/Reply'
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -11,16 +10,16 @@ import {
   Dropdown,
   FlexboxGrid,
   IconButton,
-  Input,
-  InputGroup,
   Message,
   Modal,
   Pagination,
   Panel,
   Table,
+  Timeline,
   toaster,
   Toggle
 } from 'rsuite'
+
 import {
   ApproveCommentMutation,
   Comment,
@@ -39,6 +38,7 @@ import {
   useRequestChangesOnCommentMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {
   DEFAULT_MAX_TABLE_PAGES,
