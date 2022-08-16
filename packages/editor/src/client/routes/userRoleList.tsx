@@ -36,7 +36,7 @@ export function UserRoleList() {
   const {data, refetch, loading: isLoading} = useUserRoleListQuery({
     variables: {
       filter: filter || undefined,
-      first: 200
+      take: 200
     },
     fetchPolicy: 'network-only'
   })
