@@ -165,7 +165,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
             />
           </Form.Group>
           {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
-          <Form.Group>
+          <Form.Group controlId="permissions">
             <Form.ControlLabel>{t('userRoles.panels.permissions')}</Form.ControlLabel>
             <CheckPicker
               virtualized
@@ -177,7 +177,6 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
                 label: permission.description
               }))}
               onChange={value => {
-                // setPermissions(value)
                 setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
               }}
             />

@@ -192,6 +192,8 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
       >
         <label
           class="rs-form-control-label"
+          for="permissions"
+          id="permissions-control-label"
         >
           userRoles.panels.permissions
         </label>
@@ -416,6 +418,8 @@ exports[`User Role Edit Panel should render 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="permissions"
+          id="permissions-control-label"
         >
           userRoles.panels.permissions
         </label>
@@ -593,6 +597,8 @@ exports[`User Role Edit Panel should render with role 1`] = `
       >
         <label
           class="rs-form-control-label"
+          for="permissions"
+          id="permissions-control-label"
         >
           userRoles.panels.permissions
         </label>

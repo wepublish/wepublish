@@ -104,6 +104,10 @@ Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields
 Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
 
 
+### Form accessibility
+To properly attach label to input, as well as utilize auto-generated `aria-labelledby` and `aria-describeby`, rsuite provides a `controlId` prop on `Form.Group`. This should be watched throughout the project to ensure the best possible performance and usability of the forms. More information can be found
+under this link: https://rsuitejs.com/components/form/#accessibility
+
 ## packages/api
 ### Environment Variables
 - MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, no batch maxima are considered. Possible types: `number`, any other type is being ignored.

@@ -188,13 +188,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           </Panel>
 
           <Panel header={t('peerList.panels.information')}>
-            <Form.Group>
+            <Form.Group controlId="peerListName">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('peerList.panels.name'))}
               </Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="peerListThemeColor">
               <Form.ControlLabel>{t('peerList.panels.themeColor')}</Form.ControlLabel>
               <ColorPicker
                 setColor={color => {
@@ -203,7 +203,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 currentColor={themeColor}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="peerListThemeFontColor">
               <Form.ControlLabel>{t('peerList.panels.themeFontColor')}</Form.ControlLabel>
               <ColorPicker
                 setColor={color => {
@@ -221,7 +221,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 padding: '12px',
                 marginTop: '4px'
               }}>
-              <Form.Group>
+              <Form.Group controlId="peerListCallToAction">
                 <Form.ControlLabel>{t('peerList.panels.text')}</Form.ControlLabel>
                 <Form.Control
                   name="callToActionText"
@@ -250,7 +250,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 padding: '12px',
                 marginTop: '4px'
               }}>
-              <Form.Group>
+              <Form.Group controlId="peerListImage">
                 <Form.ControlLabel>
                   {toggleRequiredLabel(t('peerList.panels.image'))}
                 </Form.ControlLabel>

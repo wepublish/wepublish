@@ -52,7 +52,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
         </Message>
 
         <Form fluid>
-          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}}>
+          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}} controlId="hours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -69,7 +69,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
               onChange={value => setHours(value)}
             />
           </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}}>
+          <Form.Group style={{paddingTop: '20px'}} controlId="field">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
