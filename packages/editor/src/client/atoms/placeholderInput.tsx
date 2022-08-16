@@ -13,7 +13,6 @@ export interface PlaceholderInputProps {
    * Called when the add button is clicked.
    */
   onAddClick?: () => void
-
   disabled?: boolean
 }
 

@@ -14,7 +14,7 @@ export function ColorPicker({setColor, currentColor, label, disabled}: ColorPick
     <>
       {label && <label htmlFor={id}>{label}</label>}
       <input
-        disabled={disabled ?? false}
+        disabled={disabled}
         id={id}
         type="color"
         value={currentColor}
