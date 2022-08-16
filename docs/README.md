@@ -102,6 +102,28 @@ Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields
 
 Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
 
+###Restricting Content With Permission Control
+
+Permission control allows for restricting Editor content dependent on the current user's role.
+
+```createCheckedPermissionComponent``` takes a list of permission IDs, any of which would permit access, followed by the component that is being controlled.
+
+
+```
+const CheckedPermissionComponent = createCheckedPermissionComponent(listOfPermissions)(ControlledComponent)
+```
+The controlled component can then be exported to replace the uncontrolled version. 
+
+```export {CheckedPermissionComponent as ControlledComponent}```
+
+If checks pass, and the user retains the specified permissions then the original component will be returned, otherwise the component will return an error message notifying the user that they aren't authorized to access that content.
+It is possible to hide the component without the error message by passing false as a second argument to ```createCheckedPermissionComponent()```.
+
+To check whether a user retains an individual permission, the ```authorise()``` can be called.
+This takes a permission ID and returns ```true``` or ```false``` depending on whether the current user has that permission.
+
+``authorise(permissionID)``
+
 
 ## packages/api
 ### Environment Variables

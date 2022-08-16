@@ -1007,6 +1007,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Zahlung"
+    },
+    "permissions": {
+      "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",
+      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}"
     }
   }
 }

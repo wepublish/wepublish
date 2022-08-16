@@ -999,6 +999,7 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Paiement"
-    }
+    },
+    "permissions": {}
   }
 }
