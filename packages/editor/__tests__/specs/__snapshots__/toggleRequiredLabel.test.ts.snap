@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should add the required symbol by default 1`] = `"foobar*"`;
+
+exports[`should add the required symbol if required is set to true 1`] = `"foobar*"`;
+
+exports[`should not add the required symbol if required is set to false 1`] = `"foobar"`;

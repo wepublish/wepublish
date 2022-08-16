@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next'
 import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {Reload, Send} from '@rsuite/icons'
 import {ResetUserPasswordForm} from './resetUserPasswordForm'
+import {toggleRequiredLabel} from '../../toggleRequiredLabel'
 
 interface CreateOrUpdateuserPasswordProps {
   user?: FullUserFragment | null
@@ -80,7 +81,10 @@ export function EditUserPassword({
     // create new password form
     return (
       <Form.Group controlId="password">
-        <Form.ControlLabel>{t('userCreateOrEditView.password') + '*'}</Form.ControlLabel>
+        <Form.ControlLabel>
+          {toggleRequiredLabel(t('userCreateOrEditView.password'))}
+        </Form.ControlLabel>
+
         <Form.Control
           type="password"
           name="password"
