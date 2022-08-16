@@ -1,5 +1,5 @@
 {
-  "version": "4.1.1",
+  "version": "5.0.0-alpha.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -19,9 +19,17 @@
       "allowBranch": "master"
     },
     "publish": {
-      "ignoreChanges": ["*.md", "*.txt"],
+      "ignoreChanges": [
+        "*.md",
+        "*.txt"
+      ],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["packages/api", "packages/api-media-karma", "packages/editor", "packages/oauth2"]
+  "packages": [
+    "packages/api",
+    "packages/api-media-karma",
+    "packages/editor",
+    "packages/oauth2"
+  ]
 }
