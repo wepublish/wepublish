@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.1.1 (2022-08-16)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#649](https://github.com/wepublish/wepublish/pull/649) fix(editor): editing peers required the token by accident ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#648](https://github.com/wepublish/wepublish/pull/648) ci: upgrade workflows checkout & setup-node + add cache for yarn ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 1
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+
+
 ## 4.1.0 (2022-08-08)
 
 #### :heart: New Feature
