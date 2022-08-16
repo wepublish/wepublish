@@ -61,7 +61,7 @@ export function UserEditView() {
   const {data: userRoleData, loading: isUserRoleLoading} = useUserRoleListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 200
+      take: 200
     }
   })
 

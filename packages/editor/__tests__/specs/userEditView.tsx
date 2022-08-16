@@ -14,7 +14,7 @@ const userRoleListDocumentQuery = {
   request: {
     query: UserRoleListDocument,
     variables: {
-      first: 200
+      take: 200
     }
   },
   result: () => {

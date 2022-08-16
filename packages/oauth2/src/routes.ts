@@ -5,7 +5,8 @@ import querystring from 'querystring'
 import {inspect} from 'util'
 
 import * as assert from 'assert'
-import {DBAdapter} from '@wepublish/api'
+import {PrismaClient} from '@prisma/client'
+import {getUserForCredentials} from '@wepublish/api'
 
 const body = urlencoded({extended: false})
 
@@ -27,7 +28,7 @@ const debug = (obj: any) =>
     }
   )
 
-export function routes(app: Application, provider: Provider, dbAdapter: DBAdapter): void {
+export function routes(app: Application, provider: Provider, prisma: PrismaClient): void {
   //const { constructor: { errors: { SessionNotFound } } } = provider;
 
   app.use((req, res, next) => {
@@ -122,10 +123,7 @@ export function routes(app: Application, provider: Provider, dbAdapter: DBAdapte
         prompt: {name}
       } = await provider.interactionDetails(req, res)
       assert.equal(name, 'login')
-      const account = await dbAdapter.user.getUserForCredentials({
-        email: req.body.login,
-        password: req.body.password
-      })
+      const account = await getUserForCredentials(req.body.login, req.body.password, prisma.user)
       if (!account) {
         throw new Error('User not found')
       }

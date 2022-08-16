@@ -42,7 +42,7 @@ export function MemberPlanList() {
   const {data, loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
-      first: 50
+      take: 50
     },
     fetchPolicy: 'network-only'
   })
@@ -168,7 +168,7 @@ export function MemberPlanList() {
                     query: MemberPlanListDocument,
                     variables: {
                       filter: filter || undefined,
-                      first: 50
+                      take: 50
                     }
                   })
 

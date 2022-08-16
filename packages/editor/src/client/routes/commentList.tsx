@@ -18,13 +18,13 @@ import {
   Pagination,
   Panel,
   Table,
-  Timeline,
-  toaster
+  toaster,
+  Toggle
 } from 'rsuite'
-
 import {
   ApproveCommentMutation,
   Comment,
+  CommentFilter,
   CommentListDocument,
   CommentListQuery,
   CommentRejectionReason,
@@ -39,7 +39,6 @@ import {
   useRequestChangesOnCommentMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -106,7 +105,14 @@ export function CommentList() {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<CommentFilter>({
+    states: [
+      CommentState.Approved,
+      CommentState.PendingApproval,
+      CommentState.PendingUserChanges,
+      CommentState.Rejected
+    ]
+  })
 
   const [comments, setComments] = useState<FullCommentFragment[]>([])
 
@@ -129,10 +135,11 @@ export function CommentList() {
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
   const commentListVariables = {
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    filter
   }
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
@@ -142,10 +149,11 @@ export function CommentList() {
 
   useEffect(() => {
     refetch({
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
-      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+      filter
     })
   }, [filter, page, limit, sortOrder, sortField])
 
@@ -204,15 +212,82 @@ export function CommentList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('comments.overview.comments')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
+
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px', gap: '8px', display: 'flex'}}>
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Approved)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Approved]
+                    : states.filter(val => val !== CommentState.Approved)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.approved')}
+            unCheckedChildren={t('comments.state.approved')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingApproval)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingApproval]
+                    : states.filter(val => val !== CommentState.PendingApproval)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingApproval')}
+            unCheckedChildren={t('comments.state.pendingApproval')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingUserChanges)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingUserChanges]
+                    : states.filter(val => val !== CommentState.PendingUserChanges)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingUserChanges')}
+            unCheckedChildren={t('comments.state.pendingUserChanges')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Rejected)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Rejected]
+                    : states.filter(val => val !== CommentState.Rejected)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.rejected')}
+            unCheckedChildren={t('comments.state.rejected')}
+          />
         </FlexboxGrid.Item>
       </FlexboxGrid>
+
       <div
         style={{
           display: 'flex',

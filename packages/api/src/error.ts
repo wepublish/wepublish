@@ -121,6 +121,15 @@ export class DuplicatePageSlugError extends ApolloError {
   }
 }
 
+export class DuplicateArticleSlugError extends ApolloError {
+  constructor(publishedArticleID: string, slug: string) {
+    super(
+      `Article with ID ${publishedArticleID} already uses the slug "${slug}"`,
+      ErrorCode.DuplicatePageSlug
+    )
+  }
+}
+
 export class CommentLengthError extends ApolloError {
   constructor() {
     super(

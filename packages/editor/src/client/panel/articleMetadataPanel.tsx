@@ -1,37 +1,34 @@
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import ListIcon from '@rsuite/icons/legacy/List'
+import MagicIcon from '@rsuite/icons/legacy/Magic'
+import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
-
+import {Trans, useTranslation} from 'react-i18next'
 import {
   Button,
   Drawer,
   Form,
-  TagPicker,
-  Toggle,
+  IconButton,
+  Input,
+  InputGroup,
+  Message,
   Nav,
   Panel,
-  Message,
-  InputGroup,
-  IconButton,
+  Schema,
+  TagPicker,
+  Toggle,
   Tooltip,
-  Whisper,
-  Input,
-  Schema
+  Whisper
 } from 'rsuite'
-
-import {ImagedEditPanel} from './imageEditPanel'
-import {AuthorCheckPicker} from './authorCheckPicker'
-import {ImageSelectPanel} from './imageSelectPanel'
-import {generateID, slugify} from '../utility'
 import {AuthorRefFragment, ImageRefFragment} from '../api'
-
-import {useTranslation, Trans} from 'react-i18next'
-import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ListIcon from '@rsuite/icons/legacy/List'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
-import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
+import {MetaDataType} from '../blocks/types'
+import {generateID, slugify} from '../utility'
+import {AuthorCheckPicker} from './authorCheckPicker'
+import {ImagedEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -40,7 +37,7 @@ export interface ArticleMetadataProperty {
 }
 
 export interface ArticleMetadata {
-  readonly slug: string
+  readonly slug?: string | null
   readonly preTitle: string
   readonly title: string
   readonly lead: string
@@ -348,7 +345,7 @@ export function ArticleMetadataPanel({
                   className="slug"
                   value={slug}
                   onChange={(slug: string) => onChange?.({...value, slug})}
-                  onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  onBlur={() => onChange?.({...value, slug: slug ? slugify(slug) : null})}
                 />
                 <Whisper
                   placement="top"

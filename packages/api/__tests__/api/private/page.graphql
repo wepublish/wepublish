@@ -18,7 +18,7 @@ fragment MutationPage on Page {
     revision
   }
 
-latest {
+  latest {
     publishedAt
     updatedAt
     slug
@@ -71,8 +71,8 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: String, $after: ID, $first: Int) {
-  pages(first: $first, after: $after, filter: {title: $filter}) {
+query PageList($filter: String, $cursor: ID, $take: Int) {
+  pages(take: $take, cursor: $cursor, filter: {title: $filter}) {
     nodes {
       ...PageRef
     }
@@ -113,7 +113,9 @@ mutation UnpublishPage($id: ID!) {
 }
 
 mutation DeletePage($id: ID!) {
-  deletePage(id: $id)
+  deletePage(id: $id) {
+    ...MutationPage
+  }
 }
 
 query Page($id: ID!) {

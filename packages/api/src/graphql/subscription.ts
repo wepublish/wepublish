@@ -1,14 +1,19 @@
+import {Subscription} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLString
 } from 'graphql'
+import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
+import {SubscriptionSort, SubscriptionWithRelations} from '../db/subscription'
+import {unselectPassword} from '../db/user'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
@@ -16,16 +21,13 @@ import {
   GraphQLMetadataPropertyPublic,
   GraphQLPageInfo
 } from './common'
-import {Context} from '../context'
-import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {Subscription, SubscriptionSort} from '../db/subscription'
-import {GraphQLUser} from './user'
 import {
   GraphQLSubscriptionDeactivation,
   GraphQLSubscriptionDeactivationReason
 } from './subscriptionDeactivation'
+import {GraphQLUser} from './user'
 
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
@@ -35,8 +37,13 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     user: {
       type: GraphQLUser,
-      async resolve({userID}, args, {dbAdapter}) {
-        return dbAdapter.user.getUserByID(userID)
+      async resolve({userID}, args, {prisma}) {
+        return prisma.user.findUnique({
+          where: {
+            id: userID
+          },
+          select: unselectPassword
+        })
       }
     },
     memberPlan: {
@@ -61,7 +68,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
   }
 })
 
-export const GraphQLPublicSubscription = new GraphQLObjectType<Subscription, Context>({
+export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithRelations, Context>({
   name: 'Subscription',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
