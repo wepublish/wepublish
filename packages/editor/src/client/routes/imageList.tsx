@@ -69,8 +69,8 @@ function ImageList() {
 
   const listVariables = {
     filter: filter || undefined,
-    first: limit,
-    skip: activePage - 1
+    take: limit,
+    skip: (activePage - 1) * limit
   }
 
   const {data, refetch, /* fetchMore, */ loading: isLoading} = useImageListQuery({
@@ -105,7 +105,7 @@ function ImageList() {
 
   /* function loadMore() {
     fetchMore({
-      variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
+      variables: {take: ImagesPerPage, skip: 1, cursor: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 

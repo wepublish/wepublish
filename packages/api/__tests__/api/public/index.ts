@@ -222,8 +222,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['Int']>
-  height?: Maybe<Scalars['Int']>
+  width?: Maybe<Scalars['String']>
+  height?: Maybe<Scalars['String']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -408,20 +408,8 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  /**
-   * This mutation allows to create a user session by taking the user's credentials
-   * email and password as an input and returns a session with token.
-   */
   createSession: SessionWithToken
-  /**
-   * This mutation allows to create a user session with JSON Web Token by taking
-   * the JSON Web Token as an input and returns a session with token
-   */
   createSessionWithJWT: SessionWithToken
-  /**
-   * This mutation allows to create user session with OAuth2 code by taking the
-   * name, code and redirect Uri as an input and returns a session with token.
-   */
   createSessionWithOAuth2Code: SessionWithToken
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']
@@ -802,10 +790,9 @@ export type QueryAuthorArgs = {
 }
 
 export type QueryAuthorsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<AuthorFilter>
   sort?: Maybe<AuthorSort>
   order?: Maybe<SortOrder>
@@ -818,10 +805,9 @@ export type QueryArticleArgs = {
 }
 
 export type QueryArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
@@ -840,10 +826,9 @@ export type QueryPageArgs = {
 }
 
 export type QueryPagesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
@@ -859,10 +844,9 @@ export type QueryMemberPlanArgs = {
 }
 
 export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<MemberPlanFilter>
   sort?: Maybe<MemberPlanSort>
   order?: Maybe<SortOrder>
@@ -1001,11 +985,11 @@ export type User = {
 export type UserAddress = {
   __typename?: 'UserAddress'
   company?: Maybe<Scalars['String']>
-  streetAddress: Scalars['String']
+  streetAddress?: Maybe<Scalars['String']>
   streetAddress2?: Maybe<Scalars['String']>
-  zipCode: Scalars['String']
-  city: Scalars['String']
-  country: Scalars['String']
+  zipCode?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UserAddressInput = {
@@ -1049,8 +1033,8 @@ export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type ArticleListQuery = {__typename?: 'Query'} & {
@@ -1173,10 +1157,9 @@ export type FullAuthorFragment = {__typename?: 'Author'} & Pick<Author, 'slug' |
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type AuthorListQuery = {__typename?: 'Query'} & {
@@ -1394,8 +1377,8 @@ export type PageRefFragment = {__typename?: 'Page'} & Pick<
 
 export type PageListQueryVariables = Exact<{
   filter?: Maybe<Array<Scalars['String']> | Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type PageListQuery = {__typename?: 'Query'} & {
@@ -1769,8 +1752,8 @@ export const FullUser = gql`
   }
 `
 export const ArticleList = gql`
-  query ArticleList($filter: [String!], $after: ID, $first: Int) {
-    articles(first: $first, after: $after, filter: {tags: $filter}) {
+  query ArticleList($filter: [String!], $cursor: ID, $take: Int) {
+    articles(take: $take, cursor: $cursor, filter: {tags: $filter}) {
       nodes {
         ...ArticleRef
       }
@@ -1850,8 +1833,8 @@ export const PeerArticle = gql`
   ${FullBlock}
 `
 export const AuthorList = gql`
-  query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullAuthor
       }
@@ -1883,8 +1866,8 @@ export const AddComment = gql`
   ${MutationComment}
 `
 export const PageList = gql`
-  query PageList($filter: [String!], $after: ID, $first: Int) {
-    pages(first: $first, after: $after, filter: {tags: $filter}) {
+  query PageList($filter: [String!], $cursor: ID, $take: Int) {
+    pages(take: $take, cursor: $cursor, filter: {tags: $filter}) {
       nodes {
         ...PageRef
       }

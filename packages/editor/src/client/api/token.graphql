@@ -18,5 +18,9 @@ mutation CreateToken($input: TokenInput!) {
 }
 
 mutation DeleteToken($id: ID!) {
-  deleteToken(id: $id)
+  deleteToken(id: $id) {
+    id
+    name
+    token
+  }
 }

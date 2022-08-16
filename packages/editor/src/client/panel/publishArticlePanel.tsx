@@ -211,7 +211,6 @@ function PublishArticlePanel({
           onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('articleEditor.panels.confirm')}
         </Button>
-
         <Button appearance="subtle" onClick={() => onClose()}>
           {t('articleEditor.panels.close')}
         </Button>

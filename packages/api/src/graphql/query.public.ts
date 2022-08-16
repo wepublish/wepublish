@@ -1,3 +1,4 @@
+import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
   GraphQLInt,
@@ -7,50 +8,55 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {GraphQLSlug} from './slug'
-import {UserInputError} from 'apollo-server-express'
-import {GraphQLPublicNavigation} from './navigation'
-import {
-  GraphQLAuthor,
-  GraphQLAuthorConnection,
-  GraphQLAuthorFilter,
-  GraphQLAuthorSort
-} from './author'
+import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
-import {GraphQLSortOrder} from './common'
-import {InputCursor, Limit, SortOrder} from '../db/common'
+import {SortOrder} from '../db/common'
+import {MemberPlanSort} from '../db/memberPlan'
+import {PageSort, PublicPage} from '../db/page'
+import {SessionType} from '../db/session'
+import {NotFound} from '../error'
+import {logger} from '../server'
+import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicArticle,
   GraphQLPublicArticleConnection,
   GraphQLPublicArticleFilter,
   GraphQLPublicArticleSort
 } from './article'
-import {SessionType} from '../db/session'
-import {ArticleSort, PublicArticle} from '../db/article'
-import {delegateToPeerSchema} from '../utility'
+import {getPublishedArticleByIdOrSlug, getPublishedArticles} from './article/article.public-queries'
+import {GraphQLAuthProvider} from './auth'
 import {
-  GraphQLPublicPage,
-  GraphQLPublicPageConnection,
-  GraphQLPublishedPageFilter,
-  GraphQLPublishedPageSort
-} from './page'
-import {PageSort, PublicPage} from '../db/page'
+  GraphQLAuthor,
+  GraphQLAuthorConnection,
+  GraphQLAuthorFilter,
+  GraphQLAuthorSort
+} from './author'
+import {getPublicAuthors} from './author/author.public-queries'
+import {GraphQLChallenge} from './challenge'
+import {GraphQLSortOrder} from './common'
+import {GraphQLPublicInvoice} from './invoice'
+import {getPublicInvoices} from './invoice/invoice.public-queries'
+import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
 import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLPublicUser} from './user'
-import {GraphQLPublicInvoice} from './invoice'
-import {GraphQLAuthProvider} from './auth'
-import {logger} from '../server'
-import {DisabledPeerError, NotFound} from '../error'
-import {Invoice} from '../db/invoice'
+import {GraphQLPublicNavigation} from './navigation'
+import {
+  GraphQLPublicPage,
+  GraphQLPublicPageConnection,
+  GraphQLPublishedPageFilter,
+  GraphQLPublishedPageSort
+} from './page'
+import {getPublishedPages} from './page/page.public-queries'
+import {GraphQLPeer, GraphQLPeerProfile} from './peer'
+import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
+import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
-import {GraphQLChallenge} from './challenge'
+import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -61,27 +67,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       description: 'This query returns the peer profile.',
-      async resolve(root, args, {hostURL, websiteURL, dbAdapter}) {
-        return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
-      }
+      resolve: (root, args, {hostURL, websiteURL, prisma: {peerProfile}}) =>
+        getPublicPeerProfile(hostURL, websiteURL, peerProfile)
     },
 
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query takes either the ID or the slug and returns the peer profile.',
-      async resolve(root, {id, slug}, {loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        const peer = id ? await loaders.peer.load(id) : await loaders.peerBySlug.load(slug)
-
-        if (peer?.isDisabled) {
-          throw new DisabledPeerError()
-        }
-        return peer
-      }
+      resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
+        getPeerByIdOrSlug(id, slug, peer, peerBySlug)
     },
 
     // Navigation
@@ -91,7 +86,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
       description: 'This query takes either the ID or the key and returns the navigation.',
-      resolve(root, {id, key}, {authenticateUser, loaders}) {
+      resolve(root, {id, key}, {loaders}) {
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
         }
@@ -119,24 +114,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     authors: {
       type: GraphQLNonNull(GraphQLAuthorConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLAuthorFilter},
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query is to get the authors.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.author.getAuthors({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {author}}) =>
+        getPublicAuthors(filter, sort, order, cursor, skip, take, author)
     },
 
     // Article
@@ -150,64 +137,36 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         token: {type: GraphQLString}
       },
       description: 'This query takes either the ID, slug or token and returns the article.',
-      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
-        let article = id ? await loaders.publicArticles.load(id) : null
-
-        if (!article && slug) {
-          article = await dbAdapter.article.getPublishedArticleBySlug(slug)
-        }
-        if (!article && token) {
-          try {
-            const articleId = verifyJWT(token)
-            const privateArticle = await loaders.articles.load(articleId)
-
-            article = privateArticle?.draft
-              ? ({
-                  id: privateArticle.id,
-                  shared: privateArticle.shared,
-                  ...privateArticle.draft,
-                  updatedAt: new Date(),
-                  publishedAt: new Date()
-                } as PublicArticle)
-              : null
-          } catch (error) {
-            logger('graphql-query').warn(
-              error as Error,
-              'Error while verifying token with article id.'
-            )
-          }
-        }
-
-        if (session?.type === SessionType.Token) {
-          return article?.shared ? article : null
-        }
-        if (!article) throw new NotFound('Article', id ?? slug ?? token)
-
-        return article
-      }
+      resolve: (
+        root,
+        {id, slug, token},
+        {session, loaders: {articles, publicArticles}, prisma: {article}, verifyJWT}
+      ) =>
+        getPublishedArticleByIdOrSlug(
+          id,
+          slug,
+          token,
+          session,
+          verifyJWT,
+          publicArticles,
+          articles,
+          article
+        )
     },
 
     articles: {
       type: GraphQLNonNull(GraphQLPublicArticleConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPublicArticleFilter},
         sort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the articles.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.article.getPublishedArticles({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, skip, take, cursor}, {prisma: {article}}) =>
+        getPublishedArticles(filter, sort, order, cursor, skip, take, article)
     },
 
     // Peer Article
@@ -272,8 +231,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
             page = privatePage?.draft
               ? ({
-                  id: privatePage.id,
                   ...privatePage.draft,
+                  id: privatePage.id,
                   updatedAt: new Date(),
                   publishedAt: new Date()
                 } as PublicPage)
@@ -294,24 +253,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     pages: {
       type: GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPublishedPageFilter},
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the pages.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.page.getPublishedPages({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma: {page}}) =>
+        getPublishedPages(filter, sort, order, cursor, skip, take, page)
     },
 
     // Auth
@@ -352,34 +303,26 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
       description: 'This query returns the invoices  of the authenticated user.',
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
-        const {user} = authenticateUser()
-
-        const subscriptions = await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
-
-        const invoices: Invoice[] = []
-
-        for (const subscription of subscriptions) {
-          if (!subscription) continue
-          const subscriptionInvoices = await dbAdapter.invoice.getInvoicesBySubscriptionID(
-            subscription.id
-          )
-          for (const invoice of subscriptionInvoices) {
-            if (!invoice) continue
-            invoices.push(invoice)
-          }
-        }
-        return invoices
-      }
+      resolve: (root, _, {authenticateUser, prisma: {subscription, invoice}}) =>
+        getPublicInvoices(authenticateUser, subscription, invoice)
     },
 
     subscriptions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicSubscription))),
       description: 'This query returns the subscriptions of the authenticated user.',
-      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+      async resolve(root, _, {authenticateUser, prisma}) {
         const {user} = authenticateUser()
 
-        return await dbAdapter.subscription.getSubscriptionsByUserID(user.id)
+        return await prisma.subscription.findMany({
+          where: {
+            userID: user.id
+          },
+          include: {
+            deactivation: true,
+            periods: true,
+            properties: true
+          }
+        })
       }
     },
 
@@ -388,7 +331,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       description: 'This query returns a member plan.',
       resolve(root, {id, slug}, {loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
+        if ((!id && !slug) || (id && slug)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
 
@@ -401,24 +344,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     memberPlans: {
       type: GraphQLNonNull(GraphQLPublicMemberPlanConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLMemberPlanFilter},
         sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.CreatedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the member plans.',
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.memberPlan.getActiveMemberPlans({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
+      resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {memberPlan}}) =>
+        getActiveMemberPlans(filter, sort, order, cursor, skip, take, memberPlan)
     },
 
     checkInvoiceStatus: {
@@ -429,18 +364,45 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description:
         'This mutation will check the invoice status and update with information from the paymentProvider',
       async resolve(root, {id}, context) {
-        const {authenticateUser, dbAdapter, paymentProviders} = context
+        const {authenticateUser, prisma, paymentProviders} = context
         const {user} = authenticateUser()
 
-        const invoice = await dbAdapter.invoice.getInvoiceByID(id)
-        if (!invoice) throw new NotFound('Invoice', id)
-        const subscription = await dbAdapter.subscription.getSubscriptionByID(
-          invoice.subscriptionID
-        )
-        if (!subscription || subscription.userID !== user.id) throw new NotFound('Invoice', id)
+        const invoice = await prisma.invoice.findUnique({
+          where: {
+            id
+          },
+          include: {
+            items: true
+          }
+        })
 
-        const payments = await dbAdapter.payment.getPaymentsByInvoiceID(invoice.id)
-        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
+        if (!invoice || !invoice.subscriptionID) {
+          throw new NotFound('Invoice', id)
+        }
+
+        const subscription = await prisma.subscription.findUnique({
+          where: {
+            id: invoice.subscriptionID
+          }
+        })
+
+        if (!subscription || subscription.userID !== user.id) {
+          throw new NotFound('Invoice', id)
+        }
+
+        const payments = await prisma.payment.findMany({
+          where: {
+            invoiceID: invoice.id
+          }
+        })
+        const paymentMethods = await prisma.paymentMethod.findMany({
+          where: {
+            active: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        })
 
         for (const payment of payments) {
           if (!payment || !payment.intentID) continue
@@ -456,15 +418,26 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
           await paymentProvider.updatePaymentWithIntentState({
             intentState,
-            dbAdapter: context.dbAdapter,
-            loaders: context.loaders
+            paymentClient: context.prisma.payment,
+            paymentsByID: context.loaders.paymentsByID,
+            invoicesByID: context.loaders.invoicesByID,
+            subscriptionClient: prisma.subscription,
+            userClient: prisma.user
           })
         }
 
         // FIXME: We need to implement a way to wait for all the database
         //  event hooks to finish before we return data. Will be solved in WPC-498
         await new Promise(resolve => setTimeout(resolve, 100))
-        return await dbAdapter.invoice.getInvoiceByID(id)
+
+        return await prisma.invoice.findUnique({
+          where: {
+            id
+          },
+          include: {
+            items: true
+          }
+        })
       }
     },
 

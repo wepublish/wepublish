@@ -10,7 +10,7 @@ export const GraphQLColor = new GraphQLScalarType({
   },
 
   parseValue(value) {
-    if (typeof value != 'string') throw new Error()
+    if (typeof value !== 'string') throw new Error()
     if (!value.match(ColorRegexp)) throw new Error('Invalid hex color string.')
 
     return value

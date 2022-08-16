@@ -154,7 +154,7 @@ export interface Peer {
   slug: string
   name: string
   logoURL: string
-  isDisabled: boolean
+  isDisabled?: boolean | null
   websiteURL: string
   themeColor: string
   themeFontColor: string

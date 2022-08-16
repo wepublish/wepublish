@@ -20,15 +20,8 @@ export type Scalars = {
   Slug: string
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any
-  Value: any
   /** The `Upload` scalar type represents a file upload. */
   Upload: File
-}
-
-export type AllowedSettingVals = {
-  __typename?: 'AllowedSettingVals'
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>
-  boolChoice?: Maybe<Scalars['Boolean']>
 }
 
 export type Article = {
@@ -60,7 +53,7 @@ export type ArticleFilter = {
 }
 
 export type ArticleInput = {
-  slug: Scalars['Slug']
+  slug?: Maybe<Scalars['Slug']>
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
@@ -100,10 +93,10 @@ export type ArticleRevision = {
   publishedAt?: Maybe<Scalars['DateTime']>
   hideAuthor: Scalars['Boolean']
   preTitle?: Maybe<Scalars['String']>
-  title: Scalars['String']
+  title?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
   seoTitle?: Maybe<Scalars['String']>
-  slug: Scalars['Slug']
+  slug?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<Properties>
   canonicalUrl?: Maybe<Scalars['String']>
@@ -303,7 +296,7 @@ export type CommentConnection = {
 }
 
 export type CommentFilter = {
-  state?: Maybe<CommentState>
+  states?: Maybe<Array<CommentState>>
 }
 
 export enum CommentItemType {
@@ -367,8 +360,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['Int']>
-  height?: Maybe<Scalars['Int']>
+  width?: Maybe<Scalars['String']>
+  height?: Maybe<Scalars['String']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -376,8 +369,8 @@ export type EmbedBlock = {
 export type EmbedBlockInput = {
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['Int']>
-  height?: Maybe<Scalars['Int']>
+  width?: Maybe<Scalars['String']>
+  height?: Maybe<Scalars['String']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -609,7 +602,6 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>
   quantity: Scalars['Int']
   amount: Scalars['Int']
-  total: Scalars['Int']
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
 }
@@ -618,12 +610,6 @@ export enum InvoiceSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
   PaidAt = 'PAID_AT'
-}
-
-export type JwtToken = {
-  __typename?: 'JWTToken'
-  token: Scalars['String']
-  expiresAt: Scalars['String']
 }
 
 export type LinkPageBreakBlock = {
@@ -724,7 +710,7 @@ export type Mutation = {
   updatePeerProfile: PeerProfile
   createPeer: Peer
   updatePeer: Peer
-  deletePeer?: Maybe<Scalars['ID']>
+  deletePeer?: Maybe<Peer>
   createSession: SessionWithToken
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
@@ -734,52 +720,51 @@ export type Mutation = {
   sendJWTLogin: Scalars['String']
   sendWebsiteLogin: Scalars['String']
   createToken: CreatedToken
-  deleteToken?: Maybe<Scalars['String']>
+  deleteToken?: Maybe<CreatedToken>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
   resetUserPassword?: Maybe<User>
-  deleteUser?: Maybe<Scalars['String']>
+  deleteUser?: Maybe<User>
   createSubscription?: Maybe<Subscription>
   updateSubscription?: Maybe<Subscription>
-  deleteSubscription?: Maybe<Scalars['String']>
+  deleteSubscription?: Maybe<Subscription>
   createUserRole?: Maybe<UserRole>
   updateUserRole?: Maybe<UserRole>
-  deleteUserRole?: Maybe<Scalars['String']>
+  deleteUserRole?: Maybe<UserRole>
   createNavigation?: Maybe<Navigation>
   updateNavigation?: Maybe<Navigation>
-  deleteNavigation?: Maybe<Scalars['ID']>
+  deleteNavigation?: Maybe<Navigation>
   createAuthor?: Maybe<Author>
   updateAuthor?: Maybe<Author>
-  deleteAuthor?: Maybe<Scalars['ID']>
+  deleteAuthor?: Maybe<Author>
   uploadImage?: Maybe<Image>
   updateImage?: Maybe<Image>
-  deleteImage?: Maybe<Scalars['Boolean']>
+  deleteImage?: Maybe<Image>
   createArticle: Article
   updateArticle?: Maybe<Article>
-  deleteArticle?: Maybe<Scalars['Boolean']>
+  deleteArticle?: Maybe<Article>
   publishArticle?: Maybe<Article>
   unpublishArticle?: Maybe<Article>
   duplicateArticle: Article
   createPage: Page
   updatePage?: Maybe<Page>
-  deletePage?: Maybe<Scalars['Boolean']>
+  deletePage?: Maybe<Page>
   publishPage?: Maybe<Page>
   unpublishPage?: Maybe<Page>
   duplicatePage: Page
   createMemberPlan?: Maybe<MemberPlan>
   updateMemberPlan?: Maybe<MemberPlan>
-  deleteMemberPlan?: Maybe<Scalars['ID']>
+  deleteMemberPlan?: Maybe<MemberPlan>
   createPaymentMethod?: Maybe<PaymentMethod>
   updatePaymentMethod?: Maybe<PaymentMethod>
-  deletePaymentMethod?: Maybe<Scalars['ID']>
+  deletePaymentMethod?: Maybe<PaymentMethod>
   createInvoice?: Maybe<Invoice>
   createPaymentFromInvoice?: Maybe<Payment>
   updateInvoice?: Maybe<Invoice>
-  deleteInvoice?: Maybe<Scalars['ID']>
+  deleteInvoice?: Maybe<Invoice>
   approveComment: Comment
   rejectComment: Comment
   requestChangesOnComment: Comment
-  updateSettingList?: Maybe<Array<Maybe<Setting>>>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -1033,10 +1018,6 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason
 }
 
-export type MutationUpdateSettingListArgs = {
-  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>
-}
-
 export type Navigation = {
   __typename?: 'Navigation'
   id: Scalars['ID']
@@ -1083,14 +1064,6 @@ export type PageConnection = {
   nodes: Array<Page>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
-}
-
-export type PageFilter = {
-  title?: Maybe<Scalars['String']>
-  draft?: Maybe<Scalars['Boolean']>
-  published?: Maybe<Scalars['Boolean']>
-  pending?: Maybe<Scalars['Boolean']>
-  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type PageInfo = {
@@ -1370,7 +1343,6 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query'
   remotePeerProfile?: Maybe<PeerProfile>
-  createJWTForUser?: Maybe<JwtToken>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1410,18 +1382,11 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
-  setting?: Maybe<Setting>
-  settings: Array<Setting>
 }
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String']
   token: Scalars['String']
-}
-
-export type QueryCreateJwtForUserArgs = {
-  userId: Scalars['String']
-  expiresInMinutes: Scalars['Int']
 }
 
 export type QueryPeerArgs = {
@@ -1437,10 +1402,8 @@ export type QueryUserArgs = {
 }
 
 export type QueryUsersArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
@@ -1452,10 +1415,8 @@ export type QuerySubscriptionArgs = {
 }
 
 export type QuerySubscriptionsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<SubscriptionFilter>
   sort?: Maybe<SubscriptionSort>
@@ -1471,10 +1432,9 @@ export type QueryUserRoleArgs = {
 }
 
 export type QueryUserRolesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserRoleFilter>
   sort?: Maybe<UserRoleSort>
   order?: Maybe<SortOrder>
@@ -1491,10 +1451,8 @@ export type QueryAuthorArgs = {
 }
 
 export type QueryAuthorsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<AuthorFilter>
   sort?: Maybe<AuthorSort>
@@ -1506,10 +1464,8 @@ export type QueryImageArgs = {
 }
 
 export type QueryImagesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
   sort?: Maybe<ImageSort>
@@ -1517,10 +1473,8 @@ export type QueryImagesArgs = {
 }
 
 export type QueryCommentsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<CommentFilter>
   sort?: Maybe<CommentSort>
@@ -1532,10 +1486,8 @@ export type QueryArticleArgs = {
 }
 
 export type QueryArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
@@ -1548,14 +1500,12 @@ export type QueryPeerArticleArgs = {
 }
 
 export type QueryPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  filter?: Maybe<ArticleFilter>
+  cursors?: Maybe<Scalars['String']>
+  take?: Maybe<Scalars['Int']>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
   peerFilter?: Maybe<Scalars['String']>
-  last?: Maybe<Scalars['Int']>
-  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<ArticleFilter>
 }
 
 export type QueryArticlePreviewLinkArgs = {
@@ -1568,12 +1518,10 @@ export type QueryPageArgs = {
 }
 
 export type QueryPagesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-  filter?: Maybe<PageFilter>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<ArticleFilter>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
 }
@@ -1583,16 +1531,10 @@ export type QueryPagePreviewLinkArgs = {
   hours: Scalars['Int']
 }
 
-export type QueryMemberPlanArgs = {
-  id?: Maybe<Scalars['ID']>
-  slug?: Maybe<Scalars['Slug']>
-}
-
 export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<MemberPlanFilter>
   sort?: Maybe<MemberPlanSort>
   order?: Maybe<SortOrder>
@@ -1607,10 +1549,9 @@ export type QueryInvoiceArgs = {
 }
 
 export type QueryInvoicesArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<InvoiceFilter>
   sort?: Maybe<InvoiceSort>
   order?: Maybe<SortOrder>
@@ -1621,17 +1562,12 @@ export type QueryPaymentArgs = {
 }
 
 export type QueryPaymentsArgs = {
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<PaymentFilter>
   sort?: Maybe<PaymentSort>
   order?: Maybe<SortOrder>
-}
-
-export type QuerySettingArgs = {
-  name?: Maybe<Scalars['String']>
 }
 
 export type QuoteBlock = {
@@ -1669,31 +1605,6 @@ export type SessionWithToken = {
   token: Scalars['String']
   createdAt: Scalars['DateTime']
   expiresAt: Scalars['DateTime']
-}
-
-export type Setting = {
-  __typename?: 'Setting'
-  id: Scalars['ID']
-  name: SettingName
-  value: Scalars['Value']
-  settingRestriction?: Maybe<SettingRestriction>
-}
-
-export enum SettingName {
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
-}
-
-export type SettingRestriction = {
-  __typename?: 'SettingRestriction'
-  maxValue?: Maybe<Scalars['Int']>
-  minValue?: Maybe<Scalars['Int']>
-  inputLength?: Maybe<Scalars['Int']>
-  allowedValues?: Maybe<AllowedSettingVals>
 }
 
 export enum SortOrder {
@@ -1766,7 +1677,6 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>
   paymentPeriodicity?: Maybe<PaymentPeriodicity>
   userHasAddress?: Maybe<Scalars['Boolean']>
-  userID?: Maybe<Scalars['ID']>
 }
 
 export type SubscriptionInput = {
@@ -1780,17 +1690,6 @@ export type SubscriptionInput = {
   paymentMethodID: Scalars['String']
   properties: Array<PropertiesInput>
   deactivation?: Maybe<SubscriptionDeactivationInput>
-}
-
-export type SubscriptionPeriod = {
-  __typename?: 'SubscriptionPeriod'
-  id: Scalars['ID']
-  invoiceID: Scalars['ID']
-  amount: Scalars['Int']
-  createdAt: Scalars['DateTime']
-  startsAt: Scalars['DateTime']
-  endsAt: Scalars['DateTime']
-  paymentPeriodicity: PaymentPeriodicity
 }
 
 export enum SubscriptionSort {
@@ -1902,11 +1801,6 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>
 }
 
-export type UpdateSettingArgs = {
-  name: SettingName
-  value: Scalars['Value']
-}
-
 export type UploadImageInput = {
   file: Scalars['Upload']
   filename?: Maybe<Scalars['String']>
@@ -1931,22 +1825,21 @@ export type User = {
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
-  lastLogin?: Maybe<Scalars['DateTime']>
+  skipLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
   roles: Array<UserRole>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
-  subscriptions: Array<UserSubscription>
 }
 
 export type UserAddress = {
   __typename?: 'UserAddress'
   company?: Maybe<Scalars['String']>
-  streetAddress: Scalars['String']
+  streetAddress?: Maybe<Scalars['String']>
   streetAddress2?: Maybe<Scalars['String']>
-  zipCode: Scalars['String']
-  city: Scalars['String']
-  country: Scalars['String']
+  zipCode?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UserAddressInput = {
@@ -2018,23 +1911,6 @@ export enum UserSort {
   ModifiedAt = 'MODIFIED_AT',
   Name = 'NAME',
   FirstName = 'FIRST_NAME'
-}
-
-export type UserSubscription = {
-  __typename?: 'UserSubscription'
-  id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
-  autoRenew: Scalars['Boolean']
-  startsAt: Scalars['DateTime']
-  paidUntil?: Maybe<Scalars['DateTime']>
-  properties: Array<Properties>
-  deactivation?: Maybe<SubscriptionDeactivation>
-  periods: Array<SubscriptionPeriod>
-  memberPlan: MemberPlan
-  invoices: Array<Invoice>
 }
 
 export type VimeoVideoBlock = {
@@ -2109,8 +1985,8 @@ export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type ArticleListQuery = {__typename?: 'Query'} & {
@@ -2125,8 +2001,8 @@ export type ArticleListQuery = {__typename?: 'Query'} & {
 
 export type PeerArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursors?: Maybe<Scalars['String']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type PeerArticleListQuery = {__typename?: 'Query'} & {
@@ -2187,7 +2063,9 @@ export type DeleteArticleMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteArticleMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteArticle'>
+export type DeleteArticleMutation = {__typename?: 'Mutation'} & {
+  deleteArticle?: Maybe<{__typename?: 'Article'} & MutationArticleFragment>
+}
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['ID']
@@ -2261,10 +2139,9 @@ export type FullAuthorFragment = {__typename?: 'Author'} & Pick<Author, 'slug' |
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type AuthorListQuery = {__typename?: 'Query'} & {
@@ -2306,7 +2183,9 @@ export type DeleteAuthorMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteAuthorMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteAuthor'>
+export type DeleteAuthorMutation = {__typename?: 'Mutation'} & {
+  deleteAuthor?: Maybe<{__typename?: 'Author'} & FullAuthorFragment>
+}
 
 type FullTeaser_ArticleTeaser_Fragment = {__typename?: 'ArticleTeaser'} & Pick<
   ArticleTeaser,
@@ -2493,10 +2372,9 @@ export type FullImageFragment = {__typename?: 'Image'} & Pick<
 
 export type ImageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type ImageListQuery = {__typename?: 'Query'} & {
@@ -2538,7 +2416,9 @@ export type DeleteImageMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteImageMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteImage'>
+export type DeleteImageMutation = {__typename?: 'Mutation'} & {
+  deleteImage?: Maybe<{__typename?: 'Image'} & FullImageFragment>
+}
 
 export type FullNavigationFragment = {__typename?: 'Navigation'} & Pick<
   Navigation,
@@ -2590,10 +2470,9 @@ export type DeleteNavigationMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteNavigationMutation = {__typename?: 'Mutation'} & Pick<
-  Mutation,
-  'deleteNavigation'
->
+export type DeleteNavigationMutation = {__typename?: 'Mutation'} & {
+  deleteNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
 
 export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     draft?: Maybe<
@@ -2653,8 +2532,8 @@ export type PageRefFragment = {__typename?: 'Page'} & Pick<
 
 export type PageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
 }>
 
 export type PageListQuery = {__typename?: 'Query'} & {
@@ -2707,7 +2586,9 @@ export type DeletePageMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeletePageMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePage'>
+export type DeletePageMutation = {__typename?: 'Mutation'} & {
+  deletePage?: Maybe<{__typename?: 'Page'} & MutationPageFragment>
+}
 
 export type PageQueryVariables = Exact<{
   id: Scalars['ID']
@@ -2829,7 +2710,9 @@ export type DeletePeerMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
+export type DeletePeerMutation = {__typename?: 'Mutation'} & {
+  deletePeer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
+}
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<
   User,
@@ -2838,10 +2721,9 @@ export type FullUserFragment = {__typename?: 'User'} & Pick<
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type UserListQuery = {__typename?: 'Query'} & {
@@ -2899,7 +2781,9 @@ export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteUserMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUser'>
+export type DeleteUserMutation = {__typename?: 'Mutation'} & {
+  deleteUser?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
 
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String']
@@ -2934,10 +2818,9 @@ export type FullUserRoleFragment = {__typename?: 'UserRole'} & Pick<
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
 }>
 
 export type UserRoleListQuery = {__typename?: 'Query'} & {
@@ -2985,7 +2868,9 @@ export type DeleteUserRoleMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type DeleteUserRoleMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUserRole'>
+export type DeleteUserRoleMutation = {__typename?: 'Mutation'} & {
+  deleteUserRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
 
 export const MutationArticle = gql`
   fragment MutationArticle on Article {
@@ -3421,8 +3306,8 @@ export const FullUser = gql`
   ${FullUserRole}
 `
 export const ArticleList = gql`
-  query ArticleList($filter: String, $after: ID, $first: Int) {
-    articles(first: $first, after: $after, filter: {title: $filter}) {
+  query ArticleList($filter: String, $cursor: ID, $take: Int) {
+    articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...ArticleRef
       }
@@ -3438,8 +3323,8 @@ export const ArticleList = gql`
   ${ArticleRef}
 `
 export const PeerArticleList = gql`
-  query PeerArticleList($filter: String, $after: ID, $first: Int) {
-    peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+  query PeerArticleList($filter: String, $cursors: String, $take: Int) {
+    peerArticles(take: $take, cursors: $cursors, filter: {title: $filter}) {
       nodes {
         peer {
           ...PeerWithProfile
@@ -3502,8 +3387,11 @@ export const UnpublishArticle = gql`
 `
 export const DeleteArticle = gql`
   mutation DeleteArticle($id: ID!) {
-    deleteArticle(id: $id)
+    deleteArticle(id: $id) {
+      ...MutationArticle
+    }
   }
+  ${MutationArticle}
 `
 export const Article = gql`
   query Article($id: ID!) {
@@ -3558,8 +3446,8 @@ export const Article = gql`
   ${FullBlock}
 `
 export const AuthorList = gql`
-  query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullAuthor
       }
@@ -3600,12 +3488,15 @@ export const UpdateAuthor = gql`
 `
 export const DeleteAuthor = gql`
   mutation DeleteAuthor($id: ID!) {
-    deleteAuthor(id: $id)
+    deleteAuthor(id: $id) {
+      ...FullAuthor
+    }
   }
+  ${FullAuthor}
 `
 export const ImageList = gql`
-  query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...ImageRef
       }
@@ -3645,8 +3536,11 @@ export const UpdateImage = gql`
 `
 export const DeleteImage = gql`
   mutation DeleteImage($id: ID!) {
-    deleteImage(id: $id)
+    deleteImage(id: $id) {
+      ...FullImage
+    }
   }
+  ${FullImage}
 `
 export const NavigationList = gql`
   query NavigationList {
@@ -3682,12 +3576,15 @@ export const UpdateNavigation = gql`
 `
 export const DeleteNavigation = gql`
   mutation DeleteNavigation($id: ID!) {
-    deleteNavigation(id: $id)
+    deleteNavigation(id: $id) {
+      ...FullNavigation
+    }
   }
+  ${FullNavigation}
 `
 export const PageList = gql`
-  query PageList($filter: String, $after: ID, $first: Int) {
-    pages(first: $first, after: $after, filter: {title: $filter}) {
+  query PageList($filter: String, $cursor: ID, $take: Int) {
+    pages(take: $take, cursor: $cursor, filter: {title: $filter}) {
       nodes {
         ...PageRef
       }
@@ -3741,8 +3638,11 @@ export const UnpublishPage = gql`
 `
 export const DeletePage = gql`
   mutation DeletePage($id: ID!) {
-    deletePage(id: $id)
+    deletePage(id: $id) {
+      ...MutationPage
+    }
   }
+  ${MutationPage}
 `
 export const Page = gql`
   query Page($id: ID!) {
@@ -3829,12 +3729,15 @@ export const UpdatePeer = gql`
 `
 export const DeletePeer = gql`
   mutation DeletePeer($id: ID!) {
-    deletePeer(id: $id)
+    deletePeer(id: $id) {
+      ...PeerRef
+    }
   }
+  ${PeerRef}
 `
 export const UserList = gql`
-  query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullUser
       }
@@ -3891,8 +3794,11 @@ export const ResetUserPassword = gql`
 `
 export const DeleteUser = gql`
   mutation DeleteUser($id: ID!) {
-    deleteUser(id: $id)
+    deleteUser(id: $id) {
+      ...FullUser
+    }
   }
+  ${FullUser}
 `
 export const CreateSession = gql`
   mutation CreateSession($email: String!, $password: String!) {
@@ -3915,8 +3821,8 @@ export const CreateSessionWithJwt = gql`
   }
 `
 export const UserRoleList = gql`
-  query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullUserRole
       }
@@ -3965,6 +3871,9 @@ export const UpdateUserRole = gql`
 `
 export const DeleteUserRole = gql`
   mutation DeleteUserRole($id: ID!) {
-    deleteUserRole(id: $id)
+    deleteUserRole(id: $id) {
+      ...FullUserRole
+    }
   }
+  ${FullUserRole}
 `

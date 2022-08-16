@@ -1,18 +1,14 @@
-import express, {Application, NextFunction, Request, Response} from 'express'
-
 import {ApolloServer} from 'apollo-server-express'
-
-import {contextFromRequest, ContextOptions} from './context'
-import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
-import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
-import {capitalizeFirstLetter, MAX_PAYLOAD_SIZE} from './utility'
-
-import {methodsToProxy, PublishableModelEvents} from './events'
-import {JobType, runJob} from './jobs'
+import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
-import TypedEmitter from 'typed-emitter'
+import {contextFromRequest, ContextOptions} from './context'
+import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
+import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
+import {JobType, runJob} from './jobs'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
+import {MAX_PAYLOAD_SIZE} from './utility'
 
 let serverLogger: pino.Logger
 
@@ -32,59 +28,17 @@ export class WepublishServer {
 
   constructor(private readonly opts: WepublishServerOpts) {
     const app = express()
-    this.opts = opts
 
-    const {dbAdapter} = opts
+    this.setupPrismaMiddlewares()
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
-
-    methodsToProxy.forEach(mtp => {
-      if (mtp.key in dbAdapter) {
-        const dbAdapterKeyTyped = mtp.key as keyof typeof dbAdapter
-        mtp.methods.forEach(method => {
-          const adapter = dbAdapter[dbAdapterKeyTyped] as Record<string, Function | any>
-          const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
-
-          if (methodName in adapter) {
-            adapter[methodName] = new Proxy(adapter[methodName], {
-              // create proxy for method
-              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
-                setImmediate(async () => {
-                  // make sure event gets executed in the next event loop
-                  try {
-                    logger('server').info('emitting event for %s', methodName)
-                    ;(mtp.eventEmitter as TypedEmitter<PublishableModelEvents<unknown>>).emit(
-                      method,
-                      await contextFromRequest(null, opts),
-                      result
-                    ) // execute event emitter
-                  } catch (error) {
-                    logger('server').error(
-                      error as Error,
-                      'error during emitting event for %s',
-                      methodName
-                    )
-                  }
-                })
-                return result // return actual result "Article, Page, User, ..."
-              }
-            })
-          } else {
-            logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
-          }
-        })
-      } else {
-        logger('server').warn('%s does not exist in dbAdapter', mtp.key)
-      }
-    })
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
       playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
-      context: ({req}) => contextFromRequest(req, opts)
+      context: ({req}) => contextFromRequest(req, this.opts)
     })
 
     const publicServer = new ApolloServer({
@@ -92,7 +46,7 @@ export class WepublishServer {
       playground: opts.playground ? {version: '1.7.27'} : false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
-      context: ({req}) => contextFromRequest(req, opts)
+      context: ({req}) => contextFromRequest(req, this.opts)
     })
 
     const corsOptions = {
@@ -116,8 +70,8 @@ export class WepublishServer {
       })
     )
 
-    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
-    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
+    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(this.opts))
+    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(this.opts))
 
     adminServer.applyMiddleware({
       app,
@@ -160,5 +114,13 @@ export class WepublishServer {
     } catch (error) {
       logger('server').error(error as Error, 'Error while running job "%s"', command)
     }
+  }
+
+  private async setupPrismaMiddlewares(): Promise<void> {
+    this.opts.prisma.$use(onFindArticle(this.opts.prisma))
+    this.opts.prisma.$use(onFindPage(this.opts.prisma))
+
+    const contextWithoutReq = await contextFromRequest(null, this.opts)
+    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }

@@ -1,27 +1,21 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  CreateAuthor,
+  Author,
   AuthorInput,
   AuthorList,
-  Author,
-  UpdateAuthor,
-  DeleteAuthor
+  CreateAuthor,
+  DeleteAuthor,
+  UpdateAuthor
 } from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -30,12 +24,12 @@ beforeAll(async () => {
 
 describe('Authors', () => {
   describe('can be created/edited/deleted:', () => {
-    let authorIds: string[] = []
-    beforeEach(async () => {
+    const authorIds: string[] = []
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'JRR Tolkien',
-        slug: `tolkien-${authorIds.length}`,
+        slug: generateRandomString(),
         links: [
           {title: 'link 1', url: 'www.link1.ch'},
           {title: 'link 2', url: 'www.link2.ch'}
@@ -65,14 +59,14 @@ describe('Authors', () => {
           input: authorInput
         }
       })
-      authorIds.unshift(res.data?.createAuthor?.id)
+      authorIds.unshift(res.data.createAuthor.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'John Grisham',
-        slug: 'john-grisham',
+        slug: generateRandomString(),
         links: [
           {title: 'link 1', url: 'www.link1.ch'},
           {title: 'link 2', url: 'www.link2.ch'}
@@ -105,11 +99,12 @@ describe('Authors', () => {
       expect(res).toMatchSnapshot({
         data: {
           createAuthor: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
-      authorIds.unshift(res.data?.createAuthor?.id)
+      authorIds.unshift(res.data.createAuthor.id)
     })
 
     test('can be read in list', async () => {
@@ -117,24 +112,11 @@ describe('Authors', () => {
       const res = await query({
         query: AuthorList,
         variables: {
-          first: 100
+          take: 100
         }
       })
-      expect(res).toMatchSnapshot({
-        data: {
-          authors: {
-            nodes: Array.from({length: authorIds.length}, () => ({
-              id: expect.any(String)
-            })),
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            },
-            totalCount: expect.any(Number)
-          }
-        }
-      })
-      expect(res.data?.authors?.totalCount).toBe(authorIds.length)
+
+      expect(res.data.authors.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -148,7 +130,8 @@ describe('Authors', () => {
       expect(res).toMatchSnapshot({
         data: {
           author: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
@@ -161,7 +144,7 @@ describe('Authors', () => {
         variables: {
           input: {
             name: 'Jane Austen',
-            slug: 'j-austen',
+            slug: generateRandomString(),
             links: [{title: 'homepage', url: 'www.j-a.com'}]
           },
           id: authorIds[0]
@@ -170,7 +153,8 @@ describe('Authors', () => {
       expect(res).toMatchSnapshot({
         data: {
           updateAuthor: {
-            id: expect.any(String)
+            id: expect.any(String),
+            slug: expect.any(String)
           }
         }
       })
@@ -186,17 +170,11 @@ describe('Authors', () => {
       })
       expect(res).toMatchSnapshot({
         data: {
-          deleteAuthor: expect.any(String)
+          deleteAuthor: expect.any(Object)
         }
       })
+      expect(res.data.deleteAuthor.id).toBe(authorIds[0])
       authorIds.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

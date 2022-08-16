@@ -37,7 +37,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     fetchPolicy: 'network-only',
     variables: {
       filter: filter,
-      first: ImagesPerPage
+      take: ImagesPerPage
     }
   })
 
@@ -68,7 +68,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
   function loadMore() {
     fetchMore({
-      variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
+      variables: {take: ImagesPerPage, skip: 1, cursor: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 

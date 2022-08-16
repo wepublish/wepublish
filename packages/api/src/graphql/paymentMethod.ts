@@ -6,12 +6,12 @@ import {
   GraphQLBoolean,
   GraphQLInputObjectType
 } from 'graphql'
-import {PaymentMethod} from '../db/paymentMethod'
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {PaymentProvider} from '../payments/paymentProvider'
 import {createProxyingResolver} from '../utility'
 import {GraphQLSlug} from './slug'
+import {PaymentMethod} from '@prisma/client'
 
 export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Context>({
   name: 'PaymentProvider',

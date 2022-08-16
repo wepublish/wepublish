@@ -1,51 +1,53 @@
 fragment FullPaymentProvider on PaymentProvider {
-    id
-    name
+  id
+  name
 }
 
 fragment FullPaymentMethod on PaymentMethod {
-    id
-    name
-    slug
-    createdAt
-    modifiedAt
-    paymentProvider {
-        ...FullPaymentProvider
-    }
-    description
-    active
+  id
+  name
+  slug
+  createdAt
+  modifiedAt
+  paymentProvider {
+    ...FullPaymentProvider
+  }
+  description
+  active
 }
 
 query PaymentProviderList {
-    paymentProviders {
-        ...FullPaymentProvider
-    }
+  paymentProviders {
+    ...FullPaymentProvider
+  }
 }
 
 query PaymentMethodList {
-    paymentMethods {
-        ...FullPaymentMethod
-    }
+  paymentMethods {
+    ...FullPaymentMethod
+  }
 }
 
 query PaymentMethod($id: ID!) {
-    paymentMethod(id: $id) {
-        ...FullPaymentMethod
-    }
+  paymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
 }
 
 mutation CreatePaymentMethod($input: PaymentMethodInput!) {
-    createPaymentMethod(input: $input) {
-        ...FullPaymentMethod
-    }
+  createPaymentMethod(input: $input) {
+    ...FullPaymentMethod
+  }
 }
 
 mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
-    updatePaymentMethod(id: $id, input: $input) {
-        ...FullPaymentMethod
-    }
+  updatePaymentMethod(id: $id, input: $input) {
+    ...FullPaymentMethod
+  }
 }
 
 mutation DeletePaymentMethod($id: ID!) {
-    deletePaymentMethod(id: $id)
+  deletePaymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
 }

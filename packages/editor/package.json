@@ -5,7 +5,7 @@
   "keywords": [
     "editor",
     "react",
-    "mongodb",
+    "postgres",
     "publishing",
     "media",
     "newspaper",
@@ -103,6 +103,7 @@
     "@types/apollo-upload-client": "^14.1.0",
     "@types/emoji-mart": "3.0.0",
     "@types/express": "^4.17.2",
+    "@types/nanoid": "^2.0.0",
     "@types/node": "^12.12.16",
     "@types/react": "^17.0.14",
     "@types/react-datepicker": "^4.1.3",

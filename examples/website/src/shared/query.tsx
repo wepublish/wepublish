@@ -38,15 +38,15 @@ export interface ListArticlesData {
 }
 
 export interface ListArticlesVariables {
-  first: number
+  take: number
   cursor?: string | null
   filter?: string[]
   authors?: string[]
 }
 
 const ArticleTagQuery = gql`
-  query ArticleTag($first: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
-    articles(first: $first, after: $cursor, filter: {tags: $filter, authors: $authors}) {
+  query ArticleTag($take: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
+    articles(take: $take, cursor: $cursor, filter: {tags: $filter, authors: $authors}) {
       pageInfo {
         startCursor
         endCursor

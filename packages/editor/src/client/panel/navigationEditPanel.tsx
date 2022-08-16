@@ -60,7 +60,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   })
 
   const {data: pageData, loading: isLoadingPageData, error: pageLoadError} = usePageListQuery({
-    variables: {first: 50},
+    variables: {take: 50},
     fetchPolicy: 'no-cache'
   })
 
@@ -69,7 +69,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     loading: isLoadingArticleData,
     error: articleLoadError
   } = useArticleListQuery({
-    variables: {first: 50},
+    variables: {take: 50},
     fetchPolicy: 'no-cache'
   })
 

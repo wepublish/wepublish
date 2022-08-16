@@ -1,23 +1,21 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CreateSession, Me, CreateSessionWithJwt} from '../api/private'
+import jwt, {SignOptions} from 'jsonwebtoken'
+import {CreateSession, CreateSessionWithJwt, Me} from '../api/private'
 import {
   CreateSession as CreateSessionPublic,
   CreateSessionWithJwt as CreateSessionWithJwtPublic
 } from '../api/public'
-import jwt, {SignOptions} from 'jsonwebtoken'
+
+import {createGraphQLTestClientWithPrisma} from '../utility'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPublic = setupClient.testClientPublic
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -36,7 +34,7 @@ describe('Sessions', () => {
           password: '123'
         }
       })
-      const session = res.data?.createSession
+      const session = res.data.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -70,7 +68,7 @@ describe('Sessions', () => {
         }
       })
 
-      const session = res.data?.createSessionWithJWT
+      const session = res.data.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -89,7 +87,7 @@ describe('Sessions', () => {
           password: '123'
         }
       })
-      const session = res.data?.createSession
+      const session = res.data.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -124,18 +122,11 @@ describe('Sessions', () => {
         }
       })
 
-      const session = res.data?.createSessionWithJWT
+      const session = res.data.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
 
     // TODO: write test for oauth auth
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

@@ -97,7 +97,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
    */
   const {data: invoicesData} = useInvoicesQuery({
     variables: {
-      first: 100,
+      take: 100,
       filter: {
         subscriptionID: id
       }
@@ -142,7 +142,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
   } = useMemberPlanListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 100
+      take: 100 // TODO: Pagination
     }
   })
 

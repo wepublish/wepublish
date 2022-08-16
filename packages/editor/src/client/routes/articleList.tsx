@@ -88,8 +88,8 @@ function ArticleList() {
 
   const articleListVariables = {
     filter: filter || undefined,
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }

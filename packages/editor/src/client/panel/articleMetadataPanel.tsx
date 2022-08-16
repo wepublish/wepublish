@@ -1,42 +1,34 @@
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import ListIcon from '@rsuite/icons/legacy/List'
+import MagicIcon from '@rsuite/icons/legacy/Magic'
+import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
-
+import {Trans, useTranslation} from 'react-i18next'
 import {
   Button,
   Drawer,
   Form,
-  TagPicker,
-  Toggle,
+  IconButton,
+  Input,
+  InputGroup,
+  Message,
   Nav,
   Panel,
-  Message,
-  InputGroup,
-  IconButton,
+  Schema,
+  TagPicker,
+  Toggle,
   Tooltip,
-  Whisper,
-  Input,
-  Schema
+  Whisper
 } from 'rsuite'
-
-import {ImagedEditPanel} from './imageEditPanel'
-import {AuthorCheckPicker} from './authorCheckPicker'
-import {ImageSelectPanel} from './imageSelectPanel'
-import {generateID, slugify} from '../utility'
 import {AuthorRefFragment, ImageRefFragment} from '../api'
-
-import {useTranslation, Trans} from 'react-i18next'
-import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ListIcon from '@rsuite/icons/legacy/List'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
-import MagicIcon from '@rsuite/icons/legacy/Magic'
 import {Textarea} from '../atoms/textarea'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
+import {MetaDataType} from '../blocks/types'
+import {generateID, slugify} from '../utility'
+import {AuthorCheckPicker} from './authorCheckPicker'
+import {ImagedEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -45,7 +37,7 @@ export interface ArticleMetadataProperty {
 }
 
 export interface ArticleMetadata {
-  readonly slug: string
+  readonly slug?: string | null
   readonly preTitle: string
   readonly title: string
   readonly lead: string
@@ -77,7 +69,12 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
+export function ArticleMetadataPanel({
+  value,
+  infoData,
+  onClose,
+  onChange
+}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -99,8 +96,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
-
-  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -217,7 +212,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</Form.ControlLabel>
               <AuthorCheckPicker
-                disabled={!isAuthorized}
                 list={socialMediaAuthors}
                 onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
               />
@@ -351,7 +345,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                   className="slug"
                   value={slug}
                   onChange={(slug: string) => onChange?.({...value, slug})}
-                  onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  onBlur={() => onChange?.({...value, slug: slug ? slugify(slug) : null})}
                 />
                 <Whisper
                   placement="top"
@@ -378,7 +372,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.authors')}</Form.ControlLabel>
               <AuthorCheckPicker
-                disabled={!isAuthorized}
                 list={authors}
                 onChange={authors => onChange?.({...value, authors})}
               />
@@ -386,7 +379,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.hideAuthors')}</Form.ControlLabel>
               <Toggle
-                disabled={!isAuthorized}
                 className="hideAuthor"
                 checked={hideAuthor}
                 onChange={hideAuthor => onChange?.({...value, hideAuthor})}
@@ -395,7 +387,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
-                disabled={!isAuthorized}
                 block
                 virtualized
                 value={tags}
@@ -407,7 +398,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.breakingNews')}</Form.ControlLabel>
               <Toggle
-                disabled={!isAuthorized}
                 className="breaking"
                 checked={breaking}
                 onChange={breaking => onChange?.({...value, breaking})}
@@ -437,11 +427,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
 
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.peering')}</Form.ControlLabel>
-              <Toggle
-                checked={shared}
-                disabled={!isAuthorized}
-                onChange={shared => onChange?.({...value, shared})}
-              />
+              <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
               <Form.HelpText>{t('articleEditor.panels.allowPeerPublishing')}</Form.HelpText>
             </Form.Group>
             <Form.ControlLabel>{t('articleEditor.panels.postImage')}</Form.ControlLabel>
@@ -470,7 +456,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group>
               <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
               <ListInput
-                disabled={!isAuthorized}
                 value={metaDataProperties}
                 onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                 defaultValue={{key: '', value: '', public: true}}>
@@ -516,7 +501,6 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
   return (
     <>
       <Form
-        disabled={!isAuthorized}
         fluid
         model={model}
         onSubmit={validationPassed => validationPassed && onClose?.()}
@@ -525,11 +509,9 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-              <Button appearance="primary" type="submit">
-                {t('articleEditor.panels.saveAndClose')}
-              </Button>
-            </PermissionControl>
+            <Button appearance="primary" type="submit">
+              {t('articleEditor.panels.saveAndClose')}
+            </Button>
           </Drawer.Actions>
         </Drawer.Header>
 
@@ -583,13 +565,3 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
     </>
   )
 }
-
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_ARTICLE',
-  'CAN_GET_ARTICLES',
-  'CAN_GET_ARTICLES',
-  'CAN_DELETE_ARTICLE',
-  'CAN_PUBLISH_ARTICLE',
-  'CAN_CREATE_ARTICLE'
-])(ArticleMetadataPanel)
-export {CheckedPermissionComponent as ArticleMetadataPanel}

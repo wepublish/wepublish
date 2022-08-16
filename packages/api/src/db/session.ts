@@ -1,5 +1,4 @@
-import {User} from './user'
-import {UserRole} from './userRole'
+import {User, UserRole} from '@prisma/client'
 
 export enum SessionType {
   User = 'user',
@@ -24,21 +23,4 @@ export interface UserSession {
   token: string
 }
 
-export type OptionalUserSession = UserSession | null
-
 export type Session = TokenSession | UserSession
-export type OptionalSession = Session | null
-
-export interface DBSessionAdapter {
-  createUserSession(user: User): Promise<OptionalUserSession>
-  getUserSessions(user: User): Promise<UserSession[]>
-
-  getSessionByID(user: User, id: string): Promise<OptionalSession>
-  getSessionByToken(token: string): Promise<OptionalSession>
-
-  // The extensions will be as long as sessionTTL inside the DBSessionAdapter
-  extendUserSessionByToken(token: string): Promise<OptionalUserSession>
-
-  deleteUserSessionByID(user: User, id: string): Promise<boolean>
-  deleteUserSessionByToken(token: string): Promise<boolean>
-}
