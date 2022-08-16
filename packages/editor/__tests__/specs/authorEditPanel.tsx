@@ -5,7 +5,7 @@ import snapshotDiff from 'snapshot-diff'
 import {AuthorDocument, CreateAuthorDocument} from '../../src/client/api'
 import {createDefaultValue} from '../../src/client/blocks/richTextBlock/richTextBlock'
 import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
-import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
 import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
@@ -149,7 +149,7 @@ describe('Author Edit Panel', () => {
           description: 'User',
           name: 'user',
           systemRole: true,
-          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_GET_AUTHOR')
+          permissions: []
         }
       ]
     }

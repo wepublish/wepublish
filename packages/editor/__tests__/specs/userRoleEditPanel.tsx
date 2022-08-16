@@ -8,7 +8,7 @@ import {
   UserRoleDocument
 } from '../../src/client/api'
 import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
 import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
@@ -252,7 +252,7 @@ describe('User Role Edit Panel', () => {
           description: 'User',
           name: 'user',
           systemRole: true,
-          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_GET_USER_ROLE')
+          permissions: []
         }
       ]
     }

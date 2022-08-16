@@ -4,7 +4,7 @@ import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 import {CreateTokenDocument} from '../../src/client/api'
 import {TokenGeneratePanel} from '../../src/client/panel/tokenGeneratePanel'
-import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
 import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
@@ -79,7 +79,7 @@ describe('Token Generate Panel', () => {
           description: 'User',
           name: 'user',
           systemRole: true,
-          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_CREATE_TOKEN')
+          permissions: []
         }
       ]
     }

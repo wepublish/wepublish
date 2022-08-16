@@ -3,7 +3,7 @@ import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
 import {CreatePeerDocument, PeerDocument} from '../../src/client/api'
 import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
-import {actWait, AllPermissions, sessionWithPermissions} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
 import snapshotDiff from 'snapshot-diff'
 import {AuthContext} from '../../src/client/authContext'
 
@@ -141,7 +141,7 @@ describe('Peer Edit Panel', () => {
           description: 'User',
           name: 'user',
           systemRole: true,
-          permissions: AllPermissions.filter(permission => permission.id !== 'CAN_GET_PEERS')
+          permissions: []
         }
       ]
     }
