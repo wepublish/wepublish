@@ -41,11 +41,7 @@ import {
   useRouteDispatch
 } from '../route'
 import {addOrUpdateOneInArray} from '../utility'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
@@ -68,8 +64,6 @@ function PeerList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPeer, setCurrentPeer] = useState<Peer>()
-
-  const isAuthorized = authorise('CAN_EDIT_PEER')
 
   const {
     data: peerInfoData,
@@ -98,8 +92,6 @@ function PeerList() {
   }, [peerInfoError, peerListError])
 
   useEffect(() => {
-    if (!isAuthorized) return
-
     switch (current?.type) {
       case RouteType.PeerProfileEdit:
         setPeerProfileEditModalOpen(true)
@@ -381,6 +373,7 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PEERS',
   'CAN_GET_PEER',
   'CAN_DELETE_PEER',
-  'CAN_CREATE_PEER'
+  'CAN_CREATE_PEER',
+  'CAN_GET_PEER_PROFILE'
 ])(PeerList)
 export {CheckedPermissionComponent as PeerList}
