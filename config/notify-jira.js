@@ -15,7 +15,7 @@ const config = {
   email: process.env.JIRA_USER_EMAIL
 }
 
-function getJireCommentBody() {
+function getJiraCommentBody() {
   const {BRANCH_NAME, PR_NUMBER} = process.env
 
   const urls = [
@@ -131,13 +131,13 @@ async function main() {
   if (oldComment?.id) {
     await axios.put(
       `${config.baseUrl}/rest/api/3/issue/${issue}/comment/${oldComment.id}`,
-      {body: getJireCommentBody()},
+      {body: getJiraCommentBody()},
       httpOptions
     )
   } else {
     await axios.post(
       `${config.baseUrl}/rest/api/3/issue/${issue}/comment`,
-      {body: getJireCommentBody()},
+      {body: getJiraCommentBody()},
       httpOptions
     )
   }
