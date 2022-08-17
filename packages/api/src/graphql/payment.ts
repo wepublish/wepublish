@@ -21,13 +21,13 @@ import {GraphQLSlug} from './slug'
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',
   values: {
-    Created: {value: PaymentState.Created},
-    Submitted: {value: PaymentState.Submitted},
-    RequiresUserAction: {value: PaymentState.RequiresUserAction},
-    Processing: {value: PaymentState.Processing},
-    Paid: {value: PaymentState.Paid},
-    Canceled: {value: PaymentState.Canceled},
-    Declined: {value: PaymentState.Declined}
+    Created: {value: PaymentState.created},
+    Submitted: {value: PaymentState.submitted},
+    RequiresUserAction: {value: PaymentState.requiresUserAction},
+    Processing: {value: PaymentState.processing},
+    Paid: {value: PaymentState.paid},
+    Canceled: {value: PaymentState.canceled},
+    Declined: {value: PaymentState.declined}
   }
 })
 
