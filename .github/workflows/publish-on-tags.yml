@@ -57,16 +57,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set RELEASE_VERSION env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - if: "contains(github.ref, 'alpha')"
         name: "Build and push alpha"
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/wepublish/wepublish:${{ github.ref_name }}
+          tags: |
+            ghcr.io/wepublish/wepublish:${{ env.RELEASE_VERSION }}
 
       - if: "!contains(github.ref, 'alpha')"
         name: "Build and push latest"
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/wepublish/wepublish:${{ github.ref_name }},ghcr.io/wepublish/wepublish:latest
+          tags: |
+            ghcr.io/wepublish/wepublish:${{ env.RELEASE_VERSION }}
+            ghcr.io/wepublish/wepublish:latest
