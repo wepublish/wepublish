@@ -61,10 +61,10 @@ jobs:
         name: "Build and push alpha"
         uses: docker/build-push-action@v2
         with:
-          tags: ghcr.io/wepublish/wepublish:{{ github.ref_name }}
+          tags: ghcr.io/wepublish/wepublish:${{ github.ref_name }}
 
       - if: "!contains(github.ref, 'alpha')"
         name: "Build and push latest"
         uses: docker/build-push-action@v2
         with:
-          tags: ghcr.io/wepublish/wepublish:{{ github.ref_name }},ghcr.io/wepublish/wepublish:latest
+          tags: ghcr.io/wepublish/wepublish:${{ github.ref_name }},ghcr.io/wepublish/wepublish:latest
