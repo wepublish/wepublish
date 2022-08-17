@@ -1,7 +1,7 @@
 export type Challenge = {
   challengeID: string
   challenge: string
-  validUntil: string
+  validUntil: Date
 }
 export type ChallengeValidationProps = {
   challengeID: string
