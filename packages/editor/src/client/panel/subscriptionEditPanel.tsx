@@ -310,7 +310,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     return (
       <Form.Group>
         <FormControlLabel>
-          {t('userSubscriptionEdit.payedUntil')}
+          {t('userSubscriptionEdit.paidUntil')}
 
           <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
             ({t('invoice.seeInvoiceHistory')})
