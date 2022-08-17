@@ -102,7 +102,7 @@ Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields
 
 Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
 
-###Restricting Content With Permission Control
+### Restricting Content With Permission Control
 
 Permission control allows for restricting Editor content dependent on the current user's role.
 

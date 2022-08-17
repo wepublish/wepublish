@@ -12,7 +12,7 @@ export function RejectionMessage({requiredPermissions}: RejectionMessageProps) {
   return (
     <>
       <Message type="error" header={t('permissions.noAccess')} showIcon>
-        {t('permissions.contactAdmin', {permissions: requiredPermissions})}
+        {t('permissions.contactAdmin', {permissions: requiredPermissions.join(', ')})}
       </Message>
     </>
   )
