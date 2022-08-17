@@ -41,7 +41,11 @@ import {
   useRouteDispatch
 } from '../route'
 import {addOrUpdateOneInArray} from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 const ListItemLink = routeLink(List.Item)
 const ButtonLink = routeLink(Button)
@@ -64,6 +68,8 @@ function PeerList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPeer, setCurrentPeer] = useState<Peer>()
+
+  const isAuthorized = authorise('CAN_EDIT_PEER')
 
   const {
     data: peerInfoData,
@@ -92,6 +98,8 @@ function PeerList() {
   }, [peerInfoError, peerListError])
 
   useEffect(() => {
+    if (!isAuthorized) return
+
     switch (current?.type) {
       case RouteType.PeerProfileEdit:
         setPeerProfileEditModalOpen(true)
@@ -192,9 +200,9 @@ function PeerList() {
 
   return (
     <>
-      <h5>{t('peerList.overview.myPeerProfile')}</h5>
-      <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
-        <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
+      <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
+        <h5>{t('peerList.overview.myPeerProfile')}</h5>
+        <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
           <NavigationBar
             centerChildren={
               <div style={{textAlign: 'center'}}>
@@ -233,8 +241,8 @@ function PeerList() {
               </PermissionControl>
             }
           />
-        </PermissionControl>
-      </div>
+        </div>
+      </PermissionControl>
 
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={24}>
@@ -244,12 +252,14 @@ function PeerList() {
           <h2>{t('peerList.overview.peers')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isPeerListLoading}
-            route={PeerCreateRoute.create({})}>
-            {t('peerList.overview.newPeer')}
-          </ButtonLink>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
+            <ButtonLink
+              appearance="primary"
+              disabled={isPeerListLoading}
+              route={PeerCreateRoute.create({})}>
+              {t('peerList.overview.newPeer')}
+            </ButtonLink>
+          </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <div style={{marginTop: '20px'}}>
