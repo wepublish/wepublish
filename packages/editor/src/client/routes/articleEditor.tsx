@@ -128,7 +128,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const articleID = id || createData?.createArticle.id
 
   const {data: articleData, refetch, loading: isLoading} = useArticleQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}

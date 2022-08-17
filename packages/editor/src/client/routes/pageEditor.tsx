@@ -92,7 +92,6 @@ export function PageEditor({id}: PageEditorProps) {
   const pageID = id || createData?.createPage.id
 
   const {data: pageData, refetch, loading: isLoading} = usePageQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
