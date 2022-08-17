@@ -44,6 +44,7 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -229,7 +230,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <Drawer.Body>
           <Panel>
             <Form.Group>
-              <Form.ControlLabel>{t('memberPlanList.name') + '*'}</Form.ControlLabel>
+              <Form.ControlLabel>{toggleRequiredLabel(t('memberPlanList.name'))}</Form.ControlLabel>
               <Form.Control
                 name="name"
                 value={name}
@@ -265,7 +266,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
             <Form.Group>
               <Form.ControlLabel>
-                {t('memberPlanList.minimumMonthlyAmount') + '*'}
+                {toggleRequiredLabel(t('memberPlanList.minimumMonthlyAmount'))}
               </Form.ControlLabel>
               <CurrencyInput
                 name="currency"
@@ -326,6 +327,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                       }))}
                       onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
                       block
+                      placement="auto"
                     />
                   </Form.Group>
                   <Form.Group>
@@ -344,6 +346,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                         })
                       }}
                       block
+                      placement="auto"
                     />
                   </Form.Group>
                 </Form>

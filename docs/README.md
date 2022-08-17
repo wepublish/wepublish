@@ -37,6 +37,7 @@
 
 * [Setup Commenting](commenting.md)
 * [Email Templates](emailtemplates.md)
+* [Releases](Releases.md)
 
 
 ## packages/editor
@@ -104,6 +105,8 @@ Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker
 
 
 ## packages/api
+### Environment Variables
+- MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, no batch maxima are considered. Possible types: `number`, any other type is being ignored.
 ### Subscriptions
 #### Receiving webhooks from payment providers such as Stripe or Payrexx
 The webhook will call `paymentProvider.updatePaymentWithIntentState()` which will create a payment.

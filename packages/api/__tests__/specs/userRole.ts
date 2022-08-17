@@ -1,29 +1,23 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {
-  UserRoleInput,
-  CreateUserRole,
-  UserRoleList,
-  UserRole,
-  UpdateUserRole,
-  DeleteUserRole,
-  PermissionList
-} from '../api/private'
 import {Permission} from '../../src'
+import {
+  CreateUserRole,
+  DeleteUserRole,
+  PermissionList,
+  UpdateUserRole,
+  UserRole,
+  UserRoleInput,
+  UserRoleList
+} from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -36,10 +30,10 @@ describe('User Roles', () => {
     let permissionsList: Permission[]
     let permissionIDs: string[]
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const input: UserRoleInput = {
-        name: `Role${ids.length}`,
+        name: generateRandomString(),
         description: 'User Role',
         permissionIDs: []
       }
@@ -49,7 +43,7 @@ describe('User Roles', () => {
           input: input
         }
       })
-      ids.unshift(res.data?.createUserRole?.id)
+      ids.unshift(res.data.createUserRole.id)
     })
 
     test('can read permission list', async () => {
@@ -59,14 +53,14 @@ describe('User Roles', () => {
       })
       expect(res).toMatchSnapshot()
 
-      permissionsList = res.data?.permissions
+      permissionsList = res.data.permissions
       permissionIDs = permissionsList.map((permission: Permission) => permission.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const input: UserRoleInput = {
-        name: `Role${ids.length}`,
+        name: generateRandomString(),
         description: 'New Role',
         permissionIDs: permissionIDs
       }
@@ -80,11 +74,12 @@ describe('User Roles', () => {
       expect(res).toMatchSnapshot({
         data: {
           createUserRole: {
-            id: expect.any(String)
+            id: expect.any(String),
+            name: expect.any(String)
           }
         }
       })
-      ids.unshift(res.data?.createUserRole?.id)
+      ids.unshift(res.data.createUserRole.id)
     })
 
     test('can be read in list', async () => {
@@ -92,24 +87,11 @@ describe('User Roles', () => {
       const res = await query({
         query: UserRoleList,
         variables: {
-          first: 100
+          take: 100
         }
       })
-      expect(res).toMatchSnapshot({
-        data: {
-          userRoles: {
-            nodes: Array.from({length: ids.length + 3}, () => ({
-              id: expect.any(String)
-            })),
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            },
-            totalCount: expect.any(Number)
-          }
-        }
-      })
-      expect(res.data?.userRoles?.totalCount).toBe(ids.length + 3)
+
+      expect(res.data.userRoles.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -123,7 +105,8 @@ describe('User Roles', () => {
       expect(res).toMatchSnapshot({
         data: {
           userRole: {
-            id: expect.any(String)
+            id: expect.any(String),
+            name: expect.any(String)
           }
         }
       })
@@ -135,17 +118,19 @@ describe('User Roles', () => {
         mutation: UpdateUserRole,
         variables: {
           input: {
-            name: 'UpdatedRole',
+            name: generateRandomString(),
             description: 'Updated Role',
             permissionIDs: [permissionIDs[0], permissionIDs[3]]
           },
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           updateUserRole: {
-            id: expect.any(String)
+            id: expect.any(String),
+            name: expect.any(String)
           }
         }
       })
@@ -159,19 +144,14 @@ describe('User Roles', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
-          deleteUserRole: expect.any(String)
+          deleteUserRole: expect.any(Object)
         }
       })
+      expect(res.data.deleteUserRole.id).toBe(ids[0])
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

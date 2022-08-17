@@ -78,9 +78,9 @@ export function AuthorList() {
 
   const authorListQueryVariables = {
     filter: filter || undefined,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
-    first: limit,
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 

@@ -8,8 +8,8 @@ import {
   SendMailProps,
   WebhookForSendMailProps
 } from './mailProvider'
-import {MailLogState} from '../db/mailLog'
 import {logger} from '../server'
+import {MailLogState} from '@prisma/client'
 
 export interface MailchimpMailProviderProps extends MailProviderProps {
   readonly apiKey: string
@@ -27,14 +27,14 @@ interface VerifyWebhookSignatureProps {
 function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   switch (event) {
     case 'send':
-      return MailLogState.Delivered
+      return MailLogState.delivered
     case 'deferral':
-      return MailLogState.Deferred
+      return MailLogState.deferred
     case 'hard_bounce':
     case 'soft_bounce':
-      return MailLogState.Bounced
+      return MailLogState.bounced
     case 'reject':
-      return MailLogState.Rejected
+      return MailLogState.rejected
     default:
       return null
   }

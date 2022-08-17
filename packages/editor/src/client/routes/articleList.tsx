@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
+import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink, useRouteDispatch} from '../route'
 
 import {
   useArticleListQuery,
@@ -42,6 +42,7 @@ import TrashIcon from '@rsuite/icons/legacy/Trash'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -82,10 +83,12 @@ export function ArticleList() {
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
+  const dispatch = useRouteDispatch()
+
   const articleListVariables = {
     filter: filter || undefined,
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
@@ -117,6 +120,7 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
+
   return (
     <>
       <FlexboxGrid>
@@ -429,28 +433,30 @@ export function ArticleList() {
                   duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
+                      refetch(articleListVariables)
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         variables: articleListVariables
                       })
 
                       if (!query) return
-
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
                           articles: {
-                            ...query.articles,
-                            nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id
-                            )
+                            ...query.articles
                           }
                         },
                         variables: articleListVariables
                       })
                     }
                   }).then(output => {
-                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) {
+                      dispatch({
+                        type: RouteActionType.ReplaceRoute,
+                        route: ArticleEditRoute.create({id: output.data?.duplicateArticle.id})
+                      })
+                    }
                   })
                   break
               }

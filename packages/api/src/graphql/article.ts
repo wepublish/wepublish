@@ -30,6 +30,7 @@ import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment'
 import {SessionType} from '../db/session'
+import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -73,7 +74,7 @@ export const GraphQLPublicArticleSort = new GraphQLEnumType({
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
   fields: {
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: GraphQLSlug},
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -118,10 +119,10 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
 
     preTitle: {type: GraphQLString},
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
@@ -226,13 +227,11 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
     },
     peeredArticleURL: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver(
-        async ({peerID, article}, {}, {loaders, dbAdapter, urlAdapter}) => {
-          const peer = await loaders.peer.load(peerID)
-          if (!peer || !article) return ''
-          return urlAdapter.getPeeredArticleURL(peer, article)
-        }
-      )
+      resolve: createProxyingResolver(async ({peerID, article}, {}, {loaders, urlAdapter}) => {
+        const peer = await loaders.peer.load(peerID)
+        if (!peer || !article) return ''
+        return urlAdapter.getPeeredArticleURL(peer, article)
+      })
     },
     article: {type: GraphQLNonNull(GraphQLArticle)}
   }
@@ -325,15 +324,15 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     comments: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
-      resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
-        // if session exists, should get user's un-approved comments as well
-        // if not we should get approved ones
-        const userSession = session?.type === SessionType.User ? authenticateUser() : null
-        return await dbAdapter.comment.getPublicCommentsForItemByID({
-          id,
-          userID: userSession?.user?.id
-        })
-      })
+      resolve: createProxyingResolver(
+        async ({id}, _, {session, authenticateUser, prisma: {comment}}) => {
+          // if session exists, should get user's un-approved comments as well
+          // if not we should get approved ones
+          const userSession = session?.type === SessionType.User ? authenticateUser() : null
+
+          return getPublicCommentsForItemById(id, userSession?.user?.id ?? null, comment)
+        }
+      )
     }
   }
 })

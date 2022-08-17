@@ -8,8 +8,8 @@ import {
   WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
-import {PaymentState} from '../db/payment'
 import {logger} from '../server'
+import {PaymentState} from '@prisma/client'
 
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -25,13 +25,13 @@ function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
     case 'requires_payment_method':
     case 'requires_confirmation':
     case 'requires_action':
-      return PaymentState.RequiresUserAction
+      return PaymentState.requiresUserAction
     case 'processing':
-      return PaymentState.Processing
+      return PaymentState.processing
     case 'succeeded':
-      return PaymentState.Paid
+      return PaymentState.paid
     case 'canceled':
-      return PaymentState.Canceled
+      return PaymentState.canceled
     default:
       return null
   }
@@ -77,6 +77,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     const state = mapStripeEventToPaymentStatue(intent.status)
     if (state !== null && intent.metadata.paymentID !== undefined) {
       let customerID
+
       if (
         intent.setup_future_usage === 'off_session' &&
         intent.customer === null &&
@@ -86,6 +87,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       } else {
         customerID = intent.customer as string
       }
+
       intentStates.push({
         paymentID: intent.metadata.paymentID,
         paymentData: JSON.stringify(intent),
@@ -103,6 +105,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     paymentID
   }: CreatePaymentIntentProps): Promise<Intent> {
     let paymentMethodID: string | null = null
+
     if (customerID) {
       // For an off_session payment the default_payment_method or the default_source of the customer will be used.
       // If both are available the default_payment_method will be used.
@@ -165,7 +168,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
         intent = {
           id: 'unknown_error',
           error,
-          state: PaymentState.RequiresUserAction
+          state: PaymentState.requiresUserAction
         }
         errorCode = 'unknown_error'
       }
@@ -182,7 +185,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      state: state ?? PaymentState.Submitted,
+      state: state ?? PaymentState.submitted,
       errorCode
     }
   }

@@ -51,6 +51,7 @@ export enum RouteType {
   TokenGenerate = 'tokenGenerate',
 
   UserList = 'userList',
+  UserEditView = 'userEditView',
   UserEdit = 'userEdit',
   UserCreate = 'userCreate',
 
@@ -74,7 +75,9 @@ export enum RouteType {
   PaymentMethodEdit = 'paymentMethodEdit',
   PaymentMethodCreate = 'paymentMethodCreate',
 
-  PeerArticleList = 'peerArticleList'
+  PeerArticleList = 'peerArticleList',
+
+  SettingList = 'settingList'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -131,7 +134,10 @@ export const TokenListRoute = route(RouteType.TokenList, routePath`/tokens`)
 export const TokenGenerateRoute = route(RouteType.TokenGenerate, routePath`/tokens/generate`)
 
 export const UserListRoute = route(RouteType.UserList, routePath`/users`)
-export const UserEditRoute = route(RouteType.UserEdit, routePath`/user/edit/${required('id')}`)
+export const UserEditViewRoute = route(
+  RouteType.UserEditView,
+  routePath`/users/edit/${required('id')}`
+)
 export const UserCreateRoute = route(RouteType.UserCreate, routePath`/user/create`)
 
 export const SubscriptionListRoute = route(RouteType.SubscriptionList, routePath`/subscriptions`)
@@ -171,6 +177,8 @@ export const PaymentMethodCreateRoute = route(
   routePath`/paymentmethod/create`
 )
 
+export const SettingListRoute = route(RouteType.SettingList, routePath`/settings`)
+
 export const PeerArticleListRoute = route(RouteType.PeerArticleList, routePath`/peerarticles`)
 
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`)
@@ -204,7 +212,7 @@ export const routes = [
   TokenListRoute,
   TokenGenerateRoute,
   UserListRoute,
-  UserEditRoute,
+  UserEditViewRoute,
   UserCreateRoute,
   SubscriptionListRoute,
   SubscriptionEditRoute,
@@ -219,6 +227,7 @@ export const routes = [
   PaymentMethodEditRoute,
   PaymentMethodCreateRoute,
   PeerArticleListRoute,
+  SettingListRoute,
   NotFoundRoute
 ] as const
 

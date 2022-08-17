@@ -13,7 +13,7 @@ export function UserCheckPicker({list, onChange}: UserCheckPickerProps) {
   const [foundUsers, setFoundUsers] = useState<FullUserFragment[]>([])
   const [usersFilter, setUsersFilter] = useState('')
 
-  const usersVariables = {filter: usersFilter || undefined, first: 10}
+  const usersVariables = {filter: usersFilter || undefined, take: 10}
   const {data} = useUserListQuery({
     variables: usersVariables,
     fetchPolicy: 'network-only'

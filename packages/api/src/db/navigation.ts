@@ -1,3 +1,5 @@
+import {Navigation, NavigationLink as PrismaNavigationLink} from '@prisma/client'
+
 export enum NavigationLinkType {
   Page = 'page',
   Article = 'article',
@@ -25,39 +27,6 @@ export interface ExternalNavigationLink extends BaseNavigationLink {
 
 export type NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
 
-export interface Navigation {
-  id: string
-  key: string
-  name: string
-  links: NavigationLink[]
-}
-export type OptionalNavigation = Navigation | null
-
-export interface NavigationInput {
-  key: string
-  name: string
-  links: NavigationLink[]
-}
-
-export interface DeleteNavigationArgs {
-  id: string
-}
-
-export interface UpdateNavigationArgs {
-  id: string
-  input: NavigationInput
-}
-
-export interface CreateNavigationArgs {
-  input: NavigationInput
-}
-
-export interface DBNavigationAdapter {
-  createNavigation(args: CreateNavigationArgs): Promise<Navigation>
-  updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
-  deleteNavigation(args: DeleteNavigationArgs): Promise<string | null>
-
-  getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]>
-  getNavigationsByKey(key: readonly string[]): Promise<OptionalNavigation[]>
-  getNavigations(): Promise<Navigation[]>
+export type NavigationWithLinks = Navigation & {
+  links: PrismaNavigationLink[]
 }

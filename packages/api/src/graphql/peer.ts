@@ -7,13 +7,14 @@ import {
   GraphQLBoolean
 } from 'graphql'
 
-import {Peer, PeerProfile} from '../db/peer'
+import {PeerProfile} from '../db/peer'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
 import {GraphQLRichText} from './richText'
+import {Peer} from '@prisma/client'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -102,8 +103,9 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
           fieldName: 'peerProfile',
           info
         })
+
         // TODO: Improve error handling for invalid tokens WPC-298
-        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
+        return peerProfile?.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }

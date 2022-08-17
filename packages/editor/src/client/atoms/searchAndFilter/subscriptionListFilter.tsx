@@ -59,7 +59,7 @@ export function SubscriptionListFilter({
   } = useMemberPlanListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 200
+      take: 200
     }
   })
 

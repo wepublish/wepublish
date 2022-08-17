@@ -1,4 +1,10 @@
 import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentRejectionReason,
+  CommentState
+} from '@prisma/client'
+import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLID,
@@ -10,17 +16,10 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
-import {
-  CommentAuthorType,
-  CommentItemType,
-  CommentRejectionReason,
-  CommentRevision,
-  CommentState,
-  PublicComment,
-  Comment,
-  CommentSort
-} from '../db/comment'
+import {CommentRevision, PublicComment, Comment, CommentSort} from '../db/comment'
+import {unselectPassword} from '../db/user'
 import {createProxyingResolver} from '../utility'
+import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
 import {GraphQLPublicUser, GraphQLUser} from './user'
@@ -28,35 +27,35 @@ import {GraphQLPublicUser, GraphQLUser} from './user'
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
   values: {
-    Approved: {value: CommentState.Approved},
-    PendingApproval: {value: CommentState.PendingApproval},
-    PendingUserChanges: {value: CommentState.PendingUserChanges},
-    Rejected: {value: CommentState.Rejected}
+    Approved: {value: CommentState.approved},
+    PendingApproval: {value: CommentState.pendingApproval},
+    PendingUserChanges: {value: CommentState.pendingUserChanges},
+    Rejected: {value: CommentState.rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    Misconduct: {value: CommentRejectionReason.Misconduct},
-    Spam: {value: CommentRejectionReason.Spam}
+    Misconduct: {value: CommentRejectionReason.misconduct},
+    Spam: {value: CommentRejectionReason.spam}
   }
 })
 
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Author: {value: CommentAuthorType.Author},
-    Team: {value: CommentAuthorType.Team},
-    VerifiedUser: {value: CommentAuthorType.VerifiedUser}
+    Author: {value: CommentAuthorType.author},
+    Team: {value: CommentAuthorType.team},
+    VerifiedUser: {value: CommentAuthorType.verifiedUser}
   }
 })
 
 export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
-    Article: {value: CommentItemType.Article},
-    Page: {value: CommentItemType.Page}
+    Article: {value: CommentItemType.article},
+    Page: {value: CommentItemType.page}
   }
 })
 
@@ -71,7 +70,7 @@ export const GraphQLCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    state: {type: GraphQLCommentState}
+    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
   }
 })
 
@@ -140,10 +139,16 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLUser,
-      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        if (userID) return dbAdapter.user.getUserByID(userID)
-        return null
-      })
+      resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
+        userID
+          ? user.findUnique({
+              where: {
+                id: userID
+              },
+              select: unselectPassword
+            })
+          : null
+      )
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
     itemID: {type: GraphQLNonNull(GraphQLID)},
@@ -152,10 +157,15 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     parentComment: {
       type: GraphQLComment,
-      resolve: createProxyingResolver(({parentID}, _, {dbAdapter}) => {
-        if (parentID) return dbAdapter.comment.getCommentById(parentID)
-        return null
-      })
+      resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
+        parentID
+          ? comment.findUnique({
+              where: {
+                id: parentID
+              }
+            })
+          : null
+      )
     },
     revisions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
@@ -178,10 +188,16 @@ export const GraphQLPublicComment: GraphQLObjectType<
     guestUsername: {type: GraphQLString},
     user: {
       type: GraphQLPublicUser,
-      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
-        if (userID) return dbAdapter.user.getUserByID(userID)
-        return null
-      })
+      resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
+        userID
+          ? user.findUnique({
+              where: {
+                id: userID
+              },
+              select: unselectPassword
+            })
+          : null
+      )
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
@@ -192,9 +208,9 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     children: {
       type: GraphQLList(GraphQLPublicComment),
-      resolve: createProxyingResolver(({id, userID}, _, {dbAdapter}) => {
-        return dbAdapter.comment.getPublicChildrenCommentsByParentId(id, userID)
-      })
+      resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
+        getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
+      )
     },
 
     text: {type: GraphQLNonNull(GraphQLRichText)},

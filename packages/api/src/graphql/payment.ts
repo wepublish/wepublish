@@ -1,18 +1,19 @@
-import {Context} from '../context'
+import {Payment, PaymentState} from '@prisma/client'
 import {
+  GraphQLEnumType,
   GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLInputObjectType,
-  GraphQLEnumType
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
+import {PaymentSort} from '../db/payment'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
-import {Payment, PaymentSort, PaymentState} from '../db/payment'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSlug} from './slug'

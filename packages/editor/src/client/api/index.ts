@@ -22,8 +22,15 @@ export type Scalars = {
   Slug: string;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
+  Value: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
+  boolChoice?: Maybe<Scalars['Boolean']>;
 };
 
 export type Article = {
@@ -55,7 +62,7 @@ export type ArticleFilter = {
 };
 
 export type ArticleInput = {
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['Slug']>;
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
@@ -95,10 +102,10 @@ export type ArticleRevision = {
   publishedAt?: Maybe<Scalars['DateTime']>;
   hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   seoTitle?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
@@ -279,7 +286,7 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
-  state?: Maybe<CommentState>;
+  states?: Maybe<Array<CommentState>>;
 };
 
 export enum CommentItemType {
@@ -588,7 +595,6 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
-  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
 };
@@ -598,6 +604,12 @@ export enum InvoiceSort {
   ModifiedAt = 'MODIFIED_AT',
   PaidAt = 'PAID_AT'
 }
+
+export type JwtToken = {
+  __typename?: 'JWTToken';
+  token: Scalars['String'];
+  expiresAt: Scalars['String'];
+};
 
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
@@ -697,7 +709,7 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
-  deletePeer?: Maybe<Scalars['ID']>;
+  deletePeer?: Maybe<Peer>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -707,51 +719,52 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   createToken: CreatedToken;
-  deleteToken?: Maybe<Scalars['String']>;
+  deleteToken?: Maybe<CreatedToken>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
   resetUserPassword?: Maybe<User>;
-  deleteUser?: Maybe<Scalars['String']>;
+  deleteUser?: Maybe<User>;
   createSubscription?: Maybe<Subscription>;
   updateSubscription?: Maybe<Subscription>;
-  deleteSubscription?: Maybe<Scalars['String']>;
+  deleteSubscription?: Maybe<Subscription>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
-  deleteUserRole?: Maybe<Scalars['String']>;
+  deleteUserRole?: Maybe<UserRole>;
   createNavigation?: Maybe<Navigation>;
   updateNavigation?: Maybe<Navigation>;
-  deleteNavigation?: Maybe<Scalars['ID']>;
+  deleteNavigation?: Maybe<Navigation>;
   createAuthor?: Maybe<Author>;
   updateAuthor?: Maybe<Author>;
-  deleteAuthor?: Maybe<Scalars['ID']>;
+  deleteAuthor?: Maybe<Author>;
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
-  deleteImage?: Maybe<Scalars['Boolean']>;
+  deleteImage?: Maybe<Image>;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
-  deleteArticle?: Maybe<Scalars['Boolean']>;
+  deleteArticle?: Maybe<Article>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
   duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
-  deletePage?: Maybe<Scalars['Boolean']>;
+  deletePage?: Maybe<Page>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
   duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<Scalars['ID']>;
+  deleteMemberPlan?: Maybe<MemberPlan>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<Scalars['ID']>;
+  deletePaymentMethod?: Maybe<PaymentMethod>;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
-  deleteInvoice?: Maybe<Scalars['ID']>;
+  deleteInvoice?: Maybe<Invoice>;
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
 };
 
 
@@ -1061,6 +1074,11 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason;
 };
 
+
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -1107,14 +1125,6 @@ export type PageConnection = {
   nodes: Array<Page>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
-};
-
-export type PageFilter = {
-  title?: Maybe<Scalars['String']>;
-  draft?: Maybe<Scalars['Boolean']>;
-  published?: Maybe<Scalars['Boolean']>;
-  pending?: Maybe<Scalars['Boolean']>;
-  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type PageInfo = {
@@ -1394,6 +1404,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query';
   remotePeerProfile?: Maybe<PeerProfile>;
+  createJWTForUser?: Maybe<JwtToken>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1433,12 +1444,20 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
 };
 
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+
+export type QueryCreateJwtForUserArgs = {
+  userId: Scalars['String'];
+  expiresInMinutes: Scalars['Int'];
 };
 
 
@@ -1458,10 +1477,8 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserFilter>;
   sort?: Maybe<UserSort>;
@@ -1475,10 +1492,8 @@ export type QuerySubscriptionArgs = {
 
 
 export type QuerySubscriptionsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<SubscriptionFilter>;
   sort?: Maybe<SubscriptionSort>;
@@ -1497,10 +1512,9 @@ export type QueryUserRoleArgs = {
 
 
 export type QueryUserRolesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserRoleFilter>;
   sort?: Maybe<UserRoleSort>;
   order?: Maybe<SortOrder>;
@@ -1520,10 +1534,8 @@ export type QueryAuthorArgs = {
 
 
 export type QueryAuthorsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<AuthorFilter>;
   sort?: Maybe<AuthorSort>;
@@ -1537,10 +1549,8 @@ export type QueryImageArgs = {
 
 
 export type QueryImagesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
@@ -1549,10 +1559,8 @@ export type QueryImagesArgs = {
 
 
 export type QueryCommentsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<CommentFilter>;
   sort?: Maybe<CommentSort>;
@@ -1566,10 +1574,8 @@ export type QueryArticleArgs = {
 
 
 export type QueryArticlesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
@@ -1584,14 +1590,12 @@ export type QueryPeerArticleArgs = {
 
 
 export type QueryPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
+  cursors?: Maybe<Scalars['String']>;
+  take?: Maybe<Scalars['Int']>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
   peerFilter?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
 };
 
 
@@ -1607,12 +1611,10 @@ export type QueryPageArgs = {
 
 
 export type QueryPagesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PageFilter>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -1631,10 +1633,9 @@ export type QueryMemberPlanArgs = {
 
 
 export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<MemberPlanFilter>;
   sort?: Maybe<MemberPlanSort>;
   order?: Maybe<SortOrder>;
@@ -1652,10 +1653,9 @@ export type QueryInvoiceArgs = {
 
 
 export type QueryInvoicesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<InvoiceFilter>;
   sort?: Maybe<InvoiceSort>;
   order?: Maybe<SortOrder>;
@@ -1668,13 +1668,17 @@ export type QueryPaymentArgs = {
 
 
 export type QueryPaymentsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<PaymentFilter>;
   sort?: Maybe<PaymentSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QuerySettingArgs = {
+  name?: Maybe<Scalars['String']>;
 };
 
 export type QuoteBlock = {
@@ -1713,6 +1717,31 @@ export type SessionWithToken = {
   token: Scalars['String'];
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  value: Scalars['Value'];
+  settingRestriction?: Maybe<SettingRestriction>;
+};
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']>;
+  allowedValues?: Maybe<AllowedSettingVals>;
 };
 
 
@@ -1800,6 +1829,17 @@ export type SubscriptionInput = {
   paymentMethodID: Scalars['String'];
   properties: Array<PropertiesInput>;
   deactivation?: Maybe<SubscriptionDeactivationInput>;
+};
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  startsAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
 };
 
 export enum SubscriptionSort {
@@ -1911,6 +1951,11 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type UpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['Value'];
+};
+
 
 export type UploadImageInput = {
   file: Scalars['Upload'];
@@ -1941,25 +1986,26 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
+  subscriptions: Array<UserSubscription>;
 };
 
 export type UserAddress = {
   __typename?: 'UserAddress';
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -2024,6 +2070,24 @@ export enum UserSort {
   FirstName = 'FIRST_NAME'
 }
 
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  periods: Array<SubscriptionPeriod>;
+  memberPlan: MemberPlan;
+  invoices: Array<Invoice>;
+};
+
+
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
   videoID: Scalars['String'];
@@ -2087,10 +2151,8 @@ export type ArticleRefFragment = (
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<ArticleSort>;
@@ -2113,12 +2175,8 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
-  filter?: Maybe<ArticleFilter>;
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
+  cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<ArticleSort>;
 }>;
@@ -2209,7 +2267,10 @@ export type DeleteArticleMutationVariables = Exact<{
 
 export type DeleteArticleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteArticle'>
+  & { deleteArticle?: Maybe<(
+    { __typename?: 'Article' }
+    & MutationArticleFragment
+  )> }
 );
 
 export type DuplicateArticleMutationVariables = Exact<{
@@ -2438,10 +2499,8 @@ export type FullAuthorFragment = (
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<AuthorSort>;
@@ -2510,7 +2569,10 @@ export type DeleteAuthorMutationVariables = Exact<{
 
 export type DeleteAuthorMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteAuthor'>
+  & { deleteAuthor?: Maybe<(
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  )> }
 );
 
 type FullTeaser_ArticleTeaser_Fragment = (
@@ -2731,10 +2793,9 @@ export type FullCommentFragment = (
 );
 
 export type CommentListQueryVariables = Exact<{
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<CommentSort>;
@@ -2831,10 +2892,8 @@ export type FullImageFragment = (
 
 export type ImageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
 }>;
 
@@ -2901,7 +2960,10 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteImage'>
+  & { deleteImage?: Maybe<(
+    { __typename?: 'Image' }
+    & FullImageFragment
+  )> }
 );
 
 export type InvoiceFragment = (
@@ -2914,10 +2976,9 @@ export type InvoiceFragment = (
 );
 
 export type InvoicesQueryVariables = Exact<{
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<InvoiceFilter>;
   sort?: Maybe<InvoiceSort>;
   order?: Maybe<SortOrder>;
@@ -2955,7 +3016,7 @@ export type UpdateInvoiceMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
+  & Pick<MemberPlan, 'id' | 'name' | 'description' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2964,7 +3025,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -2978,10 +3039,9 @@ export type FullMemberPlanFragment = (
 
 export type MemberPlanListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -3047,7 +3107,10 @@ export type DeleteMemberPlanMutationVariables = Exact<{
 
 export type DeleteMemberPlanMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteMemberPlan'>
+  & { deleteMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
 );
 
 export type FullNavigationFragment = (
@@ -3131,7 +3194,10 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 export type DeleteNavigationMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteNavigation'>
+  & { deleteNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
 );
 
 export type MutationPageFragment = (
@@ -3176,10 +3242,8 @@ export type PageRefFragment = (
 
 export type PageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<PageSort>;
@@ -3264,7 +3328,10 @@ export type DeletePageMutationVariables = Exact<{
 
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePage'>
+  & { deletePage?: Maybe<(
+    { __typename?: 'Page' }
+    & MutationPageFragment
+  )> }
 );
 
 export type DuplicatePageMutationVariables = Exact<{
@@ -3470,7 +3537,10 @@ export type DeletePaymentMethodMutationVariables = Exact<{
 
 export type DeletePaymentMethodMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePaymentMethod'>
+  & { deletePaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
 );
 
 export type FullPeerProfileFragment = (
@@ -3599,7 +3669,51 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePeer'>
+  & { deletePeer?: Maybe<(
+    { __typename?: 'Peer' }
+    & PeerRefFragment
+  )> }
+);
+
+export type FullSettingFragment = (
+  { __typename?: 'Setting' }
+  & Pick<Setting, 'id' | 'name' | 'value'>
+  & { settingRestriction?: Maybe<(
+    { __typename?: 'SettingRestriction' }
+    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+  )> }
+);
+
+export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingListQuery = (
+  { __typename?: 'Query' }
+  & { settings: Array<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'id' | 'name' | 'value'>
+    & { settingRestriction?: Maybe<(
+      { __typename?: 'SettingRestriction' }
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+      & { allowedValues?: Maybe<(
+        { __typename?: 'AllowedSettingVals' }
+        & Pick<AllowedSettingVals, 'stringChoice' | 'boolChoice'>
+      )> }
+    )> }
+  )> }
+);
+
+export type UpdateSettingListMutationVariables = Exact<{
+  input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
+}>;
+
+
+export type UpdateSettingListMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSettingList?: Maybe<Array<Maybe<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'value'>
+  )>>> }
 );
 
 export type FullSubscriptionFragment = (
@@ -3630,10 +3744,8 @@ export type DeactivationFragment = (
 
 export type SubscriptionListQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<SubscriptionSort>;
@@ -3712,7 +3824,10 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteSubscription'>
+  & { deleteSubscription?: Maybe<(
+    { __typename?: 'Subscription' }
+    & FullSubscriptionFragment
+  )> }
 );
 
 export type TokenRefFragment = (
@@ -3751,7 +3866,10 @@ export type DeleteTokenMutationVariables = Exact<{
 
 export type DeleteTokenMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteToken'>
+  & { deleteToken?: Maybe<(
+    { __typename?: 'CreatedToken' }
+    & Pick<CreatedToken, 'id' | 'name' | 'token'>
+  )> }
 );
 
 export type FullUserFragment = (
@@ -3766,15 +3884,37 @@ export type FullUserFragment = (
   )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
+  )>, subscriptions: Array<(
+    { __typename?: 'UserSubscription' }
+    & UserSubscriptionFragment
+  )> }
+);
+
+export type UserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
+  & { periods: Array<(
+    { __typename?: 'SubscriptionPeriod' }
+    & Pick<SubscriptionPeriod, 'id' | 'amount' | 'createdAt' | 'endsAt' | 'invoiceID' | 'paymentPeriodicity' | 'startsAt'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, deactivation?: Maybe<(
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  )>, memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & MemberPlanRefFragment
+  ), invoices: Array<(
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
   )> }
 );
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<UserSort>;
@@ -3869,7 +4009,10 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUser'>
+  & { deleteUser?: Maybe<(
+    { __typename?: 'User' }
+    & FullUserFragment
+  )> }
 );
 
 export type SendWebsiteLoginMutationVariables = Exact<{
@@ -3898,10 +4041,9 @@ export type FullUserRoleFragment = (
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -3978,7 +4120,10 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUserRole'>
+  & { deleteUserRole?: Maybe<(
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  )> }
 );
 
 export const MutationArticleFragmentDoc = gql`
@@ -4336,6 +4481,83 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  modifiedAt
+  createdAt
+}
+    `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -4364,8 +4586,12 @@ export const FullUserFragmentDoc = gql`
   roles {
     ...FullUserRole
   }
+  subscriptions {
+    ...UserSubscription
+  }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${UserSubscriptionFragmentDoc}`;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4434,27 +4660,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  modifiedAt
-  createdAt
-}
-    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -4508,6 +4713,18 @@ export const MutationPageFragmentDoc = gql`
   }
 }
     `;
+export const FullSettingFragmentDoc = gql`
+    fragment FullSetting on Setting {
+  id
+  name
+  value
+  settingRestriction {
+    maxValue
+    minValue
+    inputLength
+  }
+}
+    `;
 export const FullPaymentProviderFragmentDoc = gql`
     fragment FullPaymentProvider on PaymentProvider {
   id
@@ -4528,21 +4745,8 @@ export const FullPaymentMethodFragmentDoc = gql`
   active
 }
     ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
-  description
   tags
   amountPerMonthMin
   availablePaymentMethods {
@@ -4561,12 +4765,6 @@ export const MetadataPropertyFragmentDoc = gql`
   key
   value
   public
-}
-    `;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
 }
     `;
 export const FullSubscriptionFragmentDoc = gql`
@@ -4607,8 +4805,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -4636,10 +4834,8 @@ export const ArticleListDocument = gql`
  * const { data, loading, error } = useArticleListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -4658,8 +4854,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $after: ID, $first: Int, $peerFilter: String, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(first: $first, after: $after, filter: $filter, peerFilter: $peerFilter, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -4691,12 +4887,8 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
- *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      first: // value for 'first'
+ *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
- *      last: // value for 'last'
- *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
  *   },
@@ -4851,9 +5043,11 @@ export type UnpublishArticleMutationResult = Apollo.MutationResult<UnpublishArti
 export type UnpublishArticleMutationOptions = Apollo.BaseMutationOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
 export const DeleteArticleDocument = gql`
     mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id)
+  deleteArticle(id: $id) {
+    ...MutationArticle
+  }
 }
-    `;
+    ${MutationArticleFragmentDoc}`;
 export type DeleteArticleMutationFn = Apollo.MutationFunction<DeleteArticleMutation, DeleteArticleMutationVariables>;
 
 /**
@@ -5191,8 +5385,8 @@ export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreate
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
-    query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
-  authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
+  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullAuthor
     }
@@ -5220,10 +5414,8 @@ export const AuthorListDocument = gql`
  * const { data, loading, error } = useAuthorListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -5345,9 +5537,11 @@ export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutat
 export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 export const DeleteAuthorDocument = gql`
     mutation DeleteAuthor($id: ID!) {
-  deleteAuthor(id: $id)
+  deleteAuthor(id: $id) {
+    ...FullAuthor
+  }
 }
-    `;
+    ${FullAuthorFragmentDoc}`;
 export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 
 /**
@@ -5375,8 +5569,8 @@ export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMu
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const CommentListDocument = gql`
-    query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
-  comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullComment
     }
@@ -5403,10 +5597,9 @@ export const CommentListDocument = gql`
  * @example
  * const { data, loading, error } = useCommentListQuery({
  *   variables: {
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -5528,8 +5721,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ImageListDocument = gql`
-    query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int) {
-  images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip) {
+    query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...ImageRef
     }
@@ -5557,10 +5750,8 @@ export const ImageListDocument = gql`
  * const { data, loading, error } = useImageListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *   },
  * });
@@ -5680,9 +5871,11 @@ export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutatio
 export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
 export const DeleteImageDocument = gql`
     mutation DeleteImage($id: ID!) {
-  deleteImage(id: $id)
+  deleteImage(id: $id) {
+    ...FullImage
+  }
 }
-    `;
+    ${FullImageFragmentDoc}`;
 export type DeleteImageMutationFn = Apollo.MutationFunction<DeleteImageMutation, DeleteImageMutationVariables>;
 
 /**
@@ -5710,8 +5903,8 @@ export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMuta
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
-    query Invoices($after: ID, $before: ID, $first: Int, $last: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
-  invoices(after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, order: $order) {
+    query Invoices($cursor: ID, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
+  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
     nodes {
       ...Invoice
     }
@@ -5736,10 +5929,9 @@ ${PageInfoFragmentDoc}`;
  * @example
  * const { data, loading, error } = useInvoicesQuery({
  *   variables: {
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *      filter: // value for 'filter'
  *      sort: // value for 'sort'
  *      order: // value for 'order'
@@ -5792,8 +5984,8 @@ export type UpdateInvoiceMutationHookResult = ReturnType<typeof useUpdateInvoice
 export type UpdateInvoiceMutationResult = Apollo.MutationResult<UpdateInvoiceMutation>;
 export type UpdateInvoiceMutationOptions = Apollo.BaseMutationOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
 export const MemberPlanListDocument = gql`
-    query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullMemberPlan
     }
@@ -5821,10 +6013,9 @@ export const MemberPlanListDocument = gql`
  * const { data, loading, error } = useMemberPlanListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -5943,9 +6134,11 @@ export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberP
 export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
 export const DeleteMemberPlanDocument = gql`
     mutation DeleteMemberPlan($id: ID!) {
-  deleteMemberPlan(id: $id)
+  deleteMemberPlan(id: $id) {
+    ...FullMemberPlan
+  }
 }
-    `;
+    ${FullMemberPlanFragmentDoc}`;
 export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 
 /**
@@ -6110,9 +6303,11 @@ export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigat
 export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
 export const DeleteNavigationDocument = gql`
     mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id)
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
 }
-    `;
+    ${FullNavigationFragmentDoc}`;
 export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 
 /**
@@ -6140,8 +6335,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }
@@ -6169,10 +6364,8 @@ export const PageListDocument = gql`
  * const { data, loading, error } = usePageListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -6328,9 +6521,11 @@ export type UnpublishPageMutationResult = Apollo.MutationResult<UnpublishPageMut
 export type UnpublishPageMutationOptions = Apollo.BaseMutationOptions<UnpublishPageMutation, UnpublishPageMutationVariables>;
 export const DeletePageDocument = gql`
     mutation DeletePage($id: ID!) {
-  deletePage(id: $id)
+  deletePage(id: $id) {
+    ...MutationPage
+  }
 }
-    `;
+    ${MutationPageFragmentDoc}`;
 export type DeletePageMutationFn = Apollo.MutationFunction<DeletePageMutation, DeletePageMutationVariables>;
 
 /**
@@ -6669,9 +6864,11 @@ export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaym
 export type UpdatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 export const DeletePaymentMethodDocument = gql`
     mutation DeletePaymentMethod($id: ID!) {
-  deletePaymentMethod(id: $id)
+  deletePaymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
 }
-    `;
+    ${FullPaymentMethodFragmentDoc}`;
 export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 
 /**
@@ -6939,9 +7136,11 @@ export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>
 export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
 export const DeletePeerDocument = gql`
     mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id)
+  deletePeer(id: $id) {
+    ...PeerRef
+  }
 }
-    `;
+    ${PeerRefFragmentDoc}`;
 export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
 
 /**
@@ -6968,9 +7167,87 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const SettingListDocument = gql`
+    query SettingList {
+  settings {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+      }
+export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+        }
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
+export const UpdateSettingListDocument = gql`
+    mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
+  updateSettingList(value: $input) {
+    value
+  }
+}
+    `;
+export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+
+/**
+ * __useUpdateSettingListMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
+      }
+export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
+export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
+export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
-    query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query SubscriptionList($filter: SubscriptionFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
+  subscriptions(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullSubscription
     }
@@ -6998,10 +7275,8 @@ export const SubscriptionListDocument = gql`
  * const { data, loading, error } = useSubscriptionListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -7156,9 +7431,11 @@ export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubsc
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
 export const DeleteSubscriptionDocument = gql`
     mutation DeleteSubscription($id: ID!) {
-  deleteSubscription(id: $id)
+  deleteSubscription(id: $id) {
+    ...FullSubscription
+  }
 }
-    `;
+    ${FullSubscriptionFragmentDoc}`;
 export type DeleteSubscriptionMutationFn = Apollo.MutationFunction<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 
 /**
@@ -7256,7 +7533,11 @@ export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutatio
 export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
 export const DeleteTokenDocument = gql`
     mutation DeleteToken($id: ID!) {
-  deleteToken(id: $id)
+  deleteToken(id: $id) {
+    id
+    name
+    token
+  }
 }
     `;
 export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation, DeleteTokenMutationVariables>;
@@ -7286,8 +7567,8 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-  users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+  users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }
@@ -7315,10 +7596,8 @@ export const UserListDocument = gql`
  * const { data, loading, error } = useUserListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -7509,9 +7788,11 @@ export type ResetUserPasswordMutationResult = Apollo.MutationResult<ResetUserPas
 export type ResetUserPasswordMutationOptions = Apollo.BaseMutationOptions<ResetUserPasswordMutation, ResetUserPasswordMutationVariables>;
 export const DeleteUserDocument = gql`
     mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }
-    `;
+    ${FullUserFragmentDoc}`;
 export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
 
 /**
@@ -7570,8 +7851,8 @@ export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsit
 export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
 export const UserRoleListDocument = gql`
-    query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUserRole
     }
@@ -7599,10 +7880,9 @@ export const UserRoleListDocument = gql`
  * const { data, loading, error } = useUserRoleListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -7755,9 +8035,11 @@ export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleM
 export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 export const DeleteUserRoleDocument = gql`
     mutation DeleteUserRole($id: ID!) {
-  deleteUserRole(id: $id)
+  deleteUserRole(id: $id) {
+    ...FullUserRole
+  }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 
 /**

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {Link, PageCreateRoute, PageEditRoute, ButtonLink} from '../route'
+import {Link, PageCreateRoute, PageEditRoute, ButtonLink, useRouteDispatch} from '../route'
 
 import {
   PageRefFragment,
@@ -41,6 +41,7 @@ import SearchIcon from '@rsuite/icons/legacy/Search'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import {RouteActionType} from '@wepublish/karma.run-react'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -83,10 +84,12 @@ export function PageList() {
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
   const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
 
+  const dispatch = useRouteDispatch()
+
   const pageListVariables = {
     filter: filter || undefined,
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
@@ -409,6 +412,7 @@ export function PageList() {
                   duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
+                      refetch(pageListVariables)
                       const query = cache.readQuery<PageListQuery>({
                         query: PageListDocument,
                         variables: pageListVariables
@@ -420,15 +424,19 @@ export function PageList() {
                         query: PageListDocument,
                         data: {
                           pages: {
-                            ...query.pages,
-                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
+                            ...query.pages
                           }
                         },
                         variables: pageListVariables
                       })
                     }
                   }).then(output => {
-                    if (output.data) setHighlightedRowId(output.data?.duplicatePage.id)
+                    if (output.data) {
+                      dispatch({
+                        type: RouteActionType.ReplaceRoute,
+                        route: PageEditRoute.create({id: output.data?.duplicatePage.id})
+                      })
+                    }
                   })
                   break
               }
