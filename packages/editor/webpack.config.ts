@@ -1,10 +1,9 @@
 /* eslint i18next/no-literal-string: [0] */
+import {AssetListPlugin} from '@karma.run/webpack'
+import {CleanWebpackPlugin} from 'clean-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import path from 'path'
 import webpack from 'webpack'
-
-import {AssetListPlugin} from '@karma.run/webpack'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
 export default (env: any, {mode}: any) =>
   ({

@@ -1,23 +1,21 @@
-import React, {useState, useEffect} from 'react'
-
-import {Button, Drawer, Form, Panel, Input, SelectPicker, toaster, Message} from 'rsuite'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Input, Message, Panel, SelectPicker, toaster} from 'rsuite'
 
 import {
-  useCreateNavigationMutation,
-  useNavigationQuery,
-  useUpdateNavigationMutation,
+  ArticleRefFragment,
   FullNavigationFragment,
-  NavigationListDocument,
   NavigationLinkInput,
-  usePageListQuery,
+  NavigationListDocument,
   PageRefFragment,
   useArticleListQuery,
-  ArticleRefFragment
+  useCreateNavigationMutation,
+  useNavigationQuery,
+  usePageListQuery,
+  useUpdateNavigationMutation
 } from '../api'
-
-import {useTranslation} from 'react-i18next'
-import {generateID, getOperationNameFromDocument} from '../utility'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {generateID, getOperationNameFromDocument} from '../utility'
 
 export interface NavigationEditPanelProps {
   id?: string

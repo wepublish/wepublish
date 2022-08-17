@@ -1,28 +1,28 @@
+import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
+import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
+import SaveIcon from '@rsuite/icons/legacy/Save'
 import React, {useCallback, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
-import {toaster, Message, Badge, Drawer, IconButton, Modal, Notification, Tag} from 'rsuite'
-
-import {BlockList, useBlockMap} from '../atoms/blockList'
-import {EditorTemplate} from '../atoms/editorTemplate'
-import {NavigationBar} from '../atoms/navigationBar'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
-
-import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
-import {PublishArticlePanel} from '../panel/publishArticlePanel'
-
+import {ElementID} from '../../shared/elementID'
+import {ClientSettings} from '../../shared/types'
 import {
   ArticleInput,
   AuthorRefFragment,
+  useArticlePreviewLinkLazyQuery,
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
-  useUpdateArticleMutation,
-  useArticlePreviewLinkLazyQuery
+  useUpdateArticleMutation
 } from '../api'
-
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {EditorTemplate} from '../atoms/editorTemplate'
+import {NavigationBar} from '../atoms/navigationBar'
+import {BlockMap} from '../blocks/blockMap'
 import {
   blockForQueryBlock,
   BlockType,
@@ -34,30 +34,21 @@ import {
   TitleBlockValue,
   unionMapForBlock
 } from '../blocks/types'
-
+import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
+import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {BlockMap} from '../blocks/blockMap'
-
-import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
-import {ClientSettings} from '../../shared/types'
-import {ElementID} from '../../shared/elementID'
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import SaveIcon from '@rsuite/icons/legacy/Save'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-
-export interface ArticleEditorProps {
-  readonly id?: string
-}
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
 
-export function ArticleEditor({id}: ArticleEditorProps) {
+export function ArticleEditor() {
+  const navigate = useNavigate()
+  const params = useParams()
+  const {id} = params
+
   const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
     fetchPolicy: 'no-cache'
   })
@@ -73,8 +64,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const {peerByDefault}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
   )
-
-  const dispatch = useRouteDispatch()
 
   const [
     createArticle,
@@ -371,12 +360,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       await refetch({id: articleID})
     } else {
       const {data} = await createArticle({variables: {input}})
-
       if (data) {
-        dispatch({
-          type: RouteActionType.ReplaceRoute,
-          route: ArticleEditRoute.create({id: data?.createArticle.id})
-        })
+        navigate(`/articles/edit/${data?.createArticle.id}`, {replace: true})
       }
       setChanged(false)
       toaster.push(
@@ -477,16 +462,17 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           navigationChildren={
             <NavigationBar
               leftChildren={
-                <IconButtonLink
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<ArrowLeftIcon />}
-                  route={ArticleListRoute.create({})}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault()
-                  }}>
-                  {t('articleEditor.overview.back')}
-                </IconButtonLink>
+                <Link to="/articles">
+                  <IconButton
+                    style={{marginTop: '4px'}}
+                    size={'lg'}
+                    icon={<ArrowLeftIcon />}
+                    onClick={e => {
+                      if (!unsavedChangesDialog()) e.preventDefault()
+                    }}>
+                    {t('articleEditor.overview.back')}
+                  </IconButton>
+                </Link>
               }
               centerChildren={
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
@@ -550,11 +536,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 </div>
               }
               rightChildren={
-                <IconButtonLink
-                  disabled={hasChanged || !id || !canPreview}
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<EyeIcon />}
+                <Link
+                  to="#"
                   onClick={e => {
                     previewLinkFetch({
                       variables: {
@@ -562,10 +545,16 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         hours: 1
                       }
                     })
-                  }}
-                  title={canPreview ? '' : t('articleEditor.overview.previewDisabled')}>
-                  {t('articleEditor.overview.preview')}
-                </IconButtonLink>
+                  }}>
+                  <IconButton
+                    disabled={hasChanged || !id || !canPreview}
+                    style={{marginTop: '4px'}}
+                    size={'lg'}
+                    icon={<EyeIcon />}
+                    title={canPreview ? '' : t('articleEditor.overview.previewDisabled')}>
+                    {t('articleEditor.overview.preview')}
+                  </IconButton>
+                </Link>
               }
             />
           }>

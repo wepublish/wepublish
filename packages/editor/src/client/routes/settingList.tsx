@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-
 import {useTranslation} from 'react-i18next'
 import {
   Button,
@@ -12,6 +11,9 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
+import FormControl from 'rsuite/FormControl'
+
 import {
   Setting,
   SettingName,
@@ -19,8 +21,6 @@ import {
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '../api'
-import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
-import FormControl from 'rsuite/FormControl'
 
 export function SettingList() {
   const {t} = useTranslation()

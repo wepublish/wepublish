@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 /* eslint-disable i18next/no-literal-string */
 
-import React from 'react'
-
+import {findEntryFromAssetList} from '@karma.run/webpack'
+import express from 'express'
 import fs from 'fs'
 import path, {join as joinPath} from 'path'
-
-import express from 'express'
+import React from 'react'
 import {renderToStaticMarkup} from 'react-dom/server'
 
-import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
 async function asyncMain() {

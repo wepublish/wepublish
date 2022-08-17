@@ -8,6 +8,7 @@
   "scripts": {},
   "devDependencies": {},
   "dependencies": {
-    "@slack/webhook": "^6.0.0"
+    "@actions/core": "^1.9.0",
+    "axios": "^0.27.2"
   }
 }

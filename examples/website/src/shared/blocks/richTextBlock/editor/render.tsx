@@ -67,10 +67,6 @@ export function renderElement({attributes, children, element}: RenderElementProp
       )
 
     case InlineFormat.Link:
-      // TODO: Implement custom tooltip
-      // const title = element.title ? `${element.title}: ${element.url}` : element.url
-      // title={title}
-
       return (
         <a
           target="_blank"
