@@ -1,16 +1,17 @@
+import {ArrowRightLine, Calendar, Creative, Exit, Off, PieChart, Reload} from '@rsuite/icons'
+import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
+import EditIcon from '@rsuite/icons/legacy/Edit'
 import React from 'react'
-import {Divider, FlexboxGrid, Panel} from 'rsuite'
 import {useTranslation} from 'react-i18next'
-import {newSubscriptionButton} from '../../routes/subscriptionList'
+import {Link} from 'react-router-dom'
+import {Button, Divider, FlexboxGrid, Panel} from 'rsuite'
+
 import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   UserSubscriptionFragment
 } from '../../api'
-import {ArrowRightLine, Calendar, Creative, Exit, Off, PieChart, Reload} from '@rsuite/icons'
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import {ButtonLink, SubscriptionEditRoute} from '../../route'
+import {newSubscriptionButton} from '../../routes/subscriptionList'
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null
@@ -123,11 +124,11 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
             </FlexboxGrid.Item>
             {/* edit subscription */}
             <FlexboxGrid.Item colspan={6} style={{textAlign: 'right'}}>
-              <ButtonLink
-                appearance="ghost"
-                route={SubscriptionEditRoute.create({id: subscription.id})}>
-                <EditIcon /> {t('userSubscriptionList.editSubscription')}
-              </ButtonLink>
+              <Link to={`/subscriptions/edit/${subscription.id}`}>
+                <Button appearance="ghost">
+                  <EditIcon /> {t('userSubscriptionList.editSubscription')}
+                </Button>
+              </Link>
             </FlexboxGrid.Item>
             {/* subscription details */}
             <FlexboxGrid.Item colspan={12} style={{marginTop: '10px', paddingRight: '5px'}}>

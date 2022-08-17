@@ -1,22 +1,20 @@
+import LockIcon from '@rsuite/icons/legacy/Lock'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
-
-import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
-
-import {useTranslation} from 'react-i18next'
-import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table, Pagination} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import LockIcon from '@rsuite/icons/legacy/Lock'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -107,13 +105,11 @@ export function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            style={{marginLeft: 5}}
-            appearance="primary"
-            disabled={isLoading}
-            route={UserCreateRoute.create({})}>
-            {t('userList.overview.newUser')}
-          </ButtonLink>
+          <Link to="/users/create">
+            <Button style={{marginLeft: 5}} appearance="primary" disabled={isLoading}>
+              {t('userList.overview.newUser')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
@@ -163,9 +159,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditViewRoute.create({id: rowData.id})}>
-                  {rowData.firstName || ''}
-                </Link>
+                <Link to={`/users/edit/${rowData.id}`}>{rowData.firstName || ''}</Link>
               )}
             </Cell>
           </Column>
@@ -173,7 +167,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditViewRoute.create({id: rowData.id})}>
+                <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}

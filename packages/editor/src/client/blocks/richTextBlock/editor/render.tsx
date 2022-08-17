@@ -1,5 +1,6 @@
 import React from 'react'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
+
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
 export function renderElement({attributes, children, element}: RenderElementProps) {

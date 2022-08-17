@@ -1,10 +1,11 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
+import snapshotDiff from 'snapshot-diff'
+
 import {CreatePeerDocument, PeerDocument} from '../../src/client/api'
 import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
 import {actWait} from '../utils'
-import snapshotDiff from 'snapshot-diff'
 
 const MockedProvider = MockedProviderBase as any
 

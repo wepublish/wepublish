@@ -1,42 +1,30 @@
-import React, {useState, useEffect} from 'react'
-
-import {
-  Link,
-  NavigationEditRoute,
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  NavigationListRoute,
-  NavigationCreateRoute,
-  ButtonLink
-} from '../route'
-
-import {FlexboxGrid, IconButton, Input, InputGroup, Table, Drawer, Modal, Button} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {NavigationEditPanel} from '../panel/navigationEditPanel'
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {useTranslation} from 'react-i18next'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import SearchIcon from '@rsuite/icons/legacy/Search'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+
+import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {NavigationEditPanel} from '../panel/navigationEditPanel'
+
+const {Column, HeaderCell, Cell} = Table
 
 export function NavigationList() {
   const {t} = useTranslation()
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.NavigationEdit || current?.type === RouteType.NavigationCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.NavigationEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const [filter, setFilter] = useState('')
 
@@ -51,18 +39,16 @@ export function NavigationList() {
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.NavigationCreate:
-        setEditID(undefined)
-        setEditModalOpen(true)
-        break
-
-      case RouteType.NavigationEdit:
-        setEditID(current.params.id)
-        setEditModalOpen(true)
-        break
+    if (isCreateRoute) {
+      setEditID(undefined)
+      setEditModalOpen(true)
     }
-  }, [current])
+
+    if (isEditRoute) {
+      setEditID(id)
+      setEditModalOpen(true)
+    }
+  }, [location])
 
   useEffect(() => {
     if (data?.navigations) {
@@ -77,12 +63,11 @@ export function NavigationList() {
           <h2>{t('navigation.overview.navigations')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={NavigationCreateRoute.create({})}>
-            {t('navigation.overview.newNavigation')}
-          </ButtonLink>
+          <Link to="/navigations/create">
+            <Button appearance="primary" disabled={isLoading}>
+              {t('navigation.overview.newNavigation')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
@@ -100,7 +85,7 @@ export function NavigationList() {
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullNavigationFragment) => (
-              <Link route={NavigationEditRoute.create({id: rowData.id})}>
+              <Link to={`/navigations/edit/${rowData.id}`}>
                 {rowData.name || t('navigation.overview.unknown')}
               </Link>
             )}
@@ -134,26 +119,17 @@ export function NavigationList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: NavigationListRoute.create({}, current ?? undefined)
-          })
+          navigate('/navigations')
         }}>
         <NavigationEditPanel
           id={editID}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: NavigationListRoute.create({}, current ?? undefined)
-            })
+            navigate('/navigations')
           }}
           onSave={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: NavigationListRoute.create({}, current ?? undefined)
-            })
+            navigate('/navigations')
           }}
         />
       </Drawer>
