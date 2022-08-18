@@ -300,7 +300,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_AUTHOR',
-  'CAN_GET_AUTHOR',
+  'CAN_GET_AUTHORS',
   'CAN_CREATE_AUTHOR',
   'CAN_DELETE_AUTHOR'
 ])(AuthorEditPanel)

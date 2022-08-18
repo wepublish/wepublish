@@ -1,42 +1,30 @@
-import React, {useState, useEffect} from 'react'
-
-import {
-  AuthorEditRoute,
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  AuthorListRoute,
-  AuthorCreateRoute,
-  ButtonLink,
-  Link
-} from '../route'
-
-import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {AuthorEditPanel} from '../panel/authorEditPanel'
-import {RouteActionType} from '@wepublish/karma.run-react'
-
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
+  Avatar,
+  Button,
+  Drawer,
   FlexboxGrid,
   IconButton,
   Input,
   InputGroup,
-  Table,
-  Avatar,
-  Drawer,
   Modal,
-  Button,
-  Pagination
+  Pagination,
+  Table
 } from 'rsuite'
+
+import {AuthorSort, FullAuthorFragment, useAuthorListQuery, useDeleteAuthorMutation} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
@@ -56,16 +44,17 @@ function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
 
 function AuthorList() {
   const {t} = useTranslation()
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.AuthorEdit || current?.type === RouteType.AuthorCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.AuthorEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
@@ -85,11 +74,7 @@ function AuthorList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
-  const {
-    data,
-    /* fetchMore, */ loading: isLoading,
-    refetch: authorListRefetch
-  } = useAuthorListQuery({
+  const {data, loading: isLoading, refetch: authorListRefetch} = useAuthorListQuery({
     variables: authorListQueryVariables,
     fetchPolicy: 'network-only'
   })
@@ -101,18 +86,16 @@ function AuthorList() {
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.AuthorCreate:
-        setEditID(undefined)
-        setEditModalOpen(true)
-        break
-
-      case RouteType.AuthorEdit:
-        setEditID(current.params.id)
-        setEditModalOpen(true)
-        break
+    if (isCreateRoute) {
+      setEditID(undefined)
+      setEditModalOpen(true)
     }
-  }, [current])
+
+    if (isEditRoute) {
+      setEditID(id)
+      setEditModalOpen(true)
+    }
+  }, [location])
 
   useEffect(() => {
     if (data?.authors?.nodes) {
@@ -128,12 +111,11 @@ function AuthorList() {
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <ButtonLink
-              appearance="primary"
-              disabled={isLoading}
-              route={AuthorCreateRoute.create({})}>
-              {t('authors.overview.newAuthor')}
-            </ButtonLink>
+            <Link to="/authors/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('authors.overview.newAuthor')}
+              </Button>
+            </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
@@ -175,7 +157,7 @@ function AuthorList() {
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell dataKey="name">
               {(rowData: FullAuthorFragment) => (
-                <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                <Link to={`/authors/edit/${rowData.id}`}>
                   {rowData.name || t('authors.overview.untitled')}
                 </Link>
               )}
@@ -239,26 +221,17 @@ function AuthorList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: AuthorListRoute.create({}, current ?? undefined)
-          })
+          navigate('/authors')
         }}>
         <AuthorEditPanel
           id={editID}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: AuthorListRoute.create({}, current ?? undefined)
-            })
+            navigate('/authors')
           }}
           onSave={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: AuthorListRoute.create({}, current ?? undefined)
-            })
+            navigate('/authors')
           }}
         />
       </Drawer>
@@ -289,7 +262,6 @@ function AuthorList() {
               await authorListRefetch(authorListQueryVariables)
 
               setConfirmationDialogOpen(false)
-              // fetchMore()
             }}
             color="red">
             {t('authors.overview.confirm')}

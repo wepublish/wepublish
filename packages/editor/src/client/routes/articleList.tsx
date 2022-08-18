@@ -1,48 +1,43 @@
-import React, {useEffect, useState} from 'react'
-
-import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink, useRouteDispatch} from '../route'
-
-import {
-  useArticleListQuery,
-  ArticleRefFragment,
-  useUnpublishArticleMutation,
-  useDeleteArticleMutation,
-  useDuplicateArticleMutation,
-  ArticleListDocument,
-  ArticleListQuery,
-  PageRefFragment,
-  ArticleSort
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  IconButton,
-  Table,
-  Modal,
-  Button,
-  Message,
-  Pagination
-} from 'rsuite'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  StateColor,
-  mapTableSortTypeToGraphQLSortOrder,
-  DEFAULT_MAX_TABLE_PAGES
-} from '../utility'
-import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
+import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import {RouteActionType} from '@wepublish/karma.run-react'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate} from 'react-router-dom'
+import {
+  Button,
+  FlexboxGrid,
+  IconButton,
+  Input,
+  InputGroup,
+  Message,
+  Modal,
+  Pagination,
+  Table
+} from 'rsuite'
+
+import {
+  ArticleListDocument,
+  ArticleListQuery,
+  ArticleRefFragment,
+  ArticleSort,
+  PageRefFragment,
+  useArticleListQuery,
+  useDeleteArticleMutation,
+  useDuplicateArticleMutation,
+  useUnpublishArticleMutation
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  StateColor
+} from '../utility'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
@@ -84,7 +79,7 @@ function ArticleList() {
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
-  const dispatch = useRouteDispatch()
+  const navigate = useNavigate()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -130,12 +125,11 @@ function ArticleList() {
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <ButtonLink
-              appearance="primary"
-              disabled={isLoading}
-              route={ArticleCreateRoute.create({})}>
-              {t('articles.overview.newArticle')}
-            </ButtonLink>
+            <Link to="/articles/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('articles.overview.newArticle')}
+              </Button>
+            </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
@@ -197,7 +191,7 @@ function ArticleList() {
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => (
-                <Link route={ArticleEditRoute.create({id: rowData.id})}>
+                <Link to={`/articles/edit/${rowData.id}`}>
                   {rowData.latest.title || t('articles.overview.untitled')}
                 </Link>
               )}
@@ -465,9 +459,8 @@ function ArticleList() {
                     }
                   }).then(output => {
                     if (output.data) {
-                      dispatch({
-                        type: RouteActionType.ReplaceRoute,
-                        route: ArticleEditRoute.create({id: output.data?.duplicateArticle.id})
+                      navigate(`/articles/edit/${output.data?.duplicateArticle.id}`, {
+                        replace: true
                       })
                     }
                   })

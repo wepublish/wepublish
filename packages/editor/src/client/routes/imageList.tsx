@@ -1,55 +1,46 @@
-import React, {useState, useEffect} from 'react'
-
-import {ImagedEditPanel} from '../panel/imageEditPanel'
-
-import {
-  ImageUploadRoute,
-  useRoute,
-  RouteType,
-  ImageListRoute,
-  useRouteDispatch,
-  Link,
-  ImageEditRoute,
-  ButtonLink
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {
-  useImageListQuery,
-  useDeleteImageMutation,
-  ImageRefFragment,
-  ImageListQuery,
-  ImageListDocument,
-  FullImageFragment
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
+import EditIcon from '@rsuite/icons/legacy/Edit'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
+  Button,
+  Drawer,
   FlexboxGrid,
+  IconButton,
   Input,
   InputGroup,
-  IconButton,
-  Drawer,
   Modal,
-  Button,
-  Table,
-  Pagination
+  Pagination,
+  Table
 } from 'rsuite'
 
+import {
+  FullImageFragment,
+  ImageListDocument,
+  ImageListQuery,
+  ImageRefFragment,
+  useDeleteImageMutation,
+  useImageListQuery
+} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
 function ImageList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
+
+  const isUploadRoute = location.pathname.includes('upload')
+  const isEditRoute = location.pathname.includes('edit')
+
   const [images, setImages] = useState<FullImageFragment[]>([])
 
   const [filter, setFilter] = useState('')
@@ -60,12 +51,10 @@ function ImageList() {
   const [activePage, setActivePage] = useState(1)
   const [limit, setLimit] = useState(5)
 
-  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
-  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
+  const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute)
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute)
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.ImageEdit ? current.params.id : null
-  )
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const listVariables = {
     filter: filter || undefined,
@@ -73,7 +62,7 @@ function ImageList() {
     skip: (activePage - 1) * limit
   }
 
-  const {data, refetch, /* fetchMore, */ loading: isLoading} = useImageListQuery({
+  const {data, refetch, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -93,31 +82,15 @@ function ImageList() {
   }, [filter, activePage, limit])
 
   useEffect(() => {
-    if (current?.type === RouteType.ImageUpload) {
+    if (isUploadRoute) {
       setUploadModalOpen(true)
     }
 
-    if (current?.type === RouteType.ImageEdit) {
+    if (isEditRoute) {
       setEditModalOpen(true)
-      setEditID(current.params.id)
+      setEditID(id)
     }
-  }, [current])
-
-  /* function loadMore() {
-    fetchMore({
-      variables: {take: ImagesPerPage, skip: 1, cursor: data?.images.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          images: {
-            ...fetchMoreResult.images,
-            nodes: [...prev.images.nodes, ...fetchMoreResult?.images.nodes]
-          }
-        }
-      }
-    })
-  } */
+  }, [location])
 
   return (
     <>
@@ -127,12 +100,11 @@ function ImageList() {
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <ButtonLink
-              appearance="primary"
-              disabled={isLoading}
-              route={ImageUploadRoute.create({})}>
-              {t('images.overview.uploadImage')}
-            </ButtonLink>
+            <Link to="/images/upload" state={{modalLocation: location}}>
+              <Button appearance="primary" disabled={isLoading}>
+                {t('images.overview.uploadImage')}
+              </Button>
+            </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
@@ -157,7 +129,13 @@ function ImageList() {
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) => (
-                <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                // <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                // <img
+                //   src={rowData.thumbURL || ''}
+                //   style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
+                // />
+                // </Link>
+                <Link to={`/images/edit/${rowData.id}`}>
                   <img
                     src={rowData.thumbURL || ''}
                     style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
@@ -206,9 +184,7 @@ function ImageList() {
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.edit')}>
                       <>
-                        {/* Empty div is used here as Link is a function component without forwardRef and  IconButtonTooltip is passing down a ref */}
-
-                        <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
+                        <Link to={`/images/edit/${rowData.id}`}>
                           <IconButton
                             icon={<EditIcon />}
                             circle
@@ -263,25 +239,16 @@ function ImageList() {
         size={'sm'}
         onClose={() => {
           setUploadModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: ImageListRoute.create({}, current ?? undefined)
-          })
+          navigate('/images')
         }}>
         <ImageUploadAndEditPanel
           onClose={() => {
             setUploadModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: ImageListRoute.create({}, current ?? undefined)
-            })
+            navigate('/images')
           }}
           onUpload={() => {
             setUploadModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: ImageListRoute.create({}, current ?? undefined)
-            })
+            navigate('/images')
           }}
         />
       </Drawer>
@@ -290,19 +257,13 @@ function ImageList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: ImageListRoute.create({}, current ?? undefined)
-          })
+          navigate('/images')
         }}>
         <ImagedEditPanel
           id={editID!}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: ImageListRoute.create({}, current ?? undefined)
-            })
+            navigate('/images')
           }}
         />
       </Drawer>

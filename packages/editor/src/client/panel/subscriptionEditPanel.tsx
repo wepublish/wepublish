@@ -15,6 +15,7 @@ import {
   Toggle
 } from 'rsuite'
 import FormControlLabel from 'rsuite/FormControlLabel'
+
 import {
   DeactivationFragment,
   FullMemberPlanFragment,

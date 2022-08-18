@@ -29,7 +29,7 @@ export function PermissionControl({
   showRejectionMessage
 }: PropsWithChildren<PermissionControlProps>) {
   const [isAuthorized, setIsAuthorized] = useState(false)
-  const roles = useContext(AuthContext)?.session?.roles
+  const roles = useContext(AuthContext)?.session?.sessionRoles
 
   useEffect(() => {
     setIsAuthorized(
@@ -71,7 +71,7 @@ export const createCheckedPermissionComponent = (
 }
 
 export function authorise(permissionID: string) {
-  return useContext(AuthContext)?.session?.roles?.some(role =>
+  return useContext(AuthContext)?.session?.sessionRoles?.some(role =>
     role.permissions.some(permission => permission.id === permissionID)
   )
 }

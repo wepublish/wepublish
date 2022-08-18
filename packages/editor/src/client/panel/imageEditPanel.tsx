@@ -1,23 +1,21 @@
-import React, {useState, useEffect} from 'react'
+import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Button, Drawer, Form, Message, Panel, Schema, TagPicker, toaster} from 'rsuite'
 
 import {
-  useUploadImageMutation,
-  useUpdateImageMutation,
-  useImageQuery,
+  ImageListDocument,
   ImageRefFragment,
-  ImageListDocument
+  useImageQuery,
+  useUpdateImageMutation,
+  useUploadImageMutation
 } from '../api'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-
-import {Link} from '../route'
-
-import {useTranslation} from 'react-i18next'
-import {FocalPointInput} from '../atoms/focalPointInput'
-import {Point} from '../atoms/draggable'
-import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import imageCompression from 'browser-image-compression'
+import {Point} from '../atoms/draggable'
+import {FocalPointInput} from '../atoms/focalPointInput'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 import {ImageMetaData} from './imageUploadAndEditPanel'
 import {
   authorise,
@@ -314,7 +312,7 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
 
                   {originalImageURL && (
                     <DescriptionListItem label={t('images.panels.link')}>
-                      <Link href={originalImageURL} target="_blank">
+                      <Link to={originalImageURL} target="_blank">
                         {originalImageURL}
                       </Link>
                     </DescriptionListItem>
@@ -363,7 +361,6 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
                 </Form.Group>
               </Panel>
               <Panel header={t('images.panels.attribution')}>
-                {/* <Form > */}
                 <Form.Group>
                   <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
                   <Form.Control
@@ -393,7 +390,6 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
                     onChange={(value: string) => setLicense(value)}
                   />
                 </Form.Group>
-                {/* </Form> */}
               </Panel>
             </>
           )}

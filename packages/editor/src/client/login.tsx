@@ -1,43 +1,40 @@
-import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType, RouteInstance} from '@wepublish/karma.run-react'
-
-import {LoginTemplate} from './atoms/loginTemplate'
-
-import {
-  useRouteDispatch,
-  matchRoute,
-  useRoute,
-  IndexRoute,
-  LoginRoute,
-  IconButtonLink
-} from './route'
-import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
-
-import {LocalStorageKey} from './utility'
-import {Logo} from './logo'
-import {
-  useCreateSessionWithOAuth2CodeMutation,
-  useCreateSessionWithJwtMutation,
-  useCreateSessionMutation,
-  useGetAuthProvidersQuery,
-  FullUserRoleFragment
-} from './api'
-
-import {useTranslation} from 'react-i18next'
-import {Button, Form, Divider, toaster, Message} from 'rsuite'
-import GoogleIcon from '@rsuite/icons/legacy/Google'
 import FacebookIcon from '@rsuite/icons/legacy/Facebook'
-import TwitterIcon from '@rsuite/icons/legacy/Twitter'
+import GoogleIcon from '@rsuite/icons/legacy/Google'
 import SpaceShuttleIcon from '@rsuite/icons/legacy/SpaceShuttle'
+import TwitterIcon from '@rsuite/icons/legacy/Twitter'
+import React, {FormEvent, useContext, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Divider, Form, IconButton, Message, toaster} from 'rsuite'
+
+import {
+  FullUserRoleFragment,
+  useCreateSessionMutation,
+  useCreateSessionWithJwtMutation,
+  useCreateSessionWithOAuth2CodeMutation,
+  useGetAuthProvidersQuery
+} from './api'
+import {LoginTemplate} from './atoms/loginTemplate'
+import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
+import {Logo} from './logo'
+import {LocalStorageKey} from './utility'
+
+function useQuery() {
+  const {search} = useLocation()
+  return React.useMemo(() => new URLSearchParams(search), [search])
+}
 
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const {current} = useRoute()
+  const location = useLocation()
+  const params = useParams()
+  const query = useQuery()
+  const next = query.get('next')
 
   const authDispatch = useContext(AuthDispatchContext)
-  const routeDispatch = useRouteDispatch()
+  const navigate = useNavigate()
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
@@ -59,11 +56,47 @@ export function Login() {
 
   const {t} = useTranslation()
 
+  function authenticateUser(
+    sessionToken: string,
+    responseEmail: string,
+    userRoles: FullUserRoleFragment[]
+  ) {
+    const permissions = userRoles.reduce((permissions, userRole) => {
+      return [...permissions, ...userRole.permissions.map(permission => permission.id)]
+    }, [] as string[])
+
+    if (!permissions.includes('CAN_LOGIN_EDITOR')) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {t('login.unauthorized')}
+        </Message>
+      )
+      return
+    }
+
+    localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
+
+    authDispatch({
+      type: AuthDispatchActionType.Login,
+      payload: {
+        email: responseEmail,
+        sessionToken
+      }
+    })
+
+    if (next) {
+      navigate(next, {replace: true})
+      return
+    }
+    navigate('/', {replace: true})
+  }
+
   useEffect(() => {
-    if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
+    if (location && location.pathname === '/login/jwt' && params && params.jwt) {
+      const {jwt} = params
       authenticateWithJWT({
         variables: {
-          jwt: current.query.jwt
+          jwt
         }
       })
         .then((response: any) => {
@@ -76,12 +109,10 @@ export function Login() {
         })
         .catch(error => {
           console.warn('auth error', error)
-          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+          navigate('/login', {replace: true})
         })
-    } else if (current !== null && current.params !== null && current.query && current.query.code) {
-      // TODO: fix this
-      const provider = (current as RouteInstance).params.provider
-      const {code} = current!.query
+    } else if (location !== null && params && params.code && params.provider) {
+      const {code, provider} = params
       authenticateWithOAuth2Code({
         variables: {
           redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
@@ -98,10 +129,10 @@ export function Login() {
           authenticateUser(sessionToken, responseEmail, roles)
         })
         .catch(() => {
-          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+          navigate('/login', {replace: true})
         })
     }
-  }, [current])
+  }, [location])
 
   useEffect(() => {
     const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
@@ -126,43 +157,6 @@ export function Login() {
     } = response.data.createSession
 
     authenticateUser(sessionToken, responseEmail, roles)
-  }
-
-  function authenticateUser(
-    sessionToken: string,
-    responseEmail: string,
-    userRoles: FullUserRoleFragment[]
-  ) {
-    const permissions = userRoles.reduce((permissions, userRole) => {
-      return [...permissions, ...userRole.permissions.map(permission => permission.id)]
-    }, [] as string[])
-
-    if (!permissions.includes('CAN_LOGIN_EDITOR')) {
-      toaster.push(
-        <Message type="error" showIcon closable duration={0}>
-          {t('login.unauthorized')}
-        </Message>
-      )
-      return
-    }
-
-    localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
-
-    authDispatch({
-      type: AuthDispatchActionType.Login,
-      email: responseEmail,
-      sessionToken,
-      sessionRoles: userRoles
-    })
-
-    if (current!.query && current!.query.next) {
-      const route = matchRoute(location.origin + current!.query.next)
-      if (route) {
-        routeDispatch({type: RouteActionType.ReplaceRoute, route})
-        return
-      }
-    }
-    routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
   }
 
   function getAuthLogo(name: string): React.ReactElement {
@@ -219,14 +213,14 @@ export function Login() {
               <Divider />
               {providerData.authProviders.map(
                 (provider: {url: string; name: string}, index: number) => (
-                  <IconButtonLink
-                    style={{marginBottom: 10}}
-                    key={index}
-                    appearance="subtle"
-                    href={provider.url}
-                    icon={getAuthLogo(provider.name)}>
-                    {provider.name}
-                  </IconButtonLink>
+                  <Link to={provider.url} key={index}>
+                    <IconButton
+                      style={{marginBottom: 10}}
+                      appearance="subtle"
+                      icon={getAuthLogo(provider.name)}>
+                      {provider.name}
+                    </IconButton>
+                  </Link>
                 )
               )}
             </>

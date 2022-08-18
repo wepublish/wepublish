@@ -560,6 +560,6 @@ export const sessionWithPermissions = {
   session: {
     email: 'dev@abc.ch',
     sessionToken: 'abcdefg',
-    roles: [adminRole]
+    sessionRoles: [adminRole]
   }
 }

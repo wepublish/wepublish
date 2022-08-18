@@ -143,7 +143,7 @@ describe('Author Edit Panel', () => {
     session: {
       email: 'user@abc.ch',
       sessionToken: 'abcdefg',
-      roles: [
+      sessionRoles: [
         {
           id: 'user',
           description: 'User',
