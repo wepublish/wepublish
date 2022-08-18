@@ -45,7 +45,9 @@ export const unselectPassword: Record<
   password: false,
   active: true,
   lastLogin: true,
-  roleIDs: true
+  roleIDs: true,
+  // Models that shouldn't be loaded by default
+  PollVote: false
 }
 
 export type UserWithRelations = User & {
