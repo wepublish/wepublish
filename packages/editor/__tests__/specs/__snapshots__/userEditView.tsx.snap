@@ -984,6 +984,7 @@ exports[`User edit view should render 1`] = `
                     href="/subscriptions/create"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn rs-btn-primary rs-btn-green"
                       style="margin-left: 5px;"
                       type="button"
@@ -1623,6 +1624,7 @@ exports[`User edit view should render with ID 1`] = `
                     href="/subscriptions/create"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn rs-btn-primary rs-btn-green"
                       style="margin-left: 5px;"
                       type="button"
