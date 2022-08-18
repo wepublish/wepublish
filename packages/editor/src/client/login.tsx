@@ -80,7 +80,8 @@ export function Login() {
       type: AuthDispatchActionType.Login,
       payload: {
         email: responseEmail,
-        sessionToken
+        sessionToken,
+        sessionRoles: userRoles
       }
     })
 
