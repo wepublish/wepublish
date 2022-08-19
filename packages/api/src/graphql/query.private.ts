@@ -93,6 +93,8 @@ import {
   CanGetPeerArticle,
   CanLoginAsOtherUser
 } from './permissions'
+import {GraphQLPollConnection, GraphQLPollFilter, GraphQLPollSort} from './poll/poll'
+import {getPolls, PollSort} from './poll/poll.private-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting} from './setting'
@@ -638,6 +640,23 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Polls
+    // =======
+
+    polls: {
+      type: GraphQLPollConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLPollFilter},
+        sort: {type: GraphQLPollSort, defaultValue: PollSort.OpensAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {cursor, take, skip, filter, sort, order}, {authenticate, prisma: {poll}}) =>
+        getPolls(filter, sort, order, cursor, skip, take, authenticate, poll)
     }
   }
 })
