@@ -1,52 +1,37 @@
-import React, {useState, useEffect} from 'react'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  TokenListRoute,
-  TokenGenerateRoute,
-  ButtonLink
-} from '../route'
-
-import {
-  useTokenListQuery,
-  useDeleteTokenMutation,
-  TokenRefFragment,
-  TokenListDocument
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {getOperationNameFromDocument} from '../utility'
-import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
-
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
+  Drawer,
   FlexboxGrid,
+  IconButton,
   List,
   Loader,
-  IconButton,
-  Drawer,
+  Message,
   Modal,
-  toaster,
-  Message
+  toaster
 } from 'rsuite'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
+
+import {
+  TokenListDocument,
+  TokenRefFragment,
+  useDeleteTokenMutation,
+  useTokenListQuery
+} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
+import {getOperationNameFromDocument} from '../utility'
 
 export function TokenList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
-    current?.type === RouteType.TokenGenerate
-  )
+  const isGenerateRoute = location.pathname.includes('generate')
 
+  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(isGenerateRoute)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
   const {
@@ -74,16 +59,10 @@ export function TokenList() {
   }, [tokenListError, deleteTokenError])
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.TokenGenerate:
-        setTokenGeneratePanelOpen(true)
-        break
-
-      default:
-        setTokenGeneratePanelOpen(false)
-        break
+    if (isGenerateRoute) {
+      setTokenGeneratePanelOpen(true)
     }
-  }, [current])
+  }, [location])
 
   return (
     <>
@@ -92,12 +71,11 @@ export function TokenList() {
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isTokenListLoading}
-            route={TokenGenerateRoute.create({})}>
-            {t('tokenList.overview.generateToken')}
-          </ButtonLink>
+          <Link to="/tokens/generate">
+            <Button appearance="primary" disabled={isTokenListLoading}>
+              {t('tokenList.overview.generateToken')}
+            </Button>
+          </Link>
         </FlexboxGrid.Item>
       </FlexboxGrid>
       {isTokenListLoading ? (
@@ -132,18 +110,14 @@ export function TokenList() {
       <Drawer
         open={isTokenGeneratePanelOpen}
         onClose={() => {
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: TokenListRoute.create({})
-          })
+          setTokenGeneratePanelOpen(false)
+          navigate('/tokens')
         }}
         size={'sm'}>
         <TokenGeneratePanel
           onClose={() => {
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: TokenListRoute.create({})
-            })
+            setTokenGeneratePanelOpen(false)
+            navigate('/tokens')
           }}
         />
       </Drawer>

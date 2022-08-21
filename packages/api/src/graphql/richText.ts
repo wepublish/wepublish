@@ -1,5 +1,5 @@
 import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
-import {isObject, isString, isArray, isBoolean} from '@karma.run/utility'
+import {isObject, isString, isArray, isBoolean} from '../utility'
 
 export enum ElementNodeType {
   H1 = 'heading-one',

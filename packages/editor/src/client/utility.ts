@@ -1,10 +1,11 @@
+import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import Maybe from 'graphql/tsutils/Maybe'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import {PaymentPeriodicity, SortOrder} from './api'
-import {ClientSettings} from '../shared/types'
+
 import {ElementID} from '../shared/elementID'
-import Maybe from 'graphql/tsutils/Maybe'
+import {ClientSettings} from '../shared/types'
+import {PaymentPeriodicity, SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -229,4 +230,20 @@ export function getImgMinSizeToCompress(): number {
     document.getElementById(ElementID.Settings)!.textContent!
   )
   return imgMinSizeToCompress
+}
+
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never
+
+export type ValueConstructor<T> = T | (() => T)
+
+export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
+  return typeof value === 'function'
+}
+
+export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is (value: T) => T {
+  return typeof value === 'function'
 }
