@@ -556,7 +556,8 @@
     "pollEditView": {
       "loadingTitle": "Loading poll...",
       "saveTitle": "Save",
-      "saveAndCloseTitle": "Save & Close"
+      "saveAndCloseTitle": "Save & Close",
+      "question": "To be or not to be?"
     },
     "navbar": {
       "articles": "Articles",
