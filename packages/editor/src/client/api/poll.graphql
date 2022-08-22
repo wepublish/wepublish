@@ -29,3 +29,27 @@ query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: Pol
         totalCount
     }
 }
+
+query Poll($pollId: ID) {
+    poll(id: $pollId) {
+        id
+        question
+        opensAt
+        closedAt
+        answers {
+            id
+            pollId
+            answer
+            votes
+        }
+        externalVoteSources {
+            id
+            source
+            voteAmounts {
+                id
+                answerId
+                amount
+            }
+        }
+    }
+}

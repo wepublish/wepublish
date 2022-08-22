@@ -23,10 +23,10 @@ export type Scalars = {
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: File;
   /** A valid vote value */
   VoteValue: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: File;
 };
 
 export type AllowedSettingVals = {
@@ -1573,6 +1573,7 @@ export type Query = {
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
   polls?: Maybe<PollConnection>;
+  poll?: Maybe<FullPoll>;
 };
 
 
@@ -1816,6 +1817,11 @@ export type QueryPollsArgs = {
   filter?: Maybe<PollFilter>;
   sort?: Maybe<PollSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPollArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type QuoteBlock = {
@@ -3870,6 +3876,30 @@ export type PollsQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
     ) }
+  )> }
+);
+
+export type PollQueryVariables = Exact<{
+  pollId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type PollQuery = (
+  { __typename?: 'Query' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & Pick<PollExternalVoteSource, 'id' | 'source'>
+      & { voteAmounts?: Maybe<Array<(
+        { __typename?: 'PollExternalVote' }
+        & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
+      )>> }
+    )>> }
   )> }
 );
 
@@ -7460,6 +7490,59 @@ export function usePollsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Poll
 export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
 export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
 export type PollsQueryResult = Apollo.QueryResult<PollsQuery, PollsQueryVariables>;
+export const PollDocument = gql`
+    query Poll($pollId: ID) {
+  poll(id: $pollId) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      id
+      source
+      voteAmounts {
+        id
+        answerId
+        amount
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePollQuery__
+ *
+ * To run a query within a React component, call `usePollQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollQuery({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *   },
+ * });
+ */
+export function usePollQuery(baseOptions?: Apollo.QueryHookOptions<PollQuery, PollQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+      }
+export function usePollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollQuery, PollQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+        }
+export type PollQueryHookResult = ReturnType<typeof usePollQuery>;
+export type PollLazyQueryHookResult = ReturnType<typeof usePollLazyQuery>;
+export type PollQueryResult = Apollo.QueryResult<PollQuery, PollQueryVariables>;
 export const SettingListDocument = gql`
     query SettingList {
   settings {

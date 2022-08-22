@@ -1,12 +1,19 @@
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
+import {useParams} from 'react-router-dom'
 import {FlexboxGrid, Message, toaster} from 'rsuite'
 
-import {usePollsQuery} from '../../api'
+import {usePollQuery} from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
 
 export function PollEditView() {
-  const {data, loading, error} = usePollsQuery()
+  const params = useParams()
+
+  const {data, loading, error} = usePollQuery({
+    variables: {
+      pollId: params.id
+    }
+  })
   const {t} = useTranslation()
 
   /**
@@ -28,7 +35,7 @@ export function PollEditView() {
         <FlexboxGrid.Item colspan={24}>
           <ModelTitle
             loading={loading}
-            title={'Mein Title'}
+            title={data?.poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}
             saveTitle={t('pollEditView.saveTitle')}
             saveAndCloseTitle={t('pollEditView.saveAndCloseTitle')}

@@ -1,9 +1,10 @@
-import {OffIcon, PlayOutline, WaitIcon} from '@rsuite/icons'
-import EditIcon from '@rsuite/icons/legacy/Edit'
+import {PlayOutline} from '@rsuite/icons'
+import OffIcon from '@rsuite/icons/Off'
+import WaitIcon from '@rsuite/icons/Wait'
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Message, Table, toaster} from 'rsuite'
+import {FlexboxGrid, Message, Table, toaster} from 'rsuite'
 
 import {FullPoll, usePollsQuery} from '../../api'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
