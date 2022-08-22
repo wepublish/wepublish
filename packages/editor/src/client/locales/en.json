@@ -539,6 +539,10 @@
       "priceRange": "Price-(Range) in CHF",
       "title": "Member Plans"
     },
+    "pollList": {
+      "title": "Polls",
+      "createNew": "Create Poll"
+    },
     "navbar": {
       "articles": "Articles",
       "blocks": {

@@ -888,6 +888,10 @@
       },
       "hasAddress": "Adresse de l'utilisateur·trice"
     },
+    "pollList": {
+      "title": "Sondages",
+      "createNew": "Créer Sondage"
+    },
     "navbar": {
       "languageSwitch": {
         "currentLanguage": "Anglais",

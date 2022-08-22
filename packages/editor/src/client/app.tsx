@@ -26,6 +26,7 @@ import {PageList} from './routes/pageList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {PeerArticleList} from './routes/peerArticleList'
 import {PeerList} from './routes/peerList'
+import {PollList} from './routes/pollList'
 import {SettingList} from './routes/settingList'
 import {SubscriptionList} from './routes/subscriptionList'
 import {TokenList} from './routes/tokenList'
@@ -121,6 +122,16 @@ export function App() {
           />
           <Route path="pages/create" element={<PageEditor />} />
           <Route path="pages/edit/:id" element={<PageEditor />} />
+          {/* Poll Routes */}
+          <Route
+            path="polls"
+            element={
+              <Base>
+                <PollList />
+              </Base>
+            }
+          />
+
           {/* Comments Routes */}
           <Route
             path="comments"

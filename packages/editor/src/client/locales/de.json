@@ -539,6 +539,10 @@
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
     },
+    "pollList": {
+      "title": "Umfragen",
+      "createNew": "Umfrage erstellen"
+    },
     "navbar": {
       "articles": "Artikel",
       "blocks": {
