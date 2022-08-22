@@ -1,22 +1,39 @@
-import React, {useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom'
-import {FlexboxGrid} from 'rsuite'
+import React, {useEffect} from 'react'
+import {useTranslation} from 'react-i18next'
+import {useNavigate} from 'react-router-dom'
+import {FlexboxGrid, Message, toaster} from 'rsuite'
+
+import {usePollsQuery} from '../../api'
+import {ModelTitle} from '../../atoms/modelTitle'
 
 export function PollEditView() {
-  const [id, setId] = useState<string | undefined>(undefined)
-  const params = useParams()
+  const navigate = useNavigate()
+  const {data, loading, error} = usePollsQuery()
+  const {t} = useTranslation()
 
+  /**
+   * Handling errors
+   */
   useEffect(() => {
-    if (params?.id) {
-      setId(params.id)
-    }
-  }, [params?.id])
+    toaster.push(<Message type="error" showIcon closable duration={3000} />)
+  }, [error])
+
+  function close(): void {
+    navigate('/polls')
+  }
 
   return (
     <>
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
-          <h2>Umfrage {id}</h2>
+          <ModelTitle
+            loading={loading}
+            title={data.polls}
+            loadingTitle={t('pollEditView.loadingTitle')}
+            saveTitle={t('pollEditView.saveTitle')}
+            saveAndCloseTitle={t('pollEditView.saveAndCloseTitle')}
+            close={close}
+          />
         </FlexboxGrid.Item>
       </FlexboxGrid>
     </>

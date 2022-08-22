@@ -3848,6 +3848,31 @@ export type CreatePollMutation = (
   )> }
 );
 
+export type PollsQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
+}>;
+
+
+export type PollsQuery = (
+  { __typename?: 'Query' }
+  & { polls?: Maybe<(
+    { __typename?: 'PollConnection' }
+    & Pick<PollConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Poll' }
+      & Pick<Poll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  )> }
+);
+
 export type FullSettingFragment = (
   { __typename?: 'Setting' }
   & Pick<Setting, 'id' | 'name' | 'value'>
@@ -7383,6 +7408,58 @@ export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const PollsDocument = gql`
+    query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
+  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      id
+      question
+      opensAt
+      closedAt
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __usePollsQuery__
+ *
+ * To run a query within a React component, call `usePollsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollsQuery({
+ *   variables: {
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function usePollsQuery(baseOptions?: Apollo.QueryHookOptions<PollsQuery, PollsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+      }
+export function usePollsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollsQuery, PollsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+        }
+export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
+export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
+export type PollsQueryResult = Apollo.QueryResult<PollsQuery, PollsQueryVariables>;
 export const SettingListDocument = gql`
     query SettingList {
   settings {

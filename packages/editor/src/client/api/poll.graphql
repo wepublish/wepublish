@@ -11,3 +11,21 @@ mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) 
         }
     }
 }
+
+query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
+    polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+        nodes {
+            id
+            question
+            opensAt
+            closedAt
+        }
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+        totalCount
+    }
+}

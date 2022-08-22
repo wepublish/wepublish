@@ -2,7 +2,7 @@ import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
-import {Button, Notification, toaster} from 'rsuite'
+import {Button, Message, toaster} from 'rsuite'
 
 import {useCreatePollMutation} from '../../api'
 
@@ -24,7 +24,7 @@ export function CreatePollBtn() {
    * I error was thrown during poll creation, show it to the user.
    */
   useEffect(() => {
-    toaster.push(<Notification type="error" header={error?.name} duration={5000} />, {
+    toaster.push(<Message type="error" showIcon closable duration={3000} />, {
       placement: 'bottomCenter'
     })
   }, [error])
