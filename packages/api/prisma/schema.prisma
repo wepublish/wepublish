@@ -218,10 +218,23 @@ model Comment {
   authorType      CommentAuthorType
   guestUsername   String?
 
-  user User? @relation(fields: [userID], references: [id])
+  user User?            @relation(fields: [userID], references: [id])
+  tags TaggedComments[]
 
   @@index([createdAt])
   @@map("comments")
+}
+
+model TaggedComments {
+  comment    Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([commentId, tagId])
+  @@map("comments.tagged-comments")
 }
 
 model InvoiceItem {
@@ -685,4 +698,22 @@ model Setting {
   settingRestriction Json
 
   @@map("settings")
+}
+
+enum TagType {
+  Comment @map("comment")
+}
+
+model Tag {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type TagType
+  tag  String?
+
+  comments TaggedComments[]
+
+  @@unique([type, tag])
+  @@map("tags")
 }

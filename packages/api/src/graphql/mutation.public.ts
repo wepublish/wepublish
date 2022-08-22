@@ -31,7 +31,7 @@ import {
   GraphQLPublicComment,
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput
-} from './comment'
+} from './comment/comment'
 import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'

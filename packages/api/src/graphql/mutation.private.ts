@@ -27,7 +27,7 @@ import {
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
-import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment/comment'
 import {takeActionOnComment} from './comment/comment.private-mutation'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
@@ -89,6 +89,8 @@ import {
   deleteSubscriptionById,
   updateAdminSubscription
 } from './subscription/subscription.private-mutation'
+import {GraphQLTag, GraphQLTagType} from './tag/tag'
+import {createTag, deleteTag, updateTag} from './tag/tag.private-mutation'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {createToken, deleteTokenById} from './token/token.private-mutation'
 import {GraphQLUser, GraphQLUserInput} from './user'
@@ -873,6 +875,37 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {value}, {authenticate, prisma}) =>
         updateSettings(value, authenticate, prisma)
+    },
+
+    // Tag
+    // ==========
+
+    createTag: {
+      type: GraphQLTag,
+      args: {
+        tag: {type: GraphQLString},
+        type: {type: GraphQLNonNull(GraphQLTagType)}
+      },
+      resolve: (root, {tag, type}, {authenticate, prisma}) =>
+        createTag(tag, type, authenticate, prisma.tag)
+    },
+
+    updateTag: {
+      type: GraphQLTag,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        tag: {type: GraphQLString}
+      },
+      resolve: (root, {id, tag}, {authenticate, prisma}) =>
+        updateTag(id, tag, authenticate, prisma.tag)
+    },
+
+    deleteTag: {
+      type: GraphQLTag,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {tag}}) => deleteTag(id, authenticate, tag)
     }
   }
 })

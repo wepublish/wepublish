@@ -20,6 +20,22 @@ export const createCommentOrder = (
   }
 }
 
+const createTagFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+  if (filter?.tags) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tags
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
   if (filter?.states) {
     return {
@@ -33,7 +49,7 @@ const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereI
 }
 
 export const createCommentFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => ({
-  AND: [createStateFilter(filter)]
+  AND: [createStateFilter(filter), createTagFilter(filter)]
 })
 
 export const getComments = async (

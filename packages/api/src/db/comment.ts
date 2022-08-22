@@ -45,4 +45,5 @@ export enum CommentSort {
 
 export interface CommentFilter {
   readonly states?: CommentState[]
+  readonly tags?: string[]
 }

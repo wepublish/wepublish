@@ -41,7 +41,7 @@ import {
   GraphQLAuthorSort
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment/comment'
 import {getAdminComments} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
@@ -109,6 +109,8 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
+import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, TagSort} from './tag/tag.private-query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
@@ -638,6 +640,23 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Tag
+    // ==========
+
+    tags: {
+      type: GraphQLTagConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLTagFilter},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
+        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     }
   }
 })

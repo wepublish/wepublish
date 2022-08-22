@@ -483,6 +483,30 @@ export const CanUpdateSettings: Permission = {
   deprecated: false
 }
 
+export const CanCreateTag: Permission = {
+  id: 'CAN_CREATE_TAG',
+  description: 'Allows to create a tag',
+  deprecated: false
+}
+
+export const CanUpdateTag: Permission = {
+  id: 'CAN_UPDATE_TAG',
+  description: 'Allows to update a tag',
+  deprecated: false
+}
+
+export const CanGetTag: Permission = {
+  id: 'CAN_GET_TAG',
+  description: 'Allows to get all tags',
+  deprecated: false
+}
+
+export const CanDeleteTag: Permission = {
+  id: 'CAN_DELETE_TAG',
+  description: 'Allows to delete a tag',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -556,7 +580,11 @@ export const AllPermissions: Permission[] = [
   CanDeleteSubscription,
   CanLoginAsOtherUser,
   CanGetSettings,
-  CanUpdateSettings
+  CanUpdateSettings,
+  CanCreateTag,
+  CanUpdateTag,
+  CanGetTag,
+  CanDeleteTag
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -580,7 +608,11 @@ export const EditorPermissions: Permission[] = [
   CanGetPeer,
   CanGetPeers,
   CanLoginEditor,
-  CanGetSettings
+  CanGetSettings,
+  CanCreateTag,
+  CanUpdateTag,
+  CanGetTag,
+  CanDeleteTag
 ]
 
 export const PeerPermissions: Permission[] = [

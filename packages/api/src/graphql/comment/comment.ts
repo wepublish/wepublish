@@ -15,14 +15,14 @@ import {
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {Context} from '../context'
-import {CommentRevision, PublicComment, Comment, CommentSort} from '../db/comment'
-import {unselectPassword} from '../db/user'
-import {createProxyingResolver} from '../utility'
-import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
-import {GraphQLPageInfo} from './common'
-import {GraphQLRichText} from './richText'
-import {GraphQLPublicUser, GraphQLUser} from './user'
+import {Context} from '../../context'
+import {CommentRevision, PublicComment, Comment, CommentSort} from '../../db/comment'
+import {unselectPassword} from '../../db/user'
+import {createProxyingResolver} from '../../utility'
+import {getPublicChildrenCommentsByParentId} from './comment.public-queries'
+import {GraphQLPageInfo} from '../common'
+import {GraphQLRichText} from '../richText'
+import {GraphQLPublicUser, GraphQLUser} from '../user'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
