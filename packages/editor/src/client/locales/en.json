@@ -541,7 +541,17 @@
     },
     "pollList": {
       "title": "Polls",
-      "createNew": "Create Poll"
+      "createNew": "Create Poll",
+      "question": "Question",
+      "opensAt": "Opens at",
+      "openedAt": "Opened at {{openedAt}}",
+      "pollWillOpenAt": "Opens at {{opensAt}}",
+      "noQuestion": "No question captured",
+      "hasBeenClosedAt": "Closed at {{closedAt}}",
+      "closedAt": "Closed at",
+      "closedAtNone": "Not closed",
+      "answersCount": "Possible answers",
+      "state": "State"
     },
     "pollEditView": {
       "loadingTitle": "Loading poll...",

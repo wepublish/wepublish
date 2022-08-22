@@ -541,7 +541,17 @@
     },
     "pollList": {
       "title": "Umfragen",
-      "createNew": "Umfrage erstellen"
+      "createNew": "Umfrage erstellen",
+      "question": "Frage",
+      "opensAt": "Beginnt am",
+      "openedAt": "Begonnen am {{openedAt}}",
+      "pollWillOpenAt": "Beginnt am {{opensAt}}",
+      "noQuestion": "Keine Frage erfasst",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt}}",
+      "closedAt": "Geschlossen am",
+      "closedAtNone": "Nicht geschlossen",
+      "answersCount": "Erfasste Antworten",
+      "state": "Status"
     },
     "pollEditView": {
       "loadingTitle": "Lade Umfrage...",

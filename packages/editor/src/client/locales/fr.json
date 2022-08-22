@@ -890,7 +890,17 @@
     },
     "pollList": {
       "title": "Sondages",
-      "createNew": "Créer Sondage"
+      "createNew": "Créer Sondage",
+      "question": "Question",
+      "opensAt": "Débute le",
+      "openedAt": "Débuté le {{openedAt}}",
+      "pollWillOpenAt": "Débute le {{opensAt}}",
+      "noQuestion": "Aucune question saisie",
+      "hasBeenClosedAt": "Fermé le {{closedAt}}",
+      "closedAt": "Fermé le",
+      "closedAtNone": "Non fermé",
+      "answersCount": "Réponses saisies",
+      "state": "État"
     },
     "pollEditView": {
       "loadingTitle": "Chargement du sondage...",
