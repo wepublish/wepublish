@@ -543,6 +543,11 @@
       "title": "Umfragen",
       "createNew": "Umfrage erstellen"
     },
+    "pollEditView": {
+      "loadingTitle": "Lade Umfrage...",
+      "saveTitle": "Speichern",
+      "saveAndCloseTitle": "Speichern & Schliessen"
+    },
     "navbar": {
       "articles": "Artikel",
       "blocks": {

@@ -1,6 +1,6 @@
 import {ArrowLeftLine} from '@rsuite/icons'
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
 
 interface modelTitleProps {
@@ -9,7 +9,7 @@ interface modelTitleProps {
   loadingTitle: string
   saveTitle: string
   saveAndCloseTitle: string
-  close(): void
+  closePath: string
 }
 
 export function ModelTitle({
@@ -18,8 +18,17 @@ export function ModelTitle({
   loadingTitle,
   saveTitle,
   saveAndCloseTitle,
-  close
+  closePath
 }: modelTitleProps) {
+  const navigate = useNavigate()
+
+  /**
+   * FUNCTIONS
+   */
+  function close(): void {
+    navigate(closePath)
+  }
+
   /**
    * UI helpers
    */
@@ -67,7 +76,7 @@ export function ModelTitle({
         <FlexboxGrid.Item colspan={12}>
           <Row>
             <Col xs={2} style={{paddingTop: '3px'}}>
-              <Link to="/users">
+              <Link to={closePath}>
                 <h1>
                   <ArrowLeftLine />
                 </h1>

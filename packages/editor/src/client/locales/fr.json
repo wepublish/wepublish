@@ -892,6 +892,11 @@
       "title": "Sondages",
       "createNew": "Créer Sondage"
     },
+    "pollEditView": {
+      "loadingTitle": "Chargement du sondage...",
+      "saveTitle": "Enregistrer",
+      "saveAndCloseTitle": "Enregistrer & Fermer"
+    },
     "navbar": {
       "languageSwitch": {
         "currentLanguage": "Anglais",

@@ -543,6 +543,11 @@
       "title": "Polls",
       "createNew": "Create Poll"
     },
+    "pollEditView": {
+      "loadingTitle": "Loading poll...",
+      "saveTitle": "Save",
+      "saveAndCloseTitle": "Save & Close"
+    },
     "navbar": {
       "articles": "Articles",
       "blocks": {

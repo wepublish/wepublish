@@ -1,13 +1,11 @@
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useNavigate} from 'react-router-dom'
 import {FlexboxGrid, Message, toaster} from 'rsuite'
 
 import {usePollsQuery} from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
 
 export function PollEditView() {
-  const navigate = useNavigate()
   const {data, loading, error} = usePollsQuery()
   const {t} = useTranslation()
 
@@ -15,24 +13,26 @@ export function PollEditView() {
    * Handling errors
    */
   useEffect(() => {
-    toaster.push(<Message type="error" showIcon closable duration={3000} />)
+    if (error?.message) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {error.message}
+        </Message>
+      )
+    }
   }, [error])
-
-  function close(): void {
-    navigate('/polls')
-  }
 
   return (
     <>
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+        <FlexboxGrid.Item colspan={24}>
           <ModelTitle
             loading={loading}
-            title={data.polls}
+            title={'Mein Title'}
             loadingTitle={t('pollEditView.loadingTitle')}
             saveTitle={t('pollEditView.saveTitle')}
             saveAndCloseTitle={t('pollEditView.saveAndCloseTitle')}
-            close={close}
+            closePath="/polls"
           />
         </FlexboxGrid.Item>
       </FlexboxGrid>
