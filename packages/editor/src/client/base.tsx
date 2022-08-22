@@ -1,3 +1,4 @@
+import GridIcon from '@rsuite/icons/Grid'
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
 import BarsIcon from '@rsuite/icons/legacy/Bars'
@@ -124,6 +125,14 @@ export function Base({children}: BaseProps) {
 
                 <Nav.Item as={NavLink} href="/pages" icon={<FrameIcon />} active={path === 'pages'}>
                   {t('navbar.pages')}
+                </Nav.Item>
+
+                <Nav.Item
+                  as={NavLink}
+                  href="/blocks"
+                  active={path === 'blocks'}
+                  icon={<GridIcon />}>
+                  {t('navbar.blocks')}
                 </Nav.Item>
 
                 <Nav.Item
