@@ -895,7 +895,10 @@
         "close": "Fermer"
       },
       "articles": "Articles",
-      "blocks": "Blocs de contenu",
+      "blocks": {
+        "topMenu": "Blocs de contenu",
+        "polls": "Sondages"
+      },
       "authors": "Auteurs/Autrices",
       "comments": "Commentaires",
       "imageLibrary": "Bibliothèque d'images",

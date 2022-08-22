@@ -541,7 +541,10 @@
     },
     "navbar": {
       "articles": "Artikel",
-      "blocks": "Inhalts-Blöcke",
+      "blocks": {
+        "topMenu": "Inhalts-Blöcke",
+        "polls": "Umfrage"
+      },
       "authors": "Autor*innen",
       "comments": "Kommentare",
       "imageLibrary": "Bilder",

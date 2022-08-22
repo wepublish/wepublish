@@ -541,7 +541,10 @@
     },
     "navbar": {
       "articles": "Articles",
-      "blocks": "Content Blocks",
+      "blocks": {
+        "topMenu": "Content Blocks",
+        "polls": "Polls"
+      },
       "authors": "Authors",
       "comments": "Comments",
       "settings": "Settings",

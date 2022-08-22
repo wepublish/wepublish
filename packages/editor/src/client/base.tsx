@@ -18,6 +18,7 @@ import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import SpeakerIcon from '@rsuite/icons/Speaker'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
@@ -127,13 +128,15 @@ export function Base({children}: BaseProps) {
                   {t('navbar.pages')}
                 </Nav.Item>
 
-                <Nav.Item
-                  as={NavLink}
-                  href="/blocks"
-                  active={path === 'blocks'}
-                  icon={<GridIcon />}>
-                  {t('navbar.blocks')}
-                </Nav.Item>
+                <Nav.Menu eventKey={'1'} title={t('navbar.blocks.topMenu')} icon={<GridIcon />}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/polls"
+                    active={path === 'polls'}
+                    icon={<SpeakerIcon />}>
+                    {t('navbar.blocks.polls')}
+                  </Nav.Item>
+                </Nav.Menu>
 
                 <Nav.Item
                   as={NavLink}
@@ -167,7 +170,7 @@ export function Base({children}: BaseProps) {
                   {t('navbar.authors')}
                 </Nav.Item>
 
-                <Nav.Menu eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
+                <Nav.Menu eventKey={'2'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
                   <Nav.Item
                     as={NavLink}
                     href="/users"
