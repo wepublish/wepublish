@@ -41,6 +41,9 @@ export const createPoll = (
           data: [{answer: ''}, {answer: ''}]
         }
       }
+    },
+    include: {
+      answers: true
     }
   })
 }
