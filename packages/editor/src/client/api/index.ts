@@ -25,6 +25,8 @@ export type Scalars = {
   Value: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+  /** A valid vote value */
+  VoteValue: any;
 };
 
 export type AllowedSettingVals = {
@@ -430,6 +432,16 @@ export type FlexTeaserInput = {
   alignment: FlexAlignmentInput;
 };
 
+export type FullPoll = {
+  __typename?: 'FullPoll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['Date'];
+  closedAt?: Maybe<Scalars['Date']>;
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+};
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
@@ -765,6 +777,13 @@ export type Mutation = {
   rejectComment: Comment;
   requestChangesOnComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
+  createPoll?: Maybe<PollWithAnswers>;
+  createPollAnswer?: Maybe<PollAnswer>;
+  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
+  updatePoll?: Maybe<FullPoll>;
+  deletePoll?: Maybe<FullPoll>;
+  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
+  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
 };
 
 
@@ -1079,6 +1098,50 @@ export type MutationUpdateSettingListArgs = {
   value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
 };
 
+
+export type MutationCreatePollArgs = {
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closesAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollAnswerArgs = {
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdatePollArgs = {
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer>>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources>>;
+};
+
+
+export type MutationDeletePollArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollAnswerArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID'];
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -1388,6 +1451,69 @@ export type PolisConversationBlockInput = {
   conversationID: Scalars['String'];
 };
 
+export type Poll = {
+  __typename?: 'Poll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['Date'];
+  closedAt?: Maybe<Scalars['Date']>;
+};
+
+export type PollAnswer = {
+  __typename?: 'PollAnswer';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+  votes: Scalars['Int'];
+};
+
+export type PollConnection = {
+  __typename?: 'PollConnection';
+  nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote';
+  id: Scalars['ID'];
+  answerId: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource';
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<PollExternalVote>>;
+};
+
+export type PollFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>;
+};
+
+export enum PollSort {
+  OpensAt = 'OPENS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type PollWithAnswers = {
+  __typename?: 'PollWithAnswers';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['Date'];
+  closedAt?: Maybe<Scalars['Date']>;
+  answers?: Maybe<Array<PollAnswer>>;
+};
+
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
@@ -1446,6 +1572,7 @@ export type Query = {
   payments: PaymentConnection;
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
+  polls?: Maybe<PollConnection>;
 };
 
 
@@ -1679,6 +1806,16 @@ export type QueryPaymentsArgs = {
 
 export type QuerySettingArgs = {
   name?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPollsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
 };
 
 export type QuoteBlock = {
@@ -1951,6 +2088,22 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type UpdatePollAnswer = {
+  id: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePollExternalVote = {
+  id: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type UpdatePollExternalVoteSources = {
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<UpdatePollExternalVote>>;
+};
+
 export type UpdateSettingArgs = {
   name: SettingName;
   value: Scalars['Value'];
@@ -2096,6 +2249,7 @@ export type VimeoVideoBlock = {
 export type VimeoVideoBlockInput = {
   videoID: Scalars['String'];
 };
+
 
 export type YouTubeVideoBlock = {
   __typename?: 'YouTubeVideoBlock';
@@ -3672,6 +3826,25 @@ export type DeletePeerMutation = (
   & { deletePeer?: Maybe<(
     { __typename?: 'Peer' }
     & PeerRefFragment
+  )> }
+);
+
+export type CreatePollMutationVariables = Exact<{
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closesAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { createPoll?: Maybe<(
+    { __typename?: 'PollWithAnswers' }
+    & Pick<PollWithAnswers, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswer' }
+      & Pick<PollAnswer, 'id' | 'pollId' | 'answer'>
+    )>> }
   )> }
 );
 
@@ -7167,6 +7340,49 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const CreatePollDocument = gql`
+    mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) {
+  createPoll(opensAt: $opensAt, closesAt: $closesAt, question: $question) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+    }
+  }
+}
+    `;
+export type CreatePollMutationFn = Apollo.MutationFunction<CreatePollMutation, CreatePollMutationVariables>;
+
+/**
+ * __useCreatePollMutation__
+ *
+ * To run a mutation, you first call `useCreatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollMutation, { data, loading, error }] = useCreatePollMutation({
+ *   variables: {
+ *      opensAt: // value for 'opensAt'
+ *      closesAt: // value for 'closesAt'
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, options);
+      }
+export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
+export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
+export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const SettingListDocument = gql`
     query SettingList {
   settings {

@@ -1,0 +1,13 @@
+mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) {
+    createPoll(opensAt: $opensAt, closesAt: $closesAt, question: $question) {
+        id
+        question
+        opensAt
+        closedAt
+        answers {
+            id
+            pollId
+            answer
+        }
+    }
+}

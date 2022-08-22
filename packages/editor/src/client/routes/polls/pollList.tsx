@@ -1,8 +1,8 @@
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link} from 'react-router-dom'
-import {Button, FlexboxGrid, Table} from 'rsuite'
+import {FlexboxGrid} from 'rsuite'
+
+import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 
 export function PollList() {
   const {t} = useTranslation()
@@ -17,12 +17,7 @@ export function PollList() {
 
         {/* create new poll */}
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right', alignSelf: 'center'}}>
-          <Link to="polls/create">
-            <Button appearance="primary" color="green" size="lg">
-              <PlusIcon style={{marginRight: '5px'}} />
-              {t('pollList.createNew')}
-            </Button>
-          </Link>
+          <CreatePollBtn />
         </FlexboxGrid.Item>
 
         {/* table */}
