@@ -733,7 +733,7 @@ model PollVote {
   answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
 
   // While the poll can be infered through the answer, having the pollId in this table
-  // allows to make sure a sure only casts 1 vote per poll
+  // allows to make sure a user only casts 1 vote per poll
   pollId String
   poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
