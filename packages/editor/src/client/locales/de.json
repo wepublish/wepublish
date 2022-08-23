@@ -556,7 +556,10 @@
     "pollEditView": {
       "loadingTitle": "Lade Umfrage...",
       "saveTitle": "Speichern",
-      "saveAndCloseTitle": "Speichern & Schliessen"
+      "saveAndCloseTitle": "Speichern & Schliessen",
+      "question": "Frage",
+      "toBeOrNotToBe": "Sein oder nicht sein?",
+      "questionRequired": "Bitte gib Deine Frage ein."
     },
     "navbar": {
       "articles": "Artikel",

@@ -557,7 +557,9 @@
       "loadingTitle": "Loading poll...",
       "saveTitle": "Save",
       "saveAndCloseTitle": "Save & Close",
-      "question": "To be or not to be?"
+      "question": "Poll question",
+      "toBeOrNotToBe": "To be or not to be?",
+      "questionRequired": "Please enter your poll question."
     },
     "navbar": {
       "articles": "Articles",

@@ -911,7 +911,10 @@
       "languageSwitch": {
         "currentLanguage": "Anglais",
         "selectNewLanguage": "Sélectionner une nouvelle langue",
-        "close": "Fermer"
+        "close": "Fermer",
+        "question": "Question de sondage",
+        "toBeOrNotToBe": "Être ou ne pas être?",
+        "questionRequired": "Veuillez saisir votre question de sondage."
       },
       "articles": "Articles",
       "blocks": {

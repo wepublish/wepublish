@@ -12,7 +12,9 @@ import {dateTimeLocalString} from '../../utility'
 
 export function PollList() {
   const {t} = useTranslation()
-  const {data, loading, error} = usePollsQuery()
+  const {data, loading, error} = usePollsQuery({
+    fetchPolicy: 'no-cache'
+  })
 
   /**
    * Handling error on loading polls.

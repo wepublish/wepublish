@@ -3854,6 +3854,35 @@ export type CreatePollMutation = (
   )> }
 );
 
+export type UpdatePollMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
+}>;
+
+
+export type UpdatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePoll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & Pick<PollExternalVoteSource, 'id' | 'source'>
+      & { voteAmounts?: Maybe<Array<(
+        { __typename?: 'PollExternalVote' }
+        & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
+      )>> }
+    )>> }
+  )> }
+);
+
 export type PollsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
@@ -7438,6 +7467,62 @@ export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const UpdatePollDocument = gql`
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+  updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      id
+      source
+      voteAmounts {
+        id
+        answerId
+        amount
+      }
+    }
+  }
+}
+    `;
+export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, UpdatePollMutationVariables>;
+
+/**
+ * __useUpdatePollMutation__
+ *
+ * To run a mutation, you first call `useUpdatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePollMutation, { data, loading, error }] = useUpdatePollMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      opensAt: // value for 'opensAt'
+ *      closedAt: // value for 'closedAt'
+ *      question: // value for 'question'
+ *      answers: // value for 'answers'
+ *      externalVoteSources: // value for 'externalVoteSources'
+ *   },
+ * });
+ */
+export function useUpdatePollMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePollMutation, UpdatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePollMutation, UpdatePollMutationVariables>(UpdatePollDocument, options);
+      }
+export type UpdatePollMutationHookResult = ReturnType<typeof useUpdatePollMutation>;
+export type UpdatePollMutationResult = Apollo.MutationResult<UpdatePollMutation>;
+export type UpdatePollMutationOptions = Apollo.BaseMutationOptions<UpdatePollMutation, UpdatePollMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
   polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {

@@ -12,6 +12,30 @@ mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) 
     }
 }
 
+mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+    updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+        id
+        question
+        opensAt
+        closedAt
+        answers {
+            id
+            pollId
+            answer
+            votes
+        }
+        externalVoteSources {
+            id
+            source
+            voteAmounts {
+                id
+                answerId
+                amount
+            }
+        }
+    }
+}
+
 query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
     polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
         nodes {
