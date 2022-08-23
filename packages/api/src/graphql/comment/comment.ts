@@ -23,6 +23,7 @@ import {getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
+import {GraphQLTag} from '../tag/tag'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -149,6 +150,21 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
             })
           : null
       )
+    },
+    tags: {
+      type: GraphQLList(GraphQLTag),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
+        const tags = await taggedComments.findMany({
+          where: {
+            commentId: id
+          },
+          include: {
+            tag: true
+          }
+        })
+
+        return tags.map(({tag}) => tag)
+      })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
     itemID: {type: GraphQLNonNull(GraphQLID)},

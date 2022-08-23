@@ -208,7 +208,6 @@ model Comment {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  userID          String?
   itemID          String
   itemType        CommentItemType
   parentID        String?
@@ -218,7 +217,9 @@ model Comment {
   authorType      CommentAuthorType
   guestUsername   String?
 
-  user User?            @relation(fields: [userID], references: [id])
+  user   User?   @relation(fields: [userID], references: [id])
+  userID String?
+
   tags TaggedComments[]
 
   @@index([createdAt])

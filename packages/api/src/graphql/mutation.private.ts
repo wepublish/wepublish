@@ -27,8 +27,16 @@ import {
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
-import {GraphQLComment, GraphQLCommentRejectionReason} from './comment/comment'
-import {takeActionOnComment} from './comment/comment.private-mutation'
+import {
+  GraphQLComment,
+  GraphQLCommentItemType,
+  GraphQLCommentRejectionReason
+} from './comment/comment'
+import {
+  createAdminComment,
+  takeActionOnComment,
+  updateComment
+} from './comment/comment.private-mutation'
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
@@ -72,6 +80,7 @@ import {
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
 import {authorise, CanSendJWTLogin} from './permissions'
+import {GraphQLRichText} from './richText'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -824,6 +833,31 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
         deleteInvoiceById(id, authenticate, invoice)
+    },
+
+    updateComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        text: {type: GraphQLRichText},
+        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve: (root, {id, text, tagIds}, {authenticate, prisma: {comment}}) =>
+        updateComment(id, text, tagIds, authenticate, comment)
+    },
+
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        text: {type: GraphQLRichText},
+        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+        itemID: {type: GraphQLNonNull(GraphQLID)},
+        itemType: {
+          type: GraphQLNonNull(GraphQLCommentItemType)
+        }
+      },
+      resolve: (root, {text, tagIds, itemID, itemType}, {authenticate, prisma: {comment}}) =>
+        createAdminComment(itemID, itemType, text, tagIds, authenticate, comment)
     },
 
     approveComment: {
