@@ -15,7 +15,11 @@ export const deletePoll = (
   return poll.delete({
     where: {id: pollId},
     include: {
-      answers: true,
+      answers: {
+        include: {
+          _count: true
+        }
+      },
       externalVoteSources: {
         include: {
           voteAmounts: true
@@ -100,7 +104,11 @@ export const updatePoll = (
       }
     },
     include: {
-      answers: true,
+      answers: {
+        include: {
+          _count: true
+        }
+      },
       externalVoteSources: {
         include: {
           voteAmounts: true
