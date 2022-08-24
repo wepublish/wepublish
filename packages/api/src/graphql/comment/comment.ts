@@ -152,7 +152,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     tags: {
-      type: GraphQLList(GraphQLTag),
+      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
         const tags = await taggedComments.findMany({
           where: {
