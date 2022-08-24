@@ -1,20 +1,23 @@
 import {PlayOutline} from '@rsuite/icons'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import OffIcon from '@rsuite/icons/Off'
 import WaitIcon from '@rsuite/icons/Wait'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
-import {FlexboxGrid, Message, Table, toaster} from 'rsuite'
+import {FlexboxGrid, IconButton, Message, Table, toaster} from 'rsuite'
 
 import {FullPoll, usePollsQuery} from '../../api'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
+import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {dateTimeLocalString} from '../../utility'
 
 export function PollList() {
   const {t} = useTranslation()
-  const {data, loading, error} = usePollsQuery({
+  const {data, loading, error, refetch} = usePollsQuery({
     fetchPolicy: 'no-cache'
   })
+  const [pollDelete, setPollDelete] = useState<FullPoll | undefined>(undefined)
 
   /**
    * Handling error on loading polls.
@@ -23,7 +26,7 @@ export function PollList() {
     if (error?.message) {
       toaster.push(
         <Message type="error" showIcon closable duration={3000}>
-          {error.message}
+          {error?.message}
         </Message>
       )
     }
@@ -144,9 +147,25 @@ export function PollList() {
                 {(rowData: FullPoll) => rowData.answers?.length || 0}
               </Table.Cell>
             </Table.Column>
+            {/* delete */}
+            <Table.Column resizable>
+              <Table.HeaderCell>{t('polList.delete')}</Table.HeaderCell>
+              <Table.Cell dataKey={'delete'} align={'center'} style={{padding: '5px 0'}}>
+                {(poll: FullPoll) => (
+                  <IconButton
+                    icon={<TrashIcon />}
+                    circle
+                    size="sm"
+                    onClick={() => setPollDelete(poll)}
+                  />
+                )}
+              </Table.Cell>
+            </Table.Column>
           </Table>
         </FlexboxGrid.Item>
       </FlexboxGrid>
+
+      <DeletePollModal poll={pollDelete} afterDelete={refetch} setPol={setPollDelete} />
     </>
   )
 }

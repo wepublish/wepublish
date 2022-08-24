@@ -551,7 +551,15 @@
       "closedAt": "Closed at",
       "closedAtNone": "Not closed",
       "answersCount": "Possible answers",
-      "state": "State"
+      "state": "State",
+      "delete": "Delete",
+      "pollDeleted": "Poll deleted."
+    },
+    "deletePollModal": {
+      "title": "Delete Poll?",
+      "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
+      "deleteBtn": "Yes, delete",
+      "cancelBtn": "Cancel"
     },
     "pollEditView": {
       "loadingTitle": "Loading poll...",
@@ -559,7 +567,8 @@
       "saveAndCloseTitle": "Save & Close",
       "question": "Poll question",
       "toBeOrNotToBe": "To be or not to be?",
-      "questionRequired": "Please enter your poll question."
+      "questionRequired": "Please enter your poll question.",
+      "savedSuccessfully": "Poll saved."
     },
     "navbar": {
       "articles": "Articles",

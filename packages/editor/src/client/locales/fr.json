@@ -900,7 +900,15 @@
       "closedAt": "Fermé le",
       "closedAtNone": "Non fermé",
       "answersCount": "Réponses saisies",
-      "state": "État"
+      "state": "État",
+      "delete": "Supprimer",
+      "pollDeleted": "Sondage supprimé."
+    },
+    "deletePollModal": {
+      "title": "Supprimer sondage?",
+      "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
+      "deleteBtn": "Oui, supprimer",
+      "cancelBtn": "Annuler"
     },
     "pollEditView": {
       "loadingTitle": "Chargement du sondage...",
@@ -914,7 +922,8 @@
         "close": "Fermer",
         "question": "Question de sondage",
         "toBeOrNotToBe": "Être ou ne pas être?",
-        "questionRequired": "Veuillez saisir votre question de sondage."
+        "questionRequired": "Veuillez saisir votre question de sondage.",
+        "savedSuccessfully": "Sondage sauvgardé"
       },
       "articles": "Articles",
       "blocks": {

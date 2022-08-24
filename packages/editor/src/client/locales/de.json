@@ -551,7 +551,15 @@
       "closedAt": "Geschlossen am",
       "closedAtNone": "Nicht geschlossen",
       "answersCount": "Erfasste Antworten",
-      "state": "Status"
+      "state": "Status",
+      "delete": "Löschen",
+      "pollDeleted": "Umfrage gelöscht."
+    },
+    "deletePollModal": {
+      "title": "Umfrage löschen?",
+      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "cancelBtn": "Abbrechen"
     },
     "pollEditView": {
       "loadingTitle": "Lade Umfrage...",
@@ -559,7 +567,8 @@
       "saveAndCloseTitle": "Speichern & Schliessen",
       "question": "Frage",
       "toBeOrNotToBe": "Sein oder nicht sein?",
-      "questionRequired": "Bitte gib Deine Frage ein."
+      "questionRequired": "Bitte gib Deine Frage ein.",
+      "savedSuccessfully": "Umfrage gespeichert."
     },
     "navbar": {
       "articles": "Artikel",

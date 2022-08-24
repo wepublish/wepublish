@@ -36,6 +36,13 @@ mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $ques
     }
 }
 
+mutation DeletePoll($deletePollId: ID!) {
+    deletePoll(id: $deletePollId) {
+        id
+    }
+}
+
+
 query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
     polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
         nodes {
