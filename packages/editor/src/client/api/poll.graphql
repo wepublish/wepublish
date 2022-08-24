@@ -42,6 +42,20 @@ mutation DeletePoll($deletePollId: ID!) {
     }
 }
 
+mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+    createPollAnswer(pollId: $pollId, answer: $answer) {
+        answer
+        id
+        pollId
+    }
+}
+
+mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+    deletePollAnswer(id: $deletePollAnswerId) {
+        id
+    }
+}
+
 
 query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
     polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {

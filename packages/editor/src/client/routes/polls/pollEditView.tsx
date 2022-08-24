@@ -1,10 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {Col, FlexboxGrid, Form, Message, Row, Schema, toaster} from 'rsuite'
+import {Col, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
-import {FullPoll, usePollQuery, useUpdatePollMutation} from '../../api'
+import {
+  FullPoll,
+  PollAnswer,
+  PollAnswerWithVoteCount,
+  usePollQuery,
+  useUpdatePollMutation
+} from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
+import {PollAnswers} from '../../atoms/poll/pollAnswers'
 
 export function PollEditView() {
   const params = useParams()
@@ -13,7 +20,7 @@ export function PollEditView() {
   const [close, setClose] = useState<boolean>(false)
   const closePath = '/polls'
 
-  const {data, loading: createLoading, error} = usePollQuery({
+  const {data, loading: createLoading, error, refetch} = usePollQuery({
     variables: {
       pollId: params.id
     },
@@ -70,7 +77,8 @@ export function PollEditView() {
     await updatePoll({
       variables: {
         pollId: poll.id,
-        question: poll.question
+        question: poll.question,
+        answers: poll.answers
       }
     })
 
@@ -108,7 +116,7 @@ export function PollEditView() {
 
           {/* content */}
           <FlexboxGrid.Item colspan={8}>
-            <Row style={{width: '100%'}}>
+            <Row>
               <Col xs={24}>
                 {/* question */}
                 <Form.Group controlId="question">
@@ -126,6 +134,27 @@ export function PollEditView() {
                     }}
                   />
                 </Form.Group>
+              </Col>
+              {/* answers */}
+              <Col xs={24}>
+                <Panel header={t('pollEditView.answerPanelHeader')} bordered>
+                  <PollAnswers
+                    poll={poll}
+                    onNewAnswerSaved={async (answer: PollAnswer) => {
+                      if (!poll?.answers) {
+                        return
+                      }
+                      poll.answers.push(answer as PollAnswerWithVoteCount)
+                      await saveOrUpdate()
+                    }}
+                    onPollChange={poll => {
+                      setPoll(poll)
+                    }}
+                    onAnswerDeleted={async () => {
+                      await refetch()
+                    }}
+                  />
+                </Panel>
               </Col>
             </Row>
           </FlexboxGrid.Item>

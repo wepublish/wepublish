@@ -3896,6 +3896,33 @@ export type DeletePollMutation = (
   )> }
 );
 
+export type CreatePollAnswerMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollAnswer?: Maybe<(
+    { __typename?: 'PollAnswer' }
+    & Pick<PollAnswer, 'answer' | 'id' | 'pollId'>
+  )> }
+);
+
+export type DeletePollAnswerMutationVariables = Exact<{
+  deletePollAnswerId: Scalars['ID'];
+}>;
+
+
+export type DeletePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollAnswer?: Maybe<(
+    { __typename?: 'PollAnswerWithVoteCount' }
+    & Pick<PollAnswerWithVoteCount, 'id'>
+  )> }
+);
+
 export type PollsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
@@ -7569,6 +7596,75 @@ export function useDeletePollMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePollMutationHookResult = ReturnType<typeof useDeletePollMutation>;
 export type DeletePollMutationResult = Apollo.MutationResult<DeletePollMutation>;
 export type DeletePollMutationOptions = Apollo.BaseMutationOptions<DeletePollMutation, DeletePollMutationVariables>;
+export const CreatePollAnswerDocument = gql`
+    mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+  createPollAnswer(pollId: $pollId, answer: $answer) {
+    answer
+    id
+    pollId
+  }
+}
+    `;
+export type CreatePollAnswerMutationFn = Apollo.MutationFunction<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+
+/**
+ * __useCreatePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useCreatePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollAnswerMutation, { data, loading, error }] = useCreatePollAnswerMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useCreatePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>(CreatePollAnswerDocument, options);
+      }
+export type CreatePollAnswerMutationHookResult = ReturnType<typeof useCreatePollAnswerMutation>;
+export type CreatePollAnswerMutationResult = Apollo.MutationResult<CreatePollAnswerMutation>;
+export type CreatePollAnswerMutationOptions = Apollo.BaseMutationOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+export const DeletePollAnswerDocument = gql`
+    mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+  deletePollAnswer(id: $deletePollAnswerId) {
+    id
+  }
+}
+    `;
+export type DeletePollAnswerMutationFn = Apollo.MutationFunction<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+
+/**
+ * __useDeletePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useDeletePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollAnswerMutation, { data, loading, error }] = useDeletePollAnswerMutation({
+ *   variables: {
+ *      deletePollAnswerId: // value for 'deletePollAnswerId'
+ *   },
+ * });
+ */
+export function useDeletePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>(DeletePollAnswerDocument, options);
+      }
+export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePollAnswerMutation>;
+export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
+export type DeletePollAnswerMutationOptions = Apollo.BaseMutationOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
   polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
@@ -7596,7 +7692,7 @@ export const PollsDocument = gql`
  * When your component renders, `usePollsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions?? options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
  * const { data, loading, error } = usePollsQuery({
