@@ -1,34 +1,27 @@
 import {ArrowLeftLine} from '@rsuite/icons'
 import React from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
 
 interface modelTitleProps {
   title?: string
   loading: boolean
   loadingTitle: string
-  saveTitle: string
-  saveAndCloseTitle: string
+  saveBtnTitle: string
+  saveAndCloseBtnTitle: string
   closePath: string
+  setCloseFn(close: boolean): void
 }
 
 export function ModelTitle({
   title,
   loading,
   loadingTitle,
-  saveTitle,
-  saveAndCloseTitle,
-  closePath
+  saveBtnTitle,
+  saveAndCloseBtnTitle,
+  closePath,
+  setCloseFn
 }: modelTitleProps) {
-  const navigate = useNavigate()
-
-  /**
-   * FUNCTIONS
-   */
-  function close(): void {
-    navigate(closePath)
-  }
-
   /**
    * UI helpers
    */
@@ -54,7 +47,7 @@ export function ModelTitle({
           type="submit"
           data-testid="saveButton"
           style={{marginRight: '10px'}}>
-          {saveTitle}
+          {saveBtnTitle}
         </Button>
         {/* save and close button */}
         <Button
@@ -62,8 +55,8 @@ export function ModelTitle({
           loading={loading}
           type="submit"
           data-testid="saveAndCloseButton"
-          onClick={() => close()}>
-          {saveAndCloseTitle}
+          onClick={() => setCloseFn(true)}>
+          {saveAndCloseBtnTitle}
         </Button>
       </>
     )

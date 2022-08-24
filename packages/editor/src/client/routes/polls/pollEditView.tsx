@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {Col, FlexboxGrid, Form, Message, Row, Schema, toaster} from 'rsuite'
 
 import {FullPoll, usePollQuery, useUpdatePollMutation} from '../../api'
@@ -8,7 +8,10 @@ import {ModelTitle} from '../../atoms/modelTitle'
 
 export function PollEditView() {
   const params = useParams()
+  const navigate = useNavigate()
   const [poll, setPoll] = useState<FullPoll | undefined>(undefined)
+  const [close, setClose] = useState<boolean>(false)
+  const closePath = '/polls'
 
   const {data, loading: createLoading, error} = usePollQuery({
     variables: {
@@ -60,7 +63,7 @@ export function PollEditView() {
   /**
    * FUNCTIONS
    */
-  async function saveOrUpdate() {
+  async function saveOrUpdate(): Promise<void> {
     if (!poll) {
       return
     }
@@ -76,6 +79,10 @@ export function PollEditView() {
         {t('pollEditView.savedSuccessfully')}
       </Message>
     )
+
+    if (close) {
+      navigate(closePath)
+    }
   }
 
   return (
@@ -92,9 +99,10 @@ export function PollEditView() {
               loading={loading}
               title={poll?.question || t('pollList.noQuestion')}
               loadingTitle={t('pollEditView.loadingTitle')}
-              saveTitle={t('pollEditView.saveTitle')}
-              saveAndCloseTitle={t('pollEditView.saveAndCloseTitle')}
-              closePath="/polls"
+              saveBtnTitle={t('pollEditView.saveTitle')}
+              saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
+              closePath={closePath}
+              setCloseFn={setClose}
             />
           </FlexboxGrid.Item>
 
