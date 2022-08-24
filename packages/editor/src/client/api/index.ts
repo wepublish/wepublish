@@ -7596,7 +7596,7 @@ export const PollsDocument = gql`
  * When your component renders, `usePollsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions?? options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
  * const { data, loading, error } = usePollsQuery({
