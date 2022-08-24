@@ -70,6 +70,12 @@ export function PollEditView() {
         question: poll.question
       }
     })
+
+    toaster.push(
+      <Message type="success" showIcon closable duration={3000}>
+        {t('pollEditView.savedSuccessfully')}
+      </Message>
+    )
   }
 
   return (
@@ -77,7 +83,8 @@ export function PollEditView() {
       <Form
         onSubmit={validationPassed => validationPassed && saveOrUpdate()}
         model={validationModel}
-        fluid>
+        fluid
+        formValue={{question: poll?.question}}>
         <FlexboxGrid>
           {/* model title */}
           <FlexboxGrid.Item colspan={24}>
@@ -92,7 +99,7 @@ export function PollEditView() {
           </FlexboxGrid.Item>
 
           {/* content */}
-          <FlexboxGrid.Item colspan={12}>
+          <FlexboxGrid.Item colspan={8}>
             <Row style={{width: '100%'}}>
               <Col xs={24}>
                 {/* question */}
