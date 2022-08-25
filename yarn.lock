@@ -7110,6 +7110,44 @@
     "@jonkoops/matomo-tracker" "^0.7.0"
     typescript "^4.7.4"
 
+"@wepublish/api-media-karma@*":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-media-karma/-/api-media-karma-4.1.1.tgz#d6bca6deaf429255ec7bb64e852753795766f8e5"
+  integrity sha512-YfHBC9pFC+UVK7mR/vkrFXpRdOBnnWWQxDBWi7Eq2bqv7uFayL+DY1CXPVSec0dDVoIjyq98RPhU6pOsatnDRw==
+  dependencies:
+    form-data "^3.0.0"
+    node-fetch "^2.6.0"
+
+"@wepublish/api@*":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@wepublish/api/-/api-4.1.1.tgz#efbd6fb2665804391c32c645564d230de81185bf"
+  integrity sha512-fadibGfIvgjJseWnlpPRpi1DDYO6E1z7gXGp0BFLdo4a6e0d1hjebePTXXfNQE/vfl1FsemoFw32EvI3lCJ7+w==
+  dependencies:
+    "@karma.run/utility" "^0.1.0"
+    abort-controller "^3.0.0"
+    algebraic-captcha "^1.0.1"
+    apollo-server-express "2.25.3"
+    body-parser "^1.19.0"
+    dataloader "^2.0.0"
+    date-fns "^2.28.0"
+    email-templates "^8.0.7"
+    express "^4.17.1"
+    form-data "^3.0.0"
+    graphql "^14.6.0"
+    graphql-iso-date "^3.6.1"
+    graphql-tag "^2.11.0"
+    graphql-tools "^5.0.0"
+    jsonwebtoken "^8.5.1"
+    mandrill-api "^1.0.45"
+    node-cache "^5.1.2"
+    node-fetch "^2.6.0"
+    openid-client "^3.14.0"
+    pino "^6.11.0"
+    pino-http "^5.3.0"
+    pug "^3.0.2"
+    qs "^6.9.1"
+    stripe "^8.126.0"
+
 "@wepublish/karma.run-react@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@wepublish/karma.run-react/-/karma.run-react-0.2.0.tgz#159f364e3a91cce08ec61a03b773cb03f29eb2e3"
@@ -7120,6 +7158,15 @@
     fela "^10.6.1"
     fela-dom "^10.6.1"
     path-to-regexp "^3.0.0"
+
+"@wepublish/oauth2@*":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@wepublish/oauth2/-/oauth2-4.1.1.tgz#00f3697ab594ae3fd88e103d6035eae31d043ee7"
+  integrity sha512-hnzmSdaYmPi1+2x4DoCFC6IaUaaBrsqy7RBNRmBA1KIYDMVRpP6wkcEoJhpIo+xMrlyOQzVdFAsPln4kxkTVAQ==
+  dependencies:
+    express "^4.17.1"
+    lodash "^4.17.19"
+    oidc-provider "^6.23.4"
 
 "@wry/context@^0.6.0":
   version "0.6.0"
