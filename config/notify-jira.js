@@ -116,6 +116,12 @@ function getJiraTicket() {
 
 async function main() {
   const issue = getJiraTicket()
+
+  if (!issue) {
+    console.warn('No Jira issue found, skipping!')
+    return
+  }
+
   const httpOptions = {
     headers: {
       Authorization: `Basic ${Buffer.from(`${config.email}:${config.token}`).toString('base64')}`
