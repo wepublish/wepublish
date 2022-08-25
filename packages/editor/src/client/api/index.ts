@@ -1901,7 +1901,6 @@ export type Tag = {
   id: Scalars['ID'];
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
-  createdAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type TagConnection = {
@@ -3924,7 +3923,7 @@ export type TagListQuery = (
     & Pick<TagConnection, 'totalCount'>
     & { nodes: Array<(
       { __typename?: 'Tag' }
-      & Pick<Tag, 'id' | 'tag' | 'createdAt'>
+      & Pick<Tag, 'id' | 'tag'>
     )>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
@@ -7611,7 +7610,6 @@ export const TagListDocument = gql`
     nodes {
       id
       tag
-      createdAt
     }
     pageInfo {
       startCursor
