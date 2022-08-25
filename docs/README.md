@@ -80,7 +80,7 @@ then call the method on page load e.g.
 
 The tracker will automatically look in the html structure for an element with an id "peer-element" and take data from this element. Example element to send peer tracking data should look like the following:
 
-    <div id="peer-element" data-peer-name="Some peer name" data-peer-article-id="123" />
+    <div id="peer-element" data-peer-name="Some peer name" data-peer-article-id="123" data-publisher-name="Your name" />
 
 If you want to track page views and send peer name and peer article id, please make sure that this element is present on the peered article page. Otherwise the tracker won't be called.
 
