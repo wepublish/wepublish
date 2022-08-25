@@ -652,7 +652,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLTagFilter},
-        sort: {type: GraphQLTagSort, defaultValue: TagSort.ModifiedAt},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
