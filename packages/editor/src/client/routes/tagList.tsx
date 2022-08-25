@@ -187,11 +187,10 @@ export const TagList = memo<TagListProps>(({type}) => {
     [apiValue, formValue]
   )
 
-  const total = data?.tags?.totalCount
-    ? data.tags.totalCount > Object.keys(apiValue).length
+  const total =
+    data?.tags?.totalCount && data.tags.totalCount > Object.keys(apiValue).length
       ? data.tags.totalCount
       : Object.keys(apiValue).length
-    : 0
 
   useEffect(() => {
     refetch({
@@ -206,6 +205,7 @@ export const TagList = memo<TagListProps>(({type}) => {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('tags.overview.title')}</h2>
         </FlexboxGrid.Item>
+
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Button
             type="button"
@@ -242,21 +242,23 @@ export const TagList = memo<TagListProps>(({type}) => {
               />
             </div>
 
-            <div style={{flex: '1'}}>
+            <div style={{flex: '0 0 auto'}}>
               <IconButtonTooltip caption={t('tags.overview.save')}>
                 <IconButton
                   icon={<SaveIcon />}
                   circle
                   size="sm"
                   style={{marginLeft: '12px'}}
-                  onClick={() =>
+                  onClick={() => {
+                    console.log(tagId, formValue)
+
                     updateTag({
                       variables: {
                         id: tagId,
                         tag: formValue[tagId]
                       }
                     })
-                  }
+                  }}
                   disabled={!shouldUpdateTag(tagId)}
                 />
               </IconButtonTooltip>
