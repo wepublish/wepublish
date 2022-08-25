@@ -17,6 +17,7 @@ import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import TagIcon from '@rsuite/icons/Tag'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
@@ -126,13 +127,23 @@ export function Base({children}: BaseProps) {
                   {t('navbar.pages')}
                 </Nav.Item>
 
-                <Nav.Item
-                  as={NavLink}
-                  href="/comments"
-                  icon={<CommentIcon />}
-                  active={path === 'comments'}>
-                  {t('navbar.comments')}
-                </Nav.Item>
+                <Nav.Menu eventKey={'1'} title={t('navbar.comments')} icon={<CommentIcon />}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/comments"
+                    icon={<CommentIcon />}
+                    active={path === 'comments'}>
+                    {t('navbar.comments')}
+                  </Nav.Item>
+
+                  <Nav.Item
+                    as={NavLink}
+                    href="/comments/tags"
+                    icon={<TagIcon />}
+                    active={path === 'comments/tags'}>
+                    {t('navbar.commentTags')}
+                  </Nav.Item>
+                </Nav.Menu>
 
                 <Nav.Item
                   as={NavLink}
