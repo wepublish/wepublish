@@ -99,7 +99,6 @@ export const TagList = memo<TagListProps>(({type}) => {
   const [tagToDelete, setTagToDelete] = useState<string | null>(null)
 
   const [fetch, {data, loading}] = useTagListLazyQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: limit,
       filter: {
