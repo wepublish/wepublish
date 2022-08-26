@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {Col, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
   FullPoll,
@@ -110,6 +110,7 @@ export function PollEditView() {
         onSubmit={validationPassed => validationPassed && saveOrUpdate()}
         model={validationModel}
         fluid
+        disabled={loading}
         formValue={{question: poll?.question}}>
         <FlexboxGrid>
           {/* model title */}
@@ -126,45 +127,63 @@ export function PollEditView() {
           </FlexboxGrid.Item>
 
           {/* content */}
-          <FlexboxGrid.Item colspan={8}>
+          <FlexboxGrid.Item colspan={12}>
             <Row>
+              {/* question */}
               <Col xs={24}>
-                {/* question */}
-                <Form.Group controlId="question">
-                  <Form.ControlLabel>{t('pollEditView.question')}</Form.ControlLabel>
-                  <Form.Control
-                    name="question"
-                    placeholder={t('pollEditView.toBeOrNotToBe')}
-                    value={poll?.question || ''}
-                    disabled={loading}
-                    onChange={(value: string) => {
-                      if (!poll) {
-                        return
-                      }
-                      setPoll({...poll, question: value})
-                    }}
-                  />
-                </Form.Group>
+                <Panel header={t('pollEditView.QuestionPanelHeader')} bordered>
+                  <Form.Group controlId="question">
+                    <Form.Control
+                      name="question"
+                      placeholder={t('pollEditView.toBeOrNotToBe')}
+                      value={poll?.question || ''}
+                      onChange={(value: string) => {
+                        if (!poll) {
+                          return
+                        }
+                        setPoll({...poll, question: value})
+                      }}
+                    />
+                  </Form.Group>
+                </Panel>
               </Col>
               {/* answers */}
               <Col xs={24}>
                 <Panel header={t('pollEditView.answerPanelHeader')} bordered>
                   <PollAnswers
                     poll={poll}
-                    onNewAnswerSaved={async (answer: PollAnswer) => {
+                    onAnswerAdded={async (answer: PollAnswer) => {
                       if (!poll?.answers) {
                         return
                       }
                       poll.answers.push(answer as PollAnswerWithVoteCount)
                       await saveOrUpdate()
                     }}
-                    onPollChange={poll => {
-                      setPoll(poll)
-                    }}
                     onAnswerDeleted={async () => {
                       await refetch()
                     }}
+                    onPollUpdated={poll => {
+                      setPoll(poll)
+                    }}
                   />
+                </Panel>
+              </Col>
+              {/* settings */}
+              <Col xs={24}>
+                <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
+                  <Form.Group>
+                    <Form.ControlLabel>{t('pollEditView.opensAtLabel')}</Form.ControlLabel>
+                    <DatePicker
+                      value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                      format="yyyy-MM-dd HH:mm"
+                      onChange={(value: Date | null) => {
+                        if (!poll) {
+                          return
+                        }
+                        setPoll({...poll, opensAt: value?.toString()})
+                      }}
+                    />
+                  </Form.Group>
                 </Panel>
               </Col>
             </Row>

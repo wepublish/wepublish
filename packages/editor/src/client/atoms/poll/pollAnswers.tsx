@@ -14,15 +14,15 @@ import {
 
 interface PollAnswersProps {
   poll?: FullPoll
-  onPollChange(poll: FullPoll): void
-  onNewAnswerSaved(answer: PollAnswer): Promise<void>
+  onPollUpdated(poll: FullPoll): void
+  onAnswerAdded(answer: PollAnswer): Promise<void>
   onAnswerDeleted(): Promise<void>
 }
 
 export function PollAnswers({
   poll,
-  onPollChange,
-  onNewAnswerSaved,
+  onPollUpdated,
+  onAnswerAdded,
   onAnswerDeleted
 }: PollAnswersProps) {
   const {t} = useTranslation()
@@ -55,7 +55,7 @@ export function PollAnswers({
     })
     const savedAnswer = answer?.data?.createPollAnswer
     if (savedAnswer) {
-      await onNewAnswerSaved(savedAnswer)
+      await onAnswerAdded(savedAnswer)
     }
   }
 
@@ -83,7 +83,7 @@ export function PollAnswers({
       ...poll,
       answers: updatedAnswers
     }
-    await onPollChange(updatedPoll)
+    await onPollUpdated(updatedPoll)
   }
 
   return (
@@ -91,8 +91,8 @@ export function PollAnswers({
       {/* iterate poll answers */}
       <Row>
         {poll?.answers?.map((answer, index) => (
-          <>
-            <Col key={`answer-${answer.id}`} xs={18}>
+          <div key={`answer-${answer.id}`}>
+            <Col xs={18}>
               <Form.Control
                 name={`answer-${answer.id}`}
                 value={answer.answer || `${t('pollEditView.defaultAnswer')} ${index + 1}`}
@@ -113,7 +113,7 @@ export function PollAnswers({
                 onClick={() => deleteAnswer(answer)}
               />
             </Col>
-          </>
+          </div>
         ))}
       </Row>
       {/* adding new poll answer */}
@@ -122,7 +122,6 @@ export function PollAnswers({
           <Form.Control
             name="createNewFormAnswer"
             placeholder={t('pollAnswer.insertYourNewQuestion')}
-            disabled={loading}
             value={newAnswer}
             onChange={(value: string) => {
               setNewAnswer(value)
