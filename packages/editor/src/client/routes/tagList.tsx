@@ -15,8 +15,14 @@ import {
   toaster
 } from 'rsuite'
 
-import {Tag, TagType, useTagListQuery} from '../api'
-import {useCreateTagMutation, useDeleteTagMutation, useUpdateTagMutation} from '../api/index'
+import {
+  Tag,
+  TagType,
+  useCreateTagMutation,
+  useDeleteTagMutation,
+  useTagListLazyQuery,
+  useUpdateTagMutation
+} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
@@ -92,7 +98,8 @@ export const TagList = memo<TagListProps>(({type}) => {
   const [apiValue, dispatchApiValue] = useReducer(tagFormValueReducer, {})
   const [tagToDelete, setTagToDelete] = useState<string | null>(null)
 
-  const {data, loading, refetch} = useTagListQuery({
+  const [fetch, {data, loading}] = useTagListLazyQuery({
+    fetchPolicy: 'network-only',
     variables: {
       take: limit,
       filter: {
@@ -193,9 +200,11 @@ export const TagList = memo<TagListProps>(({type}) => {
       : Object.keys(apiValue).length
 
   useEffect(() => {
-    refetch({
-      take: limit,
-      skip: (page - 1) * limit
+    fetch({
+      variables: {
+        take: limit,
+        skip: (page - 1) * limit
+      }
     })
   }, [limit, page])
 
@@ -250,12 +259,10 @@ export const TagList = memo<TagListProps>(({type}) => {
                   size="sm"
                   style={{marginLeft: '12px'}}
                   onClick={() => {
-                    console.log(tagId, formValue)
-
                     updateTag({
                       variables: {
                         id: tagId,
-                        tag: formValue[tagId]
+                        tag: formValue[tagId] ? formValue[tagId] : null
                       }
                     })
                   }}
