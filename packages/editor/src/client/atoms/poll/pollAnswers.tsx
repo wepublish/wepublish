@@ -1,8 +1,8 @@
 import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Col, Form, IconButton, Row} from 'rsuite'
+import {Button, Col, Form, IconButton, Message, Row, toaster} from 'rsuite'
 
 import {
   FullPoll,
@@ -28,7 +28,17 @@ export function PollAnswers({
   const {t} = useTranslation()
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [createAnswerMutation, {loading}] = useCreatePollAnswerMutation()
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation()
+  const [deleteAnswerMutation, {error}] = useDeletePollAnswerMutation()
+
+  useEffect(() => {
+    if (error) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {error.message}
+        </Message>
+      )
+    }
+  }, [error])
 
   /**
    * FUNCTIONS
@@ -111,6 +121,7 @@ export function PollAnswers({
         <Col xs={18}>
           <Form.Control
             name="createNewFormAnswer"
+            placeholder={t('pollAnswer.insertYourNewQuestion')}
             disabled={loading}
             value={newAnswer}
             onChange={(value: string) => {

@@ -52,12 +52,18 @@ export function PollEditView() {
   useEffect(() => {
     if (data?.poll) {
       setPoll(data.poll)
-    } else if (updateData?.updatePoll) {
+    } else {
+      setPoll(undefined)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (updateData?.updatePoll) {
       setPoll(updateData.updatePoll)
     } else {
       setPoll(undefined)
     }
-  }, [data, updateData])
+  }, [updateData])
 
   /**
    * Form validation model
@@ -78,7 +84,12 @@ export function PollEditView() {
       variables: {
         pollId: poll.id,
         question: poll.question,
-        answers: poll.answers
+        answers: poll.answers?.map(answer => {
+          return {
+            id: answer.id,
+            answer: answer.answer
+          }
+        })
       }
     })
 
