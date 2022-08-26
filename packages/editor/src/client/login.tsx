@@ -183,7 +183,7 @@ export function Login() {
               flexDirection: 'column',
               margin: 0
             }}>
-            <Form.Group>
+            <Form.Group controlId="loginEmail">
               <Form.ControlLabel>{t('login.email')}</Form.ControlLabel>
               <Form.Control
                 name="email"
@@ -193,7 +193,7 @@ export function Login() {
                 onChange={(email: string) => setEmail(email)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="loginPassword">
               <Form.ControlLabel>{t('login.password')}</Form.ControlLabel>
               <Form.Control
                 name="password"

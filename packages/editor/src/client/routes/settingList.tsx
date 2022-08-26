@@ -205,7 +205,7 @@ export function SettingList() {
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
         <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="guestCommenting">
             <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
             <Toggle
               checked={allowGuestComment?.value}
@@ -220,7 +220,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="loginMinutes">
             <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
             <InputGroup>
               <FormControl
@@ -237,7 +237,7 @@ export function SettingList() {
               <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
             </InputGroup>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="passwordToken">
             <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
@@ -254,7 +254,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="peerToken">
             <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
@@ -274,7 +274,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="invoiceReminders">
             <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
             <Form.Control
               name="invoiceTries"
@@ -288,7 +288,7 @@ export function SettingList() {
               }
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="invoiceFrequency">
             <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control

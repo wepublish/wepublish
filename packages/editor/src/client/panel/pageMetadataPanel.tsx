@@ -105,7 +105,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   {t('pageEditor.panels.metadataInfo')}
                 </Message>
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="socialMediaTitle">
                 <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
                 <Form.Control
                   name="social-media-title"
@@ -115,7 +115,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   }}
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="socialMediaDescription">
                 <Form.ControlLabel>
                   {t('pageEditor.panels.socialMediaDescription')}
                 </Form.ControlLabel>
@@ -129,7 +129,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   }}
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="socialMediaImage">
                 <Form.ControlLabel>{t('pageEditor.panels.socialMediaImage')}</Form.ControlLabel>
                 <ChooseEditImage
                   header={''}
@@ -151,7 +151,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
         return (
           <Panel>
             <Form fluid>
-              <Form.Group>
+              <Form.Group controlId="pageSlug">
                 <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
                 <Form.Control
                   name="slug"
@@ -159,7 +159,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   onChange={(slug: string) => onChange?.({...value, slug})}
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="pageTitle">
                 <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
                 <Form.Control
                   name="title"
@@ -168,7 +168,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 />
                 <Form.HelpText>{t('pageEditor.panels.titleHelpBlock')}</Form.HelpText>
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="pageDescription">
                 <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
                 <Form.Control
                   name="description"
@@ -178,7 +178,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 />
                 <Form.HelpText>{t('pageEditor.panels.descriptionHelpBlock')}</Form.HelpText>
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="pageTags">
                 <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
                 <TagPicker
                   virtualized
@@ -189,7 +189,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="pageImage">
                 <Form.ControlLabel>{t('pageEditor.panels.postImage')}</Form.ControlLabel>
                 <ChooseEditImage
                   header={''}
@@ -216,7 +216,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   {t('pageEditor.panels.propertiesInfo')}
                 </Message>
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="pageProperties">
                 <Form.ControlLabel>{t('pageEditor.panels.properties')}</Form.ControlLabel>
                 <ListInput
                   value={metaDataProperties}

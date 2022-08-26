@@ -196,7 +196,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   }}
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group controlId="jobTitle">
                 <Form.ControlLabel>{t('authors.panels.jobTitle')}</Form.ControlLabel>
                 <Form.Control
                   name={t('authors.panels.jobTitle')}

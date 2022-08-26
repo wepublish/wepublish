@@ -166,7 +166,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
         <Drawer.Body>
           <Panel>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodName">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.name'))}
               </Form.ControlLabel>
@@ -180,16 +180,16 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodSlug">
               <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
               <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodIsActive">
               <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodAdapter">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.adapter'))}
               </Form.ControlLabel>
@@ -206,7 +206,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 }
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodDescription">
               <Form.ControlLabel>{t('paymentMethodList.description')}</Form.ControlLabel>
               <Form.Control
                 name="description"
