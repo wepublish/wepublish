@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}-api
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.deployment.api.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helm.name" . }}-api
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "helm.name" . }}-api
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.deployment.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.deployment.imagePullSecret }}
+      {{- end }}
+      containers:
+        - name: {{ include "helm.fullname" . }}
+          image: {{ .Values.deployment.image }}
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ include "helm.fullname" . }}-api-environment
+            {{- if .Values.deployment.api.envFromSecretRefName }}
+            - secretRef:
+                name: {{ .Values.deployment.api.envFromSecretRefName }}
+            {{- end }}
+          {{- with .Values.deployment.api.properties }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
