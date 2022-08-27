@@ -1,7 +1,7 @@
 name: Release helm chart
 
-#on:
-#  push:
+on:
+  push:
 #    branches:
 #      - master
 #    paths:
