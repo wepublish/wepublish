@@ -9,7 +9,7 @@ on:
       - v*
 
 jobs:
-  publish:
+  publish-npm:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
@@ -42,9 +42,14 @@ jobs:
         name: "Publish latest npms"
         run: yarn run publish --yes
 
-  build:
+  publish-docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - uses: actions/checkout@v3
 
       - name: Set up QEMU
@@ -63,14 +68,24 @@ jobs:
       - name: Set RELEASE_VERSION env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - if: "!contains(github.ref, 'tags/')"
+      - name: Set RELEASE_DATE env
+        run: echo "RELEASE_DATE=$(date +%s)" >> $GITHUB_ENV
+
+      - if: "github.ref == 'refs/heads/master'"
         name: "Build and push on master"
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: |
-            ghcr.io/wepublish/wepublish:dev
+            ghcr.io/wepublish/wepublish:master-${{ env.RELEASE_DATE }}-${{ github.sha }}
 
+      if: "contains(github.ref, 'refs/pull/')"
+        name: "Build and push on master"
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            ghcr.io/wepublish/wepublish:pr-
 
       - if: "contains(github.ref, 'tags/') && contains(github.ref, 'alpha')"
         name: "Build and push on alpha release"
