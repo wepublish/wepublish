@@ -37,7 +37,7 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-environment
+                name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
             {{- if .Values.deployment.editor.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.deployment.editor.envFromSecretRefName }}
