@@ -1,4 +1,4 @@
-name: Publish on tags
+name: Publish packages
 
 on:
   pull_request:
