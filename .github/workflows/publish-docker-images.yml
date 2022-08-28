@@ -40,7 +40,7 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/wepublish/wepublish:pull-${{ github.sha }}
+            ghcr.io/wepublish/wepublish:${{ github.sha }}
 
       - if: |
           github.ref == 'refs/heads/master'
