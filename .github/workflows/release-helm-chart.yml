@@ -3,35 +3,22 @@ name: Release helm chart
 on:
   push:
 #    branches:
-#      - master
+#      - 'master'
 #    paths:
-#      - helm/**/*
+#      - 'helm/charts/**/*'
 
 jobs:
-  release:
-    permissions:
-      contents: write
+  app-to-gitlab:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.8.1
-
-      - name: Release chart
-        uses: helm/chart-releaser-action@v1.4.0
-        with:
-          charts_dir: helm/charts
-          charts_repo_url: https://wepublish.github.io/helm-charts
+      - uses: actions/checkout@master
+      - uses: goodsmileduck/helm-push-action@v2
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          SOURCE_DIR: 'helm/charts'
+          CHART_FOLDER: 'app'
+          FORCE: 'True'
+          CHARTMUSEUM_URL: 'https://gitlab.com/api/v4/projects/38941346/packages/helm/stable'
+          CHARTMUSEUM_USER: 'wepublish'
+          CHARTMUSEUM_PASSWORD: ${{ secrets.GITLAB_HELM_TOKEN }}
+
+
