@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const {setFailed} = require('@actions/core')
+const {setFailed, warning} = require('@actions/core')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -116,6 +116,12 @@ function getJiraTicket() {
 
 async function main() {
   const issue = getJiraTicket()
+
+  if (!issue) {
+    warning('No Jira issue found, skipping!')
+    return
+  }
+
   const httpOptions = {
     headers: {
       Authorization: `Basic ${Buffer.from(`${config.email}:${config.token}`).toString('base64')}`
