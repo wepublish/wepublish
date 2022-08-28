@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm.fullname" . }}
+  name: {{ include "helm.fullname" . }}-api
   labels:
     app.kubernetes.io/name: {{ include "helm.name" . }}-api
     helm.sh/chart: {{ include "helm.chart" . }}
