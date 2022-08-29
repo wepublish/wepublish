@@ -20,7 +20,7 @@ import {
   GraphQLString,
   Kind
 } from 'graphql'
-import {GraphQLDate} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {GraphQLPageInfo} from '../common'
@@ -55,8 +55,8 @@ export const GraphQLPoll = new GraphQLObjectType<Poll, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDate)},
-    closedAt: {type: GraphQLDate}
+    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    closedAt: {type: GraphQLDateTime}
   }
 })
 
@@ -90,7 +90,7 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
   name: 'PollVote',
   fields: {
-    createdAt: {type: GraphQLNonNull(GraphQLDate)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
     disabled: {type: GraphQLBoolean}
   }
@@ -146,8 +146,8 @@ export const GraphQLPollWithAnswers = new GraphQLObjectType<Poll, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDate)},
-    closedAt: {type: GraphQLDate},
+    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    closedAt: {type: GraphQLDateTime},
     answers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPollAnswer))
     }
@@ -159,8 +159,8 @@ export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDate)},
-    closedAt: {type: GraphQLDate},
+    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    closedAt: {type: GraphQLDateTime},
 
     answers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPollAnswerWithVoteCount))

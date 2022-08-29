@@ -900,7 +900,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPollWithAnswers,
       args: {
         opensAt: {type: GraphQLDateTime},
-        closesAt: {type: GraphQLDateTime},
+        closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString}
       },
       resolve: (root, input, {authenticate, prisma: {poll}}) =>
