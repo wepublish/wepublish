@@ -23,6 +23,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All article changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer",
         "articlePending": "Article en attente"
@@ -967,6 +968,7 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All page changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer"
       },

@@ -87,7 +87,6 @@ function PageEditor() {
   const pageID = id || createData?.createPage.id
 
   const {data: pageData, refetch, loading: isLoading} = usePageQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
@@ -97,6 +96,7 @@ function PageEditor() {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(pageData?.page?.draft)
   const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
     ? new Date(publishData?.publishPage?.pending?.publishAt)
     : pageData?.page?.pending?.publishAt
@@ -389,7 +389,7 @@ function PageEditor() {
                 <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                   <Link to="#">
                     <IconButton
-                      disabled={hasChanged || !id}
+                      disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
                       size={'lg'}
                       icon={<EyeIcon />}
