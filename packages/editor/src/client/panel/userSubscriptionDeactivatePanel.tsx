@@ -61,7 +61,7 @@ function UserSubscriptionDeactivatePanel({
         </p>
         {!isDeactivated && (
           <Form style={{marginTop: '20px'}} fluid>
-            <Form.Group>
+            <Form.Group controlId="deactivationDate">
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
               <DatePicker
                 block
@@ -71,7 +71,7 @@ function UserSubscriptionDeactivatePanel({
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="deactivationReason">
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</Form.ControlLabel>
               <SelectPicker
                 virtualized

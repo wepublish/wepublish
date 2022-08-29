@@ -112,7 +112,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 {t('pageEditor.panels.metadataInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaTitle">
               <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
               <Form.Control
                 name="social-media-title"
@@ -122,7 +122,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaDescription">
               <Form.ControlLabel>{t('pageEditor.panels.socialMediaDescription')}</Form.ControlLabel>
               <Form.Control
                 name="social-media-description"
@@ -134,7 +134,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaImage">
               <Form.ControlLabel>{t('pageEditor.panels.socialMediaImage')}</Form.ControlLabel>
               <ChooseEditImage
                 header={''}
@@ -154,7 +154,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
       case MetaDataType.General:
         return (
           <>
-            <Form.Group>
+            <Form.Group controlId="pageSlug">
               <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
               <Form.Control
                 name="slug"
@@ -162,7 +162,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 onChange={(slug: string) => onChange?.({...value, slug})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="pageTitle">
               <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
               <Form.Control
                 name="title"
@@ -171,7 +171,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
               />
               <Form.HelpText>{t('pageEditor.panels.titleHelpBlock')}</Form.HelpText>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="pageDescription">
               <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
               <Form.Control
                 name="description"
@@ -181,7 +181,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
               />
               <Form.HelpText>{t('pageEditor.panels.descriptionHelpBlock')}</Form.HelpText>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="pageTags">
               <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
                 disabled={!isAuthorized}
@@ -218,7 +218,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 {t('pageEditor.panels.propertiesInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="pageProperties">
               <Form.ControlLabel>{t('pageEditor.panels.properties')}</Form.ControlLabel>
               <ListInput
                 disabled={!isAuthorized}

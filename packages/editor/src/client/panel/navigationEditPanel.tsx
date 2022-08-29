@@ -225,7 +225,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
       <Drawer.Body>
         <Panel>
           <Form fluid>
-            <Form.Group>
+            <Form.Group controlId="navigationName">
               <Form.ControlLabel>{t('navigation.panels.name')}</Form.ControlLabel>
               <Form.Control
                 name="name"
@@ -237,7 +237,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="navigationKey">
               <Form.ControlLabel>{t('navigation.panels.key')}</Form.ControlLabel>
               <Form.Control
                 name="key"

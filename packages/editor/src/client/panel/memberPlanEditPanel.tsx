@@ -238,7 +238,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
         </Drawer.Header>
         <Drawer.Body>
           <Panel>
-            <Form.Group>
+            <Form.Group controlId="memberPlanName">
               <Form.ControlLabel>{toggleRequiredLabel(t('memberPlanList.name'))}</Form.ControlLabel>
               <Form.Control
                 name="name"
@@ -250,12 +250,12 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="memberPlanSlug">
               <Form.ControlLabel>{t('memberPlanList.slug')}</Form.ControlLabel>
               <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="memberPlanTags">
               <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
                 disabled={isDisabled}
@@ -268,13 +268,13 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="memberPlanActive">
               <Form.ControlLabel>{t('memberPlanList.active')}</Form.ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <Form.HelpText>{t('memberPlanList.activeDescription')}</Form.HelpText>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="memberPlanMinimumMonthlyAmount">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('memberPlanList.minimumMonthlyAmount'))}
               </Form.ControlLabel>
@@ -288,7 +288,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="memberPlanDescription">
               <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
               <div className="richTextFrame">
                 <RichTextBlock
@@ -320,7 +320,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
               }}>
               {({value, onChange}) => (
                 <Form fluid>
-                  <Form.Group>
+                  <Form.Group controlId="memberPlanAutoRenewal">
                     <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
                     <Toggle
                       checked={value.forceAutoRenewal}
@@ -329,7 +329,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                     />
                     <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
                   </Form.Group>
-                  <Form.Group>
+                  <Form.Group controlId="memberPlanPaymentPeriodicity">
                     <Form.ControlLabel>
                       {t('memberPlanList.paymentPeriodicities')}
                     </Form.ControlLabel>
@@ -345,7 +345,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                       placement="auto"
                     />
                   </Form.Group>
-                  <Form.Group>
+                  <Form.Group controlId="memberPlanPaymentMethod">
                     <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
                     <CheckPicker
                       virtualized

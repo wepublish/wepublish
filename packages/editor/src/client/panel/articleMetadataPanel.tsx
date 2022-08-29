@@ -161,7 +161,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 {t('pageEditor.panels.metadataInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaTitle')}
                 <label style={{float: 'right'}}>
@@ -184,7 +184,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaDescription">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaDescription')}
                 <label style={{float: 'right'}}>
@@ -211,7 +211,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                   </label>
                 )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaAuthors">
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</Form.ControlLabel>
               <AuthorCheckPicker
                 disabled={!isAuthorized}
@@ -219,7 +219,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaImage">
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaImage')}</Form.ControlLabel>
               <ChooseEditImage
                 header={''}
@@ -263,7 +263,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.title')}
                 <label style={{float: 'right'}}>
@@ -284,7 +284,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleLead">
               <Form.ControlLabel>
                 {t('articleEditor.panels.lead')}
                 <label style={{float: 'right'}}>
@@ -309,7 +309,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleSeoTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.seoTitle')}
                 <label style={{float: 'right'}}>
@@ -340,7 +340,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleSlug">
               <Form.ControlLabel>{t('articleEditor.panels.slug')}</Form.ControlLabel>
               <InputGroup style={{width: '100%'}}>
                 <Form.Control
@@ -372,7 +372,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </Trans>
               </Form.HelpText>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleAuthors">
               <Form.ControlLabel>{t('articleEditor.panels.authors')}</Form.ControlLabel>
               <AuthorCheckPicker
                 list={authors}
@@ -389,7 +389,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={hideAuthor => onChange?.({...value, hideAuthor})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTags">
               <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
                 block
@@ -400,7 +400,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleBreakingNews">
               <Form.ControlLabel>{t('articleEditor.panels.breakingNews')}</Form.ControlLabel>
               <Toggle
                 className="breaking"
@@ -409,7 +409,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={breaking => onChange?.({...value, breaking})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleCanonicalUrl">
               <Form.ControlLabel>{t('articleEditor.panels.canonicalUrl')}</Form.ControlLabel>
               <Form.Control
                 name="canonicalUrl"
@@ -431,7 +431,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
               </Form.HelpText>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="articlePeering">
               <Form.ControlLabel>{t('articleEditor.panels.peering')}</Form.ControlLabel>
               <Toggle
                 checked={shared}
@@ -463,7 +463,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 {t('articleEditor.panels.propertiesInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleProperties">
               <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
               <ListInput
                 value={metaDataProperties}
@@ -488,7 +488,9 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                       value={value.value}
                       onChange={propertyValue => onChange({...value, value: propertyValue})}
                     />
-                    <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                    <Form.Group
+                      style={{paddingTop: '6px', paddingLeft: '8px'}}
+                      controlId="articleProperty">
                       <Toggle
                         style={{maxWidth: '70px', minWidth: '70px'}}
                         checkedChildren={t('articleEditor.panels.public')}

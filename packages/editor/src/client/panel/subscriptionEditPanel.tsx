@@ -409,7 +409,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           )}
 
           <Panel>
-            <Form.Group>
+            <Form.Group controlId="memberPlan">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
               </Form.ControlLabel>
@@ -436,7 +436,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               )}
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="user">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
               </Form.ControlLabel>
@@ -450,7 +450,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="monthlyAmount">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
               </Form.ControlLabel>
@@ -466,7 +466,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="paymentPeriodicities">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
               </Form.ControlLabel>
@@ -486,7 +486,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="autoRenew">
               <Form.ControlLabel>{t('userSubscriptionEdit.autoRenew')}</Form.ControlLabel>
 
               <Toggle
@@ -498,7 +498,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               <Form.HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</Form.HelpText>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="startsAt">
               <Form.ControlLabel>{t('userSubscriptionEdit.startsAt')}</Form.ControlLabel>
               <DatePicker
                 block
@@ -515,12 +515,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="paidUntil">
               <Form.ControlLabel>{t('userSubscriptionEdit.payedUntil')}</Form.ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="paymentMethod">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
               </Form.ControlLabel>
