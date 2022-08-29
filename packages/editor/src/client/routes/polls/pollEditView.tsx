@@ -132,11 +132,11 @@ export function PollEditView() {
           </FlexboxGrid.Item>
 
           {/* content */}
-          <FlexboxGrid.Item colspan={12}>
+          <FlexboxGrid.Item colspan={24}>
             <Row>
               {/* question */}
               <Col xs={24}>
-                <Panel header={t('pollEditView.QuestionPanelHeader')} bordered>
+                <Panel header={t('pollEditView.questionPanelHeader')} bordered>
                   <Form.Group controlId="question">
                     <Form.Control
                       name="question"

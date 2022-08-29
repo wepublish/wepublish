@@ -103,7 +103,7 @@ export function PollAnswers({
             <Col xs={18}>
               <Form.Control
                 name={`answer-${answer.id}`}
-                value={answer.answer || `${t('pollEditView.defaultAnswer')} ${index + 1}`}
+                value={answer.answer || t('pollEditView.defaultAnswer', {number: index + 1})}
                 onChange={(value: string) => {
                   updateAnswer({
                     ...answer,
@@ -132,7 +132,7 @@ export function PollAnswers({
         <Col xs={18}>
           <Form.Control
             name="createNewFormAnswer"
-            placeholder={t('pollAnswer.insertYourNewQuestion')}
+            placeholder={t('pollAnswer.insertYourNewAnswer')}
             value={newAnswer}
             onChange={(value: string) => {
               setNewAnswer(value)
@@ -155,7 +155,7 @@ export function PollAnswers({
           setModalOpen(false)
         }}>
         <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
-        <Modal.Body>{t('pollAnswer.deleteModalBody')}</Modal.Body>
+        <Modal.Body>{t('pollAnswer.deleteModalBody', {answer: answerToDelete?.answer})}</Modal.Body>
         <Modal.Footer>
           <Button appearance="primary" onClick={() => deleteAnswer()}>
             {t('pollAnswer.deleteBtn')}

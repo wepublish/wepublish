@@ -568,7 +568,30 @@
       "question": "Poll question",
       "toBeOrNotToBe": "To be or not to be?",
       "questionRequired": "Please enter your poll question.",
-      "savedSuccessfully": "Poll saved."
+      "savedSuccessfully": "Poll saved.",
+      "questionPanelHeader": "Question",
+      "answerPanelHeader": "Possible answers",
+      "addAndSaveNewAnswer": "Add Answer",
+      "settingsPanelHeader": "Publication Settings",
+      "opensAtLabel": "Opened at",
+      "closesAtLabel": "Closed at",
+      "pollExternalVotesPanelHeader": "External Vote Sources",
+      "defaultAnswer": "Default answer {{number}}"
+    },
+    "pollAnswer": {
+      "insertYourNewAnswer": "Input new question",
+      "deleteModalTitle": "Delete?",
+      "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
+      "deleteBtn": "Delete"
+    },
+    "pollExternalVotes": {
+      "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
+      "addSourceBtn": "Add Source",
+      "sourceHeaderCell": "Source",
+      "deleteTitle": "Delete?",
+      "deleteBody": "Do you want to delete the source \"{{source}}\" permanently?",
+      "deleteExternalVoteBtn": "Löschen",
+      "emptySource": "Please insert the source name."
     },
     "navbar": {
       "articles": "Articles",

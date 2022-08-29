@@ -99,7 +99,7 @@ export function PollExternalVotes({
           {iterateAnswerColumns()}
           {/* delete button */}
           <Table.Column>
-            <Table.HeaderCell>{t('pollExternalVotes.deleteExternalVote')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
             <Table.Cell>
               {(voteSource: PollExternalVoteSource) => (
                 <IconButton
@@ -119,7 +119,7 @@ export function PollExternalVotes({
 
   function iterateAnswerColumns() {
     return poll?.answers?.map((answer: PollAnswerWithVoteCount) => (
-      <Table.Column key={answer.id}>
+      <Table.Column key={answer.id} width={150}>
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
           {(externalVoteSource: PollExternalVoteSource) => (
@@ -140,7 +140,7 @@ export function PollExternalVotes({
   function addSourceView() {
     return (
       <>
-        <Row>
+        <Row style={{marginTop: '20px'}}>
           <Col xs={12}>
             <FormControl
               name="addNewSource"
@@ -164,7 +164,9 @@ export function PollExternalVotes({
       <>
         <Modal open={openModal}>
           <Modal.Title>{t('pollExternalVotes.deleteTitle')}</Modal.Title>
-          <Modal.Body>{t('pollExternalVotes.deleteBody')}</Modal.Body>
+          <Modal.Body>
+            {t('pollExternalVotes.deleteBody', {source: sourceToDelete?.source})}
+          </Modal.Body>
           <Modal.Footer>
             <Button
               appearance="primary"
