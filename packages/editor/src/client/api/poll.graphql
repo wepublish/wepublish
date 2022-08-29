@@ -1,3 +1,13 @@
+fragment PollExternalVoteSource on PollExternalVoteSource {
+    id
+    source
+    voteAmounts {
+        id
+        answerId
+        amount
+    }
+}
+
 mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) {
     createPoll(opensAt: $opensAt, closesAt: $closesAt, question: $question) {
         id
@@ -25,13 +35,7 @@ mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $ques
             votes
         }
         externalVoteSources {
-            id
-            source
-            voteAmounts {
-                id
-                answerId
-                amount
-            }
+            ...PollExternalVoteSource
         }
     }
 }
@@ -53,6 +57,12 @@ mutation CreatePollAnswer($pollId: ID!, $answer: String) {
 mutation DeletePollAnswer($deletePollAnswerId: ID!) {
     deletePollAnswer(id: $deletePollAnswerId) {
         id
+    }
+}
+
+mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+    createPollExternalVoteSource(pollId: $pollId, source: $source) {
+        ...PollExternalVoteSource
     }
 }
 
@@ -88,13 +98,7 @@ query Poll($pollId: ID) {
             votes
         }
         externalVoteSources {
-            id
-            source
-            voteAmounts {
-                id
-                answerId
-                amount
-            }
+            ...PollExternalVoteSource
         }
     }
 }

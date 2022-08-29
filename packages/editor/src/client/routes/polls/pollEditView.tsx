@@ -12,6 +12,7 @@ import {
 } from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
+import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
 
 export function PollEditView() {
   const params = useParams()
@@ -200,6 +201,17 @@ export function PollEditView() {
                         return
                       }
                       setPoll({...poll, closedAt})
+                    }}
+                  />
+                </Panel>
+              </Col>
+              {/* poll external votes */}
+              <Col xs={24}>
+                <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
+                  <PollExternalVotes
+                    poll={poll}
+                    onExternalSourceCreated={async () => {
+                      await refetch()
                     }}
                   />
                 </Panel>

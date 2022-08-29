@@ -3835,6 +3835,15 @@ export type DeletePeerMutation = (
   )> }
 );
 
+export type PollExternalVoteSourceFragment = (
+  { __typename?: 'PollExternalVoteSource' }
+  & Pick<PollExternalVoteSource, 'id' | 'source'>
+  & { voteAmounts?: Maybe<Array<(
+    { __typename?: 'PollExternalVote' }
+    & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
+  )>> }
+);
+
 export type CreatePollMutationVariables = Exact<{
   opensAt?: Maybe<Scalars['DateTime']>;
   closesAt?: Maybe<Scalars['DateTime']>;
@@ -3874,11 +3883,7 @@ export type UpdatePollMutation = (
       & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
     )>>, externalVoteSources?: Maybe<Array<(
       { __typename?: 'PollExternalVoteSource' }
-      & Pick<PollExternalVoteSource, 'id' | 'source'>
-      & { voteAmounts?: Maybe<Array<(
-        { __typename?: 'PollExternalVote' }
-        & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
-      )>> }
+      & PollExternalVoteSourceFragment
     )>> }
   )> }
 );
@@ -3923,6 +3928,20 @@ export type DeletePollAnswerMutation = (
   )> }
 );
 
+export type CreatePollExternalVoteSourceMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
 export type PollsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
@@ -3963,11 +3982,7 @@ export type PollQuery = (
       & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
     )>>, externalVoteSources?: Maybe<Array<(
       { __typename?: 'PollExternalVoteSource' }
-      & Pick<PollExternalVoteSource, 'id' | 'source'>
-      & { voteAmounts?: Maybe<Array<(
-        { __typename?: 'PollExternalVote' }
-        & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
-      )>> }
+      & PollExternalVoteSourceFragment
     )>> }
   )> }
 );
@@ -5007,6 +5022,17 @@ export const MutationPageFragmentDoc = gql`
     updatedAt
     publishAt
     revision
+  }
+}
+    `;
+export const PollExternalVoteSourceFragmentDoc = gql`
+    fragment PollExternalVoteSource on PollExternalVoteSource {
+  id
+  source
+  voteAmounts {
+    id
+    answerId
+    amount
   }
 }
     `;
@@ -7521,17 +7547,11 @@ export const UpdatePollDocument = gql`
       votes
     }
     externalVoteSources {
-      id
-      source
-      voteAmounts {
-        id
-        answerId
-        amount
-      }
+      ...PollExternalVoteSource
     }
   }
 }
-    `;
+    ${PollExternalVoteSourceFragmentDoc}`;
 export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, UpdatePollMutationVariables>;
 
 /**
@@ -7665,6 +7685,40 @@ export function useDeletePollAnswerMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePollAnswerMutation>;
 export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
 export type DeletePollAnswerMutationOptions = Apollo.BaseMutationOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+export const CreatePollExternalVoteSourceDocument = gql`
+    mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+  createPollExternalVoteSource(pollId: $pollId, source: $source) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type CreatePollExternalVoteSourceMutationFn = Apollo.MutationFunction<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useCreatePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useCreatePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollExternalVoteSourceMutation, { data, loading, error }] = useCreatePollExternalVoteSourceMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreatePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>(CreatePollExternalVoteSourceDocument, options);
+      }
+export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof useCreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
   polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
@@ -7731,17 +7785,11 @@ export const PollDocument = gql`
       votes
     }
     externalVoteSources {
-      id
-      source
-      voteAmounts {
-        id
-        answerId
-        amount
-      }
+      ...PollExternalVoteSource
     }
   }
 }
-    `;
+    ${PollExternalVoteSourceFragmentDoc}`;
 
 /**
  * __usePollQuery__
