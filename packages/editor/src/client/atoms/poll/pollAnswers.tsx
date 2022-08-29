@@ -2,7 +2,7 @@ import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Col, Form, IconButton, Message, Row, toaster} from 'rsuite'
+import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuite'
 
 import {
   FullPoll,
@@ -26,6 +26,10 @@ export function PollAnswers({
   onAnswerDeleted
 }: PollAnswersProps) {
   const {t} = useTranslation()
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [answerToDelete, setAnswerToDelete] = useState<PollAnswerWithVoteCount | undefined>(
+    undefined
+  )
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [createAnswerMutation, {loading}] = useCreatePollAnswerMutation()
   const [deleteAnswerMutation, {error}] = useDeletePollAnswerMutation()
@@ -59,10 +63,14 @@ export function PollAnswers({
     }
   }
 
-  async function deleteAnswer(answer: PollAnswerWithVoteCount) {
+  async function deleteAnswer(): Promise<void> {
+    setModalOpen(false)
+    if (!answerToDelete) {
+      return
+    }
     await deleteAnswerMutation({
       variables: {
-        deletePollAnswerId: answer.id
+        deletePollAnswerId: answerToDelete.id
       }
     })
     await onAnswerDeleted()
@@ -110,7 +118,10 @@ export function PollAnswers({
                 icon={<TrashIcon />}
                 circle
                 size={'sm'}
-                onClick={() => deleteAnswer(answer)}
+                onClick={() => {
+                  setAnswerToDelete(answer)
+                  setModalOpen(true)
+                }}
               />
             </Col>
           </div>
@@ -135,6 +146,25 @@ export function PollAnswers({
           </Button>
         </Col>
       </Row>
+
+      {/* delete modal */}
+      <Modal
+        open={modalOpen}
+        size="xs"
+        onClose={() => {
+          setModalOpen(false)
+        }}>
+        <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+        <Modal.Body>{t('pollAnswer.deleteModalBody')}</Modal.Body>
+        <Modal.Footer>
+          <Button appearance="primary" onClick={() => deleteAnswer()}>
+            {t('pollAnswer.deleteBtn')}
+          </Button>
+          <Button appearance="subtle" onClick={() => setModalOpen(false)}>
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
