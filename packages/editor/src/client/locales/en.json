@@ -356,6 +356,12 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "userName": "User Name"
       },
+      "edit": {
+        "title": "Edit Comment",
+        "tags": "Tags",
+        "unnamedTag": "<Unnamed Tag>",
+        "success": "Comment successfully updated"
+      },
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",

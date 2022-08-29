@@ -9,6 +9,7 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {CustomProvider} from 'rsuite'
 import enGB from 'rsuite/locales/en_GB'
 
+import {TagType} from './api/index'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Base} from './base'
 import de from './locales/rsuiteDe'
@@ -17,6 +18,7 @@ import {Login} from './login'
 import {ArticleEditor} from './routes/articleEditor'
 import {ArticleList} from './routes/articleList'
 import {AuthorList} from './routes/authorList'
+import {CommentEditView} from './routes/commentEditView'
 import {CommentList} from './routes/commentList'
 import {ImageList} from './routes/imageList'
 import {MemberPlanList} from './routes/memberPlanList'
@@ -28,13 +30,12 @@ import {PeerArticleList} from './routes/peerArticleList'
 import {PeerList} from './routes/peerList'
 import {SettingList} from './routes/settingList'
 import {SubscriptionList} from './routes/subscriptionList'
+import {TagList} from './routes/tagList'
 import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import {TagList} from './routes/tagList'
-import {TagType} from './api/index'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -129,6 +130,15 @@ export function App() {
             element={
               <Base>
                 <CommentList />
+              </Base>
+            }
+          />
+
+          <Route
+            path="comments/edit/:id"
+            element={
+              <Base>
+                <CommentEditView />
               </Base>
             }
           />
