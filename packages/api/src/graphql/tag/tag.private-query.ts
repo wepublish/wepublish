@@ -6,11 +6,13 @@ import {getSortOrder, SortOrder} from '../queries/sort'
 
 export type TagFilter = {
   type: TagType
+  tag: string
 }
 
 export enum TagSort {
   CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag'
 }
 
 export const createTagOrder = (
@@ -18,6 +20,11 @@ export const createTagOrder = (
   sortOrder: SortOrder
 ): Prisma.TagFindManyArgs['orderBy'] => {
   switch (field) {
+    case TagSort.Tag:
+      return {
+        tag: sortOrder
+      }
+
     case TagSort.ModifiedAt:
       return {
         modifiedAt: sortOrder
@@ -41,8 +48,21 @@ const createTypeFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => 
   return {}
 }
 
+const createTagNameFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => {
+  if (filter?.tag) {
+    return {
+      tag: {
+        mode: 'insensitive',
+        contains: filter.tag
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => ({
-  AND: [createTypeFilter(filter)]
+  AND: [createTypeFilter(filter), createTagNameFilter(filter)]
 })
 
 export const getTags = async (

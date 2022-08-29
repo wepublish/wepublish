@@ -19,7 +19,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 +           disabled=\\"\\"
             type=\\"submit\\"
           >
-            peerList.panels.create
+            create
             <span
               class=\\"rs-ripple-pond\\"
 @@ -95,11 +96,11 @@
@@ -108,7 +108,7 @@ exports[`Peer Edit Panel should render 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          peerList.panels.create
+          create
           <span
             class="rs-ripple-pond"
           >
@@ -282,7 +282,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          peerList.panels.save
+          save
           <span
             class="rs-ripple-pond"
           >

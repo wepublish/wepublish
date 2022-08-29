@@ -35,6 +35,11 @@ fragment FullComment on Comment {
   parentComment {
     ...FullParentComment
   }
+
+  tags {
+    id
+    tag
+  }
 }
 
 query CommentList(
@@ -61,6 +66,12 @@ query CommentList(
   }
 }
 
+query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+
 mutation ApproveComment($id: ID!) {
   approveComment(id: $id) {
     state
@@ -78,5 +89,11 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
+  }
+}
+
+mutation updateComment($id: ID!, $text: RichText, $tagIds: [ID!]) {
+  updateComment(id: $id, text: $text, tagIds: $tagIds) {
+    ...FullComment
   }
 }
