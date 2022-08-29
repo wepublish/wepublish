@@ -335,7 +335,7 @@ export function PageEditor() {
                       icon={<SaveIcon />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
-                      {t('pageEditor.overview.create')}
+                      {t('create')}
                     </IconButton>
                   ) : (
                     <>
@@ -348,7 +348,7 @@ export function PageEditor() {
                           icon={<SaveIcon />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
-                          {t('pageEditor.overview.save')}
+                          {t('save')}
                         </IconButton>
                       </Badge>
                       <Badge

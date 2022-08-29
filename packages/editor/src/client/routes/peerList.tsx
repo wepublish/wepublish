@@ -148,7 +148,7 @@ export function PeerList() {
               </Button>
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-              <IconButtonTooltip caption={t('peerList.overview.delete')}>
+              <IconButtonTooltip caption={t('delete')}>
                 <IconButton
                   disabled={isPeerInfoLoading}
                   icon={<TrashIcon />}

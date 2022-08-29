@@ -496,7 +496,7 @@ export function ArticleEditor() {
                       icon={<SaveIcon />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
-                      {t('articleEditor.overview.create')}
+                      {t('create')}
                     </IconButton>
                   ) : (
                     <>
@@ -509,7 +509,7 @@ export function ArticleEditor() {
                           icon={<SaveIcon />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
-                          {t('articleEditor.overview.save')}
+                          {t('save')}
                         </IconButton>
                       </Badge>
                       <Badge

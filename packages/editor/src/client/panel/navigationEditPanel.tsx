@@ -206,7 +206,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
         <Drawer.Actions>
           <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+            {id ? t('save') : t('create')}
           </Button>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
             {t('navigation.panels.close')}

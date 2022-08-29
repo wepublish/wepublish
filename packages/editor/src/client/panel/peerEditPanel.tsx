@@ -153,7 +153,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               appearance="primary"
               data-testid="saveButton"
               disabled={isDisabled}>
-              {id ? t('peerList.panels.save') : t('peerList.panels.create')}
+              {id ? t('save') : t('create')}
             </Button>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('peerList.panels.close')}

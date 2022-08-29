@@ -273,7 +273,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
         <Drawer.Actions>
           <Button appearance="primary" onClick={() => onClose?.()}>
-            {t('pageEditor.panels.saveAndClose')}
+            {t('saveAndClose')}
           </Button>
         </Drawer.Actions>
       </Drawer.Header>

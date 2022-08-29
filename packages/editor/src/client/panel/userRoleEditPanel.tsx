@@ -137,7 +137,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
               appearance="primary"
               disabled={isDisabled}
               data-testid="saveButton">
-              {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+              {id ? t('save') : t('create')}
             </Button>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('userRoles.panels.close')}

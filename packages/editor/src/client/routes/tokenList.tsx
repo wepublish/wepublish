@@ -89,7 +89,7 @@ export function TokenList() {
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <IconButtonTooltip caption={t('tokenList.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

@@ -96,7 +96,7 @@ export function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <IconButtonTooltip caption={t('navigation.overview.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     circle

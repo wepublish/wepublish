@@ -104,7 +104,7 @@ export function MemberPlanList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
               <>
-                <IconButtonTooltip caption={t('memberPlanList.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     circle

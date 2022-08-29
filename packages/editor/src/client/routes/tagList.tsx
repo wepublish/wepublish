@@ -220,7 +220,7 @@ export const TagList = memo<TagListProps>(({type}) => {
             appearance="primary"
             data-testid="create"
             onClick={() => createTag()}>
-            {t('tags.overview.create')}
+            {t('tags.overview.createTag')}
           </Button>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -251,7 +251,7 @@ export const TagList = memo<TagListProps>(({type}) => {
             </div>
 
             <div style={{flex: '0 0 auto'}}>
-              <IconButtonTooltip caption={t('tags.overview.save')}>
+              <IconButtonTooltip caption={t('save')}>
                 <IconButton
                   icon={<SaveIcon />}
                   circle
@@ -269,7 +269,7 @@ export const TagList = memo<TagListProps>(({type}) => {
                 />
               </IconButtonTooltip>
 
-              <IconButtonTooltip caption={t('tags.overview.delete')}>
+              <IconButtonTooltip caption={t('delete')}>
                 <IconButton
                   icon={<TrashIcon />}
                   color="red"
