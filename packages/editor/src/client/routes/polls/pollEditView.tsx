@@ -132,7 +132,7 @@ export function PollEditView() {
           </FlexboxGrid.Item>
 
           {/* content */}
-          <FlexboxGrid.Item colspan={24}>
+          <FlexboxGrid.Item colspan={12}>
             <Row>
               {/* question */}
               <Col xs={24}>
@@ -177,7 +177,9 @@ export function PollEditView() {
               <Col xs={24}>
                 <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
                   {/* opens at */}
-                  <Form.ControlLabel>{t('pollEditView.opensAtLabel')}</Form.ControlLabel>
+                  <Form.ControlLabel style={{marginRight: '5px'}}>
+                    {t('pollEditView.opensAtLabel')}
+                  </Form.ControlLabel>
                   <DatePicker
                     value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
                     format="yyyy-MM-dd HH:mm"
@@ -190,7 +192,7 @@ export function PollEditView() {
                   />
 
                   {/* closes at */}
-                  <Form.ControlLabel style={{marginLeft: '20px'}}>
+                  <Form.ControlLabel style={{marginLeft: '20px', marginRight: '5px'}}>
                     {t('pollEditView.closesAtLabel')}
                   </Form.ControlLabel>
                   <DatePicker
