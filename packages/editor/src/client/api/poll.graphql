@@ -66,6 +66,12 @@ mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
     }
 }
 
+mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+    deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+        ...PollExternalVoteSource
+    }
+}
+
 
 query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
     polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {

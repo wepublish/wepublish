@@ -213,6 +213,9 @@ export function PollEditView() {
                     onExternalSourceCreated={async () => {
                       await refetch()
                     }}
+                    onExternalSourceDeleted={async () => {
+                      await refetch()
+                    }}
                   />
                 </Panel>
               </Col>

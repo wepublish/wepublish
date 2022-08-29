@@ -3942,6 +3942,19 @@ export type CreatePollExternalVoteSourceMutation = (
   )> }
 );
 
+export type DeletePollExternalVoteSourceMutationVariables = Exact<{
+  deletePollExternalVoteSourceId: Scalars['ID'];
+}>;
+
+
+export type DeletePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
 export type PollsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
@@ -7719,6 +7732,39 @@ export function useCreatePollExternalVoteSourceMutation(baseOptions?: Apollo.Mut
 export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof useCreatePollExternalVoteSourceMutation>;
 export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
 export type CreatePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+export const DeletePollExternalVoteSourceDocument = gql`
+    mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+  deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type DeletePollExternalVoteSourceMutationFn = Apollo.MutationFunction<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useDeletePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useDeletePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollExternalVoteSourceMutation, { data, loading, error }] = useDeletePollExternalVoteSourceMutation({
+ *   variables: {
+ *      deletePollExternalVoteSourceId: // value for 'deletePollExternalVoteSourceId'
+ *   },
+ * });
+ */
+export function useDeletePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>(DeletePollExternalVoteSourceDocument, options);
+      }
+export type DeletePollExternalVoteSourceMutationHookResult = ReturnType<typeof useDeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<DeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
   polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
