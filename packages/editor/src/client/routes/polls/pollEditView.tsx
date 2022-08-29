@@ -80,10 +80,14 @@ export function PollEditView() {
     if (!poll) {
       return
     }
+    const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null
+    const closedAt = poll.closedAt ? new Date(poll.closedAt).toISOString() : null
     await updatePoll({
       variables: {
         pollId: poll.id,
         question: poll.question,
+        opensAt,
+        closedAt,
         answers: poll.answers?.map(answer => {
           return {
             id: answer.id,
@@ -171,19 +175,33 @@ export function PollEditView() {
               {/* settings */}
               <Col xs={24}>
                 <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
-                  <Form.Group>
-                    <Form.ControlLabel>{t('pollEditView.opensAtLabel')}</Form.ControlLabel>
-                    <DatePicker
-                      value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
-                      format="yyyy-MM-dd HH:mm"
-                      onChange={(value: Date | null) => {
-                        if (!poll) {
-                          return
-                        }
-                        setPoll({...poll, opensAt: value?.toString()})
-                      }}
-                    />
-                  </Form.Group>
+                  {/* opens at */}
+                  <Form.ControlLabel>{t('pollEditView.opensAtLabel')}</Form.ControlLabel>
+                  <DatePicker
+                    value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                    format="yyyy-MM-dd HH:mm"
+                    onChange={(opensAt: Date | null) => {
+                      if (!poll) {
+                        return
+                      }
+                      setPoll({...poll, opensAt})
+                    }}
+                  />
+
+                  {/* closes at */}
+                  <Form.ControlLabel style={{marginLeft: '20px'}}>
+                    {t('pollEditView.closesAtLabel')}
+                  </Form.ControlLabel>
+                  <DatePicker
+                    value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                    format="yyyy-MM-dd HH:mm"
+                    onChange={(closedAt: Date | null) => {
+                      if (!poll) {
+                        return
+                      }
+                      setPoll({...poll, closedAt})
+                    }}
+                  />
                 </Panel>
               </Col>
             </Row>
