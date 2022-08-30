@@ -97,3 +97,9 @@ mutation updateComment($id: ID!, $text: RichText, $tagIds: [ID!]) {
     ...FullComment
   }
 }
+
+mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    id
+  }
+}

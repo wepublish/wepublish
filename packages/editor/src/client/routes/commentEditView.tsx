@@ -27,9 +27,10 @@ import {
   useTagListQuery,
   useUpdateCommentMutation
 } from '../api'
+import {BlockMap} from '../blocks/blockMap'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-import {DEFAULT_MAX_TABLE_PAGES} from '../utility'
+import {BlockType, RichTextBlockValue} from '../blocks/types'
+import {DEFAULT_MAX_TABLE_PAGES, isValueConstructor} from '../utility'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -38,6 +39,11 @@ const showErrors = (error: ApolloError): void => {
     </Message>
   )
 }
+
+const richTextBlock = BlockMap[BlockType.RichText]
+const defaultValue = isValueConstructor(richTextBlock.defaultValue)
+  ? richTextBlock.defaultValue()
+  : richTextBlock.defaultValue
 
 export const CommentEditView = memo(() => {
   const {t} = useTranslation()
@@ -98,7 +104,7 @@ export const CommentEditView = memo(() => {
     [commentData, selectedTags]
   )
 
-  const commentText = useMemo(() => editedComment ?? lastRevision?.text, [
+  const commentText = useMemo(() => editedComment ?? lastRevision?.text ?? defaultValue, [
     lastRevision,
     editedComment
   ])

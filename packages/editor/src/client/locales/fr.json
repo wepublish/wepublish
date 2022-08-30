@@ -22,6 +22,7 @@
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
         "preview": "Aperçu",
+        "createComment": "Create Comment",
         "articlePending": "Article en attente"
       },
       "panels": {
@@ -942,7 +943,8 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
-        "preview": "Aperçu"
+        "preview": "Aperçu",
+        "createComment": "Create Comment"
       },
       "panels": {
         "confirm": "Confirmer",

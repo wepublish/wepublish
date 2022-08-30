@@ -77,7 +77,7 @@ export const updateComment = async (
 export const createAdminComment = async (
   itemId: string,
   itemType: CommentItemType,
-  text: string,
+  text: string | undefined,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   commentClient: PrismaClient['comment']
@@ -87,15 +87,17 @@ export const createAdminComment = async (
 
   return commentClient.create({
     data: {
-      state: CommentState.approved,
+      state: CommentState.pendingApproval,
       authorType: CommentAuthorType.team,
       itemID: itemId,
       itemType,
-      revisions: {
-        create: {
-          text
-        }
-      },
+      revisions: text
+        ? {
+            create: {
+              text
+            }
+          }
+        : undefined,
       tags: {
         create: tagIds?.map(tagId => ({
           tagId
