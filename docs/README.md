@@ -63,11 +63,11 @@ Usage:
 Import and initialise the tracker anywhere in the project
 
     import  Analytics  from  'analytics'
-    import { matomoPlugin } from '@wepublish/analytics'
+    import { wepublish } from '@wepublish/analytics'
     
     const  analytics = Analytics({
 	    app: 'Your app name',
-	    plugins: [matomoPlugin()]
+	    plugins: [wepublish()]
     })
 
 then call the method on page load e.g.
