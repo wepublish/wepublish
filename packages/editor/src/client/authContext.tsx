@@ -1,14 +1,16 @@
-import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {useQuery, gql} from '@apollo/client'
+import {gql, useQuery} from '@apollo/client'
+import React, {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
+import {usePageVisibility} from 'react-page-visibility'
 
 import {LocalStorageKey} from './utility'
-import {usePageVisibility} from 'react-page-visibility'
+import {UserRole} from './api'
 
 export interface AuthContextState {
   readonly session?: {
     readonly email: string
     readonly sessionToken: string
-  }
+    readonly sessionRoles?: UserRole[]
+  } | null
 }
 
 export const AuthContext = createContext<AuthContextState>({})
@@ -20,8 +22,11 @@ export enum AuthDispatchActionType {
 
 export interface AuthDispatchLoginAction {
   readonly type: AuthDispatchActionType.Login
-  readonly email: string
-  readonly sessionToken: string
+  readonly payload: {
+    readonly email: string
+    readonly sessionToken: string
+    readonly sessionRoles?: UserRole[]
+  } | null
 }
 
 export interface AuthDispatchLogoutAction {
@@ -42,14 +47,11 @@ export function authReducer(
   switch (action.type) {
     case AuthDispatchActionType.Login:
       return {
-        session: {
-          email: action.email,
-          sessionToken: action.sessionToken
-        }
+        session: action.payload
       }
 
     case AuthDispatchActionType.Logout:
-      return {}
+      return {session: null}
   }
 }
 
@@ -57,6 +59,12 @@ const MeQuery = gql`
   {
     me {
       email
+      roles {
+        id
+        permissions {
+          id
+        }
+      }
     }
   }
 `
@@ -82,19 +90,21 @@ export function AuthProvider({children}: AuthProviderProps) {
 
   useEffect(() => {
     if (data?.me) {
-      const {email} = data.me
-
+      const {email, roles} = data.me
       dispatch({
         type: AuthDispatchActionType.Login,
-        email,
-        sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+        payload: {
+          email,
+          sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!,
+          sessionRoles: roles
+        }
       })
-    } else {
+    } else if (!loading) {
       dispatch({
         type: AuthDispatchActionType.Logout
       })
     }
-  }, [data?.me, error])
+  }, [data, error, loading])
 
   return loading ? null : (
     <AuthDispatchContext.Provider value={dispatch}>

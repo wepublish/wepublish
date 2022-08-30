@@ -1,52 +1,38 @@
-import React, {useState, useEffect} from 'react'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  TokenListRoute,
-  TokenGenerateRoute,
-  ButtonLink
-} from '../route'
-
-import {
-  useTokenListQuery,
-  useDeleteTokenMutation,
-  TokenRefFragment,
-  TokenListDocument
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {getOperationNameFromDocument} from '../utility'
-import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
-
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
+  Drawer,
   FlexboxGrid,
+  IconButton,
   List,
   Loader,
-  IconButton,
-  Drawer,
+  Message,
   Modal,
-  toaster,
-  Message
+  toaster
 } from 'rsuite'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 
-export function TokenList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+import {
+  TokenListDocument,
+  TokenRefFragment,
+  useDeleteTokenMutation,
+  useTokenListQuery
+} from '../api'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
+import {getOperationNameFromDocument} from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
-  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
-    current?.type === RouteType.TokenGenerate
-  )
+function TokenList() {
+  const location = useLocation()
+  const navigate = useNavigate()
 
+  const isGenerateRoute = location.pathname.includes('generate')
+
+  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(isGenerateRoute)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
   const {
@@ -74,16 +60,10 @@ export function TokenList() {
   }, [tokenListError, deleteTokenError])
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.TokenGenerate:
-        setTokenGeneratePanelOpen(true)
-        break
-
-      default:
-        setTokenGeneratePanelOpen(false)
-        break
+    if (isGenerateRoute) {
+      setTokenGeneratePanelOpen(true)
     }
-  }, [current])
+  }, [location])
 
   return (
     <>
@@ -91,14 +71,15 @@ export function TokenList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isTokenListLoading}
-            route={TokenGenerateRoute.create({})}>
-            {t('tokenList.overview.generateToken')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/tokens/generate">
+              <Button appearance="primary" disabled={isTokenListLoading}>
+                {t('tokenList.overview.generateToken')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
       </FlexboxGrid>
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
@@ -111,17 +92,19 @@ export function TokenList() {
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <IconButtonTooltip caption={t('tokenList.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentToken(token)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
+                    <IconButtonTooltip caption={t('tokenList.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        onClick={() => {
+                          setConfirmationDialogOpen(true)
+                          setCurrentToken(token)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
             </List.Item>
@@ -132,18 +115,14 @@ export function TokenList() {
       <Drawer
         open={isTokenGeneratePanelOpen}
         onClose={() => {
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: TokenListRoute.create({})
-          })
+          setTokenGeneratePanelOpen(false)
+          navigate('/tokens')
         }}
         size={'sm'}>
         <TokenGeneratePanel
           onClose={() => {
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: TokenListRoute.create({})
-            })
+            setTokenGeneratePanelOpen(false)
+            navigate('/tokens')
           }}
         />
       </Drawer>
@@ -175,3 +154,9 @@ export function TokenList() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_CREATE_TOKEN',
+  'CAN_GET_TOKENS',
+  'CAN_DELETE_TOKEN'
+])(TokenList)
+export {CheckedPermissionComponent as TokenList}

@@ -1,22 +1,9 @@
-import React, {useState, useEffect} from 'react'
-
-import {FlexboxGrid, IconButton, Drawer, Table, Modal, Button, InputGroup, Input} from 'rsuite'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {
-  Link,
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  MemberPlanEditRoute,
-  MemberPlanCreateRoute,
-  MemberPlanListRoute,
-  ButtonLink
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
 import {
   FullMemberPlanFragment,
@@ -25,25 +12,26 @@ import {
   useDeleteMemberPlanMutation,
   useMemberPlanListQuery
 } from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
-export function MemberPlanList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+const {Column, HeaderCell, Cell} = Table
 
+function MemberPlanList() {
   const {t} = useTranslation()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.MemberPlanEdit || current?.type === RouteType.MemberPlanCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.MemberPlanEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const [filter, setFilter] = useState('')
 
@@ -52,7 +40,7 @@ export function MemberPlanList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
-  const {data, /* fetchMore, */ loading: isLoading} = useMemberPlanListQuery({
+  const {data, loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
       take: 50
@@ -63,18 +51,16 @@ export function MemberPlanList() {
   const [deleteMemberPlan, {loading: isDeleting}] = useDeleteMemberPlanMutation()
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.MemberPlanCreate:
-        setEditID(undefined)
-        setEditModalOpen(true)
-        break
-
-      case RouteType.MemberPlanEdit:
-        setEditID(current.params.id)
-        setEditModalOpen(true)
-        break
+    if (isCreateRoute) {
+      setEditID(undefined)
+      setEditModalOpen(true)
     }
-  }, [current])
+
+    if (isEditRoute) {
+      setEditID(id)
+      setEditModalOpen(true)
+    }
+  }, [location])
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
@@ -82,36 +68,21 @@ export function MemberPlanList() {
     }
   }, [data?.memberPlans])
 
-  /* function loadMore() {
-    fetchMore({
-      variables: {take: 50, skip: 1, cursor: data?.memberPlans.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          memberPlans: {
-            ...fetchMoreResult.memberPlans,
-            nodes: [...prev.memberPlans.nodes, ...fetchMoreResult?.memberPlans.nodes]
-          }
-        }
-      }
-    })
-  } */
-
   return (
     <>
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('memberPlanList.title')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={MemberPlanCreateRoute.create({})}>
-            {t('memberPlanList.createNew')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/memberplans/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('memberPlanList.createNew')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -127,9 +98,7 @@ export function MemberPlanList() {
           <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
           <Cell>
             {(rowData: FullMemberPlanFragment) => (
-              <Link route={MemberPlanEditRoute.create({id: rowData.id})}>
-                {rowData.name || t('untitled')}
-              </Link>
+              <Link to={`/memberplans/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
           </Cell>
         </Column>
@@ -137,7 +106,7 @@ export function MemberPlanList() {
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
-              <>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('memberPlanList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -150,7 +119,7 @@ export function MemberPlanList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -161,29 +130,21 @@ export function MemberPlanList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: MemberPlanListRoute.create({}, current ?? undefined)
-          })
+          navigate('/memberplans')
         }}>
         <MemberPlanEditPanel
           id={editID}
           onClose={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: MemberPlanListRoute.create({}, current ?? undefined)
-            })
+            navigate('/memberplans')
           }}
           onSave={() => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: MemberPlanListRoute.create({}, current ?? undefined)
-            })
+            navigate('/memberplans')
           }}
         />
       </Drawer>
+
       <Modal open={isConfirmationDialogOpen} size={'sm'}>
         <Modal.Header>
           <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
@@ -243,3 +204,11 @@ export function MemberPlanList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_MEMBER_PLANS',
+  'CAN_GET_MEMBER_PLAN',
+  'CAN_CREATE_MEMBER_PLAN',
+  'CAN_DELETE_MEMBER_PLAN'
+])(MemberPlanList)
+export {CheckedPermissionComponent as MemberPlanList}

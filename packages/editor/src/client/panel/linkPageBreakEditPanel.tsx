@@ -51,7 +51,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
 
       <Drawer.Body>
         <Form fluid>
-          <Form.Group>
+          <Form.Group controlId="styleLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.style.label')}</Form.ControlLabel>
             <SelectPicker
               block
@@ -72,7 +72,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             />
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="layoutLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.layout.label')}</Form.ControlLabel>
             <SelectPicker
               block
@@ -88,7 +88,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             />
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="templateLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.template.label')}</Form.ControlLabel>
             <SelectPicker
               block
@@ -102,7 +102,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             />
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="linkUrlLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.urlLabel')}</Form.ControlLabel>
             <Form.Control
               name="link"
@@ -111,7 +111,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             />
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="linkButtonLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.buttonLabel')}</Form.ControlLabel>
             <Form.Control
               name="link-text"
@@ -132,7 +132,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
             </RadioGroup>
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="linkHideToggle">
             <Form.ControlLabel>
               {t('linkPageBreakEditPanel.link.hideToggleLabel')}
             </Form.ControlLabel>

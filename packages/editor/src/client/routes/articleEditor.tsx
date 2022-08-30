@@ -1,28 +1,28 @@
+import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
+import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
+import SaveIcon from '@rsuite/icons/legacy/Save'
 import React, {useCallback, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
-import {toaster, Message, Badge, Drawer, IconButton, Modal, Notification, Tag} from 'rsuite'
-
-import {BlockList, useBlockMap} from '../atoms/blockList'
-import {EditorTemplate} from '../atoms/editorTemplate'
-import {NavigationBar} from '../atoms/navigationBar'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
-
-import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
-import {PublishArticlePanel} from '../panel/publishArticlePanel'
-
+import {ElementID} from '../../shared/elementID'
+import {ClientSettings} from '../../shared/types'
 import {
   ArticleInput,
   AuthorRefFragment,
+  useArticlePreviewLinkLazyQuery,
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
-  useUpdateArticleMutation,
-  useArticlePreviewLinkLazyQuery
+  useUpdateArticleMutation
 } from '../api'
-
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {EditorTemplate} from '../atoms/editorTemplate'
+import {NavigationBar} from '../atoms/navigationBar'
+import {BlockMap} from '../blocks/blockMap'
 import {
   blockForQueryBlock,
   BlockType,
@@ -34,30 +34,26 @@ import {
   TitleBlockValue,
   unionMapForBlock
 } from '../blocks/types'
-
+import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
+import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {BlockMap} from '../blocks/blockMap'
-
-import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
-import {ClientSettings} from '../../shared/types'
-import {ElementID} from '../../shared/elementID'
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import SaveIcon from '@rsuite/icons/legacy/Save'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-
-export interface ArticleEditorProps {
-  readonly id?: string
-}
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
 
-export function ArticleEditor({id}: ArticleEditorProps) {
+function ArticleEditor() {
+  const navigate = useNavigate()
+  const params = useParams()
+  const {id} = params
+
   const [previewLinkFetch, {data}] = useArticlePreviewLinkLazyQuery({
     fetchPolicy: 'no-cache'
   })
@@ -73,8 +69,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const {peerByDefault}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
   )
-
-  const dispatch = useRouteDispatch()
 
   const [
     createArticle,
@@ -128,7 +122,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const articleID = id || createData?.createArticle.id
 
   const {data: articleData, refetch, loading: isLoading} = useArticleQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
@@ -136,6 +129,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(articleData?.article?.draft)
   const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
     ? new Date(publishData?.publishArticle?.pending?.publishAt)
     : articleData?.article?.pending?.publishAt
@@ -145,6 +139,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [hasChanged, setChanged] = useState(false)
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -371,12 +367,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       await refetch({id: articleID})
     } else {
       const {data} = await createArticle({variables: {input}})
-
       if (data) {
-        dispatch({
-          type: RouteActionType.ReplaceRoute,
-          route: ArticleEditRoute.create({id: data?.createArticle.id})
-        })
+        navigate(`/articles/edit/${data?.createArticle.id}`, {replace: true})
       }
       setChanged(false)
       toaster.push(
@@ -477,16 +469,17 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           navigationChildren={
             <NavigationBar
               leftChildren={
-                <IconButtonLink
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<ArrowLeftIcon />}
-                  route={ArticleListRoute.create({})}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault()
-                  }}>
-                  {t('articleEditor.overview.back')}
-                </IconButtonLink>
+                <Link to="/articles">
+                  <IconButton
+                    style={{marginTop: '4px'}}
+                    size={'lg'}
+                    icon={<ArrowLeftIcon />}
+                    onClick={e => {
+                      if (!unsavedChangesDialog()) e.preventDefault()
+                    }}>
+                    {t('articleEditor.overview.back')}
+                  </IconButton>
+                </Link>
               }
               centerChildren={
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
@@ -502,18 +495,20 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<SaveIcon />}
-                      disabled={isDisabled}
-                      onClick={() => handleSave()}>
-                      {t('articleEditor.overview.create')}
-                    </IconButton>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+                      <IconButton
+                        style={{
+                          marginLeft: '10px'
+                        }}
+                        size={'lg'}
+                        icon={<SaveIcon />}
+                        disabled={isDisabled}
+                        onClick={() => handleSave()}>
+                        {t('articleEditor.overview.create')}
+                      </IconButton>
+                    </PermissionControl>
                   ) : (
-                    <>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -526,49 +521,59 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                           {t('articleEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <Badge
-                        className={
-                          articleData?.article?.draft || !articleData?.article?.published
-                            ? 'unsaved'
-                            : 'saved'
-                        }>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
-                          size={'lg'}
-                          icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
-                          onClick={() => {
-                            setPublishDialogOpen(true)
-                          }}>
-                          {t('articleEditor.overview.publish')}
-                        </IconButton>
-                      </Badge>
-                    </>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
+                        <Badge
+                          className={
+                            articleData?.article?.draft || !articleData?.article?.published
+                              ? 'unsaved'
+                              : 'saved'
+                          }>
+                          <IconButton
+                            style={{
+                              marginLeft: '10px'
+                            }}
+                            size={'lg'}
+                            icon={<CloudUploadIcon />}
+                            disabled={isDisabled}
+                            onClick={() => {
+                              setPublishDialogOpen(true)
+                            }}>
+                            {t('articleEditor.overview.publish')}
+                          </IconButton>
+                        </Badge>
+                      </PermissionControl>
+                    </PermissionControl>
                   )}
                 </div>
               }
               rightChildren={
-                <IconButtonLink
-                  disabled={hasChanged || !id}
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<EyeIcon />}
-                  onClick={e => {
-                    previewLinkFetch({
-                      variables: {
-                        id: id!,
-                        hours: 1
-                      }
-                    })
-                  }}>
-                  {t('articleEditor.overview.preview')}
-                </IconButtonLink>
+                <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
+                  <Link
+                    to="#"
+                    onClick={e => {
+                      previewLinkFetch({
+                        variables: {
+                          id: id!,
+                          hours: 1
+                        }
+                      })
+                    }}>
+                    <IconButton
+                      disabled={hasChanged || !id || !canPreview}
+                      style={{marginTop: '4px'}}
+                      size={'lg'}
+                      icon={<EyeIcon />}>
+                      {t('articleEditor.overview.preview')}
+                    </IconButton>
+                  </Link>
+                </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
+          <BlockList
+            value={blocks}
+            onChange={handleChange}
+            disabled={isLoading || isDisabled || !isAuthorized}>
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
@@ -604,3 +609,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLE',
+  'CAN_GET_ARTICLES',
+  'CAN_CREATE_ARTICLE',
+  'CAN_DELETE_ARTICLE'
+])(ArticleEditor)
+export {CheckedPermissionComponent as ArticleEditor}

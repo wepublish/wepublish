@@ -1,4 +1,7 @@
+import {ArrowLeftLine} from '@rsuite/icons'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
   CheckPicker,
@@ -14,6 +17,7 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+
 import {
   FullUserFragment,
   FullUserRoleFragment,
@@ -23,25 +27,21 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
-import {
-  Link,
-  RouteType,
-  UserEditViewRoute,
-  UserListRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-import {useTranslation} from 'react-i18next'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
-import {RouteActionType} from '@wepublish/karma.run-react'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
-import {ArrowLeftLine} from '@rsuite/icons'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function UserEditView() {
+function UserEditView() {
   const {t} = useTranslation()
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id: userId} = params
+
+  // const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
+
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
 
   // user props
@@ -58,9 +58,7 @@ export function UserEditView() {
   const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
 
   // getting user id from url param
-  const [id] = useState<string | undefined>(
-    current?.type === RouteType.UserEditView ? current.params.id : undefined
-  )
+  const [id] = useState<string | undefined>(isEditRoute ? userId : undefined)
   const {data: userRoleData, loading: isUserRoleLoading} = useUserRoleListQuery({
     fetchPolicy: 'network-only',
     variables: {
@@ -109,6 +107,7 @@ export function UserEditView() {
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
+  const canResetPassword = authorise('CAN_RESET_USER_PASSWORD')
 
   /**
    * Function to update address object
@@ -195,10 +194,7 @@ export function UserEditView() {
         )
         // go back to user list
         if (closeAfterSave) {
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({})
-          })
+          navigate('/users')
         }
       } catch (e) {
         toaster.push(
@@ -237,16 +233,9 @@ export function UserEditView() {
         )
         // go back to user list
         if (closeAfterSave) {
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({})
-          })
+          navigate('/users')
         } else {
-          // stay in view and edit user
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserEditViewRoute.create({id: newUser.id}, current ?? undefined)
-          })
+          navigate(`/users/edit/${newUser.id}`)
           setUser(newUser)
         }
       } catch (e) {
@@ -317,7 +306,7 @@ export function UserEditView() {
           <FlexboxGrid.Item colspan={12}>
             <Row>
               <Col xs={2} style={{paddingTop: '3px'}}>
-                <Link route={UserListRoute.create({})}>
+                <Link to="/users">
                   <h1>
                     <ArrowLeftLine />
                   </h1>
@@ -343,7 +332,7 @@ export function UserEditView() {
                   <Row gutter={10}>
                     {/* active / inactive */}
                     <Col xs={24} style={{textAlign: 'end'}}>
-                      <Form.Group>
+                      <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
                           checked={active}
@@ -385,7 +374,7 @@ export function UserEditView() {
                     </Col>
                     {/* preferred name */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="preferredName">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.preferredName')}
                         </Form.ControlLabel>
@@ -416,7 +405,7 @@ export function UserEditView() {
                     </Col>
                     {/* company */}
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="company">
                         <Form.ControlLabel>{t('userCreateOrEditView.company')}</Form.ControlLabel>
                         <Form.Control
                           name="company"
@@ -430,7 +419,7 @@ export function UserEditView() {
                     </Col>
                     {/* street */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="streetAddress">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress')}
                         </Form.ControlLabel>
@@ -446,7 +435,7 @@ export function UserEditView() {
                     </Col>
                     {/* street 2 */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="streetAddress2">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress2')}
                         </Form.ControlLabel>
@@ -462,7 +451,7 @@ export function UserEditView() {
                     </Col>
                     {/* zip */}
                     <Col xs={8}>
-                      <Form.Group>
+                      <Form.Group controlId="zipCode">
                         <Form.ControlLabel>{t('userCreateOrEditView.zipCode')}</Form.ControlLabel>
                         <Form.Control
                           name="zipCode"
@@ -476,7 +465,7 @@ export function UserEditView() {
                     </Col>
                     {/* city */}
                     <Col xs={16}>
-                      <Form.Group>
+                      <Form.Group controlId="city">
                         <Form.ControlLabel>{t('userCreateOrEditView.city')}</Form.ControlLabel>
                         <Form.Control
                           name="city"
@@ -490,7 +479,7 @@ export function UserEditView() {
                     </Col>
                     {/* country */}
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="country">
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
                         <Form.Control
                           name="country"
@@ -511,7 +500,7 @@ export function UserEditView() {
                   style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="userRoles">
                         <Form.ControlLabel>{t('userCreateOrEditView.userRoles')}</Form.ControlLabel>
                         <CheckPicker
                           name="userRoles"
@@ -541,7 +530,7 @@ export function UserEditView() {
                         user={user}
                         password={password}
                         setPassword={setPassword}
-                        isDisabled={isDisabled}
+                        isDisabled={isDisabled || !canResetPassword}
                       />
                     </Col>
                   </Row>
@@ -562,3 +551,11 @@ export function UserEditView() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_GET_USERS',
+  'CAN_RESET_USER_PASSWORD'
+])(UserEditView)
+export {CheckedPermissionComponent as UserEditView}

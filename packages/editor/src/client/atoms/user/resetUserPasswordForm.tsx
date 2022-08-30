@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Form, Notification, Schema, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../../api'
-
-import {useTranslation} from 'react-i18next'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string
@@ -59,7 +57,7 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
           onClose()
         }
       }}>
-      <Form.Group>
+      <Form.Group controlId="password">
         <Form.ControlLabel>
           {t('userCreateOrEditView.resetPasswordFor', {userName})}
         </Form.ControlLabel>

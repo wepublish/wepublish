@@ -1,24 +1,27 @@
-import React, {useState, useEffect} from 'react'
+import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Button, Drawer, Form, Message, Panel, Schema, TagPicker, toaster} from 'rsuite'
 
 import {
-  useUploadImageMutation,
-  useUpdateImageMutation,
-  useImageQuery,
+  ImageListDocument,
   ImageRefFragment,
-  ImageListDocument
+  useImageQuery,
+  useUpdateImageMutation,
+  useUploadImageMutation
 } from '../api'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-
-import {Link} from '../route'
-
-import {useTranslation} from 'react-i18next'
-import {FocalPointInput} from '../atoms/focalPointInput'
-import {Point} from '../atoms/draggable'
-import {Button, Drawer, Form, Panel, TagPicker, toaster, Message, Schema} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import imageCompression from 'browser-image-compression'
+import {Point} from '../atoms/draggable'
+import {FocalPointInput} from '../atoms/focalPointInput'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 import {ImageMetaData} from './imageUploadAndEditPanel'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -29,7 +32,7 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -66,7 +69,8 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
   })
 
   const [isLoading, setLoading] = useState(true)
-  const isDisabled = isLoading || isUpdating || isUploading
+  const isAuthorized = authorise('CAN_CREATE_IMAGE')
+  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
   const isUpload = file !== undefined
 
   const {t} = useTranslation()
@@ -257,9 +261,11 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance={'primary'} disabled={isDisabled} type="submit">
-              {isUpload ? t('images.panels.upload') : t('images.panels.save')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+              <Button appearance={'primary'} disabled={isDisabled} type="submit">
+                {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
             </Button>
@@ -306,7 +312,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
 
                   {originalImageURL && (
                     <DescriptionListItem label={t('images.panels.link')}>
-                      <Link href={originalImageURL} target="_blank">
+                      <Link to={originalImageURL} target="_blank">
                         {originalImageURL}
                       </Link>
                     </DescriptionListItem>
@@ -314,7 +320,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                 </DescriptionList>
               </Panel>
               <Panel header={t('images.panels.information')}>
-                <Form.Group>
+                <Form.Group controlId="imageFilename">
                   <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
                   <Form.Control
                     name="filename"
@@ -323,7 +329,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setFilename(value)}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group controlId="imageTitle">
                   <Form.ControlLabel>{t('images.panels.title')}</Form.ControlLabel>
                   <Form.Control
                     name="title"
@@ -332,7 +338,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setTitle(value)}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group controlId="imageDescription">
                   <Form.ControlLabel>{t('images.panels.description')}</Form.ControlLabel>
                   <Form.Control
                     name="description"
@@ -341,7 +347,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setDescription(value)}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group controlId="imageTags">
                   <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
                   <TagPicker
                     virtualized
@@ -355,8 +361,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                 </Form.Group>
               </Panel>
               <Panel header={t('images.panels.attribution')}>
-                {/* <Form > */}
-                <Form.Group>
+                <Form.Group controlId="imageSource">
                   <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
                   <Form.Control
                     name="source"
@@ -365,7 +370,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setSource(value)}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group controlId="imageLink">
                   <Form.ControlLabel>{t('images.panels.link')}</Form.ControlLabel>
                   <Form.Control
                     name="link"
@@ -376,7 +381,7 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                   />
                   <p>{t('images.panels.sourceLink')}</p>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group controlId="imageLicense">
                   <Form.ControlLabel>{t('images.panels.license')}</Form.ControlLabel>
                   <Form.Control
                     name="license"
@@ -385,7 +390,6 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
                     onChange={(value: string) => setLicense(value)}
                   />
                 </Form.Group>
-                {/* </Form> */}
               </Panel>
             </>
           )}
@@ -394,3 +398,11 @@ export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: Imag
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_IMAGE',
+  'CAN_GET_IMAGES',
+  'CAN_DELETE_IMAGE',
+  'CAN_CREATE_IMAGE'
+])(ImagedEditPanel)
+export {CheckedPermissionComponent as ImagedEditPanel}

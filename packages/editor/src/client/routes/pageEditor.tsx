@@ -1,45 +1,40 @@
+import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
+import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
+import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
+import SaveIcon from '@rsuite/icons/legacy/Save'
 import React, {useCallback, useEffect, useState} from 'react'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
-
-import {BlockList, useBlockMap} from '../atoms/blockList'
-import {NavigationBar} from '../atoms/navigationBar'
-import {EditorTemplate} from '../atoms/editorTemplate'
-
-import {IconButtonLink, PageEditRoute, PageListRoute, useRouteDispatch} from '../route'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
 import {
   PageInput,
   useCreatePageMutation,
+  usePagePreviewLinkLazyQuery,
   usePageQuery,
   usePublishPageMutation,
-  useUpdatePageMutation,
-  usePagePreviewLinkLazyQuery
+  useUpdatePageMutation
 } from '../api'
-
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {EditorTemplate} from '../atoms/editorTemplate'
+import {NavigationBar} from '../atoms/navigationBar'
+import {BlockMap} from '../blocks/blockMap'
+import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
-
-import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
-
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {BlockMap} from '../blocks/blockMap'
-
-import {useTranslation} from 'react-i18next'
-import {toaster, Message, Badge, Drawer, IconButton, Modal, Tag, Notification} from 'rsuite'
 import {StateColor} from '../utility'
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import SaveIcon from '@rsuite/icons/legacy/Save'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
-export interface PageEditorProps {
-  readonly id?: string
-}
-
-export function PageEditor({id}: PageEditorProps) {
-  const dispatch = useRouteDispatch()
+function PageEditor() {
+  const navigate = useNavigate()
+  const params = useParams()
+  const {id} = params
 
   const [previewLinkFetch, {data}] = usePagePreviewLinkLazyQuery({
     fetchPolicy: 'no-cache'
@@ -92,7 +87,6 @@ export function PageEditor({id}: PageEditorProps) {
   const pageID = id || createData?.createPage.id
 
   const {data: pageData, refetch, loading: isLoading} = usePageQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
@@ -102,6 +96,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(pageData?.page?.draft)
   const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
     ? new Date(publishData?.publishPage?.pending?.publishAt)
     : pageData?.page?.pending?.publishAt
@@ -110,6 +105,8 @@ export function PageEditor({id}: PageEditorProps) {
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const isAuthorized = authorise('CAN_CREATE_PAGE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -231,10 +228,7 @@ export function PageEditor({id}: PageEditorProps) {
       const {data} = await createPage({variables: {input}})
 
       if (data) {
-        dispatch({
-          type: RouteActionType.ReplaceRoute,
-          route: PageEditRoute.create({id: data?.createPage.id})
-        })
+        navigate(`/pages/edit/${data?.createPage.id}`, {replace: true})
       }
       setChanged(false)
       toaster.push(
@@ -317,16 +311,17 @@ export function PageEditor({id}: PageEditorProps) {
           navigationChildren={
             <NavigationBar
               leftChildren={
-                <IconButtonLink
-                  style={{marginTop: '4px', marginBottom: '20px'}}
-                  size={'lg'}
-                  icon={<ArrowLeftIcon />}
-                  route={PageListRoute.create({})}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault()
-                  }}>
-                  {t('Back')}
-                </IconButtonLink>
+                <Link to="/pages">
+                  <IconButton
+                    style={{marginTop: '4px', marginBottom: '20px'}}
+                    size={'lg'}
+                    icon={<ArrowLeftIcon />}
+                    onClick={e => {
+                      if (!unsavedChangesDialog()) e.preventDefault()
+                    }}>
+                    {t('Back')}
+                  </IconButton>
+                </Link>
               }
               centerChildren={
                 <div style={{marginTop: '4px'}}>
@@ -339,18 +334,20 @@ export function PageEditor({id}: PageEditorProps) {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<SaveIcon />}
-                      disabled={isDisabled}
-                      onClick={() => handleSave()}>
-                      {t('pageEditor.overview.create')}
-                    </IconButton>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+                      <IconButton
+                        style={{
+                          marginLeft: '10px'
+                        }}
+                        size={'lg'}
+                        icon={<SaveIcon />}
+                        disabled={isDisabled}
+                        onClick={() => handleSave()}>
+                        {t('pageEditor.overview.create')}
+                      </IconButton>
+                    </PermissionControl>
                   ) : (
-                    <>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -363,47 +360,55 @@ export function PageEditor({id}: PageEditorProps) {
                           {t('pageEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <Badge
-                        className={
-                          pageData?.page?.draft || !pageData?.page?.published ? 'unsaved' : 'saved'
-                        }>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
-                          size={'lg'}
-                          icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
-                          onClick={() => {
-                            setPublishDialogOpen(true)
-                          }}>
-                          {t('pageEditor.overview.publish')}
-                        </IconButton>
-                      </Badge>
-                    </>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
+                        <Badge
+                          className={
+                            pageData?.page?.draft || !pageData?.page?.published
+                              ? 'unsaved'
+                              : 'saved'
+                          }>
+                          <IconButton
+                            style={{
+                              marginLeft: '10px'
+                            }}
+                            size={'lg'}
+                            icon={<CloudUploadIcon />}
+                            disabled={isDisabled}
+                            onClick={() => {
+                              setPublishDialogOpen(true)
+                            }}>
+                            {t('pageEditor.overview.publish')}
+                          </IconButton>
+                        </Badge>
+                      </PermissionControl>
+                    </PermissionControl>
                   )}
                 </div>
               }
               rightChildren={
-                <IconButtonLink
-                  disabled={hasChanged || !id}
-                  style={{marginTop: '4px'}}
-                  size={'lg'}
-                  icon={<EyeIcon />}
-                  onClick={e => {
-                    previewLinkFetch({
-                      variables: {
-                        id: id!,
-                        hours: 1
-                      }
-                    })
-                  }}>
-                  {t('pageEditor.overview.preview')}
-                </IconButtonLink>
+                <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
+                  <Link to="#">
+                    <IconButton
+                      disabled={hasChanged || !id || !canPreview}
+                      style={{marginTop: '4px'}}
+                      size={'lg'}
+                      icon={<EyeIcon />}
+                      onClick={e => {
+                        previewLinkFetch({
+                          variables: {
+                            id: id!,
+                            hours: 1
+                          }
+                        })
+                      }}>
+                      {t('pageEditor.overview.preview')}
+                    </IconButton>
+                  </Link>
+                </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
+          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled || !isAuthorized}>
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
@@ -439,3 +444,13 @@ export function PageEditor({id}: PageEditorProps) {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAGE',
+  'CAN_GET_PAGES',
+  'CAN_CREATE_PAGE',
+  'CAN_PUBLISH_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_GET_PAGE_PREVIEW_LINK'
+])(PageEditor)
+export {CheckedPermissionComponent as PageEditor}

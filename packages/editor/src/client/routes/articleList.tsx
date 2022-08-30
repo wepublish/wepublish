@@ -1,48 +1,44 @@
-import React, {useEffect, useState} from 'react'
-
-import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink, useRouteDispatch} from '../route'
-
-import {
-  useArticleListQuery,
-  ArticleRefFragment,
-  useUnpublishArticleMutation,
-  useDeleteArticleMutation,
-  useDuplicateArticleMutation,
-  ArticleListDocument,
-  ArticleListQuery,
-  PageRefFragment,
-  ArticleSort
-} from '../api'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  IconButton,
-  Table,
-  Modal,
-  Button,
-  Message,
-  Pagination
-} from 'rsuite'
-import {
-  DEFAULT_TABLE_PAGE_SIZES,
-  StateColor,
-  mapTableSortTypeToGraphQLSortOrder,
-  DEFAULT_MAX_TABLE_PAGES
-} from '../utility'
-import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
+import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import {RouteActionType} from '@wepublish/karma.run-react'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useNavigate} from 'react-router-dom'
+import {
+  Button,
+  FlexboxGrid,
+  IconButton,
+  Input,
+  InputGroup,
+  Message,
+  Modal,
+  Pagination,
+  Table
+} from 'rsuite'
+
+import {
+  ArticleListDocument,
+  ArticleListQuery,
+  ArticleRefFragment,
+  ArticleSort,
+  PageRefFragment,
+  useArticleListQuery,
+  useDeleteArticleMutation,
+  useDuplicateArticleMutation,
+  useUnpublishArticleMutation
+} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
+import {
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  mapTableSortTypeToGraphQLSortOrder,
+  StateColor
+} from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -65,7 +61,7 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   }
 }
 
-export function ArticleList() {
+function ArticleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -83,7 +79,7 @@ export function ArticleList() {
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
-  const dispatch = useRouteDispatch()
+  const navigate = useNavigate()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -127,14 +123,15 @@ export function ArticleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('articles.overview.articles')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={ArticleCreateRoute.create({})}>
-            {t('articles.overview.newArticle')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/articles/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('articles.overview.newArticle')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -194,7 +191,7 @@ export function ArticleList() {
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => (
-                <Link route={ArticleEditRoute.create({id: rowData.id})}>
+                <Link to={`/articles/edit/${rowData.id}`}>
                   {rowData.latest.title || t('articles.overview.untitled')}
                 </Link>
               )}
@@ -244,59 +241,69 @@ export function ArticleList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
-                    <IconButton
-                      icon={<BtnOffIcon />}
-                      circle
-                      disabled={!(rowData.published || rowData.pending)}
-                      size="sm"
-                      onClick={e => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Unpublish)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
+                      <IconButton
+                        icon={<BtnOffIcon />}
+                        circle
+                        disabled={!(rowData.published || rowData.pending)}
+                        size="sm"
+                        onClick={e => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Unpublish)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
 
-                  <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Delete)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
-                    <IconButton
-                      icon={<CopyIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentArticle(rowData)
-                        setConfirmAction(ConfirmAction.Duplicate)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
-                    <IconButton
-                      icon={<EyeIcon />}
-                      circle
-                      disabled={!rowData.draft}
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentArticle(rowData)
-                        setArticlePreviewLinkOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Delete)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
+                      <IconButton
+                        icon={<CopyIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Duplicate)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
+                      <IconButton
+                        icon={<EyeIcon />}
+                        circle
+                        disabled={!rowData.draft}
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setArticlePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -452,9 +459,8 @@ export function ArticleList() {
                     }
                   }).then(output => {
                     if (output.data) {
-                      dispatch({
-                        type: RouteActionType.ReplaceRoute,
-                        route: ArticleEditRoute.create({id: output.data?.duplicateArticle.id})
+                      navigate(`/articles/edit/${output.data?.duplicateArticle.id}`, {
+                        replace: true
                       })
                     }
                   })
@@ -473,3 +479,11 @@ export function ArticleList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLES',
+  'CAN_GET_ARTICLE',
+  'CAN_CREATE_ARTICLE',
+  'CAN_DELETE_ARTICLE'
+])(ArticleList)
+export {CheckedPermissionComponent as ArticleList}

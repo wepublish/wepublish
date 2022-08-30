@@ -1,4 +1,4 @@
-import {MapDiscriminatedUnion} from '@karma.run/utility'
+import {MapDiscriminatedUnion} from '../utility'
 import {Prisma} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
 

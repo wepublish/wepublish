@@ -1,23 +1,21 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
+import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
+import {onError} from '@apollo/client/link/error'
+import {createUploadLink} from 'apollo-upload-client'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
-import {createUploadLink} from 'apollo-upload-client'
-import {onError} from '@apollo/client/link/error'
-
-import {initI18N} from './i18n'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
-import {RouteProvider} from './route'
-import {AuthProvider} from './authContext'
-import {LocalStorageKey} from './utility'
-import {TwitterProvider} from './blocks/embeds/twitter'
-import {InstagramProvider} from './blocks/embeds/instagram'
-import {FacebookProvider} from './blocks/embeds/facebook'
 import {HotApp} from './app'
+import {AuthProvider} from './authContext'
+import {FacebookProvider} from './blocks/embeds/facebook'
+import {InstagramProvider} from './blocks/embeds/instagram'
+import {TwitterProvider} from './blocks/embeds/twitter'
+import {initI18N} from './i18n'
+import {LocalStorageKey} from './utility'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
@@ -112,15 +110,13 @@ const onDOMContentLoaded = async () => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <RouteProvider>
-          <FacebookProvider sdkLanguage={'en_US'}>
-            <InstagramProvider>
-              <TwitterProvider>
-                <HotApp />
-              </TwitterProvider>
-            </InstagramProvider>
-          </FacebookProvider>
-        </RouteProvider>
+        <FacebookProvider sdkLanguage={'en_US'}>
+          <InstagramProvider>
+            <TwitterProvider>
+              <HotApp />
+            </TwitterProvider>
+          </InstagramProvider>
+        </FacebookProvider>
       </AuthProvider>
     </ApolloProvider>,
     document.getElementById(ElementID.ReactRoot)
