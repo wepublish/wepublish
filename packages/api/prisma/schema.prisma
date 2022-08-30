@@ -92,6 +92,7 @@ model Article {
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
+  ArticlePeerInformation ArticlePeerInformation[]
 }
 
 model AuthorsLinks {
@@ -168,13 +169,13 @@ model Image {
 }
 
 enum CommentItemType {
-  article @map("article")
-  page    @map("page")
+  article  @map("article")
+  page     @map("page")
 }
 
 enum CommentRejectionReason {
-  misconduct @map("misconduct")
-  spam       @map("spam")
+  misconduct  @map("misconduct")
+  spam        @map("spam")
 }
 
 model CommentsRevisions {
@@ -190,17 +191,17 @@ model CommentsRevisions {
 }
 
 enum CommentState {
-  approved           @map("approved")
-  pendingApproval    @map("pendingApproval")
-  pendingUserChanges @map("pendingUserChanges")
-  rejected           @map("rejected")
+  approved            @map("approved")
+  pendingApproval     @map("pendingApproval")
+  pendingUserChanges  @map("pendingUserChanges")
+  rejected            @map("rejected")
 }
 
 enum CommentAuthorType {
-  team         @map("team")
-  author       @map("author")
-  verifiedUser @map("verifiedUser")
-  guestUser    @map("guestUser")
+  team          @map("team")
+  author        @map("author")
+  verifiedUser  @map("verifiedUser")
+  guestUser     @map("guestUser")
 }
 
 model Comment {
@@ -267,12 +268,12 @@ model Invoice {
 }
 
 enum MailLogState {
-  submitted @map("submitted")
-  accepted  @map("accepted")
-  delivered @map("delivered")
-  deferred  @map("deferred")
-  bounced   @map("bounced")
-  rejected  @map("rejected")
+  submitted  @map("submitted")
+  accepted   @map("accepted")
+  delivered  @map("delivered")
+  deferred   @map("deferred")
+  bounced    @map("bounced")
+  rejected   @map("rejected")
 }
 
 model MailLog {
@@ -291,10 +292,10 @@ model MailLog {
 }
 
 enum PaymentPeriodicity {
-  monthly   @map("monthly")
-  quarterly @map("quarterly")
-  biannual  @map("biannual")
-  yearly    @map("yearly")
+  monthly    @map("monthly")
+  quarterly  @map("quarterly")
+  biannual   @map("biannual")
+  yearly     @map("yearly")
 }
 
 model AvailablePaymentMethod {
@@ -431,13 +432,13 @@ model PaymentMethod {
 }
 
 enum PaymentState {
-  created            @map("created")
-  submitted          @map("submitted")
-  requiresUserAction @map("requiresUserAction")
-  processing         @map("processing")
-  paid               @map("paid")
-  canceled           @map("canceled")
-  declined           @map("declined")
+  created             @map("created")
+  submitted           @map("submitted")
+  requiresUserAction  @map("requiresUserAction")
+  processing          @map("processing")
+  paid                @map("paid")
+  canceled            @map("canceled")
+  declined            @map("declined")
 }
 
 model Payment {
@@ -486,6 +487,7 @@ model Peer {
   isDisabled Boolean @default(false)
 
   @@map("peers")
+  ArticlePeerInformation ArticlePeerInformation[]
 }
 
 model Token {
@@ -535,9 +537,9 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                 @map("none")
+  userSelfDeactivated  @map("userSelfDeactivated")
+  invoiceNotPaid       @map("invoiceNotPaid")
 }
 
 model SubscriptionDeactivation {
@@ -685,4 +687,17 @@ model Setting {
   settingRestriction Json
 
   @@map("settings")
+}
+
+model ArticlePeerInformation {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  peerId String
+  peer   Peer   @relation(fields: [peerId], references: [id])
+
+  producerArticleId String
+  consumerArticleId String
+  consumerArticle   Article @relation(fields: [consumerArticleId], references: [id])
 }
