@@ -23,9 +23,7 @@
   },
   "typings": "./lib/index.d.ts",
   "license": "MIT",
-  "bin": {
-    "run-server": "./bin/run-server.js"
-  },
+  "bin": "./bin/run-server.js",
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-s build:*",
