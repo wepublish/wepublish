@@ -84,7 +84,7 @@ export function LinkMenu() {
   return (
     <>
       <Form fluid>
-        <Form.Group>
+        <Form.Group controlId="link">
           <Form.ControlLabel>{t('blocks.richText.link')}</Form.ControlLabel>
           <InputGroup>
             <select
@@ -108,7 +108,7 @@ export function LinkMenu() {
             <Form.HelpText> {t('blocks.richText.invalidMail')} </Form.HelpText>
           ) : undefined}
         </Form.Group>
-        <Form.Group>
+        <Form.Group controlId="text">
           <Form.ControlLabel>{t('blocks.richText.text')}</Form.ControlLabel>
           <Form.Control
             name="title"

@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ArticlePreviewProps {
   id: string
@@ -14,7 +15,7 @@ export interface ArticlePreviewLinkPanelProps {
   onClose(): void
 }
 
-export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps) {
+function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps) {
   const [hours, setHours] = useState<number>(12)
 
   const {t} = useTranslation()
@@ -52,7 +53,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
         </Message>
 
         <Form fluid>
-          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}}>
+          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}} controlId="hours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -69,7 +70,7 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
               onChange={value => setHours(value)}
             />
           </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}}>
+          <Form.Group style={{paddingTop: '20px'}} controlId="field">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -90,3 +91,8 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLE_PREVIEW_LINK'
+])(ArticlePreviewLinkPanel)
+export {CheckedPermissionComponent as ArticlePreviewLinkPanel}

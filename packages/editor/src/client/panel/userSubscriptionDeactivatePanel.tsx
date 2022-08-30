@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, DatePicker, Form, Message, Modal, SelectPicker} from 'rsuite'
 
 import {SubscriptionDeactivationReason} from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface DeactivateSubscription {
   date: Date
@@ -19,7 +20,7 @@ export interface SubscriptionDeactivatePanelProps {
   onClose(): void
 }
 
-export function UserSubscriptionDeactivatePanel({
+function UserSubscriptionDeactivatePanel({
   isDeactivated,
   displayName,
   paidUntil,
@@ -60,7 +61,7 @@ export function UserSubscriptionDeactivatePanel({
         </p>
         {!isDeactivated && (
           <Form style={{marginTop: '20px'}} fluid>
-            <Form.Group>
+            <Form.Group controlId="deactivationDate">
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
               <DatePicker
                 block
@@ -70,7 +71,7 @@ export function UserSubscriptionDeactivatePanel({
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="deactivationReason">
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</Form.ControlLabel>
               <SelectPicker
                 virtualized
@@ -124,3 +125,9 @@ export function UserSubscriptionDeactivatePanel({
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_CREATE_SUBSCRIPTION',
+  'CAN_DELETE_SUBSCRIPTION'
+])(UserSubscriptionDeactivatePanel)
+export {CheckedPermissionComponent as UserSubscriptionDeactivatePanel}

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 import {usePagePreviewLinkQuery} from '../api'
 
@@ -14,7 +15,7 @@ export interface PagePreviewLinkPanelProps {
   onClose(): void
 }
 
-export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
+function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
   const [hours, setHours] = useState<number>(12)
 
   const {t} = useTranslation()
@@ -52,7 +53,9 @@ export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps
         </Message>
 
         <Form fluid>
-          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}}>
+          <Form.Group
+            style={{paddingLeft: '20px', paddingRight: '20px'}}
+            controlId="articlePreviewLinkHours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -69,7 +72,7 @@ export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps
               onChange={value => setHours(value)}
             />
           </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}}>
+          <Form.Group style={{paddingTop: '20px'}} controlId="articlePreviewLinkField">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -90,3 +93,7 @@ export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_GET_PAGE_PREVIEW_LINK'])(
+  PagePreviewLinkPanel
+)
+export {CheckedPermissionComponent as PagePreviewLinkPanel}

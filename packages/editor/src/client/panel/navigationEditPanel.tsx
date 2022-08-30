@@ -16,6 +16,11 @@ import {
 } from '../api'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {generateID, getOperationNameFromDocument} from '../utility'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -32,7 +37,8 @@ export interface NavigationLink {
   url?: string
 }
 
-export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
+function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
+  const isAuthorized = authorise('CAN_CREATE_NAVIGATION')
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
   const [navigationLinks, setNavigationLinks] = useState<ListValue<NavigationLink>[]>([])
@@ -84,7 +90,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     loadError !== undefined ||
     pageLoadError !== undefined ||
     isLoadingArticleData ||
-    articleLoadError !== undefined
+    articleLoadError !== undefined ||
+    !isAuthorized
 
   const {t} = useTranslation()
 
@@ -205,9 +212,11 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
-            {id ? t('navigation.panels.save') : t('navigation.panels.create')}
-          </Button>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
+            <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
+              {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+            </Button>
+          </PermissionControl>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
             {t('navigation.panels.close')}
           </Button>
@@ -216,7 +225,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       <Drawer.Body>
         <Panel>
           <Form fluid>
-            <Form.Group>
+            <Form.Group controlId="navigationName">
               <Form.ControlLabel>{t('navigation.panels.name')}</Form.ControlLabel>
               <Form.Control
                 name="name"
@@ -228,7 +237,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="navigationKey">
               <Form.ControlLabel>{t('navigation.panels.key')}</Form.ControlLabel>
               <Form.Control
                 name="key"
@@ -244,6 +253,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </Panel>
         <Panel header={t('authors.panels.links')}>
           <ListInput
+            disabled={isDisabled}
             value={navigationLinks}
             onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
             defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
@@ -316,3 +326,10 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_NAVIGATIONS',
+  'CAN_GET_NAVIGATION',
+  'CAN_CREATE_NAVIGATION',
+  'CAN_DELETE_NAVIGATION'
+])(NavigationEditPanel)
+export {CheckedPermissionComponent as NavigationEditPanel}

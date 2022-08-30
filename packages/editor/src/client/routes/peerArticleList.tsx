@@ -28,8 +28,9 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function PeerArticleList() {
+function PeerArticleList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('publishedAt')
@@ -283,3 +284,9 @@ export function PeerArticleList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PEER_ARTICLES',
+  'CAN_GET_PEER_ARTICLE'
+])(PeerArticleList)
+export {CheckedPermissionComponent as PeerArticleList}

@@ -68,7 +68,7 @@ export function TeaserEditPanel({
         {previewForTeaser(initialTeaser)}
         <Panel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <Form.Group>
+            <Form.Group controlId="articleStyle">
               <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
               <RadioGroup
                 inline
@@ -79,7 +79,7 @@ export function TeaserEditPanel({
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articlePreTitle">
               <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
               <Form.Control
                 name="pre-title"
@@ -87,7 +87,7 @@ export function TeaserEditPanel({
                 onChange={(preTitle: string) => setPreTitle(preTitle)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTitle">
               <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
               <Form.Control
                 name="title"
@@ -95,7 +95,7 @@ export function TeaserEditPanel({
                 onChange={(title: string) => setTitle(title)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleLead">
               <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
               <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
             </Form.Group>

@@ -25,7 +25,7 @@ export const GraphQLPaymentState = new GraphQLEnumType({
     Submitted: {value: PaymentState.submitted},
     RequiresUserAction: {value: PaymentState.requiresUserAction},
     Processing: {value: PaymentState.processing},
-    Payed: {value: PaymentState.paid},
+    Paid: {value: PaymentState.paid},
     Canceled: {value: PaymentState.canceled},
     Declined: {value: PaymentState.declined}
   }
