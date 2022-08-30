@@ -1,3 +1,4 @@
+import {ApolloError} from '@apollo/client'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -21,31 +22,40 @@ export function PollEditView() {
   const [close, setClose] = useState<boolean>(false)
   const closePath = '/polls'
 
-  const {data, loading: createLoading, error, refetch} = usePollQuery({
+  /**
+   * Handling toasts
+   */
+  const onErrorToast = (error: ApolloError) => {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error.message}
+      </Message>
+    )
+  }
+  const onCompletedToast = () => {
+    toaster.push(
+      <Message type="success" showIcon closable duration={3000}>
+        {t('pollEditView.savedSuccessfully')}
+      </Message>
+    )
+  }
+
+  // get polls
+  const {data, loading: createLoading, refetch} = usePollQuery({
     variables: {
       pollId: params.id
     },
+    onError: onErrorToast,
     fetchPolicy: 'no-cache'
   })
-  const [
-    updatePoll,
-    {loading: updateLoading, data: updateData, error: updateError}
-  ] = useUpdatePollMutation()
+
+  // updating poll
+  const [updatePoll, {loading: updateLoading, data: updateData}] = useUpdatePollMutation({
+    onError: onErrorToast,
+    onCompleted: onCompletedToast
+  })
   const {t} = useTranslation()
   const loading = createLoading || updateLoading
-
-  /**
-   * Handling errors
-   */
-  useEffect(() => {
-    if (error?.message || updateError?.message) {
-      toaster.push(
-        <Message type="error" showIcon closable duration={3000}>
-          {error?.message || updateError?.message}
-        </Message>
-      )
-    }
-  }, [error, updateError])
 
   /**
    * Update poll object after fetching from api
@@ -97,12 +107,6 @@ export function PollEditView() {
         })
       }
     })
-
-    toaster.push(
-      <Message type="success" showIcon closable duration={3000}>
-        {t('pollEditView.savedSuccessfully')}
-      </Message>
-    )
 
     if (close) {
       navigate(closePath)

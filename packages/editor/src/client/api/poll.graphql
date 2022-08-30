@@ -8,8 +8,8 @@ fragment PollExternalVoteSource on PollExternalVoteSource {
     }
 }
 
-mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) {
-    createPoll(opensAt: $opensAt, closesAt: $closesAt, question: $question) {
+mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
+    createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
         id
         question
         opensAt

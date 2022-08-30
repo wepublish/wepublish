@@ -582,7 +582,8 @@
       "insertYourNewAnswer": "Input new question",
       "deleteModalTitle": "Delete?",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
-      "deleteBtn": "Delete"
+      "deleteBtn": "Delete",
+      "answerMissing": "Please, input your answer."
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",

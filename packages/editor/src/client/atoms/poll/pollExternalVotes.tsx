@@ -1,3 +1,4 @@
+import {ApolloError} from '@apollo/client'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
@@ -31,12 +32,20 @@ export function PollExternalVotes({
     undefined
   )
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [createPollMutation, {loading}] = useCreatePollExternalVoteSourceMutation({
+  const [createSourceMutation, {loading}] = useCreatePollExternalVoteSourceMutation({
     fetchPolicy: 'no-cache'
   })
   const [deletePollMutation] = useDeletePollExternalVoteSourceMutation({
     fetchPolicy: 'no-cache'
   })
+
+  const onErrorToast = (error: ApolloError) => {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error.message}
+      </Message>
+    )
+  }
 
   async function createPoll() {
     if (!newSource) {
@@ -55,11 +64,12 @@ export function PollExternalVotes({
       )
       return
     }
-    await createPollMutation({
+    await createSourceMutation({
       variables: {
         pollId: poll.id,
         source: newSource
-      }
+      },
+      onError: onErrorToast
     })
     setNewSource(undefined)
     await onExternalSourceCreated()
@@ -89,7 +99,7 @@ export function PollExternalVotes({
     }
     return (
       <>
-        <Table data={poll?.externalVoteSources || []} loading={loading} autoHeight>
+        <Table data={poll?.externalVoteSources || []} loading={loading} autoHeight rowHeight={64}>
           {/* source columns */}
           <Table.Column>
             <Table.HeaderCell>{t('pollExternalVotes.sourceHeaderCell')}</Table.HeaderCell>

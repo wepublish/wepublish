@@ -1,4 +1,4 @@
-import {ApolloQueryResult} from '@apollo/client'
+import {ApolloError, ApolloQueryResult} from '@apollo/client'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
@@ -26,6 +26,24 @@ export function DeletePollModal({poll, setPol, afterDelete}: deletePollProps) {
   }, [poll])
 
   /**
+   * Error handling
+   */
+  const onErrorToast = (error: ApolloError) => {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error.message}
+      </Message>
+    )
+  }
+  const onCompletedToast = () => {
+    toaster.push(
+      <Message type="success" showIcon closable duration={3000}>
+        {t('pollList.pollDeleted')}
+      </Message>
+    )
+  }
+
+  /**
    * FUNCTIONS
    */
   async function deletePoll() {
@@ -38,15 +56,10 @@ export function DeletePollModal({poll, setPol, afterDelete}: deletePollProps) {
     await deletePollMutation({
       variables: {
         deletePollId: poll.id
-      }
+      },
+      onError: onErrorToast,
+      onCompleted: onCompletedToast
     })
-    // inform user
-    toaster.push(
-      <Message type="success" showIcon closable duration={3000}>
-        {t('pollList.pollDeleted')}
-      </Message>
-    )
-
     await afterDelete()
   }
 

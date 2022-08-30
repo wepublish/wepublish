@@ -582,7 +582,8 @@
       "insertYourNewAnswer": "Neue Antwort eingeben",
       "deleteModalTitle": "Löschen?",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
-      "deleteBtn": "Löschen"
+      "deleteBtn": "Löschen",
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",

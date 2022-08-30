@@ -1,3 +1,4 @@
+import {ApolloError} from '@apollo/client'
 import {PlayOutline} from '@rsuite/icons'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import OffIcon from '@rsuite/icons/Off'
@@ -18,18 +19,10 @@ export function PollList() {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
-  const {data, loading, error, refetch} = usePollsQuery({
-    fetchPolicy: 'no-cache',
-    variables: {
-      take: limit,
-      skip: (page - 1) * limit
-    }
-  })
-
   /**
    * Handling error on loading polls.
    */
-  useEffect(() => {
+  const onErrorToast = (error: ApolloError) => {
     if (error?.message) {
       toaster.push(
         <Message type="error" showIcon closable duration={3000}>
@@ -37,7 +30,16 @@ export function PollList() {
         </Message>
       )
     }
-  }, [error])
+  }
+
+  const {data, loading, refetch} = usePollsQuery({
+    fetchPolicy: 'no-cache',
+    variables: {
+      take: limit,
+      skip: (page - 1) * limit
+    },
+    onError: onErrorToast
+  })
 
   /**
    * Refetch data

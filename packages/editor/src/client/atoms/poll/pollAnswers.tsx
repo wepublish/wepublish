@@ -1,6 +1,7 @@
+import {ApolloError} from '@apollo/client'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuite'
 
@@ -32,23 +33,29 @@ export function PollAnswers({
   )
   const [newAnswer, setNewAnswer] = useState<string>('')
   const [createAnswerMutation, {loading}] = useCreatePollAnswerMutation()
-  const [deleteAnswerMutation, {error}] = useDeletePollAnswerMutation()
+  const [deleteAnswerMutation] = useDeletePollAnswerMutation()
 
-  useEffect(() => {
-    if (error) {
-      toaster.push(
-        <Message type="error" showIcon closable duration={3000}>
-          {error.message}
-        </Message>
-      )
-    }
-  }, [error])
+  const onErrorToast = (error: ApolloError) => {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error.message}
+      </Message>
+    )
+  }
 
   /**
    * FUNCTIONS
    */
   async function createAnswer() {
     if (!poll) {
+      return
+    }
+    if (newAnswer === '') {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {t('pollAnswer.answerMissing')}
+        </Message>
+      )
       return
     }
     const answer = await createAnswerMutation({
@@ -61,6 +68,7 @@ export function PollAnswers({
     if (savedAnswer) {
       await onAnswerAdded(savedAnswer)
     }
+    setNewAnswer('')
   }
 
   async function deleteAnswer(): Promise<void> {
@@ -71,7 +79,8 @@ export function PollAnswers({
     await deleteAnswerMutation({
       variables: {
         deletePollAnswerId: answerToDelete.id
-      }
+      },
+      onError: onErrorToast
     })
     await onAnswerDeleted()
   }

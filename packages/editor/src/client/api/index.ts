@@ -436,8 +436,8 @@ export type FullPoll = {
   __typename?: 'FullPoll';
   id: Scalars['ID'];
   question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['Date'];
-  closedAt?: Maybe<Scalars['Date']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
   answers?: Maybe<Array<PollAnswerWithVoteCount>>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
 };
@@ -1101,7 +1101,7 @@ export type MutationUpdateSettingListArgs = {
 
 export type MutationCreatePollArgs = {
   opensAt?: Maybe<Scalars['DateTime']>;
-  closesAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
   question?: Maybe<Scalars['String']>;
 };
 
@@ -1455,8 +1455,8 @@ export type Poll = {
   __typename?: 'Poll';
   id: Scalars['ID'];
   question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['Date'];
-  closedAt?: Maybe<Scalars['Date']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type PollAnswer = {
@@ -1509,8 +1509,8 @@ export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   id: Scalars['ID'];
   question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['Date'];
-  closedAt?: Maybe<Scalars['Date']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
   answers?: Maybe<Array<PollAnswer>>;
 };
 
@@ -3846,7 +3846,7 @@ export type PollExternalVoteSourceFragment = (
 
 export type CreatePollMutationVariables = Exact<{
   opensAt?: Maybe<Scalars['DateTime']>;
-  closesAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
   question?: Maybe<Scalars['String']>;
 }>;
 
@@ -7504,8 +7504,8 @@ export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutati
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
 export const CreatePollDocument = gql`
-    mutation CreatePoll($opensAt: DateTime, $closesAt: DateTime, $question: String) {
-  createPoll(opensAt: $opensAt, closesAt: $closesAt, question: $question) {
+    mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
+  createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
     id
     question
     opensAt
@@ -7534,7 +7534,7 @@ export type CreatePollMutationFn = Apollo.MutationFunction<CreatePollMutation, C
  * const [createPollMutation, { data, loading, error }] = useCreatePollMutation({
  *   variables: {
  *      opensAt: // value for 'opensAt'
- *      closesAt: // value for 'closesAt'
+ *      closedAt: // value for 'closedAt'
  *      question: // value for 'question'
  *   },
  * });

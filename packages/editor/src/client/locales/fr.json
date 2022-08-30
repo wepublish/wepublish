@@ -931,7 +931,8 @@
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
       "deleteModalTitle": "Supprimer?",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
-      "deleteBtn": "Supprimer"
+      "deleteBtn": "Supprimer",
+      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte."
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Nom de la source du vote (par ex. Facebook)",
