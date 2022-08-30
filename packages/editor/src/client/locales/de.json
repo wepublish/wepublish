@@ -12,6 +12,7 @@
         "noSlug": "Artikel nicht publiziert. Bitte Slug erfassen.",
         "notFound": "Artikel nicht gefunden",
         "pending": "Publikation des Artikels geplant am {{date, ccc PP p}}",
+        "publish": "Publizieren",
         "previewDisabled": "Alle Änderungen an diesem Artikel wurden bereits publiziert.",
         "preview": "Vorschau",
         "published": "Artikel publiziert am {{date, ccc PP p}}.",
@@ -1110,6 +1111,10 @@
       "notPublished": "Noch nicht publiziert",
       "toOriginalArticle": "Zum Original Artikel",
       "filterByPeer": "Nach Peer filtern"
+    },
+    "permissions": {
+      "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",
+      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}"
     }
   }
 }

@@ -1111,6 +1111,10 @@
       "originalArticle": "Article original",
       "notPublished": "Pas encore publié",
       "toOriginalArticle": "Vers l'article original"
+    },
+    "permissions": {
+      "noAccess": "Vous n'avez pas l'autorisation suffisante pour accéder à ce contenu.",
+      "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l'une des autorisations suivantes: {{permissions}}"
     }
   }
 }

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 import {usePagePreviewLinkQuery} from '../api'
 
@@ -14,7 +15,7 @@ export interface PagePreviewLinkPanelProps {
   onClose(): void
 }
 
-export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
+function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
   const [hours, setHours] = useState<number>(12)
 
   const {t} = useTranslation()
@@ -92,3 +93,7 @@ export function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_GET_PAGE_PREVIEW_LINK'])(
+  PagePreviewLinkPanel
+)
+export {CheckedPermissionComponent as PagePreviewLinkPanel}

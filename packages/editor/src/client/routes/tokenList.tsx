@@ -23,8 +23,9 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 import {getOperationNameFromDocument} from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
-export function TokenList() {
+function TokenList() {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -70,13 +71,15 @@ export function TokenList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/tokens/generate">
-            <Button appearance="primary" disabled={isTokenListLoading}>
-              {t('tokenList.overview.generateToken')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/tokens/generate">
+              <Button appearance="primary" disabled={isTokenListLoading}>
+                {t('tokenList.overview.generateToken')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
       </FlexboxGrid>
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
@@ -89,17 +92,19 @@ export function TokenList() {
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <IconButtonTooltip caption={t('tokenList.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentToken(token)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
+                    <IconButtonTooltip caption={t('tokenList.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        onClick={() => {
+                          setConfirmationDialogOpen(true)
+                          setCurrentToken(token)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
             </List.Item>
@@ -149,3 +154,9 @@ export function TokenList() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_CREATE_TOKEN',
+  'CAN_GET_TOKENS',
+  'CAN_DELETE_TOKEN'
+])(TokenList)
+export {CheckedPermissionComponent as TokenList}

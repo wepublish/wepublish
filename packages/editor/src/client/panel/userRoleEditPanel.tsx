@@ -12,6 +12,11 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+  authorise
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface UserRoleEditPanelProps {
@@ -21,7 +26,8 @@ export interface UserRoleEditPanelProps {
   onSave?(userRole: FullUserRoleFragment): void
 }
 
-export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
+function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
+  const isAuthorized = authorise('CAN_CREATE_USER_ROLE')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [systemRole, setSystemRole] = useState(false)
@@ -51,7 +57,8 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     isPermissionLoading ||
     isCreating ||
     isUpdating ||
-    loadError !== undefined
+    loadError !== undefined ||
+    !isAuthorized
 
   const {t} = useTranslation()
 
@@ -132,13 +139,15 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              type="submit"
-              appearance="primary"
-              disabled={isDisabled}
-              data-testid="saveButton">
-              {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
+              <Button
+                type="submit"
+                appearance="primary"
+                disabled={isDisabled}
+                data-testid="saveButton">
+                {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('userRoles.panels.close')}
             </Button>
@@ -168,6 +177,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           <Form.Group controlId="permissions">
             <Form.ControlLabel>{t('userRoles.panels.permissions')}</Form.ControlLabel>
             <CheckPicker
+              disabled={isDisabled}
               virtualized
               block
               disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
@@ -186,3 +196,10 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USER_ROLE',
+  'CAN_GET_USER_ROLES',
+  'CAN_CREATE_USER_ROLE',
+  'CAN_DELETE_USER_ROLE'
+])(UserRoleEditPanel)
+export {CheckedPermissionComponent as UserRoleEditPanel}

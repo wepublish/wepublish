@@ -30,8 +30,9 @@ import {
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function UserEditView() {
+function UserEditView() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -106,6 +107,7 @@ export function UserEditView() {
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
+  const canResetPassword = authorise('CAN_RESET_USER_PASSWORD')
 
   /**
    * Function to update address object
@@ -528,7 +530,7 @@ export function UserEditView() {
                         user={user}
                         password={password}
                         setPassword={setPassword}
-                        isDisabled={isDisabled}
+                        isDisabled={isDisabled || !canResetPassword}
                       />
                     </Col>
                   </Row>
@@ -549,3 +551,11 @@ export function UserEditView() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_GET_USERS',
+  'CAN_RESET_USER_PASSWORD'
+])(UserEditView)
+export {CheckedPermissionComponent as UserEditView}

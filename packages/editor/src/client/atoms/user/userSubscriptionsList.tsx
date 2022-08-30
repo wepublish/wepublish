@@ -12,12 +12,13 @@ import {
   UserSubscriptionFragment
 } from '../../api'
 import {newSubscriptionButton} from '../../routes/subscriptionList'
+import {createCheckedPermissionComponent} from '../permissionControl'
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null
 }
 
-export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
+function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
   const {t} = useTranslation()
 
   /**
@@ -238,3 +239,10 @@ export function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SUBSCRIPTION',
+  'CAN_GET_SUBSCRIPTIONS',
+  'CAN_DELETE_SUBSCRIPTION',
+  'CAN_CREATE_SUBSCRIPTION'
+])(UserSubscriptionsList)
+export {CheckedPermissionComponent as UserSubscriptionsList}
