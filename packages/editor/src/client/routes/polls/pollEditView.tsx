@@ -8,6 +8,8 @@ import {
   FullPoll,
   PollAnswer,
   PollAnswerWithVoteCount,
+  PollExternalVote,
+  PollExternalVoteSource,
   usePollQuery,
   useUpdatePollMutation
 } from '../../api'
@@ -93,6 +95,15 @@ export function PollEditView() {
     }
     const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null
     const closedAt = poll.closedAt ? new Date(poll.closedAt).toISOString() : null
+    const externalSources = poll.externalVoteSources?.map((voteSource: PollExternalVoteSource) => ({
+      ...voteSource,
+      __typename: undefined,
+      voteAmounts: voteSource.voteAmounts?.map((voteAmount: PollExternalVote) => ({
+        id: voteAmount.id,
+        amount: voteAmount.amount
+      }))
+    }))
+
     await updatePoll({
       variables: {
         pollId: poll.id,
@@ -104,7 +115,8 @@ export function PollEditView() {
             id: answer.id,
             answer: answer.answer
           }
-        })
+        }),
+        externalVoteSources: externalSources || []
       }
     })
 
@@ -191,7 +203,10 @@ export function PollEditView() {
                       if (!poll) {
                         return
                       }
-                      setPoll({...poll, opensAt})
+                      setPoll({
+                        ...poll,
+                        opensAt: opensAt?.toISOString() || new Date().toISOString()
+                      })
                     }}
                   />
 
@@ -206,7 +221,7 @@ export function PollEditView() {
                       if (!poll) {
                         return
                       }
-                      setPoll({...poll, closedAt})
+                      setPoll({...poll, closedAt: closedAt?.toISOString()})
                     }}
                   />
                 </Panel>
@@ -221,6 +236,12 @@ export function PollEditView() {
                     }}
                     onExternalSourceDeleted={async () => {
                       await refetch()
+                    }}
+                    onExternalSourceChange={(externalVoteSources: PollExternalVoteSource[]) => {
+                      if (!poll) {
+                        return
+                      }
+                      setPoll({...poll, externalVoteSources})
                     }}
                   />
                 </Panel>

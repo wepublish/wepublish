@@ -3,7 +3,7 @@ import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Col, IconButton, Message, Modal, Row, Table, toaster} from 'rsuite'
+import {Button, Col, IconButton, InputNumber, Message, Modal, Row, Table, toaster} from 'rsuite'
 import FormControl from 'rsuite/FormControl'
 
 import {
@@ -19,12 +19,14 @@ interface PollExternalVotesProps {
   poll?: FullPoll
   onExternalSourceCreated(): Promise<void>
   onExternalSourceDeleted(): Promise<void>
+  onExternalSourceChange(externalVoteSources: PollExternalVoteSource[]): void
 }
 
 export function PollExternalVotes({
   poll,
   onExternalSourceCreated,
-  onExternalSourceDeleted
+  onExternalSourceDeleted,
+  onExternalSourceChange
 }: PollExternalVotesProps) {
   const {t} = useTranslation()
   const [newSource, setNewSource] = useState<string | undefined>(undefined)
@@ -91,6 +93,48 @@ export function PollExternalVotes({
   }
 
   /**
+   * set a new amount of an external vote source. used to update the parents vote source prop.
+   * @param answer
+   * @param externalVoteSource
+   * @param newAmount
+   */
+  function changeSource(
+    answer: PollAnswerWithVoteCount,
+    externalVoteSource: PollExternalVoteSource,
+    newAmount: string | number
+  ) {
+    const voteSources = poll?.externalVoteSources
+    if (!voteSources) {
+      return
+    }
+    // deep clone
+    const newVoteSources: PollExternalVoteSource[] = [...voteSources]
+
+    const sourceIndex = newVoteSources.findIndex(
+      (tmpVoteSource: PollExternalVoteSource) => tmpVoteSource.source === externalVoteSource.source
+    )
+    if (sourceIndex < 0) {
+      return
+    }
+
+    const source = newVoteSources[sourceIndex]
+    if (!source?.voteAmounts) {
+      return
+    }
+
+    const voteIndex = source.voteAmounts?.findIndex(
+      (tmpVote: PollExternalVote) => tmpVote.answerId === answer.id
+    )
+    if (voteIndex < 0) {
+      return
+    }
+    source.voteAmounts[voteIndex].amount =
+      typeof newAmount === 'string' ? parseInt(newAmount) : newAmount
+
+    onExternalSourceChange(newVoteSources)
+  }
+
+  /**
    * UI HELPER FUNCTIONS
    */
   function tableView() {
@@ -133,13 +177,15 @@ export function PollExternalVotes({
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
           {(externalVoteSource: PollExternalVoteSource) => (
-            <FormControl
-              name={`id-${answer.id}`}
+            <InputNumber
               value={
                 externalVoteSource.voteAmounts?.find(
                   (externalVote: PollExternalVote) => externalVote.answerId === answer.id
                 )?.amount || 0
               }
+              onChange={(newValue: string | number) => {
+                changeSource(answer, externalVoteSource, newValue)
+              }}
             />
           )}
         </Table.Cell>

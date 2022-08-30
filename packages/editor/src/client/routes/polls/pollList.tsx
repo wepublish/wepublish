@@ -159,13 +159,6 @@ export function PollList() {
                 {(rowData: FullPoll) => pollClosedAtView(rowData)}
               </Table.Cell>
             </Table.Column>
-            {/* answers */}
-            <Table.Column width={150} resizable>
-              <Table.HeaderCell>{t('pollList.answersCount')}</Table.HeaderCell>
-              <Table.Cell dataKey={'answers'} align={'center'}>
-                {(rowData: FullPoll) => rowData.answers?.length || 0}
-              </Table.Cell>
-            </Table.Column>
             {/* delete */}
             <Table.Column resizable>
               <Table.HeaderCell align={'center'}>{t('pollList.delete')}</Table.HeaderCell>
