@@ -52,7 +52,7 @@ Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
 
 ### Analytics
-In order to use analytics and send data to WePublish's Matomo, we prepared an analytics.js plugin that's available here:
+In order to use analytics and send data to WePublish, we prepared an analytics.js plugin that's available here:
 
 https://github.com/wepublish/analytics
 
