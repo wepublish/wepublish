@@ -27,7 +27,7 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
-export function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+export function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')

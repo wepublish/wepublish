@@ -1,22 +1,17 @@
-import React, {useState, useEffect} from 'react'
-
-import {ListValue, ListInput} from '../atoms/listInput'
-
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {
   Button,
+  CheckPicker,
   Drawer,
   Form,
-  Panel,
-  toaster,
   Message,
-  Toggle,
-  CheckPicker,
+  Panel,
+  Schema,
   TagPicker,
-  Schema
+  toaster,
+  Toggle
 } from 'rsuite'
-
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 import {
   AvailablePaymentMethod,
@@ -31,20 +26,20 @@ import {
   usePaymentMethodListQuery,
   useUpdateMemberPlanMutation
 } from '../api'
-
-import {
-  generateID,
-  getOperationNameFromDocument,
-  slugify,
-  ALL_PAYMENT_PERIODICITIES
-} from '../utility'
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
+import {ListInput, ListValue} from '../atoms/listInput'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {
+  ALL_PAYMENT_PERIODICITIES,
+  generateID,
+  getOperationNameFromDocument,
+  slugify
+} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -366,7 +361,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         </Drawer>
         {image && (
           <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-            <ImagedEditPanel
+            <ImageEditPanel
               id={image!.id}
               onClose={() => setEditModalOpen(false)}
               onSave={() => setEditModalOpen(false)}

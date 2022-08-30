@@ -1,42 +1,37 @@
-import React, {useState, useEffect} from 'react'
-
+import LinkIcon from '@rsuite/icons/legacy/Link'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {
   Button,
   Drawer,
   Form,
-  Panel,
   Input,
-  toaster,
-  Message,
-  PanelGroup,
   InputGroup,
-  Schema
+  Message,
+  Panel,
+  PanelGroup,
+  Schema,
+  toaster
 } from 'rsuite'
 
-import {ListInput, ListValue} from '../atoms/listInput'
-
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
-
 import {
-  useCreateAuthorMutation,
-  useAuthorQuery,
-  useUpdateAuthorMutation,
   AuthorLink,
+  AuthorListDocument,
+  FullAuthorFragment,
   ImageRefFragment,
   Maybe,
-  FullAuthorFragment,
-  AuthorListDocument
+  useAuthorQuery,
+  useCreateAuthorMutation,
+  useUpdateAuthorMutation
 } from '../api'
-
-import {slugify, generateID, getOperationNameFromDocument} from '../utility'
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import LinkIcon from '@rsuite/icons/legacy/Link'
+import {ListInput, ListValue} from '../atoms/listInput'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {generateID, getOperationNameFromDocument, slugify} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -274,7 +269,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer>
 
       <Drawer open={isEditModalOpen} size={'sm'}>
-        <ImagedEditPanel
+        <ImageEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
           onSave={() => setEditModalOpen(false)}

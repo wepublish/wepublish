@@ -1,20 +1,18 @@
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import ListIcon from '@rsuite/icons/legacy/List'
+import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Input, Message, Nav, Panel, TagPicker, Toggle} from 'rsuite'
 
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
-import {MetaDataType} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {generateID} from '../utility'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
-import ListIcon from '@rsuite/icons/legacy/List'
 import {Textarea} from '../atoms/textarea'
+import {MetaDataType} from '../blocks/types'
+import {generateID} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -314,7 +312,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           onClose={() => {
             setEditModalOpen(false)
           }}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />

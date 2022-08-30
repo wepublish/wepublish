@@ -17,6 +17,7 @@ import {
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
+  htmlBlockDataFragment,
   articleMetaDataFragment,
   simpleImageDataFragment,
   gridBlockFrontDataGQLfragment
@@ -85,6 +86,7 @@ export const ArticleQuery = gql`
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
+        ...HTMLBlockData
         ...ArticleGridBlockData
       }
     }
@@ -106,6 +108,7 @@ export const ArticleQuery = gql`
   ${listicleBlockDataFragment}
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
+  ${htmlBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
 `
 

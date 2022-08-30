@@ -230,7 +230,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -250,6 +250,7 @@ export type BlockInput = {
   tikTokVideo?: Maybe<TikTokVideoBlockInput>;
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
+  html?: Maybe<HtmlBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -439,6 +440,15 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
+};
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock';
+  html?: Maybe<Scalars['String']>;
+};
+
+export type HtmlBlockInput = {
+  html?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -2380,6 +2390,9 @@ export type ArticleQuery = (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
+      ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
@@ -2709,6 +2722,11 @@ type FullBlock_EmbedBlock_Fragment = (
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
 );
 
+type FullBlock_HtmlBlock_Fragment = (
+  { __typename: 'HTMLBlock' }
+  & Pick<HtmlBlock, 'html'>
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -2763,7 +2781,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -3434,6 +3452,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
+      ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -4352,6 +4373,9 @@ export const FullBlockFragmentDoc = gql`
   ... on TitleBlock {
     title
     lead
+  }
+  ... on HTMLBlock {
+    html
   }
   ... on RichTextBlock {
     richText

@@ -15,11 +15,12 @@ import {
   Panel,
   toaster
 } from 'rsuite'
+
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -82,7 +83,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImagedEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
+    return <ImageEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
   }
 
   return (
