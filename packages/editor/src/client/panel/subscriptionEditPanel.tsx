@@ -319,7 +319,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     return (
       <Form.Group>
         <FormControlLabel>
-          {t('userSubscriptionEdit.payedUntil')}
+          {t('userSubscriptionEdit.paidUntil')}
 
           <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
             ({t('invoice.seeInvoiceHistory')})
@@ -516,7 +516,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             </Form.Group>
 
             <Form.Group controlId="paidUntil">
-              <Form.ControlLabel>{t('userSubscriptionEdit.payedUntil')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('userSubscriptionEdit.paidUntil')}</Form.ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
             </Form.Group>
 
