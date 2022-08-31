@@ -2,6 +2,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import React from 'react'
 
 export const Container = cssRule(() => ({
+  position: 'relative',
   textAlign: 'center',
   width: '100%',
   display: 'flex',
