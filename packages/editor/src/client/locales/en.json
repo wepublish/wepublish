@@ -315,6 +315,13 @@
         "startWriting": "Start writing ...",
         "text": "Text"
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Edit HTML",
+        "confirm": "Confirm",
+        "close": "Close",
+        "placeholder": "Paste your HTML block here.."
+      },
       "richTextTable": {
         "label": "Rich text table",
         "addBorders": "Add Borders",

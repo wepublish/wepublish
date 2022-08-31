@@ -306,6 +306,13 @@
         "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
         "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Edit HTML",
+        "confirm": "Confirm",
+        "close": "Close",
+        "placeholder": "Paste your HTML block here.."
+      },
       "richTextTable": {
         "label": "Rich text Tabelle",
         "addBorders": "Rahmen hinzufügen",

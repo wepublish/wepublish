@@ -633,6 +633,13 @@
         "startWriting": "Commencez à écrire...",
         "text": "Texte"
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Edit HTML",
+        "confirm": "Confirm",
+        "close": "Close",
+        "placeholder": "Paste your HTML block here.."
+      },
       "richTextTable": {
         "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
