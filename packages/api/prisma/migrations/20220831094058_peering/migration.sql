@@ -10,6 +10,9 @@ CREATE TABLE "ArticlePeerInformation" (
     CONSTRAINT "ArticlePeerInformation_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "ArticlePeerInformation_consumerArticleId_key" ON "ArticlePeerInformation"("consumerArticleId");
+
 -- AddForeignKey
 ALTER TABLE "ArticlePeerInformation" ADD CONSTRAINT "ArticlePeerInformation_consumerArticleId_fkey" FOREIGN KEY ("consumerArticleId") REFERENCES "articles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
