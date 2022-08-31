@@ -28,10 +28,11 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function ImageList() {
+function ImageList() {
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
@@ -97,13 +98,15 @@ export function ImageList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('images.overview.imageLibrary')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/images/upload" state={{modalLocation: location}}>
-            <Button appearance="primary" disabled={isLoading}>
-              {t('images.overview.uploadImage')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/images/upload" state={{modalLocation: location}}>
+              <Button appearance="primary" disabled={isLoading}>
+                {t('images.overview.uploadImage')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -178,31 +181,35 @@ export function ImageList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ImageRefFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('images.overview.edit')}>
-                    <>
-                      <Link to={`/images/edit/${rowData.id}`}>
-                        <IconButton
-                          icon={<EditIcon />}
-                          circle
-                          size="sm"
-                          style={{marginLeft: '5px'}}
-                        />
-                      </Link>
-                    </>
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('images.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={event => {
-                        event.preventDefault()
-                        setCurrentImage(rowData)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+                    <IconButtonTooltip caption={t('images.overview.edit')}>
+                      <>
+                        <Link to={`/images/edit/${rowData.id}`}>
+                          <IconButton
+                            icon={<EditIcon />}
+                            circle
+                            size="sm"
+                            style={{marginLeft: '5px'}}
+                          />
+                        </Link>
+                      </>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
+                    <IconButtonTooltip caption={t('images.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={event => {
+                          event.preventDefault()
+                          setCurrentImage(rowData)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -313,3 +320,11 @@ export function ImageList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_IMAGES',
+  'CAN_GET_IMAGE',
+  'CAN_DELETE_IMAGE',
+  'CAN_CREATE_IMAGE'
+])(ImageList)
+export {CheckedPermissionComponent as ImageList}

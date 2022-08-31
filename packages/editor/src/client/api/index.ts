@@ -93,6 +93,11 @@ export type ArticleNavigationLinkInput = {
   articleID: Scalars['ID'];
 };
 
+export type ArticleOverwriteData = {
+  __typename?: 'ArticleOverwriteData';
+  title?: Maybe<TitleBlock>;
+};
+
 export type ArticleRevision = {
   __typename?: 'ArticleRevision';
   revision: Scalars['Int'];
@@ -1298,7 +1303,7 @@ export enum PaymentState {
   Submitted = 'Submitted',
   RequiresUserAction = 'RequiresUserAction',
   Processing = 'Processing',
-  Payed = 'Payed',
+  Paid = 'Paid',
   Canceled = 'Canceled',
   Declined = 'Declined'
 }
@@ -1319,6 +1324,7 @@ export type PeerArticle = {
   __typename?: 'PeerArticle';
   peer: Peer;
   peeredArticleURL: Scalars['String'];
+  overwriteData?: Maybe<ArticleOverwriteData>;
   article: Article;
 };
 
@@ -1439,7 +1445,7 @@ export type Query = {
   comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
-  peerArticle?: Maybe<Article>;
+  peerArticle?: Maybe<PeerArticle>;
   peerArticles: PeerArticleConnection;
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;

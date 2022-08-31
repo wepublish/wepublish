@@ -51,22 +51,75 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     type=\\"text\\"
                     value=\\"\\"
                   />
-@@ -705,10 +708,15 @@
-                          </svg>
-                        </div>
+@@ -206,12 +209,13 @@
+                  >
+                    <div
+                      style=\\"margin-right: 10px;\\"
+                    >
+                      <button
+-                       aria-disabled=\\"false\\"
+-                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
++                       aria-disabled=\\"true\\"
++                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
++                       disabled=\\"\\"
+                        type=\\"button\\"
+                      >
+                        <svg
+                          aria-hidden=\\"true\\"
+                          aria-label=\\"th 2\\"
+@@ -307,12 +311,13 @@
+                    </div>
+                    <div
+                      style=\\"margin-left: 10px;\\"
+                    >
+                      <button
+-                       aria-disabled=\\"false\\"
+-                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
++                       aria-disabled=\\"true\\"
++                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
++                       disabled=\\"\\"
+                        type=\\"button\\"
+                      >
+                        <svg
+                          aria-hidden=\\"true\\"
+                          aria-label=\\"trash\\"
+@@ -337,12 +342,13 @@
+                        </span>
                       </button>
                     </div>
                   </div>
-+               </div>
-+               <div
+                  <button
+-                   aria-disabled=\\"false\\"
+-                   class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
++                   aria-disabled=\\"true\\"
++                   class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
++                   disabled=\\"\\"
+                    type=\\"button\\"
+                  >
+                    <svg
+                      aria-hidden=\\"true\\"
+                      aria-label=\\"plus circle\\"
+@@ -710,15 +716,18 @@
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+-                 contenteditable=\\"true\\"
 +                 style=\\"color: rgb(202, 213, 228);\\"
 +               >
 +                 blocks.richText.startWriting
-                </div>
-                <div
-                  contenteditable=\\"true\\"
++               </div>
++               <div
                   data-gramm=\\"false\\"
-                  data-slate-editor=\\"true\\""
+                  data-slate-editor=\\"true\\"
+                  data-slate-node=\\"value\\"
+-                 role=\\"textbox\\"
+                  style=\\"outline: none; white-space: pre-wrap; word-wrap: break-word;\\"
+                >
+                  <p
+                    data-slate-node=\\"element\\"
+                  >"
 `;
 
 exports[`Author Edit Panel should fill the link field 1`] = `
@@ -74,7 +127,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
 - First value
 + Second value
 
-@@ -255,11 +255,11 @@
+@@ -256,11 +256,11 @@
                               <input
                                 class=\\"rs-input\\"
                                 name=\\"title\\"
@@ -87,7 +140,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             <div
                               class=\\"rs-form-group\\"
                               role=\\"group\\"
-@@ -703,12 +703,17 @@
+@@ -706,12 +706,17 @@
                               d=\\"M20.25 19.196C19.357 22.071 16.732 24 13.714 24s-5.643-1.929-6.536-4.804c-.196-.607.143-1.232.75-1.429.589-.196 1.232.143 1.429.75a4.543 4.543 0 004.357 3.196c2 0 3.768-1.286 4.357-3.196a1.15 1.15 0 011.446-.75c.589.196.929.821.732 1.429zm-8.821-7.767c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zm9.142 0c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zM25.143 16c0-6.304-5.125-11.429-11.429-11.429S2.285 9.696 2.285 16 7.41 27.429 13.714 27.429 25.143 22.304 25.143 16zm2.286 0c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z\\"
                             />
                           </svg>
@@ -318,6 +371,7 @@ exports[`Author Edit Panel should render 1`] = `
                     style="margin-right: 10px;"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
                       type="button"
                     >
@@ -418,6 +472,7 @@ exports[`Author Edit Panel should render 1`] = `
                     style="margin-left: 10px;"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
                       type="button"
                     >
@@ -447,6 +502,7 @@ exports[`Author Edit Panel should render 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-disabled="false"
                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
                   type="button"
                 >
@@ -1060,6 +1116,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
             <div>
               <div>
                 <button
+                  aria-disabled="false"
                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
                   type="button"
                 >
@@ -1470,5 +1527,52 @@ exports[`Author Edit Panel should render with ID 1`] = `
       </div>
     </div>
   </form>
+</DocumentFragment>
+`;
+
+exports[`Author Edit Panel will not render without correct permission 1`] = `
+<DocumentFragment>
+  <div
+    class="rs-message rs-message-error rs-message-show rs-message-has-title rs-message-has-icon"
+    role="alert"
+  >
+    <div
+      class="rs-message-container"
+    >
+      <div
+        class="rs-message-icon-wrapper"
+      >
+        <svg
+          aria-hidden="true"
+          aria-label="close circle"
+          class="rs-icon"
+          data-category="legacy"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 32 32"
+          width="1em"
+        >
+          <path
+            d="M23.936 20.711c0-.363-.133-.672-.393-.937L19.769 16l3.771-3.769a1.28 1.28 0 00.393-.937c0-.377-.133-.695-.393-.958l-1.877-1.874a1.312 1.312 0 00-.962-.395c-.361 0-.67.133-.937.395l-3.765 3.769L12.23 8.46a1.293 1.293 0 00-.939-.395c-.375 0-.697.133-.958.395l-1.874 1.874a1.312 1.312 0 00-.395.958c0 .361.133.67.395.937L12.23 16l-3.771 3.771a1.278 1.278 0 00-.395.937c0 .375.133.695.395.96l1.874 1.874c.263.263.583.393.958.393.361 0 .672-.13.937-.393l3.771-3.771 3.769 3.771c.265.263.576.393.937.393.377 0 .697-.13.962-.393l1.877-1.874c.258-.265.391-.587.391-.958zM32 16c0 2.903-.715 5.579-2.144 8.03a15.931 15.931 0 01-5.822 5.826c-2.457 1.429-5.131 2.142-8.034 2.142s-5.579-.711-8.034-2.142a15.924 15.924 0 01-5.822-5.826C.715 21.58 0 18.903 0 16s.715-5.579 2.146-8.032 3.369-4.393 5.822-5.822S13.097.002 16 .002s5.577.715 8.034 2.146a15.928 15.928 0 015.822 5.822C31.282 10.42 32 13.097 32 16z"
+          />
+        </svg>
+      </div>
+      <div
+        class="rs-message-content"
+      >
+        <div
+          class="rs-message-header"
+        >
+          permissions.noAccess
+        </div>
+        <div
+          class="rs-message-body"
+        >
+          permissions.contactAdmin
+        </div>
+      </div>
+    </div>
+  </div>
 </DocumentFragment>
 `;

@@ -21,14 +21,22 @@ import {
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '../api'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
-export function SettingList() {
+function SettingList() {
   const {t} = useTranslation()
 
-  const {data: settingListData, refetch, error: fetchError} = useSettingListQuery({
+  const isAuthorized = authorise('CAN_UPDATE_SETTINGS')
+
+  const {data: settingListData, loading, refetch, error: fetchError} = useSettingListQuery({
     fetchPolicy: 'network-only'
   })
 
+  const isDisabled = loading || !settingListData || !isAuthorized
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
     value: false,
@@ -189,7 +197,7 @@ export function SettingList() {
   return (
     <>
       <Form
-        disabled={!settingListData}
+        disabled={isDisabled}
         model={validationModel}
         formValue={{
           loginToken: sendLoginJwtExpiresMin.value,
@@ -208,6 +216,7 @@ export function SettingList() {
           <Form.Group controlId="guestCommenting">
             <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
             <Toggle
+              disabled={isDisabled}
               checked={allowGuestComment?.value}
               onChange={checked =>
                 setAllowGuestComment({
@@ -307,10 +316,18 @@ export function SettingList() {
           </Form.Group>
         </Panel>
 
-        <Button type="submit" appearance="primary" disabled={!settingListData}>
-          {t('settingList.save')}
-        </Button>
+        <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
+          <Button type="submit" appearance="primary" disabled={isDisabled}>
+            {t('settingList.save')}
+          </Button>
+        </PermissionControl>
       </Form>
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SETTINGS',
+  'CAN_UPDATE_SETTINGS'
+])(SettingList)
+export {CheckedPermissionComponent as SettingList}

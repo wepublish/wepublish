@@ -23,6 +23,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All article changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer",
         "articlePending": "Article en attente"
@@ -632,13 +633,6 @@
         "startWriting": "Commencez à écrire...",
         "text": "Texte"
       },
-      "html": {
-        "label": "HTML",
-        "edit": "Edit HTML",
-        "confirm": "Confirm",
-        "close": "Close",
-        "placeholder": "Paste your HTML block here.."
-      },
       "richTextTable": {
         "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
@@ -974,6 +968,7 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All page changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer"
       },
@@ -1116,6 +1111,10 @@
       "originalArticle": "Article original",
       "notPublished": "Pas encore publié",
       "toOriginalArticle": "Vers l'article original"
+    },
+    "permissions": {
+      "noAccess": "Vous n'avez pas l'autorisation suffisante pour accéder à ce contenu.",
+      "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l'une des autorisations suivantes: {{permissions}}"
     }
   }
 }

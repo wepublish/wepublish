@@ -3,6 +3,7 @@ import {Button, Drawer, Message} from 'rsuite'
 import {InvoiceFragment, useMeQuery} from '../api'
 import {Invoice} from '../atoms/invoice'
 import {useTranslation} from 'react-i18next'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface InvoiceListPanelProps {
   subscriptionId?: string
@@ -13,7 +14,7 @@ export interface InvoiceListPanelProps {
   onInvoicePaid(): void
 }
 
-export function InvoiceListPanel({
+function InvoiceListPanel({
   subscriptionId,
   invoices,
   disabled,
@@ -75,3 +76,10 @@ export function InvoiceListPanel({
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_INVOICES',
+  'CAN_GET_INVOICE',
+  'CAN_CREATE_INVOICE',
+  'CAN_DELETE_INVOICE'
+])(InvoiceListPanel)
+export {CheckedPermissionComponent as InvoiceListPanel}

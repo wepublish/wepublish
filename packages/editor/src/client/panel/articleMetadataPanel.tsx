@@ -30,6 +30,11 @@ import {generateID, slugify} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -70,12 +75,7 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({
-  value,
-  infoData,
-  onClose,
-  onChange
-}: ArticleMetadataPanelProps) {
+function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -113,6 +113,8 @@ export function ArticleMetadataPanel({
   )
 
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
 
   useEffect(() => {
     if (metaDataProperties) {
@@ -213,6 +215,7 @@ export function ArticleMetadataPanel({
             <Form.Group controlId="socialMediaAuthors">
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</Form.ControlLabel>
               <AuthorCheckPicker
+                disabled={!isAuthorized}
                 list={socialMediaAuthors}
                 onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
               />
@@ -374,6 +377,7 @@ export function ArticleMetadataPanel({
               <Form.ControlLabel>{t('articleEditor.panels.authors')}</Form.ControlLabel>
               <AuthorCheckPicker
                 list={authors}
+                disabled={!isAuthorized}
                 onChange={authors => onChange?.({...value, authors})}
               />
             </Form.Group>
@@ -382,6 +386,7 @@ export function ArticleMetadataPanel({
               <Toggle
                 className="hideAuthor"
                 checked={hideAuthor}
+                disabled={!isAuthorized}
                 onChange={hideAuthor => onChange?.({...value, hideAuthor})}
               />
             </Form.Group>
@@ -400,6 +405,7 @@ export function ArticleMetadataPanel({
               <Form.ControlLabel>{t('articleEditor.panels.breakingNews')}</Form.ControlLabel>
               <Toggle
                 className="breaking"
+                disabled={!isAuthorized}
                 checked={breaking}
                 onChange={breaking => onChange?.({...value, breaking})}
               />
@@ -428,7 +434,11 @@ export function ArticleMetadataPanel({
 
             <Form.Group controlId="articlePeering">
               <Form.ControlLabel>{t('articleEditor.panels.peering')}</Form.ControlLabel>
-              <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
+              <Toggle
+                checked={shared}
+                disabled={!isAuthorized}
+                onChange={shared => onChange?.({...value, shared})}
+              />
               <Form.HelpText>{t('articleEditor.panels.allowPeerPublishing')}</Form.HelpText>
             </Form.Group>
             <Form.ControlLabel>{t('articleEditor.panels.postImage')}</Form.ControlLabel>
@@ -512,9 +522,11 @@ export function ArticleMetadataPanel({
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance="primary" type="submit">
-              {t('articleEditor.panels.saveAndClose')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+              <Button appearance="primary" type="submit">
+                {t('articleEditor.panels.saveAndClose')}
+              </Button>
+            </PermissionControl>
           </Drawer.Actions>
         </Drawer.Header>
 
@@ -568,3 +580,11 @@ export function ArticleMetadataPanel({
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLES',
+  'CAN_GET_ARTICLES',
+  'CAN_DELETE_ARTICLE',
+  'CAN_PUBLISH_ARTICLE',
+  'CAN_CREATE_ARTICLE'
+])(ArticleMetadataPanel)
+export {CheckedPermissionComponent as ArticleMetadataPanel}

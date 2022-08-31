@@ -25,9 +25,12 @@ import {
   useUpdateAuthorMutation
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
+import LinkIcon from '@rsuite/icons/legacy/Link'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID, getOperationNameFromDocument, slugify} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
@@ -40,7 +43,7 @@ export interface AuthorEditPanelProps {
   onSave?(author: FullAuthorFragment): void
 }
 
-export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
+function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
@@ -52,6 +55,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  const isAuthorized = authorise('CAN_CREATE_AUTHOR')
 
   const {data, loading: isLoading, error: loadError} = useAuthorQuery({
     variables: {id: id!},
@@ -65,7 +70,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+  const isDisabled =
+    isLoading || isCreating || isUpdating || loadError !== undefined || !isAuthorized
 
   const {t} = useTranslation()
 
@@ -160,13 +166,15 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              appearance="primary"
-              disabled={isDisabled}
-              type="submit"
-              data-testid="saveButton">
-              {id ? t('authors.panels.save') : t('authors.panels.create')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
+              <Button
+                appearance="primary"
+                disabled={isDisabled}
+                type="submit"
+                data-testid="saveButton">
+                {id ? t('authors.panels.save') : t('authors.panels.create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('authors.panels.close')}
             </Button>
@@ -217,6 +225,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Panel>
             <Panel header={t('authors.panels.links')} className="authorLinks">
               <ListInput
+                disabled={isDisabled}
                 value={links}
                 onChange={links => {
                   setLinks(links)
@@ -251,7 +260,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Panel>
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
-                <RichTextBlock value={bio} onChange={value => setBio(value)} />
+                <RichTextBlock
+                  disabled={isDisabled}
+                  value={bio}
+                  onChange={value => setBio(value)}
+                />
               </div>
             </Panel>
           </PanelGroup>
@@ -261,7 +274,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={(value: ImageRefFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -278,3 +291,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_AUTHOR',
+  'CAN_GET_AUTHORS',
+  'CAN_CREATE_AUTHOR',
+  'CAN_DELETE_AUTHOR'
+])(AuthorEditPanel)
+export {CheckedPermissionComponent as AuthorEditPanel}

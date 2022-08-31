@@ -58,8 +58,8 @@
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
-    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chrome ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
+    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
     "prepare": "prisma generate"
   },
   "workspaces": [
@@ -87,7 +87,7 @@
     "prettier": "^2.0.1",
     "pretty-quick": "^1.11.1",
     "prisma": "^3.14.0",
-    "testcafe": "^1.8.5",
+    "testcafe": "1.10.0",
     "ts-node": "^10.8.1"
   },
   "prisma": {

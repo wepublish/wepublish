@@ -13,6 +13,7 @@
         "notFound": "Artikel nicht gefunden",
         "pending": "Publikation des Artikels geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
+        "previewDisabled": "Alle Änderungen an diesem Artikel wurden bereits publiziert.",
         "preview": "Vorschau",
         "published": "Artikel publiziert am {{date, ccc PP p}}.",
         "save": "Speichern",
@@ -304,13 +305,6 @@
         "text": "Text",
         "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
         "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
-      },
-      "html": {
-        "label": "HTML",
-        "edit": "Edit HTML",
-        "confirm": "Confirm",
-        "close": "Close",
-        "placeholder": "Paste your HTML block here.."
       },
       "richTextTable": {
         "label": "Rich text Tabelle",
@@ -615,6 +609,7 @@
         "pageNotFound": "Seite nicht gefunden",
         "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
+        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
         "preview": "Vorschau",
         "save": "Speichern",
         "unpublished": "Nicht publiziert",
@@ -1116,6 +1111,10 @@
       "notPublished": "Noch nicht publiziert",
       "toOriginalArticle": "Zum Original Artikel",
       "filterByPeer": "Nach Peer filtern"
+    },
+    "permissions": {
+      "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",
+      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}"
     }
   }
 }
