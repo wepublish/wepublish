@@ -18,10 +18,10 @@ import {
 
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ImageSelectPanelProps {
   onClose(): void

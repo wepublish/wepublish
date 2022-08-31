@@ -43,6 +43,8 @@ import {
   getOperationNameFromDocument,
   slugify
 } from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface MemberPlanEditPanelProps {
   id?: string

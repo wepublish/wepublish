@@ -25,12 +25,14 @@ import {
   useUpdateAuthorMutation
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import LinkIcon from '@rsuite/icons/legacy/Link'
+import {ListInput, ListValue} from '../atoms/listInput'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID, getOperationNameFromDocument, slugify} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
