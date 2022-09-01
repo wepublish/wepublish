@@ -308,10 +308,11 @@
       },
       "html": {
         "label": "HTML",
-        "edit": "Edit HTML",
-        "confirm": "Confirm",
-        "close": "Close",
-        "placeholder": "Paste your HTML block here.."
+        "edit": "HTML bearbeiten",
+        "confirm": "Bestätigen",
+        "close": "Schliessen",
+        "placeholder": "Füge hier deinen HTML Block ein",
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
       "richTextTable": {
         "label": "Rich text Tabelle",

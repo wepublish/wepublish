@@ -44,7 +44,10 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
           value={input.html}
           onChange={input => setInput({html: input})}
         />
-        <div style={{marginTop: '30px'}} dangerouslySetInnerHTML={{__html: input.html}} />
+        <div style={{marginTop: '20px'}}>
+          <span>{t('blocks.html.warning')}</span>
+        </div>
+        <div style={{marginTop: '20px'}} dangerouslySetInnerHTML={{__html: input.html}} />
       </Drawer.Body>
     </>
   )
