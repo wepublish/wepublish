@@ -9,9 +9,9 @@ import {
 } from './paymentProvider'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
-import {PaymentState} from '../db/payment'
 import qs from 'qs'
 import {logger} from '../server'
+import {PaymentState} from '@prisma/client'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -35,13 +35,13 @@ interface PayrexxData {
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'waiting':
-      return PaymentState.Processing
+      return PaymentState.processing
     case 'confirmed':
-      return PaymentState.Paid
+      return PaymentState.paid
     case 'cancelled':
-      return PaymentState.Canceled
+      return PaymentState.canceled
     case 'declined':
-      return PaymentState.Declined
+      return PaymentState.declined
     default:
       return null
   }
@@ -129,7 +129,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       intentID: payrexxResponse.data?.[0].id,
       intentSecret: payrexxResponse.data?.[0].link,
       intentData: JSON.stringify(payrexxResponse.data),
-      state: PaymentState.Submitted
+      state: PaymentState.submitted
     }
   }
 

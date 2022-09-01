@@ -21,7 +21,7 @@ export function UserSearch({
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>([])
   const {data: userData, loading, error, refetch} = useUserListQuery({
     variables: {
-      first: 100,
+      take: 100,
       filter: userSearch
     },
     fetchPolicy: 'network-only'

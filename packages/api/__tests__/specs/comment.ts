@@ -1,21 +1,12 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
-import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 // import {CommentInput, AddComment} from '../api/public'
 // import {CommentAuthorType, CommentItemType} from '../../lib'
 
-let testClientPublic: ApolloServerTestClient
 // let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
+    // const setupClient = await createGraphQLTestClientWithPrisma()
     // testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
 
@@ -45,11 +36,4 @@ describe('Comments', () => {
     // expect(res).toMatchSnapshot()
     // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

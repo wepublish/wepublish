@@ -1,29 +1,23 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  ArticleInput,
-  CreateArticle,
-  ArticleList,
   Article,
-  UpdateArticle,
+  ArticleInput,
+  ArticleList,
+  CreateArticle,
   DeleteArticle,
   PublishArticle,
-  UnpublishArticle
+  UnpublishArticle,
+  UpdateArticle
 } from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
 
@@ -34,11 +28,12 @@ beforeAll(async () => {
 describe('Articles', () => {
   describe('can be created/edited/deleted:', () => {
     const articleIds: string[] = []
-    beforeEach(async () => {
+
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
         title: 'This is the best test article',
-        slug: 'my-super-seo-slug-for-the-best-article',
+        slug: generateRandomString(),
         shared: false,
         tags: ['testing', 'awesome'],
         breaking: true,
@@ -62,14 +57,15 @@ describe('Articles', () => {
           input: articleInput
         }
       })
-      articleIds.unshift(res.data?.createArticle?.id)
+
+      articleIds.unshift(res.data.createArticle.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
         title: 'This is the best test article',
-        slug: 'my-super-seo-slug-for-the-best-article',
+        slug: generateRandomString(),
         shared: false,
         tags: ['testing', 'awesome'],
         breaking: true,
@@ -93,41 +89,31 @@ describe('Articles', () => {
           input: articleInput
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           createArticle: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
-      articleIds.unshift(res.data?.createArticle?.id)
+
+      articleIds.unshift(res.data.createArticle.id)
     })
 
     test('can be read in list', async () => {
       const {query} = testClientPrivate
-      const articles = await query({
+      const res = await query({
         query: ArticleList,
         variables: {
-          first: 100
+          take: 100
         }
       })
-      expect(articles).toMatchSnapshot({
-        data: {
-          articles: {
-            nodes: Array.from({length: articleIds.length}, () => ({
-              createdAt: expect.any(String),
-              id: expect.any(String),
-              modifiedAt: expect.any(String)
-            })),
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            },
-            totalCount: expect.any(Number)
-          }
-        }
-      })
-      expect(articles.data?.articles?.totalCount).toBe(articleIds.length)
+
+      expect(res.data.articles.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -142,7 +128,10 @@ describe('Articles', () => {
       expect(article).toMatchSnapshot({
         data: {
           article: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -155,7 +144,7 @@ describe('Articles', () => {
         variables: {
           input: {
             title: 'New Updated Title',
-            slug: 'updated-slug',
+            slug: generateRandomString(),
             shared: false,
             tags: ['testing', 'awesome', 'another'],
             breaking: true,
@@ -177,10 +166,14 @@ describe('Articles', () => {
           id: articleIds[0]
         }
       })
+
       expect(updatedArticle).toMatchSnapshot({
         data: {
           updateArticle: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -197,10 +190,14 @@ describe('Articles', () => {
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           publishArticle: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -214,10 +211,14 @@ describe('Articles', () => {
           id: articleIds[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           unpublishArticle: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -231,15 +232,19 @@ describe('Articles', () => {
           id: articleIds[0]
         }
       })
-      expect(res).toMatchSnapshot()
+
+      expect(res).toMatchSnapshot({
+        data: {
+          deleteArticle: {
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
+          }
+        }
+      })
+
       articleIds.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

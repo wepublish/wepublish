@@ -1,9 +1,9 @@
 import {logger, WepublishServerOpts} from '../server'
 import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
-import {MailLogState} from '../db/mailLog'
 import {NextHandleFunction} from 'connect'
 import bodyParser from 'body-parser'
+import {MailLogState} from '@prisma/client'
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks'
 
@@ -85,9 +85,9 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
           for (const mailLogStatus of mailLogStatuses) {
             const mailLog = await context.loaders.mailLogsByID.load(mailLogStatus.mailLogID)
             if (!mailLog) continue // TODO: handle missing mailLog
-            await context.dbAdapter.mailLog.updateMailLog({
-              id: mailLog.id,
-              input: {
+            await context.prisma.mailLog.update({
+              where: {id: mailLog.id},
+              data: {
                 recipient: mailLog.recipient,
                 subject: mailLog.subject,
                 mailProviderID: mailLog.mailProviderID,
