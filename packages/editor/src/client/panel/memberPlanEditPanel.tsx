@@ -44,6 +44,11 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CurrencyInput} from '../atoms/currencyInput'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface MemberPlanEditPanelProps {
@@ -53,8 +58,9 @@ export interface MemberPlanEditPanelProps {
   onSave?(author: FullMemberPlanFragment): void
 }
 
-export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
+function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
   const {t} = useTranslation()
+  const isAuthorized = authorise('CAN_CREATE_MEMBER_PLAN')
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -103,7 +109,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     isCreating ||
     isUpdating ||
     loadError !== undefined ||
-    paymentMethodLoadError !== undefined
+    paymentMethodLoadError !== undefined ||
+    !isAuthorized
 
   useEffect(() => {
     if (data?.memberPlan) {
@@ -219,9 +226,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance="primary" disabled={isDisabled} type="submit">
-              {id ? t('save') : t('create')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
+              <Button appearance="primary" disabled={isDisabled} type="submit">
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
             </Button>
@@ -249,6 +258,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             <Form.Group controlId="memberPlanTags">
               <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
+                disabled={isDisabled}
                 block
                 virtualized
                 value={tags ?? []}
@@ -281,7 +291,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             <Form.Group controlId="memberPlanDescription">
               <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
               <div className="richTextFrame">
-                <RichTextBlock value={description} onChange={value => setDescription(value)} />
+                <RichTextBlock
+                  value={description}
+                  disabled={isDisabled}
+                  onChange={value => setDescription(value)}
+                />
               </div>
             </Form.Group>
           </Panel>
@@ -297,6 +311,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           <Panel>
             <ListInput
               value={availablePaymentMethods}
+              disabled={isDisabled}
               onChange={app => setAvailablePaymentMethods(app)}
               defaultValue={{
                 forceAutoRenewal: false,
@@ -358,7 +373,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={(value: ImageRefFragment) => {
               setChooseModalOpen(false)
               handleImageChange(value)
             }}
@@ -377,3 +392,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_MEMBER_PLANS',
+  'CAN_GET_MEMBER_PLAN',
+  'CAN_CREATE_MEMBER_PLAN',
+  'CAN_DELETE_MEMBER_PLAN'
+])(MemberPlanEditPanel)
+export {CheckedPermissionComponent as MemberPlanEditPanel}
