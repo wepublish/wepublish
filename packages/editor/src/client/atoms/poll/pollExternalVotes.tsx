@@ -20,13 +20,15 @@ interface PollExternalVotesProps {
   onExternalSourceCreated(): Promise<void>
   onExternalSourceDeleted(): Promise<void>
   onExternalSourceChange(externalVoteSources: PollExternalVoteSource[]): void
+  savePoll(): Promise<void>
 }
 
 export function PollExternalVotes({
   poll,
   onExternalSourceCreated,
   onExternalSourceDeleted,
-  onExternalSourceChange
+  onExternalSourceChange,
+  savePoll
 }: PollExternalVotesProps) {
   const {t} = useTranslation()
   const [newSource, setNewSource] = useState<string | undefined>(undefined)
@@ -66,6 +68,9 @@ export function PollExternalVotes({
       )
       return
     }
+    // first save current poll state
+    await savePoll()
+
     await createSourceMutation({
       variables: {
         pollId: poll.id,
@@ -82,6 +87,8 @@ export function PollExternalVotes({
     if (!id) {
       return
     }
+    // first save current poll state
+    await savePoll()
     await deletePollMutation({
       variables: {
         deletePollExternalVoteSourceId: id

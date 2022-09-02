@@ -243,6 +243,7 @@ export function PollEditView() {
                       }
                       setPoll({...poll, externalVoteSources})
                     }}
+                    savePoll={saveOrUpdate}
                   />
                 </Panel>
               </Col>
