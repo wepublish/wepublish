@@ -7,6 +7,9 @@ export const getPoll = (id: string, poll: PrismaClient['poll']) => {
       answers: {
         include: {
           _count: true
+        },
+        orderBy: {
+          createdAt: 'asc'
         }
       },
       externalVoteSources: {

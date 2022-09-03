@@ -107,12 +107,12 @@ export function PollAnswers({
     <>
       {/* iterate poll answers */}
       <Row>
-        {poll?.answers?.map((answer, index) => (
+        {poll?.answers?.map(answer => (
           <div key={`answer-${answer.id}`}>
             <Col xs={18}>
               <Form.Control
                 name={`answer-${answer.id}`}
-                value={answer.answer || t('pollEditView.defaultAnswer', {number: index + 1})}
+                value={answer.answer || t('pollEditView.defaultAnswer')}
                 onChange={(value: string) => {
                   updateAnswer({
                     ...answer,

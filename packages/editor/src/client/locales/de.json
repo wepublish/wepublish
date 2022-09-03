@@ -576,7 +576,7 @@
       "opensAtLabel": "Startet am",
       "closesAtLabel": "Schliesst am",
       "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
-      "defaultAnswer": "Standardantwort {{number}}"
+      "defaultAnswer": "Standardantwort"
     },
     "pollAnswer": {
       "insertYourNewAnswer": "Neue Antwort eingeben",

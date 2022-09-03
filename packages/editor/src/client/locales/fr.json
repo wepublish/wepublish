@@ -925,7 +925,7 @@
       "opensAtLabel": "Commence le",
       "closesAtLabel": "Clôture à",
       "pollExternalVotesPanelHeader": "Soruces de vote externes",
-      "defaultAnswer": "Réponse standard {{number}}"
+      "defaultAnswer": "Réponse standard"
     },
     "pollAnswer": {
       "insertYourNewAnswer": "Saisir une nouvelle réponse",

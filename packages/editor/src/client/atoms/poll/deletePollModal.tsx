@@ -7,11 +7,11 @@ import {FullPoll, PollsQuery, useDeletePollMutation} from '../../api'
 
 interface deletePollProps {
   poll?: FullPoll
-  setPol(poll: FullPoll | undefined): void
+  setPoll(poll: FullPoll | undefined): void
   afterDelete(): Promise<ApolloQueryResult<PollsQuery>>
 }
 
-export function DeletePollModal({poll, setPol, afterDelete}: deletePollProps) {
+export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
   const {t} = useTranslation()
   const [deletePollMutation] = useDeletePollMutation()
   const [open, setOpen] = useState<boolean>(false)
@@ -76,7 +76,7 @@ export function DeletePollModal({poll, setPol, afterDelete}: deletePollProps) {
           <Button onClick={deletePoll} appearance="primary">
             {t('deletePollModal.deleteBtn')}
           </Button>
-          <Button onClick={() => setPol(undefined)} appearance="subtle">
+          <Button onClick={() => setPoll(undefined)} appearance="subtle">
             {t('deletePollModal.cancelBtn')}
           </Button>
         </Modal.Footer>

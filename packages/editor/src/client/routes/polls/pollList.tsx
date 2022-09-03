@@ -194,7 +194,7 @@ export function PollList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <DeletePollModal poll={pollDelete} afterDelete={refetch} setPol={setPollDelete} />
+      <DeletePollModal poll={pollDelete} afterDelete={refetch} setPoll={setPollDelete} />
     </>
   )
 }

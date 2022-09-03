@@ -576,7 +576,7 @@
       "opensAtLabel": "Opened at",
       "closesAtLabel": "Closed at",
       "pollExternalVotesPanelHeader": "External Vote Sources",
-      "defaultAnswer": "Default answer {{number}}"
+      "defaultAnswer": "Default answer"
     },
     "pollAnswer": {
       "insertYourNewAnswer": "Input new question",
