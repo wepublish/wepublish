@@ -594,6 +594,11 @@
       "deleteExternalVoteBtn": "Löschen",
       "emptySource": "Please insert the source name."
     },
+    "pollStateIndication": {
+      "closed": "Poll closed",
+      "open": "Poll open",
+      "waiting": "Poll is waiting for the opening on {{date}}"
+    },
     "navbar": {
       "articles": "Articles",
       "blocks": {

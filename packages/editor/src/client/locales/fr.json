@@ -943,6 +943,11 @@
       "deleteExternalVoteBtn": "Supprimer",
       "emptySource": "Veuillez saisir le nom de la source."
     },
+    "pollStateIndication": {
+      "closed": "Sondage fermé",
+      "open": "Sondage en cours",
+      "waiting": "Sondage en attente d'ouverture le {{date}}"
+    },
     "navbar": {
       "languageSwitch": {
         "currentLanguage": "Anglais",

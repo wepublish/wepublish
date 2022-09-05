@@ -594,6 +594,11 @@
       "deleteExternalVoteBtn": "Löschen",
       "emptySource": "Bitte Name der Quelle eingeben."
     },
+    "pollStateIndication": {
+      "closed": "Umfrage geschlossen",
+      "open": "Umfrage läuft",
+      "waiting": "Umfrage wartet auf Öffnung am {{date}}"
+    },
     "navbar": {
       "articles": "Artikel",
       "blocks": {
