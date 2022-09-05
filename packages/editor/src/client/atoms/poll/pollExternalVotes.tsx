@@ -254,11 +254,8 @@ export function PollExternalVotes({
 
   return (
     <>
-      {/* table */}
       {tableView()}
-      {/* add new source */}
       {addSourceView()}
-      {/* delete modal */}
       {deleteModalView()}
     </>
   )

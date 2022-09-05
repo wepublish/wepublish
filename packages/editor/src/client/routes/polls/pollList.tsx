@@ -122,7 +122,6 @@ export function PollList() {
           <CreatePollBtn />
         </FlexboxGrid.Item>
 
-        {/* table */}
         <FlexboxGrid.Item style={{marginTop: '20px'}} colspan={24}>
           <Table minHeight={600} autoHeight loading={loading} data={data?.polls?.nodes || []}>
             {/* state */}
