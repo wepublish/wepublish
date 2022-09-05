@@ -1,8 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {PlayOutline} from '@rsuite/icons'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import OffIcon from '@rsuite/icons/Off'
-import WaitIcon from '@rsuite/icons/Wait'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
@@ -11,6 +8,7 @@ import {FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsui
 import {FullPoll, usePollsQuery} from '../../api'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
+import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
 import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
 export function PollList() {
@@ -54,37 +52,6 @@ export function PollList() {
   /**
    * UI HELPERS
    */
-  function pollStateView(poll: FullPoll) {
-    const now = new Date()
-    const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined
-
-    // poll has been closed
-    if (closedAt && now.getTime() >= closedAt.getTime()) {
-      return (
-        <>
-          <OffIcon style={{color: 'red'}} />
-        </>
-      )
-    }
-
-    // poll is open
-    const opensAt = new Date(poll.opensAt)
-    if (now.getTime() > opensAt.getTime()) {
-      return (
-        <>
-          <PlayOutline style={{color: 'green'}} />
-        </>
-      )
-    }
-
-    // poll is waiting to be opened
-    return (
-      <>
-        <WaitIcon />
-      </>
-    )
-  }
-
   function pollOpensAtView(poll: FullPoll) {
     const now = new Date()
     const opensAt = new Date(poll.opensAt)
@@ -128,7 +95,7 @@ export function PollList() {
             <Table.Column resizable>
               <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
               <Table.Cell dataKey={'id'}>
-                {(rowData: FullPoll) => pollStateView(rowData)}
+                {(rowData: FullPoll) => <PollStateIndication poll={rowData} />}
               </Table.Cell>
             </Table.Column>
             {/* question */}
