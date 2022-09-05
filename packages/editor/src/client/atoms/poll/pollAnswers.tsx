@@ -50,7 +50,7 @@ export function PollAnswers({
     if (!poll) {
       return
     }
-    if (newAnswer === '') {
+    if (!newAnswer) {
       toaster.push(
         <Message type="error" showIcon closable duration={3000}>
           {t('pollAnswer.answerMissing')}
