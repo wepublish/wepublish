@@ -162,7 +162,7 @@ export function PollEditView() {
                         if (!poll) {
                           return
                         }
-                        setPoll({...poll, question: value})
+                        setPoll(p => ({...p, question: value}))
                       }}
                     />
                   </Form.Group>
