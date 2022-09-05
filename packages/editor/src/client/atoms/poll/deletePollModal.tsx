@@ -1,5 +1,5 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
 
@@ -14,16 +14,6 @@ interface deletePollProps {
 export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
   const {t} = useTranslation()
   const [deletePollMutation] = useDeletePollMutation()
-  const [open, setOpen] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!poll) {
-      setOpen(false)
-      return
-    }
-    // open
-    setOpen(true)
-  }, [poll])
 
   /**
    * Error handling
@@ -50,8 +40,6 @@ export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
     if (!poll) {
       return
     }
-    // close modal
-    setOpen(false)
     // call api
     await deletePollMutation({
       variables: {
@@ -60,12 +48,14 @@ export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
       onError: onErrorToast,
       onCompleted: onCompletedToast
     })
+    // close modal
+    setPoll(undefined)
     await afterDelete()
   }
 
   return (
     <>
-      <Modal open={open}>
+      <Modal open={!!poll} onClose={() => setPoll(undefined)}>
         <Modal.Header>
           <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
         </Modal.Header>
