@@ -36,10 +36,10 @@ export function PollExternalVotes({
     undefined
   )
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [createSourceMutation, {loading}] = useCreatePollExternalVoteSourceMutation({
+  const [createExternalVoteSource, {loading}] = useCreatePollExternalVoteSourceMutation({
     fetchPolicy: 'no-cache'
   })
-  const [deletePollMutation] = useDeletePollExternalVoteSourceMutation({
+  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation({
     fetchPolicy: 'no-cache'
   })
 
@@ -71,7 +71,7 @@ export function PollExternalVotes({
     // first save current poll state
     await savePoll()
 
-    await createSourceMutation({
+    await createExternalVoteSource({
       variables: {
         pollId: poll.id,
         source: newSource
@@ -89,7 +89,7 @@ export function PollExternalVotes({
     }
     // first save current poll state
     await savePoll()
-    await deletePollMutation({
+    await deleteExternalVoteSource({
       variables: {
         deletePollExternalVoteSourceId: id
       }

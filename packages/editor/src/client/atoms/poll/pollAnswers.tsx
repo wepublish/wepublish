@@ -105,7 +105,6 @@ export function PollAnswers({
 
   return (
     <>
-      {/* iterate poll answers */}
       <Row>
         {poll?.answers?.map(answer => (
           <div key={`answer-${answer.id}`}>
