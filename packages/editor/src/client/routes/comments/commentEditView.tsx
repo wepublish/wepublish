@@ -26,11 +26,11 @@ import {
   useCommentQuery,
   useTagListQuery,
   useUpdateCommentMutation
-} from '../api'
-import {BlockMap} from '../blocks/blockMap'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {BlockType, RichTextBlockValue} from '../blocks/types'
-import {DEFAULT_MAX_TABLE_PAGES, isValueConstructor} from '../utility'
+} from '../../api'
+import {BlockMap} from '../../blocks/blockMap'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {BlockType, RichTextBlockValue} from '../../blocks/types'
+import {DEFAULT_MAX_TABLE_PAGES, isValueConstructor} from '../../utility'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
