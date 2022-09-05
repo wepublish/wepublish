@@ -22,9 +22,7 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/editor"
   },
-  "bin": {
-    "wepublish-editor": "./dist/server/index.js"
-  },
+  "bin": "./dist/server/index.js",
   "main": "./dist/server/index.js",
   "license": "MIT",
   "scripts": {
