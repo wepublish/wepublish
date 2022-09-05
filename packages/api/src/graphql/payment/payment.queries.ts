@@ -48,14 +48,14 @@ export const getPayments = async (
 
   const [totalCount, payments] = await Promise.all([
     payment.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     payment.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })
   ])
