@@ -231,11 +231,11 @@ export function PollEditView() {
                 <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
                   <PollExternalVotes
                     poll={poll}
-                    onExternalSourceCreated={async () => {
-                      await refetch()
+                    onExternalSourceCreated={() => {
+                      refetch()
                     }}
-                    onExternalSourceDeleted={async () => {
-                      await refetch()
+                    onExternalSourceDeleted={() => {
+                      refetch()
                     }}
                     onExternalSourceChange={(externalVoteSources: PollExternalVoteSource[]) => {
                       if (!poll) {

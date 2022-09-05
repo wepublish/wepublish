@@ -17,8 +17,8 @@ import {
 
 interface PollExternalVotesProps {
   poll?: FullPoll
-  onExternalSourceCreated(): Promise<void>
-  onExternalSourceDeleted(): Promise<void>
+  onExternalSourceCreated(): void
+  onExternalSourceDeleted(): void
   onExternalSourceChange(externalVoteSources: PollExternalVoteSource[]): void
   savePoll(): Promise<void>
 }
