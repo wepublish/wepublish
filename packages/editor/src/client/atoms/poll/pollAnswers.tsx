@@ -89,7 +89,7 @@ export function PollAnswers({
     if (!poll) {
       return
     }
-    const updatedAnswers = [...(poll.answers || [])]
+    const updatedAnswers = poll.answers ? [...poll.answers] : []
     const answerIndex = updatedAnswers.findIndex(tempAnswer => tempAnswer.id === updatedAnswer.id)
     if (answerIndex < 0) {
       return
