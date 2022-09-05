@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
@@ -62,7 +62,7 @@ export function PollEditView() {
   /**
    * Update poll object after fetching from api
    */
-  useEffect(() => {
+  useMemo(() => {
     if (data?.poll) {
       setPoll(data.poll)
     } else {
@@ -70,7 +70,7 @@ export function PollEditView() {
     }
   }, [data])
 
-  useEffect(() => {
+  useMemo(() => {
     if (updateData?.updatePoll) {
       setPoll(updateData.updatePoll)
     } else {
@@ -162,7 +162,7 @@ export function PollEditView() {
                         if (!poll) {
                           return
                         }
-                        setPoll(p => ({...p, question: value}))
+                        setPoll(p => (p ? {...p, question: value} : undefined))
                       }}
                     />
                   </Form.Group>
