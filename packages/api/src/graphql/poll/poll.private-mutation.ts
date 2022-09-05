@@ -52,22 +52,29 @@ export const createPoll = (
   })
 }
 
+type UpdatePollPollInput = Pick<
+  Prisma.PollUncheckedCreateInput,
+  'question' | 'opensAt' | 'closedAt'
+>
+
+type UpdatePollAnswer = {id: string; answer: string}
+
+type UpdatePollExternalVoteAmount = {
+  id: string
+  amount: number
+}
+
+type UpdatePollExternalVoteSource = {
+  id: string
+  source: string
+  voteAmounts: UpdatePollExternalVoteAmount[] | undefined
+}
+
 export const updatePoll = (
   pollId: string,
-  pollInput: Pick<Prisma.PollUncheckedCreateInput, 'question' | 'opensAt' | 'closedAt'>,
-  answers: {id: string; answer: string}[] | undefined,
-  externalVoteSources:
-    | {
-        id: string
-        source: string
-        voteAmounts:
-          | {
-              id: string
-              amount: number
-            }[]
-          | undefined
-      }[]
-    | undefined,
+  pollInput: UpdatePollPollInput,
+  answers: UpdatePollAnswer[] | undefined,
+  externalVoteSources: UpdatePollExternalVoteSource[] | undefined,
   authenticate: Context['authenticate'],
   poll: PrismaClient['poll']
 ) => {
