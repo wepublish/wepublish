@@ -694,11 +694,14 @@ model ArticlePeerInformation {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
+  isEdited Boolean @default(false)
 
   peerId String
   peer   Peer   @relation(fields: [peerId], references: [id])
 
-  producerArticleId String
+  producerArticleId String @unique
   consumerArticleId String  @unique
   consumerArticle   Article @relation(fields: [consumerArticleId], references: [id])
+
+  @@map("articles.peer-information")
 }
