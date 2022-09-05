@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {NotFound} from '../../error'
+import {NotFound, PollClosedError, PollNotOpenError} from '../../error'
 
 export const voteOnPoll = async (
   answerId: string,
@@ -25,6 +25,14 @@ export const voteOnPoll = async (
   }
 
   const {poll} = answer
+
+  if (poll.opensAt > new Date()) {
+    throw new PollNotOpenError()
+  }
+
+  if (poll.closedAt && poll.closedAt < new Date()) {
+    throw new PollClosedError()
+  }
 
   return pollVote.upsert({
     where: {

@@ -201,3 +201,15 @@ export class InvalidSettingValueError extends ApolloError {
     super('Invalid setting data', ErrorCode.InvalidSettingData)
   }
 }
+
+export class PollNotOpenError extends ApolloError {
+  constructor() {
+    super('Poll has not been opened for voting yet!')
+  }
+}
+
+export class PollClosedError extends ApolloError {
+  constructor() {
+    super('Poll voting has been closed already!')
+  }
+}
