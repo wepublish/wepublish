@@ -1437,6 +1437,7 @@ export type Query = {
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
+  retrievePeerArticle?: Maybe<Article>;
   peerArticles: PeerArticleConnection;
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
@@ -1591,6 +1592,12 @@ export type QueryArticlesArgs = {
 
 
 export type QueryPeerArticleArgs = {
+  peerID: Scalars['ID'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryRetrievePeerArticleArgs = {
   peerID: Scalars['ID'];
   id: Scalars['ID'];
 };
