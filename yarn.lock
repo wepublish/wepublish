@@ -6952,10 +6952,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wepublish/analytics@1.0.0-alpha.0":
-  version "1.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@wepublish/analytics/-/analytics-1.0.0-alpha.0.tgz#b2a1cbc52b05febf5881717a6adce05fa76c02aa"
-  integrity sha512-2/OrKG6gBg4pS2ZXFrp546Q0OQC0nXNkr50ERrQyMgWVvYS9qUNxcPO0sgX971xIbTVsnLJF3Axw0/Jf1FDoeQ==
+"@wepublish/analytics@1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@wepublish/analytics/-/analytics-1.0.0-alpha.1.tgz#e166e73223123db83cfe6d91dafc9a3543005d91"
+  integrity sha512-z3ChvsREhyAGPHnoVGieMYm8UN/T/YY77P0nabZgoj1eqaFouybwGUCjDwVK6/o1yBsMdaTrLhsndR9wyo1+ng==
   dependencies:
     "@jonkoops/matomo-tracker" "^0.7.0"
     typescript "^4.7.4"

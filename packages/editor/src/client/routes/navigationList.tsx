@@ -9,10 +9,11 @@ import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQu
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function NavigationList() {
+function NavigationList() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -62,13 +63,15 @@ export function NavigationList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('navigation.overview.navigations')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/navigations/create">
-            <Button appearance="primary" disabled={isLoading}>
-              {t('navigation.overview.newNavigation')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/navigations/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('navigation.overview.newNavigation')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
@@ -96,18 +99,20 @@ export function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <IconButtonTooltip caption={t('navigation.overview.delete')}>
-                  <IconButton
-                    icon={<TrashIcon />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentNavigation(rowData)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </IconButtonTooltip>
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
+                  <IconButtonTooltip caption={t('navigation.overview.delete')}>
+                    <IconButton
+                      icon={<TrashIcon />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentNavigation(rowData)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
               </>
             )}
           </Cell>
@@ -170,3 +175,11 @@ export function NavigationList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_NAVIGATIONS',
+  'CAN_GET_NAVIGATION',
+  'CAN_CREATE_NAVIGATION',
+  'CAN_DELETE_NAVIGATION'
+])(NavigationList)
+export {CheckedPermissionComponent as NavigationList}

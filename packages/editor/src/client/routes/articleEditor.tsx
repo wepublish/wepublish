@@ -38,13 +38,18 @@ import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleM
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
 
-export function ArticleEditor() {
+function ArticleEditor() {
   const navigate = useNavigate()
   const params = useParams()
   const {id} = params
@@ -134,6 +139,8 @@ export function ArticleEditor() {
   const [hasChanged, setChanged] = useState(false)
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -488,18 +495,20 @@ export function ArticleEditor() {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<SaveIcon />}
-                      disabled={isDisabled}
-                      onClick={() => handleSave()}>
-                      {t('articleEditor.overview.create')}
-                    </IconButton>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+                      <IconButton
+                        style={{
+                          marginLeft: '10px'
+                        }}
+                        size={'lg'}
+                        icon={<SaveIcon />}
+                        disabled={isDisabled}
+                        onClick={() => handleSave()}>
+                        {t('articleEditor.overview.create')}
+                      </IconButton>
+                    </PermissionControl>
                   ) : (
-                    <>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -512,53 +521,59 @@ export function ArticleEditor() {
                           {t('articleEditor.overview.save')}
                         </IconButton>
                       </Badge>
-                      <Badge
-                        className={
-                          articleData?.article?.draft || !articleData?.article?.published
-                            ? 'unsaved'
-                            : 'saved'
-                        }>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
-                          size={'lg'}
-                          icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
-                          onClick={() => {
-                            setPublishDialogOpen(true)
-                          }}>
-                          {t('articleEditor.overview.publish')}
-                        </IconButton>
-                      </Badge>
-                    </>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
+                        <Badge
+                          className={
+                            articleData?.article?.draft || !articleData?.article?.published
+                              ? 'unsaved'
+                              : 'saved'
+                          }>
+                          <IconButton
+                            style={{
+                              marginLeft: '10px'
+                            }}
+                            size={'lg'}
+                            icon={<CloudUploadIcon />}
+                            disabled={isDisabled}
+                            onClick={() => {
+                              setPublishDialogOpen(true)
+                            }}>
+                            {t('articleEditor.overview.publish')}
+                          </IconButton>
+                        </Badge>
+                      </PermissionControl>
+                    </PermissionControl>
                   )}
                 </div>
               }
               rightChildren={
-                <Link
-                  to="#"
-                  onClick={e => {
-                    previewLinkFetch({
-                      variables: {
-                        id: id!,
-                        hours: 1
-                      }
-                    })
-                  }}>
-                  <IconButton
-                    disabled={hasChanged || !id || !canPreview}
-                    style={{marginTop: '4px'}}
-                    size={'lg'}
-                    icon={<EyeIcon />}
-                    title={canPreview ? '' : t('articleEditor.overview.previewDisabled')}>
-                    {t('articleEditor.overview.preview')}
-                  </IconButton>
-                </Link>
+                <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
+                  <Link
+                    to="#"
+                    onClick={e => {
+                      previewLinkFetch({
+                        variables: {
+                          id: id!,
+                          hours: 1
+                        }
+                      })
+                    }}>
+                    <IconButton
+                      disabled={hasChanged || !id || !canPreview}
+                      style={{marginTop: '4px'}}
+                      size={'lg'}
+                      icon={<EyeIcon />}>
+                      {t('articleEditor.overview.preview')}
+                    </IconButton>
+                  </Link>
+                </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
+          <BlockList
+            value={blocks}
+            onChange={handleChange}
+            disabled={isLoading || isDisabled || !isAuthorized}>
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
@@ -594,3 +609,11 @@ export function ArticleEditor() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLE',
+  'CAN_GET_ARTICLES',
+  'CAN_CREATE_ARTICLE',
+  'CAN_DELETE_ARTICLE'
+])(ArticleEditor)
+export {CheckedPermissionComponent as ArticleEditor}

@@ -8,7 +8,8 @@ import {
   UserRoleDocument
 } from '../../src/client/api'
 import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {actWait} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
+import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -113,9 +114,11 @@ describe('User Role Edit Panel', () => {
   test('should render', async () => {
     const mocks = [permissionListQuery]
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserRoleEditPanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserRoleEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -125,9 +128,11 @@ describe('User Role Edit Panel', () => {
   test('should render with role', async () => {
     const mocks = [userRoleDocumentQuery, permissionListQuery]
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserRoleEditPanel id={'roleId1'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserRoleEditPanel id={'roleId1'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -166,9 +171,11 @@ describe('User Role Edit Panel', () => {
     }
     const mocks = [userRoleDocumentQuery, permissionListQuery]
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserRoleEditPanel id={'roleId1'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserRoleEditPanel id={'roleId1'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -212,9 +219,11 @@ describe('User Role Edit Panel', () => {
     ]
 
     const {asFragment, getByTestId, getByLabelText} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserRoleEditPanel />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserRoleEditPanel />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -231,5 +240,32 @@ describe('User Role Edit Panel', () => {
     fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
+  })
+
+  const sessionWithoutPermission = {
+    session: {
+      email: 'user@abc.ch',
+      sessionToken: 'abcdefg',
+      sessionRoles: [
+        {
+          id: 'user',
+          description: 'User',
+          name: 'user',
+          systemRole: true,
+          permissions: []
+        }
+      ]
+    }
+  }
+
+  test('will not render without correct permission', () => {
+    const {asFragment} = render(
+      <AuthContext.Provider value={sessionWithoutPermission}>
+        <MockedProvider addTypename={false}>
+          <UserRoleEditPanel id={'roleId1'} />
+        </MockedProvider>
+      </AuthContext.Provider>
+    )
+    expect(asFragment()).toMatchSnapshot()
   })
 })

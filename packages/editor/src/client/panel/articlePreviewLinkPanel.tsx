@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ArticlePreviewProps {
   id: string
@@ -14,7 +15,7 @@ export interface ArticlePreviewLinkPanelProps {
   onClose(): void
 }
 
-export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps) {
+function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps) {
   const [hours, setHours] = useState<number>(12)
 
   const {t} = useTranslation()
@@ -90,3 +91,8 @@ export function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPane
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLE_PREVIEW_LINK'
+])(ArticlePreviewLinkPanel)
+export {CheckedPermissionComponent as ArticlePreviewLinkPanel}

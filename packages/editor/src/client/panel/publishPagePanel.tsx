@@ -10,6 +10,7 @@ import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date
@@ -22,7 +23,7 @@ export interface PublishPagePanelProps {
   onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
-export function PublishPagePanel({
+function PublishPagePanel({
   publishedAtDate,
   updatedAtDate,
   publishAtDate,
@@ -178,3 +179,7 @@ export function PublishPagePanel({
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_PUBLISH_PAGE'])(
+  PublishPagePanel
+)
+export {CheckedPermissionComponent as PublishPagePanel}

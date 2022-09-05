@@ -4,12 +4,13 @@ import {Button, Drawer, Input, Message, Panel, toaster} from 'rsuite'
 
 import {TokenListDocument, useCreateTokenMutation} from '../api'
 import {getOperationNameFromDocument} from '../utility'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface TokenGeneratePanelProps {
   onClose?(): void
 }
 
-export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
+function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   const [name, setName] = useState('')
 
   const [createToken, {data, loading: isCreating, error: createError}] = useCreateTokenMutation({
@@ -74,3 +75,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_CREATE_TOKEN'])(
+  TokenGeneratePanel
+)
+export {CheckedPermissionComponent as TokenGeneratePanel}
