@@ -483,6 +483,24 @@ export const CanUpdateSettings: Permission = {
   deprecated: false
 }
 
+export const CanSavePeerArticle: Permission = {
+  id: 'CAN_SAVE_PEER_ARTICLE',
+  description: 'Allows to save a peered article',
+  deprecated: false
+}
+
+export const CanUpdatePeerArticle: Permission = {
+  id: 'CAN_UPDATE_PEER_ARTICLE',
+  description: 'Allows to update a peered article',
+  deprecated: false
+}
+
+export const CanRemovePeerArticle: Permission = {
+  id: 'CAN_REMOVE_PEER_ARTICLE',
+  description: 'Allows to remove a peered article',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,

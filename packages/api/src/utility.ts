@@ -232,6 +232,18 @@ export async function delegateToPeerSchema(
 
   if (!schema) return null
 
+  // TODO remove
+  console.log(
+    'schema',
+    markResultAsProxied(
+      await delegateToSchema({
+        ...opts,
+        schema: schema,
+        transforms: [new ResetGraphQLEnums(), ...(opts.transforms ?? [])]
+      })
+    )
+  )
+
   return markResultAsProxied(
     await delegateToSchema({
       ...opts,
