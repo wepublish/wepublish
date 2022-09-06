@@ -12,7 +12,7 @@
     "clean": "run-p --print-label clean:**",
     "test": "run-p --print-label test:**",
     "build": "run-s --print-label build:api build:api-media-karma build:oauth2 build:editor build:api-example build:oauth2-example",
-    "build:production": "run-s --print-label build:api build:api-media-karma build:oauth2 build:editor:production",
+    "build:production": "run-s --print-label build:api-media-karma build:oauth2 build:api build:editor:production",
     "build:demo": "run-s --print-label build:api build:api-media-karma build:oauth2 build:editor:production build:api-example build:website-example build:oauth2-example",
     "prerelease": "run-s clean build:production",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
