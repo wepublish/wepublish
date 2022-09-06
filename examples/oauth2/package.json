@@ -2,9 +2,7 @@
   "name": "@wepublish/oauth2-example",
   "version": "0.0.0",
   "private": true,
-  "bin": {
-    "wepublish-oauth2-example": "./dist/index.js"
-  },
+  "bin": "./dist/index.js",
   "main": "./dist/",
   "license": "MIT",
   "scripts": {

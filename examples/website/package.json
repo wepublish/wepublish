@@ -2,6 +2,7 @@
   "name": "@wepublish/website-example",
   "version": "0.0.0",
   "private": true,
+  "bin": "./dist/server/index.js",
   "main": "./dist/server/index.js",
   "license": "UNLICENSED",
   "engines": {

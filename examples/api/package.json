@@ -2,9 +2,7 @@
   "name": "@wepublish/api-example",
   "version": "0.0.0",
   "private": true,
-  "bin": {
-    "wepublish-api-example": "./dist/index.js"
-  },
+  "bin": "./dist/index.js",
   "main": "./dist/",
   "license": "MIT",
   "scripts": {
