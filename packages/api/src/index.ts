@@ -37,7 +37,8 @@ export * from './db/mailLog'
 export * from './db/subscription'
 export * from './db/setting'
 
-export * from './mediaAdapter'
+export * from './media/mediaAdapter'
+export * from './media/karmaMediaAdapter'
 export * from './urlAdapter'
 
 export * from './utility'
