@@ -17,19 +17,10 @@ import {
 
 interface PollExternalVotesProps {
   poll?: FullPoll
-  onExternalSourceCreated(): void
-  onExternalSourceDeleted(): void
-  onExternalSourceChange(externalVoteSources: PollExternalVoteSource[]): void
-  savePoll(): Promise<void>
+  onPollChange(poll: FullPoll): void
 }
 
-export function PollExternalVotes({
-  poll,
-  onExternalSourceCreated,
-  onExternalSourceDeleted,
-  onExternalSourceChange,
-  savePoll
-}: PollExternalVotesProps) {
+export function PollExternalVotes({poll, onPollChange}: PollExternalVotesProps) {
   const {t} = useTranslation()
   const [newSource, setNewSource] = useState<string | undefined>(undefined)
   const [sourceToDelete, setSourceToDelete] = useState<PollExternalVoteSource | undefined>(
@@ -68,18 +59,22 @@ export function PollExternalVotes({
       )
       return
     }
-    // first save current poll state
-    await savePoll()
 
-    await createExternalVoteSource({
+    const createdSource = await createExternalVoteSource({
       variables: {
         pollId: poll.id,
         source: newSource
       },
       onError: onErrorToast
     })
+    const source = createdSource?.data?.createPollExternalVoteSource
+    if (!source) {
+      return
+    }
+    const updatedPoll = {...poll}
+    updatedPoll.externalVoteSources?.push(source)
+    onPollChange(updatedPoll)
     setNewSource(undefined)
-    await onExternalSourceCreated()
   }
 
   async function deletePoll() {
@@ -87,16 +82,23 @@ export function PollExternalVotes({
     if (!id) {
       return
     }
-    // first save current poll state
-    await savePoll()
-    await deleteExternalVoteSource({
+    const deletedSource = await deleteExternalVoteSource({
       variables: {
         deletePollExternalVoteSourceId: id
       }
     })
+    const source = deletedSource?.data?.deletePollExternalVoteSource
+    if (!source || !poll?.externalVoteSources) {
+      return
+    }
+    const deleteIndex = poll.externalVoteSources.findIndex(tmpSource => tmpSource.id === source.id)
+    if (deleteIndex < 0) {
+      return
+    }
+    poll.externalVoteSources?.splice(deleteIndex, 1)
+    onPollChange({...poll})
     setSourceToDelete(undefined)
     setOpenModal(false)
-    await onExternalSourceDeleted()
   }
 
   /**
@@ -110,35 +112,25 @@ export function PollExternalVotes({
     externalVoteSource: PollExternalVoteSource,
     newAmount: string | number
   ) {
-    const voteSources = poll?.externalVoteSources
-    if (!voteSources) {
+    if (!poll) {
       return
     }
-    // deep clone
-    const newVoteSources: PollExternalVoteSource[] = [...voteSources]
-
-    const sourceIndex = newVoteSources.findIndex(
+    const newPoll = {...poll} as FullPoll
+    const voteSource: PollExternalVoteSource | undefined = newPoll?.externalVoteSources?.find(
       (tmpVoteSource: PollExternalVoteSource) => tmpVoteSource.source === externalVoteSource.source
     )
-    if (sourceIndex < 0) {
+    if (!voteSource?.voteAmounts) {
       return
     }
-
-    const source = newVoteSources[sourceIndex]
-    if (!source?.voteAmounts) {
-      return
-    }
-
-    const voteIndex = source.voteAmounts?.findIndex(
+    const voteIndex = voteSource.voteAmounts?.findIndex(
       (tmpVote: PollExternalVote) => tmpVote.answerId === answer.id
     )
     if (voteIndex < 0) {
       return
     }
-    source.voteAmounts[voteIndex].amount =
+    voteSource.voteAmounts[voteIndex].amount =
       typeof newAmount === 'string' ? parseInt(newAmount) : newAmount
-
-    onExternalSourceChange(newVoteSources)
+    onPollChange(newPoll)
   }
 
   /**

@@ -41,7 +41,7 @@ export function PollEditView() {
   }
 
   // get polls
-  const {data, loading: createLoading, refetch} = usePollQuery({
+  const {data, loading: createLoading} = usePollQuery({
     variables: {
       pollId: params.id
     },
@@ -219,19 +219,9 @@ export function PollEditView() {
                 <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
                   <PollExternalVotes
                     poll={poll}
-                    onExternalSourceCreated={() => {
-                      refetch()
+                    onPollChange={(poll: FullPoll) => {
+                      setPoll(poll)
                     }}
-                    onExternalSourceDeleted={() => {
-                      refetch()
-                    }}
-                    onExternalSourceChange={(externalVoteSources: PollExternalVoteSource[]) => {
-                      if (!poll) {
-                        return
-                      }
-                      setPoll({...poll, externalVoteSources})
-                    }}
-                    savePoll={saveOrUpdate}
                   />
                 </Panel>
               </Col>

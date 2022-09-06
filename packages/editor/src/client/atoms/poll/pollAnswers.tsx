@@ -58,8 +58,9 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
     })
     const savedAnswer = answer?.data?.createPollAnswer
     if (savedAnswer) {
-      poll.answers?.push(savedAnswer as PollAnswerWithVoteCount)
-      onPollChange({...poll})
+      const updatedPoll = {...poll}
+      updatedPoll.answers?.push(savedAnswer as PollAnswerWithVoteCount)
+      onPollChange(updatedPoll)
     }
     setNewAnswer('')
   }
