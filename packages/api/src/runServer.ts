@@ -1,22 +1,4 @@
-#!/usr/bin/env node
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {
-  AlgebraicCaptchaChallenge,
-  Author,
-  JobType,
-  KarmaMediaAdapter,
-  MailgunMailProvider,
-  Oauth2Provider,
-  PayrexxPaymentProvider,
-  PublicArticle,
-  PublicComment,
-  PublicPage,
-  SendMailType,
-  StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  URLAdapter,
-  WepublishServer
-} from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
@@ -27,16 +9,30 @@ import {URL} from 'url'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-import {SlackMailProvider} from './SlackMailProvider'
+import {AlgebraicCaptchaChallenge} from './challenges/algebraicCaptchaChallenge'
+import {WepublishServer} from './server'
+import {SendMailType} from './mails/mailContext'
+import {JobType} from './jobs'
+import {StripePaymentProvider} from './payments/stripePaymentProvider'
+import {StripeCheckoutPaymentProvider} from './payments/stripeCheckoutPaymentProvider'
+import {MailgunMailProvider} from './mails/MailgunMailProvider'
+import {PayrexxPaymentProvider} from './payments/payrexxPaymentProvider'
+import {Oauth2Provider} from './context'
+import {URLAdapter} from './urlAdapter'
+import {PublicArticle} from './db/article'
+import {PublicPage} from './db/page'
+import {Author} from './db/author'
+import {PublicComment} from './db/comment'
+import {KarmaMediaAdapter} from './media/karmaMediaAdapter'
 
-interface ExampleURLAdapterProps {
+interface WepublishURLAdapterProps {
   websiteURL: string
 }
 
-class ExampleURLAdapter implements URLAdapter {
+class WepublishURLAdapter implements URLAdapter {
   readonly websiteURL: string
 
-  constructor(props: ExampleURLAdapterProps) {
+  constructor(props: WepublishURLAdapterProps) {
     this.websiteURL = props.websiteURL
   }
 
@@ -76,7 +72,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -158,25 +154,16 @@ async function asyncMain() {
   }
   // left here intentionally for testing
   /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
-    mailProvider = new MailchimpMailProvider({
-      id: 'mailchimp',
-      name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
-      apiKey: process.env.MAILCHIMP_API_KEY,
-      baseURL: '',
-      incomingRequestHandler: bodyParser.urlencoded({extended: true})
-    })
-  } */
-
-  if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
-    mailProvider = new SlackMailProvider({
-      id: 'slackMail',
-      name: 'Slack Mail',
-      fromAddress: 'fakeMail@wepublish.media',
-      webhookURL: process.env.SLACK_DEV_MAIL_WEBHOOK_URL
-    })
-  }
+      mailProvider = new MailchimpMailProvider({
+        id: 'mailchimp',
+        name: 'Mailchimp',
+        fromAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
+        apiKey: process.env.MAILCHIMP_API_KEY,
+        baseURL: '',
+        incomingRequestHandler: bodyParser.urlencoded({extended: true})
+      })
+    } */
 
   const paymentProviders = []
 
@@ -328,13 +315,10 @@ async function asyncMain() {
           local: true
         }
       ],
-      mailTemplatesPath:
-        process.env.NODE_ENV === 'production'
-          ? path.resolve('examples', 'api', 'templates', 'emails')
-          : path.resolve('templates', 'emails')
+      mailTemplatesPath: path.resolve('templates', 'emails')
     },
     paymentProviders,
-    urlAdapter: new ExampleURLAdapter({websiteURL}),
+    urlAdapter: new WepublishURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
     tracing: true,
@@ -342,7 +326,7 @@ async function asyncMain() {
     challenge
   })
 
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-nex t-line no-unused-expressions
   yargs(hideBin(process.argv))
     .command(
       ['listen', '$0'],
@@ -352,24 +336,6 @@ async function asyncMain() {
       },
       async argv => {
         await server.listen(port, address)
-      }
-    )
-    .command(
-      'sendTestMail [recipient]',
-      'send a test mail',
-      yargs => {
-        yargs.positional('recipient', {
-          type: 'string',
-          default: 'dev@wepublish.ch',
-          describe: 'recipient of the test mail'
-        })
-      },
-      async argv => {
-        await server.runJob(JobType.SendTestMail, {
-          recipient: argv.recipient,
-          message: 'Hello from the other side'
-        })
-        process.exit(0)
       }
     )
     .command(
@@ -423,8 +389,3 @@ async function asyncMain() {
       }
     ).argv
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

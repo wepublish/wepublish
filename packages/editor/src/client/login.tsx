@@ -80,7 +80,8 @@ export function Login() {
       type: AuthDispatchActionType.Login,
       payload: {
         email: responseEmail,
-        sessionToken
+        sessionToken,
+        sessionRoles: userRoles
       }
     })
 
@@ -186,8 +187,8 @@ export function Login() {
             <Form.Group controlId="loginEmail">
               <Form.ControlLabel>{t('login.email')}</Form.ControlLabel>
               <Form.Control
-                name="email"
-                className={'username'}
+                name="username"
+                className="username"
                 value={email}
                 autoComplete={'username'}
                 onChange={(email: string) => setEmail(email)}
@@ -197,7 +198,7 @@ export function Login() {
               <Form.ControlLabel>{t('login.password')}</Form.ControlLabel>
               <Form.Control
                 name="password"
-                className={'password'}
+                className="password"
                 type="password"
                 value={password}
                 autoComplete={'currentPassword'}

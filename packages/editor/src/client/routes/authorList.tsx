@@ -25,6 +25,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -41,7 +42,7 @@ function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   }
 }
 
-export function AuthorList() {
+function AuthorList() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -108,13 +109,15 @@ export function AuthorList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('authors.overview.authors')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/authors/create">
-            <Button appearance="primary" disabled={isLoading}>
-              {t('authors.overview.newAuthor')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/authors/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('authors.overview.newAuthor')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -175,18 +178,20 @@ export function AuthorList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('authors.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentAuthor(rowData)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
+                    <IconButtonTooltip caption={t('authors.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setConfirmationDialogOpen(true)
+                          setCurrentAuthor(rowData)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -269,3 +274,11 @@ export function AuthorList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_AUTHORS',
+  'CAN_GET_AUTHOR',
+  'CAN_DELETE_AUTHOR',
+  'CAN_CREATE_AUTHOR'
+])(AuthorList)
+export {CheckedPermissionComponent as AuthorList}

@@ -3,11 +3,13 @@ import React, {createContext, Dispatch, ReactNode, useEffect, useReducer} from '
 import {usePageVisibility} from 'react-page-visibility'
 
 import {LocalStorageKey} from './utility'
+import {UserRole} from './api'
 
 export interface AuthContextState {
   readonly session?: {
     readonly email: string
     readonly sessionToken: string
+    readonly sessionRoles?: UserRole[]
   } | null
 }
 
@@ -23,6 +25,7 @@ export interface AuthDispatchLoginAction {
   readonly payload: {
     readonly email: string
     readonly sessionToken: string
+    readonly sessionRoles?: UserRole[]
   } | null
 }
 
@@ -56,6 +59,12 @@ const MeQuery = gql`
   {
     me {
       email
+      roles {
+        id
+        permissions {
+          id
+        }
+      }
     }
   }
 `
@@ -81,12 +90,13 @@ export function AuthProvider({children}: AuthProviderProps) {
 
   useEffect(() => {
     if (data?.me) {
-      const {email} = data.me
+      const {email, roles} = data.me
       dispatch({
         type: AuthDispatchActionType.Login,
         payload: {
           email,
-          sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+          sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!,
+          sessionRoles: roles
         }
       })
     } else if (!loading) {

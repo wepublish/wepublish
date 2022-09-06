@@ -1,14 +1,9 @@
-import {
-  MediaAdapter,
-  ImageWithFocalPoint,
-  UploadImage,
-  ImageTransformation,
-  ArrayBufferUpload
-} from '@wepublish/api'
-import {FileUpload} from 'graphql-upload'
-import fetch from 'node-fetch'
-import FormData from 'form-data'
 import {URL} from 'url'
+import FormData from 'form-data'
+import {ImageTransformation, ImageWithFocalPoint, UploadImage} from '../db/image'
+import fetch from 'node-fetch'
+import {FileUpload} from 'graphql-upload'
+import {ArrayBufferUpload, MediaAdapter} from './mediaAdapter'
 
 export class MediaServerError extends Error {
   constructor(message: string) {
