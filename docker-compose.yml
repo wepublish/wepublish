@@ -8,10 +8,10 @@ services:
   website:
     build:
       context: .
-      target: demo
+      target: dev
     ports:
       - 4200:8000
-    command: ['yarn', 'workspace', '@wepublish/website-example', 'start']
+    command: ['npx', 'wepublish-example-website']
     environment:
       NODE_ENV: production
       CANONICAL_HOST: http://localhost:4200
@@ -25,10 +25,10 @@ services:
   api:
     build:
       context: .
-      target: demo
+      target: dev
     ports:
       - 4000:8000
-    command: ['yarn', 'workspace', '@wepublish/api-example', 'start']
+    command: ['npx', 'wepublish-example-api']
     environment:
       NODE_ENV: production
       HOST_URL: http://localhost:4000
@@ -51,10 +51,12 @@ services:
     networks:
       - app-tier
   editor:
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - 3006:8000
-    command: ['yarn', 'workspace', '@wepublish/editor', 'start']
+    command: ['npx', 'wepublish-editor']
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
@@ -75,10 +77,10 @@ services:
   oauth2:
     build:
       context: .
-      target: demo
+      target: dev
     ports:
       - 4300:8000
-    command: ['yarn', 'workspace', '@wepublish/oauth2-example', 'start']
+    command: ['npx', 'wepublish-example-oauth2']
     environment:
       DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
       OAUTH_DATABASE_URI: mongodb://localhost:27017/oauth2

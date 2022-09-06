@@ -1,4 +1,4 @@
-FROM ghcr.io/wepublish/node:latest as app
+FROM ghcr.io/wepublish/node:latest as production
 
 RUN apk update
 
@@ -11,7 +11,6 @@ COPY --chown=node:node ./yarn.lock ./yarn.lock
 COPY --chown=node:node ./tsconfig.base.json ./tsconfig.base.json
 COPY --chown=node:node ./LICENSE ./LICENSE
 
-COPY --chown=node:node ./examples/ ./examples/
 COPY --chown=node:node ./packages/ ./packages/
 
 RUN yarn install
@@ -22,6 +21,9 @@ EXPOSE 8000
 
 RUN yarn build:production
 
-FROM app as demo
+FROM production as dev
+
+COPY --chown=node:node ./examples/ ./examples/
+RUN yarn install
 RUN yarn build:demo
 

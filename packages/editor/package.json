@@ -24,6 +24,9 @@
   },
   "main": "./dist/server/index.js",
   "license": "MIT",
+  "bin": {
+    "wepublish-editor": "./bin/run-server.js"
+  },
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-p build:client build:server",
@@ -33,14 +36,14 @@
     "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:client": "run-p watch:client:*",
     "watch:server": "run-p watch:server:*",
-    "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
+    "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./bin/run-server.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:client:build-ts": "tsc -b ./src/client --watch",
     "watch:client:build-wp": "webpack-dev-server --mode development --hot --inline",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist ./assets",
-    "start": "./dist/server/index.js",
+    "start": "./bin/run-server.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
