@@ -1,4 +1,4 @@
-FROM ghcr.io/wepublish/node:latest
+FROM ghcr.io/wepublish/node:latest as app
 
 RUN apk update
 
@@ -15,8 +15,13 @@ COPY --chown=node:node ./examples/ ./examples/
 COPY --chown=node:node ./packages/ ./packages/
 
 RUN yarn install
-RUN yarn build:demo
 
 ENV ADDRESS=0.0.0.0
 ENV PORT=8000
 EXPOSE 8000
+
+RUN yarn build:production
+
+FROM app as demo
+RUN yarn build:demo
+
