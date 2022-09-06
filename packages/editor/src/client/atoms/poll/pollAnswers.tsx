@@ -7,7 +7,6 @@ import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuit
 
 import {
   FullPoll,
-  PollAnswer,
   PollAnswerWithVoteCount,
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation
@@ -15,17 +14,10 @@ import {
 
 interface PollAnswersProps {
   poll?: FullPoll
-  onPollUpdated(poll: FullPoll): void
-  onAnswerAdded(answer: PollAnswer): Promise<void>
-  onAnswerDeleted(): Promise<void>
+  onPollChange(poll: FullPoll): void
 }
 
-export function PollAnswers({
-  poll,
-  onPollUpdated,
-  onAnswerAdded,
-  onAnswerDeleted
-}: PollAnswersProps) {
+export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
   const {t} = useTranslation()
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [answerToDelete, setAnswerToDelete] = useState<PollAnswerWithVoteCount | undefined>(
@@ -66,7 +58,8 @@ export function PollAnswers({
     })
     const savedAnswer = answer?.data?.createPollAnswer
     if (savedAnswer) {
-      await onAnswerAdded(savedAnswer)
+      poll.answers?.push(savedAnswer as PollAnswerWithVoteCount)
+      onPollChange({...poll})
     }
     setNewAnswer('')
   }
@@ -76,13 +69,23 @@ export function PollAnswers({
     if (!answerToDelete) {
       return
     }
-    await deleteAnswerMutation({
+    const answer = await deleteAnswerMutation({
       variables: {
         deletePollAnswerId: answerToDelete.id
       },
       onError: onErrorToast
     })
-    await onAnswerDeleted()
+
+    const deletedAnswer = answer?.data?.deletePollAnswer
+    if (!deletedAnswer || !poll?.answers) {
+      return
+    }
+    const deleteIndex = poll?.answers?.findIndex(tmpAnswer => tmpAnswer.id === deletedAnswer.id)
+    if (deleteIndex < 0) {
+      return
+    }
+    poll.answers.splice(deleteIndex, 1)
+    onPollChange({...poll})
   }
 
   async function updateAnswer(updatedAnswer: PollAnswerWithVoteCount) {
@@ -96,11 +99,10 @@ export function PollAnswers({
     }
     updatedAnswers[answerIndex] = updatedAnswer
 
-    const updatedPoll = {
+    onPollChange({
       ...poll,
       answers: updatedAnswers
-    }
-    await onPollUpdated(updatedPoll)
+    })
   }
 
   return (

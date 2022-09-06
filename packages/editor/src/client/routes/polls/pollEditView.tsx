@@ -6,8 +6,6 @@ import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster
 
 import {
   FullPoll,
-  PollAnswer,
-  PollAnswerWithVoteCount,
   PollExternalVote,
   PollExternalVoteSource,
   usePollQuery,
@@ -173,17 +171,7 @@ export function PollEditView() {
                 <Panel header={t('pollEditView.answerPanelHeader')} bordered>
                   <PollAnswers
                     poll={poll}
-                    onAnswerAdded={async (answer: PollAnswer) => {
-                      if (!poll?.answers) {
-                        return
-                      }
-                      poll.answers.push(answer as PollAnswerWithVoteCount)
-                      await saveOrUpdate()
-                    }}
-                    onAnswerDeleted={async () => {
-                      await refetch()
-                    }}
-                    onPollUpdated={poll => {
+                    onPollChange={(poll: FullPoll) => {
                       setPoll(poll)
                     }}
                   />
