@@ -1,5 +1,4 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import bodyParser from 'body-parser'
 import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
@@ -24,6 +23,7 @@ import {PublicArticle} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'
+import {KarmaMediaAdapter} from './media/karmaMediaAdapter'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
