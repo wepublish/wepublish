@@ -21,7 +21,7 @@
     "watch": "yarn migrate && run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
     "setup:root": "shx cp .env.example .env",
-    "start:docker": "docker-compose up --detach database pgadmin media",
+    "start:docker": "docker-compose up --detach mongo mongo-express database pgadmin media",
     "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
