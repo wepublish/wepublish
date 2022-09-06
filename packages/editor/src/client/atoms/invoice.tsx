@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
-import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
-import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
-import {useTranslation} from 'react-i18next'
-import CheckIcon from '@rsuite/icons/legacy/Check'
 import {Email} from '@rsuite/icons'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import React, {useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
+
+import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
 
 export interface InvoiceProps {
   subscriptionId: string

@@ -1,7 +1,8 @@
 import React, {ComponentType, PropsWithChildren, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {AuthContext} from '../authContext'
 import {Message} from 'rsuite'
+
+import {AuthContext} from '../authContext'
 
 interface RejectionMessageProps {
   requiredPermissions: string[]

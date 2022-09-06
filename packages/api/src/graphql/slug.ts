@@ -8,7 +8,7 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseValue(value) {
-    if (typeof value != 'string') throw new Error()
+    if (typeof value !== 'string') throw new Error()
     return slugify(value)
   },
 

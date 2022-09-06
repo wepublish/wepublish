@@ -1,16 +1,13 @@
 import React, {useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {Teaser, TeaserType} from '../blocks/types'
 import {TeaserStyle} from '../api'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {Teaser, TeaserType} from '../blocks/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-
-import {useTranslation} from 'react-i18next'
-import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser

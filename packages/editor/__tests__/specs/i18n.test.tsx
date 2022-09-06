@@ -1,9 +1,10 @@
-import i18n from 'i18next'
-import {initI18N} from '../../src/client/i18n'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import {initReactI18next} from 'react-i18next'
-import * as reactDatepicker from 'react-datepicker'
 import {de} from 'date-fns/locale'
+import i18n from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import * as reactDatepicker from 'react-datepicker'
+import {initReactI18next} from 'react-i18next'
+
+import {initI18N} from '../../src/client/i18n'
 
 describe('i18n', () => {
   afterEach(() => {

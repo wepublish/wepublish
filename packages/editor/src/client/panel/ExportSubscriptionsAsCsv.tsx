@@ -1,8 +1,9 @@
+import {FileDownload} from '@rsuite/icons'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {IconButton} from 'rsuite'
+
 import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
-import {FileDownload} from '@rsuite/icons'
 
 export interface ExportSubscriptionAsCsvProps {
   filter?: SubscriptionFilter

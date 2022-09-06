@@ -1,10 +1,10 @@
 import React, {
   createContext,
   ReactNode,
-  useRef,
+  RefObject,
   useContext,
   useEffect,
-  RefObject,
+  useRef,
   useState
 } from 'react'
 

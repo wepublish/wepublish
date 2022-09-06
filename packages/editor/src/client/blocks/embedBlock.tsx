@@ -1,25 +1,22 @@
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import React, {useEffect, useState} from 'react'
-
-import {PlaceholderInput} from '../atoms/placeholderInput'
+import {useTranslation} from 'react-i18next'
 import {Drawer, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
-
+import {PlaceholderInput} from '../atoms/placeholderInput'
 import {EmbedEditPanel} from '../panel/embedEditPanel'
-import {EmbedBlockValue, EmbedType} from './types'
-import {YouTubeVideoEmbed} from './embeds/youTube'
-import {VimeoVideoEmbed} from './embeds/vimeo'
-import {SoundCloudTrackEmbed} from './embeds/soundCloud'
-import {InstagramPostEmbed} from './embeds/instagram'
-import {TwitterTweetEmbed} from './embeds/twitter'
-import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
-import {PolisEmbed} from './embeds/polis'
-import {IframeEmbed} from './embeds/iframe'
-
-import {useTranslation} from 'react-i18next'
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
+import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
+import {IframeEmbed} from './embeds/iframe'
+import {InstagramPostEmbed} from './embeds/instagram'
+import {PolisEmbed} from './embeds/polis'
+import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {TikTokVideoEmbed} from './embeds/tikTok'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import {TwitterTweetEmbed} from './embeds/twitter'
+import {VimeoVideoEmbed} from './embeds/vimeo'
+import {YouTubeVideoEmbed} from './embeds/youTube'
+import {EmbedBlockValue, EmbedType} from './types'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {

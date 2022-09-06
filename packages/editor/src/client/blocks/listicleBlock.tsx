@@ -1,20 +1,16 @@
-import React, {useState, useCallback} from 'react'
-
-import {BlockProps} from '../atoms/blockList'
-import {ListInput, FieldProps} from '../atoms/listInput'
-import {TypographicTextArea} from '../atoms/typographicTextArea'
-
+import React, {useCallback, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Drawer} from 'rsuite'
 
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
-
-import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
-import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
-import {isFunctionalUpdate} from '../utility'
-
-import {useTranslation} from 'react-i18next'
+import {BlockProps} from '../atoms/blockList'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {FieldProps, ListInput} from '../atoms/listInput'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {isFunctionalUpdate} from '../utility'
+import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
+import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
 
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
