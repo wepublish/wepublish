@@ -13,9 +13,9 @@ deployment:
       DATABASE_URL: postgres://
       HOST_URL: https://api
       WEBSITE_URL: https://website
-      MEDIA_SERVER_TOKEN: media_server_token
-      JWT_SECRET_KEY: jwt_secret_key
-      SENTRY_DSN: sentry_dsn
+      MEDIA_SERVER_TOKEN:
+      JWT_SECRET_KEY:
+      SENTRY_DSN:
     envFromSecretRefName:
     properties: {}
     replicaCount: 1
