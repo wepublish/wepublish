@@ -19,7 +19,7 @@ const mockedFetch = fetch as jest.MockedFunction<typeof fetch>
 const TEST_URL = 'http://fake.localhost.com/'
 const TEST_INTERNAL_URL = 'http://internal.url.com/'
 const TEST_TOKEN = 'fakeToken1234'
-const TEST_IMAGE_PATH = './__tests__/specs/test.jpg'
+const TEST_IMAGE_PATH = './__tests__/test.jpg'
 const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   createdAt: new Date(),
   modifiedAt: new Date(),
