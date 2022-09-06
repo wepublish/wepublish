@@ -4,6 +4,7 @@ import {
   AlgebraicCaptchaChallenge,
   Author,
   JobType,
+  KarmaMediaAdapter,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
@@ -16,7 +17,6 @@ import {
   URLAdapter,
   WepublishServer
 } from '@wepublish/api'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import bodyParser from 'body-parser'
 import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
