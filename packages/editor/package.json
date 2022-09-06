@@ -22,7 +22,6 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/editor"
   },
-  "bin": "./dist/server/index.js",
   "main": "./dist/server/index.js",
   "license": "MIT",
   "scripts": {
@@ -41,7 +40,7 @@
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist ./assets",
-    "start": "node ./dist/server/index.js",
+    "start": "./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
