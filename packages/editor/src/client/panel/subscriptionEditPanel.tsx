@@ -135,7 +135,6 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
         }))
       )
       setDeactivation(data.subscription.deactivation)
-      invoicesData = getInvoices(id).data
     }
   }, [data?.subscription])
 
