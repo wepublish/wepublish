@@ -1,5 +1,6 @@
-import {Transforms, Element as SlateElement, Node as SlateNode, Path} from 'slate'
+import {Element as SlateElement, Node as SlateNode, Path, Transforms} from 'slate'
 import {ReactEditor} from 'slate-react'
+
 import {DEFAULT_BORDER_COLOR, emptyTextParagraph} from './elements'
 import {BlockFormat} from './formats'
 

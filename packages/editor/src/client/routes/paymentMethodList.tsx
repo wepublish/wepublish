@@ -11,8 +11,8 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 

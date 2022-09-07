@@ -20,20 +20,21 @@ import {
   Tooltip,
   Whisper
 } from 'rsuite'
+
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID, slugify} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
 
 export interface ArticleMetadataProperty {
   readonly key: string

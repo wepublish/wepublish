@@ -1,11 +1,9 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
+import {useTranslation} from 'react-i18next'
 
 import {BlockProps} from '../atoms/blockList'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-
 import {QuoteBlockValue} from './types'
-
-import {useTranslation} from 'react-i18next'
 
 export type QuoteBlockProps = BlockProps<QuoteBlockValue>
 

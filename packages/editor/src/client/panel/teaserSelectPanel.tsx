@@ -1,4 +1,9 @@
+import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
+import FileTextIcon from '@rsuite/icons/legacy/FileText'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Input, InputGroup, List, Nav, Notification, toaster} from 'rsuite'
 
 import {
   ArticleFilter,
@@ -8,13 +13,7 @@ import {
   usePageListQuery,
   usePeerArticleListQuery
 } from '../api'
-import {TeaserType, TeaserLink} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Nav, List, Input, InputGroup, Notification, toaster} from 'rsuite'
-import FileTextIcon from '@rsuite/icons/legacy/FileText'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
+import {TeaserLink, TeaserType} from '../blocks/types'
 
 export interface TeaserSelectPanelProps {
   onClose(): void

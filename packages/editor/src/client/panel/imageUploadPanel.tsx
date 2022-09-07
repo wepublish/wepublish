@@ -1,12 +1,10 @@
+import UploadIcon from '@rsuite/icons/legacy/Upload'
 import React from 'react'
-
-import {Button, Drawer, Notification, toaster, Form} from 'rsuite'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
-
-import {useTranslation} from 'react-i18next'
 import {getImgMinSizeToCompress} from '../utility'
-import UploadIcon from '@rsuite/icons/legacy/Upload'
 
 export interface ImageUploadPanelProps {
   onClose(): void

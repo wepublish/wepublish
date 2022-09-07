@@ -1,27 +1,22 @@
-import React, {useState, ReactNode} from 'react'
-import nanoid from 'nanoid'
-
-import {PlaceholderInput} from '../atoms/placeholderInput'
-import {PlaceholderImage} from '../atoms/placeholderImage'
-import {BlockProps} from '../atoms/blockList'
-import {Overlay} from '../atoms/overlay'
-import {Typography} from '../atoms/typography'
-
-import {IconButton, Drawer, Panel, Avatar} from 'rsuite'
-
-import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
-import arrayMove from 'array-move'
-
-import {TeaserGridBlockValue, Teaser, TeaserType} from './types'
-
-import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
-
-import {useTranslation} from 'react-i18next'
+import FileIcon from '@rsuite/icons/legacy/File'
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import FileIcon from '@rsuite/icons/legacy/File'
+import arrayMove from 'array-move'
+import nanoid from 'nanoid'
+import React, {ReactNode, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
+import {Avatar, Drawer, IconButton, Panel} from 'rsuite'
+
+import {ImageRefFragment, PeerWithProfileFragment, TeaserStyle} from '../api'
+import {BlockProps} from '../atoms/blockList'
+import {Overlay} from '../atoms/overlay'
+import {PlaceholderImage} from '../atoms/placeholderImage'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {Typography} from '../atoms/typography'
+import {TeaserEditPanel} from '../panel/teaserEditPanel'
+import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
+import {Teaser, TeaserGridBlockValue, TeaserType} from './types'
 
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />

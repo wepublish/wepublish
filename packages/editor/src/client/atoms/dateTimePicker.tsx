@@ -1,12 +1,10 @@
-import React, {useState} from 'react'
-
 import './dateTimePicker.less'
 
-import DatePicker from 'react-datepicker'
-import {Button, ButtonGroup, ButtonToolbar, IconButton, Popover, Whisper, Form} from 'rsuite'
-
-import {useTranslation} from 'react-i18next'
 import InfoIcon from '@rsuite/icons/legacy/Info'
+import React, {useState} from 'react'
+import DatePicker from 'react-datepicker'
+import {useTranslation} from 'react-i18next'
+import {Button, ButtonGroup, ButtonToolbar, Form, IconButton, Popover, Whisper} from 'rsuite'
 
 export interface DateTimePreset {
   label: string

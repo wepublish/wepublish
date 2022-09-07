@@ -1,16 +1,17 @@
 import React, {useEffect, useRef} from 'react'
-import {useSlate} from 'slate-react'
-import {
-  ToolbarIconButtonProps,
-  ToolbarButtonProps,
-  ToolbarButton,
-  ToolbarIconButton,
-  SubMenuButton,
-  SubMenuButtonProps
-} from '../../../atoms/toolbar'
-import {WepublishEditor} from '../editor/wepublishEditor'
-import {Format} from '../editor/formats'
 import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
+import {useSlate} from 'slate-react'
+
+import {
+  SubMenuButton,
+  SubMenuButtonProps,
+  ToolbarButton,
+  ToolbarButtonProps,
+  ToolbarIconButton,
+  ToolbarIconButtonProps
+} from '../../../atoms/toolbar'
+import {Format} from '../editor/formats'
+import {WepublishEditor} from '../editor/wepublishEditor'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly icon: React.ReactElement

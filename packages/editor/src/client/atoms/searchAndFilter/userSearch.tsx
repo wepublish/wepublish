@@ -1,5 +1,6 @@
-import {Form, Message, SelectPicker, toaster} from 'rsuite'
 import React, {useEffect, useState} from 'react'
+import {Form, Message, SelectPicker, toaster} from 'rsuite'
+
 import {FullUserFragment, useUserListQuery} from '../../api'
 
 export interface UserSearchProps {

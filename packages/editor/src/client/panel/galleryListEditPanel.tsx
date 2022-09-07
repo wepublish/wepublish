@@ -1,18 +1,14 @@
-import React, {useState} from 'react'
 import nanoid from 'nanoid'
-
+import React, {useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form} from 'rsuite'
 
-import {ListInput, ListValue, FieldProps} from '../atoms/listInput'
-
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {FieldProps, ListInput, ListValue} from '../atoms/listInput'
+import {Textarea} from '../atoms/textarea'
+import {GalleryImageEdge} from '../blocks/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-
-import {GalleryImageEdge} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {Textarea} from '../atoms/textarea'
 
 export interface GalleryListEditPanelProps {
   id?: string

@@ -28,10 +28,10 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {addOrUpdateOneInArray} from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 

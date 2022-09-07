@@ -15,12 +15,12 @@ import {
   useUpdateNavigationMutation
 } from '../api'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {generateID, getOperationNameFromDocument} from '../utility'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {generateID, getOperationNameFromDocument} from '../utility'
 
 export interface NavigationEditPanelProps {
   id?: string
