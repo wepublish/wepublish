@@ -21,9 +21,9 @@ import {
   useTokenListQuery
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 import {getOperationNameFromDocument} from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 function TokenList() {
   const location = useLocation()

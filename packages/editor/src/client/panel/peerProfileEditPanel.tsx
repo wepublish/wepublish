@@ -1,29 +1,32 @@
-import React, {useEffect, useRef, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
-import {FormInstance} from 'rsuite/esm/Form'
+import React, {useState, useEffect, useRef} from 'react'
+
+import {Button, Drawer, Panel, Form, toaster, Message, Schema} from 'rsuite'
 
 import {
-  ImageRefFragment,
-  Maybe,
+  usePeerProfileQuery,
+  useUpdatePeerProfileMutation,
   PeerProfileDocument,
   PeerProfileQuery,
-  usePeerProfileQuery,
-  useUpdatePeerProfileMutation
+  Maybe,
+  ImageRefFragment
 } from '../api'
+
+import {ImageSelectPanel} from './imageSelectPanel'
+import {ImagedEditPanel} from './imageEditPanel'
+import {getOperationNameFromDocument} from '../utility'
+
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
+import {useTranslation} from 'react-i18next'
+import {FormInstance} from 'rsuite/esm/Form'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {getOperationNameFromDocument} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 

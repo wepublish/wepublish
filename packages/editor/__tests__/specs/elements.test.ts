@@ -1,12 +1,11 @@
 import {Element as SlateElement} from 'slate'
-
-import {
-  DEFAULT_BORDER_COLOR,
-  emptyCellsTable,
-  emptyTextParagraph
-} from '../../src/client/blocks/richTextBlock/editor/elements'
 import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {pTest} from '../utils'
+import {
+  emptyTextParagraph,
+  emptyCellsTable,
+  DEFAULT_BORDER_COLOR
+} from '../../src/client/blocks/richTextBlock/editor/elements'
 
 interface EmptyCellsTableTest {
   name: string

@@ -1,6 +1,7 @@
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 import React, {ReactNode} from 'react'
+
 import {IconButton} from 'rsuite'
+import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 
 export interface PlaceholderInputProps {
   /**

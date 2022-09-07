@@ -1,14 +1,13 @@
-import {createEditor, Element as SlateElement, Transforms} from 'slate'
 import {withReact} from 'slate-react'
-
-import {
-  DEFAULT_BORDER_COLOR,
-  emptyCellsTable,
-  emptyTextParagraph
-} from '../../src/client/blocks/richTextBlock/editor/elements'
+import {createEditor, Transforms, Element as SlateElement} from 'slate'
 import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {withNormalizeNode} from '../../src/client/blocks/richTextBlock/editor/normalizing'
 import {pTest} from '../utils'
+import {
+  emptyTextParagraph,
+  emptyCellsTable,
+  DEFAULT_BORDER_COLOR
+} from '../../src/client/blocks/richTextBlock/editor/elements'
 
 interface WithNormalizeNodeTest {
   name: string

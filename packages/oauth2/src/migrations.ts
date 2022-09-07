@@ -7,7 +7,7 @@ export interface Migration {
   migrate(adapter: Db, locale: string): Promise<void>
 }
 
-// const SessionDocumentTTL = 60 * 60 * 24 // 24h
+//const SessionDocumentTTL = 60 * 60 * 24 // 24h
 
 export const Migrations: Migration[] = [
   {

@@ -1,13 +1,12 @@
-import UnlinkIcon from '@rsuite/icons/legacy/Unlink'
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, ButtonToolbar, Form, IconButton, InputGroup} from 'rsuite'
-import {Editor, Range, Transforms} from 'slate'
+import {Button, Form, ButtonToolbar, InputGroup, IconButton} from 'rsuite'
+import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-
-import {SubMenuContext} from '../../../atoms/toolbar'
-import {InlineFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+import {InlineFormat} from '../editor/formats'
+import {SubMenuContext} from '../../../atoms/toolbar'
+import UnlinkIcon from '@rsuite/icons/legacy/Unlink'
 
 export function LinkMenu() {
   const editor = useSlate()

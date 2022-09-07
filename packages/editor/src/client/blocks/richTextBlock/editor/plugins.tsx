@@ -1,9 +1,8 @@
-import {Element as SlateElement, Point, Range} from 'slate'
+import {Point, Element as SlateElement, Range} from 'slate'
+import {WepublishEditor} from './wepublishEditor'
 import {jsx} from 'slate-hyperscript'
 import {ReactEditor} from 'slate-react'
-
-import {BlockFormat, InlineFormat, InlineFormats, TextFormat} from './formats'
-import {WepublishEditor} from './wepublishEditor'
+import {InlineFormats, BlockFormat, InlineFormat, TextFormat} from './formats'
 
 const ElementTags: any = {
   A: (el: Element) => ({

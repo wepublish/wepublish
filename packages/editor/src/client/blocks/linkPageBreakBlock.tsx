@@ -1,17 +1,17 @@
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useRef, useEffect, useState, useCallback} from 'react'
+
 import {Drawer, IconButton, Input} from 'rsuite'
-
 import {BlockProps} from '../atoms/blockList'
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
-import {isFunctionalUpdate} from '../utility'
-import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
 import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {isFunctionalUpdate} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({

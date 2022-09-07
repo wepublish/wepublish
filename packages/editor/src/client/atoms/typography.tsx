@@ -1,5 +1,5 @@
-import * as CSS from 'csstype'
 import React, {ElementType, forwardRef, ReactNode} from 'react'
+import * as CSS from 'csstype'
 
 export type TypographyVariant =
   | 'title'

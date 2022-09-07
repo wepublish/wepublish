@@ -29,7 +29,7 @@ const debug = (obj: any) =>
   )
 
 export function routes(app: Application, provider: Provider, prisma: PrismaClient): void {
-  // const { constructor: { errors: { SessionNotFound } } } = provider;
+  //const { constructor: { errors: { SessionNotFound } } } = provider;
 
   app.use((req, res, next) => {
     const orig = res.render
@@ -87,7 +87,7 @@ export function routes(app: Application, provider: Provider, prisma: PrismaClien
             }
           })
         }
-        /* case 'select_account': {
+        /*case 'select_account': {
           if (!session) {
             return provider.interactionFinished(req, res, { select_account: {} }, { mergeWithLastSubmission: false });
           }
@@ -108,7 +108,7 @@ export function routes(app: Application, provider: Provider, prisma: PrismaClien
               prompt: debug(prompt),
             },
           });
-        } */
+        }*/
         default:
           return undefined
       }
@@ -209,9 +209,9 @@ export function routes(app: Application, provider: Provider, prisma: PrismaClien
   })
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    /* if (err instanceof SessionNotFound) {
+    /*if (err instanceof SessionNotFound) {
       // handle interaction expired / session not found error
-    } */
+    }*/
     next(err)
   })
 }

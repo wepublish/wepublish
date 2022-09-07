@@ -1,25 +1,28 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import React, {useState, useEffect} from 'react'
+
+import {toaster, Message, Button, Drawer, Form, Panel, Schema} from 'rsuite'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
-  FullPeerProfileFragment,
   PeerListDocument,
   useCreatePeerMutation,
   usePeerQuery,
-  useRemotePeerProfileQuery,
-  useUpdatePeerMutation
+  useUpdatePeerMutation,
+  FullPeerProfileFragment,
+  useRemotePeerProfileQuery
 } from '../api'
-import {ChooseEditImage} from '../atoms/chooseEditImage'
+
+import {slugify, getOperationNameFromDocument} from '../utility'
+
+import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {getOperationNameFromDocument, slugify} from '../utility'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -180,7 +183,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                     'CAN_GET_PEER_PROFILE'
                   ]
             }
-            showRejectionMessage>
+            showRejectionMessage={true}>
             <Panel>
               <Form.Group controlId="name">
                 <Form.ControlLabel>

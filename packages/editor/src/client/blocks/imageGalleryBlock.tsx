@@ -1,22 +1,25 @@
-import ArrowCircleLeftIcon from '@rsuite/icons/legacy/ArrowCircleLeft'
-import ArrowCircleRightIcon from '@rsuite/icons/legacy/ArrowCircleRight'
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import ListIcon from '@rsuite/icons/legacy/List'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useState, useEffect} from 'react'
+
 import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
 
-import {ImageRefFragment} from '../api'
-import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {BlockProps} from '../atoms/blockList'
+
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageRefFragment} from '../api'
 import {ImageGalleryBlockValue} from './types'
+import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
+
+import {useTranslation} from 'react-i18next'
+import ImageIcon from '@rsuite/icons/legacy/Image'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import WrenchIcon from '@rsuite/icons/legacy/Wrench'
+import ListIcon from '@rsuite/icons/legacy/List'
+import ArrowCircleLeftIcon from '@rsuite/icons/legacy/ArrowCircleLeft'
+import ArrowCircleRightIcon from '@rsuite/icons/legacy/ArrowCircleRight'
+import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 
 export function ImageGalleryBlock({
   value,

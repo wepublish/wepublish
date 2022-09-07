@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react'
-
 import {useScript} from '../../utility'
 
 export interface PolisEmbedProps {

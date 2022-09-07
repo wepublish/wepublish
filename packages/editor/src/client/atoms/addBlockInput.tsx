@@ -1,7 +1,8 @@
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React from 'react'
-import {useTranslation} from 'react-i18next'
+
 import {Dropdown, IconButton} from 'rsuite'
+import {useTranslation} from 'react-i18next'
+import PlusIcon from '@rsuite/icons/legacy/Plus'
 
 export interface MenuProps {
   readonly items: Array<MenuItem>

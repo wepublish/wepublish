@@ -56,7 +56,7 @@ export class MongoDBAdapter {
     const result = await this.coll(this.name)
       .find(
         {_id}
-        // { payload: 1 },
+        //{ payload: 1 },
       )
       .limit(1)
       .next()

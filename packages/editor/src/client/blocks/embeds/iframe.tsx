@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {transformCssStringToObject} from '../../utility'
 
 export interface IframeEmbedProps {

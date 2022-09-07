@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useState, useRef} from 'react'
 
 export interface FileDropInputProps {
   disabled?: boolean

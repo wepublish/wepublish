@@ -23,12 +23,12 @@ import {
   usePeerArticleListQuery,
   usePeerListQuery
 } from '../api'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 function PeerArticleList() {
   const [page, setPage] = useState(1)

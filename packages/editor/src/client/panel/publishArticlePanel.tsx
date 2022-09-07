@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+
+import {ArticleMetadata} from './articleMetadataPanel'
+
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
-import {DateTimePicker} from '../atoms/dateTimePicker'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
+
+import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
+import {useTranslation} from 'react-i18next'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ArticleMetadata} from './articleMetadataPanel'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date

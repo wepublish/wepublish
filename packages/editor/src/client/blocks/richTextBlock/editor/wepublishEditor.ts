@@ -1,9 +1,8 @@
-import {toArray} from 'lodash'
-import {Editor, Node, Transforms} from 'slate'
-
+import {Editor, Transforms, Node} from 'slate'
 import {RichTextBlockValue} from '../../types'
 import {emptyTextParagraph} from './elements'
-import {BlockFormat, BlockFormats, Format, InlineFormats, ListFormats, TextFormats} from './formats'
+import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
+import {toArray} from 'lodash'
 
 export const WepublishEditor = {
   // Extending the Editor according docs: https://docs.slatejs.org/concepts/07-plugins#helper-functions

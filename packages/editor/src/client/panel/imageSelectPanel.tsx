@@ -15,13 +15,12 @@ import {
   Panel,
   toaster
 } from 'rsuite'
-
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImagedEditPanel} from './imageEditPanel'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ImageSelectPanelProps {
   onClose(): void

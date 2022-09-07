@@ -127,13 +127,13 @@ describe('Navigations', () => {
 
       const links = res.data.createNavigation?.links
       expect(links).toHaveLength(3)
-      // external link
+      //external link
       expect(links[0].label).toBe('External Label')
       expect(links[0].url).toBe('linkurl.ch/')
-      // article
+      //article
       expect(links[1].label).toBe('Article Label')
       expect(links[1].article.id).toBe(articleID)
-      // page
+      //page
       expect(links[2].label).toBe('Page Label')
       expect(links[2].page.id).toBe(pageID)
 

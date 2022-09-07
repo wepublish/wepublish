@@ -1,26 +1,27 @@
+import React, {useEffect, useState} from 'react'
+import GridLayout from 'react-grid-layout'
+
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-import FileIcon from '@rsuite/icons/legacy/File'
-import LockIcon from '@rsuite/icons/legacy/Lock'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import PlusSquareOIcon from '@rsuite/icons/legacy/PlusSquareO'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import UnlockIcon from '@rsuite/icons/legacy/Unlock'
-import i18next from 'i18next'
-import nanoid from 'nanoid'
-import React, {useEffect, useState} from 'react'
-import GridLayout from 'react-grid-layout'
-import {useTranslation} from 'react-i18next'
-import {ButtonToolbar, Drawer, IconButton, Panel} from 'rsuite'
-
+import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
 import {BlockProps} from '../atoms/blockList'
+import nanoid from 'nanoid'
+import {ButtonToolbar, Drawer, IconButton, Panel} from 'rsuite'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {contentForTeaser} from './teaserGridBlock'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {contentForTeaser} from './teaserGridBlock'
-import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
+
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import FileIcon from '@rsuite/icons/legacy/File'
+import PlusSquareOIcon from '@rsuite/icons/legacy/PlusSquareO'
+import LockIcon from '@rsuite/icons/legacy/Lock'
+import UnlockIcon from '@rsuite/icons/legacy/Unlock'
 
 export function FlexTeaserBlock({
   teaser,

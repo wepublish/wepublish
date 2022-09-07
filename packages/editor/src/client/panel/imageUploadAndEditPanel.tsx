@@ -1,8 +1,8 @@
-import exifr from 'exifr'
 import React, {useState} from 'react'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageUploadPanel} from './imageUploadPanel'
+import exifr from 'exifr'
 
 export interface ImageUploadAndEditPanelProps {
   onClose(): void

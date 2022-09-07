@@ -1,42 +1,47 @@
-import LinkIcon from '@rsuite/icons/legacy/Link'
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useState, useEffect} from 'react'
+
 import {
   Button,
   Drawer,
   Form,
-  Input,
-  InputGroup,
-  Message,
   Panel,
+  Input,
+  toaster,
+  Message,
   PanelGroup,
-  Schema,
-  toaster
+  InputGroup,
+  Schema
 } from 'rsuite'
 
+import {ListInput, ListValue} from '../atoms/listInput'
+
+import {ImagedEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
+
 import {
+  useCreateAuthorMutation,
+  useAuthorQuery,
+  useUpdateAuthorMutation,
   AuthorLink,
-  AuthorListDocument,
-  FullAuthorFragment,
   ImageRefFragment,
   Maybe,
-  useAuthorQuery,
-  useCreateAuthorMutation,
-  useUpdateAuthorMutation
+  FullAuthorFragment,
+  AuthorListDocument
 } from '../api'
+
+import {slugify, generateID, getOperationNameFromDocument} from '../utility'
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
+
+import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
+import LinkIcon from '@rsuite/icons/legacy/Link'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {generateID, getOperationNameFromDocument, slugify} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface AuthorEditPanelProps {
   id?: string

@@ -1,6 +1,5 @@
-import {Element as SlateElement} from 'slate'
-
 import {BlockFormat} from './formats'
+import {Element as SlateElement} from 'slate'
 
 export function emptyTextParagraph(): SlateElement {
   return {type: BlockFormat.Paragraph, children: [{text: ''}]}

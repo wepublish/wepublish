@@ -1,7 +1,7 @@
-import './emojiPicker.less'
-
-import {BaseEmoji, Picker} from 'emoji-mart'
 import React from 'react'
+
+import './emojiPicker.less'
+import {Picker, BaseEmoji} from 'emoji-mart'
 
 interface EmojiPickerProps {
   setEmoji: (emoji: string) => void

@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
+
 import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
+
+import {useTranslation} from 'react-i18next'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ResetUserPasswordPanelProps {
