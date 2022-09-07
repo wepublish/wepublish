@@ -93,10 +93,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     skip: id === undefined
   })
 
-  /**
-   * Loading the invoices of the current subscription
-   */
-  const {data: invoicesData} = useInvoicesQuery({
+  const {
+    data: invoicesData,
+    loading: isLoadingInvoices,
+    error: loadErrorInvoices,
+    refetch: reloadInvoices
+  } = useInvoicesQuery({
     variables: {
       take: 100,
       filter: {
@@ -104,6 +106,11 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       }
     }
   })
+
+  /**
+   * Loading the invoices of the current subscription
+   */
+
   useEffect(() => {
     const tmpInvoices = invoicesData?.invoices?.nodes
     if (tmpInvoices) {
@@ -170,11 +177,13 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
 
   const isDisabled =
     isLoading ||
+    isLoadingInvoices ||
     isCreating ||
     isMemberPlanLoading ||
     isUpdating ||
     isPaymentMethodLoading ||
     loadError !== undefined ||
+    loadErrorInvoices !== undefined ||
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
     paymentMethodLoadError !== undefined ||
@@ -199,14 +208,15 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       loadError?.message ??
       loadMemberPlanError?.message ??
       updateError?.message ??
-      paymentMethodLoadError?.message
+      paymentMethodLoadError?.message ??
+      loadErrorInvoices?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {error}
         </Message>
       )
-  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError])
+  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, loadErrorInvoices])
 
   const inputBase = {
     monthlyAmount,
@@ -272,6 +282,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     if (data?.updateSubscription) {
       setDeactivation(data.updateSubscription.deactivation)
     }
+    await reloadInvoices()
   }
   async function handleReactivation() {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return
@@ -291,6 +302,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     if (data?.updateSubscription) {
       setDeactivation(data.updateSubscription.deactivation)
     }
+    await reloadInvoices()
   }
 
   // Schema used for form validation --- reference custom field for validation
@@ -363,7 +375,6 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       </FlexboxGrid>
     )
   }
-
   return (
     <>
       <Form
@@ -575,6 +586,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             onClose={() => setDeactivationPanelOpen(false)}>
             <UserSubscriptionDeactivatePanel
               displayName={user.preferredName || user.name || user.email}
+              userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               isDeactivated={!!deactivation}
               onDeactivate={async data => {
