@@ -1075,6 +1075,7 @@
       "invoiceNo": "Invoice No.",
       "total": "Invoice amount",
       "paidAt": "Paid at",
+      "canceledAt": "Cancelled at",
       "payManually": "Pay manually",
       "areYouSure": "Are you sure?",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",

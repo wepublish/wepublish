@@ -1059,6 +1059,7 @@
       "invoiceNo": "Rechnung Nr.",
       "total": "Rechnungsbetrag",
       "paidAt": "Bezahlt am",
+      "canceledAt": "Storniert am",
       "payManually": "Manuell bezahlen",
       "areYouSure": "Bist Du sicher?",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",

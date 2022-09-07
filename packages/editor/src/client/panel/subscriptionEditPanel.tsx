@@ -110,7 +110,9 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     if (tmpInvoices) {
       setInvoices(tmpInvoices)
       // count unpaid invoices
-      const unpaidInvoices = tmpInvoices.filter(tmpInvoice => !tmpInvoice.paidAt)
+      const unpaidInvoices = tmpInvoices.filter(
+        tmpInvoice => !tmpInvoice.paidAt && !tmpInvoice.canceledAt
+      )
       setUnpaidInvoices(unpaidInvoices.length)
     }
   }, [invoicesData?.invoices?.nodes])
@@ -133,6 +135,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
         }))
       )
       setDeactivation(data.subscription.deactivation)
+      invoicesData = getInvoices(id).data
     }
   }, [data?.subscription])
 
@@ -268,12 +271,10 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
         }
       }
     })
-
     if (data?.updateSubscription) {
       setDeactivation(data.updateSubscription.deactivation)
     }
   }
-
   async function handleReactivation() {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return
     const {data} = await updateSubscription({
