@@ -972,7 +972,7 @@
       "deactivationReason": {
         "None": "None",
         "InvoiceNotPaid": "Invoice not paid",
-        "UserSelfDeactivated": "User self deactivation"
+        "UserSelfDeactivated": "User wanted to cancel the subscription"
       },
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "deactivationString": "Deactivated at {{date}}. Reason: {{reason}}",
