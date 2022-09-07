@@ -96,7 +96,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
   /**
    * Loading the invoices of the current subscription
    */
-  const {data: invoicesData} = useInvoicesQuery({
+  let {data: invoicesData} = useInvoicesQuery({
     variables: {
       take: 100,
       filter: {
@@ -104,7 +104,6 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       }
     }
   })
-
   useEffect(() => {
     const tmpInvoices = invoicesData?.invoices?.nodes
     if (tmpInvoices) {
