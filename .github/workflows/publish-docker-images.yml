@@ -38,7 +38,7 @@ jobs:
         name: "Build and push on pull-request"
         uses: docker/build-push-action@v2
         with:
-          target: production
+          target: dev
           push: true
           tags: |
             ghcr.io/wepublish/wepublish:${{ github.sha }}
