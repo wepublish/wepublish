@@ -16,7 +16,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-import {ImageMetaData} from './imageUploadAndEditPanel'
+import {ImageMetaData} from '../atoms/imageMetaData'
 import {
   authorise,
   createCheckedPermissionComponent,
