@@ -114,6 +114,9 @@ export const updatePoll = (
       answers: {
         include: {
           _count: true
+        },
+        orderBy: {
+          createdAt: 'asc'
         }
       },
       externalVoteSources: {
@@ -185,8 +188,8 @@ export const deletePollAnswer = async (
     throw new NotFound('PollAnswer', answerId)
   }
 
-  if (answerWithPoll.poll.answers.length <= 2) {
-    throw new GraphQLError('A poll requires atleast 2 answers')
+  if (answerWithPoll.poll.answers.length <= 1) {
+    throw new GraphQLError('A poll requires at least one answer.')
   }
 
   return pollAnswer.delete({
