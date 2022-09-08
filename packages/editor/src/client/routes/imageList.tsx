@@ -190,7 +190,7 @@ export function ImageList() {
                       </Link>
                     </>
                   </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('images.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

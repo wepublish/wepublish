@@ -308,7 +308,7 @@ export function SettingList() {
         </Panel>
 
         <Button type="submit" appearance="primary" disabled={!settingListData}>
-          {t('settingList.save')}
+          {t('save')}
         </Button>
       </Form>
     </>

@@ -33,6 +33,8 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
+import {TagList} from './routes/tagList'
+import {TagType} from './api/index'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -130,6 +132,16 @@ export function App() {
               </Base>
             }
           />
+
+          <Route
+            path="comments/tags"
+            element={
+              <Base>
+                <TagList type={TagType.Comment} />
+              </Base>
+            }
+          />
+
           {/* Images Routes */}
           <Route
             path="images"

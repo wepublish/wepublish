@@ -239,7 +239,7 @@ export function PageList() {
                       }}
                     />
                   </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('pageEditor.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

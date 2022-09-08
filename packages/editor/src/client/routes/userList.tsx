@@ -201,7 +201,7 @@ export function UserList() {
                       }}
                     />
                   </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('userList.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

@@ -252,7 +252,7 @@ export function ArticleList() {
                     />
                   </IconButtonTooltip>
 
-                  <IconButtonTooltip caption={t('articleEditor.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

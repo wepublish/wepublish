@@ -175,7 +175,7 @@ export function AuthorList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('authors.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

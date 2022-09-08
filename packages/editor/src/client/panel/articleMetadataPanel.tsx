@@ -510,7 +510,7 @@ export function ArticleMetadataPanel({
 
           <Drawer.Actions>
             <Button appearance="primary" type="submit">
-              {t('articleEditor.panels.saveAndClose')}
+              {t('saveAndClose')}
             </Button>
           </Drawer.Actions>
         </Drawer.Header>

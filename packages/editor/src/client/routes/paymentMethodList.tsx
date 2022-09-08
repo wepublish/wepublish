@@ -87,7 +87,7 @@ export function PaymentMethodList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
               <>
-                <IconButtonTooltip caption={t('paymentMethodList.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     circle

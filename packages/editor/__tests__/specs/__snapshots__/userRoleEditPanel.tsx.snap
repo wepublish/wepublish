@@ -19,7 +19,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 +           disabled=\\"\\"
             type=\\"submit\\"
           >
-            userRoles.panels.create
+            create
             <span
               class=\\"rs-ripple-pond\\"
 @@ -85,14 +86,15 @@
@@ -104,7 +104,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
           disabled=""
           type="submit"
         >
-          userRoles.panels.save
+          save
           <span
             class="rs-ripple-pond"
           >
@@ -333,7 +333,7 @@ exports[`User Role Edit Panel should render 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          userRoles.panels.create
+          create
           <span
             class="rs-ripple-pond"
           >
@@ -510,7 +510,7 @@ exports[`User Role Edit Panel should render with role 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          userRoles.panels.save
+          save
           <span
             class="rs-ripple-pond"
           >

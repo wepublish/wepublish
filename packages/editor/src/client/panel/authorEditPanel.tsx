@@ -170,7 +170,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               disabled={isDisabled}
               type="submit"
               data-testid="saveButton">
-              {id ? t('authors.panels.save') : t('authors.panels.create')}
+              {id ? t('save') : t('create')}
             </Button>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('authors.panels.close')}

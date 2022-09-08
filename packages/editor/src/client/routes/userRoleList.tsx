@@ -103,7 +103,7 @@ export function UserRoleList() {
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
-              <IconButtonTooltip caption={t('userRoles.overview.delete')}>
+              <IconButtonTooltip caption={t('delete')}>
                 <IconButton
                   icon={<TrashIcon />}
                   disabled={rowData.systemRole}
