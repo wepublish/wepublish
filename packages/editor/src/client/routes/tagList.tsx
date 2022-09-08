@@ -231,12 +231,13 @@ export const TagList = memo<TagListProps>(({type}) => {
         </FlexboxGrid>
       )}
 
-      <Form fluid formValue={formValue}>
-        {Object.keys(formValue).map(tagId => (
-          <FlexboxGrid key={tagId} style={{marginBottom: '12px'}}>
+      {Object.entries(formValue).map(([tagId, inputValue]) => (
+        <Form key={tagId}>
+          <FlexboxGrid style={{marginBottom: '12px'}}>
             <div style={{maxWidth: '300px', flex: '1 1'}}>
               <Form.Control
                 name={tagId}
+                value={inputValue}
                 placeholder={t('tags.overview.placeholder')}
                 onChange={(value: string) => {
                   dispatchFormValue({
@@ -253,6 +254,7 @@ export const TagList = memo<TagListProps>(({type}) => {
             <div style={{flex: '0 0 auto'}}>
               <IconButtonTooltip caption={t('save')}>
                 <IconButton
+                  type="submit"
                   icon={<SaveIcon />}
                   circle
                   size="sm"
@@ -282,25 +284,25 @@ export const TagList = memo<TagListProps>(({type}) => {
               </IconButtonTooltip>
             </div>
           </FlexboxGrid>
-        ))}
+        </Form>
+      ))}
 
-        <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={total}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
-        />
-      </Form>
+      <Pagination
+        limit={limit}
+        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+        maxButtons={DEFAULT_MAX_TABLE_PAGES}
+        first
+        last
+        prev
+        next
+        ellipsis
+        boundaryLinks
+        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+        total={total}
+        activePage={page}
+        onChangePage={page => setPage(page)}
+        onChangeLimit={limit => setLimit(limit)}
+      />
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
         <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>

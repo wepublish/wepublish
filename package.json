@@ -117,6 +117,7 @@
       "prettier/standard"
     ],
     "rules": {
+      "object-shorthand": "warn",
       "no-use-before-define": [
         0
       ],

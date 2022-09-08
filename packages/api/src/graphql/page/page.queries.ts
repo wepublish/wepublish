@@ -140,14 +140,14 @@ export const getPages = async (
 
   const [totalCount, pages] = await Promise.all([
     page.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     page.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         draft: {
