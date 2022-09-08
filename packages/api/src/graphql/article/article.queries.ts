@@ -168,14 +168,14 @@ export const getArticles = async (
 
   const [totalCount, articles] = await Promise.all([
     article.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     article.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         draft: {

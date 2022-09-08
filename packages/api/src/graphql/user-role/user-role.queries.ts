@@ -50,14 +50,14 @@ export const getUserRoles = async (
 
   const [totalCount, userroles] = await Promise.all([
     userRole.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     userRole.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })
   ])

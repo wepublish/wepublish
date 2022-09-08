@@ -501,8 +501,8 @@ export const CanUpdateTag: Permission = {
   deprecated: false
 }
 
-export const CanGetTag: Permission = {
-  id: 'CAN_GET_TAG',
+export const CanGetTags: Permission = {
+  id: 'CAN_GET_TAGS',
   description: 'Allows to get all tags',
   deprecated: false
 }
@@ -590,7 +590,7 @@ export const AllPermissions: Permission[] = [
   CanUpdateSettings,
   CanCreateTag,
   CanUpdateTag,
-  CanGetTag,
+  CanGetTags,
   CanDeleteTag
 ]
 
@@ -619,7 +619,7 @@ export const EditorPermissions: Permission[] = [
   CanGetSettings,
   CanCreateTag,
   CanUpdateTag,
-  CanGetTag,
+  CanGetTags,
   CanDeleteTag
 ]
 

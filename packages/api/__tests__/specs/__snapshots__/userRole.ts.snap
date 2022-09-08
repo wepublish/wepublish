@@ -391,7 +391,7 @@ Object {
         Object {
           "deprecated": false,
           "description": "Allows to get all tags",
-          "id": "CAN_GET_TAG",
+          "id": "CAN_GET_TAGS",
         },
         Object {
           "deprecated": false,
@@ -818,7 +818,7 @@ Object {
         Object {
           "deprecated": false,
           "description": "Allows to get all tags",
-          "id": "CAN_GET_TAG",
+          "id": "CAN_GET_TAGS",
         },
         Object {
           "deprecated": false,
@@ -1258,7 +1258,7 @@ Object {
       Object {
         "deprecated": false,
         "description": "Allows to get all tags",
-        "id": "CAN_GET_TAG",
+        "id": "CAN_GET_TAGS",
       },
       Object {
         "deprecated": false,

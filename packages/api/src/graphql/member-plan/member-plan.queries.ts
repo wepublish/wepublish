@@ -72,14 +72,14 @@ export const getMemberPlans = async (
 
   const [totalCount, memberplans] = await Promise.all([
     memberPlan.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     memberPlan.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         availablePaymentMethods: true

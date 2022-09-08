@@ -66,14 +66,14 @@ export const getComments = async (
 
   const [totalCount, comments] = await Promise.all([
     comment.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     comment.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         revisions: true
