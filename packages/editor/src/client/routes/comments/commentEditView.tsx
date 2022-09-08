@@ -2,33 +2,15 @@ import {ApolloError} from '@apollo/client'
 import React, {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {
-  Col,
-  Divider,
-  Form,
-  Grid,
-  Message,
-  Pagination,
-  Panel,
-  Row,
-  Schema,
-  TagPicker,
-  toaster
-} from 'rsuite'
+import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
-import {
-  SortOrder,
-  TagSort,
-  TagType,
-  useCommentQuery,
-  useTagListQuery,
-  useUpdateCommentMutation
-} from '../../api'
+import {TagType, useCommentQuery, useUpdateCommentMutation} from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
+import {SelectTags} from '../../atoms/tag/selectTags'
 import {BlockMap} from '../../blocks/blockMap'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {BlockType, RichTextBlockValue} from '../../blocks/types'
-import {DEFAULT_MAX_TABLE_PAGES, isValueConstructor} from '../../utility'
+import {isValueConstructor} from '../../utility'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -49,7 +31,6 @@ export const CommentEditView = memo(() => {
   const {id} = useParams()
   const commentId = id!
   const closePath = '/comments'
-  const [page, setPage] = useState(1)
   const [close, setClose] = useState<boolean>(false)
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
   const [editedComment, setEditedComment] = useState<RichTextBlockValue>(null!)
@@ -60,28 +41,6 @@ export const CommentEditView = memo(() => {
     },
     onError: showErrors
   })
-
-  const {data: tagsData, loading: loadingTagList} = useTagListQuery({
-    variables: {
-      filter: {
-        type: TagType.Comment
-      },
-      sort: TagSort.Tag,
-      order: SortOrder.Ascending
-    },
-    onError: showErrors
-  })
-
-  const availableTags = useMemo(() => {
-    if (!tagsData?.tags?.nodes) {
-      return []
-    }
-
-    return tagsData.tags.nodes.map(tag => ({
-      label: tag.tag || t('comments.edit.unnamedTag'),
-      value: tag.id
-    }))
-  }, [tagsData])
 
   const lastRevision = useMemo(
     () => commentData?.comment?.revisions[commentData?.comment?.revisions.length - 1],
@@ -113,7 +72,7 @@ export const CommentEditView = memo(() => {
     onError: showErrors
   })
 
-  const loading = updatingComment || loadingComment || loadingTagList
+  const loading = updatingComment || loadingComment
 
   /**
    * Form validation model
@@ -169,43 +128,11 @@ export const CommentEditView = memo(() => {
             {/* tags */}
             <Col xs={10}>
               <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-
-              {commentTags && (
-                <TagPicker
-                  block
-                  virtualized
-                  value={commentTags}
-                  data={availableTags}
-                  onChange={(value: string[]) => setSelectedTags(value)}
-                  renderMenu={menu => {
-                    return (
-                      <>
-                        {menu}
-
-                        <Divider style={{margin: '12px 0'}} />
-
-                        <Pagination
-                          style={{
-                            padding: '0 12px 12px'
-                          }}
-                          limit={50}
-                          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-                          first
-                          last
-                          prev
-                          next
-                          ellipsis
-                          boundaryLinks
-                          layout={['total', '-', '|', 'pager']}
-                          total={tagsData?.tags?.totalCount ?? 0}
-                          activePage={page}
-                          onChangePage={page => setPage(page)}
-                        />
-                      </>
-                    )
-                  }}
-                />
-              )}
+              <SelectTags
+                selectedTags={commentTags}
+                setSelectedTags={setSelectedTags}
+                tagType={TagType.Comment}
+              />
             </Col>
           </Row>
         </Grid>
