@@ -31,6 +31,10 @@ const validateVoteValue = (voteValue: unknown): number => {
     throw new GraphQLError(`Value is not a number: ${voteValue}`)
   }
 
+  if (voteValue < 0) {
+    throw new GraphQLError(`Value can not be below 0.`)
+  }
+
   return voteValue
 }
 

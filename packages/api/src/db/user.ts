@@ -27,7 +27,10 @@ export interface UserFilter {
 }
 
 export const unselectPassword: Record<
-  keyof Omit<Prisma.UserSelect, '_count' | 'Comment' | 'Session' | 'Subscription' | 'Invoice'>,
+  keyof Omit<
+    Prisma.UserSelect,
+    '_count' | 'Comment' | 'Session' | 'Subscription' | 'Invoice' | 'PollVote'
+  >,
   boolean
 > = {
   address: true,
@@ -45,9 +48,7 @@ export const unselectPassword: Record<
   password: false,
   active: true,
   lastLogin: true,
-  roleIDs: true,
-  // Models that shouldn't be loaded by default
-  PollVote: false
+  roleIDs: true
 }
 
 export type UserWithRelations = User & {
