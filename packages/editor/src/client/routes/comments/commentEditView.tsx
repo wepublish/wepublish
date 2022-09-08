@@ -1,20 +1,17 @@
 import {ApolloError} from '@apollo/client'
-import SpinnerIcon from '@rsuite/icons/legacy/Spinner'
 import React, {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {
-  Button,
   Col,
   Divider,
-  FlexboxGrid,
   Form,
   Grid,
-  Loader,
   Message,
   Pagination,
   Panel,
   Row,
+  Schema,
   TagPicker,
   toaster
 } from 'rsuite'
@@ -27,6 +24,7 @@ import {
   useTagListQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {ModelTitle} from '../../atoms/modelTitle'
 import {BlockMap} from '../../blocks/blockMap'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {BlockType, RichTextBlockValue} from '../../blocks/types'
@@ -50,29 +48,20 @@ export const CommentEditView = memo(() => {
   const navigate = useNavigate()
   const {id} = useParams()
   const commentId = id!
-
+  const closePath = '/comments'
   const [page, setPage] = useState(1)
-
+  const [close, setClose] = useState<boolean>(false)
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
   const [editedComment, setEditedComment] = useState<RichTextBlockValue>(null!)
 
-  const [updateComment, {loading: isUpdating}] = useUpdateCommentMutation({
-    onCompleted: () =>
-      toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
-          {t('comments.edit.success')}
-        </Message>
-      ),
-    onError: showErrors
-  })
-  const {data: commentData, loading} = useCommentQuery({
+  const {data: commentData, loading: loadingComment} = useCommentQuery({
     variables: {
       id: commentId
     },
     onError: showErrors
   })
 
-  const {data: tagsData} = useTagListQuery({
+  const {data: tagsData, loading: loadingTagList} = useTagListQuery({
     variables: {
       filter: {
         type: TagType.Comment
@@ -109,126 +98,118 @@ export const CommentEditView = memo(() => {
     editedComment
   ])
 
+  const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
+    variables: {
+      id: commentId,
+      text: commentText,
+      tagIds: commentTags
+    },
+    onCompleted: () =>
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('comments.edit.success')}
+        </Message>
+      ),
+    onError: showErrors
+  })
+
+  const loading = updatingComment || loadingComment || loadingTagList
+
+  /**
+   * Form validation model
+   */
+  const {StringType} = Schema.Types
+  const validationModel = Schema.Model({
+    commentText: StringType().isRequired(t('commentEditView.commentTextRequired'))
+  })
+
+  /**
+   * FUNCTIONS
+   */
+  async function updateComment() {
+    await updateCommentMutation()
+    if (close) {
+      navigate(closePath)
+    }
+  }
+
   return (
     <>
-      <FlexboxGrid style={{marginBottom: '40px'}}>
-        <FlexboxGrid.Item colspan={16}>
-          <h2>{t('comments.edit.title')}</h2>
-        </FlexboxGrid.Item>
+      <Form
+        onSubmit={() => updateComment()}
+        model={validationModel}
+        fluid
+        disabled={loading}
+        formValue={{
+          commentText
+        }}>
+        {/* heading */}
+        <ModelTitle
+          loading={loading}
+          title={t('comments.edit.title')}
+          loadingTitle={t('comments.edit.title')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setClose}
+        />
 
-        {commentText && (
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <Button
-              type="button"
-              appearance="ghost"
-              data-testid="save"
-              disabled={isUpdating}
-              onClick={() =>
-                updateComment({
-                  variables: {
-                    id: commentId,
-                    text: commentText,
-                    tagIds: commentTags
-                  }
-                })
-              }>
-              {isUpdating ? (
-                <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.edit.loading')}
-                </p>
-              ) : (
-                t('save')
+        {/* form elements */}
+        <Grid fluid style={{margin: '0'}}>
+          <Row gutter={12}>
+            {/* comment text */}
+            <Col xs={14}>
+              {commentText && (
+                <Panel bordered style={{width: '100%'}}>
+                  <RichTextBlock value={commentText} onChange={setEditedComment} />
+                </Panel>
               )}
-            </Button>
+            </Col>
 
-            <Button
-              style={{marginLeft: '12px'}}
-              type="button"
-              appearance="primary"
-              data-testid="save-and-close"
-              disabled={isUpdating}
-              onClick={() =>
-                updateComment({
-                  variables: {
-                    id: commentId,
-                    text: commentText,
-                    tagIds: commentTags
-                  },
-                  onCompleted() {
-                    navigate('/comments')
-                  }
-                })
-              }>
-              {isUpdating ? (
-                <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.edit.loading')}
-                </p>
-              ) : (
-                t('saveAndClose')
+            {/* tags */}
+            <Col xs={10}>
+              <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
+
+              {commentTags && (
+                <TagPicker
+                  block
+                  virtualized
+                  value={commentTags}
+                  data={availableTags}
+                  onChange={(value: string[]) => setSelectedTags(value)}
+                  renderMenu={menu => {
+                    return (
+                      <>
+                        {menu}
+
+                        <Divider style={{margin: '12px 0'}} />
+
+                        <Pagination
+                          style={{
+                            padding: '0 12px 12px'
+                          }}
+                          limit={50}
+                          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+                          first
+                          last
+                          prev
+                          next
+                          ellipsis
+                          boundaryLinks
+                          layout={['total', '-', '|', 'pager']}
+                          total={tagsData?.tags?.totalCount ?? 0}
+                          activePage={page}
+                          onChangePage={page => setPage(page)}
+                        />
+                      </>
+                    )
+                  }}
+                />
               )}
-            </Button>
-          </FlexboxGrid.Item>
-        )}
-      </FlexboxGrid>
-
-      {loading && (
-        <FlexboxGrid justify="center">
-          <Loader size="lg" style={{margin: '30px'}} />
-        </FlexboxGrid>
-      )}
-
-      <Grid fluid style={{margin: '0'}}>
-        <Row gutter={12}>
-          <Col xs={14}>
-            {commentText && (
-              <Panel bordered style={{width: '100%'}}>
-                <RichTextBlock value={commentText} onChange={setEditedComment} />
-              </Panel>
-            )}
-          </Col>
-
-          <Col xs={10}>
-            <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-
-            {commentTags && (
-              <TagPicker
-                block
-                virtualized
-                value={commentTags}
-                data={availableTags}
-                onChange={(value: string[]) => setSelectedTags(value)}
-                renderMenu={menu => {
-                  return (
-                    <>
-                      {menu}
-
-                      <Divider style={{margin: '12px 0'}} />
-
-                      <Pagination
-                        style={{
-                          padding: '0 12px 12px'
-                        }}
-                        limit={50}
-                        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-                        first
-                        last
-                        prev
-                        next
-                        ellipsis
-                        boundaryLinks
-                        layout={['total', '-', '|', 'pager']}
-                        total={tagsData?.tags?.totalCount ?? 0}
-                        activePage={page}
-                        onChangePage={page => setPage(page)}
-                      />
-                    </>
-                  )
-                }}
-              />
-            )}
-          </Col>
-        </Row>
-      </Grid>
+            </Col>
+          </Row>
+        </Grid>
+      </Form>
     </>
   )
 })
