@@ -33,6 +33,8 @@ import {
 } from './author'
 import {getPublicAuthors} from './author/author.public-queries'
 import {GraphQLChallenge} from './challenge'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
@@ -57,6 +59,8 @@ import {getPeerByIdOrSlug} from './peer/peer.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
+import {GraphQLPublicComment} from './comment'
+import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -265,6 +269,19 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         getPublishedPages(filter, sort, order, cursor, skip, take, page)
     },
 
+    // Comments
+    // =======
+
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      args: {
+        itemId: {type: GraphQLID}
+      },
+      description: 'This query returns the articles.',
+      resolve: (root, {itemId}, {prisma: {comment, commentRatingSystemAnswer}}) =>
+        getPublicCommentsForItemById(itemId, null, commentRatingSystemAnswer, comment)
+    },
+
     // Auth
     // =======
 
@@ -455,6 +472,15 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           validUntil: c.validUntil
         }
       }
+    },
+
+    // Rating System
+    // ==========
+
+    ratingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
+        getRatingSystem(commentRatingSystem)
     }
   }
 })

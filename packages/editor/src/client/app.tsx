@@ -18,6 +18,7 @@ import {ArticleEditor} from './routes/articleEditor'
 import {ArticleList} from './routes/articleList'
 import {AuthorList} from './routes/authorList'
 import {CommentList} from './routes/commentList'
+import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {ImageList} from './routes/imageList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {NavigationList} from './routes/navigationList'
@@ -127,6 +128,14 @@ export function App() {
             element={
               <Base>
                 <CommentList />
+              </Base>
+            }
+          />
+          <Route
+            path="comments/rating"
+            element={
+              <Base>
+                <CommentRatingEditView />
               </Base>
             }
           />

@@ -32,6 +32,7 @@ import {
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput
 } from './comment'
+import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -57,6 +58,7 @@ import {
   GraphQLUserAddressInput
 } from './user'
 import {createUser} from './user/user.mutation'
+import {GraphQLCommentRating} from './comment-rating/comment-rating'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
@@ -135,6 +137,30 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
       resolve: (_, {input}, {prisma: {comment}, authenticateUser}) =>
         updatePublicComment(input, authenticateUser, comment)
+    },
+
+    rateComment: {
+      type: GraphQLNonNull(GraphQLCommentRating),
+      args: {
+        commentId: {type: GraphQLNonNull(GraphQLID)},
+        answerId: {type: GraphQLNonNull(GraphQLID)},
+        value: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
+      resolve: (
+        root,
+        {commentId, answerId, value},
+        {optionalAuthenticateUser, prisma: {commentRating, commentRatingSystemAnswer}}
+      ) =>
+        rateComment(
+          commentId,
+          answerId,
+          value,
+          undefined,
+          optionalAuthenticateUser,
+          commentRatingSystemAnswer,
+          commentRating
+        )
     },
 
     registerMember: {

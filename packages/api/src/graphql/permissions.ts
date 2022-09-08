@@ -483,6 +483,30 @@ export const CanUpdateSettings: Permission = {
   deprecated: false
 }
 
+export const CanGetCommentRatingSystem: Permission = {
+  id: 'CAN_GET_COMMENT_RATING_SYSTEM',
+  description: 'Allows to get a comment rating system',
+  deprecated: false
+}
+
+export const CanCreateCommentRatingSystem: Permission = {
+  id: 'CAN_CREATE_COMMENT_RATING_SYSTEM',
+  description: 'Allows to create a comment rating system',
+  deprecated: false
+}
+
+export const CanUpdateCommentRatingSystem: Permission = {
+  id: 'CAN_UPDATE_COMMENT_RATING_SYSTEM',
+  description: 'Allows to update a comment rating system',
+  deprecated: false
+}
+
+export const CanDeleteCommentRatingSystem: Permission = {
+  id: 'CAN_DELETE_COMMENT_RATING_SYSTEM',
+  description: 'Allows to delete a comment rating system',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -556,7 +580,11 @@ export const AllPermissions: Permission[] = [
   CanDeleteSubscription,
   CanLoginAsOtherUser,
   CanGetSettings,
-  CanUpdateSettings
+  CanUpdateSettings,
+  CanGetCommentRatingSystem,
+  CanCreateCommentRatingSystem,
+  CanUpdateCommentRatingSystem,
+  CanDeleteCommentRatingSystem
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -581,7 +609,10 @@ export const EditorPermissions: Permission[] = [
   CanGetPeers,
   CanGetPeerProfile,
   CanLoginEditor,
-  CanGetSettings
+  CanGetSettings,
+  CanCreateCommentRatingSystem,
+  CanUpdateCommentRatingSystem,
+  CanDeleteCommentRatingSystem
 ]
 
 export const PeerPermissions: Permission[] = [

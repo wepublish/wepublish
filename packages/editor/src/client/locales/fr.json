@@ -238,6 +238,15 @@
         "pendingApproval": "En attente d'approbation",
         "pendingUserChanges": "En attente de modifications de l'utilisateur·trice",
         "rejected": "Rejeté"
+      },
+      "ratingEdit": {
+        "title": "Rating System",
+        "loading": "Loading",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete rating",
+        "placeholder": "Name of rating",
+        "newAnswer": "Add rating"
       }
     },
     "cancel": "Annuler",
@@ -898,6 +907,7 @@
       "articles": "Articles",
       "authors": "Auteurs/Autrices",
       "comments": "Commentaires",
+      "commentRating": "Rating System",
       "imageLibrary": "Bibliothèque d'images",
       "logout": "Déconnection",
       "memberPlans": "Plans membres",

@@ -220,8 +220,65 @@ model Comment {
 
   user User? @relation(fields: [userID], references: [id])
 
+  ratings CommentRating[]
+
   @@index([createdAt])
   @@map("comments")
+}
+
+model CommentRatingSystem {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name String? @unique
+
+  answers CommentRatingSystemAnswer[]
+
+  @@map("comments.rating-systems")
+}
+
+enum RatingSystemType {
+  star @map("star")
+}
+
+model CommentRatingSystemAnswer {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type   RatingSystemType
+  answer String?
+
+  ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
+  ratingSystemId String
+
+  ratings CommentRating[]
+
+  @@unique([ratingSystemId, answer])
+  @@map("comments.rating-system-answers")
+}
+
+model CommentRating {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  answerId String
+  answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  value       Int
+  fingerprint String?
+  disabled    Boolean @default(false)
+
+  @@unique([answerId, commentId, userId])
+  @@map("comments.ratings")
 }
 
 model InvoiceItem {
@@ -655,10 +712,11 @@ model User {
   oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment      Comment[]
-  Session      Session[]
-  Subscription Subscription[]
-  Invoice      Invoice[]
+  Comment       Comment[]
+  Session       Session[]
+  Subscription  Subscription[]
+  Invoice       Invoice[]
+  CommentRating CommentRating[]
 
   @@map("users")
 }

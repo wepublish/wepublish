@@ -201,3 +201,9 @@ export class InvalidSettingValueError extends ApolloError {
     super('Invalid setting data', ErrorCode.InvalidSettingData)
   }
 }
+
+export class InvalidStarRatingValueError extends ApolloError {
+  constructor() {
+    super('Value has to be between 0 and 5')
+  }
+}

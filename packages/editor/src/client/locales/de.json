@@ -400,6 +400,15 @@
         "pendingApproval": "Freigabe ausstehend",
         "pendingUserChanges": "Useränderung ausstehend",
         "rejected": "Abgelehnt"
+      },
+      "ratingEdit": {
+        "title": "Bewertungssystem",
+        "loading": "Laden",
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Berwertung löschen",
+        "placeholder": "Name der Berwertung",
+        "newAnswer": "Berwertung hinzufügen"
       }
     },
     "confirm": "Bestätigen",
@@ -544,6 +553,7 @@
       "articles": "Artikel",
       "authors": "Autor*innen",
       "comments": "Kommentare",
+      "commentRating": "Bewertungssystem",
       "imageLibrary": "Bilder",
       "settings": "Einstellungen",
       "languageSwitch": {

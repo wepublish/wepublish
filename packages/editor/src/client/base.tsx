@@ -17,10 +17,12 @@ import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import RateIcon from '@rsuite/icons/Rate'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
 import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+
 import {PermissionControl} from './atoms/permissionControl'
 
 export interface BaseProps {
@@ -51,9 +53,11 @@ function useStickyState(defaultValue: string, key: string) {
     const stickyValue = window.localStorage.getItem(key)
     return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue
   })
+
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
+
   return [value, setValue]
 }
 
@@ -152,16 +156,38 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_COMMENTS', 'CAN_TAKE_COMMENT_ACTION']}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/comments"
-                    icon={<CommentIcon />}
-                    active={path === 'comments'}>
-                    {t('navbar.comments')}
-                  </Nav.Item>
-                </PermissionControl>
+                <Nav.Menu eventKey={'1'} title={t('navbar.comments')} icon={<CommentIcon />}>
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_COMMENTS',
+                      'CAN_UPDATE_COMMENTS',
+                      'CAN_TAKE_COMMENT_ACTION'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/comments"
+                      icon={<CommentIcon />}
+                      active={path === 'comments'}>
+                      {t('navbar.comments')}
+                    </Nav.Item>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_COMMENT_RATING_SYSTEM',
+                      'CAN_CREATE_COMMENT_RATING_SYSTEM',
+                      'CAN_UPDATE_COMMENT_RATING_SYSTEM',
+                      'CAN_DELETE_COMMENT_RATING_SYSTEM'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/comments/rating"
+                      icon={<RateIcon />}
+                      active={path === 'comments/rating'}>
+                      {t('navbar.commentRating')}
+                    </Nav.Item>
+                  </PermissionControl>
+                </Nav.Menu>
 
                 <PermissionControl
                   qualifyingPermissions={[
@@ -234,7 +260,7 @@ export function Base({children}: BaseProps) {
                     'CAN_DELETE_PAYMENT_METHOD'
                   ]}>
                   <Nav.Menu
-                    eventKey={'1'}
+                    eventKey={'2'}
                     title={t('navbar.usersAndMembers')}
                     icon={<PeoplesIcon />}>
                     <Nav.Item

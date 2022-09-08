@@ -42,6 +42,7 @@ import {
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 import {getAdminComments} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
@@ -114,6 +115,7 @@ import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -638,6 +640,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Rating System
+    // ==========
+
+    ratingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
+        getRatingSystem(commentRatingSystem)
     }
   }
 })
