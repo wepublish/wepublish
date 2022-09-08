@@ -5,6 +5,7 @@ import EditIcon from '@rsuite/icons/legacy/Edit'
 import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
 import {
   Button,
   Dropdown,
@@ -36,15 +37,15 @@ import {
   useCommentListQuery,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation
-} from '../api'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+} from '../../api'
+import {DescriptionList, DescriptionListItem} from '../../atoms/descriptionList'
+import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
+} from '../../utility'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -292,7 +293,8 @@ export function CommentList() {
         style={{
           display: 'flex',
           flexFlow: 'column',
-          marginTop: '20px'
+          marginTop: '20px',
+          gap: '20px'
         }}>
         <Table
           autoHeight
@@ -310,7 +312,6 @@ export function CommentList() {
                 return ''
             }
           }}
-          style={{marginTop: '20px'}}
           loading={isLoading}
           data={comments}
           sortColumn={sortField}
@@ -377,14 +378,16 @@ export function CommentList() {
               }
             </Cell>
           </Column>
+
           <Column width={150} align="center" fixed="right">
-            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <HeaderCell>{t('comments.overview.moderation')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: Comment) => (
                 <>
                   <IconButtonTooltip caption={t('comments.overview.approve')}>
                     <IconButton
                       icon={<CheckIcon />}
+                      appearance="primary"
                       color="green"
                       circle
                       size="sm"
@@ -396,9 +399,11 @@ export function CommentList() {
                       }}
                     />
                   </IconButtonTooltip>
+
                   <IconButtonTooltip caption={t('comments.overview.requestChange')}>
                     <IconButton
                       icon={<EditIcon />}
+                      appearance="primary"
                       color="yellow"
                       circle
                       size="sm"
@@ -410,9 +415,11 @@ export function CommentList() {
                       }}
                     />
                   </IconButtonTooltip>
+
                   <IconButtonTooltip caption={t('comments.overview.reject')}>
                     <IconButton
                       icon={<CloseIcon />}
+                      appearance="primary"
                       color="red"
                       circle
                       size="sm"
@@ -423,6 +430,21 @@ export function CommentList() {
                         setConfirmationDialogOpen(true)
                       }}
                     />
+                  </IconButtonTooltip>
+                </>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={150} align="center" fixed="right">
+            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: Comment) => (
+                <>
+                  <IconButtonTooltip caption={t('comments.overview.edit')}>
+                    <Link to={`edit/${rowData.id}`}>
+                      <IconButton icon={<EditIcon />} circle size="sm" />
+                    </Link>
                   </IconButtonTooltip>
                 </>
               )}
@@ -447,6 +469,7 @@ export function CommentList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </div>
+
       {confirmAction && (
         <Modal
           open={isConfirmationDialogOpen}

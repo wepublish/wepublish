@@ -1464,6 +1464,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comment?: Maybe<Comment>;
   comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
@@ -1594,6 +1595,11 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1912,11 +1918,13 @@ export type TagConnection = {
 
 export type TagFilter = {
   type?: Maybe<TagType>;
+  tag?: Maybe<Scalars['String']>;
 };
 
 export enum TagSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
 }
 
 export enum TagType {
@@ -2865,7 +2873,10 @@ export type FullCommentFragment = (
   )>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & FullParentCommentFragment
-  )> }
+  )>, tags?: Maybe<Array<(
+    { __typename?: 'Tag' }
+    & Pick<Tag, 'id' | 'tag'>
+  )>> }
 );
 
 export type CommentListQueryVariables = Exact<{
@@ -2891,6 +2902,19 @@ export type CommentListQuery = (
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
     ) }
   ) }
+);
+
+export type CommentQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type CommentQuery = (
+  { __typename?: 'Query' }
+  & { comment?: Maybe<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  )> }
 );
 
 export type ApproveCommentMutationVariables = Exact<{
@@ -2931,6 +2955,37 @@ export type RequestChangesOnCommentMutation = (
   & { requestChangesOnComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
+
+export type UpdateCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  text?: Maybe<Scalars['RichText']>;
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+
+export type UpdateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateComment: (
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  ) }
+);
+
+export type CreateCommentMutationVariables = Exact<{
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  text?: Maybe<Scalars['RichText']>;
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
   ) }
 );
 
@@ -4769,6 +4824,10 @@ export const FullCommentFragmentDoc = gql`
   parentComment {
     ...FullParentComment
   }
+  tags {
+    id
+    tag
+  }
 }
     ${FullUserFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
@@ -5759,6 +5818,41 @@ export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
+export const CommentDocument = gql`
+    query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+    ${FullCommentFragmentDoc}`;
+
+/**
+ * __useCommentQuery__
+ *
+ * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+      }
+export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+        }
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
+export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const ApproveCommentDocument = gql`
     mutation ApproveComment($id: ID!) {
   approveComment(id: $id) {
@@ -5862,6 +5956,77 @@ export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.Mutation
 export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+export const UpdateCommentDocument = gql`
+    mutation updateComment($id: ID!, $text: RichText, $tagIds: [ID!]) {
+  updateComment(id: $id, text: $text, tagIds: $tagIds) {
+    ...FullComment
+  }
+}
+    ${FullCommentFragmentDoc}`;
+export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutation, UpdateCommentMutationVariables>;
+
+/**
+ * __useUpdateCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      text: // value for 'text'
+ *      tagIds: // value for 'tagIds'
+ *   },
+ * });
+ */
+export function useUpdateCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCommentMutation, UpdateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument, options);
+      }
+export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>;
+export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
+export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
+export const CreateCommentDocument = gql`
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    id
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      itemID: // value for 'itemID'
+ *      itemType: // value for 'itemType'
+ *      text: // value for 'text'
+ *      tagIds: // value for 'tagIds'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {

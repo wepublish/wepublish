@@ -835,6 +835,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         deleteInvoiceById(id, authenticate, invoice)
     },
 
+    // Comment
+    // ======
+
     updateComment: {
       type: GraphQLNonNull(GraphQLComment),
       args: {

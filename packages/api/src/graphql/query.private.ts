@@ -41,8 +41,13 @@ import {
   GraphQLAuthorSort
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment/comment'
-import {getAdminComments} from './comment/comment.private-queries'
+import {
+  GraphQLComment,
+  GraphQLCommentConnection,
+  GraphQLCommentFilter,
+  GraphQLCommentSort
+} from './comment/comment'
+import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
@@ -402,6 +407,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Comments
     // =======
 
+    comment: {
+      type: GraphQLComment,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        getComment(id, authenticate, comment)
+    },
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {
@@ -412,7 +426,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve: async (
+      resolve: (
         root,
         {filter, sort, order, skip, take, cursor},
         {authenticate, prisma: {comment}}

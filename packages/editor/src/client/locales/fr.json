@@ -22,6 +22,7 @@
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
         "preview": "Aperçu",
+        "createComment": "Create Comment",
         "articlePending": "Article en attente"
       },
       "panels": {
@@ -188,6 +189,7 @@
         "updated": "Modifié le",
         "state": "Statut",
         "action": "Action",
+        "moderation": "Moderation",
         "comments": "Commentaires",
         "created": "Créé",
         "loadMore": "Charger plus",
@@ -196,8 +198,16 @@
         "title": "Titre",
         "userName": "Nom de l'utilisateur·trice",
         "requestChange": "Demande de changement",
+        "edit": "Edit Comment",
         "reject": "Rejeter",
         "approve": "Approuver"
+      },
+      "edit": {
+        "title": "Edit Comment",
+        "tags": "Tags",
+        "unnamedTag": "<Unnamed Tag>",
+        "loading": "Loading",
+        "success": "Comment successfully updated"
       },
       "panels": {
         "userName": "Nom d'utilisateur·trices",
@@ -933,7 +943,8 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
-        "preview": "Aperçu"
+        "preview": "Aperçu",
+        "createComment": "Create Comment"
       },
       "panels": {
         "confirm": "Confirmer",
