@@ -8,6 +8,7 @@ import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuit
 import {
   FullPoll,
   PollAnswerWithVoteCount,
+  PollExternalVote,
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation
 } from '../../api'
@@ -77,16 +78,27 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
       onError: onErrorToast
     })
 
+    const updatedPoll = {...poll} as FullPoll | undefined
+    // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer
-    if (!deletedAnswer || !poll?.answers) {
+    if (!deletedAnswer || !updatedPoll?.answers) {
       return
     }
-    const deleteIndex = poll?.answers?.findIndex(tmpAnswer => tmpAnswer.id === deletedAnswer.id)
+    const deleteIndex = updatedPoll?.answers?.findIndex(
+      tmpAnswer => tmpAnswer.id === deletedAnswer.id
+    )
     if (deleteIndex < 0) {
       return
     }
-    poll.answers.splice(deleteIndex, 1)
-    onPollChange({...poll})
+    updatedPoll.answers.splice(deleteIndex, 1)
+
+    // delete external vote sources
+    updatedPoll.externalVoteSources?.forEach(tmpSource => {
+      tmpSource.voteAmounts = tmpSource.voteAmounts?.filter(
+        (tmpVoteAmount: PollExternalVote) => tmpVoteAmount.answerId !== deletedAnswer.id
+      )
+    })
+    onPollChange(updatedPoll)
   }
 
   async function updateAnswer(updatedAnswer: PollAnswerWithVoteCount) {
