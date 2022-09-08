@@ -250,6 +250,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -669,6 +674,11 @@ Object {
           "deprecated": false,
           "description": "Allows to get all comments",
           "id": "CAN_GET_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
         },
         Object {
           "deprecated": false,
@@ -1104,6 +1114,11 @@ Object {
         "deprecated": false,
         "description": "Allows to get all comments",
         "id": "CAN_GET_COMMENTS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a comment",
+        "id": "CAN_UPDATE_COMMENTS",
       },
       Object {
         "deprecated": false,
