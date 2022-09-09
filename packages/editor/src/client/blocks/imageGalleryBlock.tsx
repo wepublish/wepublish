@@ -195,7 +195,7 @@ export function ImageGalleryBlock({
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={(value: ImageRefFragment | null) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}

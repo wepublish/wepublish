@@ -22,6 +22,11 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -43,9 +48,14 @@ export const newSubscriptionButton = ({
   isLoading?: boolean
   t: TFunction<'translation'>
 }) => {
+  const canCreate = authorise('CAN_CREATE_SUBSCRIPTION')
   return (
     <Link to="/subscriptions/create">
-      <Button style={{marginLeft: 5}} appearance="primary" color="green" disabled={isLoading}>
+      <Button
+        style={{marginLeft: 5}}
+        appearance="primary"
+        color="green"
+        disabled={isLoading || !canCreate}>
         <PlusIcon style={{marginRight: '5px'}} />
         {t('subscriptionList.overview.newSubscription')}
       </Button>
@@ -53,7 +63,7 @@ export const newSubscriptionButton = ({
   )
 }
 
-export function SubscriptionList() {
+function SubscriptionList() {
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
@@ -152,7 +162,9 @@ export function SubscriptionList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
-          {newSubscriptionButton({isLoading, t})}
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+            {newSubscriptionButton({isLoading, t})}
+          </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
@@ -329,3 +341,10 @@ export function SubscriptionList() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SUBSCRIPTIONS',
+  'CAN_GET_SUBSCRIPTION',
+  'CAN_CREATE_SUBSCRIPTION',
+  'CAN_DELETE_SUBSCRIPTION'
+])(SubscriptionList)
+export {CheckedPermissionComponent as SubscriptionList}

@@ -60,8 +60,8 @@ exports[`User edit view should allow a new user to be created 1`] = `
               class=\\"rs-ripple-pond\\"
             >
               <span
-@@ -128,18 +147,19 @@
-                          class=\\"rs-form-control-label\\"
+@@ -130,18 +149,19 @@
+                          id=\\"active-control-label\\"
                         >
                           userCreateOrEditView.active
                         </label>
@@ -82,7 +82,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                           />
                           <span
                             class=\\"rs-toggle-presentation\\"
-@@ -172,10 +192,11 @@
+@@ -174,10 +194,11 @@
                         >
                           <input
                             aria-describedby=\\"firstName-help-text\\"
@@ -94,7 +94,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -203,14 +224,15 @@
+@@ -205,14 +226,15 @@
                         >
                           <input
                             aria-describedby=\\"name-help-text\\"
@@ -111,19 +111,19 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -230,10 +252,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -236,10 +258,11 @@
                         >
                           <input
+                            aria-describedby=\\"preferredName-help-text\\"
+                            aria-labelledby=\\"preferredName-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"preferredName\\"
                             name=\\"preferredName\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -260,14 +283,15 @@
+@@ -267,14 +290,15 @@
                         >
                           <input
                             aria-describedby=\\"email-help-text\\"
@@ -140,79 +140,79 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -287,10 +311,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -298,10 +322,11 @@
                         >
                           <input
+                            aria-describedby=\\"company-help-text\\"
+                            aria-labelledby=\\"company-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"company\\"
                             name=\\"company\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -313,10 +338,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -329,10 +354,11 @@
                         >
                           <input
+                            aria-describedby=\\"streetAddress-help-text\\"
+                            aria-labelledby=\\"streetAddress-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"streetAddress\\"
                             name=\\"streetAddress\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -339,10 +365,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -360,10 +386,11 @@
                         >
                           <input
+                            aria-describedby=\\"streetAddress2-help-text\\"
+                            aria-labelledby=\\"streetAddress2-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"streetAddress2\\"
                             name=\\"streetAddress2\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -365,10 +392,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -391,10 +418,11 @@
                         >
                           <input
+                            aria-describedby=\\"zipCode-help-text\\"
+                            aria-labelledby=\\"zipCode-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"zipCode\\"
                             name=\\"zipCode\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -391,10 +419,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -422,10 +450,11 @@
                         >
                           <input
+                            aria-describedby=\\"city-help-text\\"
+                            aria-labelledby=\\"city-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"city\\"
                             name=\\"city\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -417,10 +446,11 @@
-                        <div
-                          class=\\"rs-form-control rs-form-control-wrapper\\"
+@@ -453,10 +482,11 @@
                         >
                           <input
+                            aria-describedby=\\"country-help-text\\"
+                            aria-labelledby=\\"country-control-label\\"
                             class=\\"rs-input\\"
 +                           disabled=\\"\\"
+                            id=\\"country\\"
                             name=\\"country\\"
                             type=\\"text\\"
                             value=\\"\\"
                           />
-                        </div>
-@@ -547,14 +577,15 @@
+@@ -586,14 +616,15 @@
                         >
                           <input
                             aria-describedby=\\"password-help-text\\"
@@ -236,8 +236,8 @@ exports[`User edit view should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -461,11 +461,11 @@
-                          class=\\"rs-form-control-label\\"
+@@ -500,11 +500,11 @@
+                          id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
                         </label>
@@ -249,7 +249,7 @@ exports[`User edit view should allow user role to be added 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -475,17 +475,54 @@
+@@ -514,17 +514,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -315,8 +315,8 @@ exports[`User edit view should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -461,11 +461,11 @@
-                          class=\\"rs-form-control-label\\"
+@@ -500,11 +500,11 @@
+                          id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
                         </label>
@@ -328,7 +328,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -475,17 +475,54 @@
+@@ -514,17 +514,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -518,6 +518,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="active"
+                        id="active-control-label"
                       >
                         userCreateOrEditView.active
                       </label>
@@ -616,6 +618,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="preferredName"
+                        id="preferredName-control-label"
                       >
                         userCreateOrEditView.preferredName
                       </label>
@@ -623,7 +627,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="preferredName-help-text"
+                          aria-labelledby="preferredName-control-label"
                           class="rs-input"
+                          id="preferredName"
                           name="preferredName"
                           type="text"
                           value=""
@@ -673,6 +680,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="company"
+                        id="company-control-label"
                       >
                         userCreateOrEditView.company
                       </label>
@@ -680,7 +689,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="company-help-text"
+                          aria-labelledby="company-control-label"
                           class="rs-input"
+                          id="company"
                           name="company"
                           type="text"
                           value=""
@@ -699,6 +711,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="streetAddress"
+                        id="streetAddress-control-label"
                       >
                         userCreateOrEditView.streetAddress
                       </label>
@@ -706,7 +720,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="streetAddress-help-text"
+                          aria-labelledby="streetAddress-control-label"
                           class="rs-input"
+                          id="streetAddress"
                           name="streetAddress"
                           type="text"
                           value=""
@@ -725,6 +742,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="streetAddress2"
+                        id="streetAddress2-control-label"
                       >
                         userCreateOrEditView.streetAddress2
                       </label>
@@ -732,7 +751,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="streetAddress2-help-text"
+                          aria-labelledby="streetAddress2-control-label"
                           class="rs-input"
+                          id="streetAddress2"
                           name="streetAddress2"
                           type="text"
                           value=""
@@ -751,6 +773,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="zipCode"
+                        id="zipCode-control-label"
                       >
                         userCreateOrEditView.zipCode
                       </label>
@@ -758,7 +782,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="zipCode-help-text"
+                          aria-labelledby="zipCode-control-label"
                           class="rs-input"
+                          id="zipCode"
                           name="zipCode"
                           type="text"
                           value=""
@@ -777,6 +804,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="city"
+                        id="city-control-label"
                       >
                         userCreateOrEditView.city
                       </label>
@@ -784,7 +813,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="city-help-text"
+                          aria-labelledby="city-control-label"
                           class="rs-input"
+                          id="city"
                           name="city"
                           type="text"
                           value=""
@@ -803,6 +835,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="country"
+                        id="country-control-label"
                       >
                         userCreateOrEditView.country
                       </label>
@@ -810,7 +844,10 @@ exports[`User edit view should render 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="country-help-text"
+                          aria-labelledby="country-control-label"
                           class="rs-input"
+                          id="country"
                           name="country"
                           type="text"
                           value=""
@@ -851,6 +888,8 @@ exports[`User edit view should render 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="userRoles"
+                        id="userRoles-control-label"
                       >
                         userCreateOrEditView.userRoles
                       </label>
@@ -984,6 +1023,7 @@ exports[`User edit view should render 1`] = `
                     href="/subscriptions/create"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn rs-btn-primary rs-btn-green"
                       style="margin-left: 5px;"
                       type="button"
@@ -1157,6 +1197,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="active"
+                        id="active-control-label"
                       >
                         userCreateOrEditView.active
                       </label>
@@ -1255,6 +1297,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="preferredName"
+                        id="preferredName-control-label"
                       >
                         userCreateOrEditView.preferredName
                       </label>
@@ -1262,7 +1306,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="preferredName-help-text"
+                          aria-labelledby="preferredName-control-label"
                           class="rs-input"
+                          id="preferredName"
                           name="preferredName"
                           type="text"
                           value=""
@@ -1312,6 +1359,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="company"
+                        id="company-control-label"
                       >
                         userCreateOrEditView.company
                       </label>
@@ -1319,7 +1368,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="company-help-text"
+                          aria-labelledby="company-control-label"
                           class="rs-input"
+                          id="company"
                           name="company"
                           type="text"
                           value=""
@@ -1338,6 +1390,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="streetAddress"
+                        id="streetAddress-control-label"
                       >
                         userCreateOrEditView.streetAddress
                       </label>
@@ -1345,7 +1399,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="streetAddress-help-text"
+                          aria-labelledby="streetAddress-control-label"
                           class="rs-input"
+                          id="streetAddress"
                           name="streetAddress"
                           type="text"
                           value=""
@@ -1364,6 +1421,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="streetAddress2"
+                        id="streetAddress2-control-label"
                       >
                         userCreateOrEditView.streetAddress2
                       </label>
@@ -1371,7 +1430,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="streetAddress2-help-text"
+                          aria-labelledby="streetAddress2-control-label"
                           class="rs-input"
+                          id="streetAddress2"
                           name="streetAddress2"
                           type="text"
                           value=""
@@ -1390,6 +1452,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="zipCode"
+                        id="zipCode-control-label"
                       >
                         userCreateOrEditView.zipCode
                       </label>
@@ -1397,7 +1461,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="zipCode-help-text"
+                          aria-labelledby="zipCode-control-label"
                           class="rs-input"
+                          id="zipCode"
                           name="zipCode"
                           type="text"
                           value=""
@@ -1416,6 +1483,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="city"
+                        id="city-control-label"
                       >
                         userCreateOrEditView.city
                       </label>
@@ -1423,7 +1492,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="city-help-text"
+                          aria-labelledby="city-control-label"
                           class="rs-input"
+                          id="city"
                           name="city"
                           type="text"
                           value=""
@@ -1442,6 +1514,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="country"
+                        id="country-control-label"
                       >
                         userCreateOrEditView.country
                       </label>
@@ -1449,7 +1523,10 @@ exports[`User edit view should render with ID 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <input
+                          aria-describedby="country-help-text"
+                          aria-labelledby="country-control-label"
                           class="rs-input"
+                          id="country"
                           name="country"
                           type="text"
                           value=""
@@ -1490,6 +1567,8 @@ exports[`User edit view should render with ID 1`] = `
                     >
                       <label
                         class="rs-form-control-label"
+                        for="userRoles"
+                        id="userRoles-control-label"
                       >
                         userCreateOrEditView.userRoles
                       </label>
@@ -1623,6 +1702,7 @@ exports[`User edit view should render with ID 1`] = `
                     href="/subscriptions/create"
                   >
                     <button
+                      aria-disabled="false"
                       class="rs-btn rs-btn-primary rs-btn-green"
                       style="margin-left: 5px;"
                       type="button"

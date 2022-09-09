@@ -20,9 +20,15 @@ import {
   Tooltip,
   Whisper
 } from 'rsuite'
+
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID, slugify} from '../utility'
@@ -69,12 +75,7 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({
-  value,
-  infoData,
-  onClose,
-  onChange
-}: ArticleMetadataPanelProps) {
+function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -112,6 +113,8 @@ export function ArticleMetadataPanel({
   )
 
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
 
   useEffect(() => {
     if (metaDataProperties) {
@@ -159,7 +162,7 @@ export function ArticleMetadataPanel({
                 {t('pageEditor.panels.metadataInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaTitle')}
                 <label style={{float: 'right'}}>
@@ -182,7 +185,7 @@ export function ArticleMetadataPanel({
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaDescription">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaDescription')}
                 <label style={{float: 'right'}}>
@@ -209,14 +212,15 @@ export function ArticleMetadataPanel({
                   </label>
                 )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaAuthors">
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</Form.ControlLabel>
               <AuthorCheckPicker
+                disabled={!isAuthorized}
                 list={socialMediaAuthors}
                 onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="socialMediaImage">
               <Form.ControlLabel>{t('articleEditor.panels.socialMediaImage')}</Form.ControlLabel>
               <ChooseEditImage
                 header={''}
@@ -260,7 +264,7 @@ export function ArticleMetadataPanel({
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.title')}
                 <label style={{float: 'right'}}>
@@ -281,7 +285,7 @@ export function ArticleMetadataPanel({
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleLead">
               <Form.ControlLabel>
                 {t('articleEditor.panels.lead')}
                 <label style={{float: 'right'}}>
@@ -306,7 +310,7 @@ export function ArticleMetadataPanel({
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleSeoTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.seoTitle')}
                 <label style={{float: 'right'}}>
@@ -337,7 +341,7 @@ export function ArticleMetadataPanel({
                 </label>
               )}
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleSlug">
               <Form.ControlLabel>{t('articleEditor.panels.slug')}</Form.ControlLabel>
               <InputGroup style={{width: '100%'}}>
                 <Form.Control
@@ -369,10 +373,11 @@ export function ArticleMetadataPanel({
                 </Trans>
               </Form.HelpText>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleAuthors">
               <Form.ControlLabel>{t('articleEditor.panels.authors')}</Form.ControlLabel>
               <AuthorCheckPicker
                 list={authors}
+                disabled={!isAuthorized}
                 onChange={authors => onChange?.({...value, authors})}
               />
             </Form.Group>
@@ -381,10 +386,11 @@ export function ArticleMetadataPanel({
               <Toggle
                 className="hideAuthor"
                 checked={hideAuthor}
+                disabled={!isAuthorized}
                 onChange={hideAuthor => onChange?.({...value, hideAuthor})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTags">
               <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
               <TagPicker
                 block
@@ -395,15 +401,16 @@ export function ArticleMetadataPanel({
                 onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleBreakingNews">
               <Form.ControlLabel>{t('articleEditor.panels.breakingNews')}</Form.ControlLabel>
               <Toggle
                 className="breaking"
+                disabled={!isAuthorized}
                 checked={breaking}
                 onChange={breaking => onChange?.({...value, breaking})}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleCanonicalUrl">
               <Form.ControlLabel>{t('articleEditor.panels.canonicalUrl')}</Form.ControlLabel>
               <Form.Control
                 name="canonicalUrl"
@@ -425,9 +432,13 @@ export function ArticleMetadataPanel({
               </Form.HelpText>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="articlePeering">
               <Form.ControlLabel>{t('articleEditor.panels.peering')}</Form.ControlLabel>
-              <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
+              <Toggle
+                checked={shared}
+                disabled={!isAuthorized}
+                onChange={shared => onChange?.({...value, shared})}
+              />
               <Form.HelpText>{t('articleEditor.panels.allowPeerPublishing')}</Form.HelpText>
             </Form.Group>
             <Form.ControlLabel>{t('articleEditor.panels.postImage')}</Form.ControlLabel>
@@ -453,7 +464,7 @@ export function ArticleMetadataPanel({
                 {t('articleEditor.panels.propertiesInfo')}
               </Message>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleProperties">
               <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
               <ListInput
                 value={metaDataProperties}
@@ -478,7 +489,9 @@ export function ArticleMetadataPanel({
                       value={value.value}
                       onChange={propertyValue => onChange({...value, value: propertyValue})}
                     />
-                    <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                    <Form.Group
+                      style={{paddingTop: '6px', paddingLeft: '8px'}}
+                      controlId="articleProperty">
                       <Toggle
                         style={{maxWidth: '70px', minWidth: '70px'}}
                         checkedChildren={t('articleEditor.panels.public')}
@@ -509,9 +522,11 @@ export function ArticleMetadataPanel({
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance="primary" type="submit">
-              {t('saveAndClose')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+              <Button appearance="primary" type="submit">
+                {t('saveAndClose')}
+              </Button>
+            </PermissionControl>
           </Drawer.Actions>
         </Drawer.Header>
 
@@ -565,3 +580,11 @@ export function ArticleMetadataPanel({
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_ARTICLES',
+  'CAN_GET_ARTICLES',
+  'CAN_DELETE_ARTICLE',
+  'CAN_PUBLISH_ARTICLE',
+  'CAN_CREATE_ARTICLE'
+])(ArticleMetadataPanel)
+export {CheckedPermissionComponent as ArticleMetadataPanel}

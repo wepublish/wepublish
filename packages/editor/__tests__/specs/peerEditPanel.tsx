@@ -1,20 +1,22 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
-import snapshotDiff from 'snapshot-diff'
-
 import {CreatePeerDocument, PeerDocument} from '../../src/client/api'
 import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
-import {actWait} from '../utils'
+import {actWait, sessionWithPermissions} from '../utils'
+import snapshotDiff from 'snapshot-diff'
+import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
 describe('Peer Edit Panel', () => {
   test('should render', async () => {
     const {asFragment} = render(
-      <MockedProvider addTypename={false}>
-        <PeerEditPanel hostURL={'localhost:4000'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider addTypename={false}>
+          <PeerEditPanel hostURL={'localhost:4000'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
 
     expect(asFragment()).toMatchSnapshot()
@@ -47,9 +49,11 @@ describe('Peer Edit Panel', () => {
       }
     ]
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <PeerEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <PeerEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -96,9 +100,11 @@ describe('Peer Edit Panel', () => {
     ]
 
     const {asFragment, getByLabelText, getByTestId} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <PeerEditPanel hostURL={'localhost:4000'} />
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <PeerEditPanel hostURL={'localhost:4000'} />
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -123,5 +129,32 @@ describe('Peer Edit Panel', () => {
     fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
+  })
+
+  const sessionWithoutPermission = {
+    session: {
+      email: 'user@abc.ch',
+      sessionToken: 'abcdefg',
+      sessionRoles: [
+        {
+          id: 'user',
+          description: 'User',
+          name: 'user',
+          systemRole: true,
+          permissions: []
+        }
+      ]
+    }
+  }
+
+  test('will not render without correct permission', () => {
+    const {asFragment} = render(
+      <AuthContext.Provider value={sessionWithoutPermission}>
+        <MockedProvider addTypename={false}>
+          <PeerEditPanel hostURL={'localhost:4000'} />
+        </MockedProvider>
+      </AuthContext.Provider>
+    )
+    expect(asFragment()).toMatchSnapshot()
   })
 })

@@ -19,6 +19,11 @@ import {
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {BlockMap} from '../blocks/blockMap'
 import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
@@ -26,7 +31,7 @@ import {PublishPagePanel} from '../panel/publishPagePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
 
-export function PageEditor() {
+function PageEditor() {
   const navigate = useNavigate()
   const params = useParams()
   const {id} = params
@@ -82,7 +87,6 @@ export function PageEditor() {
   const pageID = id || createData?.createPage.id
 
   const {data: pageData, refetch, loading: isLoading} = usePageQuery({
-    skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
@@ -92,6 +96,7 @@ export function PageEditor() {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const canPreview = Boolean(pageData?.page?.draft)
   const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
     ? new Date(publishData?.publishPage?.pending?.publishAt)
     : pageData?.page?.pending?.publishAt
@@ -100,6 +105,8 @@ export function PageEditor() {
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const isAuthorized = authorise('CAN_CREATE_PAGE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -327,18 +334,20 @@ export function PageEditor() {
                   </IconButton>
 
                   {isNew && createData == null ? (
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<SaveIcon />}
-                      disabled={isDisabled}
-                      onClick={() => handleSave()}>
-                      {t('create')}
-                    </IconButton>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+                      <IconButton
+                        style={{
+                          marginLeft: '10px'
+                        }}
+                        size={'lg'}
+                        icon={<SaveIcon />}
+                        disabled={isDisabled}
+                        onClick={() => handleSave()}>
+                        {t('create')}
+                      </IconButton>
+                    </PermissionControl>
                   ) : (
-                    <>
+                    <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
@@ -351,49 +360,55 @@ export function PageEditor() {
                           {t('save')}
                         </IconButton>
                       </Badge>
-                      <Badge
-                        className={
-                          pageData?.page?.draft || !pageData?.page?.published ? 'unsaved' : 'saved'
-                        }>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
-                          size={'lg'}
-                          icon={<CloudUploadIcon />}
-                          disabled={isDisabled}
-                          onClick={() => {
-                            setPublishDialogOpen(true)
-                          }}>
-                          {t('pageEditor.overview.publish')}
-                        </IconButton>
-                      </Badge>
-                    </>
+                      <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
+                        <Badge
+                          className={
+                            pageData?.page?.draft || !pageData?.page?.published
+                              ? 'unsaved'
+                              : 'saved'
+                          }>
+                          <IconButton
+                            style={{
+                              marginLeft: '10px'
+                            }}
+                            size={'lg'}
+                            icon={<CloudUploadIcon />}
+                            disabled={isDisabled}
+                            onClick={() => {
+                              setPublishDialogOpen(true)
+                            }}>
+                            {t('pageEditor.overview.publish')}
+                          </IconButton>
+                        </Badge>
+                      </PermissionControl>
+                    </PermissionControl>
                   )}
                 </div>
               }
               rightChildren={
-                <Link to="#">
-                  <IconButton
-                    disabled={hasChanged || !id}
-                    style={{marginTop: '4px'}}
-                    size={'lg'}
-                    icon={<EyeIcon />}
-                    onClick={e => {
-                      previewLinkFetch({
-                        variables: {
-                          id: id!,
-                          hours: 1
-                        }
-                      })
-                    }}>
-                    {t('pageEditor.overview.preview')}
-                  </IconButton>
-                </Link>
+                <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
+                  <Link to="#">
+                    <IconButton
+                      disabled={hasChanged || !id || !canPreview}
+                      style={{marginTop: '4px'}}
+                      size={'lg'}
+                      icon={<EyeIcon />}
+                      onClick={e => {
+                        previewLinkFetch({
+                          variables: {
+                            id: id!,
+                            hours: 1
+                          }
+                        })
+                      }}>
+                      {t('pageEditor.overview.preview')}
+                    </IconButton>
+                  </Link>
+                </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
+          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled || !isAuthorized}>
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
@@ -429,3 +444,13 @@ export function PageEditor() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAGE',
+  'CAN_GET_PAGES',
+  'CAN_CREATE_PAGE',
+  'CAN_PUBLISH_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_GET_PAGE_PREVIEW_LINK'
+])(PageEditor)
+export {CheckedPermissionComponent as PageEditor}

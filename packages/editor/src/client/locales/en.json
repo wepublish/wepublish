@@ -15,6 +15,7 @@
         "pending": "Article pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "preview": "Preview",
+        "previewDisabled": "All article changes have been published already.",
         "published": "Article published on {{date, ccc PP p}}.",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
@@ -596,6 +597,7 @@
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
         "preview": "Preview",
+        "previewDisabled": "All page changes have been published already.",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
@@ -908,7 +910,7 @@
       "name": "Name",
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
-      "payedUntil": "Payed Until",
+      "paidUntil": "Paid Until",
       "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
       "preferredName": "Preferred Name",
       "firstName": "First Name",
@@ -1007,7 +1009,7 @@
       "memberPlanMonthlyAmount": "Monthly Amount (CHF)",
       "monthlyAmount": "Monthly amount",
       "name": "Name",
-      "payedUntil": "Paid Until",
+      "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
@@ -1084,6 +1086,10 @@
         "areYouSureConfirmation": "Delete tag",
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed."
       }
+    },
+    "permissions": {
+      "noAccess": "You have insufficient permission to access this content.",
+      "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}"
     }
   }
 }

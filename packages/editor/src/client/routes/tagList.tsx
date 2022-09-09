@@ -24,6 +24,7 @@ import {
   useUpdateTagMutation
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 export type TagListProps = {
@@ -90,7 +91,7 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
-export const TagList = memo<TagListProps>(({type}) => {
+const TagList = memo<TagListProps>(({type}) => {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
@@ -215,13 +216,15 @@ export const TagList = memo<TagListProps>(({type}) => {
         </FlexboxGrid.Item>
 
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Button
-            type="button"
-            appearance="primary"
-            data-testid="create"
-            onClick={() => createTag()}>
-            {t('tags.overview.createTag')}
-          </Button>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
+            <Button
+              type="button"
+              appearance="primary"
+              data-testid="create"
+              onClick={() => createTag()}>
+              {t('tags.overview.createTag')}
+            </Button>
+          </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
@@ -252,36 +255,40 @@ export const TagList = memo<TagListProps>(({type}) => {
             </div>
 
             <div style={{flex: '0 0 auto'}}>
-              <IconButtonTooltip caption={t('save')}>
-                <IconButton
-                  type="submit"
-                  icon={<SaveIcon />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '12px'}}
-                  onClick={() => {
-                    updateTag({
-                      variables: {
-                        id: tagId,
-                        tag: formValue[tagId] ? formValue[tagId] : null
-                      }
-                    })
-                  }}
-                  disabled={!shouldUpdateTag(tagId)}
-                />
-              </IconButtonTooltip>
+              <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
+                <IconButtonTooltip caption={t('save')}>
+                  <IconButton
+                    type="submit"
+                    icon={<SaveIcon />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '12px'}}
+                    onClick={() => {
+                      updateTag({
+                        variables: {
+                          id: tagId,
+                          tag: formValue[tagId] ? formValue[tagId] : null
+                        }
+                      })
+                    }}
+                    disabled={!shouldUpdateTag(tagId)}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
 
-              <IconButtonTooltip caption={t('delete')}>
-                <IconButton
-                  icon={<TrashIcon />}
-                  color="red"
-                  appearance="primary"
-                  circle
-                  size="sm"
-                  style={{marginLeft: '12px'}}
-                  onClick={() => setTagToDelete(tagId)}
-                />
-              </IconButtonTooltip>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<TrashIcon />}
+                    color="red"
+                    appearance="primary"
+                    circle
+                    size="sm"
+                    style={{marginLeft: '12px'}}
+                    onClick={() => setTagToDelete(tagId)}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
             </div>
           </FlexboxGrid>
         </Form>
@@ -330,3 +337,11 @@ export const TagList = memo<TagListProps>(({type}) => {
     </>
   )
 })
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_TAGS',
+  'CAN_CREATE_TAG',
+  'CAN_UPDATE_TAG',
+  'CAN_DELETE_TAG'
+])(TagList)
+export {CheckedPermissionComponent as TagList}

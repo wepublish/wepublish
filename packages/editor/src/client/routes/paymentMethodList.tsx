@@ -11,11 +11,12 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function PaymentMethodList() {
+function PaymentMethodList() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -64,13 +65,15 @@ export function PaymentMethodList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('paymentMethodList.title')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/paymentmethods/create">
-            <Button appearance="primary" disabled={isLoading}>
-              {t('paymentMethodList.createNew')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/paymentmethods/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('paymentMethodList.createNew')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
       </FlexboxGrid>
 
       <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={paymentMethods}>
@@ -86,7 +89,7 @@ export function PaymentMethodList() {
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
-              <>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -99,7 +102,7 @@ export function PaymentMethodList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -164,3 +167,11 @@ export function PaymentMethodList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAYMENT_METHODS',
+  'CAN_GET_PAYMENT_METHOD',
+  'CAN_CREATE_PAYMENT_METHOD',
+  'CAN_DELETE_PAYMENT_METHOD'
+])(PaymentMethodList)
+export {CheckedPermissionComponent as PaymentMethodList}

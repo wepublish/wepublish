@@ -615,6 +615,7 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
+  CanGetPeerProfile,
   CanLoginEditor,
   CanGetSettings,
   CanCreateTag,

@@ -14,11 +14,12 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function MemberPlanList() {
+function MemberPlanList() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -73,13 +74,15 @@ export function MemberPlanList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('memberPlanList.title')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/memberplans/create">
-            <Button appearance="primary" disabled={isLoading}>
-              {t('memberPlanList.createNew')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/memberplans/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('memberPlanList.createNew')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -103,7 +106,7 @@ export function MemberPlanList() {
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
-              <>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -116,7 +119,7 @@ export function MemberPlanList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -201,3 +204,11 @@ export function MemberPlanList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_MEMBER_PLANS',
+  'CAN_GET_MEMBER_PLAN',
+  'CAN_CREATE_MEMBER_PLAN',
+  'CAN_DELETE_MEMBER_PLAN'
+])(MemberPlanList)
+export {CheckedPermissionComponent as MemberPlanList}

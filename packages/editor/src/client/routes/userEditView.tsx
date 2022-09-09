@@ -30,8 +30,9 @@ import {
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function UserEditView() {
+function UserEditView() {
   const {t} = useTranslation()
   const location = useLocation()
   const params = useParams()
@@ -106,6 +107,7 @@ export function UserEditView() {
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
+  const canResetPassword = authorise('CAN_RESET_USER_PASSWORD')
 
   /**
    * Function to update address object
@@ -330,7 +332,7 @@ export function UserEditView() {
                   <Row gutter={10}>
                     {/* active / inactive */}
                     <Col xs={24} style={{textAlign: 'end'}}>
-                      <Form.Group>
+                      <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
                           checked={active}
@@ -372,7 +374,7 @@ export function UserEditView() {
                     </Col>
                     {/* preferred name */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="preferredName">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.preferredName')}
                         </Form.ControlLabel>
@@ -403,7 +405,7 @@ export function UserEditView() {
                     </Col>
                     {/* company */}
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="company">
                         <Form.ControlLabel>{t('userCreateOrEditView.company')}</Form.ControlLabel>
                         <Form.Control
                           name="company"
@@ -417,7 +419,7 @@ export function UserEditView() {
                     </Col>
                     {/* street */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="streetAddress">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress')}
                         </Form.ControlLabel>
@@ -433,7 +435,7 @@ export function UserEditView() {
                     </Col>
                     {/* street 2 */}
                     <Col xs={12}>
-                      <Form.Group>
+                      <Form.Group controlId="streetAddress2">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress2')}
                         </Form.ControlLabel>
@@ -449,7 +451,7 @@ export function UserEditView() {
                     </Col>
                     {/* zip */}
                     <Col xs={8}>
-                      <Form.Group>
+                      <Form.Group controlId="zipCode">
                         <Form.ControlLabel>{t('userCreateOrEditView.zipCode')}</Form.ControlLabel>
                         <Form.Control
                           name="zipCode"
@@ -463,7 +465,7 @@ export function UserEditView() {
                     </Col>
                     {/* city */}
                     <Col xs={16}>
-                      <Form.Group>
+                      <Form.Group controlId="city">
                         <Form.ControlLabel>{t('userCreateOrEditView.city')}</Form.ControlLabel>
                         <Form.Control
                           name="city"
@@ -477,7 +479,7 @@ export function UserEditView() {
                     </Col>
                     {/* country */}
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="country">
                         <Form.ControlLabel>{t('userCreateOrEditView.country')}</Form.ControlLabel>
                         <Form.Control
                           name="country"
@@ -498,7 +500,7 @@ export function UserEditView() {
                   style={{marginTop: '20px'}}>
                   <Row gutter={10}>
                     <Col xs={24}>
-                      <Form.Group>
+                      <Form.Group controlId="userRoles">
                         <Form.ControlLabel>{t('userCreateOrEditView.userRoles')}</Form.ControlLabel>
                         <CheckPicker
                           name="userRoles"
@@ -528,7 +530,7 @@ export function UserEditView() {
                         user={user}
                         password={password}
                         setPassword={setPassword}
-                        isDisabled={isDisabled}
+                        isDisabled={isDisabled || !canResetPassword}
                       />
                     </Col>
                   </Row>
@@ -549,3 +551,11 @@ export function UserEditView() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_GET_USERS',
+  'CAN_RESET_USER_PASSWORD'
+])(UserEditView)
+export {CheckedPermissionComponent as UserEditView}

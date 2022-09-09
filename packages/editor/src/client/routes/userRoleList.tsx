@@ -8,11 +8,12 @@ import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table
 import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
-export function UserRoleList() {
+function UserRoleList() {
   const {t} = useTranslation()
 
   const location = useLocation()
@@ -67,13 +68,15 @@ export function UserRoleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('userRoles.overview.userRoles')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <Link to="/userroles/create">
-            <Button appearance="primary" disabled={isLoading}>
-              {t('userRoles.overview.newUserRole')}
-            </Button>
-          </Link>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/userroles/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('userRoles.overview.newUserRole')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -103,19 +106,21 @@ export function UserRoleList() {
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
-              <IconButtonTooltip caption={t('delete')}>
-                <IconButton
-                  icon={<TrashIcon />}
-                  disabled={rowData.systemRole}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentUserRole(rowData)
-                  }}
-                />
-              </IconButtonTooltip>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<TrashIcon />}
+                    disabled={rowData.systemRole}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentUserRole(rowData)
+                    }}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -179,3 +184,10 @@ export function UserRoleList() {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USER_ROLES',
+  'CAN_GET_USER_ROLE',
+  'CAN_CREATE_USER_ROLE',
+  'CAN_DELETE_USER_ROLE'
+])(UserRoleList)
+export {CheckedPermissionComponent as UserRoleList}

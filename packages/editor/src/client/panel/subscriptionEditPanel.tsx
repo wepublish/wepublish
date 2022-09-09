@@ -1,4 +1,3 @@
-import FileIcon from '@rsuite/icons/legacy/File'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -34,13 +33,19 @@ import {
   useSubscriptionQuery,
   useUpdateSubscriptionMutation
 } from '../api'
-import {CurrencyInput} from '../atoms/currencyInput'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {UserSearch} from '../atoms/searchAndFilter/userSearch'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
-import {InvoiceListPanel} from './invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
+import {CurrencyInput} from '../atoms/currencyInput'
+import {InvoiceListPanel} from './invoiceListPanel'
+import FileIcon from '@rsuite/icons/legacy/File'
+import {UserSearch} from '../atoms/searchAndFilter/userSearch'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -48,8 +53,10 @@ export interface SubscriptionEditPanelProps {
   onSave?(subscription: FullSubscriptionFragment): void
 }
 
-export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
+function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps) {
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_SUBSCRIPTION')
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] = useState<boolean>(false)
   const [user, setUser] = useState<FullUserFragment | null>()
@@ -169,7 +176,8 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     loadError !== undefined ||
     createError !== undefined ||
     loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined
+    paymentMethodLoadError !== undefined ||
+    !isAuthorized
 
   const hasNoMemberPlanSelected = memberPlan === undefined
 
@@ -311,7 +319,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     return (
       <Form.Group>
         <FormControlLabel>
-          {t('userSubscriptionEdit.payedUntil')}
+          {t('userSubscriptionEdit.paidUntil')}
 
           <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
             ({t('invoice.seeInvoiceHistory')})
@@ -377,10 +385,11 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
-              {id ? t('save') : t('create')}
-            </Button>
-
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+              <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
             </Button>
@@ -400,7 +409,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
           )}
 
           <Panel>
-            <Form.Group>
+            <Form.Group controlId="memberPlan">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
               </Form.ControlLabel>
@@ -427,7 +436,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               )}
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="user">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
               </Form.ControlLabel>
@@ -441,7 +450,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="monthlyAmount">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
               </Form.ControlLabel>
@@ -457,7 +466,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="paymentPeriodicities">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
               </Form.ControlLabel>
@@ -477,7 +486,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="autoRenew">
               <Form.ControlLabel>{t('userSubscriptionEdit.autoRenew')}</Form.ControlLabel>
 
               <Toggle
@@ -489,7 +498,7 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <Form.HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</Form.HelpText>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="startsAt">
               <Form.ControlLabel>{t('userSubscriptionEdit.startsAt')}</Form.ControlLabel>
               <DatePicker
                 block
@@ -506,12 +515,12 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
               <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
             </Form.Group>
 
-            <Form.Group>
-              <Form.ControlLabel>{t('userSubscriptionEdit.payedUntil')}</Form.ControlLabel>
+            <Form.Group controlId="paidUntil">
+              <Form.ControlLabel>{t('userSubscriptionEdit.paidUntil')}</Form.ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="paymentMethod">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
               </Form.ControlLabel>
@@ -535,12 +544,14 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
         </Drawer.Body>
 
         <Drawer.Footer>
-          <Button
-            appearance={'primary'}
-            disabled={isDisabled || isDeactivated}
-            onClick={() => handleSave()}>
-            {id ? t('save') : t('create')}
-          </Button>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+            <Button
+              appearance={'primary'}
+              disabled={isDisabled || isDeactivated}
+              onClick={() => handleSave()}>
+              {id ? t('save') : t('create')}
+            </Button>
+          </PermissionControl>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>
             {t('close')}
           </Button>
@@ -583,3 +594,10 @@ export function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPan
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SUBSCRIPTION',
+  'CAN_GET_SUBSCRIPTIONS',
+  'CAN_CREATE_SUBSCRIPTION',
+  'CAN_DELETE_SUBSCRIPTION'
+])(SubscriptionEditPanel)
+export {CheckedPermissionComponent as SubscriptionEditPanel}

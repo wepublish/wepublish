@@ -21,6 +21,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All article changes have been published already.",
         "preview": "Aperçu",
         "articlePending": "Article en attente"
       },
@@ -758,7 +759,7 @@
       "editUser": "Modifier l'utilisateur·trice",
       "memberPlan": "Plan membre",
       "password": "Mot de passe",
-      "payedUntil": "Payé jusqu'à",
+      "paidUntil": "Payé jusqu'à",
       "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
       "preferredName": "Nom préféré",
       "firstName": "Prénom",
@@ -823,7 +824,7 @@
       "deactivatedAt": "Désactivé",
       "editTitle": "Modifier l'abonnement",
       "monthlyAmount": "Montant mensuel",
-      "payedUntil": "Payé jusqu'à",
+      "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
@@ -933,6 +934,7 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All page changes have been published already.",
         "preview": "Aperçu"
       },
       "panels": {
@@ -1085,6 +1087,10 @@
         "areYouSureConfirmation": "Delete tag",
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed."
       }
+    },
+    "permissions": {
+      "noAccess": "Vous n'avez pas l'autorisation suffisante pour accéder à ce contenu.",
+      "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l'une des autorisations suivantes: {{permissions}}"
     }
   }
 }
