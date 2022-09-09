@@ -1,9 +1,10 @@
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useNavigate} from 'react-router-dom'
 import {
@@ -23,8 +24,10 @@ import {
   ArticleListQuery,
   ArticleRefFragment,
   ArticleSort,
+  CommentItemType,
   PageRefFragment,
   useArticleListQuery,
+  useCreateCommentMutation,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
   useUnpublishArticleMutation
@@ -73,7 +76,6 @@ function ArticleList() {
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
@@ -94,6 +96,8 @@ function ArticleList() {
     fetchPolicy: 'network-only'
   })
 
+  const articles = useMemo(() => data?.articles?.nodes ?? [], [data])
+
   useEffect(() => {
     refetch(articleListVariables)
   }, [filter, page, limit, sortOrder, sortField])
@@ -111,11 +115,7 @@ function ArticleList() {
 
   const {t} = useTranslation()
 
-  useEffect(() => {
-    if (data?.articles.nodes) {
-      setArticles(data.articles.nodes)
-    }
-  }, [data?.articles])
+  const [createComment] = useCreateCommentMutation()
 
   return (
     <>
@@ -300,6 +300,28 @@ function ArticleList() {
                         onClick={() => {
                           setCurrentArticle(rowData)
                           setArticlePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
+                    <IconButtonTooltip caption={t('articleEditor.overview.createComment')}>
+                      <IconButton
+                        icon={<CommentIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          createComment({
+                            variables: {
+                              itemID: rowData.id,
+                              itemType: CommentItemType.Article
+                            },
+                            onCompleted(data) {
+                              navigate(`/comments/edit/${data?.createComment.id}`)
+                            }
+                          })
                         }}
                       />
                     </IconButtonTooltip>

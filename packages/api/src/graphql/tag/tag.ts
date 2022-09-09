@@ -41,7 +41,8 @@ export const GraphQLTagConnection = new GraphQLObjectType({
 export const GraphQLTagFilter = new GraphQLInputObjectType({
   name: 'TagFilter',
   fields: {
-    type: {type: GraphQLTagType}
+    type: {type: GraphQLTagType},
+    tag: {type: GraphQLString}
   }
 })
 
@@ -49,6 +50,7 @@ export const GraphQLTagSort = new GraphQLEnumType({
   name: 'TagSort',
   values: {
     CREATED_AT: {value: TagSort.CreatedAt},
-    MODIFIED_AT: {value: TagSort.ModifiedAt}
+    MODIFIED_AT: {value: TagSort.ModifiedAt},
+    TAG: {value: TagSort.Tag}
   }
 })

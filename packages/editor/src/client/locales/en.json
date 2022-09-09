@@ -16,6 +16,7 @@
         "publish": "Publish",
         "preview": "Preview",
         "previewDisabled": "All article changes have been published already.",
+        "createComment": "Create Comment",
         "published": "Article published on {{date, ccc PP p}}.",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
@@ -342,12 +343,14 @@
     "comments": {
       "overview": {
         "action": "Action",
+        "moderation": "Moderation",
         "approve": "Approve",
         "comments": "Comments",
         "created": "Created",
         "loadMore": "Load More",
         "reject": "Reject",
         "requestChange": "Request Change",
+        "edit": "Edit Comment",
         "search": "Search",
         "state": "State",
         "text": "Text",
@@ -356,6 +359,13 @@
         "updated": "Modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "userName": "User Name"
+      },
+      "edit": {
+        "title": "Edit Comment",
+        "tags": "Tags",
+        "unnamedTag": "<Unnamed Tag>",
+        "loading": "Loading",
+        "success": "Comment successfully updated"
       },
       "panels": {
         "approve": "Approve",
@@ -598,6 +608,7 @@
         "published": "Page published on {{date, ccc PP p}}",
         "preview": "Preview",
         "previewDisabled": "All page changes have been published already.",
+        "createComment": "Create Comment",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",

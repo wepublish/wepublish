@@ -1,9 +1,10 @@
 import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useNavigate} from 'react-router-dom'
 import {
@@ -19,10 +20,12 @@ import {
 } from 'rsuite'
 
 import {
+  CommentItemType,
   PageListDocument,
   PageListQuery,
   PageRefFragment,
   PageSort,
+  useCreateCommentMutation,
   useDeletePageMutation,
   useDuplicatePageMutation,
   usePageListQuery,
@@ -75,7 +78,6 @@ function PageList() {
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [pages, setPages] = useState<PageRefFragment[]>([])
 
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
@@ -94,6 +96,8 @@ function PageList() {
     fetchPolicy: 'network-only'
   })
 
+  const pages = useMemo(() => data?.pages?.nodes ?? [], [data])
+
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -109,11 +113,7 @@ function PageList() {
     refetch(pageListVariables)
   }, [filter, page, limit, sortOrder, sortField])
 
-  useEffect(() => {
-    if (data?.pages?.nodes) {
-      setPages(data.pages.nodes)
-    }
-  }, [data?.pages])
+  const [createComment] = useCreateCommentMutation()
 
   return (
     <>
@@ -288,6 +288,28 @@ function PageList() {
                         onClick={() => {
                           setCurrentPage(rowData)
                           setPagePreviewLinkOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
+                    <IconButtonTooltip caption={t('pageEditor.overview.createComment')}>
+                      <IconButton
+                        icon={<CommentIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          createComment({
+                            variables: {
+                              itemID: rowData.id,
+                              itemType: CommentItemType.Article
+                            },
+                            onCompleted(data) {
+                              navigate(`/comments/edit/${data?.createComment.id}`)
+                            }
+                          })
                         }}
                       />
                     </IconButtonTooltip>
