@@ -12,10 +12,11 @@ import {
   useUpdatePollMutation
 } from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
+import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
 
-export function PollEditView() {
+function PollEditView() {
   const params = useParams()
   const navigate = useNavigate()
   const [poll, setPoll] = useState<FullPoll | undefined>(undefined)
@@ -232,3 +233,9 @@ export function PollEditView() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_POLL',
+  'CAN_UPDATE_POLL'
+])(PollEditView)
+export {CheckedPermissionComponent as PollEditView}

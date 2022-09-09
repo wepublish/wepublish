@@ -57,7 +57,7 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
           onClose()
         }
       }}>
-      <Form.Group>
+      <Form.Group controlId="password">
         <Form.ControlLabel>
           {t('userCreateOrEditView.resetPasswordFor', {userName})}
         </Form.ControlLabel>

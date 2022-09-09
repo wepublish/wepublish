@@ -6,12 +6,13 @@ import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 
 import {FullPoll, usePollsQuery} from '../../api'
+import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
 import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
-export function PollList() {
+function PollList() {
   const {t} = useTranslation()
   const [pollDelete, setPollDelete] = useState<FullPoll | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
@@ -164,3 +165,11 @@ export function PollList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_POLL',
+  'CAN_CREATE_POLL',
+  'CAN_UPDATE_POLL',
+  'CAN_DELETE_POLL'
+])(PollList)
+export {CheckedPermissionComponent as PollList}

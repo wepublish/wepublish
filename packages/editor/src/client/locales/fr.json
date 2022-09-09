@@ -23,6 +23,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All article changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer",
         "articlePending": "Article en attente"
@@ -787,7 +788,7 @@
       "create": "Créer",
       "save": "Sauvegarder",
       "password": "Mot de passe",
-      "payedUntil": "Payé jusqu'à",
+      "paidUntil": "Payé jusqu'à",
       "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
       "preferredName": "Nom préféré",
       "firstName": "Prénom",
@@ -853,7 +854,7 @@
       "deactivatedAt": "Désactivé",
       "editTitle": "Modifier l'abonnement",
       "monthlyAmount": "Montant mensuel",
-      "payedUntil": "Payé jusqu'à",
+      "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "startsAt": "Début de l'abonnement",
@@ -952,17 +953,9 @@
       "languageSwitch": {
         "currentLanguage": "Anglais",
         "selectNewLanguage": "Sélectionner une nouvelle langue",
-        "close": "Fermer",
-        "question": "Question de sondage",
-        "toBeOrNotToBe": "Être ou ne pas être?",
-        "questionRequired": "Veuillez saisir votre question de sondage.",
-        "savedSuccessfully": "Sondage sauvgardé"
+        "close": "Fermer"
       },
       "articles": "Articles",
-      "blocks": {
-        "topMenu": "Blocs de contenu",
-        "polls": "Sondages"
-      },
       "authors": "Auteurs/Autrices",
       "comments": "Commentaires",
       "imageLibrary": "Bibliothèque d'images",
@@ -1035,6 +1028,7 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
+        "previewDisabled": "All page changes have been published already.",
         "preview": "Aperçu",
         "delete": "Supprimer"
       },
@@ -1177,6 +1171,10 @@
       "originalArticle": "Article original",
       "notPublished": "Pas encore publié",
       "toOriginalArticle": "Vers l'article original"
+    },
+    "permissions": {
+      "noAccess": "Vous n'avez pas l'autorisation suffisante pour accéder à ce contenu.",
+      "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l'une des autorisations suivantes: {{permissions}}"
     }
   }
 }
