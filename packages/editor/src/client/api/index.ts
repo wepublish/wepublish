@@ -303,7 +303,15 @@ export enum CommentRejectionReason {
 export type CommentRevision = {
   __typename?: 'CommentRevision';
   text: Scalars['RichText'];
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+};
+
+export type CommentRevisionUpdateInput = {
+  text?: Maybe<Scalars['RichText']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
 };
 
 export enum CommentSort {
@@ -1066,7 +1074,7 @@ export type MutationDeleteInvoiceArgs = {
 
 export type MutationUpdateCommentArgs = {
   id: Scalars['ID'];
-  text?: Maybe<Scalars['RichText']>;
+  revision?: Maybe<CommentRevisionUpdateInput>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
 };
 
@@ -2849,6 +2857,11 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
+export type CommentRevisionFragment = (
+  { __typename?: 'CommentRevision' }
+  & Pick<CommentRevision, 'text' | 'title' | 'lead' | 'createdAt'>
+);
+
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
@@ -2857,7 +2870,7 @@ export type FullParentCommentFragment = (
     & FullUserFragment
   )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
-    & Pick<CommentRevision, 'text' | 'createdAt'>
+    & CommentRevisionFragment
   )> }
 );
 
@@ -2869,7 +2882,7 @@ export type FullCommentFragment = (
     & FullUserFragment
   )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
-    & Pick<CommentRevision, 'text' | 'createdAt'>
+    & CommentRevisionFragment
   )>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & FullParentCommentFragment
@@ -2960,7 +2973,7 @@ export type RequestChangesOnCommentMutation = (
 
 export type UpdateCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  text?: Maybe<Scalars['RichText']>;
+  revision?: Maybe<CommentRevisionUpdateInput>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
@@ -4789,6 +4802,14 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
+export const CommentRevisionFragmentDoc = gql`
+    fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+    `;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4799,13 +4820,13 @@ export const FullParentCommentFragmentDoc = gql`
   }
   guestUsername
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
   createdAt
   modifiedAt
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}`;
 export const FullCommentFragmentDoc = gql`
     fragment FullComment on Comment {
   id
@@ -4816,8 +4837,7 @@ export const FullCommentFragmentDoc = gql`
     ...FullUser
   }
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
   createdAt
   modifiedAt
@@ -4830,6 +4850,7 @@ export const FullCommentFragmentDoc = gql`
   }
 }
     ${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
@@ -5957,8 +5978,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $text: RichText, $tagIds: [ID!]) {
-  updateComment(id: $id, text: $text, tagIds: $tagIds) {
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, tagIds: $tagIds) {
     ...FullComment
   }
 }
@@ -5979,7 +6000,7 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
  *   variables: {
  *      id: // value for 'id'
- *      text: // value for 'text'
+ *      revision: // value for 'revision'
  *      tagIds: // value for 'tagIds'
  *   },
  * });

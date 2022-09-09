@@ -1,3 +1,10 @@
+fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+
 fragment FullParentComment on Comment {
   id
   state
@@ -7,8 +14,7 @@ fragment FullParentComment on Comment {
   }
   guestUsername
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
   createdAt
   modifiedAt
@@ -23,12 +29,9 @@ fragment FullComment on Comment {
   user {
     ...FullUser
   }
-
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
-
   createdAt
   modifiedAt
 
@@ -92,8 +95,8 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   }
 }
 
-mutation updateComment($id: ID!, $text: RichText, $tagIds: [ID!]) {
-  updateComment(id: $id, text: $text, tagIds: $tagIds) {
+mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, tagIds: $tagIds) {
     ...FullComment
   }
 }

@@ -31,6 +31,8 @@ export interface Comment extends CommentData {
 
 export interface CommentRevision {
   readonly text: RichTextNode[]
+  readonly title: string | null
+  readonly lead: string | null
   readonly createdAt: Date
 }
 

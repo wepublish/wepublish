@@ -1,10 +1,16 @@
 import {ApolloError} from '@apollo/client'
-import React, {memo, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
-import {TagType, useCommentQuery, useUpdateCommentMutation} from '../../api'
+import {
+  CommentRevisionUpdateInput,
+  FullCommentFragment,
+  TagType,
+  useCommentQuery,
+  useUpdateCommentMutation
+} from '../../api'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {BlockMap} from '../../blocks/blockMap'
@@ -32,8 +38,12 @@ export const CommentEditView = memo(() => {
   const commentId = id!
   const closePath = '/comments'
   const [close, setClose] = useState<boolean>(false)
+  // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
-  const [editedComment, setEditedComment] = useState<RichTextBlockValue>(null!)
+  // where the comment properties are handled
+  const [comment, setComment] = useState<FullCommentFragment | undefined | null>(undefined)
+  // where the revisions are handled
+  const [revision, setRevision] = useState<CommentRevisionUpdateInput | undefined>(undefined)
 
   const {data: commentData, loading: loadingComment} = useCommentQuery({
     variables: {
@@ -42,27 +52,22 @@ export const CommentEditView = memo(() => {
     onError: showErrors
   })
 
-  const lastRevision = useMemo(
-    () => commentData?.comment?.revisions[commentData?.comment?.revisions.length - 1],
-    [commentData]
-  )
+  useEffect(() => {
+    const tmpComment = commentData?.comment
+    if (!tmpComment) {
+      return
+    }
+    setComment(tmpComment)
+    const revisions = tmpComment.revisions
+    setRevision(revisions[revisions.length - 1])
+  }, [commentData])
 
-  const commentTags = useMemo(
-    () => selectedTags ?? commentData?.comment?.tags?.map(tag => tag.id),
-    [commentData, selectedTags]
-  )
-
-  const commentText = useMemo(() => editedComment ?? lastRevision?.text ?? defaultValue, [
-    lastRevision,
-    editedComment
+  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
+    comment,
+    selectedTags
   ])
 
   const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
-    variables: {
-      id: commentId,
-      text: commentText,
-      tagIds: commentTags
-    },
     onCompleted: () =>
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
@@ -77,16 +82,22 @@ export const CommentEditView = memo(() => {
   /**
    * Form validation model
    */
-  const {StringType} = Schema.Types
-  const validationModel = Schema.Model({
-    commentText: StringType().isRequired(t('commentEditView.commentTextRequired'))
-  })
+  const validationModel = Schema.Model({})
 
   /**
    * FUNCTIONS
    */
   async function updateComment() {
-    await updateCommentMutation()
+    if (!comment) {
+      return
+    }
+    await updateCommentMutation({
+      variables: {
+        id: comment.id,
+        revision: {text: revision?.text || defaultValue},
+        tagIds: commentTags
+      }
+    })
     if (close) {
       navigate(closePath)
     }
@@ -94,14 +105,7 @@ export const CommentEditView = memo(() => {
 
   return (
     <>
-      <Form
-        onSubmit={() => updateComment()}
-        model={validationModel}
-        fluid
-        disabled={loading}
-        formValue={{
-          commentText
-        }}>
+      <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
         {/* heading */}
         <ModelTitle
           loading={loading}
@@ -116,23 +120,45 @@ export const CommentEditView = memo(() => {
         {/* form elements */}
         <Grid fluid style={{margin: '0'}}>
           <Row gutter={12}>
-            {/* comment text */}
-            <Col xs={14}>
-              {commentText && (
-                <Panel bordered style={{width: '100%'}}>
-                  <RichTextBlock value={commentText} onChange={setEditedComment} />
-                </Panel>
-              )}
+            <Col xs={12}>
+              <Panel
+                bordered
+                style={{width: '100%'}}
+                header={t('commentEditView.commentPanelHeader')}>
+                <Row>
+                  {/* comment title */}
+                  <Col xs={24}>
+                    <Form.Control
+                      name="commentTitle"
+                      value={revision?.title}
+                      placeholder={t('commentEditView.title')}
+                    />
+                  </Col>
+                  {/* comment text */}
+                  <Col xs={24}>
+                    <RichTextBlock
+                      value={revision?.text || defaultValue}
+                      onChange={text => {
+                        setRevision({...revision, text: text as RichTextBlockValue})
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Panel>
             </Col>
 
-            {/* tags */}
-            <Col xs={10}>
-              <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-              <SelectTags
-                selectedTags={commentTags}
-                setSelectedTags={setSelectedTags}
-                tagType={TagType.Comment}
-              />
+            <Col xs={6}>
+              <Row>
+                {/* tags */}
+                <Col xs={24}>
+                  <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
+                  <SelectTags
+                    selectedTags={commentTags}
+                    setSelectedTags={setSelectedTags}
+                    tagType={TagType.Comment}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Grid>

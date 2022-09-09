@@ -181,6 +181,8 @@ model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   text      Json
+  title     String?
+  lead      String?
 
   Comment   Comment? @relation(fields: [commentId], references: [id])
   commentId String?

@@ -79,7 +79,18 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
   name: 'CommentRevision',
   fields: {
     text: {type: GraphQLNonNull(GraphQLRichText)},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
+export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
+  name: 'CommentRevisionUpdateInput',
+  fields: {
+    text: {type: GraphQLRichText},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString}
   }
 })
 
