@@ -400,6 +400,20 @@
         "rejected": "Rejected"
       }
     },
+    "commentEditView": {
+      "title": "Title",
+      "lead": "Lead",
+      "comment": "Comment text",
+      "variousPanelHeader": "Tags & Source",
+      "tags": "Tags",
+      "source": "Source",
+      "userPanelHeader": "Author of the comment"
+    },
+    "commentUser": {
+      "selectExistingUser": "Select from registered users",
+      "guestUser": "Guest (Username)",
+      "selectImage": "Select profile image of the commenting guest"
+    },
     "confirm": "Confirm",
     "create": "Create",
     "dateTimePicker": {

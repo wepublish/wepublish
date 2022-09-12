@@ -243,6 +243,20 @@
         "rejected": "Rejeté"
       }
     },
+    "commentEditView": {
+      "title": "Titre",
+      "lead": "Sous-titre",
+      "comment": "Texte Commentaire",
+      "variousPanelHeader": "Balises & source",
+      "tags": "Tags",
+      "source": "Source",
+      "userPanelHeader": "Auteur dans le commentaire"
+    },
+    "commentUser": {
+      "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
+      "guestUser": "Invité (nom d'utilisateur)",
+      "selectImage": "Choisir ou télécharger la photo de profil de l'invité"
+    },
     "cancel": "Annuler",
     "pages": {
       "overview": {

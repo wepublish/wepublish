@@ -41,16 +41,16 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     <>
       <Row>
         <Col xs={24}>
-          <Form.ControlLabel>{t('commentEditView.existingUserLabel')}</Form.ControlLabel>
+          <Form.ControlLabel>{t('commentUser.selectExistingUser')}</Form.ControlLabel>
           <UserSearch
             name="selectFromExistingUser"
-            placeholder={t('commentUser.selectFromExistingUser')}
+            placeholder={t('commentUser.selectExistingUser')}
             onUpdateUser={setUser}
             user={comment?.user}
           />
         </Col>
         <Col xs={24}>
-          <Form.ControlLabel>{t('commentEditView.guestUserLabel')}</Form.ControlLabel>
+          <Form.ControlLabel>{t('commentUser.guestUser')}</Form.ControlLabel>
           <Form.Control
             name="guestUser"
             placeholder={t('commentUser.guestUser')}
@@ -64,7 +64,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
             disabled={false}
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
-            header={t('commentUser.selectGuestUserImage')}
+            header={t('commentUser.selectImage')}
           />
         </Col>
       </Row>

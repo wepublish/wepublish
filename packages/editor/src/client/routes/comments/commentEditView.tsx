@@ -126,7 +126,7 @@ export const CommentEditView = memo(() => {
       variables: {
         id: comment.id,
         revision: revisionChanged() ? revision : undefined,
-        userID: comment.user?.id,
+        userID: comment.user?.id || null,
         guestUsername: comment.guestUsername,
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
@@ -157,17 +157,15 @@ export const CommentEditView = memo(() => {
           <Row gutter={30}>
             {/* comment content */}
             <Col xs={14}>
-              <Panel
-                bordered
-                style={{width: '100%'}}
-                header={t('commentEditView.commentPanelHeader')}>
+              <Panel bordered style={{width: '100%'}}>
                 <Row>
                   {/* comment title */}
-                  <Col xs={12}>
+                  <Col xs={18}>
+                    <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
                     <Form.Control
                       name="commentTitle"
                       value={revision?.title || ''}
-                      placeholder={t('commentEditView.titlePlaceholder')}
+                      placeholder={t('commentEditView.title')}
                       onChange={(title: string) => {
                         setRevision({...revision, title})
                       }}
@@ -175,23 +173,27 @@ export const CommentEditView = memo(() => {
                   </Col>
                   {/* comment lead */}
                   <Col xs={18}>
+                    <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
                     <Form.Control
                       name="commentLead"
                       value={revision?.lead || ''}
-                      placeholder={t('commentEditView.leadPlaceholder')}
+                      placeholder={t('commentEditView.lead')}
                       onChange={(lead: string) => {
                         setRevision({...revision, lead})
                       }}
                     />
                   </Col>
                   {/* comment text */}
-                  <Col xs={24}>
-                    <RichTextBlock
-                      value={revision?.text || defaultValue}
-                      onChange={text => {
-                        setRevision({...revision, text: text as RichTextBlockValue})
-                      }}
-                    />
+                  <Col xs={24} style={{marginTop: '20px'}}>
+                    <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+                    <Panel bordered>
+                      <RichTextBlock
+                        value={revision?.text || defaultValue}
+                        onChange={text => {
+                          setRevision({...revision, text: text as RichTextBlockValue})
+                        }}
+                      />
+                    </Panel>
                   </Col>
                 </Row>
               </Panel>
@@ -203,7 +205,7 @@ export const CommentEditView = memo(() => {
                 <Row>
                   {/* tags */}
                   <Col xs={24}>
-                    <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
+                    <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
                     <SelectTags
                       selectedTags={commentTags}
                       setSelectedTags={setSelectedTags}
@@ -213,11 +215,10 @@ export const CommentEditView = memo(() => {
 
                   {/* external source */}
                   <Col xs={24}>
-                    <Form.ControlLabel>
-                      {t('commentEditView.externalSourceLabel')}
-                    </Form.ControlLabel>
+                    <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
                     <Form.Control
                       name="externalSource"
+                      placeholder={t('commentEditView.source')}
                       value={comment?.source || ''}
                       onChange={(source: string) => {
                         setComment({...comment, source} as FullCommentFragment)
