@@ -95,8 +95,8 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   }
 }
 
-mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, tagIds: $tagIds) {
+mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, tagIds: $tagIds) {
     ...FullComment
   }
 }

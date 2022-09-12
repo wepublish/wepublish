@@ -5,14 +5,13 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
-  CommentQuery,
-  CommentRevision,
   CommentRevisionUpdateInput,
   FullCommentFragment,
   TagType,
   useCommentQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {BlockMap} from '../../blocks/blockMap'
@@ -42,7 +41,7 @@ export const CommentEditView = memo(() => {
   const validationModel = Schema.Model({})
   const [close, setClose] = useState<boolean>(false)
   // where the comment properties are handled
-  const [comment, setComment] = useState<FullCommentFragment | undefined | null>(undefined)
+  const [comment, setComment] = useState<FullCommentFragment | undefined>(undefined)
   // where the revisions are handled
   const [revision, setRevision] = useState<CommentRevisionUpdateInput | undefined>(undefined)
   // where the tag list is handled
@@ -127,6 +126,8 @@ export const CommentEditView = memo(() => {
       variables: {
         id: comment.id,
         revision: revisionChanged() ? revision : undefined,
+        userID: comment.user?.id,
+        guestUsername: comment.guestUsername,
         tagIds: commentTags
       }
     })
@@ -193,10 +194,17 @@ export const CommentEditView = memo(() => {
               </Panel>
             </Col>
 
-            <Col xs={6}>
+            <Col xs={12}>
               <Row>
-                {/* tags */}
+                {/* user or guest user */}
                 <Col xs={24}>
+                  <CommentUser comment={comment} setComment={setComment} />
+                </Col>
+
+                {/* external source */}
+
+                {/* tags */}
+                <Col xs={12}>
                   <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
                   <SelectTags
                     selectedTags={commentTags}

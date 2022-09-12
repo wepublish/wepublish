@@ -7,7 +7,6 @@ import {
 } from '@prisma/client'
 import {Context} from '../../context'
 import {authorise, CanTakeActionOnComment, CanUpdateComments} from '../permissions'
-import {CommentRevision} from '../../db/comment'
 import {CommentRevisionUpdateInput} from '@wepublish/editor/dist/client/api'
 
 export const takeActionOnComment = (
@@ -31,6 +30,8 @@ export const takeActionOnComment = (
 export const updateComment = async (
   commentId: string,
   revision: CommentRevisionUpdateInput | undefined,
+  userID: string,
+  guestUsername: string,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   commentClient: PrismaClient['comment']
@@ -42,6 +43,8 @@ export const updateComment = async (
   return commentClient.update({
     where: {id: commentId},
     data: {
+      guestUsername,
+      userID,
       revisions: revision
         ? {
             create: {
