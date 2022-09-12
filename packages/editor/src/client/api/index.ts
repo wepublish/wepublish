@@ -260,6 +260,7 @@ export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
   guestUsername?: Maybe<Scalars['String']>;
+  guestUserImage?: Maybe<Image>;
   user?: Maybe<User>;
   tags?: Maybe<Array<Tag>>;
   authorType: CommentAuthorType;
@@ -1078,6 +1079,7 @@ export type MutationUpdateCommentArgs = {
   revision?: Maybe<CommentRevisionUpdateInput>;
   userID?: Maybe<Scalars['ID']>;
   guestUsername?: Maybe<Scalars['String']>;
+  guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
 };
@@ -2881,7 +2883,10 @@ export type FullParentCommentFragment = (
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
-  & { user?: Maybe<(
+  & { guestUserImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
   )>, revisions: Array<(
@@ -2980,6 +2985,7 @@ export type UpdateCommentMutationVariables = Exact<{
   revision?: Maybe<CommentRevisionUpdateInput>;
   userID?: Maybe<Scalars['ID']>;
   guestUsername?: Maybe<Scalars['String']>;
+  guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -4840,6 +4846,9 @@ export const FullCommentFragmentDoc = gql`
   state
   rejectionReason
   guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
   user {
     ...FullUser
   }
@@ -4857,7 +4866,8 @@ export const FullCommentFragmentDoc = gql`
     tag
   }
 }
-    ${FullUserFragmentDoc}
+    ${ImageRefFragmentDoc}
+${FullUserFragmentDoc}
 ${CommentRevisionFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
@@ -5986,8 +5996,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $source: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, source: $source, tagIds: $tagIds) {
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
     ...FullComment
   }
 }
@@ -6011,6 +6021,7 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  *      revision: // value for 'revision'
  *      userID: // value for 'userID'
  *      guestUsername: // value for 'guestUsername'
+ *      guestUserImageID: // value for 'guestUserImageID'
  *      source: // value for 'source'
  *      tagIds: // value for 'tagIds'
  *   },

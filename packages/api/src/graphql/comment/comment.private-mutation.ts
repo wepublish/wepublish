@@ -32,6 +32,7 @@ export const updateComment = async (
   revision: CommentRevisionUpdateInput | undefined,
   userID: string,
   guestUsername: string,
+  guestUserImageID: string,
   source: string,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
@@ -46,6 +47,7 @@ export const updateComment = async (
       guestUsername,
       userID,
       source,
+      guestUserImageID,
       revisions: revision
         ? {
             create: {

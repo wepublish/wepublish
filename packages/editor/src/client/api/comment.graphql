@@ -25,6 +25,9 @@ fragment FullComment on Comment {
   state
   rejectionReason
   guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
   user {
     ...FullUser
   }
@@ -95,8 +98,8 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   }
 }
 
-mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $source: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, source: $source, tagIds: $tagIds) {
+mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
     ...FullComment
   }
 }

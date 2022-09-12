@@ -17,6 +17,7 @@ export interface CommentData {
 
   readonly parentID?: string | null
   readonly source?: string | null
+  readonly guestUserImageID?: string | null
 
   readonly createdAt: Date
   readonly modifiedAt: Date

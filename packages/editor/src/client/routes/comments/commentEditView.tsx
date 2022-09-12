@@ -128,6 +128,7 @@ export const CommentEditView = memo(() => {
         revision: revisionChanged() ? revision : undefined,
         userID: comment.user?.id,
         guestUsername: comment.guestUsername,
+        guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
         tagIds: commentTags
       }
@@ -152,9 +153,10 @@ export const CommentEditView = memo(() => {
         />
 
         {/* form elements */}
-        <Grid fluid style={{margin: '0'}}>
-          <Row gutter={12}>
-            <Col xs={12}>
+        <Grid fluid>
+          <Row gutter={30}>
+            {/* comment content */}
+            <Col xs={14}>
               <Panel
                 bordered
                 style={{width: '100%'}}
@@ -195,41 +197,42 @@ export const CommentEditView = memo(() => {
               </Panel>
             </Col>
 
-            <Col xs={12}>
-              <Row>
-                {/* user or guest user */}
-                <Col xs={24}>
-                  <CommentUser comment={comment} setComment={setComment} />
-                </Col>
+            {/* tags & source */}
+            <Col xs={10}>
+              <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+                <Row>
+                  {/* tags */}
+                  <Col xs={24}>
+                    <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
+                    <SelectTags
+                      selectedTags={commentTags}
+                      setSelectedTags={setSelectedTags}
+                      tagType={TagType.Comment}
+                    />
+                  </Col>
 
-                <Col xs={12}>
-                  <Row>
-                    {/* external source */}
-                    <Col xs={24}>
-                      <Form.ControlLabel>
-                        {t('commentEditView.externalSourceLabel')}
-                      </Form.ControlLabel>
-                      <Form.Control
-                        name="externalSource"
-                        value={comment?.source || ''}
-                        onChange={(source: string) => {
-                          setComment({...comment, source} as FullCommentFragment)
-                        }}
-                      />
-                    </Col>
+                  {/* external source */}
+                  <Col xs={24}>
+                    <Form.ControlLabel>
+                      {t('commentEditView.externalSourceLabel')}
+                    </Form.ControlLabel>
+                    <Form.Control
+                      name="externalSource"
+                      value={comment?.source || ''}
+                      onChange={(source: string) => {
+                        setComment({...comment, source} as FullCommentFragment)
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Panel>
+            </Col>
 
-                    {/* tags */}
-                    <Col xs={24}>
-                      <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-                      <SelectTags
-                        selectedTags={commentTags}
-                        setSelectedTags={setSelectedTags}
-                        tagType={TagType.Comment}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
+            {/* user or guest user */}
+            <Col xs={10}>
+              <Panel bordered header={t('commentEditView.userPanelHeader')}>
+                <CommentUser comment={comment} setComment={setComment} />
+              </Panel>
             </Col>
           </Row>
         </Grid>
