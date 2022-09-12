@@ -2,10 +2,10 @@ name: Release helm chart
 
 on:
   push:
-#    branches:
-#      - 'master'
-#    paths:
-#      - 'helm/charts/**/*'
+    branches:
+      - 'master'
+    paths:
+      - 'helm/charts/**/*'
 
 jobs:
   app-to-gitlab:
