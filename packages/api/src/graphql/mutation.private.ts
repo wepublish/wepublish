@@ -104,7 +104,7 @@ import {
   updateAdminUser
 } from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
-import {retrieveArticleById} from './article-peer-information/article-peer-information.private-mutation'
+import {savePeerArticleById} from './article-peer-information/article-peer-information.private-mutation'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -672,8 +672,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     retrievePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {peerID, id}, context, info) {
-        return await retrieveArticleById(id, peerID, context, info)
+      resolve: async (root, {peerID, id}, context, info) => {
+        return await savePeerArticleById(id, peerID, context, info)
       }
     },
 

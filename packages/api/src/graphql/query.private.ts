@@ -121,17 +121,17 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {retrieveArticleById} from './article-peer-information/article-peer-information.private-mutation'
+import {savePeerArticleById} from './article-peer-information/article-peer-information.private-mutation'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // TODO remove
-    retrievePeerArticle: {
+    // todo remove from query
+    savePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
       resolve(root, {peerID, id}, context, info) {
-        return retrieveArticleById(id, peerID, context, info)
+        return savePeerArticleById(id, peerID, context, info)
       }
     },
 

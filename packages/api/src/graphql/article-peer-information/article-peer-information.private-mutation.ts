@@ -1,22 +1,44 @@
 import {delegateToPeerSchema} from '../../utility'
 import {GraphQLResolveInfo} from 'graphql'
 import {Context} from '../../context'
-import {Article} from '../../db/article'
 
 // peered articles
-export const retrieveArticleById = async (
-  // peerArticle: Article,
+export const savePeerArticleById = async (
   id: string,
   peerId: string,
   context: Context,
   info: GraphQLResolveInfo
-  // articleClient: PrismaClient['article']
-): Promise<Article> => {
+) => {
   const peerArticle = await delegateToPeerSchema(peerId, true, context, {
     fieldName: 'article',
     args: {id},
     info
   })
-  // todo create article
-  return peerArticle
+
+  if (!peerArticle.published) throw new Error('peer article not found')
+  console.log('published', peerArticle.published)
+  const {published} = peerArticle.published
+
+  // TODO authenticate
+
+  const val = await context.prisma.article.create({
+    data: {
+      shared: false,
+
+      draft: {
+        create: {
+          ...published,
+          breaking: false,
+          hideAuthor: false
+        }
+      }
+      // peeringInfo: {
+      //    create: {
+      //   peerId: peerId,
+      //      producerArticleId: id,
+      //      peer: peerArticle.peer
+      //   }}
+    }
+  })
+  return val
 }
