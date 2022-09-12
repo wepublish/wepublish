@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input} from 'rsuite'
 
@@ -11,14 +11,9 @@ export interface HtmlEditPanelProps {
 }
 
 export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
-  const [input, setInput] = useState<HTMLBlockValue>(value)
   const [htmlBlock, setHtmlBlock] = useState<HTMLBlockValue>(value)
   const isEmpty = htmlBlock === undefined
   const {t} = useTranslation()
-
-  useEffect(() => {
-    setHtmlBlock(input)
-  }, [input])
 
   return (
     <>
@@ -41,13 +36,13 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
           rows={3}
           style={{width: '100%'}}
           placeholder={t('blocks.html.placeholder')}
-          value={input.html}
-          onChange={input => setInput({html: input})}
+          value={htmlBlock.html}
+          onChange={input => setHtmlBlock({html: input})}
         />
         <div style={{marginTop: '20px'}}>
           <span>{t('blocks.html.warning')}</span>
         </div>
-        <div style={{marginTop: '20px'}} dangerouslySetInnerHTML={{__html: input.html}} />
+        <div style={{marginTop: '20px'}} dangerouslySetInnerHTML={{__html: htmlBlock.html}} />
       </Drawer.Body>
     </>
   )
