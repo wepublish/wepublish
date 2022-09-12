@@ -16,6 +16,7 @@ export interface CommentData {
   readonly itemType: CommentItemType
 
   readonly parentID?: string | null
+  readonly source?: string | null
 
   readonly createdAt: Date
   readonly modifiedAt: Date

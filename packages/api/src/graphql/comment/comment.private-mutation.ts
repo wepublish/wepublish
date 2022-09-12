@@ -32,6 +32,7 @@ export const updateComment = async (
   revision: CommentRevisionUpdateInput | undefined,
   userID: string,
   guestUsername: string,
+  source: string,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   commentClient: PrismaClient['comment']
@@ -39,12 +40,12 @@ export const updateComment = async (
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
 
-  // todo: fis as unknown as string
   return commentClient.update({
     where: {id: commentId},
     data: {
       guestUsername,
       userID,
+      source,
       revisions: revision
         ? {
             create: {

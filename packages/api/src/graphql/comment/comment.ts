@@ -197,6 +197,9 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     revisions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
     },
+    source: {
+      type: GraphQLString
+    },
     state: {type: GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},

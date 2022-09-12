@@ -218,6 +218,7 @@ model Comment {
   state           CommentState
   authorType      CommentAuthorType
   guestUsername   String?
+  source          String?
 
   user   User?   @relation(fields: [userID], references: [id])
   userID String?

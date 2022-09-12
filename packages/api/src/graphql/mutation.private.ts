@@ -845,13 +845,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         revision: {type: GraphQLCommentRevisionUpdateInput},
         userID: {type: GraphQLID},
         guestUsername: {type: GraphQLString},
+        source: {type: GraphQLString},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
       resolve: (
         root,
-        {id, revision, userID, guestUsername, tagIds},
+        {id, revision, userID, guestUsername, source, tagIds},
         {authenticate, prisma: {comment}}
-      ) => updateComment(id, revision, userID, guestUsername, tagIds, authenticate, comment)
+      ) => updateComment(id, revision, userID, guestUsername, source, tagIds, authenticate, comment)
     },
 
     createComment: {

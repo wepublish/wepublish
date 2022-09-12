@@ -22,7 +22,6 @@ fragment FullParentComment on Comment {
 
 fragment FullComment on Comment {
   id
-
   state
   rejectionReason
   guestUsername
@@ -32,6 +31,7 @@ fragment FullComment on Comment {
   revisions {
     ...CommentRevision
   }
+  source
   createdAt
   modifiedAt
 
@@ -95,8 +95,8 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   }
 }
 
-mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, tagIds: $tagIds) {
+mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $source: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, source: $source, tagIds: $tagIds) {
     ...FullComment
   }
 }

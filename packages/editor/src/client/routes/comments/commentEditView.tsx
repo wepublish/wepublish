@@ -97,9 +97,9 @@ export const CommentEditView = memo(() => {
     const revisions = comment.revisions
     const lastRevision = revisions[revisions.length - 1]
     const parsedRevision = {
-      title: lastRevision.title,
-      lead: lastRevision.lead,
-      text: lastRevision.text || defaultValue
+      title: lastRevision?.title,
+      lead: lastRevision?.lead,
+      text: lastRevision?.text || defaultValue
     } as CommentRevisionUpdateInput
     return parsedRevision
   }
@@ -128,6 +128,7 @@ export const CommentEditView = memo(() => {
         revision: revisionChanged() ? revision : undefined,
         userID: comment.user?.id,
         guestUsername: comment.guestUsername,
+        source: comment.source,
         tagIds: commentTags
       }
     })
@@ -201,16 +202,32 @@ export const CommentEditView = memo(() => {
                   <CommentUser comment={comment} setComment={setComment} />
                 </Col>
 
-                {/* external source */}
-
-                {/* tags */}
                 <Col xs={12}>
-                  <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-                  <SelectTags
-                    selectedTags={commentTags}
-                    setSelectedTags={setSelectedTags}
-                    tagType={TagType.Comment}
-                  />
+                  <Row>
+                    {/* external source */}
+                    <Col xs={24}>
+                      <Form.ControlLabel>
+                        {t('commentEditView.externalSourceLabel')}
+                      </Form.ControlLabel>
+                      <Form.Control
+                        name="externalSource"
+                        value={comment?.source || ''}
+                        onChange={(source: string) => {
+                          setComment({...comment, source} as FullCommentFragment)
+                        }}
+                      />
+                    </Col>
+
+                    {/* tags */}
+                    <Col xs={24}>
+                      <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
+                      <SelectTags
+                        selectedTags={commentTags}
+                        setSelectedTags={setSelectedTags}
+                        tagType={TagType.Comment}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Col>
