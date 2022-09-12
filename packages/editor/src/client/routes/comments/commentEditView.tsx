@@ -5,6 +5,8 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
+  CommentQuery,
+  CommentRevision,
   CommentRevisionUpdateInput,
   FullCommentFragment,
   TagType,
@@ -37,35 +39,24 @@ export const CommentEditView = memo(() => {
   const {id} = useParams()
   const commentId = id!
   const closePath = '/comments'
+  const validationModel = Schema.Model({})
   const [close, setClose] = useState<boolean>(false)
-  // where the tag list is handled
-  const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
   // where the comment properties are handled
   const [comment, setComment] = useState<FullCommentFragment | undefined | null>(undefined)
   // where the revisions are handled
   const [revision, setRevision] = useState<CommentRevisionUpdateInput | undefined>(undefined)
+  // where the tag list is handled
+  const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
 
+  /**
+   * Queries
+   */
   const {data: commentData, loading: loadingComment} = useCommentQuery({
     variables: {
       id: commentId
     },
     onError: showErrors
   })
-
-  useEffect(() => {
-    const tmpComment = commentData?.comment
-    if (!tmpComment) {
-      return
-    }
-    setComment(tmpComment)
-    const revisions = tmpComment.revisions
-    setRevision(revisions[revisions.length - 1])
-  }, [commentData])
-
-  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
-    comment,
-    selectedTags
-  ])
 
   const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
     onCompleted: () =>
@@ -77,16 +68,57 @@ export const CommentEditView = memo(() => {
     onError: showErrors
   })
 
+  // compute loading state
   const loading = updatingComment || loadingComment
 
   /**
-   * Form validation model
+   * Initial set of variables "comment" and "revision"
    */
-  const validationModel = Schema.Model({})
+  useEffect(() => {
+    const tmpComment = commentData?.comment
+    if (!tmpComment) {
+      return
+    }
+    setComment(tmpComment)
+
+    const lastRevision = getLastRevision(tmpComment)
+    setRevision(lastRevision)
+  }, [commentData])
+
+  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
+    comment,
+    selectedTags
+  ])
 
   /**
-   * FUNCTIONS
+   * Helper function to parse comment revision input object out of full revision fragment.
+   * @param comment
    */
+  function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
+    const revisions = comment.revisions
+    const lastRevision = revisions[revisions.length - 1]
+    const parsedRevision = {
+      title: lastRevision.title,
+      lead: lastRevision.lead,
+      text: lastRevision.text || defaultValue
+    } as CommentRevisionUpdateInput
+    return parsedRevision
+  }
+
+  /**
+   * Check, if revision object differs from original. Used to decide, whether to create a new revision.
+   */
+  function revisionChanged(): boolean {
+    if (!comment) {
+      return true
+    }
+    const originalVersion = getLastRevision(comment)
+    if (JSON.stringify(originalVersion) !== JSON.stringify(revision)) {
+      return true
+    }
+    return false
+  }
+
   async function updateComment() {
     if (!comment) {
       return
@@ -94,7 +126,7 @@ export const CommentEditView = memo(() => {
     await updateCommentMutation({
       variables: {
         id: comment.id,
-        revision: {text: revision?.text || defaultValue},
+        revision: revisionChanged() ? revision : undefined,
         tagIds: commentTags
       }
     })
@@ -127,11 +159,25 @@ export const CommentEditView = memo(() => {
                 header={t('commentEditView.commentPanelHeader')}>
                 <Row>
                   {/* comment title */}
-                  <Col xs={24}>
+                  <Col xs={12}>
                     <Form.Control
                       name="commentTitle"
-                      value={revision?.title}
-                      placeholder={t('commentEditView.title')}
+                      value={revision?.title || ''}
+                      placeholder={t('commentEditView.titlePlaceholder')}
+                      onChange={(title: string) => {
+                        setRevision({...revision, title})
+                      }}
+                    />
+                  </Col>
+                  {/* comment lead */}
+                  <Col xs={18}>
+                    <Form.Control
+                      name="commentLead"
+                      value={revision?.lead || ''}
+                      placeholder={t('commentEditView.leadPlaceholder')}
+                      onChange={(lead: string) => {
+                        setRevision({...revision, lead})
+                      }}
                     />
                   </Col>
                   {/* comment text */}
