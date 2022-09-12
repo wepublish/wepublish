@@ -20,27 +20,21 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     if (!comment) {
       return
     }
-    const newComment = {...comment}
-    newComment.user = user
-    setComment(newComment)
+    setComment({...comment, user})
   }
 
-  function setGuestUser(userName: string) {
+  function setGuestUser(guestUsername: string) {
     if (!comment) {
       return
     }
-    const newComment = {...comment}
-    newComment.guestUsername = userName
-    setComment(newComment)
+    setComment({...comment, guestUsername})
   }
 
-  function setImage(image: ImageRefFragment | undefined) {
+  function setImage(guestUserImage: ImageRefFragment | undefined) {
     if (!comment) {
       return
     }
-    const newComment = {...comment}
-    newComment.guestUserImage = image
-    setComment(newComment)
+    setComment({...comment, guestUserImage})
   }
 
   return (
