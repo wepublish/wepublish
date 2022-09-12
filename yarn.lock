@@ -6960,6 +6960,14 @@
     "@jonkoops/matomo-tracker" "^0.7.0"
     typescript "^4.7.4"
 
+"@wepublish/api-media-karma@*":
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/@wepublish/api-media-karma/-/api-media-karma-5.0.0.tgz#4a32c679e829ae408e90eb80469772ec7374f52b"
+  integrity sha512-UpsLKKLLp2++LJWpqd34gibXefGdKT32GfsaaC+D1ZqzgYEZUSF913zwmtsd9M7QFlfAG3OmX84WIibA+/1eiA==
+  dependencies:
+    form-data "^3.0.0"
+    node-fetch "^2.6.0"
+
 "@wry/context@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.6.0.tgz#f903eceb89d238ef7e8168ed30f4511f92d83e06"

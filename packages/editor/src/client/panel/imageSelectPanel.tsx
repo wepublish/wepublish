@@ -19,10 +19,7 @@ import {
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
 import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
-import {
-  createCheckedPermissionComponent,
-  createCheckedPermissionComponent
-} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
