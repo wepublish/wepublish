@@ -15,13 +15,13 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'
+import {ImageMetaData} from '../atoms/imageMetaData'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-import {ImageMetaData} from './imageUploadAndEditPanel'
 
 export interface ImageEditPanelProps {
   readonly id?: string

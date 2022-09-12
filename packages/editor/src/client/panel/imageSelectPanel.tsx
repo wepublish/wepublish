@@ -18,7 +18,11 @@ import {
 
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {
+  createCheckedPermissionComponent,
+  createCheckedPermissionComponent
+} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
@@ -34,6 +38,13 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('')
 
   const [file, setFile] = useState<File | null>(null)
+  const [imageMetaData, setImageMetaData] = useState<ImageMetaData>({
+    title: '',
+    description: '',
+    source: '',
+    link: '',
+    licence: ''
+  })
   const {data, fetchMore, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
@@ -50,6 +61,8 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     if (files.length === 0) return
 
     const file = files[0]
+
+    setImageMetaData(await readImageMetaData(file))
 
     if (!file.type.startsWith('image')) {
       toaster.push(
@@ -84,7 +97,14 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImageEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
+    return (
+      <ImageEditPanel
+        onClose={onClose}
+        file={file}
+        onSave={(image: ImageRefFragment) => onSelect(image)}
+        imageMetaData={imageMetaData}
+      />
+    )
   }
 
   return (
