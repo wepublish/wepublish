@@ -669,7 +669,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         duplicateArticle(id, authenticate, articles, article)
     },
 
-    retrievePeerArticle: {
+    savePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
       resolve: async (root, {peerID, id}, context, info) => {
