@@ -1440,7 +1440,7 @@ async function applyPostgres() {
               volumeMounts: [
                 {
                   name: 'postgres-volume',
-                  mountPath: '/data/db'
+                  mountPath: '/bitnami/postgresql'
                 }
               ]
             }

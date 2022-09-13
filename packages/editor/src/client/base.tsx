@@ -1,3 +1,4 @@
+import GridIcon from '@rsuite/icons/Grid'
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
 import BarsIcon from '@rsuite/icons/legacy/Bars'
@@ -17,6 +18,7 @@ import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import SpeakerIcon from '@rsuite/icons/Speaker'
 import TagIcon from '@rsuite/icons/Tag'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -115,7 +117,8 @@ export function Base({children}: BaseProps) {
                     'CAN_GET_ARTICLE',
                     'CAN_CREATE_ARTICLE',
                     'CAN_DELETE_ARTICLE',
-                    'CAN_PUBLISH_ARTICLE'
+                    'CAN_PUBLISH_ARTICLE',
+                    'CAN_GET_ARTICLE_PREVIEW_LINK'
                   ]}>
                   <Nav.Item
                     as={NavLink}
@@ -143,7 +146,8 @@ export function Base({children}: BaseProps) {
                     'CAN_GET_PAGE',
                     'CAN_CREATE_PAGE',
                     'CAN_DELETE_PAGE',
-                    'CAN_PUBLISH_PAGE'
+                    'CAN_PUBLISH_PAGE',
+                    'CAN_GET_PAGE_PREVIEW_LINK'
                   ]}>
                   <Nav.Item
                     as={NavLink}
@@ -186,6 +190,29 @@ export function Base({children}: BaseProps) {
                     </Nav.Item>
                   </PermissionControl>
                 </Nav.Menu>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
+                  <Nav.Menu eventKey={'1'} title={t('navbar.blocks.topMenu')} icon={<GridIcon />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/polls"
+                      active={path === 'polls'}
+                      icon={<SpeakerIcon />}>
+                      {t('navbar.blocks.polls')}
+                    </Nav.Item>
+                  </Nav.Menu>
+                </PermissionControl>
+
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_COMMENTS', 'CAN_TAKE_COMMENT_ACTION']}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/comments"
+                    icon={<CommentIcon />}
+                    active={path === 'comments'}>
+                    {t('navbar.comments')}
+                  </Nav.Item>
+                </PermissionControl>
 
                 <PermissionControl
                   qualifyingPermissions={[

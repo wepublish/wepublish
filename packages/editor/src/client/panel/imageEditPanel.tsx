@@ -32,7 +32,7 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
-function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -404,5 +404,5 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_IMAGES',
   'CAN_DELETE_IMAGE',
   'CAN_CREATE_IMAGE'
-])(ImagedEditPanel)
-export {CheckedPermissionComponent as ImagedEditPanel}
+])(ImageEditPanel)
+export {CheckedPermissionComponent as ImageEditPanel}

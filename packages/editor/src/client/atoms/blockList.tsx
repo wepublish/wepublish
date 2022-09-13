@@ -1,18 +1,17 @@
-import React, {Fragment, useState, ReactNode, useCallback, useMemo, memo} from 'react'
+import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
+import ArrowUpIcon from '@rsuite/icons/legacy/ArrowUp'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import nanoid from 'nanoid'
+import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import {IconButton, Panel} from 'rsuite'
 
 import {
+  isFunctionalUpdate,
   isValueConstructor,
-  ValueConstructor,
   UnionToIntersection,
-  isFunctionalUpdate
+  ValueConstructor
 } from '../utility'
-
 import {AddBlockInput} from './addBlockInput'
-import {IconButton, Panel} from 'rsuite'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import ArrowUpIcon from '@rsuite/icons/legacy/ArrowUp'
-import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
 
 export interface BlockProps<V = any> {
   value: V

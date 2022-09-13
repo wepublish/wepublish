@@ -22,7 +22,7 @@ import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTex
 import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {getOperationNameFromDocument} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
@@ -315,7 +315,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           {(logoImage || callToActionImage) && (
-            <ImagedEditPanel
+            <ImageEditPanel
               id={isLogoChange ? logoImage?.id : callToActionImage?.id}
               onClose={() => setEditModalOpen(false)}
             />
