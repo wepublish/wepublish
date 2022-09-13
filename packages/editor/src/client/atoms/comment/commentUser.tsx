@@ -34,7 +34,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     if (!comment) {
       return
     }
-    setComment({...comment, guestUserImage})
+    setComment(oldComment => ({...oldComment, guestUserImage}))
   }
 
   return (
