@@ -821,7 +821,7 @@
       "deactivationReason": {
         "None": "Aucune",
         "InvoiceNotPaid": "Facture non payée",
-        "UserSelfDeactivated": "Désactivation par l'utilisateur·trice"
+        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement"
       },
       "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
       "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",

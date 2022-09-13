@@ -1028,7 +1028,7 @@
       "deactivationReason": {
         "None": "Keiner",
         "InvoiceNotPaid": "Rechnung nicht bezahlt",
-        "UserSelfDeactivated": "Deaktivierung durch Benutzer:in"
+        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren"
       },
       "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
       "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
