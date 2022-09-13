@@ -44,10 +44,10 @@ export const updateComment = async (
   return commentClient.update({
     where: {id: commentId},
     data: {
-      guestUsername,
       userID,
-      source,
+      guestUsername,
       guestUserImageID,
+      source,
       revisions: revision
         ? {
             create: {
