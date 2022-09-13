@@ -6962,7 +6962,7 @@
 
 "@wepublish/api-media-karma@*":
   version "5.0.0"
-  resolved "https://registry.npmjs.org/@wepublish/api-media-karma/-/api-media-karma-5.0.0.tgz#4a32c679e829ae408e90eb80469772ec7374f52b"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-media-karma/-/api-media-karma-5.0.0.tgz#4a32c679e829ae408e90eb80469772ec7374f52b"
   integrity sha512-UpsLKKLLp2++LJWpqd34gibXefGdKT32GfsaaC+D1ZqzgYEZUSF913zwmtsd9M7QFlfAG3OmX84WIibA+/1eiA==
   dependencies:
     form-data "^3.0.0"
