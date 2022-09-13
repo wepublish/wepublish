@@ -20,7 +20,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     if (!comment) {
       return
     }
-    setComment({...comment, user})
+    setComment(oldComment => ({...oldComment, user}))
   }
 
   function setGuestUser(guestUsername: string) {
