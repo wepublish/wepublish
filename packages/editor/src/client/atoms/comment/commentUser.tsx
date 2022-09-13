@@ -14,7 +14,7 @@ interface CommentUserProps {
 
 export function CommentUser({comment, setComment}: CommentUserProps) {
   const {t} = useTranslation()
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
 
   function setUser(user: FullUserFragment) {
     if (!comment) {
