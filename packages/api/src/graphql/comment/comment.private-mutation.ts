@@ -7,7 +7,7 @@ import {
 } from '@prisma/client'
 import {Context} from '../../context'
 import {authorise, CanTakeActionOnComment, CanUpdateComments} from '../permissions'
-import {CommentRevisionUpdateInput} from '@wepublish/editor/dist/client/api'
+import {RichTextNode} from '../richText'
 
 export const takeActionOnComment = (
   id: string,
@@ -27,9 +27,15 @@ export const takeActionOnComment = (
   })
 }
 
+interface CommentRevisionInput {
+  text?: RichTextNode[]
+  title?: string
+  lead?: string
+}
+
 export const updateComment = async (
   commentId: string,
-  revision: CommentRevisionUpdateInput | undefined,
+  revision: CommentRevisionInput | undefined,
   userID: string,
   guestUsername: string,
   guestUserImageID: string,
