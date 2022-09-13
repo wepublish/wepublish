@@ -9,7 +9,7 @@ import {UserSearch} from '../searchAndFilter/userSearch'
 
 interface CommentUserProps {
   comment?: FullCommentFragment
-  setComment(comment: FullCommentFragment): void
+  setComment: React.Dispatch<React.SetStateAction<FullCommentFragment | undefined>>
 }
 
 export function CommentUser({comment, setComment}: CommentUserProps) {
@@ -17,24 +17,15 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
   const [open, setOpen] = useState(false)
 
   function setUser(user: FullUserFragment) {
-    if (!comment) {
-      return
-    }
-    setComment(oldComment => ({...oldComment, user}))
+    setComment(oldComment => (oldComment ? {...oldComment, user} : oldComment))
   }
 
   function setGuestUser(guestUsername: string) {
-    if (!comment) {
-      return
-    }
-    setComment(oldComment => ({...oldComment, guestUsername}))
+    setComment(oldComment => (oldComment ? {...oldComment, guestUsername} : oldComment))
   }
 
   function setImage(guestUserImage: ImageRefFragment | undefined) {
-    if (!comment) {
-      return
-    }
-    setComment(oldComment => ({...oldComment, guestUserImage}))
+    setComment(oldComment => (oldComment ? {...oldComment, guestUserImage} : oldComment))
   }
 
   return (
@@ -49,6 +40,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
             user={comment?.user}
           />
         </Col>
+
         <Col xs={24}>
           <Form.ControlLabel>{t('commentUser.guestUser')}</Form.ControlLabel>
           <Form.Control
@@ -58,6 +50,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
             value={comment?.guestUsername || ''}
           />
         </Col>
+
         <Col xs={18}>
           <ChooseEditImage
             image={comment?.guestUserImage}
@@ -68,6 +61,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
           />
         </Col>
       </Row>
+
       <Drawer
         open={open}
         onClose={() => {
