@@ -315,6 +315,14 @@
         "startWriting": "Start writing ...",
         "text": "Text"
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Edit HTML",
+        "confirm": "Confirm",
+        "close": "Close",
+        "placeholder": "Paste your HTML block here..",
+        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+      },
       "richTextTable": {
         "label": "Rich text table",
         "addBorders": "Add Borders",
@@ -1005,7 +1013,7 @@
       "name": "Name",
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
-      "paidUntil": "Paid Until",
+      "paidUntil": "Payed Until",
       "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
       "preferredName": "Preferred Name",
       "firstName": "First Name",

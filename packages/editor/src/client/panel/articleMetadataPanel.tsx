@@ -20,6 +20,7 @@ import {
   Tooltip,
   Whisper
 } from 'rsuite'
+
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -27,7 +28,7 @@ import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID, slugify} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {
   authorise,
@@ -569,7 +570,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             onClose={() => {
               setEditModalOpen(false)
             }}>
-            <ImagedEditPanel
+            <ImageEditPanel
               id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
               onClose={() => setEditModalOpen(false)}
             />

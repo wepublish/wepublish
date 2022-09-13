@@ -633,6 +633,14 @@
         "startWriting": "Commencez à écrire...",
         "text": "Texte"
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Editer l’HTML",
+        "confirm": "Confirmer",
+        "close": "Fermer",
+        "placeholder": "Copiez votre bloc HTML ici..",
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+      },
       "richTextTable": {
         "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
