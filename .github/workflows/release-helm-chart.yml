@@ -8,7 +8,7 @@ on:
       - 'helm/charts/**/*'
 
 jobs:
-  app-to-gitlab:
+  push-chart-to-gitlab:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
