@@ -22,7 +22,8 @@ export enum BlockType {
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid = 'teaserGrid',
-  TeaserGridFlex = 'teaserGridFlex'
+  TeaserGridFlex = 'teaserGridFlex',
+  HTML = 'html'
 }
 
 export interface RichTextBlock {
@@ -108,6 +109,11 @@ export interface EmbedBlock {
   height?: string
   styleCustom?: string
   sandbox?: string
+}
+
+export interface HTMLBlock {
+  type: BlockType.HTML
+  html: string
 }
 
 export interface ListicleItem {
@@ -229,6 +235,7 @@ export type ArticleBlock =
   | ListicleBlock
   | LinkPageBreakBlock
   | EmbedBlock
+  | HTMLBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

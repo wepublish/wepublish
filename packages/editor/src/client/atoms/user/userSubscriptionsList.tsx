@@ -25,7 +25,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
    * UI helpers
    */
   function autoRenewalView(subscription: UserSubscriptionFragment) {
-    if (subscription.autoRenew) {
+    if (subscription.autoRenew && !subscription.deactivation) {
       return (
         <>
           <Reload style={{marginRight: '5px'}} />{' '}
@@ -37,7 +37,8 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     // subscription is not auto renewed
     return (
       <>
-        <Off style={{marginRight: '5px'}} /> {t('userSubscriptionList.noAutoRenew')}.
+        <Off style={{marginRight: '5px'}} /> {t('userSubscriptionList.noAutoRenew')}.&nbsp;
+        {getDeactivationString(subscription)}
       </>
     )
   }
