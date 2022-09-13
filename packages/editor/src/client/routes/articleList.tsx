@@ -31,6 +31,7 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -38,7 +39,6 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   StateColor
 } from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -484,6 +484,7 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLES',
   'CAN_GET_ARTICLE',
   'CAN_CREATE_ARTICLE',
-  'CAN_DELETE_ARTICLE'
+  'CAN_DELETE_ARTICLE',
+  'CAN_GET_ARTICLE_PREVIEW_LINK'
 ])(ArticleList)
 export {CheckedPermissionComponent as ArticleList}

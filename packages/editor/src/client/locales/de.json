@@ -540,8 +540,72 @@
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
     },
+    "pollList": {
+      "title": "Umfragen",
+      "createNew": "Umfrage erstellen",
+      "question": "Frage",
+      "opensAt": "Beginnt am",
+      "openedAt": "Begonnen am {{openedAt}}",
+      "pollWillOpenAt": "Beginnt am {{opensAt}}",
+      "noQuestion": "Keine Frage erfasst",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt}}",
+      "closedAt": "Geschlossen am",
+      "closedAtNone": "Nicht geschlossen",
+      "answersCount": "Erfasste Antworten",
+      "state": "Status",
+      "delete": "Löschen",
+      "pollDeleted": "Umfrage gelöscht."
+    },
+    "deletePollModal": {
+      "title": "Umfrage löschen?",
+      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "cancelBtn": "Abbrechen"
+    },
+    "pollEditView": {
+      "loadingTitle": "Lade Umfrage...",
+      "saveTitle": "Speichern",
+      "saveAndCloseTitle": "Speichern & Schliessen",
+      "question": "Frage",
+      "toBeOrNotToBe": "Sein oder nicht sein?",
+      "questionRequired": "Bitte gib Deine Frage ein.",
+      "savedSuccessfully": "Umfrage gespeichert.",
+      "questionPanelHeader": "Frage",
+      "answerPanelHeader": "Mögliche Antworten",
+      "addAndSaveNewAnswer": "Antwort hinzufügen",
+      "settingsPanelHeader": "Einstellungen Publikation",
+      "opensAtLabel": "Startet am",
+      "closesAtLabel": "Schliesst am",
+      "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
+      "defaultAnswer": "Standardantwort"
+    },
+    "pollAnswer": {
+      "insertYourNewAnswer": "Neue Antwort eingeben",
+      "deleteModalTitle": "Löschen?",
+      "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
+      "deleteBtn": "Löschen",
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
+    },
+    "pollExternalVotes": {
+      "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
+      "addSourceBtn": "Hinzufügen",
+      "sourceHeaderCell": "Quelle",
+      "deleteTitle": "Löschen?",
+      "deleteBody": "Willst Du die Quelle \"{{source}}\" unwiderruflich löschen?",
+      "deleteExternalVoteBtn": "Löschen",
+      "emptySource": "Bitte Name der Quelle eingeben."
+    },
+    "pollStateIndication": {
+      "closed": "Umfrage geschlossen",
+      "open": "Umfrage läuft",
+      "waiting": "Umfrage wartet auf Öffnung am {{date}}"
+    },
     "navbar": {
       "articles": "Artikel",
+      "blocks": {
+        "topMenu": "Inhalts-Blöcke",
+        "polls": "Umfrage"
+      },
       "authors": "Autor*innen",
       "comments": "Kommentare",
       "imageLibrary": "Bilder",

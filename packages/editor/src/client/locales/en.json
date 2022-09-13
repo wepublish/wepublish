@@ -540,8 +540,72 @@
       "priceRange": "Price-(Range) in CHF",
       "title": "Member Plans"
     },
+    "pollList": {
+      "title": "Polls",
+      "createNew": "Create Poll",
+      "question": "Question",
+      "opensAt": "Opens at",
+      "openedAt": "Opened at {{openedAt}}",
+      "pollWillOpenAt": "Opens at {{opensAt}}",
+      "noQuestion": "No question captured",
+      "hasBeenClosedAt": "Closed at {{closedAt}}",
+      "closedAt": "Closed at",
+      "closedAtNone": "Not closed",
+      "answersCount": "Possible answers",
+      "state": "State",
+      "delete": "Delete",
+      "pollDeleted": "Poll deleted."
+    },
+    "deletePollModal": {
+      "title": "Delete Poll?",
+      "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
+      "deleteBtn": "Yes, delete",
+      "cancelBtn": "Cancel"
+    },
+    "pollEditView": {
+      "loadingTitle": "Loading poll...",
+      "saveTitle": "Save",
+      "saveAndCloseTitle": "Save & Close",
+      "question": "Poll question",
+      "toBeOrNotToBe": "To be or not to be?",
+      "questionRequired": "Please enter your poll question.",
+      "savedSuccessfully": "Poll saved.",
+      "questionPanelHeader": "Question",
+      "answerPanelHeader": "Possible answers",
+      "addAndSaveNewAnswer": "Add Answer",
+      "settingsPanelHeader": "Publication Settings",
+      "opensAtLabel": "Opened at",
+      "closesAtLabel": "Closed at",
+      "pollExternalVotesPanelHeader": "External Vote Sources",
+      "defaultAnswer": "Default answer"
+    },
+    "pollAnswer": {
+      "insertYourNewAnswer": "Input new question",
+      "deleteModalTitle": "Delete?",
+      "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
+      "deleteBtn": "Delete",
+      "answerMissing": "Please, input your answer."
+    },
+    "pollExternalVotes": {
+      "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
+      "addSourceBtn": "Add Source",
+      "sourceHeaderCell": "Source",
+      "deleteTitle": "Delete?",
+      "deleteBody": "Do you want to delete the source \"{{source}}\" permanently?",
+      "deleteExternalVoteBtn": "Löschen",
+      "emptySource": "Please insert the source name."
+    },
+    "pollStateIndication": {
+      "closed": "Poll closed",
+      "open": "Poll open",
+      "waiting": "Poll is waiting for the opening on {{date}}"
+    },
     "navbar": {
       "articles": "Articles",
+      "blocks": {
+        "topMenu": "Content Blocks",
+        "polls": "Polls"
+      },
       "authors": "Authors",
       "comments": "Comments",
       "settings": "Settings",
