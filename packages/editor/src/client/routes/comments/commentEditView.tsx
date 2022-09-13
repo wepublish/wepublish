@@ -1,36 +1,23 @@
 import {ApolloError} from '@apollo/client'
-import SpinnerIcon from '@rsuite/icons/legacy/Spinner'
-import React, {memo, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Col,
-  Divider,
-  FlexboxGrid,
-  Form,
-  Grid,
-  Loader,
-  Message,
-  Pagination,
-  Panel,
-  Row,
-  TagPicker,
-  toaster
-} from 'rsuite'
+import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
-  SortOrder,
-  TagSort,
+  CommentRevisionUpdateInput,
+  FullCommentFragment,
   TagType,
   useCommentQuery,
-  useTagListQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {CommentUser} from '../../atoms/comment/commentUser'
+import {ModelTitle} from '../../atoms/modelTitle'
+import {SelectTags} from '../../atoms/tag/selectTags'
 import {BlockMap} from '../../blocks/blockMap'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {BlockType, RichTextBlockValue} from '../../blocks/types'
-import {DEFAULT_MAX_TABLE_PAGES, isValueConstructor} from '../../utility'
+import {isValueConstructor} from '../../utility'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -50,13 +37,27 @@ export const CommentEditView = memo(() => {
   const navigate = useNavigate()
   const {id} = useParams()
   const commentId = id!
-
-  const [page, setPage] = useState(1)
-
+  const closePath = '/comments'
+  const validationModel = Schema.Model({})
+  const [close, setClose] = useState<boolean>(false)
+  // where the comment properties are handled
+  const [comment, setComment] = useState<FullCommentFragment | undefined>(undefined)
+  // where the revisions are handled
+  const [revision, setRevision] = useState<CommentRevisionUpdateInput | undefined>(undefined)
+  // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
-  const [editedComment, setEditedComment] = useState<RichTextBlockValue>(null!)
 
-  const [updateComment, {loading: isUpdating}] = useUpdateCommentMutation({
+  /**
+   * Queries
+   */
+  const {data: commentData, loading: loadingComment} = useCommentQuery({
+    variables: {
+      id: commentId
+    },
+    onError: showErrors
+  })
+
+  const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
     onCompleted: () =>
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
@@ -65,170 +66,178 @@ export const CommentEditView = memo(() => {
       ),
     onError: showErrors
   })
-  const {data: commentData, loading} = useCommentQuery({
-    variables: {
-      id: commentId
-    },
-    onError: showErrors
-  })
 
-  const {data: tagsData} = useTagListQuery({
-    variables: {
-      filter: {
-        type: TagType.Comment
-      },
-      sort: TagSort.Tag,
-      order: SortOrder.Ascending
-    },
-    onError: showErrors
-  })
+  // compute loading state
+  const loading = updatingComment || loadingComment
 
-  const availableTags = useMemo(() => {
-    if (!tagsData?.tags?.nodes) {
-      return []
+  /**
+   * Initial set of variables "comment" and "revision"
+   */
+  useEffect(() => {
+    const tmpComment = commentData?.comment
+    if (!tmpComment) {
+      return
     }
+    setComment(tmpComment)
 
-    return tagsData.tags.nodes.map(tag => ({
-      label: tag.tag || t('comments.edit.unnamedTag'),
-      value: tag.id
-    }))
-  }, [tagsData])
+    const lastRevision = getLastRevision(tmpComment)
+    setRevision(lastRevision)
+  }, [commentData])
 
-  const lastRevision = useMemo(
-    () => commentData?.comment?.revisions[commentData?.comment?.revisions.length - 1],
-    [commentData]
-  )
-
-  const commentTags = useMemo(
-    () => selectedTags ?? commentData?.comment?.tags?.map(tag => tag.id),
-    [commentData, selectedTags]
-  )
-
-  const commentText = useMemo(() => editedComment ?? lastRevision?.text ?? defaultValue, [
-    lastRevision,
-    editedComment
+  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
+    comment,
+    selectedTags
   ])
+
+  /**
+   * Helper function to parse comment revision input object out of full revision fragment.
+   * @param comment
+   */
+  function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
+    const revisions = comment.revisions
+    const lastRevision = revisions[revisions.length - 1]
+    const parsedRevision = {
+      title: lastRevision?.title,
+      lead: lastRevision?.lead,
+      text: lastRevision?.text || defaultValue
+    } as CommentRevisionUpdateInput
+    return parsedRevision
+  }
+
+  /**
+   * Check, if revision object differs from original. Used to decide, whether to create a new revision.
+   */
+  function revisionChanged(): boolean {
+    if (!comment) {
+      return true
+    }
+    const originalVersion = getLastRevision(comment)
+    if (JSON.stringify(originalVersion) !== JSON.stringify(revision)) {
+      return true
+    }
+    return false
+  }
+
+  async function updateComment() {
+    if (!comment) {
+      return
+    }
+    await updateCommentMutation({
+      variables: {
+        id: comment.id,
+        revision: revisionChanged() ? revision : undefined,
+        userID: comment.user?.id || null,
+        guestUsername: comment.guestUsername,
+        guestUserImageID: comment.guestUserImage?.id || null,
+        source: comment.source,
+        tagIds: commentTags
+      }
+    })
+    if (close) {
+      navigate(closePath)
+    }
+  }
 
   return (
     <>
-      <FlexboxGrid style={{marginBottom: '40px'}}>
-        <FlexboxGrid.Item colspan={16}>
-          <h2>{t('comments.edit.title')}</h2>
-        </FlexboxGrid.Item>
+      <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
+        {/* heading */}
+        <ModelTitle
+          loading={loading}
+          title={t('comments.edit.title')}
+          loadingTitle={t('comments.edit.title')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setClose}
+        />
 
-        {commentText && (
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <Button
-              type="button"
-              appearance="ghost"
-              data-testid="save"
-              disabled={isUpdating}
-              onClick={() =>
-                updateComment({
-                  variables: {
-                    id: commentId,
-                    text: commentText,
-                    tagIds: commentTags
-                  }
-                })
-              }>
-              {isUpdating ? (
-                <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.edit.loading')}
-                </p>
-              ) : (
-                t('save')
-              )}
-            </Button>
-
-            <Button
-              style={{marginLeft: '12px'}}
-              type="button"
-              appearance="primary"
-              data-testid="save-and-close"
-              disabled={isUpdating}
-              onClick={() =>
-                updateComment({
-                  variables: {
-                    id: commentId,
-                    text: commentText,
-                    tagIds: commentTags
-                  },
-                  onCompleted() {
-                    navigate('/comments')
-                  }
-                })
-              }>
-              {isUpdating ? (
-                <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.edit.loading')}
-                </p>
-              ) : (
-                t('saveAndClose')
-              )}
-            </Button>
-          </FlexboxGrid.Item>
-        )}
-      </FlexboxGrid>
-
-      {loading && (
-        <FlexboxGrid justify="center">
-          <Loader size="lg" style={{margin: '30px'}} />
-        </FlexboxGrid>
-      )}
-
-      <Grid fluid style={{margin: '0'}}>
-        <Row gutter={12}>
-          <Col xs={14}>
-            {commentText && (
+        {/* form elements */}
+        <Grid fluid>
+          <Row gutter={30}>
+            {/* comment content */}
+            <Col xs={14}>
               <Panel bordered style={{width: '100%'}}>
-                <RichTextBlock value={commentText} onChange={setEditedComment} />
-              </Panel>
-            )}
-          </Col>
-
-          <Col xs={10}>
-            <Form.ControlLabel>{t('comments.edit.tags')}</Form.ControlLabel>
-
-            {commentTags && (
-              <TagPicker
-                block
-                virtualized
-                value={commentTags}
-                data={availableTags}
-                onChange={(value: string[]) => setSelectedTags(value)}
-                renderMenu={menu => {
-                  return (
-                    <>
-                      {menu}
-
-                      <Divider style={{margin: '12px 0'}} />
-
-                      <Pagination
-                        style={{
-                          padding: '0 12px 12px'
+                <Row>
+                  {/* comment title */}
+                  <Col xs={18}>
+                    <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
+                    <Form.Control
+                      name="commentTitle"
+                      value={revision?.title || ''}
+                      placeholder={t('commentEditView.title')}
+                      onChange={(title: string) => {
+                        setRevision({...revision, title})
+                      }}
+                    />
+                  </Col>
+                  {/* comment lead */}
+                  <Col xs={18}>
+                    <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
+                    <Form.Control
+                      name="commentLead"
+                      value={revision?.lead || ''}
+                      placeholder={t('commentEditView.lead')}
+                      onChange={(lead: string) => {
+                        setRevision({...revision, lead})
+                      }}
+                    />
+                  </Col>
+                  {/* comment text */}
+                  <Col xs={24} style={{marginTop: '20px'}}>
+                    <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+                    <Panel bordered>
+                      <RichTextBlock
+                        value={revision?.text || defaultValue}
+                        onChange={text => {
+                          setRevision({...revision, text: text as RichTextBlockValue})
                         }}
-                        limit={50}
-                        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-                        first
-                        last
-                        prev
-                        next
-                        ellipsis
-                        boundaryLinks
-                        layout={['total', '-', '|', 'pager']}
-                        total={tagsData?.tags?.totalCount ?? 0}
-                        activePage={page}
-                        onChangePage={page => setPage(page)}
                       />
-                    </>
-                  )
-                }}
-              />
-            )}
-          </Col>
-        </Row>
-      </Grid>
+                    </Panel>
+                  </Col>
+                </Row>
+              </Panel>
+            </Col>
+
+            {/* tags & source */}
+            <Col xs={10}>
+              <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+                <Row>
+                  {/* tags */}
+                  <Col xs={24}>
+                    <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
+                    <SelectTags
+                      selectedTags={commentTags}
+                      setSelectedTags={setSelectedTags}
+                      tagType={TagType.Comment}
+                    />
+                  </Col>
+
+                  {/* external source */}
+                  <Col xs={24}>
+                    <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
+                    <Form.Control
+                      name="externalSource"
+                      placeholder={t('commentEditView.source')}
+                      value={comment?.source || ''}
+                      onChange={(source: string) => {
+                        setComment({...comment, source} as FullCommentFragment)
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Panel>
+            </Col>
+
+            {/* user or guest user */}
+            <Col xs={10}>
+              <Panel bordered header={t('commentEditView.userPanelHeader')}>
+                <CommentUser comment={comment} setComment={setComment} />
+              </Panel>
+            </Col>
+          </Row>
+        </Grid>
+      </Form>
     </>
   )
 })

@@ -16,6 +16,8 @@ export interface CommentData {
   readonly itemType: CommentItemType
 
   readonly parentID?: string | null
+  readonly source?: string | null
+  readonly guestUserImageID?: string | null
 
   readonly createdAt: Date
   readonly modifiedAt: Date
@@ -31,6 +33,8 @@ export interface Comment extends CommentData {
 
 export interface CommentRevision {
   readonly text: RichTextNode[]
+  readonly title: string | null
+  readonly lead: string | null
   readonly createdAt: Date
 }
 

@@ -165,22 +165,25 @@ model Image {
   @@index([title])
   @@index([tags])
   @@map("images")
+  Comment Comment[]
 }
 
 enum CommentItemType {
-  article @map("article")
-  page    @map("page")
+  article  @map("article")
+  page     @map("page")
 }
 
 enum CommentRejectionReason {
-  misconduct @map("misconduct")
-  spam       @map("spam")
+  misconduct  @map("misconduct")
+  spam        @map("spam")
 }
 
 model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   text      Json
+  title     String?
+  lead      String?
 
   Comment   Comment? @relation(fields: [commentId], references: [id])
   commentId String?
@@ -190,17 +193,17 @@ model CommentsRevisions {
 }
 
 enum CommentState {
-  approved           @map("approved")
-  pendingApproval    @map("pendingApproval")
-  pendingUserChanges @map("pendingUserChanges")
-  rejected           @map("rejected")
+  approved            @map("approved")
+  pendingApproval     @map("pendingApproval")
+  pendingUserChanges  @map("pendingUserChanges")
+  rejected            @map("rejected")
 }
 
 enum CommentAuthorType {
-  team         @map("team")
-  author       @map("author")
-  verifiedUser @map("verifiedUser")
-  guestUser    @map("guestUser")
+  team          @map("team")
+  author        @map("author")
+  verifiedUser  @map("verifiedUser")
+  guestUser     @map("guestUser")
 }
 
 model Comment {
@@ -208,17 +211,19 @@ model Comment {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  itemID          String
-  itemType        CommentItemType
-  parentID        String?
-  revisions       CommentsRevisions[]
-  rejectionReason CommentRejectionReason?
-  state           CommentState
-  authorType      CommentAuthorType
-  guestUsername   String?
-
-  user   User?   @relation(fields: [userID], references: [id])
-  userID String?
+  itemID           String
+  itemType         CommentItemType
+  parentID         String?
+  revisions        CommentsRevisions[]
+  rejectionReason  CommentRejectionReason?
+  state            CommentState
+  source           String?
+  authorType       CommentAuthorType
+  guestUsername    String?
+  guestUserImageID String?
+  guestUserImage   Image?                  @relation(fields: [guestUserImageID], references: [id])
+  userID           String?
+  user             User?                   @relation(fields: [userID], references: [id])
 
   tags TaggedComments[]
 
@@ -281,12 +286,12 @@ model Invoice {
 }
 
 enum MailLogState {
-  submitted @map("submitted")
-  accepted  @map("accepted")
-  delivered @map("delivered")
-  deferred  @map("deferred")
-  bounced   @map("bounced")
-  rejected  @map("rejected")
+  submitted  @map("submitted")
+  accepted   @map("accepted")
+  delivered  @map("delivered")
+  deferred   @map("deferred")
+  bounced    @map("bounced")
+  rejected   @map("rejected")
 }
 
 model MailLog {
@@ -305,10 +310,10 @@ model MailLog {
 }
 
 enum PaymentPeriodicity {
-  monthly   @map("monthly")
-  quarterly @map("quarterly")
-  biannual  @map("biannual")
-  yearly    @map("yearly")
+  monthly    @map("monthly")
+  quarterly  @map("quarterly")
+  biannual   @map("biannual")
+  yearly     @map("yearly")
 }
 
 model AvailablePaymentMethod {
@@ -445,13 +450,13 @@ model PaymentMethod {
 }
 
 enum PaymentState {
-  created            @map("created")
-  submitted          @map("submitted")
-  requiresUserAction @map("requiresUserAction")
-  processing         @map("processing")
-  paid               @map("paid")
-  canceled           @map("canceled")
-  declined           @map("declined")
+  created             @map("created")
+  submitted           @map("submitted")
+  requiresUserAction  @map("requiresUserAction")
+  processing          @map("processing")
+  paid                @map("paid")
+  canceled            @map("canceled")
+  declined            @map("declined")
 }
 
 model Payment {
@@ -549,9 +554,9 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                 @map("none")
+  userSelfDeactivated  @map("userSelfDeactivated")
+  invoiceNotPaid       @map("invoiceNotPaid")
 }
 
 model SubscriptionDeactivation {
@@ -702,7 +707,7 @@ model Setting {
 }
 
 enum TagType {
-  Comment @map("comment")
+  Comment  @map("comment")
 }
 
 model Tag {

@@ -401,6 +401,20 @@
         "rejected": "Abgelehnt"
       }
     },
+    "commentEditView": {
+      "title": "Titel",
+      "lead": "Lead",
+      "comment": "Text Kommentar",
+      "variousPanelHeader": "Tags & Quelle",
+      "tags": "Tags",
+      "source": "Quelle",
+      "userPanelHeader": "Verfasser:in des Kommentars"
+    },
+    "commentUser": {
+      "selectExistingUser": "Registrierte Benutzer:in wählen",
+      "guestUser": "Gast (Benutzername)",
+      "selectImage": "Profilbild des Gastes wählen oder hochladen"
+    },
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "dateTimePicker": {

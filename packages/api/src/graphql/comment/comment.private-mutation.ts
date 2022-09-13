@@ -7,6 +7,7 @@ import {
 } from '@prisma/client'
 import {Context} from '../../context'
 import {authorise, CanTakeActionOnComment, CanUpdateComments} from '../permissions'
+import {RichTextNode} from '../richText'
 
 export const takeActionOnComment = (
   id: string,
@@ -26,9 +27,19 @@ export const takeActionOnComment = (
   })
 }
 
+interface CommentRevisionInput {
+  text?: RichTextNode[]
+  title?: string
+  lead?: string
+}
+
 export const updateComment = async (
   commentId: string,
-  text: string | undefined,
+  revision: CommentRevisionInput | undefined,
+  userID: string,
+  guestUsername: string,
+  guestUserImageID: string,
+  source: string,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   commentClient: PrismaClient['comment']
@@ -39,10 +50,16 @@ export const updateComment = async (
   return commentClient.update({
     where: {id: commentId},
     data: {
-      revisions: text
+      userID,
+      guestUsername,
+      guestUserImageID,
+      source,
+      revisions: revision
         ? {
             create: {
-              text
+              text: (revision.text as unknown) as string,
+              title: revision.title,
+              lead: revision.lead
             }
           }
         : undefined,

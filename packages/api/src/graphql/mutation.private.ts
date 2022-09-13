@@ -30,7 +30,8 @@ import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
   GraphQLCommentItemType,
-  GraphQLCommentRejectionReason
+  GraphQLCommentRejectionReason,
+  GraphQLCommentRevisionUpdateInput
 } from './comment/comment'
 import {
   createAdminComment,
@@ -837,16 +838,33 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     // Comment
     // ======
-
     updateComment: {
       type: GraphQLNonNull(GraphQLComment),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        text: {type: GraphQLRichText},
+        revision: {type: GraphQLCommentRevisionUpdateInput},
+        userID: {type: GraphQLID},
+        guestUsername: {type: GraphQLString},
+        guestUserImageID: {type: GraphQLID},
+        source: {type: GraphQLString},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
-      resolve: (root, {id, text, tagIds}, {authenticate, prisma: {comment}}) =>
-        updateComment(id, text, tagIds, authenticate, comment)
+      resolve: (
+        root,
+        {id, revision, userID, guestUsername, guestUserImageID, source, tagIds},
+        {authenticate, prisma: {comment}}
+      ) =>
+        updateComment(
+          id,
+          revision,
+          userID,
+          guestUsername,
+          guestUserImageID,
+          source,
+          tagIds,
+          authenticate,
+          comment
+        )
     },
 
     createComment: {

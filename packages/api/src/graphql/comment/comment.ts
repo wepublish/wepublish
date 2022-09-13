@@ -24,6 +24,7 @@ import {GraphQLPageInfo} from '../common'
 import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
+import {GraphQLImage} from '../image'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -79,7 +80,18 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
   name: 'CommentRevision',
   fields: {
     text: {type: GraphQLNonNull(GraphQLRichText)},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
+export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
+  name: 'CommentRevisionUpdateInput',
+  fields: {
+    text: {type: GraphQLRichText},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString}
   }
 })
 
@@ -138,6 +150,18 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     guestUsername: {type: GraphQLString},
+    guestUserImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
+        guestUserImageID
+          ? image.findUnique({
+              where: {
+                id: guestUserImageID
+              }
+            })
+          : null
+      )
+    },
     user: {
       type: GraphQLUser,
       resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
@@ -185,6 +209,9 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     revisions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
+    },
+    source: {
+      type: GraphQLString
     },
     state: {type: GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
