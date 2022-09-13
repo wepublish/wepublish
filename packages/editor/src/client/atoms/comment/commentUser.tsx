@@ -27,7 +27,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
     if (!comment) {
       return
     }
-    setComment({...comment, guestUsername})
+    setComment(oldComment => ({...oldComment, guestUsername}))
   }
 
   function setImage(guestUserImage: ImageRefFragment | undefined) {
