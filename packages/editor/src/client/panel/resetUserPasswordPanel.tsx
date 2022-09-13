@@ -5,6 +5,7 @@ import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
 import {useResetUserPasswordMutation} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string
@@ -12,7 +13,7 @@ export interface ResetUserPasswordPanelProps {
   onClose(): void
 }
 
-export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPasswordPanelProps) {
+function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPasswordPanelProps) {
   const [password, setPassword] = useState('')
 
   const [
@@ -80,3 +81,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
     </Panel>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_RESET_USER_PASSWORD'])(
+  ResetUserPasswordPanel
+)
+export {CheckedPermissionComponent as ResetUserPasswordPanel}

@@ -37,6 +37,7 @@
 
 * [Setup Commenting](commenting.md)
 * [Email Templates](emailtemplates.md)
+* [Releases](Releases.md)
 
 
 ## packages/editor
@@ -48,6 +49,42 @@ Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 3) Navigate in your terminal to `packages/editor` and run `yarn generate:api`
 4) Now the file `index.ts` will be generated automatically `in editor/src/client/api`
 5) Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
+
+
+### Analytics
+In order to use analytics and send data to WePublish, we prepared an analytics.js plugin that's available here:
+
+https://github.com/wepublish/analytics
+
+it integrates with https://github.com/DavidWells/analytics
+
+Usage:
+
+Import and initialise the tracker anywhere in the project
+
+    import  Analytics  from  'analytics'
+    import { wepublish } from '@wepublish/analytics'
+    
+    const  analytics = Analytics({
+	    app: 'Your app name',
+	    plugins: [wepublish()]
+    })
+
+then call the method on page load e.g.
+
+    const { current } = useRoute()
+    
+    useEffect(() => {
+    	analytics.page()
+    }, [current])
+
+The tracker will automatically look in the html structure for an element with an id "peer-element" and take data from this element. Example element to send peer tracking data should look like the following:
+
+    <div id="peer-element" data-peer-name="Some peer name" data-peer-article-id="123" data-publisher-name="Your name" />
+
+If you want to track page views and send peer name and peer article id, please make sure that this element is present on the peered article page. Otherwise the tracker won't be called.
+
+The above can be seen in examples/website/src/shared/route/router.tsx
 
 ### Form validation
 Validation is based on rsuite validation: https://rsuitejs.com/components/form-validation/
@@ -102,6 +139,39 @@ Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields
 
 Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
 
+### Restricting Content With Permission Control
+
+Permission control allows for restricting Editor content dependent on the current user's role.
+
+```createCheckedPermissionComponent``` takes a list of permission IDs, any of which would permit access, followed by the component that is being controlled.
+
+
+```
+const CheckedPermissionComponent = createCheckedPermissionComponent(listOfPermissions)(ControlledComponent)
+```
+The controlled component can then be exported to replace the uncontrolled version. 
+
+```export {CheckedPermissionComponent as ControlledComponent}```
+
+If checks pass, and the user retains the specified permissions then the original component will be returned, otherwise the component will return an error message notifying the user that they aren't authorized to access that content.
+It is possible to hide the component without the error message by passing false as a second argument to ```createCheckedPermissionComponent()```.
+
+To check whether a user retains an individual permission, the ```authorise()``` can be called.
+This takes a permission ID and returns ```true``` or ```false``` depending on whether the current user has that permission.
+
+``authorise(permissionID)``
+
+
+### Form accessibility
+To properly attach label to input, as well as utilize auto-generated `aria-labelledby` and `aria-describeby`, rsuite provides a `controlId` prop on `Form.Group`. This should be watched throughout the project to ensure the best possible performance and usability of the forms. More information can be found under this link: https://rsuitejs.com/components/form/#accessibility
+
+### Custom HTML block
+
+After requests from publishers and weighing benefits and potential issues, we decided to allow to save custom HTML blocks both in articles and pages. Allowing to save and display custom HTML blocks is risky due to the fact that these blocks can be used to run dangerous scripts on the client side that may lead to, e.g. account impersonation, observing user behaviour, loading external content or stealing sensitive data. But, as the blocks will be added by publishers themselves, it's their responsibility to make sure that the HTML blocks are secure. WePublish provides further measurements by applying a filter on the HTML that sanitises the publisher's input, minimising the risk of running malicious code.
+
+To give further control over the content of HTML block, whitelisting certain tags and urls will be made possible in the editor's settings. In addition, we always store the original data in the database, and we allow the publisher to see the sanitised data in the settings to see how (and if) the HTML was changed thanks to the xss prevention filter - which can further help to understand the risks and dangers.
+
+We have, however, to be aware that it's almost impossible to be 100% sure that none of the code displayed as custom HTML is dangerous.
 
 ## packages/api
 ### Environment Variables

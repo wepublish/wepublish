@@ -3,7 +3,7 @@ import {Article} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'
-import {Peer} from './db/peer'
+import {Peer} from '@prisma/client'
 
 export interface URLAdapter {
   getPublicArticleURL(article: PublicArticle): string

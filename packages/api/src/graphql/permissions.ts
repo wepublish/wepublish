@@ -1,5 +1,5 @@
+import {UserRole} from '@prisma/client'
 import {NotAuthorisedError} from '../error'
-import {UserRole} from '../db/userRole'
 
 export interface Permission {
   id: string
@@ -465,6 +465,48 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanLoginAsOtherUser: Permission = {
+  id: 'CAN_LOGIN_AS_OTHER_USER',
+  description: 'Allows to login as other user',
+  deprecated: false
+}
+
+export const CanGetSettings: Permission = {
+  id: 'CAN_GET_SETTINGS',
+  description: 'Allows to get all settings',
+  deprecated: false
+}
+
+export const CanUpdateSettings: Permission = {
+  id: 'CAN_UPDATE_SETTINGS',
+  description: 'Allows to update settings',
+  deprecated: false
+}
+
+export const CanGetPoll: Permission = {
+  id: 'CAN_GET_POLL',
+  description: 'Allows to get a poll',
+  deprecated: false
+}
+
+export const CanCreatePoll: Permission = {
+  id: 'CAN_CREATE_POLL',
+  description: 'Allows to create a poll',
+  deprecated: false
+}
+
+export const CanUpdatePoll: Permission = {
+  id: 'CAN_UPDATE_POLL',
+  description: 'Allows to update a poll',
+  deprecated: false
+}
+
+export const CanDeletePoll: Permission = {
+  id: 'CAN_DELETE_POLL',
+  description: 'Allows to delete a poll',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -502,7 +544,6 @@ export const AllPermissions: Permission[] = [
   CanCreateToken,
   CanDeleteToken,
   CanGetTokens,
-  CanDeleteToken,
   CanCreateUser,
   CanResetUserPassword,
   CanGetUser,
@@ -536,7 +577,14 @@ export const AllPermissions: Permission[] = [
   CanCreateSubscription,
   CanGetSubscription,
   CanGetSubscriptions,
-  CanDeleteSubscription
+  CanDeleteSubscription,
+  CanLoginAsOtherUser,
+  CanGetSettings,
+  CanUpdateSettings,
+  CanGetPoll,
+  CanUpdatePoll,
+  CanDeletePoll,
+  CanCreatePoll
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -559,7 +607,13 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
-  CanLoginEditor
+  CanGetPeerProfile,
+  CanLoginEditor,
+  CanGetSettings,
+  CanGetPoll,
+  CanUpdatePoll,
+  CanDeletePoll,
+  CanCreatePoll
 ]
 
 export const PeerPermissions: Permission[] = [

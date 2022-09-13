@@ -1,44 +1,21 @@
+import LockIcon from '@rsuite/icons/legacy/Lock'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
-
-import {
-  ButtonLink,
-  Link,
-  RouteType,
-  UserCreateRoute,
-  UserEditRoute,
-  UserListRoute,
-  useRoute,
-  useRouteDispatch
-} from '../route'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {UserEditPanel} from '../panel/userEditPanel'
-import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
-
-import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table,
-  Pagination
-} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import LockIcon from '@rsuite/icons/legacy/Lock'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -57,18 +34,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   }
 }
 
-export function UserList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
-
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
-  )
-
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.UserEdit ? current.params.id : undefined
-  )
-
+function UserList() {
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
@@ -84,8 +50,8 @@ export function UserList() {
   const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     },
@@ -95,8 +61,8 @@ export function UserList() {
   useEffect(() => {
     refetch({
       filter: filter || undefined,
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
@@ -107,18 +73,6 @@ export function UserList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current?.type === RouteType.UserCreate) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (current?.type === RouteType.UserEdit) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
-    }
-  }, [current])
-
-  useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes)
       if (data.users.totalCount + 9 < page * limit) {
@@ -127,21 +81,39 @@ export function UserList() {
     }
   }, [data?.users])
 
+  /**
+   * UI helpers
+   */
+  function getSubscriptionCellView(user: FullUserFragment) {
+    const subscriptions = user.subscriptions
+    const totalSubscriptions = subscriptions?.length
+    // one subscription
+    if (subscriptions?.length === 1) {
+      return <>{t('userList.overview.oneSubscription')}</>
+    }
+    // multiple subscriptions
+    if (subscriptions?.length) {
+      return <>{t('userList.overview.amountOfSubscriptions', {amount: totalSubscriptions})}</>
+    }
+    // no subscription
+    return <>{t('userList.overview.noSubscriptions')}</>
+  }
+
   return (
     <>
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            style={{marginLeft: 5}}
-            appearance="primary"
-            disabled={isLoading}
-            route={UserCreateRoute.create({})}>
-            {t('userList.overview.newUser')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/users/create">
+              <Button style={{marginLeft: 5}} appearance="primary" disabled={isLoading}>
+                {t('userList.overview.newUser')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -190,9 +162,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
-                  {rowData.firstName || ''}
-                </Link>
+                <Link to={`/users/edit/${rowData.id}`}>{rowData.firstName || ''}</Link>
               )}
             </Cell>
           </Column>
@@ -200,7 +170,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
+                <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}
@@ -210,35 +180,46 @@ export function UserList() {
             <HeaderCell>{t('email')}</HeaderCell>
             <Cell dataKey="email" />
           </Column>
+          {/* subscription */}
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
+            <Cell>
+              {(rowData: FullUserFragment) => <div>{getSubscriptionCellView(rowData)}</div>}
+            </Cell>
+          </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullUserFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
-                    <IconButton
-                      icon={<LockIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={e => {
-                        setCurrentUser(rowData)
-                        setIsResetUserPasswordOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('userList.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentUser(rowData)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
+                    <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
+                      <IconButton
+                        icon={<LockIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={e => {
+                          setCurrentUser(rowData)
+                          setIsResetUserPasswordOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_USER']}>
+                    <IconButtonTooltip caption={t('userList.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setConfirmationDialogOpen(true)
+                          setCurrentUser(rowData)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -263,44 +244,15 @@ export function UserList() {
         />
       </div>
 
-      <Drawer
-        open={isEditModalOpen}
-        size={'sm'}
-        onClose={() => {
-          setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: UserListRoute.create({}, current ?? undefined)
-          })
-        }}>
-        <UserEditPanel
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
-
+      {/* reset user password */}
       {currentUser?.id && (
         <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
           <Modal.Header>
-            <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+            <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <ResetUserPasswordPanel
+            <ResetUserPasswordForm
               userID={currentUser?.id}
               userName={currentUser?.name}
               onClose={() => setIsResetUserPasswordOpen(false)}
@@ -309,21 +261,22 @@ export function UserList() {
 
           <Modal.Footer>
             <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-              {t('userList.panels.cancel')}
+              {t('userCreateOrEditView.cancel')}
             </Button>
           </Modal.Footer>
         </Modal>
       )}
 
+      {/* delete user modal */}
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
-          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
+          <Modal.Title>{t('userCreateOrEditView.deleteUser')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <DescriptionList>
-            <DescriptionListItem label={t('userList.panels.name')}>
-              {currentUser?.name || t('userList.panels.Unknown')}
+            <DescriptionListItem label={t('userCreateOrEditView.name')}>
+              {currentUser?.name || t('userCreateOrEditView.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
@@ -342,13 +295,22 @@ export function UserList() {
               refetch()
             }}
             color="red">
-            {t('userList.panels.confirm')}
+            {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
+            {t('userCreateOrEditView.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USERS',
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_RESET_USER_PASSWORD'
+])(UserList)
+export {CheckedPermissionComponent as UserList}

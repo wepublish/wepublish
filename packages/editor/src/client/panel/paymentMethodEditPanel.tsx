@@ -13,6 +13,12 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {slugify} from '../utility'
+import {
+  PermissionControl,
+  createCheckedPermissionComponent,
+  authorise
+} from '../atoms/permissionControl'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -21,8 +27,10 @@ export interface PaymentMethodEditPanelProps {
   onSave?(paymentMethod: FullPaymentMethodFragment): void
 }
 
-export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
+function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
   const {t} = useTranslation()
+
+  const isAuthorized = authorise('CAN_CREATE_PAYMENT_METHOD')
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -61,7 +69,8 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     isUpdating ||
     isLoadingPaymentProvider ||
     loadError !== undefined ||
-    loadPaymentProviderError !== undefined
+    loadPaymentProviderError !== undefined ||
+    !isAuthorized
 
   useEffect(() => {
     if (data?.paymentMethod) {
@@ -150,13 +159,15 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
           </Drawer.Title>
 
           <Drawer.Actions>
-            <Button
-              appearance="primary"
-              disabled={isDisabled}
-              type="submit"
-              onClick={() => handleSave()}>
-              {id ? t('save') : t('create')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+              <Button
+                appearance="primary"
+                disabled={isDisabled}
+                type="submit"
+                onClick={() => handleSave()}>
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
             </Button>
@@ -165,8 +176,10 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
         <Drawer.Body>
           <Panel>
-            <Form.Group>
-              <Form.ControlLabel>{t('paymentMethodList.name') + '*'}</Form.ControlLabel>
+            <Form.Group controlId="paymentMethodName">
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.name'))}
+              </Form.ControlLabel>
               <Form.Control
                 name="name"
                 value={name}
@@ -177,20 +190,23 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodSlug">
               <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
               <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodIsActive">
               <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
             </Form.Group>
-            <Form.Group>
-              <Form.ControlLabel>{t('paymentMethodList.adapter') + '*'}</Form.ControlLabel>
+            <Form.Group controlId="paymentMethodAdapter">
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+              </Form.ControlLabel>
               <Form.Control
                 name="paymentProvider"
                 virtualized
+                disabled={isDisabled}
                 value={paymentProvider?.id}
                 data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
@@ -201,7 +217,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 }
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="paymentMethodDescription">
               <Form.ControlLabel>{t('paymentMethodList.description')}</Form.ControlLabel>
               <Form.Control
                 name="description"
@@ -218,3 +234,11 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAYMENT_METHOD',
+  'CAN_GET_PAYMENT_METHODS',
+  'CAN_CREATE_PAYMENT_METHOD',
+  'CAN_DELETE_PAYMENT_METHOD'
+])(PaymentMethodEditPanel)
+export {CheckedPermissionComponent as PaymentMethodEditPanel}

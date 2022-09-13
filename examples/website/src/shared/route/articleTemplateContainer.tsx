@@ -417,6 +417,10 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
 
   return (
     <div
+      id="peer-element"
+      data-peer-name={peer.name}
+      data-peer-article-id={article.id}
+      data-publisher-name="WePublish Example"
       className={css(PeerProfileBreakStyle)}
       style={{backgroundColor: peer.themeColor, color: peer.themeFontColor}}>
       <div className={css(PeerProfileInnerStyle)}>

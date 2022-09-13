@@ -6,8 +6,9 @@ Object {
     "createPeer": Object {
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
+      "isDisabled": false,
       "name": "Create Peer Test",
-      "slug": "test-peer",
+      "slug": Any<String>,
     },
   },
   "errors": undefined,
@@ -23,7 +24,7 @@ Object {
 exports[`Peers can be created/edited/deleted: can be deleted 1`] = `
 Object {
   "data": Object {
-    "deletePeer": Any<String>,
+    "deletePeer": Any<Object>,
   },
   "errors": undefined,
   "extensions": undefined,
@@ -41,43 +42,10 @@ Object {
     "peer": Object {
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
-      "name": "Peer Test 3",
-      "slug": "test-peer3",
+      "isDisabled": false,
+      "name": "Create Peer Test",
+      "slug": Any<String>,
     },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Peers can be created/edited/deleted: can be read in list 1`] = `
-Object {
-  "data": Object {
-    "peers": Array [
-      Object {
-        "hostURL": "https://host-url.ch/",
-        "id": Any<String>,
-        "name": "Peer Test 2",
-        "slug": "test-peer2",
-      },
-      Object {
-        "hostURL": "https://host-url.ch/",
-        "id": Any<String>,
-        "name": "Create Peer Test",
-        "slug": "test-peer",
-      },
-      Object {
-        "hostURL": "https://host-url.ch/",
-        "id": Any<String>,
-        "name": "Peer Test 0",
-        "slug": "test-peer0",
-      },
-    ],
   },
   "errors": undefined,
   "extensions": undefined,
@@ -93,10 +61,11 @@ exports[`Peers can be created/edited/deleted: can be updated 1`] = `
 Object {
   "data": Object {
     "updatePeer": Object {
-      "hostURL": "https://host-url.ch/",
+      "hostURL": "https://new-host-url.ch/",
       "id": Any<String>,
+      "isDisabled": false,
       "name": "Updated Peer",
-      "slug": "update-peer",
+      "slug": Any<String>,
     },
   },
   "errors": undefined,
@@ -136,24 +105,14 @@ Object {
 
 exports[`Peers can be created/edited/deleted: can update peer profile 1`] = `
 Object {
-  "data": Object {
-    "updatePeerProfile": Object {
-      "callToActionImage": null,
-      "callToActionImageURL": null,
-      "callToActionText": Array [
-        Object {
-          "text": "rich text call to action",
-        },
-      ],
-      "callToActionURL": "calltoactionurl.ch/",
-      "hostURL": "https://fakeURL",
-      "logo": null,
-      "name": "test peer profile",
-      "themeColor": "#4287f5",
-      "themeFontColor": "#d67c15",
-    },
-  },
-  "errors": undefined,
+  "data": null,
+  "errors": Array [
+    [GraphQLError: 
+Invalid \`prisma.peerProfile.create()\` invocation:
+
+
+  Foreign key constraint failed on the field: \`peerProfiles_logoID_fkey (index)\`],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

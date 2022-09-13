@@ -1,20 +1,23 @@
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import ListIcon from '@rsuite/icons/legacy/List'
+import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Input, Message, Nav, Panel, TagPicker, Toggle} from 'rsuite'
 
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
-import {MetaDataType} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {generateID} from '../utility'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
-import ListIcon from '@rsuite/icons/legacy/List'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
+import {MetaDataType} from '../blocks/types'
+import {generateID} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -39,10 +42,11 @@ export interface PageMetadataPanelProps {
   readonly value: PageMetadata
 
   onClose?(): void
+
   onChange?(value: PageMetadata): void
 }
 
-export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
+function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
   const {
     title,
     description,
@@ -59,6 +63,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
+
+  const isAuthorized = authorise('CAN_CREATE_PAGE')
 
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<PageMetadataProperty>[]>(
     properties
@@ -98,168 +104,162 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
-          <Panel>
-            <Form fluid>
-              <Form.Group>
-                <Message showIcon type="info">
-                  {t('pageEditor.panels.metadataInfo')}
-                </Message>
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
-                <Form.Control
-                  name="social-media-title"
-                  value={socialMediaTitle}
-                  onChange={(socialMediaTitle: string) => {
-                    onChange?.({...value, socialMediaTitle})
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>
-                  {t('pageEditor.panels.socialMediaDescription')}
-                </Form.ControlLabel>
-                <Form.Control
-                  name="social-media-description"
-                  rows={5}
-                  accepter={Textarea}
-                  value={socialMediaDescription}
-                  onChange={(socialMediaDescription: string) => {
-                    onChange?.({...value, socialMediaDescription})
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.socialMediaImage')}</Form.ControlLabel>
-                <ChooseEditImage
-                  header={''}
-                  image={socialMediaImage}
-                  disabled={false}
-                  openChooseModalOpen={() => {
-                    setChooseModalOpen(true)
-                  }}
-                  openEditModalOpen={() => {
-                    setEditModalOpen(true)
-                  }}
-                  removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
-                />
-              </Form.Group>
-            </Form>
-          </Panel>
+          <>
+            <Form.Group>
+              <Message showIcon type="info">
+                {t('pageEditor.panels.metadataInfo')}
+              </Message>
+            </Form.Group>
+            <Form.Group controlId="socialMediaTitle">
+              <Form.ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</Form.ControlLabel>
+              <Form.Control
+                name="social-media-title"
+                value={socialMediaTitle}
+                onChange={(socialMediaTitle: string) => {
+                  onChange?.({...value, socialMediaTitle})
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="socialMediaDescription">
+              <Form.ControlLabel>{t('pageEditor.panels.socialMediaDescription')}</Form.ControlLabel>
+              <Form.Control
+                name="social-media-description"
+                rows={5}
+                accepter={Textarea}
+                value={socialMediaDescription}
+                onChange={(socialMediaDescription: string) => {
+                  onChange?.({...value, socialMediaDescription})
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="socialMediaImage">
+              <Form.ControlLabel>{t('pageEditor.panels.socialMediaImage')}</Form.ControlLabel>
+              <ChooseEditImage
+                header={''}
+                image={socialMediaImage}
+                disabled={false}
+                openChooseModalOpen={() => {
+                  setChooseModalOpen(true)
+                }}
+                openEditModalOpen={() => {
+                  setEditModalOpen(true)
+                }}
+                removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
+              />
+            </Form.Group>
+          </>
         )
       case MetaDataType.General:
         return (
-          <Panel>
-            <Form fluid>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
-                <Form.Control
-                  name="slug"
-                  value={slug}
-                  onChange={(slug: string) => onChange?.({...value, slug})}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
-                <Form.Control
-                  name="title"
-                  value={title}
-                  onChange={(title: string) => onChange?.({...value, title})}
-                />
-                <Form.HelpText>{t('pageEditor.panels.titleHelpBlock')}</Form.HelpText>
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
-                <Form.Control
-                  name="description"
-                  accepter={Textarea}
-                  value={description}
-                  onChange={(description: string) => onChange?.({...value, description})}
-                />
-                <Form.HelpText>{t('pageEditor.panels.descriptionHelpBlock')}</Form.HelpText>
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
-                <TagPicker
-                  virtualized
-                  style={{width: '100%'}}
-                  creatable
-                  value={tags}
-                  data={tags.map(tag => ({label: tag, value: tag}))}
-                  onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.postImage')}</Form.ControlLabel>
-                <ChooseEditImage
-                  header={''}
-                  image={image}
-                  disabled={false}
-                  openChooseModalOpen={() => {
-                    setChooseModalOpen(true)
-                  }}
-                  openEditModalOpen={() => {
-                    setEditModalOpen(true)
-                  }}
-                  removeImage={() => onChange?.({...value, image: undefined})}
-                />
-              </Form.Group>
-            </Form>
-          </Panel>
+          <>
+            <Form.Group controlId="pageSlug">
+              <Form.ControlLabel>{t('pageEditor.panels.slug')}</Form.ControlLabel>
+              <Form.Control
+                name="slug"
+                value={slug}
+                onChange={(slug: string) => onChange?.({...value, slug})}
+              />
+            </Form.Group>
+            <Form.Group controlId="pageTitle">
+              <Form.ControlLabel>{t('pageEditor.panels.title')}</Form.ControlLabel>
+              <Form.Control
+                name="title"
+                value={title}
+                onChange={(title: string) => onChange?.({...value, title})}
+              />
+              <Form.HelpText>{t('pageEditor.panels.titleHelpBlock')}</Form.HelpText>
+            </Form.Group>
+            <Form.Group controlId="pageDescription">
+              <Form.ControlLabel>{t('pageEditor.panels.description')}</Form.ControlLabel>
+              <Form.Control
+                name="description"
+                accepter={Textarea}
+                value={description}
+                onChange={(description: string) => onChange?.({...value, description})}
+              />
+              <Form.HelpText>{t('pageEditor.panels.descriptionHelpBlock')}</Form.HelpText>
+            </Form.Group>
+            <Form.Group controlId="pageTags">
+              <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
+              <TagPicker
+                disabled={!isAuthorized}
+                virtualized
+                style={{width: '100%'}}
+                creatable
+                value={tags}
+                data={tags.map(tag => ({label: tag, value: tag}))}
+                onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>{t('pageEditor.panels.postImage')}</Form.ControlLabel>
+              <ChooseEditImage
+                header={''}
+                image={image}
+                disabled={false}
+                openChooseModalOpen={() => {
+                  setChooseModalOpen(true)
+                }}
+                openEditModalOpen={() => {
+                  setEditModalOpen(true)
+                }}
+                removeImage={() => onChange?.({...value, image: undefined})}
+              />
+            </Form.Group>
+          </>
         )
       case MetaDataType.Properties:
         return (
-          <Panel>
-            <Form fluid>
-              <Form.Group>
-                <Message showIcon type="info">
-                  {t('pageEditor.panels.propertiesInfo')}
-                </Message>
-              </Form.Group>
-              <Form.Group>
-                <Form.ControlLabel>{t('pageEditor.panels.properties')}</Form.ControlLabel>
-                <ListInput
-                  value={metaDataProperties}
-                  onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
-                  defaultValue={{key: '', value: '', public: true}}>
-                  {({value, onChange}) => (
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                      <Input
-                        placeholder={t('pageEditor.panels.key')}
-                        style={{
-                          width: '40%',
-                          marginRight: '10px'
-                        }}
-                        value={value.key}
-                        onChange={propertyKey => {
-                          onChange({...value, key: propertyKey})
-                        }}
+          <>
+            <Form.Group>
+              <Message showIcon type="info">
+                {t('pageEditor.panels.propertiesInfo')}
+              </Message>
+            </Form.Group>
+            <Form.Group controlId="pageProperties">
+              <Form.ControlLabel>{t('pageEditor.panels.properties')}</Form.ControlLabel>
+              <ListInput
+                disabled={!isAuthorized}
+                value={metaDataProperties}
+                onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                defaultValue={{key: '', value: '', public: true}}>
+                {({value, onChange}) => (
+                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <Input
+                      placeholder={t('pageEditor.panels.key')}
+                      style={{
+                        width: '40%',
+                        marginRight: '10px'
+                      }}
+                      value={value.key}
+                      onChange={propertyKey => {
+                        onChange({...value, key: propertyKey})
+                      }}
+                    />
+                    <Input
+                      placeholder={t('pageEditor.panels.value')}
+                      style={{
+                        width: '60%'
+                      }}
+                      value={value.value}
+                      onChange={propertyValue => {
+                        onChange({...value, value: propertyValue})
+                      }}
+                    />
+                    <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                      <Toggle
+                        style={{maxWidth: '70px', minWidth: '70px'}}
+                        checkedChildren={t('pageEditor.panels.public')}
+                        unCheckedChildren={t('pageEditor.panels.private')}
+                        checked={value.public}
+                        onChange={isPublic => onChange({...value, public: isPublic})}
                       />
-                      <Input
-                        placeholder={t('pageEditor.panels.value')}
-                        style={{
-                          width: '60%'
-                        }}
-                        value={value.value}
-                        onChange={propertyValue => {
-                          onChange({...value, value: propertyValue})
-                        }}
-                      />
-                      <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
-                        <Toggle
-                          style={{maxWidth: '70px', minWidth: '70px'}}
-                          checkedChildren={t('pageEditor.panels.public')}
-                          unCheckedChildren={t('pageEditor.panels.private')}
-                          checked={value.public}
-                          onChange={isPublic => onChange({...value, public: isPublic})}
-                        />
-                      </Form.Group>
-                    </div>
-                  )}
-                </ListInput>
-              </Form.Group>
-            </Form>
-          </Panel>
+                    </Form.Group>
+                  </div>
+                )}
+              </ListInput>
+            </Form.Group>
+          </>
         )
       default:
         return <></>
@@ -272,9 +272,11 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
         <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance="primary" onClick={() => onClose?.()}>
-            {t('pageEditor.panels.saveAndClose')}
-          </Button>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+            <Button appearance="primary" onClick={() => onClose?.()}>
+              {t('pageEditor.panels.saveAndClose')}
+            </Button>
+          </PermissionControl>
         </Drawer.Actions>
       </Drawer.Header>
 
@@ -295,13 +297,17 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           </Nav.Item>
         </Nav>
 
-        {currentContent()}
+        <Panel>
+          <Form fluid disabled={!isAuthorized}>
+            {currentContent()}
+          </Form>
+        </Panel>
       </Drawer.Body>
 
       <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={(value: ImageRefFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -314,7 +320,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           onClose={() => {
             setEditModalOpen(false)
           }}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />
@@ -323,3 +329,12 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAGE',
+  'CAN_GET_PAGES',
+  'CAN_CREATE_PAGE',
+  'CAN_DELETE_PAGE',
+  'CAN_PUBLISH_PAGE'
+])(PageMetadataPanel)
+export {CheckedPermissionComponent as PageMetadataPanel}

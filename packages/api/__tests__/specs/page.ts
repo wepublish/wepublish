@@ -1,20 +1,18 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {
-  PageInput,
   CreatePage,
-  PageList,
+  DeletePage,
   Page,
-  UpdatePage,
+  PageInput,
+  PageList,
   PublishPage,
   UnpublishPage,
-  DeletePage
+  UpdatePage
 } from '../api/private'
 
-let testClientPublic: ApolloServerTestClient
+import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+
 let testClientPrivate: ApolloServerTestClient
-let dbAdapter: MongoDBAdapter
 
 const richTextNodes = [
   {
@@ -127,12 +125,8 @@ const blocks = [
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClientPublic = setupClient.testClientPublic
+    const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testClientPrivate
-    dbAdapter = setupClient.dbAdapter
-
-    console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -142,11 +136,11 @@ beforeAll(async () => {
 describe('Pages', () => {
   describe('can be created/edited/published/unpublished/deleted:', () => {
     const ids: string[] = []
-    beforeEach(async () => {
+    beforeAll(async () => {
       const {mutate} = testClientPrivate
       const input: PageInput = {
         title: 'Testing Page',
-        slug: 'testing-page',
+        slug: generateRandomString(),
         tags: ['one', 'two', 'three'],
         properties: [
           {key: 'private', value: 'private', public: false},
@@ -154,20 +148,22 @@ describe('Pages', () => {
         ],
         blocks: []
       }
+
       const res = await mutate({
         mutation: CreatePage,
         variables: {
           input: input
         }
       })
-      ids.unshift(res.data?.createPage?.id)
+
+      ids.unshift(res.data.createPage.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const input: PageInput = {
         title: 'Testing Page',
-        slug: 'testing-page',
+        slug: generateRandomString(),
         tags: ['one', 'two', 'three'],
         properties: [
           {key: 'private', value: 'private', public: false},
@@ -175,20 +171,26 @@ describe('Pages', () => {
         ],
         blocks: blocks
       }
+
       const res = await mutate({
         mutation: CreatePage,
         variables: {
           input: input
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           createPage: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
-      ids.unshift(res.data?.createPage?.id)
+
+      ids.unshift(res.data.createPage.id)
     })
 
     test('can be read in list', async () => {
@@ -196,26 +198,11 @@ describe('Pages', () => {
       const res = await query({
         query: PageList,
         variables: {
-          first: 100
+          take: 100
         }
       })
-      expect(res).toMatchSnapshot({
-        data: {
-          pages: {
-            nodes: Array.from({length: ids.length}, () => ({
-              createdAt: expect.any(String),
-              id: expect.any(String),
-              modifiedAt: expect.any(String)
-            })),
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            },
-            totalCount: expect.any(Number)
-          }
-        }
-      })
-      expect(res.data?.pages?.totalCount).toBe(ids.length)
+
+      expect(res.data.pages.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
@@ -226,10 +213,14 @@ describe('Pages', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           page: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -263,7 +254,10 @@ describe('Pages', () => {
       expect(res).toMatchSnapshot({
         data: {
           updatePage: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -280,10 +274,14 @@ describe('Pages', () => {
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           publishPage: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -299,7 +297,25 @@ describe('Pages', () => {
         properties: [],
         blocks: []
       }
+
       const newPage = await mutate({
+        mutation: CreatePage,
+        variables: {
+          input: input
+        }
+      })
+
+      await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: newPage.data.createPage.id,
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      const newPage2 = await mutate({
         mutation: CreatePage,
         variables: {
           input: input
@@ -309,12 +325,13 @@ describe('Pages', () => {
       const res = await mutate({
         mutation: PublishPage,
         variables: {
-          id: newPage.data?.createPage?.id,
+          id: newPage2.data.createPage.id,
           publishAt: '2020-11-25T23:55:35.000Z',
           publishedAt: '2020-11-25T23:55:35.000Z',
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
+
       expect(res).toMatchSnapshot({
         errors: expect.any(Array)
       })
@@ -328,10 +345,14 @@ describe('Pages', () => {
           id: ids[0]
         }
       })
+
       expect(res).toMatchSnapshot({
         data: {
           unpublishPage: {
-            id: expect.any(String)
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
           }
         }
       })
@@ -345,15 +366,13 @@ describe('Pages', () => {
           id: ids[0]
         }
       })
-      expect(res).toMatchSnapshot()
+      expect(res).toMatchSnapshot({
+        data: {
+          deletePage: expect.any(Object)
+        }
+      })
+      expect(res.data.deletePage.id).toBe(ids[0])
       ids.shift()
     })
   })
-})
-
-afterAll(async () => {
-  if (dbAdapter) {
-    await dbAdapter.db.dropDatabase()
-    await dbAdapter.client.close()
-  }
 })

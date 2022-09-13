@@ -11,17 +11,18 @@ import {
 } from '../api'
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
+  disabled?: boolean
   onClose?(): void
   onChange?(authors: AuthorRefFragment[]): void
 }
 
-export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
+export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerProps) {
   const {t} = useTranslation()
 
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
   const [authorsFilter, setAuthorsFilter] = useState('')
 
-  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
+  const authorsVariables = {filter: authorsFilter || undefined, take: 10}
   const {data} = useAuthorListQuery({
     variables: authorsVariables,
     fetchPolicy: 'network-only'
@@ -52,6 +53,7 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
 
   return (
     <CheckPicker
+      disabled={disabled}
       virtualized
       cleanable
       value={list.map(author => author.id)}

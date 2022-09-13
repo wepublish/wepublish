@@ -1,17 +1,17 @@
-import React, {useRef, useEffect, useState, useCallback} from 'react'
-
-import {Drawer, IconButton, Input} from 'rsuite'
-import {BlockProps} from '../atoms/blockList'
-import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
-import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
-import {isFunctionalUpdate} from '@wepublish/karma.run-react'
-
-import {useTranslation} from 'react-i18next'
-import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
-import {ChooseEditImage} from '../atoms/chooseEditImage'
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Drawer, IconButton, Input} from 'rsuite'
+
+import {BlockProps} from '../atoms/blockList'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ImageEditPanel} from '../panel/imageEditPanel'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
+import {isFunctionalUpdate} from '../utility'
+import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
+import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({
@@ -85,7 +85,7 @@ export function LinkPageBreakBlock({
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}

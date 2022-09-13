@@ -1,18 +1,14 @@
-import React, {useState} from 'react'
 import nanoid from 'nanoid'
-
+import React, {useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form} from 'rsuite'
 
-import {ListInput, ListValue, FieldProps} from '../atoms/listInput'
-
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
-
-import {GalleryImageEdge} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {FieldProps, ListInput, ListValue} from '../atoms/listInput'
 import {Textarea} from '../atoms/textarea'
+import {GalleryImageEdge} from '../blocks/types'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface GalleryListEditPanelProps {
   id?: string
@@ -86,7 +82,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           removeImage={() => onChange?.({...value, image: null})}
         />
         <Form fluid>
-          <Form.Group>
+          <Form.Group controlId="caption">
             <Form.ControlLabel>{t('blocks.imageGallery.panels.caption')}</Form.ControlLabel>
             <Form.Control
               name="caption"
@@ -110,7 +106,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}

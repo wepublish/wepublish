@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Build docker
         env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
@@ -19,9 +19,10 @@ jobs:
           printenv GCLOUD_AUTH | docker login -u _json_key --password-stdin https://eu.gcr.io
           docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} .
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: '10.x'
+          cache: yarn
       - name: Create manifest
         env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}

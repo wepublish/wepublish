@@ -60,7 +60,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     return {
       challengeID: Buffer.from(`${time};${hash};${this.counter++}`, 'utf-8').toString('base64'),
       challenge: image,
-      validUntil: new Date(time + this.challengeValidTime).toISOString()
+      validUntil: new Date(time + this.challengeValidTime)
     }
   }
 

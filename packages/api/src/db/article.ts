@@ -1,19 +1,23 @@
+import {
+  MetadataProperty,
+  Article as PrismaArticle,
+  ArticleRevision as PrismaArticleRevision
+} from '@prisma/client'
 import {ArticleBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
 
 export interface ArticleData {
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead?: string
-  readonly seoTitle?: string
-  readonly slug: string
+  readonly preTitle?: string | null
+  readonly title?: string | null
+  readonly lead?: string | null
+  readonly seoTitle?: string | null
+  readonly slug?: string | null
   readonly tags: string[]
 
-  readonly canonicalUrl?: string
+  readonly canonicalUrl?: string | null
 
   readonly properties: MetadataProperty[]
 
-  readonly imageID?: string
+  readonly imageID?: string | null
   readonly authorIDs: string[]
 
   readonly breaking: boolean
@@ -21,14 +25,14 @@ export interface ArticleData {
 
   readonly hideAuthor: boolean
 
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
+  readonly socialMediaTitle?: string | null
+  readonly socialMediaDescription?: string | null
   readonly socialMediaAuthorIDs: string[]
-  readonly socialMediaImageID?: string
+  readonly socialMediaImageID?: string | null
 }
 
 // Article State Flow:
-// Draft -> Pending (Optional) -> Published -> History
+// Draft -> Pending (Optional) -> Published
 export interface Article {
   readonly id: string
 
@@ -46,26 +50,21 @@ export interface PeerArticle {
   article: Article
 }
 
-export interface ArticleHistory {
-  readonly id: string
-  readonly revisions: ArticleRevision[]
-}
-
 export interface ArticleRevision extends ArticleData {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly publishAt?: Date
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
+  readonly publishAt?: Date | null
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 }
 
 export interface PublicArticle extends ArticleData {
   readonly id: string
 
   readonly shared: boolean
-  readonly updatedAt: Date
-  readonly publishedAt: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
   readonly blocks: ArticleBlock[]
 }
@@ -93,73 +92,12 @@ export enum ArticleSort {
   PublishAt = 'publishAt'
 }
 
-export interface GetArticlesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: ArticleFilter
-  readonly sort: ArticleSort
-  readonly order: SortOrder
+export type ArticleRevisionWithProperties = PrismaArticleRevision & {
+  properties: MetadataProperty[]
 }
 
-export interface GetPublishedArticlesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PublicArticleFilter
-  readonly sort: ArticleSort
-  readonly order: SortOrder
-}
-
-export interface GetArticleHistoryArgs {
-  readonly id: string
-}
-
-export interface ArticleInput extends ArticleData {
-  readonly shared: boolean
-}
-
-export interface CreateArticleArgs {
-  readonly input: ArticleInput
-}
-
-export interface UpdateArticleArgs {
-  readonly id: string
-  readonly input: ArticleInput
-}
-
-export interface DeleteArticleArgs {
-  readonly id: string
-}
-
-export interface UnpublishArticleArgs {
-  readonly id: string
-}
-
-export interface PublishArticleArgs {
-  readonly id: string
-  readonly publishAt?: Date
-  readonly publishedAt?: Date
-  readonly updatedAt?: Date
-}
-
-export type OptionalArticle = Article | null
-export type OptionalPublicArticle = PublicArticle | null
-export type OptionalArticleHistory = ArticleHistory | null
-
-export interface DBArticleAdapter {
-  createArticle(args: CreateArticleArgs): Promise<Article>
-  updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
-  publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
-  unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
-  deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
-
-  getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
-  getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
-
-  getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle>
-
-  getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
-  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>
-
-  // TODO: Implement article history
-  // getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>
+export type ArticleWithRevisions = PrismaArticle & {
+  draft: ArticleRevisionWithProperties | null
+  pending: ArticleRevisionWithProperties | null
+  published: ArticleRevisionWithProperties | null
 }

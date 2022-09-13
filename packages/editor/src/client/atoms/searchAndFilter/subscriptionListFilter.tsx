@@ -59,7 +59,7 @@ export function SubscriptionListFilter({
   } = useMemberPlanListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      first: 200
+      take: 200
     }
   })
 
@@ -275,8 +275,8 @@ export function SubscriptionListFilter({
         </Form.Group>
         <Form.Group style={formInputStyle}>
           <DateRangePicker
-            key={`payed-until-${resetFilterKey}`}
-            placeholder={t('userSubscriptionEdit.payedUntil')}
+            key={`paid-until-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.paidUntil')}
             block
             placement="auto"
             onChange={value => {

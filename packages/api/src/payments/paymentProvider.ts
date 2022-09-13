@@ -1,13 +1,10 @@
-import express, {Router} from 'express'
-import {contextFromRequest, DataLoaderContext} from '../context'
-import {logger, WepublishServerOpts} from '../server'
-import {Payment, PaymentState} from '../db/payment'
-import {Invoice} from '../db/invoice'
-import {NextHandleFunction} from 'connect'
+import {Payment, PaymentState, PrismaClient, Subscription} from '@prisma/client'
 import bodyParser from 'body-parser'
-import {paymentModelEvents} from '../events'
-import {DBAdapter} from '../db/adapter'
-import {OptionalSubscription} from '../db/subscription'
+import {NextHandleFunction} from 'connect'
+import express, {Router} from 'express'
+import {Context, contextFromRequest} from '../context'
+import {InvoiceWithItems} from '../db/invoice'
+import {logger, WepublishServerOpts} from '../server'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -25,7 +22,7 @@ export interface IntentState {
 
 export interface CreatePaymentIntentProps {
   paymentID: string
-  invoice: Invoice
+  invoice: InvoiceWithItems
   saveCustomer: boolean
   customerID?: string
   successURL?: string
@@ -38,8 +35,11 @@ export interface CheckIntentProps {
 
 export interface UpdatePaymentWithIntentStateProps {
   intentState: IntentState
-  dbAdapter: DBAdapter
-  loaders: DataLoaderContext
+  paymentClient: PrismaClient['payment']
+  paymentsByID: Context['loaders']['paymentsByID']
+  invoicesByID: Context['loaders']['invoicesByID']
+  subscriptionClient: PrismaClient['subscription']
+  userClient: PrismaClient['user']
 }
 
 export interface WebhookUpdatesProps {
@@ -108,16 +108,19 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   async updatePaymentWithIntentState({
     intentState,
-    dbAdapter,
-    loaders
+    paymentClient,
+    paymentsByID,
+    invoicesByID,
+    subscriptionClient,
+    userClient
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
-    const payment = await loaders.paymentsByID.load(intentState.paymentID)
+    const payment = await paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
     if (!payment) throw new Error(`Payment with ID ${intentState.paymentID} not found`)
 
-    const updatedPayment = await dbAdapter.payment.updatePayment({
-      id: payment.id,
-      input: {
+    const updatedPayment = await paymentClient.update({
+      where: {id: payment.id},
+      data: {
         state: intentState.state,
         paymentData: intentState.paymentData,
         intentData: payment.intentData,
@@ -128,78 +131,129 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       }
     })
 
-    if (!updatedPayment) throw new Error('Error while updating Payment')
+    if (!updatedPayment) {
+      throw new Error('Error while updating Payment')
+    }
 
     // get invoice and subscription joins out of the payment
-    const invoice = await loaders.invoicesByID.load(payment.invoiceID)
-    if (!invoice) throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+    const invoice = await invoicesByID.load(payment.invoiceID)
 
-    const subscription = await dbAdapter.subscription.getSubscriptionByID(invoice.subscriptionID)
-    if (!subscription)
+    if (!invoice || !invoice.subscriptionID) {
+      throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+    }
+
+    const subscription = await subscriptionClient.findUnique({
+      where: {
+        id: invoice.subscriptionID
+      }
+    })
+
+    if (!subscription) {
       throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+    }
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(dbAdapter, subscription, intentState.customerID)
+      await this.updatePaymentProvider(userClient, subscription, intentState.customerID)
     }
+
     return updatedPayment
   }
 
   /**
    * adding or updating paymentProvider customer ID for user
-   * @param dbAdapter
+   *
+   * @param userClient
    * @param subscription
    * @param customerID
    * @private
    */
   private async updatePaymentProvider(
-    dbAdapter: DBAdapter,
-    subscription: OptionalSubscription,
+    userClient: PrismaClient['user'],
+    subscription: Subscription,
     customerID: string
   ) {
     if (!subscription) {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    const user = await dbAdapter.user.getUserByID(subscription.userID)
-    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
-
-    const paymentProviderCustomers = user.paymentProviderCustomers.filter(
-      ppc => ppc.paymentProviderID !== this.id
-    )
-    paymentProviderCustomers.push({
-      paymentProviderID: this.id,
-      customerID
+    const user = await userClient.findUnique({
+      where: {
+        id: subscription.userID
+      },
+      include: {
+        paymentProviderCustomers: true
+      }
     })
 
-    await dbAdapter.user.updatePaymentProviderCustomers({
-      userID: user.id,
-      paymentProviderCustomers
+    if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
+
+    await userClient.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        paymentProviderCustomers: {
+          deleteMany: {
+            paymentProviderID: this.id
+          },
+          create: {
+            paymentProviderID: this.id,
+            customerID
+          }
+        }
+      }
     })
   }
 }
 
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
-  const {paymentProviders} = opts
+  const {paymentProviders, prisma} = opts
   const paymentProviderWebhookRouter = Router()
 
-  // setup update event listener
-  paymentModelEvents.on('update', async (context, model) => {
-    if (model.state === PaymentState.Paid) {
-      const invoice = await context.loaders.invoicesByID.load(model.invoiceID)
+  prisma.$use(async (params, next) => {
+    if (params.model !== 'Payment') {
+      return next(params)
+    }
+
+    if (params.action !== 'update') {
+      return next(params)
+    }
+
+    const model: Payment = await next(params)
+
+    if (model.state === PaymentState.paid) {
+      const invoice = await prisma.invoice.findUnique({
+        where: {id: model.invoiceID},
+        include: {
+          items: true
+        }
+      })
+
       if (!invoice) {
         console.warn(`No invoice with id ${model.invoiceID}`)
         return
       }
-      await context.dbAdapter.invoice.updateInvoice({
-        id: invoice.id,
-        input: {
-          ...invoice,
+
+      const {items, ...invoiceData} = invoice
+
+      await prisma.invoice.update({
+        where: {id: invoice.id},
+        data: {
+          ...invoiceData,
+          items: {
+            deleteMany: {
+              invoiceId: invoiceData.id
+            },
+            create: items
+          },
           paidAt: new Date(),
           canceledAt: null
         }
       })
     }
+
+    return model
   })
 
   // setup webhook routes for each payment provider
@@ -221,8 +275,11 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
             // TODO: handle errors properly
             await paymentProvider.updatePaymentWithIntentState({
               intentState: paymentStatus,
-              dbAdapter: context.dbAdapter,
-              loaders: context.loaders
+              paymentClient: context.prisma.payment,
+              paymentsByID: context.loaders.paymentsByID,
+              invoicesByID: context.loaders.invoicesByID,
+              subscriptionClient: context.prisma.subscription,
+              userClient: context.prisma.user
             })
           }
         } catch (error) {

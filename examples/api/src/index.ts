@@ -1,13 +1,13 @@
 #!/usr/bin/env node
+import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {
-  articleModelEvents,
+  AlgebraicCaptchaChallenge,
   Author,
-  CommentItemType,
   JobType,
+  KarmaMediaAdapter,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
-  Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -19,21 +19,17 @@ import {
   AlgebraicCaptchaChallenge,
   Article
 } from '@wepublish/api'
-
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
-
-import {URL} from 'url'
-import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
+import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
-import pinoStackdriver from 'pino-stackdriver'
 import {createWriteStream} from 'pino-sentry'
+import pinoStackdriver from 'pino-stackdriver'
+import * as process from 'process'
+import {URL} from 'url'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-import path from 'path'
-import * as process from 'process'
+import {SlackMailProvider} from './SlackMailProvider'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -63,7 +59,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
-    if (comment.itemType === CommentItemType.Article) {
+    if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }
     return `${this.websiteURL}/${item.slug}#${comment.id}`
@@ -83,7 +79,7 @@ class ExampleURLAdapter implements URLAdapter {
 }
 
 async function asyncMain() {
-  if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+  if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
   const hostURL = process.env.HOST_URL
@@ -108,45 +104,8 @@ async function asyncMain() {
       : undefined
   )
 
-  await MongoDBAdapter.initialize({
-    url: process.env.MONGO_URL!,
-    locale: process.env.MONGO_LOCALE ?? 'en',
-    seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-      const editorUserRole = await adapter.userRole.getUserRole('Editor')
-      const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
-
-      await adapter.user.createUser({
-        input: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          active: true,
-          properties: [],
-          roleIDs: [adminUserRoleId]
-        },
-        password: '123'
-      })
-
-      await adapter.user.createUser({
-        input: {
-          email: 'editor@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Editor User',
-          active: true,
-          properties: [],
-          roleIDs: [editorUserRoleId]
-        },
-        password: '123'
-      })
-    }
-  })
-
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.MONGO_URL!,
-    locale: process.env.MONGO_LOCALE ?? 'en'
-  })
+  const prisma = new PrismaClient()
+  await prisma.$connect()
 
   const oauth2Providers: Oauth2Provider[] = []
   if (
@@ -317,7 +276,7 @@ async function asyncMain() {
     hostURL,
     websiteURL,
     mediaAdapter,
-    dbAdapter,
+    prisma,
     oauth2Providers,
     mailProvider,
     mailContextOptions: {
@@ -383,10 +342,6 @@ async function asyncMain() {
     tracing: true,
     logger,
     challenge
-  })
-
-  articleModelEvents.on('create', async (context, model) => {
-    console.log('New Article created with id', model.id)
   })
 
   // eslint-disable-next-line no-unused-expressions

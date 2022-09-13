@@ -27,13 +27,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
   const peerListVariables = {
-    filter: filter || undefined,
-    first: 20,
+    peerFilter: filter || undefined,
+    take: 20,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
   // article variables
-  const listVariables = {filter: filter || undefined, first: 20}
+  const listVariables = {filter: filter || undefined, take: 20}
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
@@ -79,7 +79,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   function loadMoreArticles() {
     fetchMoreArticles({
-      variables: {...listVariables, after: articleListData?.articles.pageInfo.endCursor},
+      variables: {...listVariables, cursor: articleListData?.articles.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
@@ -97,7 +97,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchMorePeerArticles({
       variables: {
         ...peerListVariables,
-        after: peerArticleListData?.peerArticles.pageInfo.endCursor
+        cursor: peerArticleListData?.peerArticles.pageInfo.endCursor
       },
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
@@ -114,7 +114,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   function loadMorePages() {
     fetchMorePages({
-      variables: {...listVariables, after: pageListData?.pages.pageInfo.endCursor},
+      variables: {...listVariables, cursor: pageListData?.pages.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 

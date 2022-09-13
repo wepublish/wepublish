@@ -1,46 +1,34 @@
-import React, {useState, useEffect} from 'react'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Drawer, FlexboxGrid, IconButton, Modal, Table} from 'rsuite'
 
-import {
-  Link,
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  PaymentMethodEditRoute,
-  PaymentMethodCreateRoute,
-  PaymentMethodListRoute,
-  ButtonLink
-} from '../route'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {RouteActionType} from '@wepublish/karma.run-react'
 import {
   FullPaymentMethodFragment,
   useDeletePaymentMethodMutation,
   usePaymentMethodListQuery
 } from '../api'
-
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
-import {FlexboxGrid, IconButton, Drawer, Table, Modal, Button} from 'rsuite'
-import {useTranslation} from 'react-i18next'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
-export function PaymentMethodList() {
-  const {current} = useRoute()
-  const dispatch = useRouteDispatch()
+const {Column, HeaderCell, Cell} = Table
 
+function PaymentMethodList() {
   const {t} = useTranslation()
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
+  const {id} = params
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.PaymentMethodEdit || current?.type === RouteType.PaymentMethodCreate
-  )
+  const isCreateRoute = location.pathname.includes('create')
+  const isEditRoute = location.pathname.includes('edit')
 
-  const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.PaymentMethodEdit ? current.params.id : undefined
-  )
+  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+
+  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
@@ -54,18 +42,16 @@ export function PaymentMethodList() {
   const [deletePaymentMethod, {loading: isDeleting}] = useDeletePaymentMethodMutation()
 
   useEffect(() => {
-    switch (current?.type) {
-      case RouteType.PaymentMethodCreate:
-        setEditID(undefined)
-        setEditModalOpen(true)
-        break
-
-      case RouteType.PaymentMethodEdit:
-        setEditID(current.params.id)
-        setEditModalOpen(true)
-        break
+    if (isCreateRoute) {
+      setEditID(undefined)
+      setEditModalOpen(true)
     }
-  }, [current])
+
+    if (isEditRoute) {
+      setEditID(id)
+      setEditModalOpen(true)
+    }
+  }, [location])
 
   useEffect(() => {
     if (data?.paymentMethods) {
@@ -79,14 +65,15 @@ export function PaymentMethodList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('paymentMethodList.title')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            appearance="primary"
-            disabled={isLoading}
-            route={PaymentMethodCreateRoute.create({})}>
-            {t('paymentMethodList.createNew')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/paymentmethods/create">
+              <Button appearance="primary" disabled={isLoading}>
+                {t('paymentMethodList.createNew')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
       </FlexboxGrid>
 
       <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={paymentMethods}>
@@ -94,9 +81,7 @@ export function PaymentMethodList() {
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
           <Cell>
             {(rowData: FullPaymentMethodFragment) => (
-              <Link route={PaymentMethodEditRoute.create({id: rowData.id})}>
-                {rowData.name || t('untitled')}
-              </Link>
+              <Link to={`/paymentmethods/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
           </Cell>
         </Column>
@@ -104,7 +89,7 @@ export function PaymentMethodList() {
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
-              <>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('paymentMethodList.delete')}>
                   <IconButton
                     icon={<TrashIcon />}
@@ -117,7 +102,7 @@ export function PaymentMethodList() {
                     }}
                   />
                 </IconButtonTooltip>
-              </>
+              </PermissionControl>
             )}
           </Cell>
         </Column>
@@ -128,27 +113,18 @@ export function PaymentMethodList() {
         size={'sm'}
         onClose={() => {
           setEditModalOpen(false)
-          dispatch({
-            type: RouteActionType.PushRoute,
-            route: PaymentMethodListRoute.create({}, current ?? undefined)
-          })
+          navigate('/paymentmethods')
         }}>
         <PaymentMethodEditPanel
           id={editID}
           onClose={async () => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PaymentMethodListRoute.create({}, current ?? undefined)
-            })
+            navigate('/paymentmethods')
             await refetch()
           }}
           onSave={async () => {
             setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: PaymentMethodListRoute.create({}, current ?? undefined)
-            })
+            navigate('/paymentmethods')
             await refetch()
           }}
         />
@@ -191,3 +167,11 @@ export function PaymentMethodList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PAYMENT_METHODS',
+  'CAN_GET_PAYMENT_METHOD',
+  'CAN_CREATE_PAYMENT_METHOD',
+  'CAN_DELETE_PAYMENT_METHOD'
+])(PaymentMethodList)
+export {CheckedPermissionComponent as PaymentMethodList}

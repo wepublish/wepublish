@@ -1,5 +1,3 @@
-import {CSSStyle} from '@wepublish/karma.run-react'
-
 export enum BlurStrength {
   Soft = '2px',
   Strong = '4px'
@@ -71,11 +69,11 @@ export enum LineHeight {
 export const tabletMediaQuery = `@media screen and (max-width: ${Breakpoint.Desktop - 1}px)`
 export const mobileMediaQuery = `@media screen and (max-width: ${Breakpoint.Tablet - 1}px)`
 
-export function whenTablet(styles: CSSStyle) {
+export function whenTablet(styles: any) {
   return {[tabletMediaQuery]: styles}
 }
 
-export function whenMobile(styles: CSSStyle) {
+export function whenMobile(styles: any) {
   return {[mobileMediaQuery]: styles}
 }
 

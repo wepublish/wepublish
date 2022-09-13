@@ -1,4 +1,3 @@
-import {ConnectionResult, SortOrder, InputCursor, Limit} from './common'
 import {RichTextNode} from '../graphql/richText'
 
 export interface AuthorLink {
@@ -12,8 +11,8 @@ export interface Author {
   modifiedAt: Date
   name: string
   slug: string
-  jobTitle?: string
-  imageID?: string
+  jobTitle?: string | null
+  imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
 }
@@ -21,26 +20,13 @@ export interface Author {
 export interface AuthorInput {
   name: string
   slug: string
-  jobTitle?: string
-  imageID?: string
+  jobTitle?: string | null
+  imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
 }
 
 export type OptionalAuthor = Author | null
-
-export interface CreateAuthorArgs {
-  input: AuthorInput
-}
-
-export interface UpdateAuthorArgs {
-  id: string
-  input: AuthorInput
-}
-
-export interface DeleteAuthorArgs {
-  id: string
-}
 
 export enum AuthorSort {
   CreatedAt = 'createdAt',
@@ -50,23 +36,4 @@ export enum AuthorSort {
 
 export interface AuthorFilter {
   name?: string
-}
-
-export interface GetAuthorsArgs {
-  cursor: InputCursor
-  limit: Limit
-  filter?: AuthorFilter
-  sort: AuthorSort
-  order: SortOrder
-}
-
-export interface DBAuthorAdapter {
-  createAuthor(args: CreateAuthorArgs): Promise<Author>
-  updateAuthor(args: UpdateAuthorArgs): Promise<OptionalAuthor>
-  deleteAuthor(args: DeleteAuthorArgs): Promise<string | null>
-
-  getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]>
-  getAuthorsBySlug(slugs: readonly string[]): Promise<OptionalAuthor[]>
-
-  getAuthors(args: GetAuthorsArgs): Promise<ConnectionResult<Author>>
 }

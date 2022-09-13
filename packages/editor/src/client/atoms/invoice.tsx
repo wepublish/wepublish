@@ -3,7 +3,7 @@ import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import CheckIcon from '@rsuite/icons/legacy/Check'
-import {EnvelopeOpen} from '@rsuite/icons/es/icons/legacy'
+import {Email} from '@rsuite/icons'
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -32,13 +32,14 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
       toaster.push(<Message type="error">{t('invoice.userNotLoaded')}</Message>)
       return
     }
+
     // talk with the private api
     const items = prepareInvoiceItemsForApi(invoice.items)
     await updateInvoice({
       variables: {
         updateInvoiceId: invoice.id,
         input: {
-          items,
+          items: items.map(({total, ...item}) => item),
           mail: invoice.mail,
           paidAt: new Date().toISOString(),
           description: invoice.description,
@@ -110,7 +111,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
     if (invoice.paidAt) {
       return <CheckIcon style={{color: 'green', fontSize: '2em'}} />
     } else {
-      return <EnvelopeOpen style={{color: 'red', fontSize: '2em'}} />
+      return <Email style={{color: 'red', fontSize: '2em'}} />
     }
   }
 

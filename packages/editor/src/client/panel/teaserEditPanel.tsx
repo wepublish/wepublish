@@ -1,16 +1,13 @@
 import React, {useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {Teaser, TeaserType} from '../blocks/types'
 import {TeaserStyle} from '../api'
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
-
-import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {Teaser, TeaserType} from '../blocks/types'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
@@ -68,7 +65,7 @@ export function TeaserEditPanel({
         {previewForTeaser(initialTeaser)}
         <Panel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <Form.Group>
+            <Form.Group controlId="articleStyle">
               <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
               <RadioGroup
                 inline
@@ -79,7 +76,7 @@ export function TeaserEditPanel({
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articlePreTitle">
               <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
               <Form.Control
                 name="pre-title"
@@ -87,7 +84,7 @@ export function TeaserEditPanel({
                 onChange={(preTitle: string) => setPreTitle(preTitle)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleTitle">
               <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
               <Form.Control
                 name="title"
@@ -95,7 +92,7 @@ export function TeaserEditPanel({
                 onChange={(title: string) => setTitle(title)}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="articleLead">
               <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
               <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
             </Form.Group>
@@ -122,7 +119,7 @@ export function TeaserEditPanel({
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
     </>
@@ -143,7 +140,7 @@ function previewForTeaser(teaser: Teaser) {
       type = 'Article'
       imageURL = teaser.article.latest.image?.previewURL ?? undefined
       preTitle = teaser.article.latest.preTitle ?? undefined
-      title = teaser.article.latest.title
+      title = teaser.article.latest.title ?? undefined
       lead = teaser.article.latest.lead ?? undefined
       break
 
@@ -151,7 +148,7 @@ function previewForTeaser(teaser: Teaser) {
       type = 'Peer Article'
       imageURL = teaser.article?.latest.image?.previewURL ?? undefined
       preTitle = teaser.article?.latest.preTitle ?? undefined
-      title = teaser.article?.latest.title
+      title = teaser.article?.latest.title ?? undefined
       lead = teaser.article?.latest.lead ?? undefined
       break
 

@@ -1,37 +1,44 @@
 fragment Invoice on Invoice {
-    id
-    total
-    items {
-        createdAt
-        modifiedAt
-        name
-        description
-        quantity
-        amount
-        total
-    }
-    paidAt
-    description
-    mail
-    manuallySetAsPaidByUserId
-    modifiedAt
+  id
+  total
+  items {
     createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  modifiedAt
+  createdAt
 }
 
-query Invoices($after: ID, $before: ID, $first: Int, $last: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
-    invoices(after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, order: $order) {
-        nodes {
-            ...Invoice
-        }
-        pageInfo {
-            ...PageInfo
-        }
-        totalCount
+query Invoices(
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $filter: InvoiceFilter
+  $sort: InvoiceSort
+  $order: SortOrder
+) {
+  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      ...Invoice
     }
+    pageInfo {
+      ...PageInfo
+    }
+    totalCount
+  }
 }
 
 mutation UpdateInvoice($updateInvoiceId: ID!, $input: InvoiceInput!) {
-    updateInvoice(id: $updateInvoiceId, input: $input) {
-        ...Invoice
-    }
+  updateInvoice(id: $updateInvoiceId, input: $input) {
+    ...Invoice
+  }
 }

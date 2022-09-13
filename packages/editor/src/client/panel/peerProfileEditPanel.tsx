@@ -1,26 +1,29 @@
-import React, {useState, useEffect, useRef} from 'react'
-
-import {Button, Drawer, Panel, Form, toaster, Message, Schema} from 'rsuite'
+import React, {useEffect, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import {FormInstance} from 'rsuite/esm/Form'
 
 import {
-  usePeerProfileQuery,
-  useUpdatePeerProfileMutation,
+  ImageRefFragment,
+  Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
-  Maybe,
-  ImageRefFragment
+  usePeerProfileQuery,
+  useUpdatePeerProfileMutation
 } from '../api'
-
-import {ImageSelectPanel} from './imageSelectPanel'
-import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument} from '../utility'
-
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ColorPicker} from '../atoms/colorPicker'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
-import {ColorPicker} from '../atoms/colorPicker'
-import {useTranslation} from 'react-i18next'
-import {FormInstance} from 'rsuite/esm/Form'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {getOperationNameFromDocument} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -29,7 +32,8 @@ export interface ImageEditPanelProps {
   onSave?(): void
 }
 
-export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
+function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
+  const isAuthorized = authorise('CAN_UPDATE_PEER_PROFILE')
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
@@ -50,7 +54,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
     refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
-  const isDisabled = isLoading || isSaving
+  const isDisabled = isLoading || isSaving || !isAuthorized
 
   const {t} = useTranslation()
 
@@ -134,6 +138,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
+        disabled={isDisabled}
         ref={form}
         model={validationModel}
         style={{height: '100%'}}
@@ -148,9 +153,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer.Header>
           <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
           <Drawer.Actions>
-            <Button appearance="primary" disabled={isDisabled} type="submit">
-              {t('peerList.panels.save')}
-            </Button>
+            <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
+              <Button appearance="primary" disabled={isDisabled} type="submit">
+                {t('peerList.panels.save')}
+              </Button>
+            </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
               {t('peerList.panels.close')}
             </Button>
@@ -158,7 +165,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         </Drawer.Header>
 
         <Drawer.Body>
-          <Panel bodyFill header={t('peerList.panels.image') + '*'}>
+          <Panel bodyFill header={toggleRequiredLabel(t('peerList.panels.image'))}>
             <ChooseEditImage
               image={logoImage}
               header={''}
@@ -187,22 +194,26 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           </Panel>
 
           <Panel header={t('peerList.panels.information')}>
-            <Form.Group>
-              <Form.ControlLabel>{t('peerList.panels.name') + '*'}</Form.ControlLabel>
+            <Form.Group controlId="peerListName">
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('peerList.panels.name'))}
+              </Form.ControlLabel>
               <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="peerListThemeColor">
               <Form.ControlLabel>{t('peerList.panels.themeColor')}</Form.ControlLabel>
               <ColorPicker
+                disabled={isDisabled}
                 setColor={color => {
                   setThemeColor(color)
                 }}
                 currentColor={themeColor}
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="peerListThemeFontColor">
               <Form.ControlLabel>{t('peerList.panels.themeFontColor')}</Form.ControlLabel>
               <ColorPicker
+                disabled={isDisabled}
                 setColor={color => {
                   setThemeFontColor(color)
                 }}
@@ -218,13 +229,14 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 padding: '12px',
                 marginTop: '4px'
               }}>
-              <Form.Group>
+              <Form.Group controlId="peerListCallToAction">
                 <Form.ControlLabel>{t('peerList.panels.text')}</Form.ControlLabel>
                 <Form.Control
                   name="callToActionText"
                   value={callToActionText}
                   onChange={setCallToActionText}
                   accepter={RichTextBlock}
+                  disabled={isDisabled}
                 />
               </Form.Group>
               <Form.Group>
@@ -237,7 +249,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               </Form.Group>
             </div>
             <br />
-            <Form.ControlLabel>{t('peerList.panels.callToActionImage') + '*'}</Form.ControlLabel>
+            <Form.ControlLabel>
+              {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
+            </Form.ControlLabel>
             <div
               style={{
                 border: 'solid 1px #cad5e4',
@@ -245,8 +259,10 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 padding: '12px',
                 marginTop: '4px'
               }}>
-              <Form.Group>
-                <Form.ControlLabel>{t('peerList.panels.image') + '*'}</Form.ControlLabel>
+              <Form.Group controlId="peerListImage">
+                <Form.ControlLabel>
+                  {toggleRequiredLabel(t('peerList.panels.image'))}
+                </Form.ControlLabel>
                 <ChooseEditImage
                   image={callToActionImage}
                   header={''}
@@ -287,7 +303,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={(value: any) => {
               setChooseModalOpen(false)
               isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
               setTimeout(() => {
@@ -299,7 +315,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           {(logoImage || callToActionImage) && (
-            <ImagedEditPanel
+            <ImageEditPanel
               id={isLogoChange ? logoImage?.id : callToActionImage?.id}
               onClose={() => setEditModalOpen(false)}
             />
@@ -309,3 +325,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PEER_PROFILE',
+  'CAN_UPDATE_PEER_PROFILE'
+])(PeerInfoEditPanel)
+export {CheckedPermissionComponent as PeerInfoEditPanel}

@@ -1,31 +1,33 @@
+import {
+  MetadataProperty,
+  Page as PrismaPage,
+  PageRevision as PrismaPageRevision
+} from '@prisma/client'
 import {PageBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
-
-// TODO: Remove arg interfaces in favor of explicit arguments.
 
 export interface PageData {
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
-  readonly slug: string
+  readonly slug?: string | null
 
   readonly title: string
-  readonly description?: string
+  readonly description?: string | null
   readonly tags: string[]
 
   readonly properties: MetadataProperty[]
 
-  readonly imageID?: string
+  readonly imageID?: string | null
 
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
-  readonly socialMediaImageID?: string
+  readonly socialMediaTitle?: string | null
+  readonly socialMediaDescription?: string | null
+  readonly socialMediaImageID?: string | null
 
   readonly blocks: PageBlock[]
 }
 
 // Page State Flow:
-// Draft -> Pending (Optional) -> Published -> History
+// Draft -> Pending (Optional) -> Published
 export interface Page {
   readonly id: string
 
@@ -37,23 +39,18 @@ export interface Page {
   readonly pending: PageRevision | null
 }
 
-export interface PageHistory {
-  readonly id: string
-  readonly revisions: PageRevision[]
-}
-
 export interface PageRevision extends PageData {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly publishAt?: Date
+  readonly publishAt?: Date | null
 }
 
 export interface PublicPage extends PageData {
   readonly id: string
 
-  readonly updatedAt: Date
-  readonly publishedAt: Date
+  readonly updatedAt?: Date | null
+  readonly publishedAt?: Date | null
 
   readonly blocks: PageBlock[]
 }
@@ -78,70 +75,12 @@ export enum PageSort {
   PublishAt = 'publishAt'
 }
 
-export interface GetPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
+export type PageRevisionWithProperties = PrismaPageRevision & {
+  properties: MetadataProperty[]
 }
 
-export interface GetPublishedPagesArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: PublishedPageFilter
-  readonly sort: PageSort
-  readonly order: SortOrder
-}
-
-export interface GetPageHistoryArgs {
-  readonly id: string
-}
-
-export interface PageInput extends PageData {}
-
-export interface CreatePageArgs {
-  readonly input: PageInput
-}
-
-export interface UpdatePageArgs {
-  readonly id: string
-  readonly input: PageInput
-}
-
-export interface DeletePageArgs {
-  readonly id: string
-}
-
-export interface UnpublishPageArgs {
-  readonly id: string
-}
-
-export interface PublishPageArgs {
-  readonly id: string
-  readonly publishAt?: Date
-  readonly publishedAt?: Date
-  readonly updatedAt?: Date
-}
-
-export type OptionalPage = Page | null
-export type OptionalPublicPage = PublicPage | null
-export type OptionalPageHistory = PageHistory | null
-
-export interface DBPageAdapter {
-  createPage(args: CreatePageArgs): Promise<Page>
-  updatePage(args: UpdatePageArgs): Promise<OptionalPage>
-  publishPage(args: PublishPageArgs): Promise<OptionalPage>
-  unpublishPage(args: UnpublishPageArgs): Promise<OptionalPage>
-  deletePage(args: DeletePageArgs): Promise<boolean | null>
-
-  getPagesByID(ids: readonly string[]): Promise<OptionalPage[]>
-  getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublicPage[]>
-  getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublicPage[]>
-
-  getPages(args: GetPagesArgs): Promise<ConnectionResult<Page>>
-  getPublishedPages(args: GetPublishedPagesArgs): Promise<ConnectionResult<PublicPage>>
-
-  // TODO: Implement page history
-  // getPageHistory(args: GetPageHistoryArgs): Promise<OptionalPageHistory>
+export type PageWithRevisions = PrismaPage & {
+  draft: PageRevisionWithProperties | null
+  pending: PageRevisionWithProperties | null
+  published: PageRevisionWithProperties | null
 }

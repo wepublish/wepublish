@@ -15,11 +15,14 @@ import {
   Panel,
   toaster
 } from 'rsuite'
+
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
+import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -28,15 +31,22 @@ export interface ImageSelectPanelProps {
 
 const ImagesPerPage = 20
 
-export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
+function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('')
 
   const [file, setFile] = useState<File | null>(null)
+  const [imageMetaData, setImageMetaData] = useState<ImageMetaData>({
+    title: '',
+    description: '',
+    source: '',
+    link: '',
+    licence: ''
+  })
   const {data, fetchMore, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
       filter: filter,
-      first: ImagesPerPage
+      take: ImagesPerPage
     }
   })
 
@@ -48,6 +58,8 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     if (files.length === 0) return
 
     const file = files[0]
+
+    setImageMetaData(await readImageMetaData(file))
 
     if (!file.type.startsWith('image')) {
       toaster.push(
@@ -67,7 +79,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
   function loadMore() {
     fetchMore({
-      variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
+      variables: {take: ImagesPerPage, skip: 1, cursor: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
@@ -82,7 +94,14 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImagedEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
+    return (
+      <ImageEditPanel
+        onClose={onClose}
+        file={file}
+        onSave={(image: ImageRefFragment) => onSelect(image)}
+        imageMetaData={imageMetaData}
+      />
+    )
   }
 
   return (
@@ -169,3 +188,11 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_IMAGE',
+  'CAN_GET_IMAGES',
+  'CAN_GET_IMAGES',
+  'CAN_DELETE_IMAGE'
+])(ImageSelectPanel)
+export {CheckedPermissionComponent as ImageSelectPanel}

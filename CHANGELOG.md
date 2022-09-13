@@ -1,5 +1,90 @@
 # Change Log
 
+## 5.0.0 (2022-09-01)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#640](https://github.com/wepublish/wepublish/pull/640) Prisma & Postgresql instead of MongoDB ([@Itrulia](https://github.com/Itrulia))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#640](https://github.com/wepublish/wepublish/pull/640) Prisma & Postgresql instead of MongoDB ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#658](https://github.com/wepublish/wepublish/pull/658) Npm publish only on tags push ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+## 4.1.1 (2022-08-16)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#649](https://github.com/wepublish/wepublish/pull/649) fix(editor): editing peers required the token by accident ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#648](https://github.com/wepublish/wepublish/pull/648) ci: upgrade workflows checkout & setup-node + add cache for yarn ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 1
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+
+
+## 4.1.0 (2022-08-08)
+
+#### :heart: New Feature
+* Other
+  * [#629](https://github.com/wepublish/wepublish/pull/629) Send pageView analytics data in example page ([@antkiewiczk](https://github.com/antkiewiczk))
+* `api-db-mongodb`, `api`, `editor`
+  * [#632](https://github.com/wepublish/wepublish/pull/632) f/WPC-759-subscriptions-inside-user ([@michael-scheurer](https://github.com/michael-scheurer))
+  * [#637](https://github.com/wepublish/wepublish/pull/637) Settings page ([@penk85](https://github.com/penk85))
+* `api`
+  * [#639](https://github.com/wepublish/wepublish/pull/639) F/wpc 776 allow admin to generate login token for other users ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :bug: Bug Fix
+* `api`
+  * [#635](https://github.com/wepublish/wepublish/pull/635) Preview page with token or slug ([@penk85](https://github.com/penk85))
+  * [#638](https://github.com/wepublish/wepublish/pull/638) Fixed lower mail ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#634](https://github.com/wepublish/wepublish/pull/634) B/wpc 770 cancel invoices when deactivating subscription ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#625](https://github.com/wepublish/wepublish/pull/625) b/WPC-765-auto-renew ([@michael-scheurer](https://github.com/michael-scheurer))
+* `api`, `editor`
+  * [#633](https://github.com/wepublish/wepublish/pull/633) Disappearing duplicate page and article ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* `api-db-mongodb`, `api`
+  * [#628](https://github.com/wepublish/wepublish/pull/628) Normalized and validated mail on create and update ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 4
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## 4.0.0 (2022-07-12)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* `editor`
+  * [#565](https://github.com/wepublish/wepublish/pull/565) F/wpc 667 form validation ([@camilleory](https://github.com/camilleory))
+
+#### :memo: Documentation
+* [#624](https://github.com/wepublish/wepublish/pull/624) documentation for validation ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#594](https://github.com/wepublish/wepublish/pull/594) chore: upgraded typescript to latest version ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## v3.2.0 (2022-06-23)
 
 #### :heart: New Feature

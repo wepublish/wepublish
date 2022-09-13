@@ -1,11 +1,13 @@
+import {MemberPlan, PaymentMethod} from '@prisma/client'
+import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
-
-import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} from 'graphql-tools'
-
+import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {Subscription} from './db/subscription'
-import formatISO from 'date-fns/formatISO'
+import {SettingRestriction} from './db/setting'
+import {SubscriptionWithRelations} from './db/subscription'
+import {UserWithRelations} from './db/user'
+import {InvalidSettingValueError} from './error'
 
 export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
@@ -17,7 +19,13 @@ export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS
 
 export const USER_PROPERTY_LAST_LOGIN_LINK_SEND = '_wepLastLoginLinkSentTimestamp'
 
-export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
+export function mapSubscriptionsAsCsv(
+  subscriptions: (SubscriptionWithRelations & {
+    user: UserWithRelations
+    paymentMethod: PaymentMethod
+    memberPlan: MemberPlan
+  })[]
+) {
   let csvStr =
     [
       'id',
@@ -245,4 +253,53 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
     }
     return countRichtextChars(charLength, node.children)
   }, blocksCharLength)
+}
+
+export type DiscriminateUnion<T, K extends keyof T, V extends T[K]> = T extends Record<K, V>
+  ? T
+  : never
+
+export type MapDiscriminatedUnion<T extends Record<K, string>, K extends keyof T> = {
+  [V in T[K]]: DiscriminateUnion<T, K, V>
+}
+
+export function isObject<T>(unknown: unknown): unknown is Record<any, T> {
+  return typeof unknown === 'object' && unknown != null && !Array.isArray(unknown)
+}
+
+export function isArray<T>(unknown: unknown): unknown is T[] {
+  return Array.isArray(unknown)
+}
+
+export function isString(unknown: unknown): unknown is string {
+  return typeof unknown === 'string'
+}
+
+export function isBoolean(unknown: unknown): unknown is boolean {
+  return typeof unknown === 'boolean'
+}
+
+export function checkSettingRestrictions(
+  val: unknown,
+  currentVal: unknown,
+  restriction: SettingRestriction | undefined
+) {
+  if (!restriction) return
+
+  if (typeof val !== typeof currentVal) throw new InvalidSettingValueError()
+  if (restriction.allowedValues?.boolChoice && typeof val !== 'boolean')
+    throw new InvalidSettingValueError()
+  if (typeof val === 'number') {
+    if (restriction.maxValue && val > restriction.maxValue) throw new InvalidSettingValueError()
+    if (restriction.minValue && val < restriction.minValue) throw new InvalidSettingValueError()
+  }
+  if (typeof val === 'string') {
+    if (restriction.inputLength && val.length > restriction.inputLength)
+      throw new InvalidSettingValueError()
+    if (
+      restriction.allowedValues?.stringChoice &&
+      !restriction.allowedValues.stringChoice.includes(val)
+    )
+      throw new InvalidSettingValueError()
+  }
 }

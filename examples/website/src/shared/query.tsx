@@ -17,6 +17,7 @@ import {
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
+  htmlBlockDataFragment,
   articleMetaDataFragment,
   simpleImageDataFragment,
   gridBlockFrontDataGQLfragment
@@ -38,15 +39,15 @@ export interface ListArticlesData {
 }
 
 export interface ListArticlesVariables {
-  first: number
+  take: number
   cursor?: string | null
   filter?: string[]
   authors?: string[]
 }
 
 const ArticleTagQuery = gql`
-  query ArticleTag($first: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
-    articles(first: $first, after: $cursor, filter: {tags: $filter, authors: $authors}) {
+  query ArticleTag($take: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
+    articles(take: $take, cursor: $cursor, filter: {tags: $filter, authors: $authors}) {
       pageInfo {
         startCursor
         endCursor
@@ -85,6 +86,7 @@ export const ArticleQuery = gql`
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
+        ...HTMLBlockData
         ...ArticleGridBlockData
       }
     }
@@ -106,6 +108,7 @@ export const ArticleQuery = gql`
   ${listicleBlockDataFragment}
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
+  ${htmlBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
 `
 

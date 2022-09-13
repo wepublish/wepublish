@@ -1,26 +1,25 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
+import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
+import {ApolloServer} from 'apollo-server'
+import {createTestClient} from 'apollo-server-testing'
+import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
+import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
+  AlgebraicCaptchaChallenge,
   Author,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  OptionalUserSession,
   PublicArticle,
-  PublicPage,
-  URLAdapter,
   PublicComment,
-  CommentItemType,
-  Peer
+  PublicPage,
+  URLAdapter
 } from '../src'
-import {ApolloServer} from 'apollo-server'
-import {createTestClient} from 'apollo-server-testing'
-import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
-import {AlgebraicCaptchaChallenge} from '../lib'
+import {DefaultSessionTTL} from '../src/db/common'
+import {createUserSession} from '../src/graphql/session/session.mutation'
 
 export interface TestClient {
-  dbAdapter: MongoDBAdapter
   testClientPublic: ApolloServerTestClient
   testClientPrivate: ApolloServerTestClient
 }
@@ -51,7 +50,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
-    if (comment.itemType === CommentItemType.Article) {
+    if (comment.itemType === CommentItemType.article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }
     return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
@@ -62,36 +61,18 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> {
-  if (!process.env.TEST_MONGO_URL) {
-    throw new Error('TEST_MONGO_URL not defined')
+export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not defined')
   }
-  let adminUser
 
-  await MongoDBAdapter.initialize({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en',
-    seed: async adapter => {
-      const adminUserRole = await adapter.userRole.getUserRole('Admin')
-      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
+  const prisma = new PrismaClient()
+  await prisma.$connect()
 
-      adminUser = await adapter.user.createUser({
-        input: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          roleIDs: [adminUserRoleId],
-          active: true,
-          properties: []
-        },
-        password: '123'
-      })
+  const adminUser = await prisma.user.findUnique({
+    where: {
+      email: 'dev@wepublish.ch'
     }
-  })
-
-  const dbAdapter = await MongoDBAdapter.connect({
-    url: process.env.TEST_MONGO_URL!,
-    locale: 'en'
   })
 
   const mediaAdapter: KarmaMediaAdapter = {
@@ -105,11 +86,13 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     uploadImageFromArrayBuffer: jest.fn(),
     _uploadImage: jest.fn()
   }
-  if (!adminUser) {
-    throw new Error('Could not get admin user')
-  }
 
-  const userSession: OptionalUserSession = await dbAdapter.session.createUserSession(adminUser)
+  const userSession = await createUserSession(
+    adminUser!,
+    DefaultSessionTTL,
+    prisma.session,
+    prisma.userRole
+  )
 
   const request: any = {
     headers: {
@@ -128,7 +111,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
-        dbAdapter,
+        prisma,
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
@@ -151,7 +134,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
-        dbAdapter,
+        prisma,
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
@@ -169,8 +152,9 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
   const testClientPublic = createTestClient(apolloServerPublic)
 
   return {
-    dbAdapter,
     testClientPublic,
     testClientPrivate
   }
 }
+
+export const generateRandomString = () => crypto.randomBytes(20).toString('hex')

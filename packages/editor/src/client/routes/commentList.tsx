@@ -1,55 +1,51 @@
+import {ApolloCache} from '@apollo/client'
+import CheckIcon from '@rsuite/icons/legacy/Check'
+import CloseIcon from '@rsuite/icons/legacy/Close'
+import EditIcon from '@rsuite/icons/legacy/Edit'
+import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useState} from 'react'
-
+import {useTranslation} from 'react-i18next'
 import {
-  CommentListQuery,
-  FullCommentFragment,
-  useCommentListQuery,
-  useApproveCommentMutation,
-  useRequestChangesOnCommentMutation,
-  CommentState,
-  CommentRejectionReason,
-  Comment,
-  useRejectCommentMutation,
-  CommentSort,
-  CommentListDocument,
-  ApproveCommentMutation,
-  RequestChangesOnCommentMutation,
-  RejectCommentMutation
-} from '../api'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-
-import {
-  Timeline,
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  IconButton,
-  Table,
-  Modal,
   Button,
   Dropdown,
-  toaster,
+  FlexboxGrid,
+  IconButton,
   Message,
+  Modal,
+  Pagination,
   Panel,
-  Pagination
+  Table,
+  Timeline,
+  toaster,
+  Toggle
 } from 'rsuite'
 
+import {
+  ApproveCommentMutation,
+  Comment,
+  CommentFilter,
+  CommentListDocument,
+  CommentListQuery,
+  CommentRejectionReason,
+  CommentSort,
+  CommentState,
+  FullCommentFragment,
+  RejectCommentMutation,
+  RequestChangesOnCommentMutation,
+  useApproveCommentMutation,
+  useCommentListQuery,
+  useRejectCommentMutation,
+  useRequestChangesOnCommentMutation
+} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-
-import {useTranslation} from 'react-i18next'
-
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {ApolloCache} from '@apollo/client'
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import CheckIcon from '@rsuite/icons/legacy/Check'
-import ReplyIcon from '@rsuite/icons/legacy/Reply'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -103,14 +99,21 @@ function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   }
 }
 
-export function CommentList() {
+function CommentList() {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<CommentFilter>({
+    states: [
+      CommentState.Approved,
+      CommentState.PendingApproval,
+      CommentState.PendingUserChanges,
+      CommentState.Rejected
+    ]
+  })
 
   const [comments, setComments] = useState<FullCommentFragment[]>([])
 
@@ -133,10 +136,11 @@ export function CommentList() {
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
   const commentListVariables = {
-    first: limit,
-    skip: page - 1,
+    take: limit,
+    skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    filter
   }
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
@@ -146,10 +150,11 @@ export function CommentList() {
 
   useEffect(() => {
     refetch({
-      first: limit,
-      skip: page - 1,
+      take: limit,
+      skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
-      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+      filter
     })
   }, [filter, page, limit, sortOrder, sortField])
 
@@ -208,15 +213,82 @@ export function CommentList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('comments.overview.comments')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
+
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px', gap: '8px', display: 'flex'}}>
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Approved)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Approved]
+                    : states.filter(val => val !== CommentState.Approved)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.approved')}
+            unCheckedChildren={t('comments.state.approved')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingApproval)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingApproval]
+                    : states.filter(val => val !== CommentState.PendingApproval)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingApproval')}
+            unCheckedChildren={t('comments.state.pendingApproval')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.PendingUserChanges)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.PendingUserChanges]
+                    : states.filter(val => val !== CommentState.PendingUserChanges)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.pendingUserChanges')}
+            unCheckedChildren={t('comments.state.pendingUserChanges')}
+          />
+
+          <Toggle
+            defaultChecked={filter.states?.includes?.(CommentState.Rejected)}
+            onChange={enabled =>
+              setFilter(f => {
+                const states = f.states || []
+
+                return {
+                  ...f,
+                  states: enabled
+                    ? [...states, CommentState.Rejected]
+                    : states.filter(val => val !== CommentState.Rejected)
+                }
+              })
+            }
+            checkedChildren={t('comments.state.rejected')}
+            unCheckedChildren={t('comments.state.rejected')}
+          />
         </FlexboxGrid.Item>
       </FlexboxGrid>
+
       <div
         style={{
           display: 'flex',
@@ -308,54 +380,56 @@ export function CommentList() {
           </Column>
           <Column width={150} align="center" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
-              {(rowData: Comment) => (
-                <>
-                  <IconButtonTooltip caption={t('comments.overview.approve')}>
-                    <IconButton
-                      icon={<CheckIcon />}
-                      color="green"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.Approve)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('comments.overview.requestChange')}>
-                    <IconButton
-                      icon={<EditIcon />}
-                      color="yellow"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.RequestChanges)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('comments.overview.reject')}>
-                    <IconButton
-                      icon={<CloseIcon />}
-                      color="red"
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentComment(rowData)
-                        setConfirmAction(ConfirmAction.Reject)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                </>
-              )}
-            </Cell>
+            <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
+              <Cell style={{padding: '6px 0'}}>
+                {(rowData: Comment) => (
+                  <>
+                    <IconButtonTooltip caption={t('comments.overview.approve')}>
+                      <IconButton
+                        icon={<CheckIcon />}
+                        color="green"
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentComment(rowData)
+                          setConfirmAction(ConfirmAction.Approve)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                    <IconButtonTooltip caption={t('comments.overview.requestChange')}>
+                      <IconButton
+                        icon={<EditIcon />}
+                        color="yellow"
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentComment(rowData)
+                          setConfirmAction(ConfirmAction.RequestChanges)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                    <IconButtonTooltip caption={t('comments.overview.reject')}>
+                      <IconButton
+                        icon={<CloseIcon />}
+                        color="red"
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentComment(rowData)
+                          setConfirmAction(ConfirmAction.Reject)
+                          setConfirmationDialogOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </>
+                )}
+              </Cell>
+            </PermissionControl>
           </Column>
         </Table>
 
@@ -571,3 +645,9 @@ export function CommentList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_COMMENTS',
+  'CAN_TAKE_COMMENT_ACTION'
+])(CommentList)
+export {CheckedPermissionComponent as CommentList}

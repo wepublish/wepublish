@@ -10,6 +10,7 @@ import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessag
 import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
 import {useTranslation} from 'react-i18next'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date
@@ -22,7 +23,7 @@ export interface PublishArticlePanelProps {
   onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
 }
 
-export function PublishArticlePanel({
+function PublishArticlePanel({
   publishedAtDate,
   updatedAtDate,
   publishAtDate,
@@ -210,7 +211,6 @@ export function PublishArticlePanel({
           onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
           {t('articleEditor.panels.confirm')}
         </Button>
-
         <Button appearance="subtle" onClick={() => onClose()}>
           {t('articleEditor.panels.close')}
         </Button>
@@ -218,3 +218,7 @@ export function PublishArticlePanel({
     </>
   )
 }
+const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_PUBLISH_ARTICLE'])(
+  PublishArticlePanel
+)
+export {CheckedPermissionComponent as PublishArticlePanel}

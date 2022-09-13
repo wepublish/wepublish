@@ -1,0 +1,36 @@
+deployment:
+  image:
+  imagePullPolicy: Always
+  imagePullSecret:
+  env: {}
+
+  api:
+    env: {}
+    envFromSecretRefName:
+    properties: {}
+    replicaCount: 1
+
+  editor:
+    env: {}
+    envFromSecretRefName:
+    properties: {}
+    replicaCount: 1
+
+service:
+  api:
+    type: ClusterIP
+    port: 80
+  editor:
+    type: ClusterIP
+    port: 80
+
+ingress:
+  enabled: true
+  api:
+    host: api.demo.wepublish.ch
+    path: /
+  editor:
+    host: editor.demo.wepublish.ch
+    path: /
+
+labels: {}

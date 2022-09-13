@@ -22,8 +22,17 @@ export type Scalars = {
   Slug: string;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
+  Value: any;
+  /** A valid vote value */
+  VoteValue: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
+  boolChoice?: Maybe<Scalars['Boolean']>;
 };
 
 export type Article = {
@@ -55,7 +64,7 @@ export type ArticleFilter = {
 };
 
 export type ArticleInput = {
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['Slug']>;
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
@@ -95,10 +104,10 @@ export type ArticleRevision = {
   publishedAt?: Maybe<Scalars['DateTime']>;
   hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   seoTitle?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   canonicalUrl?: Maybe<Scalars['String']>;
@@ -223,7 +232,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -243,6 +252,7 @@ export type BlockInput = {
   tikTokVideo?: Maybe<TikTokVideoBlockInput>;
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
+  html?: Maybe<HtmlBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -279,7 +289,7 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
-  state?: Maybe<CommentState>;
+  states?: Maybe<Array<CommentState>>;
 };
 
 export enum CommentItemType {
@@ -423,6 +433,16 @@ export type FlexTeaserInput = {
   alignment: FlexAlignmentInput;
 };
 
+export type FullPoll = {
+  __typename?: 'FullPoll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+};
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
@@ -432,6 +452,15 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
+};
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock';
+  html?: Maybe<Scalars['String']>;
+};
+
+export type HtmlBlockInput = {
+  html?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -588,7 +617,6 @@ export type InvoiceItemInput = {
   description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
-  total: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
 };
@@ -598,6 +626,12 @@ export enum InvoiceSort {
   ModifiedAt = 'MODIFIED_AT',
   PaidAt = 'PAID_AT'
 }
+
+export type JwtToken = {
+  __typename?: 'JWTToken';
+  token: Scalars['String'];
+  expiresAt: Scalars['String'];
+};
 
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
@@ -697,7 +731,7 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
-  deletePeer?: Maybe<Scalars['ID']>;
+  deletePeer?: Maybe<Peer>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -707,51 +741,59 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   createToken: CreatedToken;
-  deleteToken?: Maybe<Scalars['String']>;
+  deleteToken?: Maybe<CreatedToken>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
   resetUserPassword?: Maybe<User>;
-  deleteUser?: Maybe<Scalars['String']>;
+  deleteUser?: Maybe<User>;
   createSubscription?: Maybe<Subscription>;
   updateSubscription?: Maybe<Subscription>;
-  deleteSubscription?: Maybe<Scalars['String']>;
+  deleteSubscription?: Maybe<Subscription>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
-  deleteUserRole?: Maybe<Scalars['String']>;
+  deleteUserRole?: Maybe<UserRole>;
   createNavigation?: Maybe<Navigation>;
   updateNavigation?: Maybe<Navigation>;
-  deleteNavigation?: Maybe<Scalars['ID']>;
+  deleteNavigation?: Maybe<Navigation>;
   createAuthor?: Maybe<Author>;
   updateAuthor?: Maybe<Author>;
-  deleteAuthor?: Maybe<Scalars['ID']>;
+  deleteAuthor?: Maybe<Author>;
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
-  deleteImage?: Maybe<Scalars['Boolean']>;
+  deleteImage?: Maybe<Image>;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
-  deleteArticle?: Maybe<Scalars['Boolean']>;
+  deleteArticle?: Maybe<Article>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
   duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
-  deletePage?: Maybe<Scalars['Boolean']>;
+  deletePage?: Maybe<Page>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
   duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<Scalars['ID']>;
+  deleteMemberPlan?: Maybe<MemberPlan>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<Scalars['ID']>;
+  deletePaymentMethod?: Maybe<PaymentMethod>;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
-  deleteInvoice?: Maybe<Scalars['ID']>;
+  deleteInvoice?: Maybe<Invoice>;
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
+  createPoll?: Maybe<PollWithAnswers>;
+  createPollAnswer?: Maybe<PollAnswer>;
+  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
+  updatePoll?: Maybe<FullPoll>;
+  deletePoll?: Maybe<FullPoll>;
+  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
+  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
 };
 
 
@@ -1061,6 +1103,55 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason;
 };
 
+
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
+};
+
+
+export type MutationCreatePollArgs = {
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollAnswerArgs = {
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdatePollArgs = {
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer>>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources>>;
+};
+
+
+export type MutationDeletePollArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollAnswerArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID'];
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -1107,14 +1198,6 @@ export type PageConnection = {
   nodes: Array<Page>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
-};
-
-export type PageFilter = {
-  title?: Maybe<Scalars['String']>;
-  draft?: Maybe<Scalars['Boolean']>;
-  published?: Maybe<Scalars['Boolean']>;
-  pending?: Maybe<Scalars['Boolean']>;
-  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type PageInfo = {
@@ -1278,7 +1361,7 @@ export enum PaymentState {
   Submitted = 'Submitted',
   RequiresUserAction = 'RequiresUserAction',
   Processing = 'Processing',
-  Payed = 'Payed',
+  Paid = 'Paid',
   Canceled = 'Canceled',
   Declined = 'Declined'
 }
@@ -1378,6 +1461,69 @@ export type PolisConversationBlockInput = {
   conversationID: Scalars['String'];
 };
 
+export type Poll = {
+  __typename?: 'Poll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PollAnswer = {
+  __typename?: 'PollAnswer';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+  votes: Scalars['Int'];
+};
+
+export type PollConnection = {
+  __typename?: 'PollConnection';
+  nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote';
+  id: Scalars['ID'];
+  answerId: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource';
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<PollExternalVote>>;
+};
+
+export type PollFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>;
+};
+
+export enum PollSort {
+  OpensAt = 'OPENS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type PollWithAnswers = {
+  __typename?: 'PollWithAnswers';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+  answers?: Maybe<Array<PollAnswer>>;
+};
+
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
@@ -1394,6 +1540,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query';
   remotePeerProfile?: Maybe<PeerProfile>;
+  createJWTForUser?: Maybe<JwtToken>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1433,12 +1580,22 @@ export type Query = {
   invoices: InvoiceConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
+  polls?: Maybe<PollConnection>;
+  poll?: Maybe<FullPoll>;
 };
 
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+
+export type QueryCreateJwtForUserArgs = {
+  userId: Scalars['String'];
+  expiresInMinutes: Scalars['Int'];
 };
 
 
@@ -1458,10 +1615,8 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserFilter>;
   sort?: Maybe<UserSort>;
@@ -1475,10 +1630,8 @@ export type QuerySubscriptionArgs = {
 
 
 export type QuerySubscriptionsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<SubscriptionFilter>;
   sort?: Maybe<SubscriptionSort>;
@@ -1497,10 +1650,9 @@ export type QueryUserRoleArgs = {
 
 
 export type QueryUserRolesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserRoleFilter>;
   sort?: Maybe<UserRoleSort>;
   order?: Maybe<SortOrder>;
@@ -1520,10 +1672,8 @@ export type QueryAuthorArgs = {
 
 
 export type QueryAuthorsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<AuthorFilter>;
   sort?: Maybe<AuthorSort>;
@@ -1537,10 +1687,8 @@ export type QueryImageArgs = {
 
 
 export type QueryImagesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
@@ -1549,10 +1697,8 @@ export type QueryImagesArgs = {
 
 
 export type QueryCommentsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<CommentFilter>;
   sort?: Maybe<CommentSort>;
@@ -1566,10 +1712,8 @@ export type QueryArticleArgs = {
 
 
 export type QueryArticlesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
@@ -1584,14 +1728,12 @@ export type QueryPeerArticleArgs = {
 
 
 export type QueryPeerArticlesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
+  cursors?: Maybe<Scalars['String']>;
+  take?: Maybe<Scalars['Int']>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
   peerFilter?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
 };
 
 
@@ -1607,12 +1749,10 @@ export type QueryPageArgs = {
 
 
 export type QueryPagesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PageFilter>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -1631,10 +1771,9 @@ export type QueryMemberPlanArgs = {
 
 
 export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<MemberPlanFilter>;
   sort?: Maybe<MemberPlanSort>;
   order?: Maybe<SortOrder>;
@@ -1652,10 +1791,9 @@ export type QueryInvoiceArgs = {
 
 
 export type QueryInvoicesArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<InvoiceFilter>;
   sort?: Maybe<InvoiceSort>;
   order?: Maybe<SortOrder>;
@@ -1668,13 +1806,32 @@ export type QueryPaymentArgs = {
 
 
 export type QueryPaymentsArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<PaymentFilter>;
   sort?: Maybe<PaymentSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QuerySettingArgs = {
+  name?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPollsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPollArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type QuoteBlock = {
@@ -1713,6 +1870,31 @@ export type SessionWithToken = {
   token: Scalars['String'];
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  value: Scalars['Value'];
+  settingRestriction?: Maybe<SettingRestriction>;
+};
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']>;
+  allowedValues?: Maybe<AllowedSettingVals>;
 };
 
 
@@ -1800,6 +1982,17 @@ export type SubscriptionInput = {
   paymentMethodID: Scalars['String'];
   properties: Array<PropertiesInput>;
   deactivation?: Maybe<SubscriptionDeactivationInput>;
+};
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  startsAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
 };
 
 export enum SubscriptionSort {
@@ -1911,6 +2104,27 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type UpdatePollAnswer = {
+  id: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePollExternalVote = {
+  id: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type UpdatePollExternalVoteSources = {
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<UpdatePollExternalVote>>;
+};
+
+export type UpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['Value'];
+};
+
 
 export type UploadImageInput = {
   file: Scalars['Upload'];
@@ -1941,25 +2155,26 @@ export type User = {
   roles: Array<UserRole>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   oauth2Accounts: Array<OAuth2Account>;
+  subscriptions: Array<UserSubscription>;
 };
 
 export type UserAddress = {
   __typename?: 'UserAddress';
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>;
-  streetAddress: Scalars['String'];
+  streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
-  zipCode: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
+  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -2024,6 +2239,24 @@ export enum UserSort {
   FirstName = 'FIRST_NAME'
 }
 
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  periods: Array<SubscriptionPeriod>;
+  memberPlan: MemberPlan;
+  invoices: Array<Invoice>;
+};
+
+
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
   videoID: Scalars['String'];
@@ -2032,6 +2265,7 @@ export type VimeoVideoBlock = {
 export type VimeoVideoBlockInput = {
   videoID: Scalars['String'];
 };
+
 
 export type YouTubeVideoBlock = {
   __typename?: 'YouTubeVideoBlock';
@@ -2087,10 +2321,8 @@ export type ArticleRefFragment = (
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<ArticleFilter>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<ArticleSort>;
@@ -2113,12 +2345,8 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
-  filter?: Maybe<ArticleFilter>;
-  after?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
+  cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<ArticleSort>;
 }>;
@@ -2209,7 +2437,10 @@ export type DeleteArticleMutationVariables = Exact<{
 
 export type DeleteArticleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteArticle'>
+  & { deleteArticle?: Maybe<(
+    { __typename?: 'Article' }
+    & MutationArticleFragment
+  )> }
 );
 
 export type DuplicateArticleMutationVariables = Exact<{
@@ -2318,6 +2549,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
+      ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -2438,10 +2672,8 @@ export type FullAuthorFragment = (
 
 export type AuthorListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<AuthorSort>;
@@ -2510,7 +2742,10 @@ export type DeleteAuthorMutationVariables = Exact<{
 
 export type DeleteAuthorMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteAuthor'>
+  & { deleteAuthor?: Maybe<(
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  )> }
 );
 
 type FullTeaser_ArticleTeaser_Fragment = (
@@ -2647,6 +2882,11 @@ type FullBlock_EmbedBlock_Fragment = (
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
 );
 
+type FullBlock_HtmlBlock_Fragment = (
+  { __typename: 'HTMLBlock' }
+  & Pick<HtmlBlock, 'html'>
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -2701,7 +2941,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -2731,10 +2971,9 @@ export type FullCommentFragment = (
 );
 
 export type CommentListQueryVariables = Exact<{
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<CommentSort>;
@@ -2831,10 +3070,8 @@ export type FullImageFragment = (
 
 export type ImageListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
 }>;
 
@@ -2901,7 +3138,10 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteImage'>
+  & { deleteImage?: Maybe<(
+    { __typename?: 'Image' }
+    & FullImageFragment
+  )> }
 );
 
 export type InvoiceFragment = (
@@ -2914,10 +3154,9 @@ export type InvoiceFragment = (
 );
 
 export type InvoicesQueryVariables = Exact<{
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<InvoiceFilter>;
   sort?: Maybe<InvoiceSort>;
   order?: Maybe<SortOrder>;
@@ -2955,7 +3194,7 @@ export type UpdateInvoiceMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active' | 'tags'>
+  & Pick<MemberPlan, 'id' | 'name' | 'description' | 'slug' | 'active' | 'tags'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2964,7 +3203,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'tags' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'tags' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -2978,10 +3217,9 @@ export type FullMemberPlanFragment = (
 
 export type MemberPlanListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -3047,7 +3285,10 @@ export type DeleteMemberPlanMutationVariables = Exact<{
 
 export type DeleteMemberPlanMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteMemberPlan'>
+  & { deleteMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
 );
 
 export type FullNavigationFragment = (
@@ -3131,7 +3372,10 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 export type DeleteNavigationMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteNavigation'>
+  & { deleteNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
 );
 
 export type MutationPageFragment = (
@@ -3176,10 +3420,8 @@ export type PageRefFragment = (
 
 export type PageListQueryVariables = Exact<{
   filter?: Maybe<PageFilter>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<PageSort>;
@@ -3264,7 +3506,10 @@ export type DeletePageMutationVariables = Exact<{
 
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePage'>
+  & { deletePage?: Maybe<(
+    { __typename?: 'Page' }
+    & MutationPageFragment
+  )> }
 );
 
 export type DuplicatePageMutationVariables = Exact<{
@@ -3368,6 +3613,9 @@ export type PageQuery = (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
+      ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
@@ -3470,7 +3718,10 @@ export type DeletePaymentMethodMutationVariables = Exact<{
 
 export type DeletePaymentMethodMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePaymentMethod'>
+  & { deletePaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
 );
 
 export type FullPeerProfileFragment = (
@@ -3599,7 +3850,216 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePeer'>
+  & { deletePeer?: Maybe<(
+    { __typename?: 'Peer' }
+    & PeerRefFragment
+  )> }
+);
+
+export type PollExternalVoteSourceFragment = (
+  { __typename?: 'PollExternalVoteSource' }
+  & Pick<PollExternalVoteSource, 'id' | 'source'>
+  & { voteAmounts?: Maybe<Array<(
+    { __typename?: 'PollExternalVote' }
+    & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
+  )>> }
+);
+
+export type CreatePollMutationVariables = Exact<{
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { createPoll?: Maybe<(
+    { __typename?: 'PollWithAnswers' }
+    & Pick<PollWithAnswers, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswer' }
+      & Pick<PollAnswer, 'id' | 'pollId' | 'answer'>
+    )>> }
+  )> }
+);
+
+export type UpdatePollMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
+}>;
+
+
+export type UpdatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePoll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & PollExternalVoteSourceFragment
+    )>> }
+  )> }
+);
+
+export type DeletePollMutationVariables = Exact<{
+  deletePollId: Scalars['ID'];
+}>;
+
+
+export type DeletePollMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePoll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id'>
+  )> }
+);
+
+export type CreatePollAnswerMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollAnswer?: Maybe<(
+    { __typename?: 'PollAnswer' }
+    & Pick<PollAnswer, 'answer' | 'id' | 'pollId'>
+  )> }
+);
+
+export type DeletePollAnswerMutationVariables = Exact<{
+  deletePollAnswerId: Scalars['ID'];
+}>;
+
+
+export type DeletePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollAnswer?: Maybe<(
+    { __typename?: 'PollAnswerWithVoteCount' }
+    & Pick<PollAnswerWithVoteCount, 'id'>
+  )> }
+);
+
+export type CreatePollExternalVoteSourceMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
+export type DeletePollExternalVoteSourceMutationVariables = Exact<{
+  deletePollExternalVoteSourceId: Scalars['ID'];
+}>;
+
+
+export type DeletePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
+export type PollsQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
+}>;
+
+
+export type PollsQuery = (
+  { __typename?: 'Query' }
+  & { polls?: Maybe<(
+    { __typename?: 'PollConnection' }
+    & Pick<PollConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Poll' }
+      & Pick<Poll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  )> }
+);
+
+export type PollQueryVariables = Exact<{
+  pollId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type PollQuery = (
+  { __typename?: 'Query' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & PollExternalVoteSourceFragment
+    )>> }
+  )> }
+);
+
+export type FullSettingFragment = (
+  { __typename?: 'Setting' }
+  & Pick<Setting, 'id' | 'name' | 'value'>
+  & { settingRestriction?: Maybe<(
+    { __typename?: 'SettingRestriction' }
+    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+  )> }
+);
+
+export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingListQuery = (
+  { __typename?: 'Query' }
+  & { settings: Array<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'id' | 'name' | 'value'>
+    & { settingRestriction?: Maybe<(
+      { __typename?: 'SettingRestriction' }
+      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
+      & { allowedValues?: Maybe<(
+        { __typename?: 'AllowedSettingVals' }
+        & Pick<AllowedSettingVals, 'stringChoice' | 'boolChoice'>
+      )> }
+    )> }
+  )> }
+);
+
+export type UpdateSettingListMutationVariables = Exact<{
+  input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
+}>;
+
+
+export type UpdateSettingListMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSettingList?: Maybe<Array<Maybe<(
+    { __typename?: 'Setting' }
+    & Pick<Setting, 'value'>
+  )>>> }
 );
 
 export type FullSubscriptionFragment = (
@@ -3630,10 +4090,8 @@ export type DeactivationFragment = (
 
 export type SubscriptionListQueryVariables = Exact<{
   filter?: Maybe<SubscriptionFilter>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<SubscriptionSort>;
@@ -3712,7 +4170,10 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteSubscription'>
+  & { deleteSubscription?: Maybe<(
+    { __typename?: 'Subscription' }
+    & FullSubscriptionFragment
+  )> }
 );
 
 export type TokenRefFragment = (
@@ -3751,7 +4212,10 @@ export type DeleteTokenMutationVariables = Exact<{
 
 export type DeleteTokenMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteToken'>
+  & { deleteToken?: Maybe<(
+    { __typename?: 'CreatedToken' }
+    & Pick<CreatedToken, 'id' | 'name' | 'token'>
+  )> }
 );
 
 export type FullUserFragment = (
@@ -3766,15 +4230,37 @@ export type FullUserFragment = (
   )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
+  )>, subscriptions: Array<(
+    { __typename?: 'UserSubscription' }
+    & UserSubscriptionFragment
+  )> }
+);
+
+export type UserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
+  & { periods: Array<(
+    { __typename?: 'SubscriptionPeriod' }
+    & Pick<SubscriptionPeriod, 'id' | 'amount' | 'createdAt' | 'endsAt' | 'invoiceID' | 'paymentPeriodicity' | 'startsAt'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, deactivation?: Maybe<(
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  )>, memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & MemberPlanRefFragment
+  ), invoices: Array<(
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
   )> }
 );
 
 export type UserListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<UserSort>;
@@ -3869,7 +4355,10 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUser'>
+  & { deleteUser?: Maybe<(
+    { __typename?: 'User' }
+    & FullUserFragment
+  )> }
 );
 
 export type SendWebsiteLoginMutationVariables = Exact<{
@@ -3898,10 +4387,9 @@ export type FullUserRoleFragment = (
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -3978,7 +4466,10 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteUserRole'>
+  & { deleteUserRole?: Maybe<(
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  )> }
 );
 
 export const MutationArticleFragmentDoc = gql`
@@ -4208,6 +4699,9 @@ export const FullBlockFragmentDoc = gql`
     title
     lead
   }
+  ... on HTMLBlock {
+    html
+  }
   ... on RichTextBlock {
     richText
   }
@@ -4336,6 +4830,83 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  modifiedAt
+  createdAt
+}
+    `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -4364,8 +4935,12 @@ export const FullUserFragmentDoc = gql`
   roles {
     ...FullUserRole
   }
+  subscriptions {
+    ...UserSubscription
+  }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${UserSubscriptionFragmentDoc}`;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4434,27 +5009,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  modifiedAt
-  createdAt
-}
-    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -4508,6 +5062,29 @@ export const MutationPageFragmentDoc = gql`
   }
 }
     `;
+export const PollExternalVoteSourceFragmentDoc = gql`
+    fragment PollExternalVoteSource on PollExternalVoteSource {
+  id
+  source
+  voteAmounts {
+    id
+    answerId
+    amount
+  }
+}
+    `;
+export const FullSettingFragmentDoc = gql`
+    fragment FullSetting on Setting {
+  id
+  name
+  value
+  settingRestriction {
+    maxValue
+    minValue
+    inputLength
+  }
+}
+    `;
 export const FullPaymentProviderFragmentDoc = gql`
     fragment FullPaymentProvider on PaymentProvider {
   id
@@ -4528,21 +5105,8 @@ export const FullPaymentMethodFragmentDoc = gql`
   active
 }
     ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
-  description
   tags
   amountPerMonthMin
   availablePaymentMethods {
@@ -4561,12 +5125,6 @@ export const MetadataPropertyFragmentDoc = gql`
   key
   value
   public
-}
-    `;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
 }
     `;
 export const FullSubscriptionFragmentDoc = gql`
@@ -4607,8 +5165,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: ArticleFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -4636,10 +5194,8 @@ export const ArticleListDocument = gql`
  * const { data, loading, error } = useArticleListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -4658,8 +5214,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $after: ID, $first: Int, $peerFilter: String, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(first: $first, after: $after, filter: $filter, peerFilter: $peerFilter, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -4691,12 +5247,8 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
- *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      first: // value for 'first'
+ *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
- *      last: // value for 'last'
- *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
  *   },
@@ -4851,9 +5403,11 @@ export type UnpublishArticleMutationResult = Apollo.MutationResult<UnpublishArti
 export type UnpublishArticleMutationOptions = Apollo.BaseMutationOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
 export const DeleteArticleDocument = gql`
     mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id)
+  deleteArticle(id: $id) {
+    ...MutationArticle
+  }
 }
-    `;
+    ${MutationArticleFragmentDoc}`;
 export type DeleteArticleMutationFn = Apollo.MutationFunction<DeleteArticleMutation, DeleteArticleMutationVariables>;
 
 /**
@@ -5191,8 +5745,8 @@ export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreate
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
-    query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
-  authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
+  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullAuthor
     }
@@ -5220,10 +5774,8 @@ export const AuthorListDocument = gql`
  * const { data, loading, error } = useAuthorListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -5345,9 +5897,11 @@ export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutat
 export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 export const DeleteAuthorDocument = gql`
     mutation DeleteAuthor($id: ID!) {
-  deleteAuthor(id: $id)
+  deleteAuthor(id: $id) {
+    ...FullAuthor
+  }
 }
-    `;
+    ${FullAuthorFragmentDoc}`;
 export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 
 /**
@@ -5375,8 +5929,8 @@ export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMu
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const CommentListDocument = gql`
-    query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
-  comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullComment
     }
@@ -5403,10 +5957,9 @@ export const CommentListDocument = gql`
  * @example
  * const { data, loading, error } = useCommentListQuery({
  *   variables: {
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -5528,8 +6081,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ImageListDocument = gql`
-    query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int) {
-  images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip) {
+    query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...ImageRef
     }
@@ -5557,10 +6110,8 @@ export const ImageListDocument = gql`
  * const { data, loading, error } = useImageListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *   },
  * });
@@ -5680,9 +6231,11 @@ export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutatio
 export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
 export const DeleteImageDocument = gql`
     mutation DeleteImage($id: ID!) {
-  deleteImage(id: $id)
+  deleteImage(id: $id) {
+    ...FullImage
+  }
 }
-    `;
+    ${FullImageFragmentDoc}`;
 export type DeleteImageMutationFn = Apollo.MutationFunction<DeleteImageMutation, DeleteImageMutationVariables>;
 
 /**
@@ -5710,8 +6263,8 @@ export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMuta
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
-    query Invoices($after: ID, $before: ID, $first: Int, $last: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
-  invoices(after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, order: $order) {
+    query Invoices($cursor: ID, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
+  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
     nodes {
       ...Invoice
     }
@@ -5736,10 +6289,9 @@ ${PageInfoFragmentDoc}`;
  * @example
  * const { data, loading, error } = useInvoicesQuery({
  *   variables: {
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *      filter: // value for 'filter'
  *      sort: // value for 'sort'
  *      order: // value for 'order'
@@ -5792,8 +6344,8 @@ export type UpdateInvoiceMutationHookResult = ReturnType<typeof useUpdateInvoice
 export type UpdateInvoiceMutationResult = Apollo.MutationResult<UpdateInvoiceMutation>;
 export type UpdateInvoiceMutationOptions = Apollo.BaseMutationOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
 export const MemberPlanListDocument = gql`
-    query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullMemberPlan
     }
@@ -5821,10 +6373,9 @@ export const MemberPlanListDocument = gql`
  * const { data, loading, error } = useMemberPlanListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -5943,9 +6494,11 @@ export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberP
 export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
 export const DeleteMemberPlanDocument = gql`
     mutation DeleteMemberPlan($id: ID!) {
-  deleteMemberPlan(id: $id)
+  deleteMemberPlan(id: $id) {
+    ...FullMemberPlan
+  }
 }
-    `;
+    ${FullMemberPlanFragmentDoc}`;
 export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 
 /**
@@ -6110,9 +6663,11 @@ export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigat
 export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
 export const DeleteNavigationDocument = gql`
     mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id)
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
 }
-    `;
+    ${FullNavigationFragmentDoc}`;
 export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 
 /**
@@ -6140,8 +6695,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: PageFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }
@@ -6169,10 +6724,8 @@ export const PageListDocument = gql`
  * const { data, loading, error } = usePageListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -6328,9 +6881,11 @@ export type UnpublishPageMutationResult = Apollo.MutationResult<UnpublishPageMut
 export type UnpublishPageMutationOptions = Apollo.BaseMutationOptions<UnpublishPageMutation, UnpublishPageMutationVariables>;
 export const DeletePageDocument = gql`
     mutation DeletePage($id: ID!) {
-  deletePage(id: $id)
+  deletePage(id: $id) {
+    ...MutationPage
+  }
 }
-    `;
+    ${MutationPageFragmentDoc}`;
 export type DeletePageMutationFn = Apollo.MutationFunction<DeletePageMutation, DeletePageMutationVariables>;
 
 /**
@@ -6669,9 +7224,11 @@ export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaym
 export type UpdatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 export const DeletePaymentMethodDocument = gql`
     mutation DeletePaymentMethod($id: ID!) {
-  deletePaymentMethod(id: $id)
+  deletePaymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
 }
-    `;
+    ${FullPaymentMethodFragmentDoc}`;
 export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 
 /**
@@ -6939,9 +7496,11 @@ export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>
 export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
 export const DeletePeerDocument = gql`
     mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id)
+  deletePeer(id: $id) {
+    ...PeerRef
+  }
 }
-    `;
+    ${PeerRefFragmentDoc}`;
 export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
 
 /**
@@ -6968,9 +7527,448 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const CreatePollDocument = gql`
+    mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
+  createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+    }
+  }
+}
+    `;
+export type CreatePollMutationFn = Apollo.MutationFunction<CreatePollMutation, CreatePollMutationVariables>;
+
+/**
+ * __useCreatePollMutation__
+ *
+ * To run a mutation, you first call `useCreatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollMutation, { data, loading, error }] = useCreatePollMutation({
+ *   variables: {
+ *      opensAt: // value for 'opensAt'
+ *      closedAt: // value for 'closedAt'
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, options);
+      }
+export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
+export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
+export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const UpdatePollDocument = gql`
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+  updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, UpdatePollMutationVariables>;
+
+/**
+ * __useUpdatePollMutation__
+ *
+ * To run a mutation, you first call `useUpdatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePollMutation, { data, loading, error }] = useUpdatePollMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      opensAt: // value for 'opensAt'
+ *      closedAt: // value for 'closedAt'
+ *      question: // value for 'question'
+ *      answers: // value for 'answers'
+ *      externalVoteSources: // value for 'externalVoteSources'
+ *   },
+ * });
+ */
+export function useUpdatePollMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePollMutation, UpdatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePollMutation, UpdatePollMutationVariables>(UpdatePollDocument, options);
+      }
+export type UpdatePollMutationHookResult = ReturnType<typeof useUpdatePollMutation>;
+export type UpdatePollMutationResult = Apollo.MutationResult<UpdatePollMutation>;
+export type UpdatePollMutationOptions = Apollo.BaseMutationOptions<UpdatePollMutation, UpdatePollMutationVariables>;
+export const DeletePollDocument = gql`
+    mutation DeletePoll($deletePollId: ID!) {
+  deletePoll(id: $deletePollId) {
+    id
+  }
+}
+    `;
+export type DeletePollMutationFn = Apollo.MutationFunction<DeletePollMutation, DeletePollMutationVariables>;
+
+/**
+ * __useDeletePollMutation__
+ *
+ * To run a mutation, you first call `useDeletePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollMutation, { data, loading, error }] = useDeletePollMutation({
+ *   variables: {
+ *      deletePollId: // value for 'deletePollId'
+ *   },
+ * });
+ */
+export function useDeletePollMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollMutation, DeletePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollMutation, DeletePollMutationVariables>(DeletePollDocument, options);
+      }
+export type DeletePollMutationHookResult = ReturnType<typeof useDeletePollMutation>;
+export type DeletePollMutationResult = Apollo.MutationResult<DeletePollMutation>;
+export type DeletePollMutationOptions = Apollo.BaseMutationOptions<DeletePollMutation, DeletePollMutationVariables>;
+export const CreatePollAnswerDocument = gql`
+    mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+  createPollAnswer(pollId: $pollId, answer: $answer) {
+    answer
+    id
+    pollId
+  }
+}
+    `;
+export type CreatePollAnswerMutationFn = Apollo.MutationFunction<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+
+/**
+ * __useCreatePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useCreatePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollAnswerMutation, { data, loading, error }] = useCreatePollAnswerMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useCreatePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>(CreatePollAnswerDocument, options);
+      }
+export type CreatePollAnswerMutationHookResult = ReturnType<typeof useCreatePollAnswerMutation>;
+export type CreatePollAnswerMutationResult = Apollo.MutationResult<CreatePollAnswerMutation>;
+export type CreatePollAnswerMutationOptions = Apollo.BaseMutationOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+export const DeletePollAnswerDocument = gql`
+    mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+  deletePollAnswer(id: $deletePollAnswerId) {
+    id
+  }
+}
+    `;
+export type DeletePollAnswerMutationFn = Apollo.MutationFunction<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+
+/**
+ * __useDeletePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useDeletePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollAnswerMutation, { data, loading, error }] = useDeletePollAnswerMutation({
+ *   variables: {
+ *      deletePollAnswerId: // value for 'deletePollAnswerId'
+ *   },
+ * });
+ */
+export function useDeletePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>(DeletePollAnswerDocument, options);
+      }
+export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePollAnswerMutation>;
+export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
+export type DeletePollAnswerMutationOptions = Apollo.BaseMutationOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+export const CreatePollExternalVoteSourceDocument = gql`
+    mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+  createPollExternalVoteSource(pollId: $pollId, source: $source) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type CreatePollExternalVoteSourceMutationFn = Apollo.MutationFunction<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useCreatePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useCreatePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollExternalVoteSourceMutation, { data, loading, error }] = useCreatePollExternalVoteSourceMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreatePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>(CreatePollExternalVoteSourceDocument, options);
+      }
+export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof useCreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+export const DeletePollExternalVoteSourceDocument = gql`
+    mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+  deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type DeletePollExternalVoteSourceMutationFn = Apollo.MutationFunction<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useDeletePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useDeletePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollExternalVoteSourceMutation, { data, loading, error }] = useDeletePollExternalVoteSourceMutation({
+ *   variables: {
+ *      deletePollExternalVoteSourceId: // value for 'deletePollExternalVoteSourceId'
+ *   },
+ * });
+ */
+export function useDeletePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>(DeletePollExternalVoteSourceDocument, options);
+      }
+export type DeletePollExternalVoteSourceMutationHookResult = ReturnType<typeof useDeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<DeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
+export const PollsDocument = gql`
+    query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
+  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      id
+      question
+      opensAt
+      closedAt
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __usePollsQuery__
+ *
+ * To run a query within a React component, call `usePollsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollsQuery({
+ *   variables: {
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function usePollsQuery(baseOptions?: Apollo.QueryHookOptions<PollsQuery, PollsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+      }
+export function usePollsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollsQuery, PollsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+        }
+export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
+export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
+export type PollsQueryResult = Apollo.QueryResult<PollsQuery, PollsQueryVariables>;
+export const PollDocument = gql`
+    query Poll($pollId: ID) {
+  poll(id: $pollId) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+
+/**
+ * __usePollQuery__
+ *
+ * To run a query within a React component, call `usePollQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollQuery({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *   },
+ * });
+ */
+export function usePollQuery(baseOptions?: Apollo.QueryHookOptions<PollQuery, PollQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+      }
+export function usePollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollQuery, PollQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+        }
+export type PollQueryHookResult = ReturnType<typeof usePollQuery>;
+export type PollLazyQueryHookResult = ReturnType<typeof usePollLazyQuery>;
+export type PollQueryResult = Apollo.QueryResult<PollQuery, PollQueryVariables>;
+export const SettingListDocument = gql`
+    query SettingList {
+  settings {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+      }
+export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+        }
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
+export const UpdateSettingListDocument = gql`
+    mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
+  updateSettingList(value: $input) {
+    value
+  }
+}
+    `;
+export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+
+/**
+ * __useUpdateSettingListMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
+      }
+export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
+export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
+export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
-    query SubscriptionList($filter: SubscriptionFilter, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query SubscriptionList($filter: SubscriptionFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
+  subscriptions(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullSubscription
     }
@@ -6998,10 +7996,8 @@ export const SubscriptionListDocument = gql`
  * const { data, loading, error } = useSubscriptionListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -7156,9 +8152,11 @@ export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubsc
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
 export const DeleteSubscriptionDocument = gql`
     mutation DeleteSubscription($id: ID!) {
-  deleteSubscription(id: $id)
+  deleteSubscription(id: $id) {
+    ...FullSubscription
+  }
 }
-    `;
+    ${FullSubscriptionFragmentDoc}`;
 export type DeleteSubscriptionMutationFn = Apollo.MutationFunction<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 
 /**
@@ -7256,7 +8254,11 @@ export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutatio
 export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
 export const DeleteTokenDocument = gql`
     mutation DeleteToken($id: ID!) {
-  deleteToken(id: $id)
+  deleteToken(id: $id) {
+    id
+    name
+    token
+  }
 }
     `;
 export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation, DeleteTokenMutationVariables>;
@@ -7286,8 +8288,8 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-  users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+  users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }
@@ -7315,10 +8317,8 @@ export const UserListDocument = gql`
  * const { data, loading, error } = useUserListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
@@ -7509,9 +8509,11 @@ export type ResetUserPasswordMutationResult = Apollo.MutationResult<ResetUserPas
 export type ResetUserPasswordMutationOptions = Apollo.BaseMutationOptions<ResetUserPasswordMutation, ResetUserPasswordMutationVariables>;
 export const DeleteUserDocument = gql`
     mutation DeleteUser($id: ID!) {
-  deleteUser(id: $id)
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }
-    `;
+    ${FullUserFragmentDoc}`;
 export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
 
 /**
@@ -7570,8 +8572,8 @@ export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsit
 export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
 export const UserRoleListDocument = gql`
-    query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUserRole
     }
@@ -7599,10 +8601,9 @@ export const UserRoleListDocument = gql`
  * const { data, loading, error } = useUserRoleListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      first: // value for 'first'
- *      last: // value for 'last'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -7755,9 +8756,11 @@ export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleM
 export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 export const DeleteUserRoleDocument = gql`
     mutation DeleteUserRole($id: ID!) {
-  deleteUserRole(id: $id)
+  deleteUserRole(id: $id) {
+    ...FullUserRole
+  }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 
 /**

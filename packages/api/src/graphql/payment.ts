@@ -1,18 +1,19 @@
-import {Context} from '../context'
+import {Payment, PaymentState} from '@prisma/client'
 import {
+  GraphQLEnumType,
   GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLInputObjectType,
-  GraphQLEnumType
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {Context} from '../context'
+import {PaymentSort} from '../db/payment'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
-import {Payment, PaymentSort, PaymentState} from '../db/payment'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {GraphQLSlug} from './slug'
@@ -20,13 +21,13 @@ import {GraphQLSlug} from './slug'
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',
   values: {
-    Created: {value: PaymentState.Created},
-    Submitted: {value: PaymentState.Submitted},
-    RequiresUserAction: {value: PaymentState.RequiresUserAction},
-    Processing: {value: PaymentState.Processing},
-    Payed: {value: PaymentState.Paid},
-    Canceled: {value: PaymentState.Canceled},
-    Declined: {value: PaymentState.Declined}
+    Created: {value: PaymentState.created},
+    Submitted: {value: PaymentState.submitted},
+    RequiresUserAction: {value: PaymentState.requiresUserAction},
+    Processing: {value: PaymentState.processing},
+    Paid: {value: PaymentState.paid},
+    Canceled: {value: PaymentState.canceled},
+    Declined: {value: PaymentState.declined}
   }
 })
 
