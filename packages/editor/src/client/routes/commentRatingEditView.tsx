@@ -59,6 +59,7 @@ function CommentRatingEditView() {
   })
 
   const [deleteAnswer, {loading: isDeleting}] = useDeleteRatingSystemAnswerMutation({
+    onError: showErrors,
     onCompleted: data => {
       setRatingSystem(old =>
         old
@@ -71,7 +72,9 @@ function CommentRatingEditView() {
     }
   })
 
-  const [updateAnswer, {loading: isUpdating}] = useUpdateRatingSystemMutation()
+  const [updateAnswer, {loading: isUpdating}] = useUpdateRatingSystemMutation({
+    onError: showErrors
+  })
 
   const updateAnswerLocally = useCallback(
     (answerId: string, answer: string | null | undefined, type: RatingSystemType) => {
