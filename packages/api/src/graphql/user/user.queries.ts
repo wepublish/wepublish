@@ -72,6 +72,30 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
             contains: filter.text,
             mode: 'insensitive'
           }
+        },
+        {
+          address: {
+            OR: [
+              {
+                streetAddress: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                zipCode: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                city: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              }
+            ]
+          }
         }
       ]
     }
