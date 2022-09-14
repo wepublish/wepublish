@@ -55,6 +55,7 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
     Article: {value: CommentItemType.article},
+    PeerArticle: {value: CommentItemType.peerArticle},
     Page: {value: CommentItemType.page}
   }
 })
@@ -116,6 +117,7 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
+    peerId: {type: GraphQLID},
 
     text: {
       type: new GraphQLNonNull(GraphQLRichText)

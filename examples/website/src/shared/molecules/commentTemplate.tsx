@@ -184,6 +184,7 @@ export interface ComposeCommentProps {
   readonly role?: string
   readonly parentID?: string
   readonly itemID?: string
+  readonly peerId?: string
   readonly slug?: string
   readonly itemType: string
 }
@@ -195,6 +196,7 @@ export interface CommentListProps {
 export interface LoginToComment {
   readonly itemType: string
   readonly itemID?: string
+  readonly peerId?: string
   readonly slug?: string
 }
 
@@ -207,7 +209,7 @@ export function ComposeComment(props: ComposeCommentProps) {
   const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
   const [commentStateInfo, setcommentStateInfo] = useState('')
 
-  const {commentComposerHeader, role, itemID, itemType, parentID} = props
+  const {commentComposerHeader, role, itemID, itemType, parentID, peerId} = props
 
   const [addComment, {loading}] = useMutation(AddComment, {
     onCompleted() {
@@ -231,7 +233,8 @@ export function ComposeComment(props: ComposeCommentProps) {
                 parentID,
                 text: commentInput,
                 itemID,
-                itemType
+                itemType,
+                peerId
               }
             }
           })
@@ -282,7 +285,7 @@ export function CommentList(commentListProps: CommentListProps) {
     } = CommentProps.comment
 
     // This allows to display the children in a chronological order for the sake of a better UX
-    let childrenReversed = [...children].reverse()
+    const childrenReversed = [...children].reverse()
 
     const [editMode, setEditMode] = useState(false)
     const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())

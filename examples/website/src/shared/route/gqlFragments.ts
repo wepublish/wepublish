@@ -162,6 +162,10 @@ export const peerArticleMetaDataFragment = gql`
     socialMediaImage {
       ...SimpleImageData
     }
+    comments {
+      ...CommentsData
+      ...RecursiveCommentsData
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}

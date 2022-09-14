@@ -168,8 +168,9 @@ model Image {
 }
 
 enum CommentItemType {
-  article @map("article")
-  page    @map("page")
+  peerArticle @map("peerArticle")
+  article     @map("article")
+  page        @map("page")
 }
 
 enum CommentRejectionReason {
@@ -211,6 +212,8 @@ model Comment {
   userID          String?
   itemID          String
   itemType        CommentItemType
+  /// only populated when itemType is peerArticle
+  peerId          String?
   parentID        String?
   revisions       CommentsRevisions[]
   rejectionReason CommentRejectionReason?
@@ -219,6 +222,7 @@ model Comment {
   guestUsername   String?
 
   user User? @relation(fields: [userID], references: [id])
+  peer Peer? @relation(fields: [peerId], references: [id])
 
   @@index([createdAt])
   @@map("comments")
@@ -484,6 +488,8 @@ model Peer {
   hostURL    String
   token      String
   isDisabled Boolean @default(false)
+
+  Comment Comment[]
 
   @@map("peers")
 }

@@ -282,6 +282,7 @@ export function PeerArticleTemplateContainer({
     authors,
     publishedAt,
     updatedAt,
+    comments,
     blocks,
     socialMediaImage,
     socialMediaDescription,
@@ -342,6 +343,8 @@ export function PeerArticleTemplateContainer({
         publishDate={publishedAt}
         id={id}
         isPeerArticle
+        peer={peer}
+        comments={comments}
       />
     </>
   )
