@@ -307,7 +307,7 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text: Scalars['RichText'];
+  text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];

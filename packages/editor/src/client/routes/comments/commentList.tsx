@@ -534,7 +534,7 @@ function CommentList() {
                             currentComment?.parentComment?.revisions
                               ? currentComment.parentComment.revisions[
                                   currentComment.parentComment.revisions.length - 1
-                                ]?.text
+                                ]?.text || []
                               : []
                           }
                         />
@@ -563,7 +563,7 @@ function CommentList() {
                               displayOnly
                               // TODO: remove this
                               onChange={console.log}
-                              value={text}
+                              value={text || []}
                             />
                           </Timeline.Item>
                         ))
