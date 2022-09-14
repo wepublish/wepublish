@@ -34,7 +34,6 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -42,6 +41,7 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   StateColor
 } from '../utility'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 

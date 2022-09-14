@@ -1119,6 +1119,7 @@
       "invoiceNo": "Facture n°",
       "total": "Montant facturé",
       "paidAt": "Payée le",
+      "canceledAt": "Annulé le",
       "payManually": "Payer manuellement",
       "areYouSure": "Êtes-vous sûr·e ?",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
