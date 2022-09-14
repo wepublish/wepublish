@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.1 (2022-09-14)
+
+#### :bug: Bug Fix
+* `api`
+  * [#672](https://github.com/wepublish/wepublish/pull/672) fix(api): navigation link missing relations ([@Itrulia](https://github.com/Itrulia))
+  * [#661](https://github.com/wepublish/wepublish/pull/661) fix(api): userlist filter missing address filter due to merge conflict ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 1
+
+
 ## 5.0.0 (2022-09-01)
 
 #### :boom: Breaking Change
