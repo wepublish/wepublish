@@ -1,5 +1,22 @@
 # Change Log
 
+## 5.0.0 (2022-09-01)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#640](https://github.com/wepublish/wepublish/pull/640) Prisma & Postgresql instead of MongoDB ([@Itrulia](https://github.com/Itrulia))
+
+#### :heart: New Feature
+* `api-db-mongodb`, `api-media-karma`, `api`, `editor`, `oauth2`
+  * [#640](https://github.com/wepublish/wepublish/pull/640) Prisma & Postgresql instead of MongoDB ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#658](https://github.com/wepublish/wepublish/pull/658) Npm publish only on tags push ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
 ## 4.1.1 (2022-08-16)
 
 #### :bug: Bug Fix
