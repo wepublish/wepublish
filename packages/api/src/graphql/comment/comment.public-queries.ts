@@ -34,9 +34,8 @@ export const getPublicCommentsForItemById = async (
   comment: PrismaClient['comment']
 ) => {
   const [answers, comments] = await Promise.all([
-    commentRatingSystemAnswer.findMany({
-      where: {}
-    }),
+    commentRatingSystemAnswer.findMany(
+),
     comment.findMany({
       where: {
         OR: [
