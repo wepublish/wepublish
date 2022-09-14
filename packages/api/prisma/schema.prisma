@@ -89,6 +89,8 @@ model Article {
 
   shared Boolean
 
+  navigations NavigationLink[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
@@ -339,13 +341,17 @@ model NavigationLink {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  label     String
-  type      String
-  url       String?
-  pageID    String?
+  label String
+  type  String
+  url   String?
+
+  page   Page?   @relation(fields: [pageID], references: [id], onDelete: Cascade)
+  pageID String?
+
+  article   Article? @relation(fields: [articleID], references: [id], onDelete: Cascade)
   articleID String?
 
-  Navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
+  navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
   navigationId String?
 
   @@map("navigations.links")
@@ -408,6 +414,8 @@ model Page {
 
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
+
+  navigations NavigationLink[]
 
   @@index([createdAt])
   @@index([modifiedAt])
