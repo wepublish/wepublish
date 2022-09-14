@@ -1,5 +1,4 @@
-import React, {createContext, ReactNode, useContext, useEffect} from 'react'
-
+import React, {createContext, useContext, useEffect, ReactNode} from 'react'
 import {useScript} from '../../utility'
 
 // Define some globals set by the SDKs.

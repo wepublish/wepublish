@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 import {usePagePreviewLinkQuery} from '../api'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PagePreviewProps {
   id: string

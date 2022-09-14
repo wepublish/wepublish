@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useState, useEffect} from 'react'
 import {Button, CheckPicker} from 'rsuite'
+import {useTranslation} from 'react-i18next'
 
+import {slugify, getOperationNameFromDocument} from '../utility'
 import {
-  AuthorListDocument,
-  AuthorRefFragment,
   useAuthorListQuery,
-  useCreateAuthorMutation
+  AuthorRefFragment,
+  useCreateAuthorMutation,
+  AuthorListDocument
 } from '../api'
-import {getOperationNameFromDocument, slugify} from '../utility'
-
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
   disabled?: boolean

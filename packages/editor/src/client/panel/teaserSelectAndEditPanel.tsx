@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
+
+import {TeaserSelectPanel} from './teaserSelectPanel'
+import {TeaserEditPanel} from './teaserEditPanel'
+import {TeaserLink, Teaser} from '../blocks/types'
+import {TeaserStyle} from '../api'
 import {Drawer} from 'rsuite'
 
-import {TeaserStyle} from '../api'
-import {Teaser, TeaserLink} from '../blocks/types'
-import {TeaserEditPanel} from './teaserEditPanel'
-import {TeaserSelectPanel} from './teaserSelectPanel'
+import {useTranslation} from 'react-i18next'
 
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void

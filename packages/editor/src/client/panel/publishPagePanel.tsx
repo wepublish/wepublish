@@ -1,13 +1,16 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useState, useEffect} from 'react'
+
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
-import {DateTimePicker} from '../atoms/dateTimePicker'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
-import {InfoColor} from '../atoms/infoMessage'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
 import {PageMetadata} from './pageMetadataPanel'
+
+import {useTranslation} from 'react-i18next'
+import {DateTimePicker} from '../atoms/dateTimePicker'
+import {InfoColor} from '../atoms/infoMessage'
+import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date

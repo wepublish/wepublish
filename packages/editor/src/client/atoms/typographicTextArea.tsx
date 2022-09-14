@@ -1,13 +1,13 @@
 import React, {
-  ChangeEvent,
-  forwardRef,
   useEffect,
-  useImperativeHandle,
+  useRef,
   useLayoutEffect,
-  useRef
+  forwardRef,
+  useImperativeHandle,
+  ChangeEvent
 } from 'react'
 
-import {stylesForTypographyVariant, TypographyTextAlign, TypographyVariant} from './typography'
+import {TypographyVariant, stylesForTypographyVariant, TypographyTextAlign} from './typography'
 
 const AutoSizeBuffer = 2
 

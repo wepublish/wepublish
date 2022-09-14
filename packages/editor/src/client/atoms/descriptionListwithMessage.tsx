@@ -1,7 +1,6 @@
 import React, {ReactNode} from 'react'
-
+import {InfoMessage, InfoColor} from './infoMessage'
 import {DescriptionListItem} from './descriptionList'
-import {InfoColor, InfoMessage} from './infoMessage'
 
 export interface DescriptionListWithMessageItemProps {
   label?: ReactNode

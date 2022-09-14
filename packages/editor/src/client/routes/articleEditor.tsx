@@ -22,11 +22,6 @@ import {
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
 import {BlockMap} from '../blocks/blockMap'
 import {
   blockForQueryBlock,
@@ -43,6 +38,11 @@ import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleM
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},

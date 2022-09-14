@@ -1,17 +1,16 @@
-import './tableMenu.less'
-
-import BanIcon from '@rsuite/icons/legacy/Ban'
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, InputGroup, InputNumber} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
-
 import {ColorPicker} from '../../../atoms/colorPicker'
 import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
-import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
-import {BlockFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+import {BlockFormat} from '../editor/formats'
+import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
+import BanIcon from '@rsuite/icons/legacy/Ban'
+
+import './tableMenu.less'
 
 export function TableMenu() {
   const editor = useSlate()

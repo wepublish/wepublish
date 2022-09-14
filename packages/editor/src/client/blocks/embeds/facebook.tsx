@@ -1,13 +1,12 @@
 import React, {
   createContext,
-  ReactNode,
   useContext,
   useEffect,
+  ReactNode,
+  useState,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react'
-
 import {useScript} from '../../utility'
 
 // Define some globals set by Facebook SDK.

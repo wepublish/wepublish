@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
+import React, {useState, useEffect} from 'react'
+
+import {Button, Drawer, Form, Panel, toaster, Message, Toggle, SelectPicker, Schema} from 'rsuite'
 
 import {
   FullPaymentMethodFragment,
@@ -10,13 +10,15 @@ import {
   usePaymentProviderListQuery,
   useUpdatePaymentMethodMutation
 } from '../api'
+
+import {useTranslation} from 'react-i18next'
+import {slugify} from '../utility'
 import {
-  authorise,
+  PermissionControl,
   createCheckedPermissionComponent,
-  PermissionControl
+  authorise
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {slugify} from '../utility'
 
 export interface PaymentMethodEditPanelProps {
   id?: string

@@ -1,5 +1,5 @@
-import nanoid from 'nanoid'
 import React from 'react'
+import nanoid from 'nanoid'
 
 interface ColorPickerProps {
   setColor: (color: string) => void

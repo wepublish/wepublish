@@ -1,8 +1,9 @@
-import SquareOIcon from '@rsuite/icons/legacy/SquareO'
-import React, {useLayoutEffect, useRef, useState} from 'react'
-import {Panel} from 'rsuite'
+import React, {useRef, useState, useLayoutEffect} from 'react'
 
-import {Draggable, DraggableContainer, Point} from './draggable'
+import {DraggableContainer, Draggable, Point} from './draggable'
+
+import {Panel} from 'rsuite'
+import SquareOIcon from '@rsuite/icons/legacy/SquareO'
 
 export interface FocalPointInputProps {
   imageURL: string

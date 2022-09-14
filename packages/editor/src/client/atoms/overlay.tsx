@@ -1,6 +1,6 @@
 import React, {forwardRef, ReactNode} from 'react'
 
-import {BlurStrength, hexToRgba} from './helpers'
+import {hexToRgba, BlurStrength} from './helpers'
 
 export interface OverlayProps extends React.ComponentPropsWithRef<'div'> {
   children?: ReactNode

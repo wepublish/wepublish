@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'

@@ -1,7 +1,6 @@
-import React, {useCallback, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, {useState, useCallback} from 'react'
 import {Form, Message} from 'rsuite'
-
+import {useTranslation} from 'react-i18next'
 import {validateURL} from '../utility'
 
 interface UrlValidationProps {

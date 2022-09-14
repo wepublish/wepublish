@@ -27,10 +27,10 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
-import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 function UserEditView() {
   const {t} = useTranslation()

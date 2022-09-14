@@ -1,12 +1,11 @@
-import CloseIcon from '@rsuite/icons/legacy/Close'
+import React from 'react'
+import {Dropdown, IconButton, Panel, Placeholder} from 'rsuite'
+import {PlaceholderInput} from './placeholderInput'
+import {useTranslation} from 'react-i18next'
+import WrenchIcon from '@rsuite/icons/legacy/Wrench'
 import ImageIcon from '@rsuite/icons/legacy/Image'
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
-import React from 'react'
-import {useTranslation} from 'react-i18next'
-import {Dropdown, IconButton, Panel, Placeholder} from 'rsuite'
-
-import {PlaceholderInput} from './placeholderInput'
+import CloseIcon from '@rsuite/icons/legacy/Close'
 
 export interface ChooseEditImageProps {
   image: any

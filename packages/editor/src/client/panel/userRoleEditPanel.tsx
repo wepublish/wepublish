@@ -1,19 +1,21 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker, Drawer, Form, Message, Schema, toaster} from 'rsuite'
+import React, {useState, useEffect} from 'react'
+
+import {toaster, Message, Button, CheckPicker, Drawer, Form, Schema} from 'rsuite'
 
 import {
-  FullUserRoleFragment,
   Permission,
   useCreateUserRoleMutation,
   usePermissionListQuery,
+  FullUserRoleFragment,
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '../api'
+
+import {useTranslation} from 'react-i18next'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  authorise
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
