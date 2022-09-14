@@ -24,6 +24,7 @@ import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
 import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+
 import {PermissionControl} from './atoms/permissionControl'
 
 export interface BaseProps {
@@ -200,17 +201,6 @@ export function Base({children}: BaseProps) {
                       {t('navbar.blocks.polls')}
                     </Nav.Item>
                   </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_COMMENTS', 'CAN_TAKE_COMMENT_ACTION']}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/comments"
-                    icon={<CommentIcon />}
-                    active={path === 'comments'}>
-                    {t('navbar.comments')}
-                  </Nav.Item>
                 </PermissionControl>
 
                 <PermissionControl
