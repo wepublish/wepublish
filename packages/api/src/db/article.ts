@@ -29,7 +29,6 @@ export interface ArticleData {
   readonly socialMediaDescription?: string | null
   readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string | null
-  readonly peerInformation?: ArticlePeerInformation | null
 }
 
 // Article State Flow:
@@ -44,6 +43,7 @@ export interface Article {
   readonly draft: ArticleRevision | null
   readonly published: ArticleRevision | null
   readonly pending: ArticleRevision | null
+  readonly peerInformation?: ArticlePeerInformation | null
 }
 
 export interface PeerArticle {

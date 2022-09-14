@@ -207,7 +207,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     },
     peerInformation: {
       type: GraphQLArticlePeerInformation,
-      resolve: createProxyingResolver(({id}, {loaders, prisma: {articlePeerInformation}}) =>
+      resolve: createProxyingResolver(({id}, {loaders}) =>
         loaders.articlePeerInformationByID.load(id)
       )
     }
