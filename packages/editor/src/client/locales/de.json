@@ -1078,8 +1078,8 @@
         "date": "Deaktivierung",
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert",
         "modalMessage": {
-          "deactivated": "Wills du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
-          "activated": "Wills du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
+          "deactivated": "Willst du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
+          "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
         },
         "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerun gewählt ist",
         "modalTitle": {
@@ -1131,6 +1131,7 @@
       "invoiceNo": "Rechnung Nr.",
       "total": "Rechnungsbetrag",
       "paidAt": "Bezahlt am",
+      "canceledAt": "Storniert am",
       "payManually": "Manuell bezahlen",
       "areYouSure": "Bist Du sicher?",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",

@@ -575,6 +575,7 @@ export type Invoice = {
   manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItem>;
   total: Scalars['Int'];
+  canceledAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type InvoiceConnection = {
@@ -3146,7 +3147,7 @@ export type DeleteImageMutation = (
 
 export type InvoiceFragment = (
   { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt'>
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt' | 'canceledAt'>
   & { items: Array<(
     { __typename?: 'InvoiceItem' }
     & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
@@ -4866,6 +4867,7 @@ export const InvoiceFragmentDoc = gql`
   description
   mail
   manuallySetAsPaidByUserId
+  canceledAt
   modifiedAt
   createdAt
 }
