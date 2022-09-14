@@ -94,6 +94,7 @@ export const updateComment = async (
 export const createAdminComment = async (
   itemId: string,
   itemType: CommentItemType,
+  parentID: string | undefined | null,
   text: string | undefined,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
@@ -108,6 +109,7 @@ export const createAdminComment = async (
       authorType: CommentAuthorType.team,
       itemID: itemId,
       itemType,
+      parentID,
       revisions: text
         ? {
             create: {

@@ -79,7 +79,7 @@ export const GraphQLCommentFilter = new GraphQLInputObjectType({
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
-    text: {type: GraphQLNonNull(GraphQLRichText)},
+    text: {type: GraphQLRichText},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
@@ -208,7 +208,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     revisions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
+      type: GraphQLList(GraphQLNonNull(GraphQLCommentRevision))
     },
     source: {
       type: GraphQLString

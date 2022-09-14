@@ -201,7 +201,8 @@
         "requestChange": "Demande de changement",
         "edit": "Edit Comment",
         "reject": "Rejeter",
-        "approve": "Approuver"
+        "approve": "Approuver",
+        "editState": "Modifier le statut"
       },
       "edit": {
         "title": "Edit Comment",
@@ -257,6 +258,10 @@
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
       "guestUser": "Invité (nom d'utilisateur)",
       "selectImage": "Choisir ou télécharger la photo de profil de l'invité"
+    },
+    "replyCommentBtn": {
+      "reply": "Répondre au commentaire",
+      "tooltip": "Crée un nouveau commentaire qui répond à ce commentaire."
     },
     "cancel": "Annuler",
     "pages": {

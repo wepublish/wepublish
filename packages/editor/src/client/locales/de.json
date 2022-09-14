@@ -366,7 +366,8 @@
         "userName": "User Name",
         "requestChange": "Änderung verlangen",
         "reject": "Ablehnen",
-        "approve": "Freigeben"
+        "approve": "Freigeben",
+        "editState": "Status bearbeiten"
       },
       "edit": {
         "title": "Kommentar editieren",
@@ -422,6 +423,10 @@
       "selectExistingUser": "Registrierte Benutzer:in wählen",
       "guestUser": "Gast (Benutzername)",
       "selectImage": "Profilbild des Gastes wählen oder hochladen"
+    },
+    "replyCommentBtn": {
+      "reply": "Auf Kommentar antworten",
+      "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
     },
     "confirm": "Bestätigen",
     "create": "Erstellen",

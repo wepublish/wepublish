@@ -12,6 +12,7 @@ import {
   useUpdateCommentMutation
 } from '../../api'
 import {CommentUser} from '../../atoms/comment/commentUser'
+import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {BlockMap} from '../../blocks/blockMap'
@@ -95,6 +96,9 @@ export const CommentEditView = memo(() => {
    */
   function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
     const revisions = comment.revisions
+    if (!revisions || !revisions.length) {
+      return
+    }
     const lastRevision = revisions[revisions.length - 1]
     const parsedRevision = {
       title: lastRevision?.title,
@@ -150,6 +154,7 @@ export const CommentEditView = memo(() => {
           saveAndCloseBtnTitle={t('saveAndClose')}
           closePath={closePath}
           setCloseFn={setClose}
+          additionalMenu={<ReplyCommentBtn comment={comment} appearance="link" />}
         />
 
         {/* form elements */}

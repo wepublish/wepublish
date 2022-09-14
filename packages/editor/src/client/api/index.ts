@@ -270,7 +270,7 @@ export type Comment = {
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   parentComment?: Maybe<Comment>;
-  revisions: Array<CommentRevision>;
+  revisions?: Maybe<Array<CommentRevision>>;
   source?: Maybe<Scalars['String']>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -585,8 +585,8 @@ export type Invoice = {
   paidAt?: Maybe<Scalars['DateTime']>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItem>;
-  total: Scalars['Int'];
   canceledAt?: Maybe<Scalars['DateTime']>;
+  total: Scalars['Int'];
 };
 
 export type InvoiceConnection = {
@@ -801,9 +801,6 @@ export type Mutation = {
   rejectComment: Comment;
   requestChangesOnComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
-  createTag?: Maybe<Tag>;
-  updateTag?: Maybe<Tag>;
-  deleteTag?: Maybe<Tag>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -811,6 +808,9 @@ export type Mutation = {
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
+  createTag?: Maybe<Tag>;
+  updateTag?: Maybe<Tag>;
+  deleteTag?: Maybe<Tag>;
 };
 
 
@@ -1119,6 +1119,7 @@ export type MutationCreateCommentArgs = {
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
   itemID: Scalars['ID'];
+  parentID?: Maybe<Scalars['ID']>;
   itemType: CommentItemType;
 };
 
@@ -1142,18 +1143,6 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationUpdateSettingListArgs = {
   value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
-};
-
-
-export type MutationCreateTagArgs = {
-  tag?: Maybe<Scalars['String']>;
-  type: TagType;
-};
-
-
-export type MutationUpdateTagArgs = {
-  id: Scalars['ID'];
-  tag?: Maybe<Scalars['String']>;
 };
 
 
@@ -1197,6 +1186,23 @@ export type MutationDeletePollAnswerArgs = {
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateTagArgs = {
+  tag?: Maybe<Scalars['String']>;
+  type: TagType;
+};
+
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteTagArgs = {
   id: Scalars['ID'];
 };
 
@@ -1883,6 +1889,7 @@ export type QueryTagsArgs = {
   sort?: Maybe<TagSort>;
   order?: Maybe<SortOrder>;
 };
+
 
 export type QueryPollsArgs = {
   cursor?: Maybe<Scalars['ID']>;
@@ -3047,25 +3054,25 @@ export type FullParentCommentFragment = (
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  )>, revisions: Array<(
+  )>, revisions?: Maybe<Array<(
     { __typename?: 'CommentRevision' }
     & CommentRevisionFragment
-  )> }
+  )>> }
 );
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt' | 'itemID' | 'itemType'>
   & { guestUserImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )>, user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  )>, revisions: Array<(
+  )>, revisions?: Maybe<Array<(
     { __typename?: 'CommentRevision' }
     & CommentRevisionFragment
-  )>, parentComment?: Maybe<(
+  )>>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & FullParentCommentFragment
   )>, tags?: Maybe<Array<(
@@ -3175,6 +3182,7 @@ export type UpdateCommentMutation = (
 export type CreateCommentMutationVariables = Exact<{
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -3298,7 +3306,7 @@ export type DeleteImageMutation = (
 
 export type InvoiceFragment = (
   { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt' | 'canceledAt'>
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'canceledAt' | 'modifiedAt' | 'createdAt'>
   & { items: Array<(
     { __typename?: 'InvoiceItem' }
     & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
@@ -5203,6 +5211,8 @@ export const FullCommentFragmentDoc = gql`
   source
   createdAt
   modifiedAt
+  itemID
+  itemType
   parentComment {
     ...FullParentComment
   }
@@ -6391,8 +6401,8 @@ export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateComment
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
     id
   }
 }
@@ -6414,6 +6424,7 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *   variables: {
  *      itemID: // value for 'itemID'
  *      itemType: // value for 'itemType'
+ *      parentID: // value for 'parentID'
  *      text: // value for 'text'
  *      tagIds: // value for 'tagIds'
  *   },

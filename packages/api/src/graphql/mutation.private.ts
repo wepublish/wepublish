@@ -891,12 +891,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         text: {type: GraphQLRichText},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
         itemID: {type: GraphQLNonNull(GraphQLID)},
+        parentID: {type: GraphQLID},
         itemType: {
           type: GraphQLNonNull(GraphQLCommentItemType)
         }
       },
-      resolve: (root, {text, tagIds, itemID, itemType}, {authenticate, prisma: {comment}}) =>
-        createAdminComment(itemID, itemType, text, tagIds, authenticate, comment)
+      resolve: (
+        root,
+        {text, tagIds, itemID, itemType, parentID},
+        {authenticate, prisma: {comment}}
+      ) => createAdminComment(itemID, itemType, parentID, text, tagIds, authenticate, comment)
     },
 
     approveComment: {

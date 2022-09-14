@@ -38,6 +38,7 @@ import {
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation
 } from '../../api'
+import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {DescriptionList, DescriptionListItem} from '../../atoms/descriptionList'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
@@ -333,7 +334,7 @@ function CommentList() {
                       disabled
                       // TODO: remove this
                       onChange={console.log}
-                      value={rowData?.revisions[rowData?.revisions?.length - 1].text}
+                      value={rowData?.revisions[rowData?.revisions?.length - 1]?.text || []}
                     />
                   ) : null}
                 </>
@@ -381,7 +382,7 @@ function CommentList() {
           </Column>
 
           <Column width={150} align="center" fixed="right">
-            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: Comment) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
@@ -436,14 +437,20 @@ function CommentList() {
           </Column>
 
           <Column width={150} align="center" fixed="right">
-            <HeaderCell>{t('comments.overview.edit')}</HeaderCell>
+            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: Comment) => (
+              {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
+                  {/* edit comment */}
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
                     <Link to={`edit/${rowData?.id}`}>
                       <IconButton icon={<EditIcon />} circle size="sm" />
                     </Link>
+                  </IconButtonTooltip>
+
+                  {/* reply to comment */}
+                  <IconButtonTooltip caption={t('comments.overview.reply')}>
+                    <ReplyCommentBtn comment={rowData} size="sm" circle hideText />
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -524,9 +531,11 @@ function CommentList() {
                           // TODO: remove this
                           onChange={console.log}
                           value={
-                            currentComment.parentComment?.revisions[
-                              currentComment.parentComment.revisions.length - 1
-                            ]?.text
+                            currentComment?.parentComment?.revisions
+                              ? currentComment.parentComment.revisions[
+                                  currentComment.parentComment.revisions.length - 1
+                                ]?.text
+                              : []
                           }
                         />
                       </>

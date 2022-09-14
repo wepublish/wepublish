@@ -366,7 +366,8 @@
         "untitled": "Untitled",
         "updated": "Modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "userName": "User Name"
+        "userName": "User Name",
+        "editState": "Edit state"
       },
       "edit": {
         "title": "Edit Comment",
@@ -422,6 +423,10 @@
       "selectExistingUser": "Select from registered users",
       "guestUser": "Guest (Username)",
       "selectImage": "Select profile image of the commenting guest"
+    },
+    "replyCommentBtn": {
+      "reply": "Reply to this comment",
+      "tooltip": "Create a new comment, which replies to this comment."
     },
     "confirm": "Confirm",
     "create": "Create",
