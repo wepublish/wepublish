@@ -15,13 +15,14 @@ import {
   Panel,
   toaster
 } from 'rsuite'
+
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
+import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {ImageEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -94,7 +95,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
   if (file) {
     return (
-      <ImagedEditPanel
+      <ImageEditPanel
         onClose={onClose}
         file={file}
         onSave={(image: ImageRefFragment) => onSelect(image)}

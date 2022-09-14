@@ -158,7 +158,6 @@ export function TitleBlockDefault({
                 )
                 .reduce((prev, curr) => [prev, ', ', curr])}
               {' — '}
-              {/* authors.map(author => author.name).join(', ') */}
             </>
           )}
           {publishedAt && getHumanReadableTimePassed(publishedAt)}
