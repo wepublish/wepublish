@@ -31,6 +31,7 @@ import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment'
 import {SessionType} from '../db/session'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
+import {GraphQLArticlePeerInformation} from './articlePeerInformation'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -203,7 +204,14 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
       resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
         return draft ?? pending ?? published
       })
+    },
+    peerInformation: {
+      type: GraphQLArticlePeerInformation,
+      resolve: createProxyingResolver(({id}, {loaders, prisma: {articlePeerInformation}}) =>
+        loaders.articlePeerInformationByID.load(id)
+      )
     }
+
     // TODO: Implement article history
     // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }

@@ -16,10 +16,10 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
+  Slug: string;
+  RichText: Node[];
   /** A hexidecimal color value. */
   Color: string;
-  RichText: Node[];
-  Slug: string;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
@@ -745,7 +745,7 @@ export type Mutation = {
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
   duplicateArticle: Article;
-  retrievePeerArticle?: Maybe<Article>;
+  savePeerArticle?: Maybe<Article>;
   createPage: Page;
   updatePage?: Maybe<Page>;
   deletePage?: Maybe<Page>;
@@ -972,7 +972,7 @@ export type MutationDuplicateArticleArgs = {
 };
 
 
-export type MutationRetrievePeerArticleArgs = {
+export type MutationSavePeerArticleArgs = {
   peerID: Scalars['ID'];
   id: Scalars['ID'];
 };
@@ -1410,6 +1410,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  savePeerArticle?: Maybe<Article>;
   remotePeerProfile?: Maybe<PeerProfile>;
   createJWTForUser?: Maybe<JwtToken>;
   peerProfile: PeerProfile;
@@ -1437,7 +1438,6 @@ export type Query = {
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
-  retrievePeerArticle?: Maybe<Article>;
   peerArticles: PeerArticleConnection;
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
@@ -1454,6 +1454,12 @@ export type Query = {
   payments: PaymentConnection;
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
+};
+
+
+export type QuerySavePeerArticleArgs = {
+  peerID: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 
@@ -1592,12 +1598,6 @@ export type QueryArticlesArgs = {
 
 
 export type QueryPeerArticleArgs = {
-  peerID: Scalars['ID'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryRetrievePeerArticleArgs = {
   peerID: Scalars['ID'];
   id: Scalars['ID'];
 };

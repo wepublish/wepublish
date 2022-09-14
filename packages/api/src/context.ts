@@ -28,7 +28,7 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {ArticleWithRevisions, PublicArticle} from './db/article'
+import {ArticleWithRevisions, PublicArticle, ArticlePeerInformation} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
@@ -101,6 +101,7 @@ export interface DataLoaderContext {
   readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>
   readonly invoicesByID: DataLoader<string, InvoiceWithItems | null>
   readonly paymentsByID: DataLoader<string, Payment | null>
+  readonly articlePeerInformationByID: DataLoader<string, ArticlePeerInformation | null>
 }
 
 export interface OAuth2Clients {
@@ -830,6 +831,19 @@ export async function contextFromRequest(
       createOptionalsArray(
         ids as string[],
         await prisma.payment.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
+      )
+    ),
+    articlePeerInformationByID: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.articlePeerInformation.findMany({
           where: {
             id: {
               in: ids as string[]

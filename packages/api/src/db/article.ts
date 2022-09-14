@@ -29,6 +29,7 @@ export interface ArticleData {
   readonly socialMediaDescription?: string | null
   readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string | null
+  readonly peerInformation?: ArticlePeerInformation | null
 }
 
 // Article State Flow:
@@ -90,6 +91,15 @@ export enum ArticleSort {
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
   PublishAt = 'publishAt'
+}
+
+export interface ArticlePeerInformation {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date | null
+  readonly peerId: string
+  readonly producerArticleId: string
+  readonly consumerArticleId: string
 }
 
 export type ArticleRevisionWithProperties = PrismaArticleRevision & {

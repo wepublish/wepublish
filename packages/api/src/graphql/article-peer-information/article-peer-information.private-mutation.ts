@@ -16,10 +16,11 @@ export const savePeerArticleById = async (
   })
 
   if (!peerArticle.published) throw new Error('peer article not found')
+  console.log('peer article', peerArticle)
   console.log('published', peerArticle.published)
   const {published} = peerArticle.published
 
-  // TODO authenticate
+  // TODO authenticat
 
   const val = await context.prisma.article.create({
     data: {
