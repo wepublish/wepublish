@@ -14,7 +14,7 @@ import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageGalleryBlockValue} from './types'
 
@@ -200,7 +200,7 @@ export function ImageGalleryBlock({
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
       <Drawer

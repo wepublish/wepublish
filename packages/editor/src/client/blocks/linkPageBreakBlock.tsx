@@ -5,7 +5,7 @@ import {Drawer, IconButton, Input} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
 import {isFunctionalUpdate} from '../utility'
@@ -85,7 +85,7 @@ export function LinkPageBreakBlock({
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}

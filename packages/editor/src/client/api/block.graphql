@@ -61,6 +61,10 @@ fragment FullBlock on Block {
     lead
   }
 
+  ... on HTMLBlock {
+    html
+  }
+
   ... on RichTextBlock {
     richText
   }

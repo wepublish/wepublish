@@ -35,7 +35,7 @@ import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTex
 import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID, getOperationNameFromDocument, slugify} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface AuthorEditPanelProps {
@@ -284,7 +284,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer>
 
       <Drawer open={isEditModalOpen} size={'sm'}>
-        <ImagedEditPanel
+        <ImageEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
           onSave={() => setEditModalOpen(false)}

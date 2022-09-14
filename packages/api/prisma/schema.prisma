@@ -659,6 +659,7 @@ model User {
   Session      Session[]
   Subscription Subscription[]
   Invoice      Invoice[]
+  PollVote     PollVote[]
 
   @@map("users")
 }
@@ -685,4 +686,91 @@ model Setting {
   settingRestriction Json
 
   @@map("settings")
+}
+
+model Poll {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  opensAt  DateTime  @default(now())
+  closedAt DateTime?
+
+  question String?
+
+  answers             PollAnswer[]
+  votes               PollVote[]
+  externalVoteSources PollExternalVoteSource[]
+
+  @@map("polls")
+}
+
+model PollAnswer {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  answer String?
+
+  pollId String
+  poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  votes         PollVote[]
+  externalVotes PollExternalVote[]
+
+  @@map("polls.answers")
+}
+
+model PollVote {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  answerId String
+  answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  // While the poll can be infered through the answer, having the pollId in this table
+  // allows to make sure a user only casts 1 vote per poll
+  pollId String
+  poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  fingerprint String?
+  disabled    Boolean @default(false)
+
+  @@unique([pollId, userId])
+  @@map("polls.votes")
+}
+
+model PollExternalVoteSource {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  pollId String
+  poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  source      String?
+  voteAmounts PollExternalVote[]
+
+  @@map("polls.external-vote-sources")
+}
+
+model PollExternalVote {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  answerId String
+  answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  sourceId String
+  source   PollExternalVoteSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  amount Int @default(0)
+
+  @@unique([answerId, sourceId])
+  @@map("polls.external-votes")
 }

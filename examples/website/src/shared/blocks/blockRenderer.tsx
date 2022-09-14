@@ -16,6 +16,7 @@ import {ListicalBLock} from './listicalBlock'
 import {TitleBlock} from './titleBlock'
 import {TitleImageBlock} from './titleBlockImage'
 import {FlexGridBlock} from './flexGridBlock'
+import {HTMLBlock} from './htmlBlock'
 
 export interface BlockRendererProps {
   blocks: Block[]
@@ -54,7 +55,6 @@ export interface RenderBlockOptions {
 export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   const {authors, publishedAt, updatedAt, articleShareUrl, isArticle, isPeerArticle = false} = opts
   if (!block) return null
-
   switch (block.type) {
     case BlockType.RichText:
       return (
@@ -103,6 +103,9 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
     case BlockType.Teaser:
       return renderTeaser(block.key, block.value, isPeerArticle)
+
+    case BlockType.HTMLBlock:
+      return <HTMLBlock html={block.value.html} />
 
     case BlockType.PeerPageBreak:
       return (

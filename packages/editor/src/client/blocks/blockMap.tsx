@@ -14,6 +14,7 @@ import React from 'react'
 
 import {BlockMapForValue} from '../atoms/blockList'
 import {EmbedBlock} from './embedBlock'
+import {HTMLBlock} from './htmlBlock'
 import {ImageBlock} from './imageBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'
@@ -152,5 +153,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: 'blocks.teaserFlexGrid.label',
     icon: <ColumnsIcon />
+  },
+
+  [BlockType.HTMLBlock]: {
+    field: props => <HTMLBlock {...props} />,
+    defaultValue: {html: ''},
+    label: 'blocks.html.label',
+    icon: <CodeIcon />
   }
 }

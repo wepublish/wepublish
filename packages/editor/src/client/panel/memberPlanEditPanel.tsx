@@ -43,7 +43,7 @@ import {
   getOperationNameFromDocument,
   slugify
 } from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface MemberPlanEditPanelProps {
@@ -376,7 +376,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
         </Drawer>
         {image && (
           <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-            <ImagedEditPanel
+            <ImageEditPanel
               id={image!.id}
               onClose={() => setEditModalOpen(false)}
               onSave={() => setEditModalOpen(false)}

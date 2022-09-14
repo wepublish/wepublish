@@ -24,7 +24,8 @@ export enum BlockType {
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid1 = 'teaserGrid1',
   TeaserGrid6 = 'teaserGrid6',
-  TeaserGridFlex = 'teaserGridFlex'
+  TeaserGridFlex = 'teaserGridFlex',
+  HTMLBlock = 'html'
 }
 
 export type RichTextBlockValue = Node[]
@@ -56,6 +57,10 @@ export interface ListicleBlockValue {
 export interface TitleBlockValue {
   title: string
   lead: string
+}
+
+export interface HTMLBlockValue {
+  html: string
 }
 
 export interface QuoteBlockValue {
@@ -259,6 +264,8 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
   TeaserGridFlexBlockValue
 >
 
+export type HTMLBlockListValue = BlockListValue<BlockType.HTMLBlock, HTMLBlockValue>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -271,9 +278,17 @@ export type BlockValue =
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
+  | HTMLBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
+    case BlockType.HTMLBlock:
+      return {
+        html: {
+          html: block.value?.html
+        }
+      }
+
     case BlockType.Image:
       return {
         image: {
@@ -723,6 +738,15 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           height: block.height ?? undefined,
           styleCustom: block.styleCustom ?? undefined,
           sandbox: block.sandbox ?? undefined
+        }
+      }
+
+    case 'HTMLBlock':
+      return {
+        key,
+        type: BlockType.HTMLBlock,
+        value: {
+          html: block.html ?? ''
         }
       }
 

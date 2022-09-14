@@ -6,7 +6,7 @@ import {BlockProps} from '../atoms/blockList'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {FieldProps, ListInput} from '../atoms/listInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {isFunctionalUpdate} from '../utility'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
@@ -95,7 +95,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}

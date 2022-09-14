@@ -516,3 +516,10 @@ export const titleBlockDataFragment = gql`
     lead
   }
 `
+
+export const htmlBlockDataFragment = gql`
+  fragment HTMLBlockData on HTMLBlock {
+    __typename
+    html
+  }
+`

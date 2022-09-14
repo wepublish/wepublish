@@ -484,6 +484,7 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLES',
   'CAN_GET_ARTICLE',
   'CAN_CREATE_ARTICLE',
-  'CAN_DELETE_ARTICLE'
+  'CAN_DELETE_ARTICLE',
+  'CAN_GET_ARTICLE_PREVIEW_LINK'
 ])(ArticleList)
 export {CheckedPermissionComponent as ArticleList}

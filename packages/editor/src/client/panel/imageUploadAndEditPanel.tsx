@@ -1,9 +1,8 @@
-import exifr from 'exifr'
 import React, {useState} from 'react'
 
-import {ImagedEditPanel} from './imageEditPanel'
-import {ImageUploadPanel} from './imageUploadPanel'
 import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageUploadPanel} from './imageUploadPanel'
 
 export interface ImageUploadAndEditPanelProps {
   onClose(): void
@@ -25,12 +24,7 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
   }
 
   return file ? (
-    <ImagedEditPanel
-      file={file}
-      onClose={onClose}
-      onSave={onUpload}
-      imageMetaData={imageMetaData}
-    />
+    <ImageEditPanel file={file} onClose={onClose} onSave={onUpload} imageMetaData={imageMetaData} />
   ) : (
     <ImageUploadPanel onClose={onClose} onUpload={handleUpload} />
   )

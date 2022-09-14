@@ -34,6 +34,7 @@ import {
   TitleBlock,
   QuoteBlock,
   EmbedBlock,
+  HTMLBlock,
   ImageCaptionEdge,
   ArticleTeaser,
   TeaserGridBlock,
@@ -513,6 +514,16 @@ export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Con
   })
 })
 
+export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
+  name: 'HTMLBlock',
+  fields: {
+    html: {type: GraphQLString}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.HTML
+  })
+})
+
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   name: 'EmbedBlock',
   fields: {
@@ -764,6 +775,13 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLHTMLBlockInput = new GraphQLInputObjectType({
+  name: 'HTMLBlockInput',
+  fields: {
+    html: {type: GraphQLString}
+  }
+})
+
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
@@ -853,6 +871,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.TikTokVideo]: {type: GraphQLTikTokVideoBlockInput},
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
+    [BlockType.HTML]: {type: GraphQLHTMLBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
     [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
@@ -877,6 +896,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
+    GraphQLHTMLBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
@@ -902,6 +922,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
+    GraphQLHTMLBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,

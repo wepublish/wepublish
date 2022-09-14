@@ -7,7 +7,7 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {FieldProps, ListInput, ListValue} from '../atoms/listInput'
 import {Textarea} from '../atoms/textarea'
 import {GalleryImageEdge} from '../blocks/types'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface GalleryListEditPanelProps {
@@ -106,7 +106,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}

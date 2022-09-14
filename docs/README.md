@@ -163,8 +163,15 @@ This takes a permission ID and returns ```true``` or ```false``` depending on wh
 
 
 ### Form accessibility
-To properly attach label to input, as well as utilize auto-generated `aria-labelledby` and `aria-describeby`, rsuite provides a `controlId` prop on `Form.Group`. This should be watched throughout the project to ensure the best possible performance and usability of the forms. More information can be found
-under this link: https://rsuitejs.com/components/form/#accessibility
+To properly attach label to input, as well as utilize auto-generated `aria-labelledby` and `aria-describeby`, rsuite provides a `controlId` prop on `Form.Group`. This should be watched throughout the project to ensure the best possible performance and usability of the forms. More information can be found under this link: https://rsuitejs.com/components/form/#accessibility
+
+### Custom HTML block
+
+After requests from publishers and weighing benefits and potential issues, we decided to allow to save custom HTML blocks both in articles and pages. Allowing to save and display custom HTML blocks is risky due to the fact that these blocks can be used to run dangerous scripts on the client side that may lead to, e.g. account impersonation, observing user behaviour, loading external content or stealing sensitive data. But, as the blocks will be added by publishers themselves, it's their responsibility to make sure that the HTML blocks are secure. WePublish provides further measurements by applying a filter on the HTML that sanitises the publisher's input, minimising the risk of running malicious code.
+
+To give further control over the content of HTML block, whitelisting certain tags and urls will be made possible in the editor's settings. In addition, we always store the original data in the database, and we allow the publisher to see the sanitised data in the settings to see how (and if) the HTML was changed thanks to the xss prevention filter - which can further help to understand the risks and dangers.
+
+We have, however, to be aware that it's almost impossible to be 100% sure that none of the code displayed as custom HTML is dangerous.
 
 ## packages/api
 ### Environment Variables

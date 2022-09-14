@@ -16,7 +16,7 @@ import {
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
+import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface PageMetadataProperty {
@@ -320,7 +320,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
           onClose={() => {
             setEditModalOpen(false)
           }}>
-          <ImagedEditPanel
+          <ImageEditPanel
             id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />
