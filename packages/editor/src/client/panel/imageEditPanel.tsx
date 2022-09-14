@@ -263,7 +263,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
               <Button appearance={'primary'} disabled={isDisabled} type="submit">
-                {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+                {isUpload ? t('images.panels.upload') : t('save')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>

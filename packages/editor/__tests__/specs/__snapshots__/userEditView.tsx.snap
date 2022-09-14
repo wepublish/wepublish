@@ -44,7 +44,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
 +           <span
 +             class=\\"rs-btn-spin\\"
 +           />
-            userCreateOrEditView.create
+            create
           </button>
           <button
 -           class=\\"rs-btn rs-btn-primary\\"
@@ -55,7 +55,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
 +           <span
 +             class=\\"rs-btn-spin\\"
 +           />
-            userCreateOrEditView.createAndClose
+            createAndClose
             <span
               class=\\"rs-ripple-pond\\"
             >
@@ -452,14 +452,14 @@ exports[`User edit view should render 1`] = `
           style="margin-right: 10px;"
           type="submit"
         >
-          userCreateOrEditView.create
+          create
         </button>
         <button
           class="rs-btn rs-btn-primary"
           data-testid="saveAndCloseButton"
           type="submit"
         >
-          userCreateOrEditView.createAndClose
+          createAndClose
           <span
             class="rs-ripple-pond"
           >
@@ -1131,14 +1131,14 @@ exports[`User edit view should render with ID 1`] = `
           style="margin-right: 10px;"
           type="submit"
         >
-          userCreateOrEditView.create
+          create
         </button>
         <button
           class="rs-btn rs-btn-primary"
           data-testid="saveAndCloseButton"
           type="submit"
         >
-          userCreateOrEditView.createAndClose
+          createAndClose
           <span
             class="rs-ripple-pond"
           >

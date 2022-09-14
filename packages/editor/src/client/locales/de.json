@@ -4,7 +4,6 @@
       "overview": {
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
-        "create": "Erstellen",
         "draft": "Entwurf",
         "draftCreated": "Artikelentwurf erstellt",
         "draftSaved": "Artikelentwurf gespeichert",
@@ -15,8 +14,8 @@
         "publish": "Publizieren",
         "previewDisabled": "Alle Änderungen an diesem Artikel wurden bereits publiziert.",
         "preview": "Vorschau",
+        "createComment": "Kommentar erstellen",
         "published": "Artikel publiziert am {{date, ccc PP p}}.",
-        "save": "Speichern",
         "unpublished": "Nicht publiziert",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -25,7 +24,6 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
         "duplicate": "Duplizieren",
-        "delete": "Löschen",
         "articlePending": "Artikel geplant"
       },
       "panels": {
@@ -92,7 +90,6 @@
         "published": "Publiziert",
         "removeImage": "Bild entfernen",
         "removeTeaser": "Teaser entfernen",
-        "saveAndClose": "Speichern und schliessen",
         "search": "Suchen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
@@ -173,7 +170,6 @@
         "createAuthorProfile": "Autor*innenprofil erstellen für {{name}}",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "deleteArticle": "Artikel löschen?",
         "duplicateArticle": "Artikel duplizieren?",
         "lead": "Lead",
@@ -193,7 +189,6 @@
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "created": "Erstellt",
-        "delete": "Löschen",
         "deleteAuthor": "Autor*in löschen?",
         "loadMore": "Mehr laden",
         "name": "Name",
@@ -208,7 +203,6 @@
         "bioInformation": "Biographie",
         "chooseImage": "Bild wählen",
         "close": "Schliessen",
-        "create": "Erstellen",
         "createAuthor": "Autor*in erstellen",
         "editAuthor": "Autor*in bearbeiten",
         "editImage": "Bild entfernen",
@@ -218,7 +212,6 @@
         "links": "Links",
         "name": "Name",
         "removeImage": "Bild entfernen",
-        "save": "Speichern",
         "title": "Titel"
       }
     },
@@ -269,8 +262,7 @@
           "close": "Schliessen",
           "editGallery": "Galerie bearbeiten",
           "editImage": "Bild bearbeiten",
-          "removeImage": "Bild entfernen",
-          "save": "Speichern"
+          "removeImage": "Bild entfernen"
         }
       },
       "linkPageBreak": {
@@ -319,7 +311,6 @@
         "addBorders": "Rahmen hinzufügen",
         "cancel": "Abbrechen",
         "columns": "Spalten",
-        "delete": "Löschen",
         "deleteTable": "Tabelle löschen",
         "insertTable": "Tabelle einfügen",
         "rows": "Zeilen",
@@ -360,6 +351,8 @@
     "comments": {
       "overview": {
         "action": "Aktion",
+        "moderation": "Moderation",
+        "edit": "Kommentar editieren",
         "comments": "Kommentare",
         "created": "Erstellt",
         "loadMore": "Mehr laden",
@@ -375,6 +368,13 @@
         "reject": "Ablehnen",
         "approve": "Freigeben"
       },
+      "edit": {
+        "title": "Kommentar editieren",
+        "tags": "Etiketten",
+        "unnamedTag": "<Unbennantes Etikett>",
+        "loading": "Laden",
+        "success": "Kommentar erfolgreich editiert"
+      },
       "panels": {
         "approve": "Annehmen",
         "approveComment": "Kommentar freischalten",
@@ -383,7 +383,6 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
-        "delete": "Löschen",
         "id": "ID",
         "reject": "Ablehnen",
         "rejectComment": "Kommentar ablehnen",
@@ -410,6 +409,20 @@
         "rejected": "Abgelehnt"
       }
     },
+    "commentEditView": {
+      "title": "Titel",
+      "lead": "Lead",
+      "comment": "Text Kommentar",
+      "variousPanelHeader": "Tags & Quelle",
+      "tags": "Tags",
+      "source": "Quelle",
+      "userPanelHeader": "Verfasser:in des Kommentars"
+    },
+    "commentUser": {
+      "selectExistingUser": "Registrierte Benutzer:in wählen",
+      "guestUser": "Gast (Benutzername)",
+      "selectImage": "Profilbild des Gastes wählen oder hochladen"
+    },
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "dateTimePicker": {
@@ -427,7 +440,6 @@
         "noImagesFound": "Keine Bilder gefunden",
         "search": "Suchen",
         "uploadImage": "Bild hochladen",
-        "delete": "Löschen",
         "actions": "Aktionen",
         "image": "Bild",
         "filename": "Filename",
@@ -456,7 +468,6 @@
         "license": "Lizenz",
         "link": "Link",
         "notFound": "Bild nicht gefunden!",
-        "save": "Speichern",
         "source": "Quelle",
         "sourceLink": "Link zur Original-Quelle des Bildes.",
         "tags": "Tags",
@@ -544,7 +555,6 @@
       "title": "Memberpläne",
       "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
       "minimumMonthlyAmount": "Minimaler monatlicher Betrag CHF",
-      "delete": "Löschen",
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
     },
@@ -616,6 +626,7 @@
       },
       "authors": "Autor*innen",
       "comments": "Kommentare",
+      "commentTags": "Etiketten",
       "imageLibrary": "Bilder",
       "settings": "Einstellungen",
       "languageSwitch": {
@@ -643,7 +654,6 @@
         "action": "Aktion",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
-        "delete": "Löschen",
         "deleteNavigation": "Navigation löschen",
         "name": "Name",
         "navigations": "Navigationen",
@@ -655,7 +665,6 @@
       "panels": {
         "article": "Artikel",
         "close": "Schliessen",
-        "create": "Erstellen",
         "createNavigation": "Navigation erstellen",
         "editNavigation": "Navigation bearbeiten",
         "key": "Key",
@@ -663,7 +672,6 @@
         "links": "Links",
         "name": "Name",
         "page": "Seite",
-        "save": "Speichern",
         "selectArticle": "Artikel auswählen",
         "selectPage": "Seite auswählen",
         "url": "URL",
@@ -673,7 +681,6 @@
     "pageEditor": {
       "overview": {
         "back": "Zurück",
-        "create": "Erstellen",
         "draft": "Entwurf",
         "metadata": "Metadaten",
         "pageDraftCreated": "Seiten Entwurf erstellt",
@@ -681,9 +688,9 @@
         "pageNotFound": "Seite nicht gefunden",
         "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
-        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
         "preview": "Vorschau",
-        "save": "Speichern",
+        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
+        "createComment": "Kommentar erstellen",
         "unpublished": "Nicht publiziert",
         "published": "Seite publiziert am {{date, ccc PP p}}",
         "pagePublished": "Seite publiziert",
@@ -692,8 +699,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
         "pagePending": "Seite geplant",
-        "duplicate": "Duplizieren",
-        "delete": "Löschen"
+        "duplicate": "Duplizieren"
       },
       "panels": {
         "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -714,7 +720,6 @@
         "public": "Öffentlich",
         "publishDate": "Publikationsdatum",
         "removeImage": "Bild entfernen",
-        "saveAndClose": "Speichern und schliessen",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -767,7 +772,6 @@
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "deletePage": "Seite löschen?",
         "duplicatePage": "Seite duplizieren?",
         "lead": "Lead",
@@ -793,7 +797,6 @@
       "name": "Name",
       "title": "Zahlungsmethoden",
       "active": "Aktiv",
-      "delete": "Löschen",
       "slug": "Slug"
     },
     "peerList": {
@@ -805,7 +808,6 @@
         "invalidURLTooltip": "Ungültige URL",
         "myPeerProfile": "Mein Peer Profil",
         "editProfile": "Profil bearbeiten",
-        "delete": "Löschen",
         "disable": "Deaktivieren",
         "enable": "Aktivieren"
       },
@@ -817,7 +819,6 @@
         "chooseImage": "Bild wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "create": "Erstellen",
         "createPeer": "Peer erstellen",
         "deletePeer": "Peer löschen",
         "editImage": "Bild bearbeiten",
@@ -833,7 +834,6 @@
         "peerInfoUpdated": "Peer-Info aktualisiert",
         "peerUpdated": "Peer aktualisiert",
         "removeImage": "Bild entfernen",
-        "save": "Speichern",
         "themeColor": "Theme Farbe",
         "themeFontColor": "Schrift Farbe",
         "token": "Token",
@@ -853,14 +853,16 @@
       }
     },
     "save": "Speichern",
+    "delete": "Löschen",
+    "saveAndClose": "Speichern & Schliessen",
+    "createAndClose": "Erstellen & Schliessen",
     "yes": "Ja",
     "no": "Nein",
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
         "loading": "laden...",
-        "tokens": "Tokens",
-        "delete": "Löschen"
+        "tokens": "Tokens"
       },
       "panels": {
         "cancel": "Abbrechen",
@@ -882,7 +884,6 @@
       "overview": {
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -916,7 +917,6 @@
         "action": "Aktion",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "description": "Beschreibung",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -939,7 +939,6 @@
     "userRoles": {
       "overview": {
         "action": "Aktion",
-        "delete": "Löschen",
         "description": "Beschreibung",
         "name": "Name",
         "newUserRole": "Neue Userrolle",
@@ -953,14 +952,12 @@
         "cancel": "Abbrechen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "create": "Erstellen",
         "createUserRole": "Userrolle kreieren",
         "deleteUserRole": "Userrolle löschen?",
         "description": "Beschreibung",
         "editUserRole": "Userrolle bearbeiten",
         "name": "Name",
         "permissions": "Berechtigungen",
-        "save": "Speichern",
         "Unknown": "Unbekannt",
         "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden"
       }
@@ -975,8 +972,6 @@
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
       "createNewUser": "Neue:n Benutzer:in erstellen",
-      "saveAndClose": "Speichern & Schliessen",
-      "createAndClose": "Erstellen & Schliessen",
       "csvData": "CSV-Daten",
       "exportSubscriptions": "Exportieren",
       "generateCSV": "Generieren",
@@ -988,7 +983,6 @@
       "cancel": "Abbrechen",
       "close": "Schliessen",
       "confirm": "Bestätigen",
-      "create": "Erstellen",
       "createUser": "User erstellen",
       "deleteUser": "User löschen?",
       "editUser": "User bearbeiten",
@@ -1007,11 +1001,9 @@
       "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
       "sendWebsiteLoginFailureMessage": "Login-Link konnte nicht versendet werden. {{error}}",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
-      "save": "Speichern",
       "selectUserRole": "Userrolle wählen",
       "startedAt": "Gestartet",
       "startedAtDate": "{{startedAtDate, ccc PP p}}",
-      "subCreate": "Erstellen",
       "subEdit": "Bearbeiten",
       "subTitle": "Abonnement",
       "Unknown": "Unbekannt",
@@ -1151,7 +1143,6 @@
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
-      "save": "Speichern",
       "errorTitle": "Fehler",
       "editSettings": "Einstellungen ändern",
       "guestCommenting": "Gastkommentare erlauben",
@@ -1184,6 +1175,16 @@
       "notPublished": "Noch nicht publiziert",
       "toOriginalArticle": "Zum Original Artikel",
       "filterByPeer": "Nach Peer filtern"
+    },
+    "tags": {
+      "overview": {
+        "title": "Etiketten",
+        "createTag": "Neues Etikett",
+        "placeholder": "Name des Etiketts",
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureConfirmation": "Etikett löschen",
+        "areYouSureBody": "Das Etikett \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden."
+      }
     },
     "permissions": {
       "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",

@@ -41,8 +41,13 @@ import {
   GraphQLAuthorSort
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
-import {getAdminComments} from './comment/comment.private-queries'
+import {
+  GraphQLComment,
+  GraphQLCommentConnection,
+  GraphQLCommentFilter,
+  GraphQLCommentSort
+} from './comment/comment'
+import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
@@ -117,6 +122,8 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
+import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, TagSort} from './tag/tag.private-query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
@@ -408,6 +415,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Comments
     // =======
 
+    comment: {
+      type: GraphQLComment,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        getComment(id, authenticate, comment)
+    },
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {
@@ -418,7 +434,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve: async (
+      resolve: (
         root,
         {filter, sort, order, skip, take, cursor},
         {authenticate, prisma: {comment}}
@@ -573,8 +589,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetPaymentProviders, roles)
 
         return paymentProviders.map(({id, name}) => ({
-          id: id,
-          name: name
+          id,
+          name
         }))
       }
     },
@@ -646,6 +662,23 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Tag
+    // ==========
+
+    tags: {
+      type: GraphQLTagConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLTagFilter},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
+        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     },
 
     // Polls

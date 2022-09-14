@@ -21,9 +21,9 @@ import {
   useTokenListQuery
 } from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 import {getOperationNameFromDocument} from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 function TokenList() {
   const location = useLocation()
@@ -93,7 +93,7 @@ function TokenList() {
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
-                    <IconButtonTooltip caption={t('tokenList.overview.delete')}>
+                    <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         icon={<TrashIcon />}
                         circle
