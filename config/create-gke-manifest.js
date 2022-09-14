@@ -1449,7 +1449,7 @@ async function applyPostgres() {
             {
               name: 'postgres-data-permission-fix',
               image: 'busybox',
-              command: ['/bin/chmod', '-R', '777', '/bitnami/postgresql'],
+              command: ['/bin/chmod', '-R', '755', '/bitnami/postgresql'],
               volumeMounts: [
                 {
                   name: 'postgres-volume',
