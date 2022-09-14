@@ -207,3 +207,15 @@ export class InvalidStarRatingValueError extends ApolloError {
     super('Value has to be between 0 and 5')
   }
 }
+
+export class PollNotOpenError extends ApolloError {
+  constructor() {
+    super('Poll has not been opened for voting yet!')
+  }
+}
+
+export class PollClosedError extends ApolloError {
+  constructor() {
+    super('Poll voting has been closed already!')
+  }
+}

@@ -642,6 +642,14 @@
         "startWriting": "Commencez à écrire...",
         "text": "Texte"
       },
+      "html": {
+        "label": "HTML",
+        "edit": "Editer l’HTML",
+        "confirm": "Confirmer",
+        "close": "Fermer",
+        "placeholder": "Copiez votre bloc HTML ici..",
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+      },
       "richTextTable": {
         "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
@@ -822,7 +830,7 @@
       "deactivationReason": {
         "None": "Aucune",
         "InvoiceNotPaid": "Facture non payée",
-        "UserSelfDeactivated": "Désactivation par l'utilisateur·trice"
+        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement"
       },
       "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
       "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",
@@ -897,6 +905,66 @@
         "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée."
       },
       "hasAddress": "Adresse de l'utilisateur·trice"
+    },
+    "pollList": {
+      "title": "Sondages",
+      "createNew": "Créer Sondage",
+      "question": "Question",
+      "opensAt": "Débute le",
+      "openedAt": "Débuté le {{openedAt}}",
+      "pollWillOpenAt": "Débute le {{opensAt}}",
+      "noQuestion": "Aucune question saisie",
+      "hasBeenClosedAt": "Fermé le {{closedAt}}",
+      "closedAt": "Fermé le",
+      "closedAtNone": "Non fermé",
+      "answersCount": "Réponses saisies",
+      "state": "État",
+      "delete": "Supprimer",
+      "pollDeleted": "Sondage supprimé."
+    },
+    "deletePollModal": {
+      "title": "Supprimer sondage?",
+      "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
+      "deleteBtn": "Oui, supprimer",
+      "cancelBtn": "Annuler"
+    },
+    "pollEditView": {
+      "loadingTitle": "Chargement du sondage...",
+      "saveTitle": "Enregistrer",
+      "saveAndCloseTitle": "Enregistrer & Fermer",
+      "question": "Question",
+      "toBeOrNotToBe": "Être ou ne pas être.",
+      "questionRequired": "Saisie ta question",
+      "savedSuccessfully": "Sondage enregistré.",
+      "questionPanelHeader": "Question",
+      "answerPanelHeader": "Réponses possibles",
+      "addAndSaveNewAnswer": "Ajouter une réponse",
+      "settingsPanelHeader": "Paramètres Publication",
+      "opensAtLabel": "Commence le",
+      "closesAtLabel": "Clôture à",
+      "pollExternalVotesPanelHeader": "Soruces de vote externes",
+      "defaultAnswer": "Réponse standard"
+    },
+    "pollAnswer": {
+      "insertYourNewAnswer": "Saisir une nouvelle réponse",
+      "deleteModalTitle": "Supprimer?",
+      "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
+      "deleteBtn": "Supprimer",
+      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte."
+    },
+    "pollExternalVotes": {
+      "newSourcePlaceholder": "Nom de la source du vote (par ex. Facebook)",
+      "addSourceBtn": "Ajouter",
+      "sourceHeaderCell": "Source",
+      "deleteTitle": "Supprimer?",
+      "deleteBody": "Supprimer la source \"{{source}}\" de manière irréversible?",
+      "deleteExternalVoteBtn": "Supprimer",
+      "emptySource": "Veuillez saisir le nom de la source."
+    },
+    "pollStateIndication": {
+      "closed": "Sondage fermé",
+      "open": "Sondage en cours",
+      "waiting": "Sondage en attente d'ouverture le {{date}}"
     },
     "navbar": {
       "languageSwitch": {
@@ -1069,6 +1137,7 @@
       "invoiceNo": "Facture n°",
       "total": "Montant facturé",
       "paidAt": "Payée le",
+      "canceledAt": "Annulé le",
       "payManually": "Payer manuellement",
       "areYouSure": "Êtes-vous sûr·e ?",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",

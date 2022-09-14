@@ -507,6 +507,30 @@ export const CanDeleteCommentRatingSystem: Permission = {
   deprecated: false
 }
 
+export const CanGetPoll: Permission = {
+  id: 'CAN_GET_POLL',
+  description: 'Allows to get a poll',
+  deprecated: false
+}
+
+export const CanCreatePoll: Permission = {
+  id: 'CAN_CREATE_POLL',
+  description: 'Allows to create a poll',
+  deprecated: false
+}
+
+export const CanUpdatePoll: Permission = {
+  id: 'CAN_UPDATE_POLL',
+  description: 'Allows to update a poll',
+  deprecated: false
+}
+
+export const CanDeletePoll: Permission = {
+  id: 'CAN_DELETE_POLL',
+  description: 'Allows to delete a poll',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -584,7 +608,11 @@ export const AllPermissions: Permission[] = [
   CanGetCommentRatingSystem,
   CanCreateCommentRatingSystem,
   CanUpdateCommentRatingSystem,
-  CanDeleteCommentRatingSystem
+  CanDeleteCommentRatingSystem,
+  CanGetPoll,
+  CanUpdatePoll,
+  CanDeletePoll,
+  CanCreatePoll
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -612,7 +640,11 @@ export const EditorPermissions: Permission[] = [
   CanGetSettings,
   CanCreateCommentRatingSystem,
   CanUpdateCommentRatingSystem,
-  CanDeleteCommentRatingSystem
+  CanDeleteCommentRatingSystem,
+  CanGetPoll,
+  CanUpdatePoll,
+  CanDeletePoll,
+  CanCreatePoll
 ]
 
 export const PeerPermissions: Permission[] = [

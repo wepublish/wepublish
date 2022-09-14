@@ -56,6 +56,8 @@ import {getPublishedPages} from './page/page.public-queries'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLFullPoll} from './poll/poll'
+import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
@@ -481,6 +483,17 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
       resolve: (root, input, {prisma: {commentRatingSystem}}) =>
         getRatingSystem(commentRatingSystem)
+    },
+
+    // Poll
+    // =======
+    poll: {
+      type: GraphQLFullPoll,
+      description: 'This query returns a poll with all the needed data',
+      args: {
+        id: {type: GraphQLID}
+      },
+      resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
     }
   }
 })

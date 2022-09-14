@@ -37,6 +37,8 @@ import {addPublicComment, updatePublicComment} from './comment/comment.public-mu
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPollVote} from './poll/poll'
+import {voteOnPoll} from './poll/poll.public-mutation'
 import {GraphQLPublicSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -766,6 +768,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           failureURL
         })
       }
+    },
+
+    voteOnPoll: {
+      type: GraphQLPollVote,
+      args: {
+        answerId: {type: GraphQLNonNull(GraphQLID)}
+      },
+      description:
+        "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
+      resolve: (root, {answerId}, {optionalAuthenticateUser, prisma: {pollAnswer, pollVote}}) =>
+        voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote)
     }
   }
 })

@@ -83,6 +83,24 @@ import {
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
 import {authorise, CanSendJWTLogin} from './permissions'
+import {
+  GraphQLFullPoll,
+  GraphQLPollAnswer,
+  GraphQLPollAnswerWithVoteCount,
+  GraphQLPollExternalVoteSource,
+  GraphQLPollWithAnswers,
+  GraphQLUpdatePollAnswer,
+  GraphQLUpdatePollExternalVoteSources
+} from './poll/poll'
+import {
+  createPoll,
+  createPollAnswer,
+  createPollExternalVoteSource,
+  deletePoll,
+  deletePollAnswer,
+  deletePollExternalVoteSource,
+  updatePoll
+} from './poll/poll.private-mutation'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -931,6 +949,98 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {commentRatingSystemAnswer}}) =>
         deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer)
+    },
+
+    // Poll
+    // ==========
+
+    createPoll: {
+      type: GraphQLPollWithAnswers,
+      args: {
+        opensAt: {type: GraphQLDateTime},
+        closedAt: {type: GraphQLDateTime},
+        question: {type: GraphQLString}
+      },
+      resolve: (root, input, {authenticate, prisma: {poll}}) =>
+        createPoll(input, authenticate, poll)
+    },
+
+    createPollAnswer: {
+      type: GraphQLPollAnswer,
+      args: {
+        pollId: {type: GraphQLNonNull(GraphQLID)},
+        answer: {type: GraphQLString}
+      },
+      resolve: (
+        root,
+        {pollId, answer},
+        {authenticate, prisma: {pollExternalVoteSource, pollAnswer}}
+      ) => createPollAnswer(pollId, answer, authenticate, pollExternalVoteSource, pollAnswer)
+    },
+
+    createPollExternalVoteSource: {
+      type: GraphQLPollExternalVoteSource,
+      args: {
+        pollId: {type: GraphQLNonNull(GraphQLID)},
+        source: {type: GraphQLString}
+      },
+      resolve: (
+        root,
+        {pollId, source},
+        {authenticate, prisma: {pollExternalVoteSource, pollAnswer}}
+      ) =>
+        createPollExternalVoteSource(
+          pollId,
+          source,
+          authenticate,
+          pollAnswer,
+          pollExternalVoteSource
+        )
+    },
+
+    updatePoll: {
+      type: GraphQLFullPoll,
+      args: {
+        pollId: {type: GraphQLNonNull(GraphQLID)},
+        opensAt: {type: GraphQLDateTime},
+        closedAt: {type: GraphQLDateTime},
+        question: {type: GraphQLString},
+        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
+        externalVoteSources: {
+          type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
+        }
+      },
+      resolve: (
+        root,
+        {pollId, answers, externalVoteSources, ...pollInput},
+        {authenticate, prisma: {poll}}
+      ) => updatePoll(pollId, pollInput, answers, externalVoteSources, authenticate, poll)
+    },
+
+    deletePoll: {
+      type: GraphQLFullPoll,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {poll}}) => deletePoll(id, authenticate, poll)
+    },
+
+    deletePollAnswer: {
+      type: GraphQLPollAnswerWithVoteCount,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {pollAnswer}}) =>
+        deletePollAnswer(id, authenticate, pollAnswer)
+    },
+
+    deletePollExternalVoteSource: {
+      type: GraphQLPollExternalVoteSource,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {pollExternalVoteSource}}) =>
+        deletePollExternalVoteSource(id, authenticate, pollExternalVoteSource)
     }
   }
 })

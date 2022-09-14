@@ -375,6 +375,7 @@ Object {
         },
         Object {
           "deprecated": false,
+<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -392,6 +393,25 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+          "description": "Allows to get a poll",
+          "id": "CAN_GET_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a poll",
+          "id": "CAN_UPDATE_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a poll",
+          "id": "CAN_DELETE_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a poll",
+          "id": "CAN_CREATE_POLL",
+>>>>>>> origin/master
         },
       ],
       "systemRole": false,
@@ -797,6 +817,7 @@ Object {
         },
         Object {
           "deprecated": false,
+<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -814,6 +835,25 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+          "description": "Allows to get a poll",
+          "id": "CAN_GET_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a poll",
+          "id": "CAN_UPDATE_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a poll",
+          "id": "CAN_DELETE_POLL",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a poll",
+          "id": "CAN_CREATE_POLL",
+>>>>>>> origin/master
         },
       ],
       "systemRole": false,
@@ -1232,6 +1272,7 @@ Object {
       },
       Object {
         "deprecated": false,
+<<<<<<< HEAD
         "description": "Allows to get a comment rating system",
         "id": "CAN_GET_COMMENT_RATING_SYSTEM",
       },
@@ -1249,6 +1290,25 @@ Object {
         "deprecated": false,
         "description": "Allows to delete a comment rating system",
         "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+        "description": "Allows to get a poll",
+        "id": "CAN_GET_POLL",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a poll",
+        "id": "CAN_UPDATE_POLL",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a poll",
+        "id": "CAN_DELETE_POLL",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a poll",
+        "id": "CAN_CREATE_POLL",
+>>>>>>> origin/master
       },
     ],
   },
