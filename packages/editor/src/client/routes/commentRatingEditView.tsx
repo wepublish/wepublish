@@ -40,6 +40,8 @@ function CommentRatingEditView() {
   const [ratingSystem, setRatingSystem] = useState<FullCommentRatingSystem | null>(null)
   const [answerToDelete, setAnswerToDelete] = useState<string | null>(null)
 
+  const [t] = useTranslation()
+
   const [fetchRatingSystem, {loading: isFetching}] = useRatingSystemLazyQuery({
     onError: showErrors,
     onCompleted: data => setRatingSystem(data.ratingSystem)
@@ -73,7 +75,13 @@ function CommentRatingEditView() {
   })
 
   const [updateAnswer, {loading: isUpdating}] = useUpdateRatingSystemMutation({
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () =>
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('comments.ratingEdit.updateSuccessful')}
+        </Message>
+      )
   })
 
   const updateAnswerLocally = useCallback(
@@ -91,8 +99,6 @@ function CommentRatingEditView() {
   )
 
   const isLoading = isFetching || isAdding || isDeleting || isUpdating
-
-  const [t] = useTranslation()
 
   useEffect(() => {
     fetchRatingSystem()

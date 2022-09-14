@@ -416,7 +416,8 @@
         "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Berwertung löschen",
         "placeholder": "Name der Berwertung",
-        "newAnswer": "Berwertung hinzufügen"
+        "newAnswer": "Berwertung hinzufügen",
+        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert."
       }
     },
     "confirm": "Bestätigen",

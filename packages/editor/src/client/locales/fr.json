@@ -246,7 +246,8 @@
         "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete rating",
         "placeholder": "Name of rating",
-        "newAnswer": "Add rating"
+        "newAnswer": "Add rating",
+        "updateSuccessful": "Successfuly updated the rating system."
       }
     },
     "cancel": "Annuler",
