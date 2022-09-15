@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
@@ -23,7 +23,6 @@
   },
   "typings": "./lib/index.d.ts",
   "license": "MIT",
-  "bin": "./bin/run-server.js",
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-s build:*",
@@ -86,7 +85,6 @@
     "@types/ms": "^0.7.31",
     "@types/nanoid": "^2.0.0",
     "@types/node": "^13.7.7",
-    "@types/node-fetch": "^2.5.5",
     "@types/pino": "^6.3.5",
     "@types/pino-http": "^5.0.6",
     "@types/qs": "^6.9.1",
