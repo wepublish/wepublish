@@ -1,11 +1,14 @@
 import {Attachment} from '@rsuite/icons'
+import EyeIcon from '@rsuite/icons/legacy/Eye'
 import TagIcon from '@rsuite/icons/Tag'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
-import {Col, Grid, Panel, Row} from 'rsuite'
+import {Link} from 'react-router-dom'
+import {Col, Grid, IconButton, Panel, Row} from 'rsuite'
 
 import {CommentRevision, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {ReplyCommentBtn} from './replyCommentBtn'
 
 export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
   const {t} = useTranslation()
@@ -110,10 +113,21 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
           </Col>
           {/* tags & source */}
           <Col xs={6}>
-            <CommentTags comment={comment} />
+            <div>
+              <CommentTags comment={comment} />
+            </div>
             <div style={{marginTop: '20px'}}>
               <CommentSource comment={comment} />
             </div>
+          </Col>
+          {/* actions */}
+          <Col xs={24} style={{textAlign: 'center', marginTop: '20px'}}>
+            <ReplyCommentBtn comment={comment} appearance="ghost" />
+            <Link to={`/comments/edit/${comment.id}`}>
+              <IconButton style={{marginLeft: '10px'}} icon={<EyeIcon />} appearance="ghost">
+                {t('commentPreview.showComment')}
+              </IconButton>
+            </Link>
           </Col>
         </Row>
       </Grid>
