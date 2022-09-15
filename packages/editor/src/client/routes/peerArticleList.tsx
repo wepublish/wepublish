@@ -1,4 +1,20 @@
+import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  Avatar,
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Message,
+  Pagination,
+  Popover,
+  SelectPicker,
+  Table,
+  toaster,
+  Whisper
+} from 'rsuite'
+
 import {
   ArticleFilter,
   ArticleSort,
@@ -7,30 +23,14 @@ import {
   usePeerArticleListQuery,
   usePeerListQuery
 } from '../api'
-
 import {
-  toaster,
-  Message,
-  Avatar,
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  Popover,
-  SelectPicker,
-  Table,
-  Whisper,
-  Pagination
-} from 'rsuite'
-import {useTranslation} from 'react-i18next'
-import {Link} from '../route'
-import {
+  DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder,
-  DEFAULT_MAX_TABLE_PAGES
+  mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import SearchIcon from '@rsuite/icons/legacy/Search'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-export function PeerArticleList() {
+function PeerArticleList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('publishedAt')
@@ -160,9 +160,9 @@ export function PeerArticleList() {
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
-                <Link href={rowData.peeredArticleURL} target="_blank">
+                <a href={rowData.peeredArticleURL} target="_blank" rel="noreferrer">
                   {rowData.article.latest.title || t('articles.overview.untitled')}
-                </Link>
+                </a>
               )}
             </Cell>
           </Column>
@@ -284,3 +284,9 @@ export function PeerArticleList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_PEER_ARTICLES',
+  'CAN_GET_PEER_ARTICLE'
+])(PeerArticleList)
+export {CheckedPermissionComponent as PeerArticleList}

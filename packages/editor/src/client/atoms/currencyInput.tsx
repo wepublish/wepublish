@@ -30,7 +30,6 @@ export function CurrencyInput({
 
   return (
     <div>
-      {/* <Form.Group> */}
       <InputGroup inside>
         <Form.Control
           value={amount as string}
@@ -48,7 +47,6 @@ export function CurrencyInput({
         />
         <InputGroup.Addon>{currency}</InputGroup.Addon>
       </InputGroup>
-      {/* </Form.Group> */}
     </div>
   )
 }

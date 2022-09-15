@@ -3,7 +3,7 @@ import nanoid from 'nanoid'
 import {SortableHandle, SortableContainer, SortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {isFunctionalUpdate} from '@wepublish/karma.run-react'
+import {isFunctionalUpdate} from '../utility'
 
 import {IconButton, Panel} from 'rsuite'
 import TrashIcon from '@rsuite/icons/legacy/Trash'

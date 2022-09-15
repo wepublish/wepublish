@@ -1,8 +1,12 @@
 import React, {Fragment, useState, ReactNode, useCallback, useMemo, memo} from 'react'
 import nanoid from 'nanoid'
 
-import {isFunctionalUpdate} from '@wepublish/karma.run-react'
-import {isValueConstructor, ValueConstructor, UnionToIntersection} from '@karma.run/utility'
+import {
+  isValueConstructor,
+  ValueConstructor,
+  UnionToIntersection,
+  isFunctionalUpdate
+} from '../utility'
 
 import {AddBlockInput} from './addBlockInput'
 import {IconButton, Panel} from 'rsuite'

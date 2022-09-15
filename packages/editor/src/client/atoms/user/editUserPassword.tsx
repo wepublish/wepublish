@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
-import {Button, Form, Message, Modal, toaster} from 'rsuite'
-import {useTranslation} from 'react-i18next'
-import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {Reload, Send} from '@rsuite/icons'
-import {ResetUserPasswordForm} from './resetUserPasswordForm'
+import React, {useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Form, Message, Modal, toaster} from 'rsuite'
+
+import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {toggleRequiredLabel} from '../../toggleRequiredLabel'
+import {ResetUserPasswordForm} from './resetUserPasswordForm'
 
 interface CreateOrUpdateuserPasswordProps {
   user?: FullUserFragment | null

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-
 import {useTranslation} from 'react-i18next'
 import {
   Button,
@@ -12,6 +11,9 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
+import FormControl from 'rsuite/FormControl'
+
 import {
   Setting,
   SettingName,
@@ -19,16 +21,22 @@ import {
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '../api'
-import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
-import FormControl from 'rsuite/FormControl'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 
-export function SettingList() {
+function SettingList() {
   const {t} = useTranslation()
 
-  const {data: settingListData, refetch, error: fetchError} = useSettingListQuery({
+  const isAuthorized = authorise('CAN_UPDATE_SETTINGS')
+
+  const {data: settingListData, loading, refetch, error: fetchError} = useSettingListQuery({
     fetchPolicy: 'network-only'
   })
 
+  const isDisabled = loading || !settingListData || !isAuthorized
   const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
     id: '',
     value: false,
@@ -189,7 +197,7 @@ export function SettingList() {
   return (
     <>
       <Form
-        disabled={!settingListData}
+        disabled={isDisabled}
         model={validationModel}
         formValue={{
           loginToken: sendLoginJwtExpiresMin.value,
@@ -205,9 +213,10 @@ export function SettingList() {
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
         <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="guestCommenting">
             <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
             <Toggle
+              disabled={isDisabled}
               checked={allowGuestComment?.value}
               onChange={checked =>
                 setAllowGuestComment({
@@ -220,7 +229,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="loginMinutes">
             <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
             <InputGroup>
               <FormControl
@@ -237,7 +246,7 @@ export function SettingList() {
               <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
             </InputGroup>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="passwordToken">
             <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
@@ -254,7 +263,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="peerToken">
             <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
@@ -274,7 +283,7 @@ export function SettingList() {
         </Panel>
 
         <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
-          <Form.Group>
+          <Form.Group controlId="invoiceReminders">
             <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
             <Form.Control
               name="invoiceTries"
@@ -288,7 +297,7 @@ export function SettingList() {
               }
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="invoiceFrequency">
             <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
             <InputGroup>
               <Form.Control
@@ -307,10 +316,18 @@ export function SettingList() {
           </Form.Group>
         </Panel>
 
-        <Button type="submit" appearance="primary" disabled={!settingListData}>
-          {t('settingList.save')}
-        </Button>
+        <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
+          <Button type="submit" appearance="primary" disabled={isDisabled}>
+            {t('settingList.save')}
+          </Button>
+        </PermissionControl>
       </Form>
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SETTINGS',
+  'CAN_UPDATE_SETTINGS'
+])(SettingList)
+export {CheckedPermissionComponent as SettingList}

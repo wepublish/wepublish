@@ -1,5 +1,56 @@
 # Change Log
 
+## 6.0.0 (2022-09-15)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#589](https://github.com/wepublish/wepublish/pull/589) Payed -> paid ([@antkiewiczk](https://github.com/antkiewiczk))
+* `api`
+  * [#654](https://github.com/wepublish/wepublish/pull/654) fix(api): challenge validUntil should be a date ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#659](https://github.com/wepublish/wepublish/pull/659) feat(editor): disable preview for article/page without draft ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#654](https://github.com/wepublish/wepublish/pull/654) fix(api): challenge validUntil should be a date ([@Itrulia](https://github.com/Itrulia))
+* Other
+  * [#662](https://github.com/wepublish/wepublish/pull/662) docker compose fix ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#642](https://github.com/wepublish/wepublish/pull/642) Hide components that user has no access to ([@penk85](https://github.com/penk85))
+  * [#653](https://github.com/wepublish/wepublish/pull/653) Remove Karma libraries ([@antkiewiczk](https://github.com/antkiewiczk))
+* `editor`
+  * [#664](https://github.com/wepublish/wepublish/pull/664) Add controlId prop to Form.Group along ControlLabel #739 ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* `editor`
+  * [#668](https://github.com/wepublish/wepublish/pull/668) Update testcafe package and editor internal urls, fix selectors ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#652](https://github.com/wepublish/wepublish/pull/652) Translations update from Weblate ([@wepublishweblate](https://github.com/wepublishweblate))
+* Other
+  * [#676](https://github.com/wepublish/wepublish/pull/676) ci: fix deployment action if jira issue not found ([@Itrulia](https://github.com/Itrulia))
+  * [#679](https://github.com/wepublish/wepublish/pull/679) Publish packages on master builds ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#666](https://github.com/wepublish/wepublish/pull/666) chore(deps): bump @actions/core from 1.9.0 to 1.9.1 in /config ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#665](https://github.com/wepublish/wepublish/pull/665) Build and push image on new tag ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#677](https://github.com/wepublish/wepublish/pull/677) Add WePublish helm chart ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#651](https://github.com/wepublish/wepublish/pull/651) ci: notify github/jira on successful deployment ([@Itrulia](https://github.com/Itrulia))
+  * [#650](https://github.com/wepublish/wepublish/pull/650) chore: add recommended vscode plugins ([@Itrulia](https://github.com/Itrulia))
+  * [#645](https://github.com/wepublish/wepublish/pull/645) chore(deps): bump terser from 4.6.12 to 4.8.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#643](https://github.com/wepublish/wepublish/pull/643) chore(deps): bump moment from 2.29.2 to 2.29.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#626](https://github.com/wepublish/wepublish/pull/626) chore(deps): bump shell-quote from 1.7.2 to 1.7.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#662](https://github.com/wepublish/wepublish/pull/662) docker compose fix ([@penk85](https://github.com/penk85))
+  * [#592](https://github.com/wepublish/wepublish/pull/592) Improve release process (add docs, improve release command) ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`, `editor`
+  * [#653](https://github.com/wepublish/wepublish/pull/653) Remove Karma libraries ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### Committers: 5
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+
+
 ## 5.0.1 (2022-09-14)
 
 #### :bug: Bug Fix

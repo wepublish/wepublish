@@ -1,51 +1,37 @@
-import React, {ReactNode, useEffect, useState} from 'react'
-
-import {Container, Sidebar, Sidenav, Nav, Navbar, Dropdown, IconButton} from 'rsuite'
-import {
-  ArticleListRoute,
-  AuthorListRoute,
-  CommentListRoute,
-  ImageListRoute,
-  LogoutRoute,
-  MemberPlanListRoute,
-  NavigationListRoute,
-  PageListRoute,
-  PaymentMethodListRoute,
-  PeerArticleListRoute,
-  PeerListRoute,
-  routeLink,
-  RouteType,
-  SettingListRoute,
-  SubscriptionListRoute,
-  TokenListRoute,
-  UserListRoute,
-  useRoute,
-  UserRoleListRoute
-} from './route'
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
+import BarsIcon from '@rsuite/icons/legacy/Bars'
+import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
+import CogIcon from '@rsuite/icons/legacy/Cog'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
+import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
 import FileTextIcon from '@rsuite/icons/legacy/FileText'
 import FileTextOIcon from '@rsuite/icons/legacy/FileTextO'
 import FrameIcon from '@rsuite/icons/legacy/Frame'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
+import GlobeIcon from '@rsuite/icons/legacy/Globe'
+import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ImageIcon from '@rsuite/icons/legacy/Image'
-import BarsIcon from '@rsuite/icons/legacy/Bars'
+import KeyIcon from '@rsuite/icons/legacy/Key'
+import MehOIcon from '@rsuite/icons/legacy/MehO'
 import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
-import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
-import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
-import MehOIcon from '@rsuite/icons/legacy/MehO'
-import IdCardIcon from '@rsuite/icons/legacy/IdCard'
 import ShareIcon from '@rsuite/icons/legacy/Share'
-import KeyIcon from '@rsuite/icons/legacy/Key'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import GlobeIcon from '@rsuite/icons/legacy/Globe'
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
+import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link, useLocation} from 'react-router-dom'
+import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {PermissionControl} from './atoms/permissionControl'
 
 export interface BaseProps {
   children?: ReactNode
 }
+
+const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
+  <Link ref={ref} to={href} {...rest}>
+    {children}
+  </Link>
+))
 
 const AVAILABLE_LANG = [
   {id: 'en', lang: 'en_US', name: 'English'},
@@ -59,8 +45,6 @@ const iconStyles = {
   lineHeight: '56px',
   textAlign: 'center' as const
 }
-const NavItemLink = routeLink(Nav.Item)
-const DropdownItemLink = routeLink(Dropdown.Item)
 
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
@@ -74,7 +58,8 @@ function useStickyState(defaultValue: string, key: string) {
 }
 
 export function Base({children}: BaseProps) {
-  const {current} = useRoute()
+  const {pathname} = useLocation()
+  const path = pathname.substring(1)
 
   const {t, i18n} = useTranslation()
 
@@ -122,121 +107,257 @@ export function Base({children}: BaseProps) {
               />
 
               <Nav>
-                <NavItemLink
-                  icon={<FileTextIcon />}
-                  route={ArticleListRoute.create({})}
-                  active={
-                    current?.type === RouteType.ArticleList || current?.type === RouteType.Index
-                  }>
-                  {t('navbar.articles')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_ARTICLES',
+                    'CAN_GET_ARTICLE',
+                    'CAN_CREATE_ARTICLE',
+                    'CAN_DELETE_ARTICLE',
+                    'CAN_PUBLISH_ARTICLE'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/articles"
+                    icon={<FileTextIcon />}
+                    active={path === 'articles'}>
+                    {t('navbar.articles')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<FileTextOIcon />}
-                  route={PeerArticleListRoute.create({})}
-                  active={current?.type === RouteType.PeerArticleList}>
-                  {t('navbar.peerArticles')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_PEER_ARTICLES', 'CAN_GET_PEER_ARTICLE']}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/peerarticles"
+                    icon={<FileTextOIcon />}
+                    active={path === 'peerarticles'}>
+                    {t('navbar.peerArticles')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<FrameIcon />}
-                  route={PageListRoute.create({})}
-                  active={current?.type === RouteType.PageList}>
-                  {t('navbar.pages')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_PAGES',
+                    'CAN_GET_PAGE',
+                    'CAN_CREATE_PAGE',
+                    'CAN_DELETE_PAGE',
+                    'CAN_PUBLISH_PAGE'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/pages"
+                    icon={<FrameIcon />}
+                    active={path === 'pages'}>
+                    {t('navbar.pages')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<CommentIcon />}
-                  route={CommentListRoute.create({})}
-                  active={current?.type === RouteType.CommentList}>
-                  {t('navbar.comments')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_COMMENTS', 'CAN_TAKE_COMMENT_ACTION']}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/comments"
+                    icon={<CommentIcon />}
+                    active={path === 'comments'}>
+                    {t('navbar.comments')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<ImageIcon />}
-                  route={ImageListRoute.create({})}
-                  active={current?.type === RouteType.ImageList}>
-                  {t('navbar.imageLibrary')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_IMAGES',
+                    'CAN_GET_IMAGE',
+                    'CAN_CREATE_IMAGE',
+                    'CAN_DELETE_IMAGE'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/images"
+                    icon={<ImageIcon />}
+                    active={path === 'images'}>
+                    {t('navbar.imageLibrary')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<BarsIcon />}
-                  route={NavigationListRoute.create({})}
-                  active={current?.type === RouteType.NavigationList}>
-                  {t('navbar.navigations')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_NAVIGATIONS',
+                    'CAN_GET_NAVIGATION',
+                    'CAN_CREATE_NAVIGATION',
+                    'CAN_DELETE_NAVIGATION'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/navigations"
+                    icon={<BarsIcon />}
+                    active={path === 'navigations'}>
+                    {t('navbar.navigations')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <NavItemLink
-                  icon={<PeopleGroupIcon />}
-                  route={AuthorListRoute.create({})}
-                  active={current?.type === RouteType.AuthorList}>
-                  {t('navbar.authors')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_AUTHORS',
+                    'CAN_GET_AUTHOR',
+                    'CAN_CREATE_AUTHOR',
+                    'CAN_DELETE_AUTHOR'
+                  ]}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/authors"
+                    icon={<PeopleGroupIcon />}
+                    active={path === 'authors'}>
+                    {t('navbar.authors')}
+                  </Nav.Item>
+                </PermissionControl>
 
-                <Dropdown eventKey={'1'} title={t('navbar.usersAndMembers')} icon={<PeoplesIcon />}>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.UserList}
-                    icon={<UserCircleIcon />}
-                    route={UserListRoute.create({})}>
-                    {t('navbar.users')}
-                  </DropdownItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_USERS',
+                    'CAN_GET_USER',
+                    'CAN_CREATE_USER',
+                    'CAN_DELETE_USER',
+                    'CAN_CREATE_USER_ROLE',
+                    'CAN_GET_USER_ROLE',
+                    'CAN_GET_USER_ROLES',
+                    'CAN_DELETE_USER_ROLE',
+                    'CAN_CREATE_SUBSCRIPTION',
+                    'CAN_GET_SUBSCRIPTIONS',
+                    'CAN_GET_SUBSCRIPTION',
+                    'CAN_DELETE_SUBSCRIPTION',
+                    'CAN_GET_MEMBER_PLAN',
+                    'CAN_GET_MEMBER_PLANS',
+                    'CAN_CREATE_MEMBER_PLAN',
+                    'CAN_DELETE_MEMBER_PLAN',
+                    'CAN_CREATE_PAYMENT_METHOD',
+                    'CAN_GET_PAYMENT_METHODS',
+                    'CAN_DELETE_PAYMENT_METHOD'
+                  ]}>
+                  <Nav.Menu
+                    eventKey={'1'}
+                    title={t('navbar.usersAndMembers')}
+                    icon={<PeoplesIcon />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/users"
+                      active={path === 'users'}
+                      icon={<UserCircleIcon />}>
+                      {t('navbar.users')}
+                    </Nav.Item>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.UserRoleList}
-                    icon={<CharacterAuthorizeIcon />}
-                    route={UserRoleListRoute.create({})}>
-                    {t('navbar.userRoles')}
-                  </DropdownItemLink>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_USER_ROLES',
+                        'CAN_GET_USER_ROLE',
+                        'CAN_CREATE_USER_ROLE',
+                        'CAN_DELETE_USER_ROLE'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/userroles"
+                        active={path === 'userroles'}
+                        icon={<CharacterAuthorizeIcon />}>
+                        {t('navbar.userRoles')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.SubscriptionList}
-                    icon={<MehOIcon />}
-                    route={SubscriptionListRoute.create({})}>
-                    {t('navbar.subscriptions')}
-                  </DropdownItemLink>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_SUBSCRIPTIONS',
+                        'CAN_GET_SUBSCRIPTION',
+                        'CAN_CREATE_SUBSCRIPTION',
+                        'CAN_DELETE_SUBSCRIPTION'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/subscriptions"
+                        active={path === 'subscriptions'}
+                        icon={<MehOIcon />}>
+                        {t('navbar.subscriptions')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.MemberPlanList}
-                    icon={<IdCardIcon />}
-                    route={MemberPlanListRoute.create({})}>
-                    {t('navbar.memberPlans')}
-                  </DropdownItemLink>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_MEMBER_PLANS',
+                        'CAN_GET_MEMBER_PLAN',
+                        'CAN_CREATE_MEMBER_PLAN',
+                        'CAN_DELETE_MEMBER_PLAN'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/memberplans"
+                        active={path === 'memberplans'}
+                        icon={<IdCardIcon />}>
+                        {t('navbar.memberPlans')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <DropdownItemLink
-                    active={current?.type === RouteType.PaymentMethodList}
-                    icon={<CreditCardIcon />}
-                    route={PaymentMethodListRoute.create({})}>
-                    {t('navbar.paymentMethods')}
-                  </DropdownItemLink>
-                </Dropdown>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_PAYMENT_METHODS',
+                        'CAN_GET_PAYMENT_METHOD',
+                        'CAN_CREATE_PAYMENT_METHOD',
+                        'CAN_DELETE_PAYMENT_METHOD'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/paymentmethods"
+                        active={path === 'paymentmethods'}
+                        icon={<CreditCardIcon />}>
+                        {t('navbar.paymentMethods')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
 
-                <Dropdown title={t('navbar.peering')} icon={<ShareIcon />}>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.PeerList}
-                    icon={<ShareIcon />}
-                    route={PeerListRoute.create({})}>
-                    {t('navbar.peers')}
-                  </DropdownItemLink>
-                  <DropdownItemLink
-                    active={current?.type === RouteType.TokenList}
-                    icon={<KeyIcon />}
-                    route={TokenListRoute.create({})}>
-                    {t('navbar.tokens')}
-                  </DropdownItemLink>
-                </Dropdown>
-
-                <NavItemLink
-                  active={current?.type === RouteType.SettingList}
-                  icon={<CogIcon />}
-                  route={SettingListRoute.create({})}>
-                  {t('navbar.settings')}
-                </NavItemLink>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_PEERS',
+                    'CAN_GET_PEER',
+                    'CAN_CREATE_PEER',
+                    'CAN_DELETE_PEER'
+                  ]}>
+                  <Nav.Menu title={t('navbar.peering')} icon={<ShareIcon />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/peering"
+                      active={path === 'peering'}
+                      icon={<ShareIcon />}>
+                      {t('navbar.peers')}
+                    </Nav.Item>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TOKENS',
+                        'CAN_CREATE_TOKEN',
+                        'CAN_DELETE_TOKEN'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/tokens"
+                        active={path === 'tokens'}
+                        icon={<KeyIcon />}>
+                        {t('navbar.tokens')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/settings"
+                    active={path === 'settings'}
+                    icon={<CogIcon />}>
+                    {t('navbar.settings')}
+                  </Nav.Item>
+                </PermissionControl>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
           <Navbar appearance="default" className="nav-toggle">
             <Nav>
-              <Dropdown
+              <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
@@ -249,13 +370,13 @@ export function Base({children}: BaseProps) {
                     icon={<BarsIcon />}
                   />
                 )}>
-                <DropdownItemLink route={LogoutRoute.create({})}>
+                <Nav.Item as={NavLink} href="/logout">
                   {t('navbar.logout')}
-                </DropdownItemLink>
-              </Dropdown>
+                </Nav.Item>
+              </Nav.Menu>
             </Nav>
             <Nav>
-              <Dropdown
+              <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
@@ -269,14 +390,14 @@ export function Base({children}: BaseProps) {
                   />
                 )}>
                 {AVAILABLE_LANG.map(lang => (
-                  <Dropdown.Item
+                  <Nav.Item
                     key={lang.id}
                     onSelect={() => setUILanguage(lang.id)}
                     active={lang.id === uiLanguage}>
                     {lang.name}
-                  </Dropdown.Item>
+                  </Nav.Item>
                 ))}
-              </Dropdown>
+              </Nav.Menu>
             </Nav>
           </Navbar>
         </Sidebar>

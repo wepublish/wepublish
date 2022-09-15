@@ -1,11 +1,13 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
+import {BrowserRouter} from 'react-router-dom'
+import snapshotDiff from 'snapshot-diff'
+
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
 import {UserEditView} from '../../src/client/routes/userEditView'
-import {actWait} from '../utils'
-import {RouteProvider} from '../../src/client/route'
-import snapshotDiff from 'snapshot-diff'
+import {actWait, sessionWithPermissions} from '../utils'
+import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -93,11 +95,13 @@ describe('User edit view', () => {
   test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <RouteProvider>
-          <UserEditView />
-        </RouteProvider>
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -108,11 +112,13 @@ describe('User edit view', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename>
-        <RouteProvider>
-          <UserEditView />
-        </RouteProvider>
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
 
@@ -123,11 +129,13 @@ describe('User edit view', () => {
     const mocks = [userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <RouteProvider>
-          <UserEditView />
-        </RouteProvider>
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -143,11 +151,13 @@ describe('User edit view', () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const {asFragment} = render(
-      <MockedProvider mocks={mocks} addTypename>
-        <RouteProvider>
-          <UserEditView />
-        </RouteProvider>
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()
@@ -204,11 +214,13 @@ describe('User edit view', () => {
     ]
 
     const {asFragment, getByLabelText, getByTestId} = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <RouteProvider>
-          <UserEditView />
-        </RouteProvider>
-      </MockedProvider>
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
     )
     await actWait()
     const initialRender = asFragment()

@@ -1,22 +1,21 @@
+import LockIcon from '@rsuite/icons/legacy/Lock'
+import SearchIcon from '@rsuite/icons/legacy/Search'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
-
-import {ButtonLink, Link, UserCreateRoute, UserEditViewRoute} from '../route'
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
-
-import {useTranslation} from 'react-i18next'
-import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table, Pagination} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import LockIcon from '@rsuite/icons/legacy/Lock'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -35,7 +34,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   }
 }
 
-export function UserList() {
+function UserList() {
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
@@ -106,15 +105,15 @@ export function UserList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-          <ButtonLink
-            style={{marginLeft: 5}}
-            appearance="primary"
-            disabled={isLoading}
-            route={UserCreateRoute.create({})}>
-            {t('userList.overview.newUser')}
-          </ButtonLink>
-        </FlexboxGrid.Item>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
+          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+            <Link to="/users/create">
+              <Button style={{marginLeft: 5}} appearance="primary" disabled={isLoading}>
+                {t('userList.overview.newUser')}
+              </Button>
+            </Link>
+          </FlexboxGrid.Item>
+        </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -163,9 +162,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditViewRoute.create({id: rowData.id})}>
-                  {rowData.firstName || ''}
-                </Link>
+                <Link to={`/users/edit/${rowData.id}`}>{rowData.firstName || ''}</Link>
               )}
             </Cell>
           </Column>
@@ -173,7 +170,7 @@ export function UserList() {
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
-                <Link route={UserEditViewRoute.create({id: rowData.id})}>
+                <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}
@@ -195,30 +192,34 @@ export function UserList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullUserFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
-                    <IconButton
-                      icon={<LockIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={e => {
-                        setCurrentUser(rowData)
-                        setIsResetUserPasswordOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                  <IconButtonTooltip caption={t('userList.overview.delete')}>
-                    <IconButton
-                      icon={<TrashIcon />}
-                      circle
-                      size="sm"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentUser(rowData)
-                      }}
-                    />
-                  </IconButtonTooltip>
+                  <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
+                    <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
+                      <IconButton
+                        icon={<LockIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={e => {
+                          setCurrentUser(rowData)
+                          setIsResetUserPasswordOpen(true)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_USER']}>
+                    <IconButtonTooltip caption={t('userList.overview.delete')}>
+                      <IconButton
+                        icon={<TrashIcon />}
+                        circle
+                        size="sm"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setConfirmationDialogOpen(true)
+                          setCurrentUser(rowData)
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
                 </>
               )}
             </Cell>
@@ -304,3 +305,12 @@ export function UserList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_USERS',
+  'CAN_GET_USER',
+  'CAN_CREATE_USER',
+  'CAN_DELETE_USER',
+  'CAN_RESET_USER_PASSWORD'
+])(UserList)
+export {CheckedPermissionComponent as UserList}

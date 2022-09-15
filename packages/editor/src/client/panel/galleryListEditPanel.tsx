@@ -86,7 +86,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           removeImage={() => onChange?.({...value, image: null})}
         />
         <Form fluid>
-          <Form.Group>
+          <Form.Group controlId="caption">
             <Form.ControlLabel>{t('blocks.imageGallery.panels.caption')}</Form.ControlLabel>
             <Form.Control
               name="caption"

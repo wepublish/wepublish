@@ -15,14 +15,13 @@
     "build:production": "run-s --print-label build:api build:api-media-karma build:oauth2 build:editor:production",
     "build:demo": "run-s --print-label build:api build:api-media-karma build:oauth2 build:editor:production build:api-example build:website-example build:oauth2-example",
     "prerelease": "run-s clean build:production",
-    "release": "config/release.sh",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
     "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
     "watch": "yarn migrate && run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
     "setup:root": "shx cp .env.example .env",
-    "start:docker": "docker compose up --detach mongo mongo-express database pgadmin media",
+    "start:docker": "docker-compose up --detach mongo mongo-express database pgadmin media",
     "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
@@ -59,8 +58,8 @@
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prettier-check": "prettier --check \"{packages,services}/**/*.{js,ts,tsx,json}\"",
-    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chromium ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
-    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --assertion-timeout 10000",
+    "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chrome ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
+    "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
     "prepare": "prisma generate"
   },
   "workspaces": [
@@ -88,7 +87,7 @@
     "prettier": "^2.0.1",
     "pretty-quick": "^1.11.1",
     "prisma": "^3.14.0",
-    "testcafe": "^1.8.5",
+    "testcafe": "1.10.0",
     "ts-node": "^10.8.1"
   },
   "prisma": {
