@@ -40,6 +40,9 @@ export interface UpdatePaymentWithIntentStateProps {
   invoicesByID: Context['loaders']['invoicesByID']
   subscriptionClient: PrismaClient['subscription']
   userClient: PrismaClient['user']
+  invoiceClient: PrismaClient['invoice']
+  subscriptionPeriodClient: PrismaClient['subscriptionPeriod']
+  invoiceItemClient: PrismaClient['invoiceItem']
 }
 
 export interface WebhookUpdatesProps {
@@ -279,7 +282,10 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
               paymentsByID: context.loaders.paymentsByID,
               invoicesByID: context.loaders.invoicesByID,
               subscriptionClient: context.prisma.subscription,
-              userClient: context.prisma.user
+              userClient: context.prisma.user,
+              invoiceClient: context.prisma.invoice,
+              subscriptionPeriodClient: context.prisma.subscriptionPeriod,
+              invoiceItemClient: context.prisma.invoiceItem
             })
           }
         } catch (error) {
