@@ -212,11 +212,7 @@ export const CommentEditView = memo(() => {
                 <Col xs={24}>
                   <Panel bordered header={t('commentEditView.commentContextHeader')}>
                     <Row>
-                      <Col xs={24}>
-                        {comment && (
-                          <CommentHistory itemType={comment.itemType} itemID={comment.itemID} />
-                        )}
-                      </Col>
+                      <Col xs={24}>{comment && <CommentHistory comment={comment} />}</Col>
                     </Row>
                   </Panel>
                 </Col>
