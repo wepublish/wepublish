@@ -1,10 +1,74 @@
 import {Attachment} from '@rsuite/icons'
+import TagIcon from '@rsuite/icons/Tag'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, Grid, Panel, Row} from 'rsuite'
 
-import {FullCommentFragment} from '../../api'
+import {CommentRevision, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+
+export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
+  const {t} = useTranslation()
+  if (!revision) {
+    return (
+      <h6>
+        <Attachment />
+        <span style={{marginLeft: '5px'}}>{t('commentPreview.noContent')}</span>
+      </h6>
+    )
+  }
+  return (
+    <>
+      {revision.title && <h6>{revision.title}</h6>}
+
+      {revision.lead && <p>{revision.lead}</p>}
+
+      {revision.text && (
+        <div style={{marginTop: '5px'}}>
+          <RichTextBlock value={revision.text} onChange={console.log} displayOnly />
+        </div>
+      )}
+    </>
+  )
+}
+
+function CommentTags({comment}: {comment: FullCommentFragment | undefined}) {
+  const {t} = useTranslation()
+  const tags = comment?.tags
+  return (
+    <>
+      <h6 style={{marginBottom: '5px'}}>{t('tags.overview.title')}</h6>
+      {tags &&
+        tags.map(tag => (
+          <div key={tag.id}>
+            <TagIcon /> {tag.tag}
+          </div>
+        ))}
+      {(!tags || !tags.length) && <p>{t('commentPreview.noTags')}</p>}
+    </>
+  )
+}
+
+function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
+  const {t} = useTranslation()
+  const source = comment?.source
+  const title = <h6 style={{marginBottom: '5px'}}>{t('commentPreview.source')}</h6>
+
+  if (source) {
+    return (
+      <>
+        {title}
+        {source}
+      </>
+    )
+  }
+  return (
+    <>
+      {title}
+      {t('commentPreview.noSource')}
+    </>
+  )
+}
 
 interface CommentPreviewProps {
   comment: FullCommentFragment
@@ -16,7 +80,7 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
   const revisions = comment.revisions
   const lastRevision = revisions?.length ? revisions[revisions.length - 1] : undefined
 
-  function getPanelText() {
+  function getPanelHeader() {
     const createdAtReadable = new Date(comment.createdAt).toLocaleString('de-CH', {
       timeZone: 'europe/zurich'
     })
@@ -37,31 +101,19 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
   }
 
   return (
-    <Panel shaded collapsible header={getPanelText()} defaultExpanded={!!expanded}>
-      <Grid>
-        <Row>
+    <Panel bordered collapsible header={getPanelHeader()} defaultExpanded={!!expanded}>
+      <Grid style={{maxWidth: '100%'}}>
+        <Row style={{maxWidth: '100%'}}>
           {/* title, lead, text */}
           <Col xs={18}>
-            {lastRevision && (
-              <>
-                {lastRevision.title && <h6>{lastRevision.title}</h6>}
-
-                {lastRevision.lead && <p>{lastRevision.lead}</p>}
-
-                {lastRevision.text && (
-                  <div style={{marginTop: '5px'}}>
-                    <RichTextBlock value={lastRevision.text} onChange={console.log} displayOnly />
-                  </div>
-                )}
-              </>
-            )}
-
-            {!lastRevision && (
-              <h6>
-                <Attachment />
-                <span style={{marginLeft: '5px'}}>{t('commentPreview.noContent')}</span>
-              </h6>
-            )}
+            <CommentRevisionView revision={lastRevision} />
+          </Col>
+          {/* tags & source */}
+          <Col xs={6}>
+            <CommentTags comment={comment} />
+            <div style={{marginTop: '20px'}}>
+              <CommentSource comment={comment} />
+            </div>
           </Col>
         </Row>
       </Grid>

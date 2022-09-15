@@ -1,7 +1,31 @@
-import React, {ReactChild, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {FullCommentFragment, useCommentListQuery} from '../../api'
 import {CommentPreview} from './commentPreview'
+
+interface ChildCommentsProps {
+  comments?: FullCommentFragment[]
+  comment: FullCommentFragment
+  originComment?: FullCommentFragment
+}
+
+function ChildComments({comments, comment, originComment}: ChildCommentsProps) {
+  if (!comments) {
+    return <></>
+  }
+  const childComments = comments.filter(tmpComment => tmpComment.parentComment?.id === comment.id)
+  return (
+    <div style={{marginTop: '20px', borderLeft: '1px lightgrey solid', paddingLeft: '20px'}}>
+      {childComments.map(childComment => (
+        <div key={childComment.id}>
+          <CommentPreview comment={childComment} expanded={childComment.id === originComment?.id} />
+          {/* some fancy recursion */}
+          <ChildComments comments={comments} comment={childComment} originComment={originComment} />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 interface CommentHistoryProps {
   comment: FullCommentFragment
@@ -22,26 +46,6 @@ export function CommentHistory({comment}: CommentHistoryProps) {
     setComments(data?.comments?.nodes)
   }, [data])
 
-  function getChildComments(originComment: FullCommentFragment): ReactChild {
-    if (!comments) {
-      return <></>
-    }
-    const childComments = comments.filter(
-      tmpComment => tmpComment.parentComment?.id === originComment.id
-    )
-    return (
-      <div style={{marginTop: '20px', borderLeft: '1px lightgrey solid', paddingLeft: '20px'}}>
-        {childComments.map(childComment => (
-          <div key={childComment.id}>
-            <CommentPreview comment={childComment} expanded={childComment.id === comment.id} />
-            {/* some fancy recursion */}
-            {getChildComments(childComment)}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
   return (
     <>
       {comments &&
@@ -50,7 +54,7 @@ export function CommentHistory({comment}: CommentHistoryProps) {
             {!tmpComment.parentComment && (
               <>
                 <CommentPreview comment={tmpComment} expanded={tmpComment.id === comment.id} />
-                {getChildComments(tmpComment)}
+                <ChildComments comment={tmpComment} originComment={comment} comments={comments} />
               </>
             )}
           </div>
