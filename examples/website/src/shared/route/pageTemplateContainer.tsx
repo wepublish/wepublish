@@ -22,7 +22,8 @@ import {
   titleBlockDataFragment,
   pageMetaDataFragment,
   gridBlockFrontDataGQLfragment,
-  flexGridBlockFrontDataGQLfragment
+  flexGridBlockFrontDataGQLfragment,
+  htmlBlockDataFragment
 } from './gqlFragments'
 
 import {PageTemplate} from '../templates/pageTemplate'
@@ -71,6 +72,7 @@ const PageQuery = gql`
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
+        ...HTMLBlockData
         ...ArticleGridBlockData
         ...ArticleFlexGridBlockData
       }
@@ -97,6 +99,7 @@ const PageQuery = gql`
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
   ${flexGridBlockFrontDataGQLfragment}
+  ${htmlBlockDataFragment}
 `
 
 export interface PageTemplateContainerProps {

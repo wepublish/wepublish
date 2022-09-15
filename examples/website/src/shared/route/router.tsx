@@ -12,11 +12,11 @@ import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '../authC
 import {gql, useMutation} from '@apollo/client'
 import {Login} from './login'
 import Analytics from 'analytics'
-import {matomoPlugin} from '@wepublish/analytics'
+import {wepublish} from '@wepublish/analytics'
 
 const analytics = Analytics({
   app: 'wp-example',
-  plugins: [matomoPlugin()]
+  plugins: [wepublish()]
 })
 
 export function Router() {

@@ -19,13 +19,13 @@ import {
 import {AuthorSort, FullAuthorFragment, useAuthorListQuery, useDeleteAuthorMutation} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -179,7 +179,7 @@ function AuthorList() {
               {(rowData: FullAuthorFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
-                    <IconButtonTooltip caption={t('authors.overview.delete')}>
+                    <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         icon={<TrashIcon />}
                         circle

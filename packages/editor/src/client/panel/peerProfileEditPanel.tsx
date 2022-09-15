@@ -1,32 +1,29 @@
-import React, {useState, useEffect, useRef} from 'react'
-
-import {Button, Drawer, Panel, Form, toaster, Message, Schema} from 'rsuite'
+import React, {useEffect, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import {FormInstance} from 'rsuite/esm/Form'
 
 import {
-  usePeerProfileQuery,
-  useUpdatePeerProfileMutation,
+  ImageRefFragment,
+  Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
-  Maybe,
-  ImageRefFragment
+  usePeerProfileQuery,
+  useUpdatePeerProfileMutation
 } from '../api'
-
-import {ImageSelectPanel} from './imageSelectPanel'
-import {ImagedEditPanel} from './imageEditPanel'
-import {getOperationNameFromDocument} from '../utility'
-
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
 import {ColorPicker} from '../atoms/colorPicker'
-import {useTranslation} from 'react-i18next'
-import {FormInstance} from 'rsuite/esm/Form'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {getOperationNameFromDocument} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -146,11 +143,11 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         model={validationModel}
         style={{height: '100%'}}
         formValue={{
-          name: name,
-          callToActionText: callToActionText,
-          callToActionImage: callToActionImage,
-          callToActionTextURL: callToActionTextURL,
-          callToActionImageURL: callToActionImageURL,
+          name,
+          callToActionText,
+          callToActionImage,
+          callToActionTextURL,
+          callToActionImageURL,
           profileImg: logoImage?.id
         }}>
         <Drawer.Header>
@@ -158,7 +155,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
               <Button appearance="primary" disabled={isDisabled} type="submit">
-                {t('peerList.panels.save')}
+                {t('save')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
@@ -318,7 +315,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
           {(logoImage || callToActionImage) && (
-            <ImagedEditPanel
+            <ImageEditPanel
               id={isLogoChange ? logoImage?.id : callToActionImage?.id}
               onClose={() => setEditModalOpen(false)}
             />

@@ -8,8 +8,8 @@ import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table
 import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {NavigationEditPanel} from '../panel/navigationEditPanel'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {NavigationEditPanel} from '../panel/navigationEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -100,7 +100,7 @@ function NavigationList() {
             {(rowData: FullNavigationFragment) => (
               <>
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
-                  <IconButtonTooltip caption={t('navigation.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle
