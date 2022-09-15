@@ -72,7 +72,10 @@ export const GraphQLCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
+    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))},
+    tags: {type: GraphQLList(GraphQLString)},
+    itemType: {type: GraphQLCommentItemType},
+    itemID: {type: GraphQLID}
   }
 })
 

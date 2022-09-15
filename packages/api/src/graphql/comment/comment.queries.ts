@@ -48,8 +48,37 @@ const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereI
   return {}
 }
 
+const createItemTypeFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+  if (filter?.itemType) {
+    return {
+      itemType: {
+        equals: filter.itemType
+      }
+    }
+  }
+
+  return {}
+}
+
+const createItemIdFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+  if (filter.itemID) {
+    return {
+      itemID: {
+        equals: filter.itemID
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createCommentFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => ({
-  AND: [createStateFilter(filter), createTagFilter(filter)]
+  AND: [
+    createStateFilter(filter),
+    createTagFilter(filter),
+    createItemTypeFilter(filter),
+    createItemIdFilter(filter)
+  ]
 })
 
 export const getComments = async (

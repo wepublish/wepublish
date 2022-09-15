@@ -293,6 +293,9 @@ export type CommentConnection = {
 
 export type CommentFilter = {
   states?: Maybe<Array<CommentState>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  itemType?: Maybe<CommentItemType>;
+  itemID?: Maybe<Scalars['ID']>;
 };
 
 export enum CommentItemType {
