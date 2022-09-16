@@ -250,6 +250,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -375,6 +380,7 @@ Object {
         },
         Object {
           "deprecated": false,
+<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -392,6 +398,25 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+          "description": "Allows to create a tag",
+          "id": "CAN_CREATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a tag",
+          "id": "CAN_UPDATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all tags",
+          "id": "CAN_GET_TAGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a tag",
+          "id": "CAN_DELETE_TAG",
+>>>>>>> origin/master
         },
         Object {
           "deprecated": false,
@@ -692,6 +717,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -817,6 +847,7 @@ Object {
         },
         Object {
           "deprecated": false,
+<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -834,6 +865,25 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+          "description": "Allows to create a tag",
+          "id": "CAN_CREATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a tag",
+          "id": "CAN_UPDATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all tags",
+          "id": "CAN_GET_TAGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a tag",
+          "id": "CAN_DELETE_TAG",
+>>>>>>> origin/master
         },
         Object {
           "deprecated": false,
@@ -1147,6 +1197,11 @@ Object {
       },
       Object {
         "deprecated": false,
+        "description": "Allows to update a comment",
+        "id": "CAN_UPDATE_COMMENTS",
+      },
+      Object {
+        "deprecated": false,
         "description": "Allows to create a member plan",
         "id": "CAN_CREATE_MEMBER_PLAN",
       },
@@ -1272,6 +1327,7 @@ Object {
       },
       Object {
         "deprecated": false,
+<<<<<<< HEAD
         "description": "Allows to get a comment rating system",
         "id": "CAN_GET_COMMENT_RATING_SYSTEM",
       },
@@ -1289,6 +1345,25 @@ Object {
         "deprecated": false,
         "description": "Allows to delete a comment rating system",
         "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+=======
+        "description": "Allows to create a tag",
+        "id": "CAN_CREATE_TAG",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a tag",
+        "id": "CAN_UPDATE_TAG",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all tags",
+        "id": "CAN_GET_TAGS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a tag",
+        "id": "CAN_DELETE_TAG",
+>>>>>>> origin/master
       },
       Object {
         "deprecated": false,

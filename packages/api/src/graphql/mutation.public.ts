@@ -31,8 +31,7 @@ import {
   GraphQLPublicComment,
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput
-} from './comment'
-import {rateComment} from './comment-rating/comment-rating.public-mutation'
+} from './comment/comment'
 import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -66,6 +65,7 @@ import {
   updatePublicUser,
   updateUserPassword
 } from './user/user.public-mutation'
+import {rateComment} from './comment-rating/comment-rating.public-mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',

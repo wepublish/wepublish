@@ -5,8 +5,6 @@
         "articlePublished": "Article Published",
         "articlePending": "Article Pending",
         "back": "Back",
-        "create": "Create",
-        "delete": "Delete",
         "draft": "Draft",
         "draftCreated": "Article Draft Created",
         "draftSaved": "Article Draft Saved",
@@ -16,10 +14,10 @@
         "notFound": "Article Not Found",
         "pending": "Article pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
-        "previewDisabled": "All article changes have been published already.",
         "preview": "Preview",
+        "previewDisabled": "All article changes have been published already.",
+        "createComment": "Create Comment",
         "published": "Article published on {{date, ccc PP p}}.",
-        "save": "Save",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
@@ -109,7 +107,6 @@
         "published": "Published",
         "removeImage": "Remove Image",
         "removeTeaser": "Remove Teaser",
-        "saveAndClose": "Save and close",
         "search": "Search",
         "seoTitle": "SEO Title",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
@@ -173,7 +170,6 @@
         "createAuthorProfile": "Create Author Profile for {{name}}",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Delete",
         "deleteArticle": "Delete Article?",
         "duplicateArticle": "Duplicate Article?",
         "lead": "Lead",
@@ -195,7 +191,6 @@
         "confirm": "Confirm",
         "created": "Created",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "delete": "Delete",
         "deleteAuthor": "Delete Author?",
         "loadMore": "Load More",
         "name": "Name",
@@ -208,7 +203,6 @@
         "bioInformation": "Biographical Information",
         "chooseImage": "Choose Image",
         "close": "Close",
-        "create": "Create",
         "createAuthor": "Create Author",
         "editAuthor": "Edit Author",
         "editImage": "Remove Image",
@@ -218,7 +212,6 @@
         "links": "Links",
         "name": "Name",
         "removeImage": "Remove Image",
-        "save": "Save",
         "title": "Title"
       }
     },
@@ -278,8 +271,7 @@
           "close": "Close",
           "editGallery": "Edit Gallery",
           "editImage": "Edit Image",
-          "removeImage": "Remove Image",
-          "save": "Save"
+          "removeImage": "Remove Image"
         }
       },
       "linkPageBreak": {
@@ -329,7 +321,6 @@
         "border": "Border",
         "cancel": "Cancel",
         "columns": "Columns",
-        "delete": "Delete",
         "deleteTable": "Delete Table",
         "insertTable": "Insert Table",
         "rows": "Rows"
@@ -360,12 +351,14 @@
     "comments": {
       "overview": {
         "action": "Action",
+        "moderation": "Moderation",
         "approve": "Approve",
         "comments": "Comments",
         "created": "Created",
         "loadMore": "Load More",
         "reject": "Reject",
         "requestChange": "Request Change",
+        "edit": "Edit Comment",
         "search": "Search",
         "state": "State",
         "text": "Text",
@@ -375,6 +368,13 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "userName": "User Name"
       },
+      "edit": {
+        "title": "Edit Comment",
+        "tags": "Tags",
+        "unnamedTag": "<Unnamed Tag>",
+        "loading": "Loading",
+        "success": "Comment successfully updated"
+      },
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",
@@ -383,7 +383,6 @@
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "Created At",
-        "delete": "Delete",
         "id": "Id",
         "parent": "Parent",
         "parentDate": "{{parentDate,ccc PP p}}",
@@ -420,6 +419,20 @@
         "updateSuccessful": "Successfuly updated the rating system."
       }
     },
+    "commentEditView": {
+      "title": "Title",
+      "lead": "Lead",
+      "comment": "Comment text",
+      "variousPanelHeader": "Tags & Source",
+      "tags": "Tags",
+      "source": "Source",
+      "userPanelHeader": "Author of the comment"
+    },
+    "commentUser": {
+      "selectExistingUser": "Select from registered users",
+      "guestUser": "Guest (Username)",
+      "selectImage": "Select profile image of the commenting guest"
+    },
     "confirm": "Confirm",
     "create": "Create",
     "dateTimePicker": {
@@ -434,7 +447,6 @@
       "overview": {
         "description": "Description",
         "actions": "Actions",
-        "delete": "Delete",
         "imageLibrary": "Image Library",
         "loadMore": "Load More",
         "noImagesFound": "No Images found",
@@ -468,7 +480,6 @@
         "license": "License",
         "link": "Link",
         "notFound": "Image not found!",
-        "save": "Save",
         "source": "Source",
         "sourceLink": "Link to original source of the image.",
         "tags": "Tags",
@@ -537,7 +548,6 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "createNew": "New Member Plan",
       "createTitle": "Create Member Plan",
-      "delete": "Delete",
       "deleteModalTitle": "Delete Member Plan",
       "description": "Description",
       "errorMessage": "Please enter a number",
@@ -627,6 +637,7 @@
       "authors": "Authors",
       "comments": "Comments",
       "commentRating": "Rating System",
+      "commentTags": "Tags",
       "settings": "Settings",
       "imageLibrary": "Image Library",
       "languageSwitch": {
@@ -654,7 +665,6 @@
         "action": "Action",
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "delete": "Delete",
         "deleteNavigation": "Delete navigation",
         "name": "Name",
         "navigations": "Navigations",
@@ -666,7 +676,6 @@
       "panels": {
         "article": "Article",
         "close": "Close",
-        "create": "Create",
         "createdAt": "{{testDate}} hello",
         "createNavigation": "Create Navigation",
         "editNavigation": "Edit Navigation",
@@ -675,7 +684,6 @@
         "links": "Links",
         "name": "Name",
         "page": "Page",
-        "save": "Save",
         "selectArticle": "Select Article",
         "selectPage": "Select Page",
         "url": "URL"
@@ -684,8 +692,6 @@
     "pageEditor": {
       "overview": {
         "back": "Back",
-        "create": "Create",
-        "delete": "Delete",
         "draft": "Draft",
         "duplicate": "Duplicate",
         "metadata": "Metadata",
@@ -697,9 +703,9 @@
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "publish": "Publish",
         "published": "Page published on {{date, ccc PP p}}",
-        "previewDisabled": "All page changes have been published already.",
         "preview": "Preview",
-        "save": "Save",
+        "previewDisabled": "All page changes have been published already.",
+        "createComment": "Create Comment",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
         "publishedAt": "{{publicationDate, ccc PP p}}",
@@ -740,7 +746,6 @@
         "publishAt": "Available online from",
         "publishAtDateCheckbox": "Set a different date for online availibility",
         "removeImage": "Remove Image",
-        "saveAndClose": "Save and close",
         "slug": "Slug",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
@@ -778,7 +783,6 @@
         "confirm": "Confirm",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Delete",
         "deletePage": "Delete Page?",
         "duplicatePage": "Duplicate Page?",
         "lead": "Lead",
@@ -799,7 +803,6 @@
       "adapter": "Payment Adapter",
       "createNew": "New Payment Method",
       "createTitle": "Create Payment Method",
-      "delete": "Delete",
       "deleteModalTitle": "Delete Payment Method",
       "description": "Description",
       "editTitle": "Edit Payment Method",
@@ -823,7 +826,6 @@
     },
     "peerList": {
       "overview": {
-        "delete": "Delete",
         "disable": "Disable",
         "enable": "Enable",
         "editProfile": "Edit profile",
@@ -848,7 +850,6 @@
         "chooseImage": "Choose Image",
         "close": "Close",
         "confirm": "Confirm",
-        "create": "Create",
         "createPeer": "Create Peer",
         "deletePeer": "Delete Peer",
         "editImage": "Edit Image",
@@ -864,7 +865,6 @@
         "peerInfoUpdated": "Peer Info Updated",
         "peerUpdated": "Peer updated",
         "removeImage": "Remove Image",
-        "save": "Save",
         "getRemote": "Fetch Remote Peer Profile",
         "themeColor": "Theme Color",
         "themeFontColor": "Font Color",
@@ -877,11 +877,13 @@
       }
     },
     "save": "Save",
+    "delete": "Delete",
+    "saveAndClose": "Save & Close",
+    "createAndClose": "Create & Close",
     "yes": "Yes",
     "no": "No",
     "tokenList": {
       "overview": {
-        "delete": "Delete",
         "generateToken": "Generate Token",
         "loading": "loading...",
         "tokens": "Tokens"
@@ -906,7 +908,6 @@
       "overview": {
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Delete",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -940,7 +941,6 @@
         "action": "Action",
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Delete",
         "description": "Description",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -966,7 +966,6 @@
     "userRoles": {
       "overview": {
         "action": "Action",
-        "delete": "Delete",
         "description": "Description",
         "name": "Name",
         "newUserRole": "New UserRole",
@@ -980,14 +979,12 @@
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "Confirm",
-        "create": "Create",
         "createUserRole": "Create User Role",
         "deleteUserRole": "Delete User Role?",
         "description": "Description",
         "editUserRole": "Edit User Role",
         "name": "Name",
         "permissions": "Permissions",
-        "save": "Save",
         "systemRole": "is a System Role and can not be edited",
         "Unknown": "Unknown"
       }
@@ -1002,8 +999,6 @@
       "successfullyCreatedUser": "User successfully created",
       "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
       "createNewUser": "Create new user",
-      "saveAndClose": "Save & Close",
-      "createAndClose": "Create & Close",
       "csvData": "CSV Data",
       "exportSubscriptions": "Export",
       "generateCSV": "Generate",
@@ -1015,7 +1010,6 @@
       "cancel": "Cancel",
       "close": "Close",
       "confirm": "Confirm",
-      "create": "Create",
       "createUser": "Create User",
       "deleteUser": "Delete User?",
       "editUser": "Edit User",
@@ -1034,11 +1028,9 @@
       "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
       "sendWebsiteLoginFailureMessage": "Sending Login Link failed. {{error}}",
       "resetPasswordFor": "Reset the password for {{userName}}",
-      "save": "Save",
       "selectUserRole": "Select User Role",
       "startedAt": "Started",
       "startedAtDate": "{{startedAtDate, ccc PP p}}",
-      "subCreate": "Create",
       "subDisableDescription": "Subscription can only be added once the user has been created.",
       "subEdit": "Edit",
       "subTitle": "Subscription",
@@ -1178,7 +1170,6 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
-      "save": "Save",
       "errorTitle": "Error",
       "editSettings": "Edit Settings",
       "guestCommenting": "Allow guest commenting",
@@ -1194,6 +1185,16 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Payment"
+    },
+    "tags": {
+      "overview": {
+        "title": "Tags",
+        "createTag": "New Tag",
+        "placeholder": "Name of tag",
+        "areYouSure": "Are you sure?",
+        "areYouSureConfirmation": "Delete tag",
+        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed."
+      }
     },
     "permissions": {
       "noAccess": "You have insufficient permission to access this content.",

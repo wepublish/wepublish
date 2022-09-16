@@ -23,17 +23,17 @@ import {
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID, slugify} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -523,7 +523,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
               <Button appearance="primary" type="submit">
-                {t('articleEditor.panels.saveAndClose')}
+                {t('saveAndClose')}
               </Button>
             </PermissionControl>
           </Drawer.Actions>

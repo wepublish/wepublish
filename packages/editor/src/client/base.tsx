@@ -20,6 +20,7 @@ import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
 import RateIcon from '@rsuite/icons/Rate'
 import SpeakerIcon from '@rsuite/icons/Speaker'
+import TagIcon from '@rsuite/icons/Tag'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
@@ -160,20 +161,7 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
-                  <Nav.Menu eventKey={'1'} title={t('navbar.blocks.topMenu')} icon={<GridIcon />}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/polls"
-                      active={path === 'polls'}
-                      icon={<SpeakerIcon />}>
-                      {t('navbar.blocks.polls')}
-                    </Nav.Item>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <Nav.Menu eventKey={'1'} title={t('navbar.comments')} icon={<CommentIcon />}>
+                <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<CommentIcon />}>
                   <PermissionControl
                     qualifyingPermissions={[
                       'CAN_GET_COMMENTS',
@@ -186,6 +174,22 @@ export function Base({children}: BaseProps) {
                       icon={<CommentIcon />}
                       active={path === 'comments'}>
                       {t('navbar.comments')}
+                    </Nav.Item>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_TAGS',
+                      'CAN_CREATE_TAG',
+                      'CAN_UPDATE_TAG',
+                      'CAN_DELETE_TAG'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/comments/tags"
+                      icon={<TagIcon />}
+                      active={path === 'comments/tags'}>
+                      {t('navbar.commentTags')}
                     </Nav.Item>
                   </PermissionControl>
 
@@ -205,6 +209,22 @@ export function Base({children}: BaseProps) {
                     </Nav.Item>
                   </PermissionControl>
                 </Nav.Menu>
+
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
+                  <Nav.Menu
+                    eventKey={'poll'}
+                    title={t('navbar.blocks.topMenu')}
+                    icon={<GridIcon />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/polls"
+                      active={path === 'polls'}
+                      icon={<SpeakerIcon />}>
+                      {t('navbar.blocks.polls')}
+                    </Nav.Item>
+                  </Nav.Menu>
+                </PermissionControl>
 
                 <PermissionControl
                   qualifyingPermissions={[
@@ -277,7 +297,7 @@ export function Base({children}: BaseProps) {
                     'CAN_DELETE_PAYMENT_METHOD'
                   ]}>
                   <Nav.Menu
-                    eventKey={'2'}
+                    eventKey={'usersAndMembers'}
                     title={t('navbar.usersAndMembers')}
                     icon={<PeoplesIcon />}>
                     <Nav.Item

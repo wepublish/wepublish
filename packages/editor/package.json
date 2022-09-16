@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -22,7 +22,9 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/editor"
   },
-  "bin": "./dist/server/index.js",
+  "bin": {
+    "wepublish-editor": "./dist/server/index.js"
+  },
   "main": "./dist/server/index.js",
   "license": "MIT",
   "scripts": {
@@ -164,6 +166,7 @@
             "placement",
             "trigger",
             "dataKey",
+            "eventKey",
             "appearance",
             "icon",
             "iconActive",

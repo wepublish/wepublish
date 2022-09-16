@@ -61,7 +61,7 @@ import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
-import {GraphQLPublicComment} from './comment'
+import {GraphQLPublicComment} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({

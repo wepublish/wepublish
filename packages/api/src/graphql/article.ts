@@ -28,7 +28,7 @@ import {
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
-import {GraphQLPublicComment} from './comment'
+import {GraphQLPublicComment} from './comment/comment'
 import {SessionType} from '../db/session'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
