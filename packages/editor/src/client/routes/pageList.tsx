@@ -64,7 +64,7 @@ function PageList() {
   const {t} = useTranslation()
   const navigate = useNavigate()
 
-  const [filter, setFilter] = useState<PageFilter>({title: ''})
+  const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
@@ -132,7 +132,7 @@ function PageList() {
         </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>

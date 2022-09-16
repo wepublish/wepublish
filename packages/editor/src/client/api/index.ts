@@ -2345,6 +2345,7 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
+  filter?: Maybe<ArticleFilter>;
   cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
   order?: Maybe<SortOrder>;
@@ -3419,7 +3420,7 @@ export type PageRefFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<PageFilter>;
+  filter?: Maybe<Scalars['String']>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -5214,8 +5215,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5247,6 +5248,7 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
@@ -6695,8 +6697,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

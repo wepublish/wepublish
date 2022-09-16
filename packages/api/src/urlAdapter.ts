@@ -1,5 +1,4 @@
-import {PublicArticle} from './db/article'
-import {Article} from './db/article'
+import {Article, PublicArticle} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'

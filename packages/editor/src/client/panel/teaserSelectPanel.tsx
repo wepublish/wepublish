@@ -1,4 +1,9 @@
+import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
+import FileTextIcon from '@rsuite/icons/legacy/FileText'
+import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Input, InputGroup, List, Nav, Notification, toaster} from 'rsuite'
 
 import {
   ArticleFilter,
@@ -8,13 +13,7 @@ import {
   usePageListQuery,
   usePeerArticleListQuery
 } from '../api'
-import {TeaserType, TeaserLink} from '../blocks/types'
-
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Nav, List, Input, InputGroup, Notification, toaster} from 'rsuite'
-import FileTextIcon from '@rsuite/icons/legacy/FileText'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
+import {TeaserLink, TeaserType} from '../blocks/types'
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -27,13 +26,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
   const peerListVariables = {
-    peerFilter: filter || undefined,
-    take: 20,
+    filter: filter || undefined,
+    first: 20,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
   // article variables
   const listVariables = {filter: filter || undefined, take: 20}
+  const pageListVariables = {filter: filter.title || undefined, take: 20}
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
@@ -48,12 +48,12 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchMore: fetchMorePeerArticles,
     error: peerArticleListError
   } = usePeerArticleListQuery({
-    variables: listVariables,
+    variables: peerListVariables,
     fetchPolicy: 'network-only'
   })
 
   const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
-    variables: listVariables,
+    variables: pageListVariables,
     fetchPolicy: 'no-cache'
   })
 
