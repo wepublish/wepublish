@@ -1445,6 +1445,19 @@ async function applyPostgres() {
               ]
             }
           ],
+          initContainers: [
+            {
+              name: 'postgres-data-permission-fix',
+              image: 'busybox',
+              command: ['/bin/chmod', '-R', '777', '/bitnami/postgresql'],
+              volumeMounts: [
+                {
+                  name: 'postgres-volume',
+                  mountPath: '/bitnami/postgresql'
+                }
+              ]
+            }
+          ],
           dnsPolicy: 'ClusterFirst',
           restartPolicy: 'Always',
           schedulerName: 'default-scheduler',

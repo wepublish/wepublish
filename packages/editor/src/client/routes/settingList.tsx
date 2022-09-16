@@ -239,7 +239,7 @@ function SettingList() {
                 onChange={(value: number) =>
                   setSendLoginJwtExpiresMin({
                     ...sendLoginJwtExpiresMin,
-                    value: value
+                    value
                   })
                 }
               />
@@ -254,7 +254,7 @@ function SettingList() {
                 accepter={InputNumber}
                 value={resetPwdJwtExpiresMin.value}
                 onChange={(value: number) => {
-                  setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value: value})
+                  setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value})
                 }}
               />
               <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
@@ -273,7 +273,7 @@ function SettingList() {
                 onChange={(value: number) => {
                   setPeeringTimeoutMs({
                     ...peeringTimeoutMs,
-                    value: value
+                    value
                   })
                 }}
               />
@@ -292,7 +292,7 @@ function SettingList() {
               onChange={(value: number) =>
                 setInvoiceReminderTries({
                   ...invoiceReminderTries,
-                  value: value
+                  value
                 })
               }
             />
@@ -307,7 +307,7 @@ function SettingList() {
                 onChange={(value: number) =>
                   setInvoiceReminderFreq({
                     ...invoiceReminderFreq,
-                    value: value
+                    value
                   })
                 }
               />
@@ -318,7 +318,7 @@ function SettingList() {
 
         <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
           <Button type="submit" appearance="primary" disabled={isDisabled}>
-            {t('settingList.save')}
+            {t('save')}
           </Button>
         </PermissionControl>
       </Form>

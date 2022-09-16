@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
@@ -23,7 +23,6 @@
   },
   "typings": "./lib/index.d.ts",
   "license": "MIT",
-  "bin": "./bin/run-server.js",
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-s build:*",

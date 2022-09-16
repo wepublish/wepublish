@@ -278,7 +278,7 @@ function UserEditView() {
           type="submit"
           data-testid="saveButton"
           style={{marginRight: '10px'}}>
-          {user ? t('userCreateOrEditView.save') : t('userCreateOrEditView.create')}
+          {user ? t('save') : t('create')}
         </Button>
         {/* save and close button */}
         <Button
@@ -287,7 +287,7 @@ function UserEditView() {
           type="submit"
           data-testid="saveAndCloseButton"
           onClick={() => setCloseAfterSave(true)}>
-          {user ? t('userCreateOrEditView.saveAndClose') : t('userCreateOrEditView.createAndClose')}
+          {user ? t('saveAndClose') : t('createAndClose')}
         </Button>
       </>
     )

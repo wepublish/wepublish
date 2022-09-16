@@ -250,6 +250,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -372,6 +377,26 @@ Object {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a tag",
+          "id": "CAN_CREATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a tag",
+          "id": "CAN_UPDATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all tags",
+          "id": "CAN_GET_TAGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a tag",
+          "id": "CAN_DELETE_TAG",
         },
         Object {
           "deprecated": false,
@@ -672,6 +697,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to update a comment",
+          "id": "CAN_UPDATE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -794,6 +824,26 @@ Object {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a tag",
+          "id": "CAN_CREATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a tag",
+          "id": "CAN_UPDATE_TAG",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all tags",
+          "id": "CAN_GET_TAGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a tag",
+          "id": "CAN_DELETE_TAG",
         },
         Object {
           "deprecated": false,
@@ -1107,6 +1157,11 @@ Object {
       },
       Object {
         "deprecated": false,
+        "description": "Allows to update a comment",
+        "id": "CAN_UPDATE_COMMENTS",
+      },
+      Object {
+        "deprecated": false,
         "description": "Allows to create a member plan",
         "id": "CAN_CREATE_MEMBER_PLAN",
       },
@@ -1229,6 +1284,26 @@ Object {
         "deprecated": false,
         "description": "Allows to update settings",
         "id": "CAN_UPDATE_SETTINGS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a tag",
+        "id": "CAN_CREATE_TAG",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a tag",
+        "id": "CAN_UPDATE_TAG",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all tags",
+        "id": "CAN_GET_TAGS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a tag",
+        "id": "CAN_DELETE_TAG",
       },
       Object {
         "deprecated": false,

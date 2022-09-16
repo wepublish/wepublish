@@ -173,6 +173,45 @@ describe('Navigations', () => {
 
     test('can be updated', async () => {
       const {mutate} = testClientPrivate
+
+      const articleInput: ArticleInput = {
+        title: '',
+        slug: generateRandomString(),
+        shared: false,
+        tags: [],
+        breaking: true,
+        lead: '',
+        preTitle: '',
+        hideAuthor: false,
+        properties: [],
+        authorIDs: [],
+        socialMediaTitle: '',
+        socialMediaAuthorIDs: [],
+        socialMediaDescription: '',
+        socialMediaImageID: '',
+        blocks: []
+      }
+      const articleRes = await mutate({
+        mutation: CreateArticle,
+        variables: {
+          input: articleInput
+        }
+      })
+
+      const pageInput: PageInput = {
+        title: '',
+        slug: generateRandomString(),
+        tags: [],
+        properties: [],
+        blocks: []
+      }
+      const pageRes = await mutate({
+        mutation: CreatePage,
+        variables: {
+          input: pageInput
+        }
+      })
+
       const res = await mutate({
         mutation: UpdateNavigation,
         variables: {
@@ -181,8 +220,8 @@ describe('Navigations', () => {
             key: generateRandomString(),
             links: [
               {external: {label: 'New External Label', url: 'newlinkurl.ch/'}},
-              {article: {label: 'New Article Label', articleID: 'newID'}},
-              {page: {label: 'New Page Label', pageID: 'newID'}}
+              {article: {label: 'New Article Label', articleID: articleRes.data.createArticle.id}},
+              {page: {label: 'New Page Label', pageID: pageRes.data.createPage.id}}
             ]
           },
           id: ids[0]
@@ -193,7 +232,21 @@ describe('Navigations', () => {
         data: {
           updateNavigation: {
             id: expect.any(String),
-            key: expect.any(String)
+            key: expect.any(String),
+            links: expect.arrayContaining([
+              expect.objectContaining({
+                label: 'New External Label',
+                url: 'newlinkurl.ch/'
+              }),
+              expect.objectContaining({
+                label: 'New Page Label',
+                page: expect.any(Object)
+              }),
+              expect.objectContaining({
+                label: 'New Article Label',
+                article: expect.any(Object)
+              })
+            ])
           }
         }
       })

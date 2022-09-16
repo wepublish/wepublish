@@ -15,12 +15,12 @@ import {
   useUpdateNavigationMutation
 } from '../api'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {generateID, getOperationNameFromDocument} from '../utility'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {generateID, getOperationNameFromDocument} from '../utility'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -214,7 +214,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
             <Button appearance="primary" disabled={isDisabled} onClick={() => handleSave()}>
-              {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+              {id ? t('save') : t('create')}
             </Button>
           </PermissionControl>
           <Button appearance={'subtle'} onClick={() => onClose?.()}>

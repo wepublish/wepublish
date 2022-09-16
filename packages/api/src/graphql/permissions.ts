@@ -177,6 +177,12 @@ export const CanGetComments: Permission = {
   deprecated: false
 }
 
+export const CanUpdateComments: Permission = {
+  id: 'CAN_UPDATE_COMMENTS',
+  description: 'Allows to update a comment',
+  deprecated: false
+}
+
 export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
@@ -483,6 +489,30 @@ export const CanUpdateSettings: Permission = {
   deprecated: false
 }
 
+export const CanCreateTag: Permission = {
+  id: 'CAN_CREATE_TAG',
+  description: 'Allows to create a tag',
+  deprecated: false
+}
+
+export const CanUpdateTag: Permission = {
+  id: 'CAN_UPDATE_TAG',
+  description: 'Allows to update a tag',
+  deprecated: false
+}
+
+export const CanGetTags: Permission = {
+  id: 'CAN_GET_TAGS',
+  description: 'Allows to get all tags',
+  deprecated: false
+}
+
+export const CanDeleteTag: Permission = {
+  id: 'CAN_DELETE_TAG',
+  description: 'Allows to delete a tag',
+  deprecated: false
+}
+
 export const CanGetPoll: Permission = {
   id: 'CAN_GET_POLL',
   description: 'Allows to get a poll',
@@ -556,6 +586,7 @@ export const AllPermissions: Permission[] = [
   CanGetPermission,
   CanGetPermissions,
   CanGetComments,
+  CanUpdateComments,
   CanCreateMemberPlan,
   CanGetMemberPlan,
   CanGetMemberPlans,
@@ -581,6 +612,10 @@ export const AllPermissions: Permission[] = [
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,
+  CanCreateTag,
+  CanUpdateTag,
+  CanGetTags,
+  CanDeleteTag,
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,
@@ -589,6 +624,7 @@ export const AllPermissions: Permission[] = [
 
 export const EditorPermissions: Permission[] = [
   CanGetComments,
+  CanUpdateComments,
   CanTakeActionOnComment,
   CanCreateAuthor,
   CanGetAuthor,
@@ -610,6 +646,10 @@ export const EditorPermissions: Permission[] = [
   CanGetPeerProfile,
   CanLoginEditor,
   CanGetSettings,
+  CanCreateTag,
+  CanUpdateTag,
+  CanGetTags,
+  CanDeleteTag,
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,

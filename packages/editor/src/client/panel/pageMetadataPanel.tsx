@@ -274,7 +274,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
             <Button appearance="primary" onClick={() => onClose?.()}>
-              {t('pageEditor.panels.saveAndClose')}
+              {t('saveAndClose')}
             </Button>
           </PermissionControl>
         </Drawer.Actions>

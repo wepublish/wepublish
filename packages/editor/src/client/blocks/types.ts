@@ -1,17 +1,19 @@
-import nanoid from 'nanoid'
-import {Node} from 'slate'
-
-import {
-  ArticleRefFragment,
-  BlockInput,
-  FullBlockFragment,
-  ImageRefFragment,
-  PageRefFragment,
-  PeerRefFragment,
-  TeaserStyle
-} from '../api'
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
+
+import {Node} from 'slate'
+
+import nanoid from 'nanoid'
+
+import {
+  FullBlockFragment,
+  ImageRefFragment,
+  ArticleRefFragment,
+  BlockInput,
+  PeerRefFragment,
+  PageRefFragment,
+  TeaserStyle
+} from '../api'
 
 export enum BlockType {
   RichText = 'richText',
