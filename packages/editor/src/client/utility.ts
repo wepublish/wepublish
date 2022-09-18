@@ -247,3 +247,37 @@ export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
 export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is (value: T) => T {
   return typeof value === 'function'
 }
+
+// recursively replace all scripts with executable ones
+const nodeScriptClone = (node: HTMLElement) => {
+  const script = document.createElement('script')
+  script.text = node.innerHTML
+
+  let i = -1
+  const attrs = node.attributes
+  let attr
+  while (++i < attrs.length) {
+    script.setAttribute((attr = attrs[i]).name, attr.value)
+  }
+  return script
+}
+
+const nodeScriptIs = (node: HTMLElement) => {
+  return node.tagName === 'SCRIPT'
+}
+
+export const nodeScriptReplace = (node: HTMLElement) => {
+  if (!node) return
+  if (nodeScriptIs(node) === true) {
+    node.parentNode && node.parentNode.replaceChild(nodeScriptClone(node), node)
+  } else {
+    let i = -1
+    const children = node.childNodes
+    while (++i < children.length) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      nodeScriptReplace(children[i])
+    }
+  }
+  return node
+}

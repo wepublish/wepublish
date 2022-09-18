@@ -6,6 +6,7 @@ import {Drawer, IconButton, Panel} from 'rsuite'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
+import {nodeScriptReplace} from '../utility'
 import {HTMLBlockValue} from './types'
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
@@ -18,6 +19,10 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
       setHtmlDialogOpen(true)
     }
   }, [])
+
+  useEffect(() => {
+    nodeScriptReplace(document.getElementById('html-block') as HTMLElement)
+  }, [value.html])
 
   return (
     <>
@@ -51,7 +56,11 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
                   {t('blocks.html.edit')}
                 </IconButton>
               </div>
-              <div style={{marginTop: '30px'}} dangerouslySetInnerHTML={{__html: value.html}} />
+              <div
+                style={{marginTop: '30px'}}
+                id="html-block"
+                dangerouslySetInnerHTML={{__html: value.html}}
+              />
             </div>
           )}
         </PlaceholderInput>
