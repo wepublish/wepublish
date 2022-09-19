@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input} from 'rsuite'
 
 import {HTMLBlockValue} from '../blocks/types'
-import {nodeScriptReplace} from '../utility'
 
 export interface HtmlEditPanelProps {
   readonly value: HTMLBlockValue
@@ -15,10 +14,6 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
   const [htmlBlock, setHtmlBlock] = useState<HTMLBlockValue>(value)
   const isEmpty = htmlBlock === undefined
   const {t} = useTranslation()
-
-  useEffect(() => {
-    nodeScriptReplace(document.getElementById('html-block') as HTMLElement)
-  }, [htmlBlock])
 
   return (
     <>
@@ -47,11 +42,6 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
         <div style={{marginTop: '20px'}}>
           <span>{t('blocks.html.warning')}</span>
         </div>
-        <div
-          style={{marginTop: '20px'}}
-          id="html-block"
-          dangerouslySetInnerHTML={{__html: htmlBlock.html}}
-        />
       </Drawer.Body>
     </>
   )

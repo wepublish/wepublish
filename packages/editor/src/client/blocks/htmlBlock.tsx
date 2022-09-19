@@ -6,7 +6,7 @@ import {Drawer, IconButton, Panel} from 'rsuite'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
-import {nodeScriptReplace} from '../utility'
+import {executeScriptElements} from '../utility'
 import {HTMLBlockValue} from './types'
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
@@ -21,7 +21,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
   }, [])
 
   useEffect(() => {
-    nodeScriptReplace(document.getElementById('html-block') as HTMLElement)
+    executeScriptElements(document.getElementById('html-block') as HTMLElement)
   }, [value.html])
 
   return (
