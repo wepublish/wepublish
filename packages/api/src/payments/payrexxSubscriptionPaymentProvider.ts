@@ -78,15 +78,19 @@ async function findSubscriptionByExternalId(
       properties: {
         some: {
           key: 'payrexx_external_id',
-          value: externalId
+          value: `${externalId}`
         }
       }
     },
     include: {
       properties: true,
-      periods: true,
       deactivation: true,
-      memberPlan: true
+      memberPlan: true,
+      periods: {
+        include: {
+          Invoice: true
+        }
+      }
     }
   })
 }
@@ -115,12 +119,12 @@ async function deleteUnpaidInvoices(
     }
   })
   for (const unpaidInvoice of unpaidInvoices) {
+    await deletePeriodOfUnpaidInvoice(subscriptionPeriodClient, subscription, unpaidInvoice)
     await invoiceClient.delete({
       where: {
         id: unpaidInvoice.id
       }
     })
-    await deletePeriodOfUnpaidInvoice(subscriptionPeriodClient, subscription, unpaidInvoice)
   }
 }
 
@@ -235,15 +239,15 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         return
       }
 
-      // Calculate max possible Extension length for subscription
-      const maxSubscriptionExtensionLength = subscriptionValidUntil.plus({
-        month: getMonths(subscription.paymentPeriodicity)
+      // Calculate max possible Extension length for subscription security margin of 7 days
+      const maxSubscriptionExtensionLength = subscriptionValidUntil.minus({
+        day: 7
       })
 
-      // Find last period in array
+      // Find last paid period in array
       let longestPeriod
       for (const period of subscription.periods) {
-        if (!longestPeriod || period.endsAt > longestPeriod.endsAt) {
+        if (period.Invoice.paidAt && (!longestPeriod || period.endsAt > longestPeriod.endsAt)) {
           longestPeriod = period
         }
       }
@@ -253,7 +257,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       // Skip if subscription is already renewed
       if (
-        maxSubscriptionExtensionLength < DateTime.fromJSDate(longestPeriod.endsAt).startOf('day')
+        maxSubscriptionExtensionLength <= DateTime.fromJSDate(longestPeriod.endsAt).startOf('day')
       ) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISO()} < ${DateTime.fromJSDate(
@@ -327,7 +331,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const subscriptionPeriod = await subscriptionPeriodClient.create({
         data: {
-          startsAt: new Date(),
+          subscriptionId: subscription.id,
+          startsAt: longestPeriod.endsAt,
           endsAt: newSubscriptionValidUntil,
           paymentPeriodicity: subscription.paymentPeriodicity,
           amount: payedAmount,
