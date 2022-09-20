@@ -43,7 +43,6 @@
   },
   "dependencies": {
     "@prisma/client": "^3.14.0",
-    "@types/luxon": "^3.0.1",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",
     "apollo-server-express": "2.25.3",
@@ -84,6 +83,7 @@
     "@types/graphql-upload": "^8.0.3",
     "@types/jest": "^26.0.14",
     "@types/jsonwebtoken": "^8.5.0",
+    "@types/luxon": "^3.0.1",
     "@types/mandrill-api": "^1.0.30",
     "@types/ms": "^0.7.31",
     "@types/nanoid": "^2.0.0",

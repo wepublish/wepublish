@@ -256,7 +256,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         maxSubscriptionExtensionLength < DateTime.fromJSDate(longestPeriod.endsAt).startOf('day')
       ) {
         logger('payrexxSubscriptionPaymentProvider').warn(
-          `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISO()} < ${DateTime.fromISO(
+          `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISO()} < ${DateTime.fromJSDate(
             longestPeriod.endsAt
           )
             .startOf('day')
