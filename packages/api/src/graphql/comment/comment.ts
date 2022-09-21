@@ -274,7 +274,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     rejectionReason: {type: GraphQLString},
 
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    rating: {
+    ratings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
     }
   })
