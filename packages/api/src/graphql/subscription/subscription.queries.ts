@@ -245,14 +245,14 @@ export const getSubscriptions = async (
 
   const [totalCount, subscriptions] = await Promise.all([
     subscription.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     subscription.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         deactivation: true,

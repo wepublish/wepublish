@@ -123,7 +123,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
-            bio: bio
+            bio
           }
         }
       })
@@ -138,7 +138,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
-            bio: bio
+            bio
           }
         }
       })
@@ -160,7 +160,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name: name}}
+        formValue={{name}}
         style={{height: '100%'}}>
         <Drawer.Header>
           <Drawer.Title>
@@ -174,7 +174,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 disabled={isDisabled}
                 type="submit"
                 data-testid="saveButton">
-                {id ? t('authors.panels.save') : t('authors.panels.create')}
+                {id ? t('save') : t('create')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>

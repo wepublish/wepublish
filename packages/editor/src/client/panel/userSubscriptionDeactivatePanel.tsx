@@ -13,6 +13,7 @@ export interface DeactivateSubscription {
 export interface SubscriptionDeactivatePanelProps {
   isDeactivated: boolean
   displayName: string
+  userEmail: string
   paidUntil?: Date
 
   onDeactivate(data: DeactivateSubscription): void
@@ -23,6 +24,7 @@ export interface SubscriptionDeactivatePanelProps {
 function UserSubscriptionDeactivatePanel({
   isDeactivated,
   displayName,
+  userEmail,
   paidUntil,
   onDeactivate,
   onReactivate,
@@ -56,7 +58,7 @@ function UserSubscriptionDeactivatePanel({
             isDeactivated
               ? 'userSubscriptionEdit.deactivation.modalMessage.deactivated'
               : 'userSubscriptionEdit.deactivation.modalMessage.activated',
-            {userName: displayName}
+            {userName: displayName, userEmail}
           )}
         </p>
         {!isDeactivated && (

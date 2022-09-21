@@ -72,6 +72,30 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
             contains: filter.text,
             mode: 'insensitive'
           }
+        },
+        {
+          address: {
+            OR: [
+              {
+                streetAddress: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                zipCode: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                city: {
+                  contains: filter.text,
+                  mode: 'insensitive'
+                }
+              }
+            ]
+          }
         }
       ]
     }
@@ -98,14 +122,14 @@ export const getUsers = async (
 
   const [totalCount, users] = await Promise.all([
     user.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     user.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       select: unselectPassword
     })

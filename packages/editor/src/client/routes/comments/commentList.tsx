@@ -5,6 +5,7 @@ import EditIcon from '@rsuite/icons/legacy/Edit'
 import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
 import {
   Button,
   Dropdown,
@@ -36,16 +37,16 @@ import {
   useCommentListQuery,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation
-} from '../api'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+} from '../../api'
+import {DescriptionList, DescriptionListItem} from '../../atoms/descriptionList'
+import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+} from '../../utility'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -293,7 +294,8 @@ function CommentList() {
         style={{
           display: 'flex',
           flexFlow: 'column',
-          marginTop: '20px'
+          marginTop: '20px',
+          gap: '20px'
         }}>
         <Table
           autoHeight
@@ -311,7 +313,6 @@ function CommentList() {
                 return ''
             }
           }}
-          style={{marginTop: '20px'}}
           loading={isLoading}
           data={comments}
           sortColumn={sortField}
@@ -378,58 +379,75 @@ function CommentList() {
               }
             </Cell>
           </Column>
+
           <Column width={150} align="center" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-            <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
-              <Cell style={{padding: '6px 0'}}>
-                {(rowData: Comment) => (
-                  <>
-                    <IconButtonTooltip caption={t('comments.overview.approve')}>
-                      <IconButton
-                        icon={<CheckIcon />}
-                        color="green"
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentComment(rowData)
-                          setConfirmAction(ConfirmAction.Approve)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                    <IconButtonTooltip caption={t('comments.overview.requestChange')}>
-                      <IconButton
-                        icon={<EditIcon />}
-                        color="yellow"
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentComment(rowData)
-                          setConfirmAction(ConfirmAction.RequestChanges)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                    <IconButtonTooltip caption={t('comments.overview.reject')}>
-                      <IconButton
-                        icon={<CloseIcon />}
-                        color="red"
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentComment(rowData)
-                          setConfirmAction(ConfirmAction.Reject)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </>
-                )}
-              </Cell>
-            </PermissionControl>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: Comment) => (
+                <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
+                  <IconButtonTooltip caption={t('comments.overview.approve')}>
+                    <IconButton
+                      icon={<CheckIcon />}
+                      appearance="primary"
+                      color="green"
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentComment(rowData)
+                        setConfirmAction(ConfirmAction.Approve)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('comments.overview.requestChange')}>
+                    <IconButton
+                      icon={<EditIcon />}
+                      appearance="primary"
+                      color="yellow"
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentComment(rowData)
+                        setConfirmAction(ConfirmAction.RequestChanges)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('comments.overview.reject')}>
+                    <IconButton
+                      icon={<CloseIcon />}
+                      appearance="primary"
+                      color="red"
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentComment(rowData)
+                        setConfirmAction(ConfirmAction.Reject)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={150} align="center" fixed="right">
+            <HeaderCell>{t('comments.overview.edit')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: Comment) => (
+                <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
+                  <IconButtonTooltip caption={t('comments.overview.edit')}>
+                    <Link to={`edit/${rowData?.id}`}>
+                      <IconButton icon={<EditIcon />} circle size="sm" />
+                    </Link>
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </Cell>
           </Column>
         </Table>
 
@@ -450,6 +468,7 @@ function CommentList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </div>
+
       {confirmAction && (
         <Modal
           open={isConfirmationDialogOpen}

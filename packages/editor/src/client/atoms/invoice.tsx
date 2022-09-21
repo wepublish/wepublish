@@ -3,6 +3,7 @@ import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import CheckIcon from '@rsuite/icons/legacy/Check'
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import {Email} from '@rsuite/icons'
 
 export interface InvoiceProps {
@@ -80,6 +81,13 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
           {new Date(invoice.paidAt).toLocaleString('de-CH', {timeZone: 'europe/zurich'})}
         </p>
       )
+    } else if (invoice.canceledAt) {
+      return (
+        <p>
+          {t('invoice.canceledAt')}{' '}
+          {new Date(invoice.canceledAt).toLocaleString('de-CH', {timeZone: 'europe/zurich'})}
+        </p>
+      )
     } else {
       return (
         <>
@@ -110,6 +118,8 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
   function invoiceIconView() {
     if (invoice.paidAt) {
       return <CheckIcon style={{color: 'green', fontSize: '2em'}} />
+    } else if (invoice.canceledAt) {
+      return <CloseIcon style={{color: 'red', fontSize: '2em'}} />
     } else {
       return <Email style={{color: 'red', fontSize: '2em'}} />
     }

@@ -19,7 +19,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
 +           disabled=\\"\\"
             type=\\"submit\\"
           >
-            authors.panels.create
+            create
             <span
               class=\\"rs-ripple-pond\\"
 @@ -95,14 +96,15 @@
@@ -205,7 +205,7 @@ exports[`Author Edit Panel should render 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          authors.panels.create
+          create
           <span
             class="rs-ripple-pond"
           >
@@ -956,7 +956,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
           data-testid="saveButton"
           type="submit"
         >
-          authors.panels.save
+          save
           <span
             class="rs-ripple-pond"
           >

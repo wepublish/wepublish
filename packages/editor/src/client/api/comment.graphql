@@ -1,3 +1,10 @@
+fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+
 fragment FullParentComment on Comment {
   id
   state
@@ -7,8 +14,7 @@ fragment FullParentComment on Comment {
   }
   guestUsername
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
   createdAt
   modifiedAt
@@ -16,24 +22,29 @@ fragment FullParentComment on Comment {
 
 fragment FullComment on Comment {
   id
-
   state
   rejectionReason
   guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
   user {
     ...FullUser
   }
-
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
-
+  source
   createdAt
   modifiedAt
 
   parentComment {
     ...FullParentComment
+  }
+
+  tags {
+    id
+    tag
   }
 }
 
@@ -61,6 +72,12 @@ query CommentList(
   }
 }
 
+query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+
 mutation ApproveComment($id: ID!) {
   approveComment(id: $id) {
     state
@@ -78,5 +95,17 @@ mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionRea
   requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
+  }
+}
+
+mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
+    ...FullComment
+  }
+}
+
+mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    id
   }
 }

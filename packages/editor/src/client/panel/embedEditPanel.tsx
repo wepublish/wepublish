@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+
 import {Button, Drawer, Input, Message} from 'rsuite'
 
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
+
+import {useTranslation} from 'react-i18next'
 import {flattenDOMTokenList} from '../utility'
 
 export interface EmbedEditPanel {
