@@ -1,0 +1,46 @@
+query RatingSystem {
+  ratingSystem {
+    id
+    name
+
+    answers {
+      id
+      type
+      answer
+      ratingSystemId
+    }
+  }
+}
+
+mutation UpdateRatingSystem(
+  $ratingSystemId: ID!
+  $name: String
+  $answers: [UpdateCommentRatingSystemAnswer!]
+) {
+  updateRatingSystem(ratingSystemId: $ratingSystemId, name: $name, answers: $answers) {
+    id
+    name
+
+    answers {
+      id
+      type
+      answer
+      ratingSystemId
+    }
+  }
+}
+
+mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
+  createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
+    answer
+    id
+    type
+    ratingSystemId
+  }
+}
+
+mutation DeleteRatingSystemAnswer($answerId: ID!) {
+  deleteRatingSystemAnswer(id: $answerId) {
+    id
+  }
+}
