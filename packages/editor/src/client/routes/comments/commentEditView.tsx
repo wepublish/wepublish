@@ -97,7 +97,7 @@ export const CommentEditView = memo(() => {
    */
   function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
     const revisions = comment.revisions
-    if (!revisions || !revisions.length) {
+    if (!revisions.length) {
       return
     }
     const lastRevision = revisions[revisions.length - 1]
