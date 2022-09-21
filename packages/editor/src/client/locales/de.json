@@ -216,6 +216,21 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Kommentarblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Kommentare filtern nach Etikett",
+        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
+        "cherryPick": "Spezifische Kommentare auswählen",
+        "displayName": "Anzeigename",
+        "comments": "{{count}} Kommentar",
+        "comments_plural": "{{count}} Kommentare"
+      },
+      "poll": {
+        "title": "Umfrageblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "select": "Auswählen"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {

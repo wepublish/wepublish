@@ -594,6 +594,21 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Edit Comment Block",
+        "edit": "Edit comment block",
+        "filterByTag": "Filter comments by tag",
+        "commentsFilterByTagInformation": "All comments below will be displayed",
+        "cherryPick": "Select specific comments",
+        "displayName": "Display name",
+        "comments": "{{count}} Comment",
+        "comments_plural": "{{count}} Comments"
+      },
+      "poll": {
+        "title": "Edit Poll Block",
+        "edit": "Edit poll block",
+        "select": "Select"
+      },
       "embeds": {
         "label": "Intégration",
         "overview": {

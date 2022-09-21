@@ -89,6 +89,24 @@ fragment FullBlock on Block {
     }
   }
 
+  ... on PollBlock {
+    poll {
+      id
+      question
+    }
+  }
+
+  ... on CommentBlock {
+    filter {
+      item
+      tags
+      comments
+    }
+    comments {
+      ...FullComment
+    }
+  }
+
   ... on ImageBlock {
     caption
     image {
