@@ -380,7 +380,6 @@ Object {
         },
         Object {
           "deprecated": false,
-<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -398,7 +397,9 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
-=======
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a tag",
           "id": "CAN_CREATE_TAG",
         },
@@ -416,7 +417,6 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a tag",
           "id": "CAN_DELETE_TAG",
->>>>>>> origin/master
         },
         Object {
           "deprecated": false,
@@ -847,7 +847,6 @@ Object {
         },
         Object {
           "deprecated": false,
-<<<<<<< HEAD
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
@@ -865,7 +864,9 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
-=======
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a tag",
           "id": "CAN_CREATE_TAG",
         },
@@ -883,7 +884,6 @@ Object {
           "deprecated": false,
           "description": "Allows to delete a tag",
           "id": "CAN_DELETE_TAG",
->>>>>>> origin/master
         },
         Object {
           "deprecated": false,
@@ -1327,7 +1327,6 @@ Object {
       },
       Object {
         "deprecated": false,
-<<<<<<< HEAD
         "description": "Allows to get a comment rating system",
         "id": "CAN_GET_COMMENT_RATING_SYSTEM",
       },
@@ -1345,7 +1344,9 @@ Object {
         "deprecated": false,
         "description": "Allows to delete a comment rating system",
         "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
-=======
+      },
+      Object {
+        "deprecated": false,
         "description": "Allows to create a tag",
         "id": "CAN_CREATE_TAG",
       },
@@ -1363,7 +1364,6 @@ Object {
         "deprecated": false,
         "description": "Allows to delete a tag",
         "id": "CAN_DELETE_TAG",
->>>>>>> origin/master
       },
       Object {
         "deprecated": false,
