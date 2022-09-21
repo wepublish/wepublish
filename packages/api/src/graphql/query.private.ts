@@ -129,6 +129,7 @@ import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -136,6 +137,7 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -662,6 +664,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Rating System
+    // ==========
+
+    ratingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
+        getRatingSystem(commentRatingSystem)
     },
 
     // Tag
