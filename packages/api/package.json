@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.14.0",
+    "@types/node-fetch": "^2.6.2",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",
     "apollo-server-express": "2.25.3",
