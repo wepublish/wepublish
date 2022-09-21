@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-import {CommentSort, FullCommentFragment, useCommentListQuery} from '../../api'
+import {FullCommentFragment, useCommentListQuery} from '../../api'
 import {CommentPreview} from './commentPreview'
 
 interface ChildCommentsProps {
@@ -39,7 +39,6 @@ export function CommentHistory({comment}: CommentHistoryProps) {
         itemType: comment.itemType,
         itemID: comment.itemID
       },
-      sort: CommentSort.CreatedAt,
       take: 1000
     }
   })
