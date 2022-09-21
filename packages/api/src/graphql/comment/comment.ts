@@ -202,13 +202,16 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
           ? comment.findUnique({
               where: {
                 id: parentID
+              },
+              include: {
+                revisions: true
               }
             })
           : null
       )
     },
     revisions: {
-      type: GraphQLList(GraphQLNonNull(GraphQLCommentRevision))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
     },
     source: {
       type: GraphQLString

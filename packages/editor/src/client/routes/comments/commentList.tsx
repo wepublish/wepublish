@@ -327,14 +327,14 @@ function CommentList() {
             <Cell dataKey="revisions">
               {(rowData: FullCommentFragment) => (
                 <>
-                  {rowData?.revisions?.length ? (
+                  {rowData.revisions?.length ? (
                     <RichTextBlock
                       displayOnly
                       displayOneLine
                       disabled
                       // TODO: remove this
                       onChange={console.log}
-                      value={rowData?.revisions[rowData?.revisions?.length - 1]?.text || []}
+                      value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
                     />
                   ) : null}
                 </>
@@ -531,11 +531,9 @@ function CommentList() {
                           // TODO: remove this
                           onChange={console.log}
                           value={
-                            currentComment?.parentComment?.revisions
-                              ? currentComment.parentComment.revisions[
-                                  currentComment.parentComment.revisions.length - 1
-                                ]?.text || []
-                              : []
+                            currentComment.parentComment.revisions[
+                              currentComment.parentComment.revisions.length - 1
+                            ]?.text || []
                           }
                         />
                       </>

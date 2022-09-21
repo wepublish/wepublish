@@ -270,7 +270,7 @@ export type Comment = {
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   parentComment?: Maybe<Comment>;
-  revisions?: Maybe<Array<CommentRevision>>;
+  revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -3054,10 +3054,10 @@ export type FullParentCommentFragment = (
   & { user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  )>, revisions?: Maybe<Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & CommentRevisionFragment
-  )>> }
+  )> }
 );
 
 export type FullCommentFragment = (
@@ -3069,10 +3069,10 @@ export type FullCommentFragment = (
   )>, user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
-  )>, revisions?: Maybe<Array<(
+  )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
     & CommentRevisionFragment
-  )>>, parentComment?: Maybe<(
+  )>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & FullParentCommentFragment
   )>, tags?: Maybe<Array<(
