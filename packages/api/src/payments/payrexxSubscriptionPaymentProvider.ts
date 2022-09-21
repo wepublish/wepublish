@@ -23,7 +23,10 @@ import * as crypto from 'crypto'
 import {timingSafeEqual} from 'crypto'
 import qs from 'qs'
 import {Context} from '../context'
-import {DateTime} from 'luxon'
+import sub from 'date-fns/sub'
+import parseISO from 'date-fns/parseISO'
+import startOfDay from 'date-fns/startOfDay'
+import add from 'date-fns/add'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -228,7 +231,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     const subscriptionId = rawSubscription.id
 
     if (intentState.state === PaymentState.paid) {
-      const subscriptionValidUntil = DateTime.fromISO(rawSubscription.valid_until).startOf('day')
+      const subscriptionValidUntil = startOfDay(parseISO(rawSubscription.valid_until))
 
       // Get subscription
       const subscription = await findSubscriptionByExternalId(subscriptionClient, subscriptionId)
@@ -240,9 +243,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
 
       // Calculate max possible Extension length for subscription security margin of 7 days
-      const maxSubscriptionExtensionLength = subscriptionValidUntil.minus({
-        day: 7
-      })
+      const maxSubscriptionExtensionLength = sub(subscriptionValidUntil, {days: 7})
 
       // Find last paid period in array
       let longestPeriod
@@ -256,23 +257,19 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       if (!longestPeriod) throw Error(`No period found in subscription ${subscriptionId}`)
 
       // Skip if subscription is already renewed
-      if (
-        maxSubscriptionExtensionLength <= DateTime.fromJSDate(longestPeriod.endsAt).startOf('day')
-      ) {
+      if (maxSubscriptionExtensionLength <= startOfDay(longestPeriod.endsAt)) {
         logger('payrexxSubscriptionPaymentProvider').warn(
-          `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISO()} < ${DateTime.fromJSDate(
+          `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISOString()} <= ${startOfDay(
             longestPeriod.endsAt
-          )
-            .startOf('day')
-            .toISO()}`
+          ).toISOString()}`
         )
         return
       }
 
       // Calculate new subscription valid until
-      const newSubscriptionValidUntil = DateTime.fromJSDate(longestPeriod.endsAt)
-        .plus({month: getMonths(subscription.paymentPeriodicity)})
-        .toISO()
+      const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
+        months: getMonths(subscription.paymentPeriodicity)
+      }).toISOString()
 
       console.log('NEW Subsription date: ' + newSubscriptionValidUntil)
 
