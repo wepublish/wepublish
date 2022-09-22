@@ -595,7 +595,7 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
     comments: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
       resolve: async ({filter}, _, {prisma}) => {
-        const result = await prisma.comment.findMany({
+        const comments = await prisma.comment.findMany({
           where: {
             itemID: filter.item ?? undefined,
             OR: [
@@ -620,9 +620,10 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
           }
         })
 
-        console.log(result)
-
-        return []
+        return comments.map(({revisions, ...comment}) => ({
+          text: revisions[revisions.length - 1].text,
+          ...comment
+        }))
       }
     }
   },
