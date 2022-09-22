@@ -18,6 +18,10 @@ export type Scalars = {
   Color: string
   RichText: Node[]
   Slug: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any
+  /** A valid vote value */
+  VoteValue: any
 }
 
 export type Article = {
@@ -152,6 +156,7 @@ export type Block =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
+  | HtmlBlock
   | LinkPageBreakBlock
   | TitleBlock
   | QuoteBlock
@@ -162,7 +167,7 @@ export type Challenge = {
   __typename?: 'Challenge'
   challenge?: Maybe<Scalars['String']>
   challengeID?: Maybe<Scalars['String']>
-  validUntil?: Maybe<Scalars['String']>
+  validUntil?: Maybe<Scalars['Date']>
 }
 
 export type ChallengeInput = {
@@ -184,6 +189,7 @@ export type Comment = {
   state: CommentState
   rejectionReason?: Maybe<Scalars['String']>
   modifiedAt: Scalars['DateTime']
+  ratings: Array<Rating>
 }
 
 export enum CommentAuthorType {
@@ -206,6 +212,22 @@ export enum CommentItemType {
   Page = 'Page'
 }
 
+export type CommentRating = {
+  __typename?: 'CommentRating'
+  createdAt: Scalars['DateTime']
+  value?: Maybe<Scalars['Int']>
+  fingerprint?: Maybe<Scalars['String']>
+  disabled?: Maybe<Scalars['Boolean']>
+}
+
+export type CommentRatingSystemAnswer = {
+  __typename?: 'CommentRatingSystemAnswer'
+  id: Scalars['ID']
+  ratingSystemId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+  type: RatingSystemType
+}
+
 export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
@@ -222,8 +244,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['String']>
-  height?: Maybe<Scalars['String']>
+  width?: Maybe<Scalars['Int']>
+  height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -254,10 +276,32 @@ export type FlexTeaser = {
   teaser?: Maybe<Teaser>
 }
 
+export type FullCommentRatingSystem = {
+  __typename?: 'FullCommentRatingSystem'
+  id: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  answers: Array<CommentRatingSystemAnswer>
+}
+
+export type FullPoll = {
+  __typename?: 'FullPoll'
+  id: Scalars['ID']
+  question?: Maybe<Scalars['String']>
+  opensAt: Scalars['DateTime']
+  closedAt?: Maybe<Scalars['DateTime']>
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>
+}
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge'
   caption?: Maybe<Scalars['String']>
   image?: Maybe<Image>
+}
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock'
+  html?: Maybe<Scalars['String']>
 }
 
 export type Image = {
@@ -420,6 +464,8 @@ export type Mutation = {
    * CommentUpdateInput which contains the ID of the comment you want to update and the new text.
    */
   updateComment: Comment
+  /** This mutation allows to rate a comment. Supports logged in and anonymous */
+  rateComment: CommentRating
   /** This mutation allows to register a new member, */
   registerMember: Registration
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
@@ -448,6 +494,8 @@ export type Mutation = {
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>
+  /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
+  voteOnPoll?: Maybe<PollVote>
 }
 
 export type MutationCreateSessionArgs = {
@@ -471,6 +519,12 @@ export type MutationAddCommentArgs = {
 
 export type MutationUpdateCommentArgs = {
   input: CommentUpdateInput
+}
+
+export type MutationRateCommentArgs = {
+  commentId: Scalars['ID']
+  answerId: Scalars['ID']
+  value: Scalars['Int']
 }
 
 export type MutationRegisterMemberArgs = {
@@ -544,6 +598,10 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationCreatePaymentFromInvoiceArgs = {
   input: PaymentFromInvoiceInput
+}
+
+export type MutationVoteOnPollArgs = {
+  answerId: Scalars['ID']
 }
 
 export type Navigation = {
@@ -714,6 +772,35 @@ export type PolisConversationBlock = {
   conversationID: Scalars['String']
 }
 
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount'
+  id: Scalars['ID']
+  pollId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+  votes: Scalars['Int']
+}
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote'
+  id: Scalars['ID']
+  answerId: Scalars['ID']
+  amount?: Maybe<Scalars['VoteValue']>
+}
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource'
+  id: Scalars['ID']
+  source?: Maybe<Scalars['String']>
+  voteAmounts?: Maybe<Array<PollExternalVote>>
+}
+
+export type PollVote = {
+  __typename?: 'PollVote'
+  createdAt: Scalars['DateTime']
+  fingerprint?: Maybe<Scalars['String']>
+  disabled?: Maybe<Scalars['Boolean']>
+}
+
 export type PublicProperties = {
   __typename?: 'PublicProperties'
   key: Scalars['String']
@@ -756,6 +843,8 @@ export type Query = {
   page?: Maybe<Page>
   /** This query returns the pages. */
   pages: PageConnection
+  /** This query returns the articles. */
+  comments: Array<Comment>
   /** This query returns the redirect Uri. */
   authProviders: Array<AuthProvider>
   /** This query returns the user. */
@@ -772,6 +861,9 @@ export type Query = {
   checkInvoiceStatus?: Maybe<Invoice>
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge
+  ratingSystem: FullCommentRatingSystem
+  /** This query returns a poll with all the needed data */
+  poll?: Maybe<FullPoll>
 }
 
 export type QueryPeerArgs = {
@@ -834,6 +926,10 @@ export type QueryPagesArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QueryCommentsArgs = {
+  itemId?: Maybe<Scalars['ID']>
+}
+
 export type QueryAuthProvidersArgs = {
   redirectUri?: Maybe<Scalars['String']>
 }
@@ -856,10 +952,26 @@ export type QueryCheckInvoiceStatusArgs = {
   id: Scalars['ID']
 }
 
+export type QueryPollArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
+}
+
+export type Rating = {
+  __typename?: 'Rating'
+  answerId: Scalars['ID']
+  count: Scalars['Int']
+  total: Scalars['Int']
+  mean: Scalars['Float']
+}
+
+export enum RatingSystemType {
+  Star = 'STAR'
 }
 
 export type Registration = {
@@ -994,11 +1106,11 @@ export type UserAddress = {
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>
-  streetAddress: Scalars['String']
+  streetAddress?: Maybe<Scalars['String']>
   streetAddress2?: Maybe<Scalars['String']>
-  zipCode: Scalars['String']
-  city: Scalars['String']
-  country: Scalars['String']
+  zipCode?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UserInput = {
@@ -1086,6 +1198,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -1137,6 +1250,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -1276,6 +1390,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
   'text' | 'linkText' | 'linkURL'
@@ -1318,6 +1434,7 @@ export type FullBlockFragment =
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
@@ -1420,6 +1537,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)

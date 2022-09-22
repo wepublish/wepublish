@@ -235,7 +235,7 @@ export async function delegateToPeerSchema(
   return markResultAsProxied(
     await delegateToSchema({
       ...opts,
-      schema: schema,
+      schema,
       transforms: [new ResetGraphQLEnums(), ...(opts.transforms ?? [])]
     })
   )

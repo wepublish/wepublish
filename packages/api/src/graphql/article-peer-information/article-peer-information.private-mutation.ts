@@ -5,23 +5,26 @@ import {Context} from '../../context'
 // peered articles
 export async function savePeerArticleById(
   id: string,
-  peerId: string,
+  peerID: string,
   context: Context,
   info: GraphQLResolveInfo
 ) {
-  const peerArticle = await delegateToPeerSchema(peerId, true, context, {
+  console.log('id', id)
+  console.log('peerID', peerID)
+  const peerArticle = await delegateToPeerSchema(peerID, true, context, {
     fieldName: 'article',
     args: {id},
     info
   })
-
+  // console.log('peerArticle', peerArticle)
   if (!peerArticle) throw new Error('peer article not found')
-  console.log('peer article', peerArticle)
-  const {published} = peerArticle
-  const {blocks} = published
+  // console.log('peer article', peerArticle)
+  const {published, peerInformation} = peerArticle
+  // const {blocks} = published
+  console.log('peerInformation', peerInformation)
 
-  console.log('published', JSON.stringify(published))
-  console.log('blocks', JSON.stringify(blocks))
+  // console.log('published', JSON.stringify(published))
+  // console.log('blocks', JSON.stringify(blocks))
 
   // const {blocks} = published
   // const strippedBlocks = blocks.map((block: any) => { return delete block.__typename})
@@ -47,5 +50,6 @@ export async function savePeerArticleById(
       //   }}
     }
   })
+  console.log('val', val)
   return val
 }

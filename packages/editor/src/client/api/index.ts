@@ -45,6 +45,7 @@ export type Article = {
   published?: Maybe<ArticleRevision>;
   pending?: Maybe<ArticleRevision>;
   latest: ArticleRevision;
+  peerInformation?: Maybe<ArticlePeerInformation>;
 };
 
 export type ArticleConnection = {
@@ -93,6 +94,16 @@ export type ArticleNavigationLink = BaseNavigationLink & {
 export type ArticleNavigationLinkInput = {
   label: Scalars['String'];
   articleID: Scalars['ID'];
+};
+
+export type ArticlePeerInformation = {
+  __typename?: 'ArticlePeerInformation';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
+  peer: Peer;
+  producerArticle: Scalars['ID'];
+  consumerArticle: Scalars['ID'];
 };
 
 export type ArticleRevision = {

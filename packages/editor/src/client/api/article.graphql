@@ -159,6 +159,12 @@ mutation DeleteArticle($id: ID!) {
   }
 }
 
+mutation SavePeerArticle($peerId: ID!, $id: ID!) {
+  savePeerArticle(peerId: $peerId, id: $id) {
+    ...MutationArticle
+  }
+}
+
 mutation DuplicateArticle($id: ID!) {
   duplicateArticle(id: $id) {
     ...MutationArticle

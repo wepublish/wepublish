@@ -92,7 +92,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {authorise, CanSendJWTLogin} from './permissions'
+import {authorise, CanGetPeerArticle, CanSendJWTLogin} from './permissions'
 import {
   GraphQLFullPoll,
   GraphQLPollAnswer,
@@ -714,8 +714,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     savePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: async (root, {peerID, id}, context, info) => {
-        return await savePeerArticleById(id, peerID, context, info)
+      resolve: (root, {peerID, id}, context, info) => {
+        const {authenticate} = context
+        const {roles} = authenticate()
+
+        authorise(CanGetPeerArticle, roles)
+        return savePeerArticleById(id, peerID, context, info)
       }
     },
 
