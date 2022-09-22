@@ -94,6 +94,7 @@ export const updatePoll = (
         }))
       },
       externalVoteSources: {
+        // @ts-ignore
         update: externalVoteSources?.map(externalVoteSource => ({
           where: {id: externalVoteSource.id},
           data: {
