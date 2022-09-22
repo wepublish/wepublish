@@ -407,6 +407,16 @@
         "pendingApproval": "Pending Approval",
         "pendingUserChanges": "Pending User Change",
         "rejected": "Rejected"
+      },
+      "ratingEdit": {
+        "title": "Rating System",
+        "loading": "Loading",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete rating",
+        "placeholder": "Name of rating",
+        "newAnswer": "Add rating",
+        "updateSuccessful": "Successfuly updated the rating system."
       }
     },
     "commentEditView": {
@@ -626,6 +636,7 @@
       },
       "authors": "Authors",
       "comments": "Comments",
+      "commentRating": "Rating System",
       "commentTags": "Tags",
       "settings": "Settings",
       "imageLibrary": "Image Library",

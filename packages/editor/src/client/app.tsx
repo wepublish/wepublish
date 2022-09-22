@@ -18,6 +18,7 @@ import {Login} from './login'
 import {ArticleEditor} from './routes/articleEditor'
 import {ArticleList} from './routes/articleList'
 import {AuthorList} from './routes/authorList'
+import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
 import {ImageList} from './routes/imageList'
@@ -168,6 +169,15 @@ export function App() {
             element={
               <Base>
                 <TagList type={TagType.Comment} />
+              </Base>
+            }
+          />
+
+          <Route
+            path="comments/rating"
+            element={
+              <Base>
+                <CommentRatingEditView />
               </Base>
             }
           />
