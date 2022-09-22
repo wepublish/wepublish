@@ -45,7 +45,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: Article): string {
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
     return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 

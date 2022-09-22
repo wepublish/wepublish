@@ -19,7 +19,7 @@ import {MailgunMailProvider} from './mails/MailgunMailProvider'
 import {PayrexxPaymentProvider} from './payments/payrexxPaymentProvider'
 import {Oauth2Provider} from './context'
 import {URLAdapter} from './urlAdapter'
-import {Article, PublicArticle} from './db/article'
+import {PublicArticle} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'
@@ -40,7 +40,7 @@ class WepublishURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: Article): string {
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
     return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 

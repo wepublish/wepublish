@@ -33,7 +33,7 @@ export interface ArticleData {
 
 // Article State Flow:
 // Draft -> Pending (Optional) -> Published
-export interface Article {
+export interface Article extends ArticleData {
   readonly id: string
 
   readonly shared: boolean
