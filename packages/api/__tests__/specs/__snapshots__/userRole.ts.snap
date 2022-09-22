@@ -380,6 +380,26 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to get a comment rating system",
+          "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a comment rating system",
+          "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a comment rating system",
+          "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a comment rating system",
+          "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a tag",
           "id": "CAN_CREATE_TAG",
         },
@@ -824,6 +844,26 @@ Object {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get a comment rating system",
+          "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a comment rating system",
+          "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a comment rating system",
+          "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a comment rating system",
+          "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
         },
         Object {
           "deprecated": false,
@@ -1284,6 +1324,26 @@ Object {
         "deprecated": false,
         "description": "Allows to update settings",
         "id": "CAN_UPDATE_SETTINGS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get a comment rating system",
+        "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a comment rating system",
+        "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a comment rating system",
+        "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a comment rating system",
+        "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
       },
       Object {
         "deprecated": false,

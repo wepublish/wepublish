@@ -18,6 +18,7 @@ import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
 import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
 import ShareIcon from '@rsuite/icons/legacy/Share'
 import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
+import RateIcon from '@rsuite/icons/Rate'
 import SpeakerIcon from '@rsuite/icons/Speaker'
 import TagIcon from '@rsuite/icons/Tag'
 import React, {ReactNode, useEffect, useState} from 'react'
@@ -55,9 +56,11 @@ function useStickyState(defaultValue: string, key: string) {
     const stickyValue = window.localStorage.getItem(key)
     return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue
   })
+
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
+
   return [value, setValue]
 }
 
@@ -158,7 +161,7 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
-                <Nav.Menu eventKey={'1'} title={t('navbar.comments')} icon={<CommentIcon />}>
+                <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<CommentIcon />}>
                   <PermissionControl
                     qualifyingPermissions={[
                       'CAN_GET_COMMENTS',
@@ -189,10 +192,30 @@ export function Base({children}: BaseProps) {
                       {t('navbar.commentTags')}
                     </Nav.Item>
                   </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_COMMENT_RATING_SYSTEM',
+                      'CAN_CREATE_COMMENT_RATING_SYSTEM',
+                      'CAN_UPDATE_COMMENT_RATING_SYSTEM',
+                      'CAN_DELETE_COMMENT_RATING_SYSTEM'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/comments/rating"
+                      icon={<RateIcon />}
+                      active={path === 'comments/rating'}>
+                      {t('navbar.commentRating')}
+                    </Nav.Item>
+                  </PermissionControl>
                 </Nav.Menu>
+
                 <PermissionControl
                   qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
-                  <Nav.Menu eventKey={'1'} title={t('navbar.blocks.topMenu')} icon={<GridIcon />}>
+                  <Nav.Menu
+                    eventKey={'poll'}
+                    title={t('navbar.blocks.topMenu')}
+                    icon={<GridIcon />}>
                     <Nav.Item
                       as={NavLink}
                       href="/polls"
@@ -274,7 +297,7 @@ export function Base({children}: BaseProps) {
                     'CAN_DELETE_PAYMENT_METHOD'
                   ]}>
                   <Nav.Menu
-                    eventKey={'1'}
+                    eventKey={'usersAndMembers'}
                     title={t('navbar.usersAndMembers')}
                     icon={<PeoplesIcon />}>
                     <Nav.Item
