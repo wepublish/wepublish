@@ -3,29 +3,35 @@ import {GraphQLResolveInfo} from 'graphql'
 import {Context} from '../../context'
 
 // peered articles
-export const savePeerArticleById = async (
+export async function savePeerArticleById(
   id: string,
   peerId: string,
   context: Context,
   info: GraphQLResolveInfo
-) => {
+) {
   const peerArticle = await delegateToPeerSchema(peerId, true, context, {
     fieldName: 'article',
     args: {id},
     info
   })
 
-  if (!peerArticle.published) throw new Error('peer article not found')
+  if (!peerArticle) throw new Error('peer article not found')
   console.log('peer article', peerArticle)
-  console.log('published', peerArticle.published)
-  const {published} = peerArticle.published
+  const {published} = peerArticle
+  const {blocks} = published
 
-  // TODO authenticat
+  console.log('published', JSON.stringify(published))
+  console.log('blocks', JSON.stringify(blocks))
+
+  // const {blocks} = published
+  // const strippedBlocks = blocks.map((block: any) => { return delete block.__typename})
+  // console.log('blocks', strippedBlocks)
+  // TODO authenticate
+  // todo check peer version
 
   const val = await context.prisma.article.create({
     data: {
       shared: false,
-
       draft: {
         create: {
           ...published,

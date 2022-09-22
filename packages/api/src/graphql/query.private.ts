@@ -145,7 +145,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     savePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {peerID, id}, context, info) {
+      async resolve(root, {peerID, id}, context, info) {
+        const {authenticate} = context
+        const {roles} = authenticate()
+
+        authorise(CanGetPeerArticle, roles)
         return savePeerArticleById(id, peerID, context, info)
       }
     },
