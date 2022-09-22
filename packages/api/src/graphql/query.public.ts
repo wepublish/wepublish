@@ -1,6 +1,5 @@
 import {UserInputError} from 'apollo-server-express'
 import {
-  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLList,
