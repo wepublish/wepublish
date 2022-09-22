@@ -15,8 +15,7 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  AlgebraicCaptchaChallenge,
-  Article
+  AlgebraicCaptchaChallenge
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
