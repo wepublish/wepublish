@@ -249,19 +249,21 @@ export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is 
 }
 
 // replace scripts with executable ones
-export function executeScriptElements(containerElement: HTMLElement) {
-  if (!containerElement) return
-  const scriptElements = containerElement.querySelectorAll('script')
+export function executeScriptElements(containerElements: NodeListOf<HTMLElement>) {
+  if (!containerElements.length) return
 
-  Array.from(scriptElements).forEach((scriptElement: HTMLScriptElement) => {
-    const clonedElement = document.createElement('script')
+  Array.from(containerElements).forEach(container => {
+    const scriptElements = container.querySelectorAll('script')
+    Array.from(scriptElements).forEach((scriptElement: HTMLScriptElement) => {
+      const clonedElement = document.createElement('script')
+      Array.from(scriptElement.attributes).forEach(attribute => {
+        clonedElement.setAttribute(attribute.name, attribute.value)
+      })
 
-    Array.from(scriptElement.attributes).forEach(attribute => {
-      clonedElement.setAttribute(attribute.name, attribute.value)
+      clonedElement.text = scriptElement.text
+
+      scriptElement.parentNode &&
+        scriptElement.parentNode.replaceChild(clonedElement, scriptElement)
     })
-
-    clonedElement.text = scriptElement.text
-
-    scriptElement.parentNode && scriptElement.parentNode.replaceChild(clonedElement, scriptElement)
   })
 }

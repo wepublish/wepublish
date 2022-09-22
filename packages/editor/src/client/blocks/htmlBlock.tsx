@@ -21,7 +21,9 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
   }, [])
 
   useEffect(() => {
-    executeScriptElements(document.getElementById('html-block') as HTMLElement)
+    executeScriptElements(
+      document.querySelectorAll('div[data-html-block]') as NodeListOf<HTMLElement>
+    )
   }, [value.html])
 
   return (
@@ -58,7 +60,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
               </div>
               <div
                 style={{marginTop: '30px'}}
-                id="html-block"
+                data-html-block
                 dangerouslySetInnerHTML={{__html: value.html}}
               />
             </div>
