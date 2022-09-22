@@ -5,13 +5,14 @@ import {
   CommentState
 } from '@prisma/client'
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
   GraphQLEnumType,
+  GraphQLFloat,
+  GraphQLID,
   GraphQLInputObjectType,
-  GraphQLList,
   GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -19,7 +20,7 @@ import {Context} from '../../context'
 import {CommentRevision, PublicComment, Comment, CommentSort} from '../../db/comment'
 import {unselectPassword} from '../../db/user'
 import {createProxyingResolver} from '../../utility'
-import {getPublicChildrenCommentsByParentId} from './comment.public-queries'
+import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
@@ -220,6 +221,16 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   })
 })
 
+export const GraphQLRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'Rating',
+  fields: {
+    answerId: {type: GraphQLNonNull(GraphQLID)},
+    count: {type: GraphQLNonNull(GraphQLInt)},
+    total: {type: GraphQLNonNull(GraphQLInt)},
+    mean: {type: GraphQLNonNull(GraphQLFloat)}
+  }
+})
+
 export const GraphQLPublicComment: GraphQLObjectType<
   PublicComment,
   Context
@@ -262,7 +273,10 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     rejectionReason: {type: GraphQLString},
 
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    ratings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
+    }
   })
 })
 

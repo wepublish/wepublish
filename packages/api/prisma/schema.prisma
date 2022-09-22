@@ -162,23 +162,23 @@ model Image {
   Author      Author[]
   MemberPlan  MemberPlan[]
   PeerProfile PeerProfile[]
+  Comment     Comment[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
   @@index([tags])
   @@map("images")
-  Comment Comment[]
 }
 
 enum CommentItemType {
-  article  @map("article")
-  page     @map("page")
+  article @map("article")
+  page    @map("page")
 }
 
 enum CommentRejectionReason {
-  misconduct  @map("misconduct")
-  spam        @map("spam")
+  misconduct @map("misconduct")
+  spam       @map("spam")
 }
 
 model CommentsRevisions {
@@ -196,17 +196,17 @@ model CommentsRevisions {
 }
 
 enum CommentState {
-  approved            @map("approved")
-  pendingApproval     @map("pendingApproval")
-  pendingUserChanges  @map("pendingUserChanges")
-  rejected            @map("rejected")
+  approved           @map("approved")
+  pendingApproval    @map("pendingApproval")
+  pendingUserChanges @map("pendingUserChanges")
+  rejected           @map("rejected")
 }
 
 enum CommentAuthorType {
-  team          @map("team")
-  author        @map("author")
-  verifiedUser  @map("verifiedUser")
-  guestUser     @map("guestUser")
+  team         @map("team")
+  author       @map("author")
+  verifiedUser @map("verifiedUser")
+  guestUser    @map("guestUser")
 }
 
 model Comment {
@@ -230,6 +230,8 @@ model Comment {
 
   tags TaggedComments[]
 
+  ratings CommentRating[]
+
   @@index([createdAt])
   @@map("comments")
 }
@@ -244,6 +246,61 @@ model TaggedComments {
 
   @@id([commentId, tagId])
   @@map("comments.tagged-comments")
+}
+
+model CommentRatingSystem {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name String? @unique
+
+  answers CommentRatingSystemAnswer[]
+
+  @@map("comments.rating-systems")
+}
+
+enum RatingSystemType {
+  star @map("star")
+}
+
+model CommentRatingSystemAnswer {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type   RatingSystemType
+  answer String?
+
+  ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
+  ratingSystemId String
+
+  ratings CommentRating[]
+
+  @@unique([ratingSystemId, answer])
+  @@map("comments.rating-system-answers")
+}
+
+model CommentRating {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  answerId String
+  answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  value       Int
+  fingerprint String?
+  disabled    Boolean @default(false)
+
+  @@unique([answerId, commentId, userId])
+  @@map("comments.ratings")
 }
 
 model InvoiceItem {
@@ -289,12 +346,12 @@ model Invoice {
 }
 
 enum MailLogState {
-  submitted  @map("submitted")
-  accepted   @map("accepted")
-  delivered  @map("delivered")
-  deferred   @map("deferred")
-  bounced    @map("bounced")
-  rejected   @map("rejected")
+  submitted @map("submitted")
+  accepted  @map("accepted")
+  delivered @map("delivered")
+  deferred  @map("deferred")
+  bounced   @map("bounced")
+  rejected  @map("rejected")
 }
 
 model MailLog {
@@ -313,10 +370,10 @@ model MailLog {
 }
 
 enum PaymentPeriodicity {
-  monthly    @map("monthly")
-  quarterly  @map("quarterly")
-  biannual   @map("biannual")
-  yearly     @map("yearly")
+  monthly   @map("monthly")
+  quarterly @map("quarterly")
+  biannual  @map("biannual")
+  yearly    @map("yearly")
 }
 
 model AvailablePaymentMethod {
@@ -459,13 +516,13 @@ model PaymentMethod {
 }
 
 enum PaymentState {
-  created             @map("created")
-  submitted           @map("submitted")
-  requiresUserAction  @map("requiresUserAction")
-  processing          @map("processing")
-  paid                @map("paid")
-  canceled            @map("canceled")
-  declined            @map("declined")
+  created            @map("created")
+  submitted          @map("submitted")
+  requiresUserAction @map("requiresUserAction")
+  processing         @map("processing")
+  paid               @map("paid")
+  canceled           @map("canceled")
+  declined           @map("declined")
 }
 
 model Payment {
@@ -564,9 +621,9 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                 @map("none")
-  userSelfDeactivated  @map("userSelfDeactivated")
-  invoiceNotPaid       @map("invoiceNotPaid")
+  none                @map("none")
+  userSelfDeactivated @map("userSelfDeactivated")
+  invoiceNotPaid      @map("invoiceNotPaid")
 }
 
 model SubscriptionDeactivation {
@@ -684,11 +741,12 @@ model User {
   oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment      Comment[]
-  Session      Session[]
-  Subscription Subscription[]
-  Invoice      Invoice[]
-  PollVote     PollVote[]
+  Comment       Comment[]
+  Session       Session[]
+  Subscription  Subscription[]
+  Invoice       Invoice[]
+  CommentRating CommentRating[]
+  PollVote      PollVote[]
 
   @@map("users")
 }
@@ -718,7 +776,7 @@ model Setting {
 }
 
 enum TagType {
-  Comment  @map("comment")
+  Comment @map("comment")
 }
 
 model Tag {
