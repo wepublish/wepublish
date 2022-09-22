@@ -16,7 +16,7 @@ import {
   Toggle
 } from 'rsuite'
 
-import {Comment, FullCommentFragment, TagType} from '../api'
+import {FullCommentFragment, TagType} from '../api'
 import {useCommentListLazyQuery} from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
