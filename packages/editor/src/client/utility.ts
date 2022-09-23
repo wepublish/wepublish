@@ -249,7 +249,7 @@ export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is 
 }
 
 // replace scripts with executable ones
-export function executeScriptElements(containerElements: NodeListOf<HTMLElement>) {
+export function executeScriptElements(containerElements: NodeListOf<HTMLElement> | HTMLElement[]) {
   if (!containerElements.length) return
 
   Array.from(containerElements).forEach(container => {
