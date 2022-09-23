@@ -490,14 +490,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         cursors: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
         peerFilter: {type: GraphQLString},
         filter: {type: GraphQLArticleFilter}
       },
 
-      resolve: (root, {sort, order, after, peerFilter}, context, info) =>
-        getAdminPeerArticles(sort, order, peerFilter, after, context, info)
+      resolve: (root, {sort, order, cursors, filter, peerFilter, skip, take}, context, info) =>
+        getAdminPeerArticles(filter, peerFilter, sort, order, cursors, skip, take, context, info)
     },
 
     articlePreviewLink: {

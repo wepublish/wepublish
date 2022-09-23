@@ -97,12 +97,21 @@ query ArticleList(
 }
 
 query PeerArticleList(
-  $cursors: String
   $peerFilter: String
+  $cursors: String
+  $take: Int
+  $skip: Int
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+  peerArticles(
+    peerFilter: $peerFilter
+    cursors: $cursors
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       peer {
         ...PeerWithProfile

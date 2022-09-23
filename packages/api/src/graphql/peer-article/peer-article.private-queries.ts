@@ -1,16 +1,19 @@
 import {GraphQLResolveInfo, Kind} from 'graphql'
 import {ExtractField, WrapQuery} from 'graphql-tools'
 import {Context} from '../../context'
-import {ArticleSort, PeerArticle} from '../../db/article'
+import {Article, ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
 import {ConnectionResult, SortOrder} from '../../db/common'
-import {delegateToPeerSchema, base64Encode} from '../../utility'
+import {delegateToPeerSchema} from '../../utility'
 import {authorise, CanGetPeerArticles} from '../permissions'
 
 export const getAdminPeerArticles = async (
+  peerNameFilter: string,
+  filter: Partial<ArticleFilter>,
   sort: ArticleSort,
   order: SortOrder,
-  peerNameFilter: string,
   stringifiedCursors: string,
+  skip: number,
+  take: number,
   context: Context,
   info: GraphQLResolveInfo
 ): Promise<ConnectionResult<PeerArticle>> => {
@@ -38,7 +41,7 @@ export const getAdminPeerArticles = async (
     loaders.peer.prime(peer.id, peer)
   }
 
-  const articles = await Promise.all(
+  const articles: ConnectionResult<Article>[] = await Promise.all(
     peers.map(peer => {
       try {
         if (cursors && !cursors[peer.id]) {
@@ -50,13 +53,12 @@ export const getAdminPeerArticles = async (
           fieldName: 'articles',
           args: {
             cursor: cursors ? cursors[peer.id] : undefined,
-            take: 50,
+            take,
+            skip,
             filter: {
+              ...filter,
               published: true
-            },
-            // needed for versions before prisma
-            after: cursors ? base64Encode(cursors[peer.id]) : undefined,
-            first: 50
+            }
           },
           transforms: [
             new ExtractField({
@@ -145,7 +147,7 @@ export const getAdminPeerArticles = async (
     })
   )
 
-  const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
+  const totalCount = [...articles].sort((a, b) => b.totalCount - a.totalCount)[0]?.totalCount
 
   const startCursors = Object.fromEntries(
     articles.map((result, index) => [peers[index].id, result?.pageInfo?.startCursor ?? null])
@@ -214,7 +216,7 @@ export const getAdminPeerArticles = async (
 
   return {
     nodes: peerArticles,
-    totalCount: totalCount,
+    totalCount,
     pageInfo: {
       endCursor: JSON.stringify(endCursors),
       startCursor: JSON.stringify(startCursors),
