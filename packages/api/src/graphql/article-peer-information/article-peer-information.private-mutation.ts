@@ -14,19 +14,16 @@ export async function savePeerArticleById(
   const peerArticle = await delegateToPeerSchema(peerID, true, context, {
     fieldName: 'article',
     args: {id},
-    info
+    info,
+    operation: 'query'
   })
-  // console.log('peerArticle', peerArticle)
+
   if (!peerArticle) throw new Error('peer article not found')
-  // console.log('peer article', peerArticle)
+
   const {published, peerInformation} = peerArticle
-  // const {blocks} = published
+
   console.log('peerInformation', peerInformation)
 
-  // console.log('published', JSON.stringify(published))
-  // console.log('blocks', JSON.stringify(blocks))
-
-  // const {blocks} = published
   // const strippedBlocks = blocks.map((block: any) => { return delete block.__typename})
   // console.log('blocks', strippedBlocks)
   // TODO authenticate
