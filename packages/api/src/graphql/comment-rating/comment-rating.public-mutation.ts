@@ -1,6 +1,11 @@
 import {PrismaClient, RatingSystemType} from '@prisma/client'
 import {Context} from '../../context'
-import {InvalidStarRatingValueError, NotFound} from '../../error'
+import {
+  AnonymousCommentRatingDisabledError,
+  InvalidStarRatingValueError,
+  NotFound
+} from '../../error'
+import {SettingName} from '../../db/setting'
 
 export const rateComment = async (
   commentId: string,
@@ -9,9 +14,19 @@ export const rateComment = async (
   fingerprint: string | undefined,
   optionalAuthenticateUser: Context['optionalAuthenticateUser'],
   commentRatingSystemAnswer: PrismaClient['commentRatingSystemAnswer'],
-  commentRating: PrismaClient['commentRating']
+  commentRating: PrismaClient['commentRating'],
+  settingsClient: PrismaClient['setting']
 ) => {
   const session = optionalAuthenticateUser()
+  // check if anonymous rating is allowed
+  const guestRatingSetting = await settingsClient.findUnique({
+    where: {
+      name: SettingName.ALLOW_GUEST_COMMENT_RATING
+    }
+  })
+  if (!session && guestRatingSetting?.value !== true) {
+    throw new AnonymousCommentRatingDisabledError()
+  }
 
   const answer = await commentRatingSystemAnswer.findUnique({
     where: {
