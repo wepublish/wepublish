@@ -441,7 +441,7 @@ function CommentList() {
               {(rowData: Comment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
-                    <Link to={`edit/${rowData?.id}`}>
+                    <Link to={`edit/${rowData.id}`}>
                       <IconButton icon={<EditIcon />} circle size="sm" />
                     </Link>
                   </IconButtonTooltip>

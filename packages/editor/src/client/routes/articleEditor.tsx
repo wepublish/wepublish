@@ -571,6 +571,7 @@ function ArticleEditor() {
             />
           }>
           <BlockList
+            itemId={articleID}
             value={blocks}
             onChange={handleChange}
             disabled={isLoading || isDisabled || !isAuthorized}>

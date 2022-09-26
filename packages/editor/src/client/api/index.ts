@@ -20,11 +20,11 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
+  /** A valid vote value */
+  VoteValue: any;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
-  /** A valid vote value */
-  VoteValue: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -232,7 +232,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -253,6 +253,8 @@ export type BlockInput = {
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   html?: Maybe<HtmlBlockInput>;
+  poll?: Maybe<PollBlockInput>;
+  comment?: Maybe<CommentBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -284,6 +286,29 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentBlock = {
+  __typename?: 'CommentBlock';
+  filter: CommentBlockFilter;
+  comments: Array<Comment>;
+};
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter';
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter;
+};
+
+export type CommentBlockInputFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
 export type CommentConnection = {
   __typename?: 'CommentConnection';
   nodes: Array<Comment>;
@@ -292,6 +317,8 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
   states?: Maybe<Array<CommentState>>;
 };
 
@@ -1574,6 +1601,15 @@ export type PollAnswerWithVoteCount = {
   votes: Scalars['Int'];
 };
 
+export type PollBlock = {
+  __typename?: 'PollBlock';
+  poll?: Maybe<FullPoll>;
+};
+
+export type PollBlockInput = {
+  pollId?: Maybe<Scalars['ID']>;
+};
+
 export type PollConnection = {
   __typename?: 'PollConnection';
   nodes: Array<Poll>;
@@ -2700,6 +2736,12 @@ export type ArticleQuery = (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
       ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
+      ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
@@ -3034,6 +3076,25 @@ type FullBlock_HtmlBlock_Fragment = (
   & Pick<HtmlBlock, 'html'>
 );
 
+type FullBlock_PollBlock_Fragment = (
+  { __typename: 'PollBlock' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question'>
+  )> }
+);
+
+type FullBlock_CommentBlock_Fragment = (
+  { __typename: 'CommentBlock' }
+  & { filter: (
+    { __typename?: 'CommentBlockFilter' }
+    & Pick<CommentBlockFilter, 'item' | 'tags' | 'comments'>
+  ), comments: Array<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  )> }
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -3088,7 +3149,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3883,6 +3944,12 @@ export type PageQuery = (
       ) | (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
+      ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -4878,274 +4945,6 @@ export const FullAuthorFragmentDoc = gql`
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
-export const ArticleRefFragmentDoc = gql`
-    fragment ArticleRef on Article {
-  id
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    preTitle
-    title
-    lead
-    authors {
-      name
-    }
-    image {
-      ...ImageRef
-    }
-    canonicalUrl
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...ImageRef
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...ImageRef
-  }
-  callToActionImageURL
-}
-    ${ImageRefFragmentDoc}`;
-export const PeerRefFragmentDoc = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-export const PeerWithProfileFragmentDoc = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRefFragmentDoc}
-${FullPeerProfileFragmentDoc}`;
-export const PageRefFragmentDoc = gql`
-    fragment PageRef on Page {
-  id
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    title
-    description
-    image {
-      ...ImageRef
-    }
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullTeaserFragmentDoc = gql`
-    fragment FullTeaser on Teaser {
-  ... on ArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PeerArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    peer {
-      ...PeerWithProfile
-    }
-    articleID
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PageTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    page {
-      ...PageRef
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${ArticleRefFragmentDoc}
-${PeerWithProfileFragmentDoc}
-${PageRefFragmentDoc}`;
-export const FullBlockFragmentDoc = gql`
-    fragment FullBlock on Block {
-  __typename
-  ... on TitleBlock {
-    title
-    lead
-  }
-  ... on HTMLBlock {
-    html
-  }
-  ... on RichTextBlock {
-    richText
-  }
-  ... on QuoteBlock {
-    quote
-    author
-  }
-  ... on LinkPageBreakBlock {
-    text
-    linkText
-    linkURL
-    styleOption
-    richText
-    linkTarget
-    hideButton
-    templateOption
-    layoutOption
-    image {
-      ...ImageRef
-    }
-  }
-  ... on ImageBlock {
-    caption
-    image {
-      ...ImageRef
-    }
-  }
-  ... on ImageGalleryBlock {
-    images {
-      caption
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ... on ListicleBlock {
-    items {
-      title
-      image {
-        ...ImageRef
-      }
-      richText
-    }
-  }
-  ... on FacebookPostBlock {
-    userID
-    postID
-  }
-  ... on FacebookVideoBlock {
-    userID
-    videoID
-  }
-  ... on InstagramPostBlock {
-    postID
-  }
-  ... on TwitterTweetBlock {
-    userID
-    tweetID
-  }
-  ... on VimeoVideoBlock {
-    videoID
-  }
-  ... on YouTubeVideoBlock {
-    videoID
-  }
-  ... on SoundCloudTrackBlock {
-    trackID
-  }
-  ... on PolisConversationBlock {
-    conversationID
-  }
-  ... on TikTokVideoBlock {
-    userID
-    videoID
-  }
-  ... on BildwurfAdBlock {
-    zoneID
-  }
-  ... on EmbedBlock {
-    url
-    title
-    width
-    height
-    styleCustom
-    sandbox
-  }
-  ... on TeaserGridBlock {
-    teasers {
-      ...FullTeaser
-    }
-    numColumns
-  }
-  ... on TeaserGridFlexBlock {
-    flexTeasers {
-      alignment {
-        i
-        x
-        y
-        w
-        h
-        static
-      }
-      teaser {
-        ...FullTeaser
-      }
-    }
-  }
-}
-    ${ImageRefFragmentDoc}
-${FullTeaserFragmentDoc}`;
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
@@ -5331,6 +5130,291 @@ export const FullCommentFragmentDoc = gql`
 ${FullUserFragmentDoc}
 ${CommentRevisionFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
+export const ArticleRefFragmentDoc = gql`
+    fragment ArticleRef on Article {
+  id
+  createdAt
+  modifiedAt
+  draft {
+    revision
+  }
+  pending {
+    publishAt
+    revision
+  }
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+  latest {
+    publishedAt
+    updatedAt
+    revision
+    preTitle
+    title
+    lead
+    authors {
+      name
+    }
+    image {
+      ...ImageRef
+    }
+    canonicalUrl
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
+}
+    ${ImageRefFragmentDoc}`;
+export const PeerRefFragmentDoc = gql`
+    fragment PeerRef on Peer {
+  id
+  name
+  slug
+  isDisabled
+  hostURL
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
+export const PeerWithProfileFragmentDoc = gql`
+    fragment PeerWithProfile on Peer {
+  ...PeerRef
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${PeerRefFragmentDoc}
+${FullPeerProfileFragmentDoc}`;
+export const PageRefFragmentDoc = gql`
+    fragment PageRef on Page {
+  id
+  createdAt
+  modifiedAt
+  draft {
+    revision
+  }
+  pending {
+    publishAt
+    revision
+  }
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+  latest {
+    publishedAt
+    updatedAt
+    revision
+    title
+    description
+    image {
+      ...ImageRef
+    }
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullTeaserFragmentDoc = gql`
+    fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
+    article {
+      ...ArticleRef
+    }
+  }
+  ... on PeerArticleTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
+    peer {
+      ...PeerWithProfile
+    }
+    articleID
+    article {
+      ...ArticleRef
+    }
+  }
+  ... on PageTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
+    page {
+      ...PageRef
+    }
+  }
+}
+    ${ImageRefFragmentDoc}
+${ArticleRefFragmentDoc}
+${PeerWithProfileFragmentDoc}
+${PageRefFragmentDoc}`;
+export const FullBlockFragmentDoc = gql`
+    fragment FullBlock on Block {
+  __typename
+  ... on TitleBlock {
+    title
+    lead
+  }
+  ... on HTMLBlock {
+    html
+  }
+  ... on RichTextBlock {
+    richText
+  }
+  ... on QuoteBlock {
+    quote
+    author
+  }
+  ... on LinkPageBreakBlock {
+    text
+    linkText
+    linkURL
+    styleOption
+    richText
+    linkTarget
+    hideButton
+    templateOption
+    layoutOption
+    image {
+      ...ImageRef
+    }
+  }
+  ... on PollBlock {
+    poll {
+      id
+      question
+    }
+  }
+  ... on CommentBlock {
+    filter {
+      item
+      tags
+      comments
+    }
+    comments {
+      ...FullComment
+    }
+  }
+  ... on ImageBlock {
+    caption
+    image {
+      ...ImageRef
+    }
+  }
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ... on ListicleBlock {
+    items {
+      title
+      image {
+        ...ImageRef
+      }
+      richText
+    }
+  }
+  ... on FacebookPostBlock {
+    userID
+    postID
+  }
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
+  ... on InstagramPostBlock {
+    postID
+  }
+  ... on TwitterTweetBlock {
+    userID
+    tweetID
+  }
+  ... on VimeoVideoBlock {
+    videoID
+  }
+  ... on YouTubeVideoBlock {
+    videoID
+  }
+  ... on SoundCloudTrackBlock {
+    trackID
+  }
+  ... on PolisConversationBlock {
+    conversationID
+  }
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+  ... on EmbedBlock {
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+  ... on TeaserGridBlock {
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
+  }
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      teaser {
+        ...FullTeaser
+      }
+    }
+  }
+}
+    ${ImageRefFragmentDoc}
+${FullCommentFragmentDoc}
+${FullTeaserFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   startCursor

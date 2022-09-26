@@ -99,7 +99,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   return (
     <Slate
       editor={editor}
-      value={value}
+      value={value?.length ? value : WepublishEditor.createDefaultValue()}
       onChange={(newValue: SlateNode[]) => {
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) {

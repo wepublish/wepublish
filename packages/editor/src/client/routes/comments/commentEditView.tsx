@@ -14,10 +14,8 @@ import {
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {SelectTags} from '../../atoms/tag/selectTags'
-import {BlockMap} from '../../blocks/blockMap'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {BlockType, RichTextBlockValue} from '../../blocks/types'
-import {isValueConstructor} from '../../utility'
+import {RichTextBlockValue} from '../../blocks/types'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -26,11 +24,6 @@ const showErrors = (error: ApolloError): void => {
     </Message>
   )
 }
-
-const richTextBlock = BlockMap[BlockType.RichText]
-const defaultValue = isValueConstructor(richTextBlock.defaultValue)
-  ? richTextBlock.defaultValue()
-  : richTextBlock.defaultValue
 
 export const CommentEditView = memo(() => {
   const {t} = useTranslation()
@@ -99,7 +92,7 @@ export const CommentEditView = memo(() => {
     const parsedRevision = {
       title: lastRevision?.title,
       lead: lastRevision?.lead,
-      text: lastRevision?.text || defaultValue
+      text: lastRevision?.text
     } as CommentRevisionUpdateInput
     return parsedRevision
   }
@@ -188,7 +181,7 @@ export const CommentEditView = memo(() => {
                     <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
                     <Panel bordered>
                       <RichTextBlock
-                        value={revision?.text || defaultValue}
+                        value={revision?.text || []}
                         onChange={text => {
                           setRevision({...revision, text: text as RichTextBlockValue})
                         }}

@@ -177,6 +177,8 @@ export enum BlockType {
   Listicle = 'listicle',
   PeerPageBreak = 'linkPageBreak',
   HTMLBlock = 'html',
+  CommentBlock = 'comment',
+  PollBlock = 'poll',
 
   // Layout
   Grid = 'grid',
