@@ -45,6 +45,16 @@ function SettingList() {
     value: false,
     name: SettingName.AllowGuestCommenting
   })
+  const [allowGuestCommentRating, setAllowGuestCommentRating] = useState<Setting>({
+    id: '',
+    value: false,
+    name: SettingName.AllowGuestCommentRating
+  })
+  const [allowGuestPollVoting, setAllowGuestPollVoting] = useState<Setting>({
+    id: '',
+    value: false,
+    name: SettingName.AllowGuestPollVoting
+  })
   const [sendLoginJwtExpiresMin, setSendLoginJwtExpiresMin] = useState<Setting>({
     id: '',
     value: 0,
@@ -82,6 +92,16 @@ function SettingList() {
       )
       if (allowGuestCommentSetting) setAllowGuestComment(allowGuestCommentSetting)
 
+      const allowGuestCommentRatingSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.AllowGuestCommentRating
+      )
+      if (allowGuestCommentRatingSetting) setAllowGuestCommentRating(allowGuestCommentRatingSetting)
+
+      const allowGuestPollVotingSetting = settingListData?.settings?.find(
+        setting => setting.name === SettingName.AllowGuestPollVoting
+      )
+      if (allowGuestPollVotingSetting) setAllowGuestPollVoting(allowGuestPollVotingSetting)
+
       const peeringTimeoutMsSetting = settingListData?.settings?.find(
         setting => setting.name === SettingName.PeeringTimeoutMs
       )
@@ -116,6 +136,8 @@ function SettingList() {
   async function handleSettingListUpdate() {
     const allSettings: UpdateSettingArgs[] = [
       {name: SettingName.AllowGuestCommenting, value: allowGuestComment.value},
+      {name: SettingName.AllowGuestCommentRating, value: allowGuestCommentRating.value},
+      {name: SettingName.AllowGuestPollVoting, value: allowGuestPollVoting.value},
       {name: SettingName.SendLoginJwtExpiresMin, value: parseInt(sendLoginJwtExpiresMin?.value)},
       {name: SettingName.ResetPasswordJwtExpiresMin, value: parseInt(resetPwdJwtExpiresMin.value)},
       {name: SettingName.PeeringTimeoutMs, value: parseInt(peeringTimeoutMs.value)},
@@ -241,7 +263,16 @@ function SettingList() {
                       <Form.ControlLabel>
                         {t('settingsList.allowGuestCommentRating')}
                       </Form.ControlLabel>
-                      <Toggle disabled={isDisabled} />
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={allowGuestCommentRating?.value}
+                        onChange={checked =>
+                          setAllowGuestCommentRating({
+                            ...allowGuestCommentRating,
+                            value: checked
+                          })
+                        }
+                      />
                     </Form.Group>
                   </Panel>
                 </Col>
@@ -250,7 +281,16 @@ function SettingList() {
                   <Panel bordered header={t('settingsList.polls')} style={{marginBottom: 10}}>
                     <Form.Group controlId="guestPollVote">
                       <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
-                      <Toggle disabled={isDisabled} />
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={allowGuestPollVoting?.value}
+                        onChange={checked =>
+                          setAllowGuestPollVoting({
+                            ...allowGuestPollVoting,
+                            value: checked
+                          })
+                        }
+                      />
                     </Form.Group>
                   </Panel>
                 </Col>
