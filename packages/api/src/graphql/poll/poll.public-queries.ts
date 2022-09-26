@@ -6,7 +6,6 @@ import {
   PollExternalVote,
   Prisma
 } from '@prisma/client'
-import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 
 export type FullPoll = Poll & {
