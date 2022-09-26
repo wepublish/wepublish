@@ -13,6 +13,7 @@ import {
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
+import xss from 'xss'
 
 import {Context} from '../context'
 
@@ -517,7 +518,10 @@ export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Con
 export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
   name: 'HTMLBlock',
   fields: {
-    html: {type: GraphQLString}
+    html: {
+      type: GraphQLString,
+      resolve: value => xss(value.html, {whiteList: {span: ['']}})
+    }
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.HTML
