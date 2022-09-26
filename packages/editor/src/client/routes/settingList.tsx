@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
+  Col,
   Form,
+  Grid,
   InputGroup,
   InputNumber,
   Notification,
   Panel,
+  Row,
   Schema,
   toaster,
   Toggle
@@ -212,110 +215,150 @@ function SettingList() {
         <Form.Group>
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
-        <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
-          <Form.Group controlId="guestCommenting">
-            <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
-            <Toggle
-              disabled={isDisabled}
-              checked={allowGuestComment?.value}
-              onChange={checked =>
-                setAllowGuestComment({
-                  ...allowGuestComment,
-                  value: checked
-                })
-              }
-            />
-          </Form.Group>
-        </Panel>
+        <Grid fluid>
+          <Row>
+            {/* first column */}
+            <Col xs={12}>
+              <Row>
+                {/* comments */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
+                    <Form.Group controlId="guestCommenting">
+                      <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={allowGuestComment?.value}
+                        onChange={checked =>
+                          setAllowGuestComment({
+                            ...allowGuestComment,
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+                    {/* Allow guest rating of a comment */}
+                    <Form.Group controlId="guestCommentRating">
+                      <Form.ControlLabel>
+                        {t('settingsList.allowGuestCommentRating')}
+                      </Form.ControlLabel>
+                      <Toggle disabled={isDisabled} />
+                    </Form.Group>
+                  </Panel>
+                </Col>
+                {/* polls */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingsList.polls')} style={{marginBottom: 10}}>
+                    <Form.Group controlId="guestPollVote">
+                      <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
+                      <Toggle disabled={isDisabled} />
+                    </Form.Group>
+                  </Panel>
+                </Col>
+              </Row>
+            </Col>
+            {/* second column */}
+            <Col xs={12}>
+              <Row>
+                {/* login */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
+                    <Form.Group controlId="loginMinutes">
+                      <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
+                      <InputGroup>
+                        <FormControl
+                          name="loginToken"
+                          accepter={InputNumber}
+                          value={sendLoginJwtExpiresMin.value}
+                          onChange={(value: number) =>
+                            setSendLoginJwtExpiresMin({
+                              ...sendLoginJwtExpiresMin,
+                              value
+                            })
+                          }
+                        />
+                        <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
+                      </InputGroup>
+                    </Form.Group>
+                    <Form.Group controlId="passwordToken">
+                      <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
+                      <InputGroup>
+                        <Form.Control
+                          name="passwordExpire"
+                          accepter={InputNumber}
+                          value={resetPwdJwtExpiresMin.value}
+                          onChange={(value: number) => {
+                            setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value})
+                          }}
+                        />
+                        <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
+                      </InputGroup>
+                    </Form.Group>
+                  </Panel>
+                </Col>
+                {/* peering */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
+                    <Form.Group controlId="peerToken">
+                      <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
+                      <InputGroup>
+                        <Form.Control
+                          name="peeringTimeout"
+                          accepter={InputNumber}
+                          value={peeringTimeoutMs.value}
+                          onChange={(value: number) => {
+                            setPeeringTimeoutMs({
+                              ...peeringTimeoutMs,
+                              value
+                            })
+                          }}
+                        />
+                        <InputGroupAddon>{t('settingList.ms')}</InputGroupAddon>
+                      </InputGroup>
+                    </Form.Group>
+                  </Panel>
+                </Col>
+                {/* payment */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
+                    <Form.Group controlId="invoiceReminders">
+                      <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
+                      <Form.Control
+                        name="invoiceTries"
+                        accepter={InputNumber}
+                        value={invoiceReminderTries.value}
+                        onChange={(value: number) =>
+                          setInvoiceReminderTries({
+                            ...invoiceReminderTries,
+                            value
+                          })
+                        }
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="invoiceFrequency">
+                      <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
+                      <InputGroup>
+                        <Form.Control
+                          name="invoiceFrequency"
+                          accepter={InputNumber}
+                          value={invoiceReminderFreq.value}
+                          onChange={(value: number) =>
+                            setInvoiceReminderFreq({
+                              ...invoiceReminderFreq,
+                              value
+                            })
+                          }
+                        />
+                        <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
+                      </InputGroup>
+                    </Form.Group>
+                  </Panel>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Grid>
 
-        <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
-          <Form.Group controlId="loginMinutes">
-            <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
-            <InputGroup>
-              <FormControl
-                name="loginToken"
-                accepter={InputNumber}
-                value={sendLoginJwtExpiresMin.value}
-                onChange={(value: number) =>
-                  setSendLoginJwtExpiresMin({
-                    ...sendLoginJwtExpiresMin,
-                    value
-                  })
-                }
-              />
-              <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
-            </InputGroup>
-          </Form.Group>
-          <Form.Group controlId="passwordToken">
-            <Form.ControlLabel>{t('settingList.passwordToken')}</Form.ControlLabel>
-            <InputGroup>
-              <Form.Control
-                name="passwordExpire"
-                accepter={InputNumber}
-                value={resetPwdJwtExpiresMin.value}
-                onChange={(value: number) => {
-                  setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value})
-                }}
-              />
-              <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
-            </InputGroup>
-          </Form.Group>
-        </Panel>
-
-        <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
-          <Form.Group controlId="peerToken">
-            <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
-            <InputGroup>
-              <Form.Control
-                name="peeringTimeout"
-                accepter={InputNumber}
-                value={peeringTimeoutMs.value}
-                onChange={(value: number) => {
-                  setPeeringTimeoutMs({
-                    ...peeringTimeoutMs,
-                    value
-                  })
-                }}
-              />
-              <InputGroupAddon>{t('settingList.ms')}</InputGroupAddon>
-            </InputGroup>
-          </Form.Group>
-        </Panel>
-
-        <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
-          <Form.Group controlId="invoiceReminders">
-            <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
-            <Form.Control
-              name="invoiceTries"
-              accepter={InputNumber}
-              value={invoiceReminderTries.value}
-              onChange={(value: number) =>
-                setInvoiceReminderTries({
-                  ...invoiceReminderTries,
-                  value
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group controlId="invoiceFrequency">
-            <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
-            <InputGroup>
-              <Form.Control
-                name="invoiceFrequency"
-                accepter={InputNumber}
-                value={invoiceReminderFreq.value}
-                onChange={(value: number) =>
-                  setInvoiceReminderFreq({
-                    ...invoiceReminderFreq,
-                    value
-                  })
-                }
-              />
-              <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
-            </InputGroup>
-          </Form.Group>
-        </Panel>
-
+        {/* save btn */}
         <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
           <Button type="submit" appearance="primary" disabled={isDisabled}>
             {t('save')}
