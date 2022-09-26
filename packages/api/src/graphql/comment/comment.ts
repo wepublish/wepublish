@@ -73,6 +73,8 @@ export const GraphQLCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
   }
 })
@@ -203,6 +205,9 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
           ? comment.findUnique({
               where: {
                 id: parentID
+              },
+              include: {
+                revisions: true
               }
             })
           : null
@@ -252,6 +257,21 @@ export const GraphQLPublicComment: GraphQLObjectType<
             })
           : null
       )
+    },
+    tags: {
+      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
+        const tags = await taggedComments.findMany({
+          where: {
+            commentId: id
+          },
+          include: {
+            tag: true
+          }
+        })
+
+        return tags.map(({tag}) => tag)
+      })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 

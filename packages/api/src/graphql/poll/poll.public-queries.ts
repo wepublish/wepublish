@@ -1,7 +1,24 @@
+import {
+  PollAnswer,
+  PollExternalVoteSource,
+  PrismaClient,
+  Poll,
+  PollExternalVote,
+  Prisma
+} from '@prisma/client'
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 
-export const getPoll = (id: string, poll: PrismaClient['poll']) => {
+export type FullPoll = Poll & {
+  answers: (PollAnswer & {
+    _count: Prisma.PollAnswerCountOutputType
+  })[]
+  externalVoteSources: (PollExternalVoteSource & {
+    voteAmounts: PollExternalVote[]
+  })[]
+}
+
+export const getPoll = (id: string, poll: PrismaClient['poll']): Promise<FullPoll | null> => {
   return poll.findUnique({
     where: {id},
     include: {
