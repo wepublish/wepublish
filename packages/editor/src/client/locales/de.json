@@ -224,12 +224,14 @@
         "cherryPick": "Spezifische Kommentare auswählen",
         "displayName": "Anzeigename",
         "comments": "{{count}} Kommentar",
-        "comments_plural": "{{count}} Kommentare"
+        "comments_plural": "{{count}} Kommentare",
+        "label": "Kommentare"
       },
       "poll": {
         "title": "Umfrageblock Bearbeiten",
         "edit": "Bearbeiten",
-        "select": "Auswählen"
+        "select": "Auswählen",
+        "label": "Umfrage"
       },
       "embeds": {
         "label": "Embed",

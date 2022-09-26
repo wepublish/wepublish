@@ -224,12 +224,14 @@
         "cherryPick": "Select specific comments",
         "displayName": "Display name",
         "comments": "{{count}} Comment",
-        "comments_plural": "{{count}} Comments"
+        "comments_plural": "{{count}} Comments",
+        "label": "Comments"
       },
       "poll": {
         "title": "Edit Poll Block",
         "edit": "Edit poll block",
-        "select": "Select"
+        "select": "Select",
+        "label": "Poll"
       },
       "embeds": {
         "label": "Embed",
