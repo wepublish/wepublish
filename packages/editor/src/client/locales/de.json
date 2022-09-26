@@ -1185,7 +1185,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Zahlung",
-      "days": "Tage"
+      "days": "Tage",
+      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
+      "polls": "Umfragen",
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"

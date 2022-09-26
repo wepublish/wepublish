@@ -261,7 +261,7 @@ function SettingList() {
                     {/* Allow guest rating of a comment */}
                     <Form.Group controlId="guestCommentRating">
                       <Form.ControlLabel>
-                        {t('settingsList.allowGuestCommentRating')}
+                        {t('settingList.allowGuestCommentRating')}
                       </Form.ControlLabel>
                       <Toggle
                         disabled={isDisabled}
@@ -278,7 +278,7 @@ function SettingList() {
                 </Col>
                 {/* polls */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingsList.polls')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.polls')} style={{marginBottom: 10}}>
                     <Form.Group controlId="guestPollVote">
                       <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
                       <Toggle

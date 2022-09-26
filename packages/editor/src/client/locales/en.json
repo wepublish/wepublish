@@ -1202,7 +1202,10 @@
       "comments": "Comments",
       "login": "Login",
       "peering": "Peering",
-      "payment": "Payment"
+      "payment": "Payment",
+      "allowGuestCommentRating": "Allow guest ratings on comments",
+      "polls": "Polls",
+      "guestPollVote": "Allow guest votes on polls"
     },
     "tags": {
       "overview": {
