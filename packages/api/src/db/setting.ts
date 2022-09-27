@@ -7,6 +7,8 @@ export type Setting<T = unknown> = {
 
 export enum SettingName {
   ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
+  ALLOW_GUEST_COMMENT_RATING = 'allowGuestCommentRating',
+  ALLOW_GUEST_POLL_VOTING = 'allowGuestPollVoting',
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
