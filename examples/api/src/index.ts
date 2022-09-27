@@ -240,7 +240,8 @@ async function asyncMain() {
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
-        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET
+        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        prisma: prisma
       })
     )
   }

@@ -16,13 +16,13 @@ import {
   Subscription,
   SubscriptionDeactivationReason,
   Prisma,
-  PrismaClient
+  PrismaClient,
+  MetadataProperty
 } from '@prisma/client'
 import fetch from 'node-fetch'
 import * as crypto from 'crypto'
 import {timingSafeEqual} from 'crypto'
 import qs from 'qs'
-import {Context} from '../context'
 import sub from 'date-fns/sub'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
@@ -32,6 +32,7 @@ export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProvider
   instanceName: string
   instanceAPISecret: string
   webhookSecret: string
+  prisma: PrismaClient
 }
 
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
@@ -141,78 +142,72 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     this.instanceName = props.instanceName
     this.instanceAPISecret = props.instanceAPISecret
     this.webhookSecret = props.webhookSecret
-    this.activateHook()
+    this.activateHook(props.prisma)
   }
 
-  activateHook() {
-    return (context: Context): Prisma.Middleware => async (params, next) => {
+  activateHook(prisma: PrismaClient) {
+    console.log('Activate Payrexx subscription prisma hook')
+
+    const hook = (): Prisma.Middleware => async (params, next) => {
+      // Only handle subscription update db queries skip all other
       if (params.model !== 'Subscription' || params.action !== 'update') {
         return next(params)
       }
 
-      const updatedSubscription: Subscription = params.args.data
-      const prismaClient = context.prisma
-      const subscriptionClient = prismaClient.subscription
+      const subscription = params.args.data
+      const properties: MetadataProperty[] = params.args.data.properties.createMany.data
+      const deactivation = params.args.data.deactivation
 
-      // Get subscription with joined stuff
-      const subscription = await subscriptionClient.findUnique({
+      // Get paymentProviderName
+      const paymentProvider = await prisma.paymentMethod.findUnique({
         where: {
-          id: updatedSubscription.id
-        },
-        include: {
-          properties: true,
-          deactivation: true
+          id: subscription.paymentMethodID
         }
       })
 
-      // Exit if subscription has no external id
-      const isPayrexxExt = subscription?.properties.find(sub => sub.key === 'payrexx_external_id')
-      if (!subscription || !isPayrexxExt || subscription.paymentMethodID !== this.id)
+      // Exit if subscription has no external id or is other payment provider
+      if (!subscription || paymentProvider?.paymentProviderID !== this.id) {
         return next(params)
+      }
 
-      // Disable Subscription
-      if (subscription.deactivation || !subscription.autoRenew) {
+      // Find external id property and fail if subscription has been deactivated
+      const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
+      if (!isPayrexxExt) {
+        throw Error("It's not supported to reactivate a deactivated Payrexx subscription!")
+      }
+
+      // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
+      if (deactivation.upsert || !subscription.autoRenew) {
         await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))
 
-        const propertiesClient = prismaClient.subscriptionDeactivation
+        // Rewrite properties
+        isPayrexxExt.key = 'deactivated_payrexx_external_id'
 
-        await subscriptionClient.update({
-          where: {
-            id: subscription.id
-          },
-          data: {
-            autoRenew: false,
-            properties: {
-              updateMany: {
-                where: {
-                  key: 'payrexx_external_id'
-                },
-                data: {
-                  key: 'deactivated_payrexx_external_id'
-                }
-              }
+        // Rewrite subscription
+        subscription.autoRenew = false
+        subscription.deactivation = {
+          upsert: {
+            create: {
+              date: new Date(),
+              reason: SubscriptionDeactivationReason.userSelfDeactivated
+            },
+            update: {
+              date: new Date(),
+              reason: SubscriptionDeactivationReason.userSelfDeactivated
             }
-          },
-          include: {
-            properties: true,
-            deactivation: true
           }
-        })
-
-        await propertiesClient.create({
-          data: {
-            subscriptionID: subscription.id,
-            reason: SubscriptionDeactivationReason.userSelfDeactivated,
-            date: new Date()
-          }
-        })
+        }
 
         // Update subscription
       } else {
         const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
         await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
       }
+
+      // Return in the end
+      return next(params)
     }
+    prisma.$use(hook())
   }
 
   async updatePaymentWithIntentState({
@@ -270,8 +265,6 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
         months: getMonths(subscription.paymentPeriodicity)
       }).toISOString()
-
-      console.log('NEW Subsription date: ' + newSubscriptionValidUntil)
 
       // Get User
       const user = await userClient.findUnique({
