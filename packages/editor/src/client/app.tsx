@@ -9,6 +9,7 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {CustomProvider} from 'rsuite'
 import enGB from 'rsuite/locales/en_GB'
 
+import {TagType} from './api/index'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Base} from './base'
 import de from './locales/rsuiteDe'
@@ -17,7 +18,9 @@ import {Login} from './login'
 import {ArticleEditor} from './routes/articleEditor'
 import {ArticleList} from './routes/articleList'
 import {AuthorList} from './routes/authorList'
-import {CommentList} from './routes/commentList'
+import {CommentRatingEditView} from './routes/commentRatingEditView'
+import {CommentEditView} from './routes/comments/commentEditView'
+import {CommentList} from './routes/comments/commentList'
 import {ImageList} from './routes/imageList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {NavigationList} from './routes/navigationList'
@@ -26,8 +29,11 @@ import {PageList} from './routes/pageList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {PeerArticleList} from './routes/peerArticleList'
 import {PeerList} from './routes/peerList'
+import {PollEditView} from './routes/polls/pollEditView'
+import {PollList} from './routes/polls/pollList'
 import {SettingList} from './routes/settingList'
 import {SubscriptionList} from './routes/subscriptionList'
+import {TagList} from './routes/tagList'
 import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
@@ -121,6 +127,24 @@ export function App() {
           />
           <Route path="pages/create" element={<PageEditor />} />
           <Route path="pages/edit/:id" element={<PageEditor />} />
+          {/* Poll Routes */}
+          <Route
+            path="polls"
+            element={
+              <Base>
+                <PollList />
+              </Base>
+            }
+          />
+          <Route
+            path="polls/edit/:id"
+            element={
+              <Base>
+                <PollEditView />
+              </Base>
+            }
+          />
+
           {/* Comments Routes */}
           <Route
             path="comments"
@@ -130,6 +154,34 @@ export function App() {
               </Base>
             }
           />
+
+          <Route
+            path="comments/edit/:id"
+            element={
+              <Base>
+                <CommentEditView />
+              </Base>
+            }
+          />
+
+          <Route
+            path="comments/tags"
+            element={
+              <Base>
+                <TagList type={TagType.Comment} />
+              </Base>
+            }
+          />
+
+          <Route
+            path="comments/rating"
+            element={
+              <Base>
+                <CommentRatingEditView />
+              </Base>
+            }
+          />
+
           {/* Images Routes */}
           <Route
             path="images"

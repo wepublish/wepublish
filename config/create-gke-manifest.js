@@ -1440,7 +1440,20 @@ async function applyPostgres() {
               volumeMounts: [
                 {
                   name: 'postgres-volume',
-                  mountPath: '/data/db'
+                  mountPath: '/bitnami/postgresql'
+                }
+              ]
+            }
+          ],
+          initContainers: [
+            {
+              name: 'postgres-data-permission-fix',
+              image: 'busybox',
+              command: ['/bin/chmod', '-R', '777', '/bitnami/postgresql'],
+              volumeMounts: [
+                {
+                  name: 'postgres-volume',
+                  mountPath: '/bitnami/postgresql'
                 }
               ]
             }

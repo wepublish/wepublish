@@ -41,8 +41,13 @@ import {
   GraphQLAuthorSort
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
-import {getAdminComments} from './comment/comment.private-queries'
+import {
+  GraphQLComment,
+  GraphQLCommentConnection,
+  GraphQLCommentFilter,
+  GraphQLCommentSort
+} from './comment/comment'
+import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
@@ -93,6 +98,14 @@ import {
   CanGetPeerArticle,
   CanLoginAsOtherUser
 } from './permissions'
+import {
+  GraphQLFullPoll,
+  GraphQLPollConnection,
+  GraphQLPollFilter,
+  GraphQLPollSort
+} from './poll/poll'
+import {getPolls, PollSort} from './poll/poll.private-queries'
+import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting} from './setting'
@@ -109,11 +122,14 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
+import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, TagSort} from './tag/tag.private-query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -121,6 +137,7 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -400,6 +417,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Comments
     // =======
 
+    comment: {
+      type: GraphQLComment,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        getComment(id, authenticate, comment)
+    },
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {
@@ -410,7 +436,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve: async (
+      resolve: (
         root,
         {filter, sort, order, skip, take, cursor},
         {authenticate, prisma: {comment}}
@@ -565,8 +591,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetPaymentProviders, roles)
 
         return paymentProviders.map(({id, name}) => ({
-          id: id,
-          name: name
+          id,
+          name
         }))
       }
     },
@@ -638,6 +664,57 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
       resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+    },
+
+    // Rating System
+    // ==========
+
+    ratingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
+        getRatingSystem(commentRatingSystem)
+    },
+
+    // Tag
+    // ==========
+
+    tags: {
+      type: GraphQLTagConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLTagFilter},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
+        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+    },
+
+    // Polls
+    // =======
+
+    polls: {
+      type: GraphQLPollConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLPollFilter},
+        sort: {type: GraphQLPollSort, defaultValue: PollSort.OpensAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {cursor, take, skip, filter, sort, order}, {authenticate, prisma: {poll}}) =>
+        getPolls(filter, sort, order, cursor, skip, take, authenticate, poll)
+    },
+
+    poll: {
+      type: GraphQLFullPoll,
+      args: {
+        id: {type: GraphQLID}
+      },
+      resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
     }
   }
 })

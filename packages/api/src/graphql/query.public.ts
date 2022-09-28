@@ -33,6 +33,8 @@ import {
 } from './author'
 import {getPublicAuthors} from './author/author.public-queries'
 import {GraphQLChallenge} from './challenge'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {getRatingSystem, userCommentRating} from './comment-rating/comment-rating.public-queries'
 import {GraphQLSortOrder} from './common'
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
@@ -54,9 +56,13 @@ import {getPublishedPages} from './page/page.public-queries'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLFullPoll} from './poll/poll'
+import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
+import {GraphQLPublicComment} from './comment/comment'
+import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -265,6 +271,31 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         getPublishedPages(filter, sort, order, cursor, skip, take, page)
     },
 
+    // Comments
+    // =======
+
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      args: {
+        itemId: {type: GraphQLNonNull(GraphQLID)}
+      },
+      description: 'This query returns the comments of an item.',
+      resolve: (root, {itemId}, {prisma: {comment, commentRatingSystemAnswer}}) =>
+        getPublicCommentsForItemById(itemId, null, commentRatingSystemAnswer, comment)
+    },
+
+    userCommentRating: {
+      type: GraphQLInt,
+      args: {
+        commentId: {type: GraphQLNonNull(GraphQLID)},
+        answerId: {type: GraphQLNonNull(GraphQLID)}
+      },
+      description:
+        'This query returns the value of a comments answer rating if the user has already rated it.',
+      resolve: (root, {commentId, answerId}, {authenticateUser, prisma: {commentRating}}) =>
+        userCommentRating(commentId, answerId, authenticateUser, commentRating)
+    },
+
     // Auth
     // =======
 
@@ -455,6 +486,36 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           validUntil: c.validUntil
         }
       }
+    },
+
+    // Rating System
+    // ==========
+
+    ratingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
+        getRatingSystem(commentRatingSystem)
+    },
+
+    // Poll
+    // =======
+    poll: {
+      type: GraphQLNonNull(GraphQLFullPoll),
+      description: 'This query returns a poll with all the needed data',
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
+    },
+
+    userPollVote: {
+      type: GraphQLID,
+      description: 'This query returns the answerId of a poll if the user has already voted on it.',
+      args: {
+        pollId: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
+        userPollVote(pollId, authenticateUser, pollVote)
     }
   }
 })

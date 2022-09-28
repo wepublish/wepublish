@@ -27,6 +27,28 @@ const seedSettings = (prisma: PrismaClient) => [
   }),
   prisma.setting.upsert({
     where: {
+      name: SettingName.ALLOW_GUEST_COMMENT_RATING
+    },
+    update: {},
+    create: {
+      name: SettingName.ALLOW_GUEST_COMMENT_RATING,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.ALLOW_GUEST_POLL_VOTING
+    },
+    update: {},
+    create: {
+      name: SettingName.ALLOW_GUEST_POLL_VOTING,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
       name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN
     },
     update: {},

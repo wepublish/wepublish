@@ -247,7 +247,7 @@ function SubscriptionList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullSubscriptionFragment) => (
                 <>
-                  <IconButtonTooltip caption={t('subscriptionList.overview.delete')}>
+                  <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<TrashIcon />}
                       circle

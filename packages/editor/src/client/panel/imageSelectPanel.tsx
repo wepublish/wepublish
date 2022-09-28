@@ -15,12 +15,14 @@ import {
   Panel,
   toaster
 } from 'rsuite'
+
 import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
+import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
-import {ImagedEditPanel} from './imageEditPanel'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {ImageEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -33,6 +35,13 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('')
 
   const [file, setFile] = useState<File | null>(null)
+  const [imageMetaData, setImageMetaData] = useState<ImageMetaData>({
+    title: '',
+    description: '',
+    source: '',
+    link: '',
+    licence: ''
+  })
   const {data, fetchMore, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
@@ -49,6 +58,8 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     if (files.length === 0) return
 
     const file = files[0]
+
+    setImageMetaData(await readImageMetaData(file))
 
     if (!file.type.startsWith('image')) {
       toaster.push(
@@ -84,10 +95,11 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
   if (file) {
     return (
-      <ImagedEditPanel
+      <ImageEditPanel
         onClose={onClose}
         file={file}
         onSave={(image: ImageRefFragment) => onSelect(image)}
+        imageMetaData={imageMetaData}
       />
     )
   }

@@ -4,7 +4,6 @@
       "overview": {
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
-        "create": "Erstellen",
         "draft": "Entwurf",
         "draftCreated": "Artikelentwurf erstellt",
         "draftSaved": "Artikelentwurf gespeichert",
@@ -15,8 +14,8 @@
         "publish": "Publizieren",
         "previewDisabled": "Alle Änderungen an diesem Artikel wurden bereits publiziert.",
         "preview": "Vorschau",
+        "createComment": "Kommentar erstellen",
         "published": "Artikel publiziert am {{date, ccc PP p}}.",
-        "save": "Speichern",
         "unpublished": "Nicht publiziert",
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -25,7 +24,6 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
         "duplicate": "Duplizieren",
-        "delete": "Löschen",
         "articlePending": "Artikel geplant"
       },
       "panels": {
@@ -92,7 +90,6 @@
         "published": "Publiziert",
         "removeImage": "Bild entfernen",
         "removeTeaser": "Teaser entfernen",
-        "saveAndClose": "Speichern und schliessen",
         "search": "Suchen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
@@ -173,7 +170,6 @@
         "createAuthorProfile": "Autor*innenprofil erstellen für {{name}}",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "deleteArticle": "Artikel löschen?",
         "duplicateArticle": "Artikel duplizieren?",
         "lead": "Lead",
@@ -193,7 +189,6 @@
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "created": "Erstellt",
-        "delete": "Löschen",
         "deleteAuthor": "Autor*in löschen?",
         "loadMore": "Mehr laden",
         "name": "Name",
@@ -208,7 +203,6 @@
         "bioInformation": "Biographie",
         "chooseImage": "Bild wählen",
         "close": "Schliessen",
-        "create": "Erstellen",
         "createAuthor": "Autor*in erstellen",
         "editAuthor": "Autor*in bearbeiten",
         "editImage": "Bild entfernen",
@@ -218,11 +212,27 @@
         "links": "Links",
         "name": "Name",
         "removeImage": "Bild entfernen",
-        "save": "Speichern",
         "title": "Titel"
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Kommentarblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Kommentare filtern nach Etikett",
+        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
+        "cherryPick": "Spezifische Kommentare auswählen",
+        "displayName": "Anzeigename",
+        "comments": "{{count}} Kommentar",
+        "comments_plural": "{{count}} Kommentare",
+        "label": "Kommentare"
+      },
+      "poll": {
+        "title": "Umfrageblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "select": "Auswählen",
+        "label": "Umfrage"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -269,8 +279,7 @@
           "close": "Schliessen",
           "editGallery": "Galerie bearbeiten",
           "editImage": "Bild bearbeiten",
-          "removeImage": "Bild entfernen",
-          "save": "Speichern"
+          "removeImage": "Bild entfernen"
         }
       },
       "linkPageBreak": {
@@ -306,12 +315,19 @@
         "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
         "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
       },
+      "html": {
+        "label": "HTML",
+        "edit": "HTML bearbeiten",
+        "confirm": "Bestätigen",
+        "close": "Schliessen",
+        "placeholder": "Füge hier deinen HTML Block ein",
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+      },
       "richTextTable": {
         "label": "Rich text Tabelle",
         "addBorders": "Rahmen hinzufügen",
         "cancel": "Abbrechen",
         "columns": "Spalten",
-        "delete": "Löschen",
         "deleteTable": "Tabelle löschen",
         "insertTable": "Tabelle einfügen",
         "rows": "Zeilen",
@@ -352,6 +368,8 @@
     "comments": {
       "overview": {
         "action": "Aktion",
+        "moderation": "Moderation",
+        "edit": "Kommentar editieren",
         "comments": "Kommentare",
         "created": "Erstellt",
         "loadMore": "Mehr laden",
@@ -367,6 +385,13 @@
         "reject": "Ablehnen",
         "approve": "Freigeben"
       },
+      "edit": {
+        "title": "Kommentar editieren",
+        "tags": "Etiketten",
+        "unnamedTag": "<Unbennantes Etikett>",
+        "loading": "Laden",
+        "success": "Kommentar erfolgreich editiert"
+      },
       "panels": {
         "approve": "Annehmen",
         "approveComment": "Kommentar freischalten",
@@ -375,7 +400,6 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
-        "delete": "Löschen",
         "id": "ID",
         "reject": "Ablehnen",
         "rejectComment": "Kommentar ablehnen",
@@ -400,7 +424,31 @@
         "pendingApproval": "Freigabe ausstehend",
         "pendingUserChanges": "Useränderung ausstehend",
         "rejected": "Abgelehnt"
+      },
+      "ratingEdit": {
+        "title": "Bewertungssystem",
+        "loading": "Laden",
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Berwertung löschen",
+        "placeholder": "Name der Berwertung",
+        "newAnswer": "Berwertung hinzufügen",
+        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert."
       }
+    },
+    "commentEditView": {
+      "title": "Titel",
+      "lead": "Lead",
+      "comment": "Text Kommentar",
+      "variousPanelHeader": "Tags & Quelle",
+      "tags": "Tags",
+      "source": "Quelle",
+      "userPanelHeader": "Verfasser:in des Kommentars"
+    },
+    "commentUser": {
+      "selectExistingUser": "Registrierte Benutzer:in wählen",
+      "guestUser": "Gast (Benutzername)",
+      "selectImage": "Profilbild des Gastes wählen oder hochladen"
     },
     "confirm": "Bestätigen",
     "create": "Erstellen",
@@ -419,7 +467,6 @@
         "noImagesFound": "Keine Bilder gefunden",
         "search": "Suchen",
         "uploadImage": "Bild hochladen",
-        "delete": "Löschen",
         "actions": "Aktionen",
         "image": "Bild",
         "filename": "Filename",
@@ -448,7 +495,6 @@
         "license": "Lizenz",
         "link": "Link",
         "notFound": "Bild nicht gefunden!",
-        "save": "Speichern",
         "source": "Quelle",
         "sourceLink": "Link zur Original-Quelle des Bildes.",
         "tags": "Tags",
@@ -536,14 +582,79 @@
       "title": "Memberpläne",
       "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
       "minimumMonthlyAmount": "Minimaler monatlicher Betrag CHF",
-      "delete": "Löschen",
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
     },
+    "pollList": {
+      "title": "Umfragen",
+      "createNew": "Umfrage erstellen",
+      "question": "Frage",
+      "opensAt": "Beginnt am",
+      "openedAt": "Begonnen am {{openedAt}}",
+      "pollWillOpenAt": "Beginnt am {{opensAt}}",
+      "noQuestion": "Keine Frage erfasst",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt}}",
+      "closedAt": "Geschlossen am",
+      "closedAtNone": "Nicht geschlossen",
+      "answersCount": "Erfasste Antworten",
+      "state": "Status",
+      "delete": "Löschen",
+      "pollDeleted": "Umfrage gelöscht."
+    },
+    "deletePollModal": {
+      "title": "Umfrage löschen?",
+      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "cancelBtn": "Abbrechen"
+    },
+    "pollEditView": {
+      "loadingTitle": "Lade Umfrage...",
+      "saveTitle": "Speichern",
+      "saveAndCloseTitle": "Speichern & Schliessen",
+      "question": "Frage",
+      "toBeOrNotToBe": "Sein oder nicht sein?",
+      "questionRequired": "Bitte gib Deine Frage ein.",
+      "savedSuccessfully": "Umfrage gespeichert.",
+      "questionPanelHeader": "Frage",
+      "answerPanelHeader": "Mögliche Antworten",
+      "addAndSaveNewAnswer": "Antwort hinzufügen",
+      "settingsPanelHeader": "Einstellungen Publikation",
+      "opensAtLabel": "Startet am",
+      "closesAtLabel": "Schliesst am",
+      "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
+      "defaultAnswer": "Standardantwort"
+    },
+    "pollAnswer": {
+      "insertYourNewAnswer": "Neue Antwort eingeben",
+      "deleteModalTitle": "Löschen?",
+      "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
+      "deleteBtn": "Löschen",
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
+    },
+    "pollExternalVotes": {
+      "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
+      "addSourceBtn": "Hinzufügen",
+      "sourceHeaderCell": "Quelle",
+      "deleteTitle": "Löschen?",
+      "deleteBody": "Willst Du die Quelle \"{{source}}\" unwiderruflich löschen?",
+      "deleteExternalVoteBtn": "Löschen",
+      "emptySource": "Bitte Name der Quelle eingeben."
+    },
+    "pollStateIndication": {
+      "closed": "Umfrage geschlossen",
+      "open": "Umfrage läuft",
+      "waiting": "Umfrage wartet auf Öffnung am {{date}}"
+    },
     "navbar": {
       "articles": "Artikel",
+      "blocks": {
+        "topMenu": "Inhalts-Blöcke",
+        "polls": "Umfrage"
+      },
       "authors": "Autor*innen",
       "comments": "Kommentare",
+      "commentRating": "Bewertungssystem",
+      "commentTags": "Etiketten",
       "imageLibrary": "Bilder",
       "settings": "Einstellungen",
       "languageSwitch": {
@@ -571,7 +682,6 @@
         "action": "Aktion",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
-        "delete": "Löschen",
         "deleteNavigation": "Navigation löschen",
         "name": "Name",
         "navigations": "Navigationen",
@@ -583,7 +693,6 @@
       "panels": {
         "article": "Artikel",
         "close": "Schliessen",
-        "create": "Erstellen",
         "createNavigation": "Navigation erstellen",
         "editNavigation": "Navigation bearbeiten",
         "key": "Key",
@@ -591,7 +700,6 @@
         "links": "Links",
         "name": "Name",
         "page": "Seite",
-        "save": "Speichern",
         "selectArticle": "Artikel auswählen",
         "selectPage": "Seite auswählen",
         "url": "URL",
@@ -601,7 +709,6 @@
     "pageEditor": {
       "overview": {
         "back": "Zurück",
-        "create": "Erstellen",
         "draft": "Entwurf",
         "metadata": "Metadaten",
         "pageDraftCreated": "Seiten Entwurf erstellt",
@@ -609,9 +716,9 @@
         "pageNotFound": "Seite nicht gefunden",
         "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
         "publish": "Publizieren",
-        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
         "preview": "Vorschau",
-        "save": "Speichern",
+        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
+        "createComment": "Kommentar erstellen",
         "unpublished": "Nicht publiziert",
         "published": "Seite publiziert am {{date, ccc PP p}}",
         "pagePublished": "Seite publiziert",
@@ -620,8 +727,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
         "pagePending": "Seite geplant",
-        "duplicate": "Duplizieren",
-        "delete": "Löschen"
+        "duplicate": "Duplizieren"
       },
       "panels": {
         "addTag": "Enter drücken um Tag hinzuzufügen",
@@ -642,7 +748,6 @@
         "public": "Öffentlich",
         "publishDate": "Publikationsdatum",
         "removeImage": "Bild entfernen",
-        "saveAndClose": "Speichern und schliessen",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -695,7 +800,6 @@
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "deletePage": "Seite löschen?",
         "duplicatePage": "Seite duplizieren?",
         "lead": "Lead",
@@ -721,7 +825,6 @@
       "name": "Name",
       "title": "Zahlungsmethoden",
       "active": "Aktiv",
-      "delete": "Löschen",
       "slug": "Slug"
     },
     "peerList": {
@@ -733,7 +836,6 @@
         "invalidURLTooltip": "Ungültige URL",
         "myPeerProfile": "Mein Peer Profil",
         "editProfile": "Profil bearbeiten",
-        "delete": "Löschen",
         "disable": "Deaktivieren",
         "enable": "Aktivieren"
       },
@@ -745,7 +847,6 @@
         "chooseImage": "Bild wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "create": "Erstellen",
         "createPeer": "Peer erstellen",
         "deletePeer": "Peer löschen",
         "editImage": "Bild bearbeiten",
@@ -761,7 +862,6 @@
         "peerInfoUpdated": "Peer-Info aktualisiert",
         "peerUpdated": "Peer aktualisiert",
         "removeImage": "Bild entfernen",
-        "save": "Speichern",
         "themeColor": "Theme Farbe",
         "themeFontColor": "Schrift Farbe",
         "token": "Token",
@@ -781,14 +881,16 @@
       }
     },
     "save": "Speichern",
+    "delete": "Löschen",
+    "saveAndClose": "Speichern & Schliessen",
+    "createAndClose": "Erstellen & Schliessen",
     "yes": "Ja",
     "no": "Nein",
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
         "loading": "laden...",
-        "tokens": "Tokens",
-        "delete": "Löschen"
+        "tokens": "Tokens"
       },
       "panels": {
         "cancel": "Abbrechen",
@@ -810,7 +912,6 @@
       "overview": {
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -844,7 +945,6 @@
         "action": "Aktion",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "delete": "Löschen",
         "description": "Beschreibung",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -867,7 +967,6 @@
     "userRoles": {
       "overview": {
         "action": "Aktion",
-        "delete": "Löschen",
         "description": "Beschreibung",
         "name": "Name",
         "newUserRole": "Neue Userrolle",
@@ -881,14 +980,12 @@
         "cancel": "Abbrechen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "create": "Erstellen",
         "createUserRole": "Userrolle kreieren",
         "deleteUserRole": "Userrolle löschen?",
         "description": "Beschreibung",
         "editUserRole": "Userrolle bearbeiten",
         "name": "Name",
         "permissions": "Berechtigungen",
-        "save": "Speichern",
         "Unknown": "Unbekannt",
         "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden"
       }
@@ -903,8 +1000,6 @@
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
       "createNewUser": "Neue:n Benutzer:in erstellen",
-      "saveAndClose": "Speichern & Schliessen",
-      "createAndClose": "Erstellen & Schliessen",
       "csvData": "CSV-Daten",
       "exportSubscriptions": "Exportieren",
       "generateCSV": "Generieren",
@@ -916,7 +1011,6 @@
       "cancel": "Abbrechen",
       "close": "Schliessen",
       "confirm": "Bestätigen",
-      "create": "Erstellen",
       "createUser": "User erstellen",
       "deleteUser": "User löschen?",
       "editUser": "User bearbeiten",
@@ -935,11 +1029,9 @@
       "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
       "sendWebsiteLoginFailureMessage": "Login-Link konnte nicht versendet werden. {{error}}",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
-      "save": "Speichern",
       "selectUserRole": "Userrolle wählen",
       "startedAt": "Gestartet",
       "startedAtDate": "{{startedAtDate, ccc PP p}}",
-      "subCreate": "Erstellen",
       "subEdit": "Bearbeiten",
       "subTitle": "Abonnement",
       "Unknown": "Unbekannt",
@@ -956,7 +1048,7 @@
       "deactivationReason": {
         "None": "Keiner",
         "InvoiceNotPaid": "Rechnung nicht bezahlt",
-        "UserSelfDeactivated": "Deaktivierung durch Benutzer:in"
+        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren"
       },
       "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
       "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
@@ -1006,8 +1098,8 @@
         "date": "Deaktivierung",
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert",
         "modalMessage": {
-          "deactivated": "Wills du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
-          "activated": "Wills du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
+          "deactivated": "Willst du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
+          "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
         },
         "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerun gewählt ist",
         "modalTitle": {
@@ -1059,6 +1151,7 @@
       "invoiceNo": "Rechnung Nr.",
       "total": "Rechnungsbetrag",
       "paidAt": "Bezahlt am",
+      "canceledAt": "Storniert am",
       "payManually": "Manuell bezahlen",
       "areYouSure": "Bist Du sicher?",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
@@ -1078,7 +1171,6 @@
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
-      "save": "Speichern",
       "errorTitle": "Fehler",
       "editSettings": "Einstellungen ändern",
       "guestCommenting": "Gastkommentare erlauben",
@@ -1093,7 +1185,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Zahlung",
-      "days": "Tage"
+      "days": "Tage",
+      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
+      "polls": "Umfragen",
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"
@@ -1111,6 +1206,16 @@
       "notPublished": "Noch nicht publiziert",
       "toOriginalArticle": "Zum Original Artikel",
       "filterByPeer": "Nach Peer filtern"
+    },
+    "tags": {
+      "overview": {
+        "title": "Etiketten",
+        "createTag": "Neues Etikett",
+        "placeholder": "Name des Etiketts",
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureConfirmation": "Etikett löschen",
+        "areYouSureBody": "Das Etikett \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden."
+      }
     },
     "permissions": {
       "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",

@@ -20,6 +20,22 @@ export const createCommentOrder = (
   }
 }
 
+const createTagFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+  if (filter?.tags?.length) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tags
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
   if (filter?.states) {
     return {
@@ -32,8 +48,18 @@ const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereI
   return {}
 }
 
+const createItemFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+  if (filter?.item) {
+    return {
+      itemID: filter.item
+    }
+  }
+
+  return {}
+}
+
 export const createCommentFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => ({
-  AND: [createStateFilter(filter)]
+  AND: [createStateFilter(filter), createTagFilter(filter), createItemFilter(filter)]
 })
 
 export const getComments = async (
@@ -50,14 +76,14 @@ export const getComments = async (
 
   const [totalCount, comments] = await Promise.all([
     comment.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     comment.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         revisions: true

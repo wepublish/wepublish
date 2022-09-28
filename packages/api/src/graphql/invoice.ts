@@ -46,6 +46,7 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     paidAt: {type: GraphQLDateTime},
     manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
+    canceledAt: {type: GraphQLDateTime},
     total: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {

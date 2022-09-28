@@ -128,7 +128,7 @@ export function TableMenu() {
               closeMenu()
               setShowRemoveConfirm(false)
             }}>
-            {t('blocks.richTextTable.delete')}
+            {t('delete')}
           </Button>
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}

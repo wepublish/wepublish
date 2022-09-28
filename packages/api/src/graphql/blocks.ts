@@ -1,58 +1,64 @@
 import {
-  GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLNonNull,
-  GraphQLString,
+  GraphQLBoolean,
+  GraphQLEnumType,
   GraphQLID,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
-  GraphQLUnionType,
-  GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLUnionType
 } from 'graphql'
 
-import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
+import {GraphQLRichText} from './richText'
 
 import {Context} from '../context'
 
 import {
-  BlockType,
-  ImageBlock,
-  ImageGalleryBlock,
-  FacebookPostBlock,
-  InstagramPostBlock,
-  TwitterTweetBlock,
-  VimeoVideoBlock,
-  YouTubeVideoBlock,
-  SoundCloudTrackBlock,
-  PolisConversationBlock,
-  TikTokVideoBlock,
-  ListicleItem,
-  ListicleBlock,
-  LinkPageBreakBlock,
-  TitleBlock,
-  QuoteBlock,
-  EmbedBlock,
-  ImageCaptionEdge,
   ArticleTeaser,
-  TeaserGridBlock,
-  TeaserGridFlexBlock,
-  TeaserStyle,
-  PeerArticleTeaser,
-  PageTeaser,
-  TeaserType,
-  RichTextBlock,
+  BildwurfAdBlock,
+  BlockType,
+  CommentBlock,
+  EmbedBlock,
+  FacebookPostBlock,
   FacebookVideoBlock,
   FlexAlignment,
   FlexTeaser,
-  BildwurfAdBlock
+  HTMLBlock,
+  ImageBlock,
+  ImageCaptionEdge,
+  ImageGalleryBlock,
+  InstagramPostBlock,
+  LinkPageBreakBlock,
+  ListicleBlock,
+  ListicleItem,
+  PageTeaser,
+  PeerArticleTeaser,
+  PolisConversationBlock,
+  PollBlock,
+  QuoteBlock,
+  RichTextBlock,
+  SoundCloudTrackBlock,
+  TeaserGridBlock,
+  TeaserGridFlexBlock,
+  TeaserStyle,
+  TeaserType,
+  TikTokVideoBlock,
+  TitleBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
 } from '../db/block'
 
+import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
-import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerSchema} from '../utility'
+import {GraphQLFullPoll} from './poll/poll'
+
+import {GraphQLComment, GraphQLPublicComment} from './comment/comment'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -513,6 +519,119 @@ export const GraphQLBildwurfAdBlock = new GraphQLObjectType<BildwurfAdBlock, Con
   })
 })
 
+export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
+  name: 'HTMLBlock',
+  fields: {
+    html: {type: GraphQLString}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.HTML
+  })
+})
+
+export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
+  name: 'PollBlock',
+  fields: {
+    poll: {
+      type: GraphQLFullPoll,
+      resolve: ({pollId}, _, {loaders: {pollById}}) => pollById.load(pollId)
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Poll
+  })
+})
+
+export const GraphQLCommentBlockFilter = new GraphQLObjectType({
+  name: 'CommentBlockFilter',
+  fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
+  name: 'CommentBlock',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLCommentBlockFilter)},
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLComment))),
+      resolve: async ({filter}, _, {prisma}) =>
+        prisma.comment.findMany({
+          where: {
+            itemID: filter.item,
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
+                    }
+                  }
+                }
+              },
+              {
+                id: {
+                  in: filter.comments ?? []
+                }
+              }
+            ]
+          },
+          include: {
+            revisions: true
+          }
+        })
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Comment
+  })
+})
+
+export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
+  name: 'CommentBlock',
+  fields: {
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: async ({filter}, _, {prisma}) => {
+        const comments = await prisma.comment.findMany({
+          where: {
+            itemID: filter.item ?? undefined,
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
+                    }
+                  }
+                }
+              },
+              {
+                id: {
+                  in: filter.comments ?? []
+                }
+              }
+            ]
+          },
+          include: {
+            revisions: true
+          }
+        })
+
+        return comments.map(({revisions, ...comment}) => ({
+          text: revisions[revisions.length - 1].text,
+          ...comment
+        }))
+      }
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Comment
+  })
+})
+
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   name: 'EmbedBlock',
   fields: {
@@ -764,6 +883,36 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLHTMLBlockInput = new GraphQLInputObjectType({
+  name: 'HTMLBlockInput',
+  fields: {
+    html: {type: GraphQLString}
+  }
+})
+
+export const GraphQLPollBlockInput = new GraphQLInputObjectType({
+  name: 'PollBlockInput',
+  fields: {
+    pollId: {type: GraphQLID}
+  }
+})
+
+export const GraphQLCommentBlockInputFilter = new GraphQLInputObjectType({
+  name: 'CommentBlockInputFilter',
+  fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLCommentBlockInput = new GraphQLInputObjectType({
+  name: 'CommentBlockInput',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLCommentBlockInputFilter)}
+  }
+})
+
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
@@ -853,6 +1002,9 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.TikTokVideo]: {type: GraphQLTikTokVideoBlockInput},
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
+    [BlockType.HTML]: {type: GraphQLHTMLBlockInput},
+    [BlockType.Poll]: {type: GraphQLPollBlockInput},
+    [BlockType.Comment]: {type: GraphQLCommentBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
     [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
@@ -877,6 +1029,9 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
+    GraphQLHTMLBlock,
+    GraphQLPollBlock,
+    GraphQLCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
@@ -902,6 +1057,8 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
+    GraphQLPollBlock,
+    GraphQLPublicCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,

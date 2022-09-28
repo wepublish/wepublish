@@ -151,6 +151,18 @@ export class AnonymousCommentsDisabledError extends ApolloError {
   }
 }
 
+export class AnonymousCommentRatingDisabledError extends ApolloError {
+  constructor() {
+    super('Anonymous rating on comments disabled!')
+  }
+}
+
+export class AnonymousPollVotingDisabledError extends ApolloError {
+  constructor() {
+    super('Anonymous voting on polls disabled!')
+  }
+}
+
 export class AnonymousCommentError extends ApolloError {
   constructor() {
     super(`You need to give an anonymous name if you're not authenticated`)
@@ -199,5 +211,23 @@ export class UserIdNotFound extends ApolloError {
 export class InvalidSettingValueError extends ApolloError {
   constructor() {
     super('Invalid setting data', ErrorCode.InvalidSettingData)
+  }
+}
+
+export class InvalidStarRatingValueError extends ApolloError {
+  constructor() {
+    super('Value has to be between 0 and 5')
+  }
+}
+
+export class PollNotOpenError extends ApolloError {
+  constructor() {
+    super('Poll has not been opened for voting yet!')
+  }
+}
+
+export class PollClosedError extends ApolloError {
+  constructor() {
+    super('Poll voting has been closed already!')
   }
 }

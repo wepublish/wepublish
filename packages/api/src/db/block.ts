@@ -1,6 +1,6 @@
-import {MapDiscriminatedUnion} from '../utility'
-import {Prisma} from '@prisma/client'
+import {PollAnswer, Prisma} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
+import {MapDiscriminatedUnion} from '../utility'
 
 export enum BlockType {
   Title = 'title',
@@ -22,7 +22,10 @@ export enum BlockType {
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid = 'teaserGrid',
-  TeaserGridFlex = 'teaserGridFlex'
+  TeaserGridFlex = 'teaserGridFlex',
+  HTML = 'html',
+  Poll = 'poll',
+  Comment = 'comment'
 }
 
 export interface RichTextBlock {
@@ -108,6 +111,29 @@ export interface EmbedBlock {
   height?: string
   styleCustom?: string
   sandbox?: string
+}
+
+export interface HTMLBlock {
+  type: BlockType.HTML
+  html: string
+}
+
+export type PollAnswerWithVoteCount = PollAnswer & {
+  votes: number
+}
+
+export interface PollBlock {
+  type: BlockType.Poll
+  pollId: string
+}
+
+export interface CommentBlock {
+  type: BlockType.Comment
+  filter: Partial<{
+    item: string
+    tags: string[]
+    comments: string[]
+  }>
 }
 
 export interface ListicleItem {
@@ -229,6 +255,9 @@ export type ArticleBlock =
   | ListicleBlock
   | LinkPageBreakBlock
   | EmbedBlock
+  | HTMLBlock
+  | CommentBlock
+  | PollBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

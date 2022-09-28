@@ -176,6 +176,9 @@ export enum BlockType {
   Image = 'image',
   Listicle = 'listicle',
   PeerPageBreak = 'linkPageBreak',
+  HTMLBlock = 'html',
+  CommentBlock = 'comment',
+  PollBlock = 'poll',
 
   // Layout
   Grid = 'grid',
@@ -205,6 +208,11 @@ export type TitleBlockValue = {
   isHeader?: boolean
 }
 export type TitleBlock = BaseBlock<BlockType.Title, TitleBlockValue>
+
+export type HTMLBlockValue = {
+  html: string
+}
+export type HTMLBlock = BaseBlock<BlockType.HTMLBlock, HTMLBlockValue>
 
 export type QuoteBlock = BaseBlock<BlockType.Quote, {text: string; author: string}>
 
@@ -382,6 +390,7 @@ export type Block =
   | GridBlock
   | TeaserBlock
   | FlexGridBlock
+  | HTMLBlock
 
 // Image
 export interface ImageRefData {

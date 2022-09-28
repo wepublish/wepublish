@@ -14,8 +14,8 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -107,7 +107,7 @@ function MemberPlanList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
-                <IconButtonTooltip caption={t('memberPlanList.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     circle
