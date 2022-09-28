@@ -16,6 +16,7 @@ import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
+import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../blocks/types'
@@ -28,7 +29,7 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
-export const CommentEditView = memo(() => {
+const CommentEditView = memo(() => {
   const {t} = useTranslation()
   const navigate = useNavigate()
   const {id} = useParams()
@@ -273,3 +274,9 @@ export const CommentEditView = memo(() => {
     </>
   )
 })
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_UPDATE_COMMENTS',
+  'CAN_TAKE_COMMENT_ACTION'
+])(CommentEditView)
+export {CheckedPermissionComponent as CommentEditView}
