@@ -5,13 +5,26 @@ deployment:
   env: {}
 
   api:
-    env: {}
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
+      MEDIA_SERVER_URL: https://media
+      MEDIA_ADDRESS: media_server_address
+      MEDIA_PORT: "443"
+      DATABASE_URL: postgres://
+      HOST_URL: https://api
+      WEBSITE_URL: https://website
+      MEDIA_SERVER_TOKEN: ''
+      JWT_SECRET_KEY: ''
+      SENTRY_DSN: ''
     envFromSecretRefName:
     properties: {}
     replicaCount: 1
 
+
   editor:
-    env: {}
+    env:
+      API_URL: https://api
+      PEER_BY_DEFAULT: "true"
     envFromSecretRefName:
     properties: {}
     replicaCount: 1

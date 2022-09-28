@@ -14,7 +14,7 @@ metadata:
 spec:
   type: {{ .Values.service.api.type }}
   ports:
-    - port: {{ .Values.service.editor.port }}
+    - port: {{ .Values.service.api.port }}
       targetPort: http
       protocol: TCP
       name: http
