@@ -1,4 +1,3 @@
-import {ApolloCache} from '@apollo/client'
 import EditIcon from '@rsuite/icons/legacy/Edit'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -6,16 +5,11 @@ import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Pagination, Table, Toggle} from 'rsuite'
 
 import {
-  ApproveCommentMutation,
   Comment,
   CommentFilter,
-  CommentListDocument,
-  CommentListQuery,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  RejectCommentMutation,
-  RequestChangesOnCommentMutation,
   useCommentListQuery
 } from '../../api'
 import {CommentStateView} from '../../atoms/comment/commentStateView'
@@ -91,29 +85,6 @@ function CommentList() {
       }
     }
   }, [data?.comments])
-
-  const refetchListAfterAction = (
-    cache: ApolloCache<
-      ApproveCommentMutation | RequestChangesOnCommentMutation | RejectCommentMutation
-    >
-  ) => {
-    const query = cache.readQuery<CommentListQuery>({
-      query: CommentListDocument,
-      variables: commentListVariables
-    })
-
-    if (!query) return
-
-    cache.writeQuery<CommentListQuery>({
-      query: CommentListDocument,
-      data: {
-        comments: {
-          ...query.comments
-        }
-      },
-      variables: commentListVariables
-    })
-  }
 
   return (
     <>
@@ -292,11 +263,7 @@ function CommentList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
-                  <CommentStateView
-                    comment={rowData}
-                    size="sm"
-                    onStateChanged={refetchListAfterAction}
-                  />
+                  <CommentStateView comment={rowData} size="sm" onStateChanged={refetch} />
                 </PermissionControl>
               )}
             </Cell>

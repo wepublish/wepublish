@@ -1,16 +1,12 @@
-import {ApolloCache} from '@apollo/client'
 import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
 
 import {
-  ApproveCommentMutation,
   CommentRejectionReason,
   CommentState,
   FullCommentFragment,
-  RejectCommentMutation,
-  RequestChangesOnCommentMutation,
   useApproveCommentMutation,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation
@@ -45,11 +41,7 @@ function mapCommentActionToBtnTitle(commentState: CommentState) {
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment
   newCommentState: CommentState
-  onStateChanged?(
-    cache: ApolloCache<
-      ApproveCommentMutation | RequestChangesOnCommentMutation | RejectCommentMutation
-    >
-  ): void
+  onStateChanged?(): void
 }
 
 export function CommentStateChangeModal({
@@ -227,7 +219,7 @@ export function CommentStateChangeModal({
                   variables: {
                     id: comment.id
                   },
-                  update: onStateChanged
+                  onCompleted: onStateChanged
                 })
                 setOpen(false)
                 break
@@ -238,7 +230,7 @@ export function CommentStateChangeModal({
                     id: comment.id,
                     rejectionReason
                   },
-                  update: onStateChanged
+                  onCompleted: onStateChanged
                 })
                 setOpen(false)
                 break
@@ -249,7 +241,7 @@ export function CommentStateChangeModal({
                     id: comment.id,
                     rejectionReason
                   },
-                  update: onStateChanged
+                  onCompleted: onStateChanged
                 })
                 setOpen(false)
                 break

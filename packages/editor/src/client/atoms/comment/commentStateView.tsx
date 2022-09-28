@@ -1,17 +1,10 @@
-import {ApolloCache} from '@apollo/client'
 import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
-import {
-  ApproveCommentMutation,
-  CommentState,
-  FullCommentFragment,
-  RejectCommentMutation,
-  RequestChangesOnCommentMutation
-} from '../../api'
+import {CommentState, FullCommentFragment} from '../../api'
 import {IconButtonTooltip} from '../iconButtonTooltip'
 import {CommentStateChangeModal} from './commentStateChangeModal'
 
@@ -30,11 +23,7 @@ function mapCommentStateToColor(commentState: CommentState) {
 interface CommentStateViewProps {
   comment: FullCommentFragment
   size?: TypeAttributes.Size
-  onStateChanged?(
-    cache: ApolloCache<
-      ApproveCommentMutation | RequestChangesOnCommentMutation | RejectCommentMutation
-    >
-  ): void
+  onStateChanged?(): void
 }
 
 export function CommentStateView({comment, size, onStateChanged}: CommentStateViewProps) {
