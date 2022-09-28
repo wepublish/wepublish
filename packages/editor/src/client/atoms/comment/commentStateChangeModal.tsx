@@ -42,12 +42,14 @@ interface CommentStateChangeModalProps {
   comment: FullCommentFragment
   newCommentState: CommentState
   onStateChanged?(): void
+  onClose?(): void
 }
 
 export function CommentStateChangeModal({
   comment,
   newCommentState,
-  onStateChanged
+  onStateChanged,
+  onClose
 }: CommentStateChangeModalProps) {
   const {t} = useTranslation()
   const [open, setOpen] = useState<boolean>(false)
@@ -70,13 +72,20 @@ export function CommentStateChangeModal({
       )
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
+  // handling the modal visibility
   useEffect(() => {
     if (comment && comment.state !== newCommentState) {
       setOpen(true)
     } else {
       setOpen(false)
     }
-  }, [comment, newCommentState])
+  }, [newCommentState])
+
+  useEffect(() => {
+    if (!open && onClose) {
+      onClose()
+    }
+  }, [open])
 
   const printUsername = comment?.user?.name
     ? `${comment.user.name}`

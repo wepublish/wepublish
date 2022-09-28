@@ -75,6 +75,7 @@ export function CommentStateView({comment, size, onStateChanged}: CommentStateVi
         comment={comment}
         newCommentState={newCommentState}
         onStateChanged={onStateChanged}
+        onClose={() => setNewCommentState(comment.state)}
       />
     </>
   )
