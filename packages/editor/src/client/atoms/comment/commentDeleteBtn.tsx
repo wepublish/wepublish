@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
 
 import {FullCommentFragment, useDeleteCommentMutation} from '../../api'
+import {PermissionControl} from '../permissionControl'
 
 interface CommentDeleteBtnProps {
   comment?: FullCommentFragment
@@ -38,14 +39,16 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
 
   return (
     <>
-      <IconButton
-        color="red"
-        appearance="ghost"
-        icon={<TrashIcon />}
-        onClick={() => setModalOpen(true)}
-        loading={loading}>
-        {t('delete')}
-      </IconButton>
+      <PermissionControl qualifyingPermissions={['CAN_DELETE_COMMENTS']}>
+        <IconButton
+          color="red"
+          appearance="ghost"
+          icon={<TrashIcon />}
+          onClick={() => setModalOpen(true)}
+          loading={loading}>
+          {t('delete')}
+        </IconButton>
+      </PermissionControl>
 
       <Modal open={modalOpen}>
         <Modal.Title>{t('commentDeleteBtn.modalTitle')}</Modal.Title>
