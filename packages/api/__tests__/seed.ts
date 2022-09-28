@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {seedBase as rootSeed} from '../prisma/seed-base'
+import {seed as rootSeed} from '../prisma/seed'
 import {hashPassword} from '../src'
 
 async function seed() {

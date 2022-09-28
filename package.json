@@ -88,7 +88,7 @@
   },
   "prisma": {
     "schema": "packages/api/prisma/schema.prisma",
-    "seed": "npx ts-node packages/api/prisma/seed.ts"
+    "seed": "npx ts-node examples/api/prisma/seed.ts"
   },
   "husky": {
     "hooks": {

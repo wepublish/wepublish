@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
+import {seed as rootSeed} from '../../../packages/api/prisma/seed'
 import {hashPassword} from '../../../packages/api/src/db/user'
-import {seedBase as rootSeed} from '../../../packages/api/prisma/seed-base'
 
 async function seed() {
   const prisma = new PrismaClient()
