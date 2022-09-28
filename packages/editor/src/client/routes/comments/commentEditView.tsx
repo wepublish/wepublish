@@ -11,6 +11,7 @@ import {
   useCommentQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
@@ -199,6 +200,7 @@ export const CommentEditView = memo(() => {
 
             <Col xs={10}>
               <Row>
+                {/* some actions on the comment */}
                 <Col xs={24} style={{marginTop: '0px'}}>
                   <Panel bordered header={t('commentEditView.actions')}>
                     <FlexboxGrid align="bottom">
@@ -211,6 +213,14 @@ export const CommentEditView = memo(() => {
                             }}
                           />
                         )}
+                      </FlexboxGrid.Item>
+                      <FlexboxGrid.Item>
+                        <CommentDeleteBtn
+                          comment={comment}
+                          onCommentDeleted={() => {
+                            navigate(closePath)
+                          }}
+                        />
                       </FlexboxGrid.Item>
                       <FlexboxGrid.Item>
                         <ReplyCommentBtn comment={comment} appearance="default" />

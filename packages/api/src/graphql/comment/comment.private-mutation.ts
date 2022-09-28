@@ -6,7 +6,12 @@ import {
   CommentAuthorType
 } from '@prisma/client'
 import {Context} from '../../context'
-import {authorise, CanTakeActionOnComment, CanUpdateComments} from '../permissions'
+import {
+  authorise,
+  CanTakeActionOnComment,
+  CanUpdateComments,
+  CanDeleteComments
+} from '../permissions'
 import {RichTextNode} from '../richText'
 
 export const takeActionOnComment = (
@@ -125,6 +130,21 @@ export const createAdminComment = async (
     },
     include: {
       revisions: true
+    }
+  })
+}
+
+export const deleteComment = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  commentClient: PrismaClient['comment']
+) => {
+  const {roles} = authenticate()
+  authorise(CanDeleteComments, roles)
+
+  return commentClient.delete({
+    where: {
+      id
     }
   })
 }
