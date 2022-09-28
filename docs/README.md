@@ -43,6 +43,8 @@
 It might happen, that your tests are failing. Try to update your snapshots
 by running (eventually in the package in question) `yarn test -- -u`
 
+For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
+
 ## packages/editor
 ### How to call an api endpoint from the UI (.tsx file)?
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
