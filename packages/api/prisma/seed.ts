@@ -1,6 +1,5 @@
 import {PrismaClient} from '@prisma/client'
 import {SettingName} from '@wepublish/api'
-import {hashPassword} from '../src'
 
 const seedSettings = (prisma: PrismaClient) => [
   prisma.setting.upsert({
@@ -135,28 +134,6 @@ const seedRoles = (prisma: PrismaClient) => [
   })
 ]
 
-const seedUsers = async (prisma: PrismaClient) => [
-  prisma.user.upsert({
-    where: {
-      id: 'admin'
-    },
-    update: {},
-    create: {
-      id: 'admin',
-      email: 'admin@wepublish.ch',
-      emailVerifiedAt: new Date(),
-      name: 'Admin',
-      active: true,
-      roleIDs: ['admin'],
-      password: await hashPassword('123')
-    }
-  })
-]
-
 export async function seed(prisma: PrismaClient) {
-  return prisma.$transaction([
-    ...seedRoles(prisma),
-    ...seedSettings(prisma),
-    ...(await seedUsers(prisma))
-  ])
+  return prisma.$transaction([...seedRoles(prisma), ...seedSettings(prisma)])
 }
