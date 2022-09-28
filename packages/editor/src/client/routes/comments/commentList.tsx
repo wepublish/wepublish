@@ -200,6 +200,7 @@ function CommentList() {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
@@ -219,6 +220,7 @@ function CommentList() {
               )}
             </Cell>
           </Column>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>
@@ -227,6 +229,7 @@ function CommentList() {
               )}
             </Cell>
           </Column>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="left" verticalAlign="middle" resizable sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
@@ -236,6 +239,7 @@ function CommentList() {
             </Cell>
           </Column>
 
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
@@ -247,6 +251,7 @@ function CommentList() {
             </Cell>
           </Column>
 
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
