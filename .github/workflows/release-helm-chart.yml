@@ -18,7 +18,7 @@ jobs:
           CHART_FOLDER: 'wepublish'
           FORCE: 'True'
           CHARTMUSEUM_URL: 'https://gitlab.com/api/v4/projects/38941346/packages/helm/stable'
-          CHARTMUSEUM_USER: 'wepublish'
+          CHARTMUSEUM_USER: ${{ secrets.GITLAB_HELM_USER }}
           CHARTMUSEUM_PASSWORD: ${{ secrets.GITLAB_HELM_TOKEN }}
 
 
