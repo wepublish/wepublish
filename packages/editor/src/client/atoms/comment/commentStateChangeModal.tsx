@@ -26,7 +26,7 @@ function mapModalTitle(commentState: CommentState): string {
   }
 }
 
-function mapCommentActionToBtnTitle(commentState: CommentState) {
+export function mapCommentActionToBtnTitle(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'comments.panels.approve'
@@ -89,7 +89,9 @@ export function CommentStateChangeModal({
 
   const printUsername = comment?.user?.name
     ? `${comment.user.name}`
-    : ` ${comment?.guestUsername} ${t('comments.panels.unregisteredUser')}`
+    : `${comment?.guestUsername || t('comments.panels.noUserName')} ${t(
+        'comments.panels.unregisteredUser'
+      )}`
 
   return (
     <Modal open={open} size="sm" overflow>
@@ -102,7 +104,7 @@ export function CommentStateChangeModal({
         <DescriptionList>
           <DescriptionListItem label={t('comments.panels.id')}>{comment?.id}</DescriptionListItem>
           <DescriptionListItem label={t('comments.panels.userName')}>
-            {printUsername || t('comments.panels.untitled')}
+            {printUsername}
           </DescriptionListItem>
           <DescriptionListItem label={t('comments.panels.createdAt')}>
             {comment?.createdAt &&

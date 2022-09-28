@@ -236,7 +236,8 @@
         "updatedAt": "Mis à jour le",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "unregisteredUser": "(Utilisateur·trice non enregistré·e)"
+        "unregisteredUser": "(Utilisateur·trice non enregistré·e)",
+        "noUserName": "Pas de nom d'utilisateur"
       },
       "state": {
         "approved": "Approuvé",
@@ -262,7 +263,8 @@
       "variousPanelHeader": "Balises & source",
       "tags": "Tags",
       "source": "Source",
-      "userPanelHeader": "Auteur dans le commentaire"
+      "userPanelHeader": "Auteur dans le commentaire",
+      "actions": "Actions"
     },
     "commentUser": {
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",

@@ -2,7 +2,7 @@ import {ApolloError} from '@apollo/client'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {Col, FlexboxGrid, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
   CommentRevisionUpdateInput,
@@ -11,7 +11,7 @@ import {
   useCommentQuery,
   useUpdateCommentMutation
 } from '../../api'
-import {CommentStateView} from '../../atoms/comment/commentStateView'
+import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
@@ -198,56 +198,64 @@ export const CommentEditView = memo(() => {
             </Col>
 
             <Col xs={10}>
-              <Panel bordered header={t('commentEditView.actions')}>
-                <span style={{marginRight: '10px'}}>
-                  {comment && (
-                    <CommentStateView
-                      comment={comment}
-                      onStateChanged={async () => {
-                        await refetch()
-                      }}
-                    />
-                  )}
-                </span>
-                <ReplyCommentBtn comment={comment} appearance="default" />
-              </Panel>
-            </Col>
+              <Row>
+                <Col xs={24} style={{marginTop: '0px'}}>
+                  <Panel bordered header={t('commentEditView.actions')}>
+                    <FlexboxGrid align="bottom">
+                      <FlexboxGrid.Item style={{marginRight: '10px'}}>
+                        {comment && (
+                          <CommentStateDropdown
+                            comment={comment}
+                            onStateChanged={async () => {
+                              await refetch()
+                            }}
+                          />
+                        )}
+                      </FlexboxGrid.Item>
+                      <FlexboxGrid.Item>
+                        <ReplyCommentBtn comment={comment} appearance="default" />
+                      </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                  </Panel>
+                </Col>
 
-            {/* tags & source */}
-            <Col xs={10}>
-              <Panel bordered header={t('commentEditView.variousPanelHeader')}>
-                <Row>
-                  {/* tags */}
-                  <Col xs={24}>
-                    <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
-                    <SelectTags
-                      selectedTags={commentTags}
-                      setSelectedTags={setSelectedTags}
-                      tagType={TagType.Comment}
-                    />
-                  </Col>
+                {/* tags & source */}
+                <Col xs={24}>
+                  <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+                    <Row>
+                      {/* tags */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
+                        <SelectTags
+                          selectedTags={commentTags}
+                          setSelectedTags={setSelectedTags}
+                          tagType={TagType.Comment}
+                        />
+                      </Col>
 
-                  {/* external source */}
-                  <Col xs={24}>
-                    <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
-                    <Form.Control
-                      name="externalSource"
-                      placeholder={t('commentEditView.source')}
-                      value={comment?.source || ''}
-                      onChange={(source: string) => {
-                        setComment({...comment, source} as FullCommentFragment)
-                      }}
-                    />
-                  </Col>
-                </Row>
-              </Panel>
-            </Col>
+                      {/* external source */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
+                        <Form.Control
+                          name="externalSource"
+                          placeholder={t('commentEditView.source')}
+                          value={comment?.source || ''}
+                          onChange={(source: string) => {
+                            setComment({...comment, source} as FullCommentFragment)
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Panel>
+                </Col>
 
-            {/* user or guest user */}
-            <Col xs={10}>
-              <Panel bordered header={t('commentEditView.userPanelHeader')}>
-                <CommentUser comment={comment} setComment={setComment} />
-              </Panel>
+                {/* user or guest user */}
+                <Col xs={24}>
+                  <Panel bordered header={t('commentEditView.userPanelHeader')}>
+                    <CommentUser comment={comment} setComment={setComment} />
+                  </Panel>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Grid>

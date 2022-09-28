@@ -12,7 +12,7 @@ import {
   FullCommentFragment,
   useCommentListQuery
 } from '../../api'
-import {CommentStateView} from '../../atoms/comment/commentStateView'
+import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
@@ -177,6 +177,7 @@ function CommentList() {
         }}>
         <Table
           autoHeight
+          rowHeight={60}
           rowClassName={rowData => {
             switch (rowData?.state) {
               case CommentState.Approved:
@@ -199,7 +200,7 @@ function CommentList() {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
-          <Column width={350} align="left" resizable>
+          <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
               {(rowData: FullCommentFragment) => (
@@ -218,7 +219,7 @@ function CommentList() {
               )}
             </Cell>
           </Column>
-          <Column width={150} align="left" resizable>
+          <Column width={150} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>
               {(rowData: FullCommentFragment) => (
@@ -226,7 +227,7 @@ function CommentList() {
               )}
             </Cell>
           </Column>
-          <Column width={150} align="left" resizable sortable>
+          <Column width={150} align="left" verticalAlign="middle" resizable sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: Comment) =>
@@ -235,18 +236,18 @@ function CommentList() {
             </Cell>
           </Column>
 
-          <Column width={300} align="center" fixed="right">
+          <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
-                  <CommentStateView comment={rowData} size="sm" onStateChanged={refetch} />
+                  <CommentStateDropdown comment={rowData} size="xs" onStateChanged={refetch} />
                 </PermissionControl>
               )}
             </Cell>
           </Column>
 
-          <Column width={150} align="center" fixed="right">
+          <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullCommentFragment) => (

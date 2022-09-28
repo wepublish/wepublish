@@ -419,7 +419,8 @@
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "unregisteredUser": "(Not registered user)"
+        "unregisteredUser": "(Not registered user)",
+        "noUserName": "No username"
       },
       "state": {
         "approved": "Approved",
@@ -445,7 +446,8 @@
       "variousPanelHeader": "Tags & Source",
       "tags": "Tags",
       "source": "Source",
-      "userPanelHeader": "Author of the comment"
+      "userPanelHeader": "Author of the comment",
+      "actions": "Actions"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
