@@ -275,6 +275,10 @@
       "reply": "Répondre au commentaire",
       "tooltip": "Crée un nouveau commentaire qui répond à ce commentaire."
     },
+    "commentDeleteBtn": {
+      "modalTitle": "Vraiment supprimer?",
+      "modalBody": "Si tu supprimes ce commentaire, c'est irrévocable. Le commentaire ne peut pas être restauré."
+    },
     "cancel": "Annuler",
     "pages": {
       "overview": {

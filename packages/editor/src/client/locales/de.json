@@ -457,6 +457,10 @@
       "reply": "Auf Kommentar antworten",
       "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
     },
+    "commentDeleteBtn": {
+      "modalTitle": "Wirklich löschen?",
+      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden."
+    },
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "dateTimePicker": {

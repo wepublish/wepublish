@@ -260,9 +260,7 @@ function CommentList() {
                   </IconButtonTooltip>
 
                   {/* reply to comment */}
-                  <IconButtonTooltip caption={t('comments.overview.reply')}>
-                    <ReplyCommentBtn comment={rowData} size="sm" circle hideText />
-                  </IconButtonTooltip>
+                  <ReplyCommentBtn comment={rowData} size="sm" circle hideText />
                 </PermissionControl>
               )}
             </Cell>

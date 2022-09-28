@@ -458,6 +458,10 @@
       "reply": "Reply to this comment",
       "tooltip": "Create a new comment, which replies to this comment."
     },
+    "commentDeleteBtn": {
+      "modalTitle": "Really delete?",
+      "modalBody": "If you delete this comment, it is irrevocable. The comment cannot be restored."
+    },
     "confirm": "Confirm",
     "create": "Create",
     "dateTimePicker": {
