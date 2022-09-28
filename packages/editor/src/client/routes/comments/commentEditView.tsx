@@ -11,6 +11,7 @@ import {
   useCommentQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {CommentStateView} from '../../atoms/comment/commentStateView'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
@@ -203,6 +204,8 @@ export const CommentEditView = memo(() => {
                 </Row>
               </Panel>
             </Col>
+
+            <Col xs={10}>{comment && <CommentStateView comment={comment} />}</Col>
 
             {/* tags & source */}
             <Col xs={10}>
