@@ -194,7 +194,7 @@ export function SelectCommentPanel({
                       disabled
                       // TODO: remove this
                       onChange={console.log}
-                      value={rowData?.revisions[rowData?.revisions?.length - 1].text}
+                      value={rowData?.revisions[rowData?.revisions?.length - 1]?.text || []}
                     />
                   ) : null}
                 </>
