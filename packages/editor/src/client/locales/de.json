@@ -216,6 +216,23 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Kommentarblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Kommentare filtern nach Etikett",
+        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
+        "cherryPick": "Spezifische Kommentare auswählen",
+        "displayName": "Anzeigename",
+        "comments": "{{count}} Kommentar",
+        "comments_plural": "{{count}} Kommentare",
+        "label": "Kommentare"
+      },
+      "poll": {
+        "title": "Umfrageblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "select": "Auswählen",
+        "label": "Umfrage"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -1173,7 +1190,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Zahlung",
-      "days": "Tage"
+      "days": "Tage",
+      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
+      "polls": "Umfragen",
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"

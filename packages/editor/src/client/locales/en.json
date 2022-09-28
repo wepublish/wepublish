@@ -216,11 +216,29 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Edit Comment Block",
+        "edit": "Edit comment block",
+        "filterByTag": "Filter comments by tag",
+        "commentsFilterByTagInformation": "All comments below will be displayed",
+        "cherryPick": "Select specific comments",
+        "displayName": "Display name",
+        "comments": "{{count}} Comment",
+        "comments_plural": "{{count}} Comments",
+        "label": "Comments"
+      },
+      "poll": {
+        "title": "Edit Poll Block",
+        "edit": "Edit poll block",
+        "select": "Select",
+        "label": "Poll"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
           "editEmbed": "Edit Embed"
         },
+
         "panels": {
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "close": "Close",
@@ -1189,7 +1207,10 @@
       "comments": "Comments",
       "login": "Login",
       "peering": "Peering",
-      "payment": "Payment"
+      "payment": "Payment",
+      "allowGuestCommentRating": "Allow guest ratings on comments",
+      "polls": "Polls",
+      "guestPollVote": "Allow guest votes on polls"
     },
     "tags": {
       "overview": {

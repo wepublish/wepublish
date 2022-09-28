@@ -152,7 +152,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {commentId, answerId, value},
-        {optionalAuthenticateUser, prisma: {commentRating, commentRatingSystemAnswer}}
+        {optionalAuthenticateUser, prisma: {commentRating, commentRatingSystemAnswer, setting}}
       ) =>
         rateComment(
           commentId,
@@ -161,7 +161,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           undefined,
           optionalAuthenticateUser,
           commentRatingSystemAnswer,
-          commentRating
+          commentRating,
+          setting
         )
     },
 
@@ -345,7 +346,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const userExists = await prisma.user.findUnique({
           where: {
-            email: email
+            email
           },
           select: unselectPassword
         })
@@ -777,8 +778,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
-      resolve: (root, {answerId}, {optionalAuthenticateUser, prisma: {pollAnswer, pollVote}}) =>
-        voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote)
+      resolve: (
+        root,
+        {answerId},
+        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}}
+      ) => voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

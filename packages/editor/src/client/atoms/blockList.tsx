@@ -14,6 +14,7 @@ import {
 import {AddBlockInput} from './addBlockInput'
 
 export interface BlockProps<V = any> {
+  itemId?: string | null
   value: V
   onChange: React.Dispatch<React.SetStateAction<V>>
   autofocus?: boolean
@@ -42,6 +43,7 @@ export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
 >
 
 export interface BlockListItemProps<T extends string = string, V = any> {
+  itemId: string | null | undefined
   index: number
   value: BlockListValue<T, V>
   icon: React.ReactElement
@@ -56,6 +58,7 @@ export interface BlockListItemProps<T extends string = string, V = any> {
 }
 
 const BlockListItem = memo(function BlockListItem({
+  itemId,
   index,
   value,
   icon,
@@ -83,7 +86,7 @@ const BlockListItem = memo(function BlockListItem({
       onDelete={() => onDelete(index)}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}>
-      {children({value: value.value, onChange: handleValueChange, autofocus, disabled})}
+      {children({value: value.value, onChange: handleValueChange, autofocus, disabled, itemId})}
     </ListItemWrapper>
   )
 })
@@ -100,6 +103,7 @@ export interface BlockListProps<V extends BlockListValue> extends BlockProps<V[]
 }
 
 export function BlockList<V extends BlockListValue>({
+  itemId,
   value: values,
   children,
   disabled,
@@ -207,6 +211,7 @@ export function BlockList<V extends BlockListValue>({
       <Fragment key={value.key}>
         <BlockListItem
           index={index}
+          itemId={itemId}
           value={value}
           icon={blockDef.icon}
           onDelete={handleRemove}
