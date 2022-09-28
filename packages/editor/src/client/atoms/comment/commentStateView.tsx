@@ -52,11 +52,13 @@ export function CommentStateView({comment, size, onStateChanged}: CommentStateVi
             return (
               <Popover ref={ref} className={className} style={{left, top}} full>
                 <Dropdown.Menu onSelect={handleSelect}>
-                  {Object.keys(CommentState).map((tmpState, index) => (
-                    <IconButtonTooltip key={index} caption={t('comments.overview.approve')}>
-                      <Dropdown.Item eventKey={tmpState}>{tmpState}</Dropdown.Item>
-                    </IconButtonTooltip>
-                  ))}
+                  {Object.keys(CommentState)
+                    .filter(tmpState => tmpState !== CommentState.PendingApproval)
+                    .map((tmpState, index) => (
+                      <IconButtonTooltip key={index} caption={t('comments.overview.approve')}>
+                        <Dropdown.Item eventKey={tmpState}>{tmpState}</Dropdown.Item>
+                      </IconButtonTooltip>
+                    ))}
                 </Dropdown.Menu>
               </Popover>
             )

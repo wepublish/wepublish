@@ -226,29 +226,6 @@ function CommentList() {
               )}
             </Cell>
           </Column>
-          <Column width={150} align="left" resizable>
-            <HeaderCell>{t('comments.overview.state')}</HeaderCell>
-            <Cell dataKey="state">
-              {(rowData: FullCommentFragment) => {
-                let state: string
-                switch (rowData?.state) {
-                  case CommentState.Approved:
-                    state = 'comments.state.approved'
-                    break
-                  case CommentState.PendingApproval:
-                    state = 'comments.state.pendingApproval'
-                    break
-                  case CommentState.PendingUserChanges:
-                    state = 'comments.state.pendingUserChanges'
-                    break
-                  case CommentState.Rejected:
-                    state = 'comments.state.rejected'
-                    break
-                }
-                return <div>{t(state)}</div>
-              }}
-            </Cell>
-          </Column>
           <Column width={150} align="left" resizable sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">

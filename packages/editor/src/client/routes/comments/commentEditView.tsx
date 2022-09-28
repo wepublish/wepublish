@@ -52,7 +52,7 @@ export const CommentEditView = memo(() => {
   /**
    * Queries
    */
-  const {data: commentData, loading: loadingComment} = useCommentQuery({
+  const {data: commentData, loading: loadingComment, refetch} = useCommentQuery({
     variables: {
       id: commentId
     },
@@ -155,7 +155,6 @@ export const CommentEditView = memo(() => {
           saveAndCloseBtnTitle={t('saveAndClose')}
           closePath={closePath}
           setCloseFn={setClose}
-          additionalMenu={<ReplyCommentBtn comment={comment} appearance="link" />}
         />
 
         {/* form elements */}
@@ -205,7 +204,21 @@ export const CommentEditView = memo(() => {
               </Panel>
             </Col>
 
-            <Col xs={10}>{comment && <CommentStateView comment={comment} />}</Col>
+            <Col xs={10}>
+              <Panel bordered header={t('commentEditView.actions')}>
+                <span style={{marginRight: '10px'}}>
+                  {comment && (
+                    <CommentStateView
+                      comment={comment}
+                      onStateChanged={async () => {
+                        await refetch()
+                      }}
+                    />
+                  )}
+                </span>
+                <ReplyCommentBtn comment={comment} appearance="default" />
+              </Panel>
+            </Col>
 
             {/* tags & source */}
             <Col xs={10}>
