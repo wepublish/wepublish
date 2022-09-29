@@ -9,7 +9,7 @@ import SubscriptIcon from '@rsuite/icons/legacy/Subscript'
 import SuperscriptIcon from '@rsuite/icons/legacy/Superscript'
 import TableIcon from '@rsuite/icons/legacy/Table'
 import UnderlineIcon from '@rsuite/icons/legacy/Underline'
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {createEditor, Location, Node as SlateNode, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
@@ -49,8 +49,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
-
   const [charCount, setCharCount] = useState(0)
+  const emojiRef = useRef(null)
 
   useEffect(() => {
     setCharCount(WepublishEditor.calculateEditorCharCount(editor))
@@ -152,8 +152,16 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <SubMenuButton icon={<SmileOIcon />}>
-              <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+            <SubMenuButton icon={<SmileOIcon />} ref={emojiRef}>
+              <EmojiPicker
+                setEmoji={emoji => {
+                  ;(emojiRef?.current as any).close()
+                  editor.insertText(emoji)
+                }}
+                onClose={() => {
+                  ;(emojiRef?.current as any).close()
+                }}
+              />
             </SubMenuButton>
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
