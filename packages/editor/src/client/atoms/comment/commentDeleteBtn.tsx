@@ -7,6 +7,14 @@ import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
 import {FullCommentFragment, useDeleteCommentMutation} from '../../api'
 import {PermissionControl} from '../permissionControl'
 
+const onErrorToast = (error: ApolloError) => {
+  toaster.push(
+    <Message type="error" showIcon closable duration={3000}>
+      {error.message}
+    </Message>
+  )
+}
+
 interface CommentDeleteBtnProps {
   comment?: FullCommentFragment
   onCommentDeleted?(): void
@@ -15,14 +23,6 @@ interface CommentDeleteBtnProps {
 export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnProps) {
   if (!comment) {
     return <></>
-  }
-
-  const onErrorToast = (error: ApolloError) => {
-    toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
-        {error.message}
-      </Message>
-    )
   }
 
   const {t} = useTranslation()
@@ -34,7 +34,10 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
         onCommentDeleted()
       }
     },
-    onError: onErrorToast
+    onError: error => {
+      setModalOpen(false)
+      onErrorToast(error)
+    }
   })
 
   return (
