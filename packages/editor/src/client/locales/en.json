@@ -384,7 +384,8 @@
         "untitled": "Untitled",
         "updated": "Modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "userName": "User Name"
+        "userName": "User Name",
+        "editState": "Edit state"
       },
       "edit": {
         "title": "Edit Comment",
@@ -418,7 +419,8 @@
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "unregisteredUser": "(Not registered user)"
+        "unregisteredUser": "(Not registered user)",
+        "noUserName": "No username"
       },
       "state": {
         "approved": "Approved",
@@ -444,12 +446,21 @@
       "variousPanelHeader": "Tags & Source",
       "tags": "Tags",
       "source": "Source",
-      "userPanelHeader": "Author of the comment"
+      "userPanelHeader": "Author of the comment",
+      "actions": "Actions"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
       "guestUser": "Guest (Username)",
       "selectImage": "Select profile image of the commenting guest"
+    },
+    "replyCommentBtn": {
+      "reply": "Reply to this comment",
+      "tooltip": "Create a new comment, which replies to this comment."
+    },
+    "commentDeleteBtn": {
+      "modalTitle": "Really delete?",
+      "modalBody": "If you delete this comment, it is irrevocable. The comment cannot be restored."
     },
     "confirm": "Confirm",
     "create": "Create",

@@ -383,7 +383,8 @@
         "userName": "User Name",
         "requestChange": "Änderung verlangen",
         "reject": "Ablehnen",
-        "approve": "Freigeben"
+        "approve": "Freigeben",
+        "editState": "Status bearbeiten"
       },
       "edit": {
         "title": "Kommentar editieren",
@@ -417,7 +418,8 @@
         "parentDate": "{{parentDate,ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "unregisteredUser": "(Nicht registrierter Benutzer)"
+        "unregisteredUser": "(Nicht registrierter Benutzer)",
+        "noUserName": "Kein Benutzername"
       },
       "state": {
         "approved": "Angenommen",
@@ -443,12 +445,21 @@
       "variousPanelHeader": "Tags & Quelle",
       "tags": "Tags",
       "source": "Quelle",
-      "userPanelHeader": "Verfasser:in des Kommentars"
+      "userPanelHeader": "Verfasser:in des Kommentars",
+      "actions": "Aktionen"
     },
     "commentUser": {
       "selectExistingUser": "Registrierte Benutzer:in wählen",
       "guestUser": "Gast (Benutzername)",
       "selectImage": "Profilbild des Gastes wählen oder hochladen"
+    },
+    "replyCommentBtn": {
+      "reply": "Auf Kommentar antworten",
+      "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
+    },
+    "commentDeleteBtn": {
+      "modalTitle": "Wirklich löschen?",
+      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden."
     },
     "confirm": "Bestätigen",
     "create": "Erstellen",

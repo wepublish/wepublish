@@ -2,7 +2,7 @@ import {ApolloError} from '@apollo/client'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {Col, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {Col, FlexboxGrid, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
 import {
   CommentRevisionUpdateInput,
@@ -11,8 +11,12 @@ import {
   useCommentQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
+import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
+import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
+import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../blocks/types'
@@ -25,7 +29,7 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
-export const CommentEditView = memo(() => {
+const CommentEditView = memo(() => {
   const {t} = useTranslation()
   const navigate = useNavigate()
   const {id} = useParams()
@@ -43,7 +47,7 @@ export const CommentEditView = memo(() => {
   /**
    * Queries
    */
-  const {data: commentData, loading: loadingComment} = useCommentQuery({
+  const {data: commentData, loading: loadingComment, refetch} = useCommentQuery({
     variables: {
       id: commentId
     },
@@ -88,6 +92,9 @@ export const CommentEditView = memo(() => {
    */
   function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
     const revisions = comment.revisions
+    if (!revisions.length) {
+      return
+    }
     const lastRevision = revisions[revisions.length - 1]
     const parsedRevision = {
       title: lastRevision?.title,
@@ -192,41 +199,74 @@ export const CommentEditView = memo(() => {
               </Panel>
             </Col>
 
-            {/* tags & source */}
             <Col xs={10}>
-              <Panel bordered header={t('commentEditView.variousPanelHeader')}>
-                <Row>
-                  {/* tags */}
-                  <Col xs={24}>
-                    <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
-                    <SelectTags
-                      selectedTags={commentTags}
-                      setSelectedTags={setSelectedTags}
-                      tagType={TagType.Comment}
-                    />
-                  </Col>
+              <Row>
+                {/* some actions on the comment */}
+                <Col xs={24} style={{marginTop: '0px'}}>
+                  <Panel bordered header={t('commentEditView.actions')}>
+                    <FlexboxGrid align="bottom">
+                      <FlexboxGrid.Item style={{marginRight: '10px'}}>
+                        <CommentDeleteBtn
+                          comment={comment}
+                          onCommentDeleted={() => {
+                            navigate(closePath)
+                          }}
+                        />
+                      </FlexboxGrid.Item>
+                      <FlexboxGrid.Item>
+                        {comment && (
+                          <CommentStateDropdown
+                            comment={comment}
+                            onStateChanged={async () => {
+                              await refetch()
+                            }}
+                          />
+                        )}
+                      </FlexboxGrid.Item>
+                      <FlexboxGrid.Item>
+                        <ReplyCommentBtn comment={comment} appearance="default" />
+                      </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                  </Panel>
+                </Col>
 
-                  {/* external source */}
-                  <Col xs={24}>
-                    <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
-                    <Form.Control
-                      name="externalSource"
-                      placeholder={t('commentEditView.source')}
-                      value={comment?.source || ''}
-                      onChange={(source: string) => {
-                        setComment({...comment, source} as FullCommentFragment)
-                      }}
-                    />
-                  </Col>
-                </Row>
-              </Panel>
-            </Col>
+                {/* tags & source */}
+                <Col xs={24}>
+                  <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+                    <Row>
+                      {/* tags */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
+                        <SelectTags
+                          selectedTags={commentTags}
+                          setSelectedTags={setSelectedTags}
+                          tagType={TagType.Comment}
+                        />
+                      </Col>
 
-            {/* user or guest user */}
-            <Col xs={10}>
-              <Panel bordered header={t('commentEditView.userPanelHeader')}>
-                <CommentUser comment={comment} setComment={setComment} />
-              </Panel>
+                      {/* external source */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
+                        <Form.Control
+                          name="externalSource"
+                          placeholder={t('commentEditView.source')}
+                          value={comment?.source || ''}
+                          onChange={(source: string) => {
+                            setComment({...comment, source} as FullCommentFragment)
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Panel>
+                </Col>
+
+                {/* user or guest user */}
+                <Col xs={24}>
+                  <Panel bordered header={t('commentEditView.userPanelHeader')}>
+                    <CommentUser comment={comment} setComment={setComment} />
+                  </Panel>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Grid>
@@ -234,3 +274,9 @@ export const CommentEditView = memo(() => {
     </>
   )
 })
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_UPDATE_COMMENTS',
+  'CAN_TAKE_COMMENT_ACTION'
+])(CommentEditView)
+export {CheckedPermissionComponent as CommentEditView}
