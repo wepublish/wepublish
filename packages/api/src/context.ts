@@ -38,6 +38,7 @@ import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
 import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
+import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {BaseMailProvider} from './mails/mailProvider'
@@ -102,6 +103,8 @@ export interface DataLoaderContext {
   readonly invoicesByID: DataLoader<string, InvoiceWithItems | null>
   readonly paymentsByID: DataLoader<string, Payment | null>
   readonly articlePeerInformationByID: DataLoader<string, ArticlePeerInformation | null>
+
+  readonly pollById: DataLoader<string, FullPoll | null>
 }
 
 export interface OAuth2Clients {
@@ -840,6 +843,7 @@ export async function contextFromRequest(
         'id'
       )
     ),
+    pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
     articlePeerInformationByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],
@@ -1045,9 +1049,9 @@ function generateCacheKey(params: PeerQueryParams) {
       // Hash function doesn't have to be crypto safe, just fast!
       .createHash('md5')
       .update(
-        `${JSON.stringify(params.hostURL)}${JSON.stringify(
-          params.variables?._v0_id
-        )}${JSON.stringify(params.query)}`
+        `${JSON.stringify(params.hostURL)}${JSON.stringify(params.variables)}${JSON.stringify(
+          params.query
+        )}`
       )
       .digest('hex')
   )

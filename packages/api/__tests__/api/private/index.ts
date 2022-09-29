@@ -20,8 +20,15 @@ export type Scalars = {
   Slug: string
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any
+  Value: any
   /** The `Upload` scalar type represents a file upload. */
   Upload: File
+}
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals'
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>
+  boolChoice?: Maybe<Scalars['Boolean']>
 }
 
 export type Article = {
@@ -237,6 +244,7 @@ export type Block =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
+  | HtmlBlock
   | LinkPageBreakBlock
   | TitleBlock
   | QuoteBlock
@@ -261,6 +269,7 @@ export type BlockInput = {
   tikTokVideo?: Maybe<TikTokVideoBlockInput>
   bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
+  html?: Maybe<HtmlBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>
@@ -360,8 +369,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['String']>
-  height?: Maybe<Scalars['String']>
+  width?: Maybe<Scalars['Int']>
+  height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -369,8 +378,8 @@ export type EmbedBlock = {
 export type EmbedBlockInput = {
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['String']>
-  height?: Maybe<Scalars['String']>
+  width?: Maybe<Scalars['Int']>
+  height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -447,6 +456,15 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
+}
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock'
+  html?: Maybe<Scalars['String']>
+}
+
+export type HtmlBlockInput = {
+  html?: Maybe<Scalars['String']>
 }
 
 export type Image = {
@@ -612,6 +630,12 @@ export enum InvoiceSort {
   PaidAt = 'PAID_AT'
 }
 
+export type JwtToken = {
+  __typename?: 'JWTToken'
+  token: Scalars['String']
+  expiresAt: Scalars['String']
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
@@ -765,6 +789,7 @@ export type Mutation = {
   approveComment: Comment
   rejectComment: Comment
   requestChangesOnComment: Comment
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -1016,6 +1041,10 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID']
   rejectionReason: CommentRejectionReason
+}
+
+export type MutationUpdateSettingListArgs = {
+  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>
 }
 
 export type Navigation = {
@@ -1343,6 +1372,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query'
   remotePeerProfile?: Maybe<PeerProfile>
+  createJWTForUser?: Maybe<JwtToken>
   peerProfile: PeerProfile
   peers?: Maybe<Array<Peer>>
   peer?: Maybe<Peer>
@@ -1382,11 +1412,18 @@ export type Query = {
   invoices: InvoiceConnection
   payment?: Maybe<Payment>
   payments: PaymentConnection
+  setting?: Maybe<Setting>
+  settings: Array<Setting>
 }
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String']
   token: Scalars['String']
+}
+
+export type QueryCreateJwtForUserArgs = {
+  userId: Scalars['String']
+  expiresInMinutes: Scalars['Int']
 }
 
 export type QueryPeerArgs = {
@@ -1531,6 +1568,11 @@ export type QueryPagePreviewLinkArgs = {
   hours: Scalars['Int']
 }
 
+export type QueryMemberPlanArgs = {
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
+}
+
 export type QueryMemberPlansArgs = {
   cursor?: Maybe<Scalars['ID']>
   take?: Maybe<Scalars['Int']>
@@ -1570,6 +1612,10 @@ export type QueryPaymentsArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QuerySettingArgs = {
+  name?: Maybe<Scalars['String']>
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
@@ -1605,6 +1651,31 @@ export type SessionWithToken = {
   token: Scalars['String']
   createdAt: Scalars['DateTime']
   expiresAt: Scalars['DateTime']
+}
+
+export type Setting = {
+  __typename?: 'Setting'
+  id: Scalars['ID']
+  name: SettingName
+  value: Scalars['Value']
+  settingRestriction?: Maybe<SettingRestriction>
+}
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction'
+  maxValue?: Maybe<Scalars['Int']>
+  minValue?: Maybe<Scalars['Int']>
+  inputLength?: Maybe<Scalars['Int']>
+  allowedValues?: Maybe<AllowedSettingVals>
 }
 
 export enum SortOrder {
@@ -1677,6 +1748,7 @@ export type SubscriptionFilter = {
   memberPlanID?: Maybe<Scalars['String']>
   paymentPeriodicity?: Maybe<PaymentPeriodicity>
   userHasAddress?: Maybe<Scalars['Boolean']>
+  userID?: Maybe<Scalars['ID']>
 }
 
 export type SubscriptionInput = {
@@ -1690,6 +1762,17 @@ export type SubscriptionInput = {
   paymentMethodID: Scalars['String']
   properties: Array<PropertiesInput>
   deactivation?: Maybe<SubscriptionDeactivationInput>
+}
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod'
+  id: Scalars['ID']
+  invoiceID: Scalars['ID']
+  amount: Scalars['Int']
+  createdAt: Scalars['DateTime']
+  startsAt: Scalars['DateTime']
+  endsAt: Scalars['DateTime']
+  paymentPeriodicity: PaymentPeriodicity
 }
 
 export enum SubscriptionSort {
@@ -1801,6 +1884,11 @@ export type UpdatePeerInput = {
   token?: Maybe<Scalars['String']>
 }
 
+export type UpdateSettingArgs = {
+  name: SettingName
+  value: Scalars['Value']
+}
+
 export type UploadImageInput = {
   file: Scalars['Upload']
   filename?: Maybe<Scalars['String']>
@@ -1825,11 +1913,12 @@ export type User = {
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
   active: Scalars['Boolean']
-  skipLogin?: Maybe<Scalars['DateTime']>
+  lastLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
   roles: Array<UserRole>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
+  subscriptions: Array<UserSubscription>
 }
 
 export type UserAddress = {
@@ -1844,11 +1933,11 @@ export type UserAddress = {
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>
-  streetAddress: Scalars['String']
+  streetAddress?: Maybe<Scalars['String']>
   streetAddress2?: Maybe<Scalars['String']>
-  zipCode: Scalars['String']
-  city: Scalars['String']
-  country: Scalars['String']
+  zipCode?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UserConnection = {
@@ -1911,6 +2000,23 @@ export enum UserSort {
   ModifiedAt = 'MODIFIED_AT',
   Name = 'NAME',
   FirstName = 'FIRST_NAME'
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  properties: Array<Properties>
+  deactivation?: Maybe<SubscriptionDeactivation>
+  periods: Array<SubscriptionPeriod>
+  memberPlan: MemberPlan
+  invoices: Array<Invoice>
 }
 
 export type VimeoVideoBlock = {
@@ -2118,6 +2224,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+              | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -2288,6 +2395,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
   'text' | 'linkText' | 'linkURL'
@@ -2331,6 +2440,7 @@ export type FullBlockFragment =
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
@@ -2506,6 +2616,7 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -2627,6 +2738,7 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+              | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)

@@ -7,6 +7,7 @@ import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
   AlgebraicCaptchaChallenge,
+  Article,
   Author,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
@@ -33,7 +34,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+  getPeeredArticleURL(peer: Peer, article: Article): string {
     return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
   }
 

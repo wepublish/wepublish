@@ -66,7 +66,7 @@ fragment ArticleRef on Article {
 }
 
 query ArticleList(
-  $filter: String
+  $filter: ArticleFilter
   $cursor: ID
   $take: Int
   $skip: Int
@@ -74,7 +74,7 @@ query ArticleList(
   $sort: ArticleSort
 ) {
   articles(
-    filter: {title: $filter}
+    filter: $filter
     cursor: $cursor
     take: $take
     skip: $skip
@@ -97,12 +97,13 @@ query ArticleList(
 }
 
 query PeerArticleList(
+  $filter: ArticleFilter
   $cursors: String
   $peerFilter: String
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
         ...PeerWithProfile

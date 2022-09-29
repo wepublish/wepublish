@@ -23,12 +23,12 @@ import {
   usePeerArticleListQuery,
   usePeerListQuery
 } from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 function PeerArticleList() {
   const [page, setPage] = useState(1)
@@ -117,7 +117,12 @@ function PeerArticleList() {
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+            <Input
+              value={filter.title || ''}
+              onChange={value => {
+                setFilter({title: value})
+              }}
+            />
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>

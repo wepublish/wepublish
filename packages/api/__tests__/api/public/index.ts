@@ -18,6 +18,8 @@ export type Scalars = {
   Color: string
   RichText: Node[]
   Slug: string
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any
 }
 
 export type Article = {
@@ -152,6 +154,7 @@ export type Block =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
+  | HtmlBlock
   | LinkPageBreakBlock
   | TitleBlock
   | QuoteBlock
@@ -162,7 +165,7 @@ export type Challenge = {
   __typename?: 'Challenge'
   challenge?: Maybe<Scalars['String']>
   challengeID?: Maybe<Scalars['String']>
-  validUntil?: Maybe<Scalars['String']>
+  validUntil?: Maybe<Scalars['Date']>
 }
 
 export type ChallengeInput = {
@@ -222,8 +225,8 @@ export type EmbedBlock = {
   __typename?: 'EmbedBlock'
   url?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  width?: Maybe<Scalars['String']>
-  height?: Maybe<Scalars['String']>
+  width?: Maybe<Scalars['Int']>
+  height?: Maybe<Scalars['Int']>
   styleCustom?: Maybe<Scalars['String']>
   sandbox?: Maybe<Scalars['String']>
 }
@@ -258,6 +261,11 @@ export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge'
   caption?: Maybe<Scalars['String']>
   image?: Maybe<Image>
+}
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock'
+  html?: Maybe<Scalars['String']>
 }
 
 export type Image = {
@@ -994,11 +1002,11 @@ export type UserAddress = {
 
 export type UserAddressInput = {
   company?: Maybe<Scalars['String']>
-  streetAddress: Scalars['String']
+  streetAddress?: Maybe<Scalars['String']>
   streetAddress2?: Maybe<Scalars['String']>
-  zipCode: Scalars['String']
-  city: Scalars['String']
-  country: Scalars['String']
+  zipCode?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UserInput = {
@@ -1086,6 +1094,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -1137,6 +1146,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -1276,6 +1286,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
   'text' | 'linkText' | 'linkURL'
@@ -1318,6 +1330,7 @@ export type FullBlockFragment =
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
@@ -1420,6 +1433,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)

@@ -32,7 +32,7 @@ export function authorsAdapter(authors: any): Author[] {
 }
 
 export function commentsAdapter(comments: any): Comment[] {
-  return comments?.map((comment: Comment) => {
+  return comments?.map((comment: any) => {
     return {
       id: comment.id,
       state: comment.state,
@@ -43,7 +43,7 @@ export function commentsAdapter(comments: any): Comment[] {
       modifiedAt: comment.modifiedAt,
       parentID: comment.parentID,
       authorType: comment.authorType,
-      userName: comment.user.name,
+      userName: comment.user?.name ?? comment.guestUsername ?? 'Anonymous',
       children: comment.children
     }
   })

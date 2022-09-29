@@ -1,19 +1,19 @@
-import {BlockListValue} from '../atoms/blockList'
-import {ListValue} from '../atoms/listInput'
-
+import nanoid from 'nanoid'
 import {Node} from 'slate'
 
-import nanoid from 'nanoid'
-
 import {
-  FullBlockFragment,
-  ImageRefFragment,
   ArticleRefFragment,
   BlockInput,
-  PeerRefFragment,
+  FullBlockFragment,
+  FullCommentFragment,
+  FullPoll,
+  ImageRefFragment,
   PageRefFragment,
+  PeerRefFragment,
   TeaserStyle
 } from '../api'
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
 
 export enum BlockType {
   RichText = 'richText',
@@ -27,7 +27,9 @@ export enum BlockType {
   TeaserGrid1 = 'teaserGrid1',
   TeaserGrid6 = 'teaserGrid6',
   TeaserGridFlex = 'teaserGridFlex',
-  HTMLBlock = 'html'
+  HTMLBlock = 'html',
+  PollBlock = 'poll',
+  CommentBlock = 'comment'
 }
 
 export type RichTextBlockValue = Node[]
@@ -63,6 +65,19 @@ export interface TitleBlockValue {
 
 export interface HTMLBlockValue {
   html: string
+}
+
+export interface PollBlockValue {
+  poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
+}
+
+export interface CommentBlockValue {
+  filter: Partial<{
+    item: string | null
+    tags: string[] | null
+    comments: string[] | null
+  }>
+  comments: FullCommentFragment[]
 }
 
 export interface QuoteBlockValue {
@@ -268,6 +283,10 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
 
 export type HTMLBlockListValue = BlockListValue<BlockType.HTMLBlock, HTMLBlockValue>
 
+export type PollBlockListValue = BlockListValue<BlockType.PollBlock, PollBlockValue>
+
+export type CommentBlockListValue = BlockListValue<BlockType.CommentBlock, CommentBlockValue>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -281,9 +300,25 @@ export type BlockValue =
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
   | HTMLBlockListValue
+  | PollBlockListValue
+  | CommentBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
+    case BlockType.CommentBlock:
+      return {
+        comment: {
+          filter: block.value?.filter ?? {}
+        }
+      }
+
+    case BlockType.PollBlock:
+      return {
+        poll: {
+          pollId: block.value?.poll?.id
+        }
+      }
+
     case BlockType.HTMLBlock:
       return {
         html: {
@@ -314,7 +349,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         listicle: {
           items: block.value.items.map(({value: {title, richText, image}}) => ({
             title,
-            richText: richText,
+            richText,
             imageID: image?.id
           }))
         }
@@ -628,7 +663,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
             value: {
               title,
               image: image ?? null,
-              richText: richText
+              richText
             }
           }))
         }
@@ -927,6 +962,25 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           linkTarget: block.linkTarget ?? '',
           hideButton: block.hideButton,
           image: block.image ?? undefined
+        }
+      }
+
+    case 'PollBlock':
+      return {
+        key,
+        type: BlockType.PollBlock,
+        value: {
+          poll: block.poll
+        }
+      }
+
+    case 'CommentBlock':
+      return {
+        key,
+        type: BlockType.CommentBlock,
+        value: {
+          filter: block.filter,
+          comments: block.comments
         }
       }
 
