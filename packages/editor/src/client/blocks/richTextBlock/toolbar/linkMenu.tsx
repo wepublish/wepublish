@@ -1,12 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Form, ButtonToolbar, InputGroup, IconButton} from 'rsuite'
-import {Transforms, Range, Editor} from 'slate'
-import {useSlate} from 'slate-react'
-import {WepublishEditor} from '../editor/wepublishEditor'
-import {InlineFormat} from '../editor/formats'
-import {SubMenuContext} from '../../../atoms/toolbar'
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import UnlinkIcon from '@rsuite/icons/legacy/Unlink'
+import React, {useContext, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, ButtonToolbar, Col, Form, IconButton, InputGroup, Row} from 'rsuite'
+import {Editor, Range, Transforms} from 'slate'
+import {useSlate} from 'slate-react'
+
+import {SubMenuContext} from '../../../atoms/toolbar'
+import {InlineFormat} from '../editor/formats'
+import {WepublishEditor} from '../editor/wepublishEditor'
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -83,6 +85,11 @@ export function LinkMenu() {
 
   return (
     <>
+      <Row>
+        <Col xs={24} style={{textAlign: 'right', marginTop: '0px'}}>
+          <IconButton icon={<CloseIcon />} onClick={() => closeMenu()} />
+        </Col>
+      </Row>
       <Form fluid>
         <Form.Group controlId="link">
           <Form.ControlLabel>{t('blocks.richText.link')}</Form.ControlLabel>
