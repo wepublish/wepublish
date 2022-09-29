@@ -6,6 +6,8 @@ on:
       image:
         required: true
         type: string
+    secrets: inherit
+
 
 jobs:
   deployment:
