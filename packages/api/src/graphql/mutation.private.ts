@@ -715,12 +715,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     savePeerArticle: {
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: async (root, {peerID, id}, context, info) => {
+      resolve: async (root, {peerID, id}, context) => {
         const {authenticate} = context
         const {roles} = authenticate()
 
         authorise(CanGetPeerArticle, roles)
-        return await savePeerArticleById(id, peerID, context, info)
+        return await savePeerArticleById(id, peerID, context)
       }
     },
 
