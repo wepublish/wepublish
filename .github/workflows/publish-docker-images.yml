@@ -85,3 +85,4 @@ jobs:
       uses: ./.github/workflows/deploy.yml
       with:
         image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+      secrets: inherit
