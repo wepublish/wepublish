@@ -245,7 +245,13 @@ function CommentList() {
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
-                  <CommentStateDropdown comment={rowData} size="xs" onStateChanged={refetch} />
+                  <CommentStateDropdown
+                    comment={rowData}
+                    size="xs"
+                    onStateChanged={async () => {
+                      await refetch()
+                    }}
+                  />
                 </PermissionControl>
               )}
             </Cell>
