@@ -29,6 +29,7 @@
     "@wepublish/analytics": "1.0.0-alpha.2",
     "analytics": "^0.8.1",
     "cross-fetch": "^3.0.4",
+    "dangerously-set-html-content": "^1.0.9",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fela": "^10.6.1",

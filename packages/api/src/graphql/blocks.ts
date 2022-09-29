@@ -13,7 +13,7 @@ import {
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
-import xss from 'xss'
+// import xss from 'xss'
 
 import {Context} from '../context'
 
@@ -519,8 +519,28 @@ export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
   name: 'HTMLBlock',
   fields: {
     html: {
-      type: GraphQLString,
-      resolve: value => xss(value.html, {whiteList: {span: ['']}})
+      type: GraphQLString
+      //   resolve: value =>
+      //     xss(value.html, {
+      //       whiteList: {
+      //         span: [''],
+      //         div: ['class']
+      //       },
+      //       onIgnoreTagAttr: (tag, name, value) => {
+      //         if (name.substring(0, 5) === 'data-') {
+      //           return name + '="' + value + '"'
+      //         }
+      //         return tag
+      //       },
+      //       // @ts-ignore
+      //       onIgnoreTag: (tag, html) => {
+      //         if (tag === 'script') {
+      //           return html
+      //         }
+      //       },
+      //       stripIgnoreTagBody: ['script'],
+      //       allowCommentTag: false
+      //     })
     }
   },
   isTypeOf: createProxyingIsTypeOf(value => {

@@ -1,15 +1,14 @@
 import {cssRule, useStyle} from '@karma.run/react'
 import React from 'react'
+import {pxToRem} from '../style/helpers'
+import InnerHTML from 'dangerously-set-html-content'
 
-export const Container = cssRule(() => ({
-  position: 'relative',
-  textAlign: 'center',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  margin: '2rem',
-  padding: '0 2rem'
+const Container = cssRule(() => ({
+  paddingTop: pxToRem(30),
+  maxWidth: pxToRem(800),
+  margin: '0 auto',
+  paddingBottom: pxToRem(40),
+  marginBottom: pxToRem(70)
 }))
 
 export interface HTMLBlockProps {
@@ -18,5 +17,9 @@ export interface HTMLBlockProps {
 
 export function HTMLBlock({html}: HTMLBlockProps) {
   const css = useStyle()
-  return <div className={css(Container)} dangerouslySetInnerHTML={{__html: html}} />
+  return (
+    <div className={css(Container)}>
+      <InnerHTML html={html} />
+    </div>
+  )
 }

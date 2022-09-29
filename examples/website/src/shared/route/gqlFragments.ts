@@ -15,7 +15,8 @@ export enum BlockTypes {
   TikTokVideoBlock = 'TikTokVideoBlock',
   BildwurfAdBlock = 'BildwurfAdBlock',
   ListicleBlock = 'ListicleBlock',
-  LinkPageBreakBlock = 'LinkPageBreakBlock'
+  LinkPageBreakBlock = 'LinkPageBreakBlock',
+  HTMLBlock = 'HTMLBlock'
 }
 
 export const simpleImageDataFragment = gql`
