@@ -1,16 +1,18 @@
 name: Publish docker images
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
-    tags:
-      - v*
+  workflow_call:
+    outputs:
+      image:
+        description: "Image tag"
+        value: ${{ jobs.publish-docker.outputs.image }}
+
 
 jobs:
   publish-docker:
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.image_tag.outputs.image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -33,56 +35,35 @@ jobs:
       - name: Set RELEASE_DATE env
         run: echo "RELEASE_DATE=$(date +%s)" >> $GITHUB_ENV
 
-      - if: | 
+
+      - if: |
           github.event_name == 'pull_request'
-        name: "Build and push on pull-request"
-        uses: docker/build-push-action@v2
-        with:
-          target: production
-          push: true
-          tags: |
-            ghcr.io/wepublish/wepublish:${{ github.sha }}
-
-      
-
+        name: Set pull-request IMAGE_TAG env
+        run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
 
       - if: |
           github.ref == 'refs/heads/master'
-        name: "Build and push on master"
-        uses: docker/build-push-action@v2
-        with:
-          target: dev
-          push: true
-          tags: |
-            ghcr.io/wepublish/wepublish:master-${{ env.RELEASE_DATE }}-${{ github.sha }}
+        name: Set master IMAGE_TAG env
+        run: echo "IMAGE_TAG=master-${{ env.RELEASE_DATE }}-${{ github.sha }}" >> $GITHUB_ENV
 
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
-        name: "Build and push on alpha release"
-        uses: docker/build-push-action@v2
-        with:
-          target: production
-          push: true
-          tags: |
-            ghcr.io/wepublish/wepublish:${{ env.RELEASE_VERSION }}
+        name: Set alpha-release IMAGE_TAG env
+        run: echo "IMAGE_TAG=${{ env.RELEASE_VERSION }}" >> $GITHUB_ENV
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
-        name: "Build and push on non-alpha tag"
+        name: Set release IMAGE_TAG env
+        run: echo "IMAGE_TAG=${{ env.RELEASE_VERSION }}" >> $GITHUB_ENV
+
+
+      - id: image_tag
+        run: echo "::set-output name=image::ghcr.io/wepublish/wepublish:${{ env.IMAGE_TAG }}"
+
+      - name: "Build and push docker image"
         uses: docker/build-push-action@v2
         with:
           target: production
           push: true
           tags: |
-            ghcr.io/wepublish/wepublish:${{ env.RELEASE_VERSION }}
-            ghcr.io/wepublish/wepublish:latest
-
-
-
-
-  deploy:
-      name: "Deployment"
-      uses: ./.github/workflows/deploy.yml
-      with:
-        image: ghcr.io/wepublish/wepublish:${{ github.sha }}
-      secrets: inherit
+            ${{ steps.image_tag.outputs.image }}
