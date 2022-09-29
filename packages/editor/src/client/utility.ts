@@ -247,23 +247,3 @@ export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
 export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is (value: T) => T {
   return typeof value === 'function'
 }
-
-// replace scripts with executable ones
-export function executeScriptElements(containerElements: NodeListOf<HTMLElement> | HTMLElement[]) {
-  if (!containerElements.length) return
-
-  Array.from(containerElements).forEach(container => {
-    const scriptElements = container.querySelectorAll('script')
-    Array.from(scriptElements).forEach((scriptElement: HTMLScriptElement) => {
-      const clonedElement = document.createElement('script')
-      Array.from(scriptElement.attributes).forEach(attribute => {
-        clonedElement.setAttribute(attribute.name, attribute.value)
-      })
-
-      clonedElement.text = scriptElement.text
-
-      scriptElement.parentNode &&
-        scriptElement.parentNode.replaceChild(clonedElement, scriptElement)
-    })
-  })
-}

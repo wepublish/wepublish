@@ -10058,6 +10058,11 @@ d@1, d@^1.0.1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
+dangerously-set-html-content@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/dangerously-set-html-content/-/dangerously-set-html-content-1.0.9.tgz#d876deda1ec9ef4e62b21847f6dd6bc39d03a2cb"
+  integrity sha512-nnXstBbPIaE+HEy6FbYpi14wIhIcPHkzNDCprpsrhwvyYtZE1Z44qYcbx8nlYpNdbYeW7x4Bkhx784Ud5QPa+A==
+
 dargs@^4.0.1:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/dargs/-/dargs-4.1.0.tgz#03a9dbb4b5c2f139bf14ae53f0b8a2a6a86f4e17"

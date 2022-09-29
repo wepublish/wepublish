@@ -1,16 +1,15 @@
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import React, {useEffect, useRef, useState} from 'react'
+import InnerHTML from 'dangerously-set-html-content'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
-import {executeScriptElements} from '../utility'
 import {HTMLBlockValue} from './types'
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
-  const scriptContainer = useRef<HTMLDivElement>(null)
   const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(false)
   const isEmpty = !value.html
   const {t} = useTranslation()
@@ -20,12 +19,6 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
       setHtmlDialogOpen(true)
     }
   }, [])
-
-  useEffect(() => {
-    if (scriptContainer.current) {
-      executeScriptElements([scriptContainer.current])
-    }
-  }, [value.html, scriptContainer.current])
 
   return (
     <>
@@ -59,11 +52,9 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
                   {t('blocks.html.edit')}
                 </IconButton>
               </div>
-              <div
-                style={{marginTop: '30px'}}
-                ref={scriptContainer}
-                dangerouslySetInnerHTML={{__html: value.html}}
-              />
+              <div style={{marginTop: '30px'}}>
+                <InnerHTML html={value.html} />
+              </div>
             </div>
           )}
         </PlaceholderInput>
