@@ -230,3 +230,9 @@ query Article($id: ID!) {
     }
   }
 }
+
+mutation SavePeerArticle($peerId: ID!, $id: ID!) {
+  savePeerArticle(peerID: $peerId, id: $id) {
+    ...MutationArticle
+  }
+}

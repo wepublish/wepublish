@@ -41,6 +41,7 @@
     "seed": "npx ts-node __tests__/seed.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@prisma/client": "^3.14.0",
     "@types/node-fetch": "^2.6.2",
     "abort-controller": "^3.0.0",
@@ -53,7 +54,6 @@
     "email-templates": "^8.0.7",
     "express": "^4.17.1",
     "form-data": "^3.0.0",
-    "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^5.0.0",

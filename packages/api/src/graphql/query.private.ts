@@ -137,25 +137,11 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {savePeerArticleById} from './article-peer-information/article-peer-information.private-mutation'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // todo remove from query
-    savePeerArticle: {
-      type: GraphQLArticle,
-      args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {peerID, id}, context, info) {
-        const {authenticate} = context
-        const {roles} = authenticate()
-
-        authorise(CanGetPeerArticle, roles)
-        return savePeerArticleById(id, peerID, context, info)
-      }
-    },
-
     // Peering
     // =======
 

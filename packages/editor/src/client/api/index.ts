@@ -45,6 +45,7 @@ export type Article = {
   published?: Maybe<ArticleRevision>;
   pending?: Maybe<ArticleRevision>;
   latest: ArticleRevision;
+  peerInformation?: Maybe<ArticlePeerInformation>;
 };
 
 export type ArticleConnection = {
@@ -93,6 +94,16 @@ export type ArticleNavigationLink = BaseNavigationLink & {
 export type ArticleNavigationLinkInput = {
   label: Scalars['String'];
   articleID: Scalars['ID'];
+};
+
+export type ArticlePeerInformation = {
+  __typename?: 'ArticlePeerInformation';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
+  peer: Peer;
+  producerArticle: Scalars['ID'];
+  consumerArticle: Scalars['ID'];
 };
 
 export type ArticleRevision = {
@@ -2730,6 +2741,20 @@ export type ArticleQuery = (
         & FullBlock_TeaserGridFlexBlock_Fragment
       )> }
     ) }
+  )> }
+);
+
+export type SavePeerArticleMutationVariables = Exact<{
+  peerId: Scalars['ID'];
+  id: Scalars['ID'];
+}>;
+
+
+export type SavePeerArticleMutation = (
+  { __typename?: 'Mutation' }
+  & { savePeerArticle?: Maybe<(
+    { __typename?: 'Article' }
+    & MutationArticleFragment
   )> }
 );
 
@@ -5954,6 +5979,40 @@ export function useArticleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ar
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
 export type ArticleQueryResult = Apollo.QueryResult<ArticleQuery, ArticleQueryVariables>;
+export const SavePeerArticleDocument = gql`
+    mutation SavePeerArticle($peerId: ID!, $id: ID!) {
+  savePeerArticle(peerID: $peerId, id: $id) {
+    ...MutationArticle
+  }
+}
+    ${MutationArticleFragmentDoc}`;
+export type SavePeerArticleMutationFn = Apollo.MutationFunction<SavePeerArticleMutation, SavePeerArticleMutationVariables>;
+
+/**
+ * __useSavePeerArticleMutation__
+ *
+ * To run a mutation, you first call `useSavePeerArticleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePeerArticleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePeerArticleMutation, { data, loading, error }] = useSavePeerArticleMutation({
+ *   variables: {
+ *      peerId: // value for 'peerId'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSavePeerArticleMutation(baseOptions?: Apollo.MutationHookOptions<SavePeerArticleMutation, SavePeerArticleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SavePeerArticleMutation, SavePeerArticleMutationVariables>(SavePeerArticleDocument, options);
+      }
+export type SavePeerArticleMutationHookResult = ReturnType<typeof useSavePeerArticleMutation>;
+export type SavePeerArticleMutationResult = Apollo.MutationResult<SavePeerArticleMutation>;
+export type SavePeerArticleMutationOptions = Apollo.BaseMutationOptions<SavePeerArticleMutation, SavePeerArticleMutationVariables>;
 export const CreateSessionDocument = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {
