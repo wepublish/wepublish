@@ -95,7 +95,7 @@ export function CommentStateChangeModal({
 
   return (
     <Modal open={open} size="sm" overflow>
-      <Modal.Header>
+      <Modal.Header onClose={() => setOpen(false)}>
         <Modal.Title>
           <div>{t(mapModalTitle(newCommentState))}</div>
         </Modal.Title>
