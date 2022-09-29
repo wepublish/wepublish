@@ -39,6 +39,11 @@
 * [Email Templates](emailtemplates.md)
 * [Releases](Releases.md)
 
+## Automated Testing
+It might happen, that your tests are failing. Try to update your snapshots
+by running (eventually in the package in question) `yarn test -- -u`
+
+For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 
 ## packages/editor
 ### How to call an api endpoint from the UI (.tsx file)?
