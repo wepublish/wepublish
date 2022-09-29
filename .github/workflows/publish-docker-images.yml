@@ -43,12 +43,7 @@ jobs:
           tags: |
             ghcr.io/wepublish/wepublish:${{ github.sha }}
 
-      - if: | 
-          github.event_name == 'pull_request'
-        name: "Deploy pull-request"
-        uses: ./.github/workflows/deploy.yml
-        with:
-          image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+      
 
 
       - if: |
@@ -82,3 +77,11 @@ jobs:
             ghcr.io/wepublish/wepublish:${{ env.RELEASE_VERSION }}
             ghcr.io/wepublish/wepublish:latest
 
+
+
+
+  deploy:
+      name: "Deployment"
+      uses: ./.github/workflows/deploy.yml
+      with:
+        image: ghcr.io/wepublish/wepublish:${{ github.sha }}
