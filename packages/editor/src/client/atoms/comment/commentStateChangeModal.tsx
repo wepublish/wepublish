@@ -41,7 +41,7 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment
   newCommentState: CommentState
-  onStateChanged?(): void
+  onStateChanged?(commentState: CommentState, rejectReason?: CommentRejectionReason | null): void
   onClose?(): void
 }
 
@@ -71,6 +71,57 @@ export function CommentStateChangeModal({
         </Message>
       )
   }, [errorApprove, errorRequestingChanges, errorRejecting])
+
+  async function changeState() {
+    if (!comment) return
+    switch (newCommentState) {
+      case CommentState.Approved:
+        await approveComment({
+          variables: {
+            id: comment.id
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              onStateChanged(data.approveComment.state)
+            }
+          }
+        })
+        setOpen(false)
+        break
+      case CommentState.PendingUserChanges:
+        if (!rejectionReason) return
+        await requestChanges({
+          variables: {
+            id: comment.id,
+            rejectionReason
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              const comment = data.requestChangesOnComment
+              onStateChanged(comment.state, comment.rejectionReason)
+            }
+          }
+        })
+        setOpen(false)
+        break
+      case CommentState.Rejected:
+        if (!rejectionReason) return
+        await rejectComment({
+          variables: {
+            id: comment.id,
+            rejectionReason
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              const comment = data.rejectComment
+              onStateChanged(comment.state, comment.rejectionReason)
+            }
+          }
+        })
+        setOpen(false)
+        break
+    }
+  }
 
   // handling the modal visibility
   useEffect(() => {
@@ -222,42 +273,7 @@ export function CommentStateChangeModal({
             isRejecting ||
             (!rejectionReason && newCommentState !== CommentState.Approved)
           }
-          onClick={async () => {
-            if (!comment) return
-            switch (newCommentState) {
-              case CommentState.Approved:
-                await approveComment({
-                  variables: {
-                    id: comment.id
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-              case CommentState.PendingUserChanges:
-                if (!rejectionReason) return
-                await requestChanges({
-                  variables: {
-                    id: comment.id,
-                    rejectionReason
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-              case CommentState.Rejected:
-                if (!rejectionReason) return
-                await rejectComment({
-                  variables: {
-                    id: comment.id,
-                    rejectionReason
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-            }
-          }}>
+          onClick={async () => await changeState()}>
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
         <Button

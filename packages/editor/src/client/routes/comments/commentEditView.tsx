@@ -47,7 +47,7 @@ const CommentEditView = memo(() => {
   /**
    * Queries
    */
-  const {data: commentData, loading: loadingComment, refetch} = useCommentQuery({
+  const {data: commentData, loading: loadingComment} = useCommentQuery({
     variables: {
       id: commentId
     },
@@ -217,8 +217,12 @@ const CommentEditView = memo(() => {
                         {comment && (
                           <CommentStateDropdown
                             comment={comment}
-                            onStateChanged={async () => {
-                              await refetch()
+                            onStateChanged={async (state, rejectionReason) => {
+                              setComment({
+                                ...comment,
+                                state,
+                                rejectionReason
+                              })
                             }}
                           />
                         )}

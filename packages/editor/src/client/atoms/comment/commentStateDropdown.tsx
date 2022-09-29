@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next'
 import {Badge, Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
-import {CommentState, FullCommentFragment} from '../../api'
+import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
 
 function mapCommentStateToColor(commentState: CommentState) {
@@ -35,7 +35,7 @@ function humanReadableCommentState(commentState: CommentState) {
 interface CommentStateViewProps {
   comment: FullCommentFragment
   size?: TypeAttributes.Size
-  onStateChanged?(): void
+  onStateChanged?(commentState: CommentState, rejectReason?: CommentRejectionReason | null): void
 }
 
 export function CommentStateDropdown({comment, size, onStateChanged}: CommentStateViewProps) {
@@ -100,7 +100,11 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
       <CommentStateChangeModal
         comment={comment}
         newCommentState={newCommentState}
-        onStateChanged={onStateChanged}
+        onStateChanged={(commentState, rejectReason) => {
+          if (onStateChanged) {
+            onStateChanged(commentState, rejectReason)
+          }
+        }}
         onClose={() => setNewCommentState(comment.state)}
       />
     </>
