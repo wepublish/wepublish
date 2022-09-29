@@ -12,7 +12,7 @@ import {HTMLBlockValue} from './types'
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
   const scriptContainer = useRef<HTMLDivElement>(null)
   const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(false)
-  const isEmpty = value.html === ''
+  const isEmpty = !value.html
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -68,6 +68,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
           )}
         </PlaceholderInput>
       </Panel>
+
       <Drawer size={'sm'} open={isHtmlDialogOpen} onClose={() => setHtmlDialogOpen(false)}>
         <HtmlEditPanel
           value={value}

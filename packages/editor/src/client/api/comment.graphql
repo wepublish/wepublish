@@ -37,7 +37,8 @@ fragment FullComment on Comment {
   source
   createdAt
   modifiedAt
-
+  itemID
+  itemType
   parentComment {
     ...FullParentComment
   }
@@ -104,8 +105,14 @@ mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID:
   }
 }
 
-mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
+    id
+  }
+}
+
+mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
     id
   }
 }

@@ -20,11 +20,11 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
+  /** A valid vote value */
+  VoteValue: any;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
-  /** A valid vote value */
-  VoteValue: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -232,7 +232,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -253,6 +253,8 @@ export type BlockInput = {
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   html?: Maybe<HtmlBlockInput>;
+  poll?: Maybe<PollBlockInput>;
+  comment?: Maybe<CommentBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -284,6 +286,29 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentBlock = {
+  __typename?: 'CommentBlock';
+  filter: CommentBlockFilter;
+  comments: Array<Comment>;
+};
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter';
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter;
+};
+
+export type CommentBlockInputFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
 export type CommentConnection = {
   __typename?: 'CommentConnection';
   nodes: Array<Comment>;
@@ -292,6 +317,8 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
   states?: Maybe<Array<CommentState>>;
 };
 
@@ -315,7 +342,7 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text: Scalars['RichText'];
+  text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
@@ -815,6 +842,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  deleteComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   updateRatingSystem: FullCommentRatingSystem;
@@ -1137,6 +1165,7 @@ export type MutationCreateCommentArgs = {
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
   itemID: Scalars['ID'];
+  parentID?: Maybe<Scalars['ID']>;
   itemType: CommentItemType;
 };
 
@@ -1155,6 +1184,11 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationDeleteCommentArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1572,6 +1606,15 @@ export type PollAnswerWithVoteCount = {
   pollId: Scalars['ID'];
   answer?: Maybe<Scalars['String']>;
   votes: Scalars['Int'];
+};
+
+export type PollBlock = {
+  __typename?: 'PollBlock';
+  poll?: Maybe<FullPoll>;
+};
+
+export type PollBlockInput = {
+  pollId?: Maybe<Scalars['ID']>;
 };
 
 export type PollConnection = {
@@ -1994,6 +2037,8 @@ export type Setting = {
 
 export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
@@ -2700,6 +2745,12 @@ export type ArticleQuery = (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
       ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
+      ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
@@ -3034,6 +3085,25 @@ type FullBlock_HtmlBlock_Fragment = (
   & Pick<HtmlBlock, 'html'>
 );
 
+type FullBlock_PollBlock_Fragment = (
+  { __typename: 'PollBlock' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question'>
+  )> }
+);
+
+type FullBlock_CommentBlock_Fragment = (
+  { __typename: 'CommentBlock' }
+  & { filter: (
+    { __typename?: 'CommentBlockFilter' }
+    & Pick<CommentBlockFilter, 'item' | 'tags' | 'comments'>
+  ), comments: Array<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  )> }
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -3088,7 +3158,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3171,7 +3241,7 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt' | 'itemID' | 'itemType'>
   & { guestUserImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3291,6 +3361,7 @@ export type UpdateCommentMutation = (
 export type CreateCommentMutationVariables = Exact<{
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -3299,6 +3370,19 @@ export type CreateCommentMutationVariables = Exact<{
 export type CreateCommentMutation = (
   { __typename?: 'Mutation' }
   & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  deleteCommentId: Scalars['ID'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'id'>
   ) }
@@ -3883,6 +3967,12 @@ export type PageQuery = (
       ) | (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
+      ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -4878,6 +4968,193 @@ export const FullAuthorFragmentDoc = gql`
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  canceledAt
+  modifiedAt
+  createdAt
+}
+    `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on User {
+  id
+  createdAt
+  modifiedAt
+  name
+  firstName
+  preferredName
+  address {
+    company
+    streetAddress
+    streetAddress2
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  emailVerifiedAt
+  roles {
+    ...FullUserRole
+  }
+  subscriptions {
+    ...UserSubscription
+  }
+}
+    ${FullUserRoleFragmentDoc}
+${UserSubscriptionFragmentDoc}`;
+export const CommentRevisionFragmentDoc = gql`
+    fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+    `;
+export const FullParentCommentFragmentDoc = gql`
+    fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  guestUsername
+  revisions {
+    ...CommentRevision
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}`;
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
+  user {
+    ...FullUser
+  }
+  revisions {
+    ...CommentRevision
+  }
+  source
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+  parentComment {
+    ...FullParentComment
+  }
+  tags {
+    id
+    tag
+  }
+}
+    ${ImageRefFragmentDoc}
+${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export const ArticleRefFragmentDoc = gql`
     fragment ArticleRef on Article {
   id
@@ -5057,6 +5334,22 @@ export const FullBlockFragmentDoc = gql`
       ...ImageRef
     }
   }
+  ... on PollBlock {
+    poll {
+      id
+      question
+    }
+  }
+  ... on CommentBlock {
+    filter {
+      item
+      tags
+      comments
+    }
+    comments {
+      ...FullComment
+    }
+  }
   ... on ImageBlock {
     caption
     image {
@@ -5145,192 +5438,8 @@ export const FullBlockFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}
+${FullCommentFragmentDoc}
 ${FullTeaserFragmentDoc}`;
-export const FullPermissionFragmentDoc = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRoleFragmentDoc = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
-}
-    `;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  description
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  canceledAt
-  modifiedAt
-  createdAt
-}
-    `;
-export const UserSubscriptionFragmentDoc = gql`
-    fragment UserSubscription on UserSubscription {
-  id
-  createdAt
-  modifiedAt
-  paymentPeriodicity
-  monthlyAmount
-  autoRenew
-  startsAt
-  paidUntil
-  periods {
-    id
-    amount
-    createdAt
-    endsAt
-    invoiceID
-    paymentPeriodicity
-    startsAt
-  }
-  properties {
-    key
-    value
-    public
-  }
-  deactivation {
-    ...Deactivation
-  }
-  memberPlan {
-    ...MemberPlanRef
-  }
-  invoices {
-    ...Invoice
-  }
-}
-    ${DeactivationFragmentDoc}
-${MemberPlanRefFragmentDoc}
-${InvoiceFragmentDoc}`;
-export const FullUserFragmentDoc = gql`
-    fragment FullUser on User {
-  id
-  createdAt
-  modifiedAt
-  name
-  firstName
-  preferredName
-  address {
-    company
-    streetAddress
-    streetAddress2
-    zipCode
-    city
-    country
-  }
-  active
-  lastLogin
-  properties {
-    key
-    value
-    public
-  }
-  email
-  emailVerifiedAt
-  roles {
-    ...FullUserRole
-  }
-  subscriptions {
-    ...UserSubscription
-  }
-}
-    ${FullUserRoleFragmentDoc}
-${UserSubscriptionFragmentDoc}`;
-export const CommentRevisionFragmentDoc = gql`
-    fragment CommentRevision on CommentRevision {
-  text
-  title
-  lead
-  createdAt
-}
-    `;
-export const FullParentCommentFragmentDoc = gql`
-    fragment FullParentComment on Comment {
-  id
-  state
-  rejectionReason
-  user {
-    ...FullUser
-  }
-  guestUsername
-  revisions {
-    ...CommentRevision
-  }
-  createdAt
-  modifiedAt
-}
-    ${FullUserFragmentDoc}
-${CommentRevisionFragmentDoc}`;
-export const FullCommentFragmentDoc = gql`
-    fragment FullComment on Comment {
-  id
-  state
-  rejectionReason
-  guestUsername
-  guestUserImage {
-    ...ImageRef
-  }
-  user {
-    ...FullUser
-  }
-  revisions {
-    ...CommentRevision
-  }
-  source
-  createdAt
-  modifiedAt
-  parentComment {
-    ...FullParentComment
-  }
-  tags {
-    id
-    tag
-  }
-}
-    ${ImageRefFragmentDoc}
-${FullUserFragmentDoc}
-${CommentRevisionFragmentDoc}
-${FullParentCommentFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   startCursor
@@ -6661,8 +6770,8 @@ export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateComment
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
     id
   }
 }
@@ -6684,6 +6793,7 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *   variables: {
  *      itemID: // value for 'itemID'
  *      itemType: // value for 'itemType'
+ *      parentID: // value for 'parentID'
  *      text: // value for 'text'
  *      tagIds: // value for 'tagIds'
  *   },
@@ -6696,6 +6806,39 @@ export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      deleteCommentId: // value for 'deleteCommentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
