@@ -265,6 +265,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
         months: getMonths(subscription.paymentPeriodicity)
       }).toISOString()
+      const newSubscriptionValidFrom = add(longestPeriod.endsAt, {
+        days: 1
+      }).toISOString()
 
       // Get User
       const user = await userClient.findUnique({
@@ -322,7 +325,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const subscriptionPeriod = await subscriptionPeriodClient.create({
         data: {
           subscriptionId: subscription.id,
-          startsAt: longestPeriod.endsAt,
+          startsAt: newSubscriptionValidFrom,
           endsAt: newSubscriptionValidUntil,
           paymentPeriodicity: subscription.paymentPeriodicity,
           amount: payedAmount,
