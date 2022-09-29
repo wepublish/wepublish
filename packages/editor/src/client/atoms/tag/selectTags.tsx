@@ -40,6 +40,7 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
       sort: TagSort.Tag,
       order: SortOrder.Ascending
     },
+    fetchPolicy: 'no-cache',
     onError: showErrors
   })
 
