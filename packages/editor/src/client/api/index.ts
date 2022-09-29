@@ -2512,7 +2512,7 @@ export type ArticleRefFragment = (
 );
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<ArticleFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -2537,6 +2537,7 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
+  filter?: Maybe<ArticleFilter>;
   cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
   order?: Maybe<SortOrder>;
@@ -5626,8 +5627,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -5675,8 +5676,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5708,6 +5709,7 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'

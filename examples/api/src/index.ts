@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {
-  AlgebraicCaptchaChallenge,
   Author,
   JobType,
   KarmaMediaAdapter,
@@ -16,6 +15,7 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
+  AlgebraicCaptchaChallenge,
   PayrexxSubscriptionPaymentProvider
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
