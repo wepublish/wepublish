@@ -1,10 +1,9 @@
-name: Publish
+name: Deploy pull request
 
 on:
-  - pull_request
+  pull_request:
 
 jobs:
-
   publish-docker-image:
     uses: ./.github/workflows/publish-docker-image.yml
     with:
