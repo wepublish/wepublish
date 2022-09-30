@@ -238,7 +238,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['node', './examples/website/dist/server/index.js'],
+              command: ['npx', 'wepublish-example-website'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -589,7 +589,7 @@ async function applyApiServer() {
               name: appName,
               image,
               command: ['/bin/sh'],
-              args: ['-c', 'yarn migrate && node ./examples/api/dist/index.js'],
+              args: ['-c', 'yarn migrate && npx wepublish-example-api'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',
@@ -987,7 +987,7 @@ async function applyEditor() {
             {
               name: appName,
               image,
-              command: ['node', './packages/editor/dist/server/index.js'],
+              command: ['npx', 'wepublish-editor'],
               env: [
                 {
                   name: 'NODE_ENV',
