@@ -49,8 +49,8 @@ export default (mode: string) =>
     },
     devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
     plugins: [
-      new ModuleMapPlugin({filename: './dist/moduleMap.json'}),
-      new AssetListPlugin({filename: './dist/assetList.json'})
+      // new ModuleMapPlugin({filename: './dist/moduleMap.json'}),
+      // new AssetListPlugin({filename: './dist/assetList.json'})
     ],
     devServer: {
       writeToDisk: true,
