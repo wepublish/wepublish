@@ -14,10 +14,11 @@ jobs:
       - id: image_tag
         run: echo "::set-output name=tag::master-$(date +%s)-${{ github.sha }}"
 
-  publish-docker-images:
+  publish_master_docker:
     needs: master_image_tag
     uses: ./.github/workflows/publish-docker-image.yml
     with:
+      target: production
       tags: |
         ghcr.io/wepublish/wepublish:${{ needs.master_image_tag.outputs.tag }}
     secrets: inherit

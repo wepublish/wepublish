@@ -7,7 +7,7 @@ jobs:
   publish-docker-image:
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      target: development
+      target: dev
       tags: |
         ghcr.io/wepublish/wepublish:${{ github.sha }}
     secrets: inherit
