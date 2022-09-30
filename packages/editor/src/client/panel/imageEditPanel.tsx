@@ -15,13 +15,13 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-import {ImageMetaData} from './imageUploadAndEditPanel'
+import {ImageMetaData} from '../atoms/imageMetaData'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -32,7 +32,7 @@ export interface ImageEditPanelProps {
   onSave?(image: ImageRefFragment): void
 }
 
-function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -263,7 +263,7 @@ function ImagedEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPa
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
               <Button appearance={'primary'} disabled={isDisabled} type="submit">
-                {isUpload ? t('images.panels.upload') : t('images.panels.save')}
+                {isUpload ? t('images.panels.upload') : t('save')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>
@@ -404,5 +404,5 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_IMAGES',
   'CAN_DELETE_IMAGE',
   'CAN_CREATE_IMAGE'
-])(ImagedEditPanel)
-export {CheckedPermissionComponent as ImagedEditPanel}
+])(ImageEditPanel)
+export {CheckedPermissionComponent as ImageEditPanel}

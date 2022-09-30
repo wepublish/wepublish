@@ -19,17 +19,17 @@ import {
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
+import {
+  authorise,
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../atoms/permissionControl'
 import {BlockMap} from '../blocks/blockMap'
 import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
-import {
-  authorise,
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../atoms/permissionControl'
 
 function PageEditor() {
   const navigate = useNavigate()
@@ -343,7 +343,7 @@ function PageEditor() {
                         icon={<SaveIcon />}
                         disabled={isDisabled}
                         onClick={() => handleSave()}>
-                        {t('pageEditor.overview.create')}
+                        {t('create')}
                       </IconButton>
                     </PermissionControl>
                   ) : (
@@ -357,7 +357,7 @@ function PageEditor() {
                           icon={<SaveIcon />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
-                          {t('pageEditor.overview.save')}
+                          {t('save')}
                         </IconButton>
                       </Badge>
                       <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>

@@ -8,8 +8,8 @@ import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table
 import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -107,7 +107,7 @@ function UserRoleList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
-                <IconButtonTooltip caption={t('userRoles.overview.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     disabled={rowData.systemRole}

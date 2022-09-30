@@ -122,14 +122,14 @@ export const getUsers = async (
 
   const [totalCount, users] = await Promise.all([
     user.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     user.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       select: unselectPassword
     })

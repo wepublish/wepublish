@@ -1,19 +1,17 @@
-import React, {useState, useEffect} from 'react'
-
+import ImageIcon from '@rsuite/icons/legacy/Image'
+import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import WrenchIcon from '@rsuite/icons/legacy/Wrench'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
+
+import {ImageRefFragment} from '../api'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-
+import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
-import {ImageRefFragment} from '../api'
 import {ImageBlockValue} from './types'
-
-import {useTranslation} from 'react-i18next'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import ImageIcon from '@rsuite/icons/legacy/Image'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
@@ -98,7 +96,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
     </>

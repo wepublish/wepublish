@@ -1,21 +1,19 @@
-import React, {useState, useEffect} from 'react'
-
-import {toaster, Message, Button, CheckPicker, Drawer, Form, Schema} from 'rsuite'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, CheckPicker, Drawer, Form, Message, Schema, toaster} from 'rsuite'
 
 import {
+  FullUserRoleFragment,
   Permission,
   useCreateUserRoleMutation,
   usePermissionListQuery,
-  FullUserRoleFragment,
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '../api'
-
-import {useTranslation} from 'react-i18next'
 import {
+  authorise,
   createCheckedPermissionComponent,
-  PermissionControl,
-  authorise
+  PermissionControl
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
@@ -132,7 +130,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
         fluid
         model={validationModel}
         style={{height: '100%'}}
-        formValue={{name: name}}>
+        formValue={{name}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
@@ -145,7 +143,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
                 appearance="primary"
                 disabled={isDisabled}
                 data-testid="saveButton">
-                {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
+                {id ? t('save') : t('create')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>

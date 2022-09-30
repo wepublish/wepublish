@@ -23,6 +23,8 @@ export type Scalars = {
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
+  /** A valid vote value */
+  VoteValue: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -91,11 +93,6 @@ export type ArticleNavigationLink = BaseNavigationLink & {
 export type ArticleNavigationLinkInput = {
   label: Scalars['String'];
   articleID: Scalars['ID'];
-};
-
-export type ArticleOverwriteData = {
-  __typename?: 'ArticleOverwriteData';
-  title?: Maybe<TitleBlock>;
 };
 
 export type ArticleRevision = {
@@ -235,7 +232,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -255,6 +252,7 @@ export type BlockInput = {
   tikTokVideo?: Maybe<TikTokVideoBlockInput>;
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
+  html?: Maybe<HtmlBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -265,12 +263,15 @@ export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
   guestUsername?: Maybe<Scalars['String']>;
+  guestUserImage?: Maybe<Image>;
   user?: Maybe<User>;
+  tags?: Maybe<Array<Tag>>;
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
+  source?: Maybe<Scalars['String']>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
@@ -307,7 +308,15 @@ export enum CommentRejectionReason {
 export type CommentRevision = {
   __typename?: 'CommentRevision';
   text: Scalars['RichText'];
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+};
+
+export type CommentRevisionUpdateInput = {
+  text?: Maybe<Scalars['RichText']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
 };
 
 export enum CommentSort {
@@ -435,6 +444,16 @@ export type FlexTeaserInput = {
   alignment: FlexAlignmentInput;
 };
 
+export type FullPoll = {
+  __typename?: 'FullPoll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+};
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
@@ -444,6 +463,15 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
+};
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock';
+  html?: Maybe<Scalars['String']>;
+};
+
+export type HtmlBlockInput = {
+  html?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -558,6 +586,7 @@ export type Invoice = {
   manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItem>;
   total: Scalars['Int'];
+  canceledAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type InvoiceConnection = {
@@ -766,10 +795,22 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
   deleteInvoice?: Maybe<Invoice>;
+  updateComment: Comment;
+  createComment: Comment;
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
+  createTag?: Maybe<Tag>;
+  updateTag?: Maybe<Tag>;
+  deleteTag?: Maybe<Tag>;
+  createPoll?: Maybe<PollWithAnswers>;
+  createPollAnswer?: Maybe<PollAnswer>;
+  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
+  updatePoll?: Maybe<FullPoll>;
+  deletePoll?: Maybe<FullPoll>;
+  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
+  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
 };
 
 
@@ -1063,6 +1104,25 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationUpdateCommentArgs = {
+  id: Scalars['ID'];
+  revision?: Maybe<CommentRevisionUpdateInput>;
+  userID?: Maybe<Scalars['ID']>;
+  guestUsername?: Maybe<Scalars['String']>;
+  guestUserImageID?: Maybe<Scalars['ID']>;
+  source?: Maybe<Scalars['String']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+};
+
+
+export type MutationCreateCommentArgs = {
+  text?: Maybe<Scalars['RichText']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+};
+
+
 export type MutationApproveCommentArgs = {
   id: Scalars['ID'];
 };
@@ -1082,6 +1142,62 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationUpdateSettingListArgs = {
   value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
+};
+
+
+export type MutationCreateTagArgs = {
+  tag?: Maybe<Scalars['String']>;
+  type: TagType;
+};
+
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollArgs = {
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollAnswerArgs = {
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdatePollArgs = {
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer>>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources>>;
+};
+
+
+export type MutationDeletePollArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollAnswerArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID'];
 };
 
 export type Navigation = {
@@ -1314,7 +1430,6 @@ export type PeerArticle = {
   __typename?: 'PeerArticle';
   peer: Peer;
   peeredArticleURL: Scalars['String'];
-  overwriteData?: Maybe<ArticleOverwriteData>;
   article: Article;
 };
 
@@ -1394,6 +1509,69 @@ export type PolisConversationBlockInput = {
   conversationID: Scalars['String'];
 };
 
+export type Poll = {
+  __typename?: 'Poll';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PollAnswer = {
+  __typename?: 'PollAnswer';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount';
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+  votes: Scalars['Int'];
+};
+
+export type PollConnection = {
+  __typename?: 'PollConnection';
+  nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote';
+  id: Scalars['ID'];
+  answerId: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource';
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<PollExternalVote>>;
+};
+
+export type PollFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>;
+};
+
+export enum PollSort {
+  OpensAt = 'OPENS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type PollWithAnswers = {
+  __typename?: 'PollWithAnswers';
+  id: Scalars['ID'];
+  question?: Maybe<Scalars['String']>;
+  opensAt: Scalars['DateTime'];
+  closedAt?: Maybe<Scalars['DateTime']>;
+  answers?: Maybe<Array<PollAnswer>>;
+};
+
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
@@ -1432,10 +1610,11 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comment?: Maybe<Comment>;
   comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
-  peerArticle?: Maybe<PeerArticle>;
+  peerArticle?: Maybe<Article>;
   peerArticles: PeerArticleConnection;
   articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
@@ -1452,6 +1631,9 @@ export type Query = {
   payments: PaymentConnection;
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
+  tags?: Maybe<TagConnection>;
+  polls?: Maybe<PollConnection>;
+  poll?: Maybe<FullPoll>;
 };
 
 
@@ -1561,6 +1743,11 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1685,6 +1872,30 @@ export type QueryPaymentsArgs = {
 
 export type QuerySettingArgs = {
   name?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryTagsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<TagFilter>;
+  sort?: Maybe<TagSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type QueryPollsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPollArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type QuoteBlock = {
@@ -1853,6 +2064,35 @@ export enum SubscriptionSort {
   ModifiedAt = 'MODIFIED_AT'
 }
 
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+};
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  type?: Maybe<TagType>;
+  tag?: Maybe<Scalars['String']>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
+
+export enum TagType {
+  Comment = 'Comment'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserGridBlock = {
@@ -1955,6 +2195,22 @@ export type UpdatePeerInput = {
   hostURL?: Maybe<Scalars['String']>;
   isDisabled?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePollAnswer = {
+  id: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePollExternalVote = {
+  id: Scalars['ID'];
+  amount?: Maybe<Scalars['VoteValue']>;
+};
+
+export type UpdatePollExternalVoteSources = {
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<UpdatePollExternalVote>>;
 };
 
 export type UpdateSettingArgs = {
@@ -2102,6 +2358,7 @@ export type VimeoVideoBlock = {
 export type VimeoVideoBlockInput = {
   videoID: Scalars['String'];
 };
+
 
 export type YouTubeVideoBlock = {
   __typename?: 'YouTubeVideoBlock';
@@ -2385,6 +2642,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
+      ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -2715,6 +2975,11 @@ type FullBlock_EmbedBlock_Fragment = (
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
 );
 
+type FullBlock_HtmlBlock_Fragment = (
+  { __typename: 'HTMLBlock' }
+  & Pick<HtmlBlock, 'html'>
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -2769,7 +3034,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+
+export type CommentRevisionFragment = (
+  { __typename?: 'CommentRevision' }
+  & Pick<CommentRevision, 'text' | 'title' | 'lead' | 'createdAt'>
+);
 
 export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
@@ -2779,23 +3049,29 @@ export type FullParentCommentFragment = (
     & FullUserFragment
   )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
-    & Pick<CommentRevision, 'text' | 'createdAt'>
+    & CommentRevisionFragment
   )> }
 );
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
-  & { user?: Maybe<(
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
+  & { guestUserImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, user?: Maybe<(
     { __typename?: 'User' }
     & FullUserFragment
   )>, revisions: Array<(
     { __typename?: 'CommentRevision' }
-    & Pick<CommentRevision, 'text' | 'createdAt'>
+    & CommentRevisionFragment
   )>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
     & FullParentCommentFragment
-  )> }
+  )>, tags?: Maybe<Array<(
+    { __typename?: 'Tag' }
+    & Pick<Tag, 'id' | 'tag'>
+  )>> }
 );
 
 export type CommentListQueryVariables = Exact<{
@@ -2821,6 +3097,19 @@ export type CommentListQuery = (
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
     ) }
   ) }
+);
+
+export type CommentQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type CommentQuery = (
+  { __typename?: 'Query' }
+  & { comment?: Maybe<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  )> }
 );
 
 export type ApproveCommentMutationVariables = Exact<{
@@ -2861,6 +3150,41 @@ export type RequestChangesOnCommentMutation = (
   & { requestChangesOnComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
+
+export type UpdateCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  revision?: Maybe<CommentRevisionUpdateInput>;
+  userID?: Maybe<Scalars['ID']>;
+  guestUsername?: Maybe<Scalars['String']>;
+  guestUserImageID?: Maybe<Scalars['ID']>;
+  source?: Maybe<Scalars['String']>;
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+
+export type UpdateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateComment: (
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  ) }
+);
+
+export type CreateCommentMutationVariables = Exact<{
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  text?: Maybe<Scalars['RichText']>;
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
   ) }
 );
 
@@ -2974,7 +3298,7 @@ export type DeleteImageMutation = (
 
 export type InvoiceFragment = (
   { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt'>
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt' | 'canceledAt'>
   & { items: Array<(
     { __typename?: 'InvoiceItem' }
     & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
@@ -3441,6 +3765,9 @@ export type PageQuery = (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
+        { __typename?: 'HTMLBlock' }
+        & FullBlock_HtmlBlock_Fragment
+      ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
@@ -3681,6 +4008,171 @@ export type DeletePeerMutation = (
   )> }
 );
 
+export type PollExternalVoteSourceFragment = (
+  { __typename?: 'PollExternalVoteSource' }
+  & Pick<PollExternalVoteSource, 'id' | 'source'>
+  & { voteAmounts?: Maybe<Array<(
+    { __typename?: 'PollExternalVote' }
+    & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
+  )>> }
+);
+
+export type CreatePollMutationVariables = Exact<{
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { createPoll?: Maybe<(
+    { __typename?: 'PollWithAnswers' }
+    & Pick<PollWithAnswers, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswer' }
+      & Pick<PollAnswer, 'id' | 'pollId' | 'answer'>
+    )>> }
+  )> }
+);
+
+export type UpdatePollMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  opensAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  question?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
+}>;
+
+
+export type UpdatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePoll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & PollExternalVoteSourceFragment
+    )>> }
+  )> }
+);
+
+export type DeletePollMutationVariables = Exact<{
+  deletePollId: Scalars['ID'];
+}>;
+
+
+export type DeletePollMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePoll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id'>
+  )> }
+);
+
+export type CreatePollAnswerMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollAnswer?: Maybe<(
+    { __typename?: 'PollAnswer' }
+    & Pick<PollAnswer, 'answer' | 'id' | 'pollId'>
+  )> }
+);
+
+export type DeletePollAnswerMutationVariables = Exact<{
+  deletePollAnswerId: Scalars['ID'];
+}>;
+
+
+export type DeletePollAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollAnswer?: Maybe<(
+    { __typename?: 'PollAnswerWithVoteCount' }
+    & Pick<PollAnswerWithVoteCount, 'id'>
+  )> }
+);
+
+export type CreatePollExternalVoteSourceMutationVariables = Exact<{
+  pollId: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { createPollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
+export type DeletePollExternalVoteSourceMutationVariables = Exact<{
+  deletePollExternalVoteSourceId: Scalars['ID'];
+}>;
+
+
+export type DeletePollExternalVoteSourceMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePollExternalVoteSource?: Maybe<(
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  )> }
+);
+
+export type PollsQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PollFilter>;
+  sort?: Maybe<PollSort>;
+  order?: Maybe<SortOrder>;
+}>;
+
+
+export type PollsQuery = (
+  { __typename?: 'Query' }
+  & { polls?: Maybe<(
+    { __typename?: 'PollConnection' }
+    & Pick<PollConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Poll' }
+      & Pick<Poll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  )> }
+);
+
+export type PollQueryVariables = Exact<{
+  pollId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type PollQuery = (
+  { __typename?: 'Query' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
+    & { answers?: Maybe<Array<(
+      { __typename?: 'PollAnswerWithVoteCount' }
+      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
+    )>>, externalVoteSources?: Maybe<Array<(
+      { __typename?: 'PollExternalVoteSource' }
+      & PollExternalVoteSourceFragment
+    )>> }
+  )> }
+);
+
 export type FullSettingFragment = (
   { __typename?: 'Setting' }
   & Pick<Setting, 'id' | 'name' | 'value'>
@@ -3833,6 +4325,72 @@ export type DeleteSubscriptionMutation = (
   & { deleteSubscription?: Maybe<(
     { __typename?: 'Subscription' }
     & FullSubscriptionFragment
+  )> }
+);
+
+export type TagListQueryVariables = Exact<{
+  filter?: Maybe<TagFilter>;
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<TagSort>;
+}>;
+
+
+export type TagListQuery = (
+  { __typename?: 'Query' }
+  & { tags?: Maybe<(
+    { __typename?: 'TagConnection' }
+    & Pick<TagConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Tag' }
+      & Pick<Tag, 'id' | 'tag'>
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  )> }
+);
+
+export type CreateTagMutationVariables = Exact<{
+  tag?: Maybe<Scalars['String']>;
+  type: TagType;
+}>;
+
+
+export type CreateTagMutation = (
+  { __typename?: 'Mutation' }
+  & { createTag?: Maybe<(
+    { __typename?: 'Tag' }
+    & Pick<Tag, 'id' | 'tag'>
+  )> }
+);
+
+export type UpdateTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateTagMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTag?: Maybe<(
+    { __typename?: 'Tag' }
+    & Pick<Tag, 'id' | 'tag'>
+  )> }
+);
+
+export type DeleteTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTagMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteTag?: Maybe<(
+    { __typename?: 'Tag' }
+    & Pick<Tag, 'id' | 'tag'>
   )> }
 );
 
@@ -4359,6 +4917,9 @@ export const FullBlockFragmentDoc = gql`
     title
     lead
   }
+  ... on HTMLBlock {
+    html
+  }
   ... on RichTextBlock {
     richText
   }
@@ -4523,6 +5084,7 @@ export const InvoiceFragmentDoc = gql`
   description
   mail
   manuallySetAsPaidByUserId
+  canceledAt
   modifiedAt
   createdAt
 }
@@ -4598,6 +5160,14 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
+export const CommentRevisionFragmentDoc = gql`
+    fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+    `;
 export const FullParentCommentFragmentDoc = gql`
     fragment FullParentComment on Comment {
   id
@@ -4608,33 +5178,42 @@ export const FullParentCommentFragmentDoc = gql`
   }
   guestUsername
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
   createdAt
   modifiedAt
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}`;
 export const FullCommentFragmentDoc = gql`
     fragment FullComment on Comment {
   id
   state
   rejectionReason
   guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
   user {
     ...FullUser
   }
   revisions {
-    text
-    createdAt
+    ...CommentRevision
   }
+  source
   createdAt
   modifiedAt
   parentComment {
     ...FullParentComment
   }
+  tags {
+    id
+    tag
+  }
 }
-    ${FullUserFragmentDoc}
+    ${ImageRefFragmentDoc}
+${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}
 ${FullParentCommentFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
@@ -4716,6 +5295,17 @@ export const MutationPageFragmentDoc = gql`
     updatedAt
     publishAt
     revision
+  }
+}
+    `;
+export const PollExternalVoteSourceFragmentDoc = gql`
+    fragment PollExternalVoteSource on PollExternalVoteSource {
+  id
+  source
+  voteAmounts {
+    id
+    answerId
+    amount
   }
 }
     `;
@@ -5623,6 +6213,41 @@ export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
+export const CommentDocument = gql`
+    query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+    ${FullCommentFragmentDoc}`;
+
+/**
+ * __useCommentQuery__
+ *
+ * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+      }
+export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+        }
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
+export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const ApproveCommentDocument = gql`
     mutation ApproveComment($id: ID!) {
   approveComment(id: $id) {
@@ -5726,6 +6351,81 @@ export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.Mutation
 export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+export const UpdateCommentDocument = gql`
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
+    ...FullComment
+  }
+}
+    ${FullCommentFragmentDoc}`;
+export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutation, UpdateCommentMutationVariables>;
+
+/**
+ * __useUpdateCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      revision: // value for 'revision'
+ *      userID: // value for 'userID'
+ *      guestUsername: // value for 'guestUsername'
+ *      guestUserImageID: // value for 'guestUserImageID'
+ *      source: // value for 'source'
+ *      tagIds: // value for 'tagIds'
+ *   },
+ * });
+ */
+export function useUpdateCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCommentMutation, UpdateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument, options);
+      }
+export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>;
+export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
+export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
+export const CreateCommentDocument = gql`
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    id
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      itemID: // value for 'itemID'
+ *      itemType: // value for 'itemType'
+ *      text: // value for 'text'
+ *      tagIds: // value for 'tagIds'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
@@ -7173,6 +7873,367 @@ export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
 export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
+export const CreatePollDocument = gql`
+    mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
+  createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+    }
+  }
+}
+    `;
+export type CreatePollMutationFn = Apollo.MutationFunction<CreatePollMutation, CreatePollMutationVariables>;
+
+/**
+ * __useCreatePollMutation__
+ *
+ * To run a mutation, you first call `useCreatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollMutation, { data, loading, error }] = useCreatePollMutation({
+ *   variables: {
+ *      opensAt: // value for 'opensAt'
+ *      closedAt: // value for 'closedAt'
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, options);
+      }
+export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
+export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
+export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const UpdatePollDocument = gql`
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+  updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, UpdatePollMutationVariables>;
+
+/**
+ * __useUpdatePollMutation__
+ *
+ * To run a mutation, you first call `useUpdatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePollMutation, { data, loading, error }] = useUpdatePollMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      opensAt: // value for 'opensAt'
+ *      closedAt: // value for 'closedAt'
+ *      question: // value for 'question'
+ *      answers: // value for 'answers'
+ *      externalVoteSources: // value for 'externalVoteSources'
+ *   },
+ * });
+ */
+export function useUpdatePollMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePollMutation, UpdatePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePollMutation, UpdatePollMutationVariables>(UpdatePollDocument, options);
+      }
+export type UpdatePollMutationHookResult = ReturnType<typeof useUpdatePollMutation>;
+export type UpdatePollMutationResult = Apollo.MutationResult<UpdatePollMutation>;
+export type UpdatePollMutationOptions = Apollo.BaseMutationOptions<UpdatePollMutation, UpdatePollMutationVariables>;
+export const DeletePollDocument = gql`
+    mutation DeletePoll($deletePollId: ID!) {
+  deletePoll(id: $deletePollId) {
+    id
+  }
+}
+    `;
+export type DeletePollMutationFn = Apollo.MutationFunction<DeletePollMutation, DeletePollMutationVariables>;
+
+/**
+ * __useDeletePollMutation__
+ *
+ * To run a mutation, you first call `useDeletePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollMutation, { data, loading, error }] = useDeletePollMutation({
+ *   variables: {
+ *      deletePollId: // value for 'deletePollId'
+ *   },
+ * });
+ */
+export function useDeletePollMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollMutation, DeletePollMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollMutation, DeletePollMutationVariables>(DeletePollDocument, options);
+      }
+export type DeletePollMutationHookResult = ReturnType<typeof useDeletePollMutation>;
+export type DeletePollMutationResult = Apollo.MutationResult<DeletePollMutation>;
+export type DeletePollMutationOptions = Apollo.BaseMutationOptions<DeletePollMutation, DeletePollMutationVariables>;
+export const CreatePollAnswerDocument = gql`
+    mutation CreatePollAnswer($pollId: ID!, $answer: String) {
+  createPollAnswer(pollId: $pollId, answer: $answer) {
+    answer
+    id
+    pollId
+  }
+}
+    `;
+export type CreatePollAnswerMutationFn = Apollo.MutationFunction<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+
+/**
+ * __useCreatePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useCreatePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollAnswerMutation, { data, loading, error }] = useCreatePollAnswerMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useCreatePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>(CreatePollAnswerDocument, options);
+      }
+export type CreatePollAnswerMutationHookResult = ReturnType<typeof useCreatePollAnswerMutation>;
+export type CreatePollAnswerMutationResult = Apollo.MutationResult<CreatePollAnswerMutation>;
+export type CreatePollAnswerMutationOptions = Apollo.BaseMutationOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>;
+export const DeletePollAnswerDocument = gql`
+    mutation DeletePollAnswer($deletePollAnswerId: ID!) {
+  deletePollAnswer(id: $deletePollAnswerId) {
+    id
+  }
+}
+    `;
+export type DeletePollAnswerMutationFn = Apollo.MutationFunction<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+
+/**
+ * __useDeletePollAnswerMutation__
+ *
+ * To run a mutation, you first call `useDeletePollAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollAnswerMutation, { data, loading, error }] = useDeletePollAnswerMutation({
+ *   variables: {
+ *      deletePollAnswerId: // value for 'deletePollAnswerId'
+ *   },
+ * });
+ */
+export function useDeletePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>(DeletePollAnswerDocument, options);
+      }
+export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePollAnswerMutation>;
+export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
+export type DeletePollAnswerMutationOptions = Apollo.BaseMutationOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>;
+export const CreatePollExternalVoteSourceDocument = gql`
+    mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
+  createPollExternalVoteSource(pollId: $pollId, source: $source) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type CreatePollExternalVoteSourceMutationFn = Apollo.MutationFunction<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useCreatePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useCreatePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPollExternalVoteSourceMutation, { data, loading, error }] = useCreatePollExternalVoteSourceMutation({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *      source: // value for 'source'
+ *   },
+ * });
+ */
+export function useCreatePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>(CreatePollExternalVoteSourceDocument, options);
+      }
+export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof useCreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
+export type CreatePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>;
+export const DeletePollExternalVoteSourceDocument = gql`
+    mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
+  deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+    ...PollExternalVoteSource
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+export type DeletePollExternalVoteSourceMutationFn = Apollo.MutationFunction<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
+
+/**
+ * __useDeletePollExternalVoteSourceMutation__
+ *
+ * To run a mutation, you first call `useDeletePollExternalVoteSourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePollExternalVoteSourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePollExternalVoteSourceMutation, { data, loading, error }] = useDeletePollExternalVoteSourceMutation({
+ *   variables: {
+ *      deletePollExternalVoteSourceId: // value for 'deletePollExternalVoteSourceId'
+ *   },
+ * });
+ */
+export function useDeletePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>(DeletePollExternalVoteSourceDocument, options);
+      }
+export type DeletePollExternalVoteSourceMutationHookResult = ReturnType<typeof useDeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<DeletePollExternalVoteSourceMutation>;
+export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
+export const PollsDocument = gql`
+    query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
+  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      id
+      question
+      opensAt
+      closedAt
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __usePollsQuery__
+ *
+ * To run a query within a React component, call `usePollsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollsQuery({
+ *   variables: {
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function usePollsQuery(baseOptions?: Apollo.QueryHookOptions<PollsQuery, PollsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+      }
+export function usePollsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollsQuery, PollsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+        }
+export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
+export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
+export type PollsQueryResult = Apollo.QueryResult<PollsQuery, PollsQueryVariables>;
+export const PollDocument = gql`
+    query Poll($pollId: ID) {
+  poll(id: $pollId) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+      votes
+    }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
+}
+    ${PollExternalVoteSourceFragmentDoc}`;
+
+/**
+ * __usePollQuery__
+ *
+ * To run a query within a React component, call `usePollQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePollQuery({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *   },
+ * });
+ */
+export function usePollQuery(baseOptions?: Apollo.QueryHookOptions<PollQuery, PollQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+      }
+export function usePollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollQuery, PollQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+        }
+export type PollQueryHookResult = ReturnType<typeof usePollQuery>;
+export type PollLazyQueryHookResult = ReturnType<typeof usePollLazyQuery>;
+export type PollQueryResult = Apollo.QueryResult<PollQuery, PollQueryVariables>;
 export const SettingListDocument = gql`
     query SettingList {
   settings {
@@ -7468,6 +8529,160 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const TagListDocument = gql`
+    query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
+  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      id
+      tag
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useTagListQuery__
+ *
+ * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useTagListQuery(baseOptions?: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+      }
+export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
+export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
+export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
+export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
+export const CreateTagDocument = gql`
+    mutation CreateTag($tag: String, $type: TagType!) {
+  createTag(tag: $tag, type: $type) {
+    id
+    tag
+  }
+}
+    `;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const UpdateTagDocument = gql`
+    mutation UpdateTag($id: ID!, $tag: String) {
+  updateTag(id: $id, tag: $tag) {
+    id
+    tag
+  }
+}
+    `;
+export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, UpdateTagMutationVariables>;
+
+/**
+ * __useUpdateTagMutation__
+ *
+ * To run a mutation, you first call `useUpdateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
+      }
+export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
+export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
+export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
+export const DeleteTagDocument = gql`
+    mutation DeleteTag($id: ID!) {
+  deleteTag(id: $id) {
+    id
+    tag
+  }
+}
+    `;
+export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
+
+/**
+ * __useDeleteTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+      }
+export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
+export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
+export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const TokenListDocument = gql`
     query TokenList {
   tokens {
