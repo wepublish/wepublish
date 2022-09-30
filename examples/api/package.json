@@ -19,9 +19,6 @@
     "prepare": "run-s clean build"
   },
   "dependencies": {
-    "@karma.run/media": "^0.2.1",
-    "@karma.run/media-image-sharp": "^0.2.0",
-    "@karma.run/media-storage-local": "^0.1.4",
     "@wepublish/api": "*",
     "@wepublish/api-media-karma": "*",
     "bcrypt": "^5.0.0",
