@@ -1,0 +1,37 @@
+name: Publish release artifacts
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+
+  release_version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - id: version
+        run: echo "::set-output name=version::${GITHUB_REF#refs/*/}"
+
+  alpha_release_docker:
+    if: |
+      contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
+    needs: release_version
+    uses: ./.github/workflows/publish-docker-image.yml
+    with:
+      tags: |
+        ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
+    secrets: inherit
+
+  release_docker:
+    if: |
+      contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
+    needs: release_version
+    uses: ./.github/workflows/publish-docker-image.yml
+    with:
+      tags: |
+        ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/wepublish:latest
+    secrets: inherit
