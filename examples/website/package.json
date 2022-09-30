@@ -63,7 +63,7 @@
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-helmet-async": "^1.0.0",
-    "@types/webpack": "^4.4.34",
+    "@types/webpack": "^4.35.3",
     "@types/webpack-dev-server": "^2.9.4",
     "babel-loader": "^8.0.6",
     "core-js": "^3.2.1",
