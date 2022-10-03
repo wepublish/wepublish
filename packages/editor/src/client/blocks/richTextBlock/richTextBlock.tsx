@@ -49,7 +49,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
-
   const [charCount, setCharCount] = useState(0)
 
   useEffect(() => {
@@ -153,7 +152,11 @@ export const RichTextBlock = memo(function RichTextBlock({
             <ToolbarDivider />
 
             <SubMenuButton icon={<SmileOIcon />}>
-              <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+              <EmojiPicker
+                setEmoji={emoji => {
+                  editor.insertText(emoji)
+                }}
+              />
             </SubMenuButton>
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
