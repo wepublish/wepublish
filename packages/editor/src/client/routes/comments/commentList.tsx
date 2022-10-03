@@ -211,8 +211,9 @@ function CommentList() {
                       displayOnly
                       displayOneLine
                       disabled
-                      // TODO: remove this
-                      onChange={console.log}
+                      onChange={() => {
+                        return undefined
+                      }}
                       value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
                     />
                   ) : null}
@@ -264,11 +265,13 @@ function CommentList() {
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   {/* edit comment */}
-                  <IconButtonTooltip caption={t('comments.overview.edit')}>
-                    <Link to={`edit/${rowData.id}`}>
-                      <IconButton icon={<EditIcon />} circle size="sm" />
-                    </Link>
-                  </IconButtonTooltip>
+                  <span style={{marginRight: '5px'}}>
+                    <IconButtonTooltip caption={t('comments.overview.edit')}>
+                      <Link to={`edit/${rowData.id}`}>
+                        <IconButton icon={<EditIcon />} circle size="sm" />
+                      </Link>
+                    </IconButtonTooltip>
+                  </span>
 
                   {/* reply to comment */}
                   <ReplyCommentBtn comment={rowData} size="sm" circle hideText />

@@ -204,16 +204,11 @@ const CommentEditView = memo(() => {
                 {/* some actions on the comment */}
                 <Col xs={24} style={{marginTop: '0px'}}>
                   <Panel bordered header={t('commentEditView.actions')}>
-                    <FlexboxGrid align="bottom">
-                      <FlexboxGrid.Item style={{marginRight: '10px'}}>
-                        <CommentDeleteBtn
-                          comment={comment}
-                          onCommentDeleted={() => {
-                            navigate(closePath)
-                          }}
-                        />
+                    <FlexboxGrid align="bottom" justify="end">
+                      <FlexboxGrid.Item style={{textAlign: 'end'}} colspan={24}>
+                        <ReplyCommentBtn comment={comment} appearance="ghost" />
                       </FlexboxGrid.Item>
-                      <FlexboxGrid.Item>
+                      <FlexboxGrid.Item colspan={24} style={{marginTop: '10px', textAlign: 'end'}}>
                         {comment && (
                           <CommentStateDropdown
                             comment={comment}
@@ -227,8 +222,13 @@ const CommentEditView = memo(() => {
                           />
                         )}
                       </FlexboxGrid.Item>
-                      <FlexboxGrid.Item>
-                        <ReplyCommentBtn comment={comment} appearance="default" />
+                      <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
+                        <CommentDeleteBtn
+                          comment={comment}
+                          onCommentDeleted={() => {
+                            navigate(closePath)
+                          }}
+                        />
                       </FlexboxGrid.Item>
                     </FlexboxGrid>
                   </Panel>

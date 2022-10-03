@@ -42,7 +42,7 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment
   newCommentState: CommentState
-  onStateChanged?(commentState: CommentState, rejectReason?: CommentRejectionReason | null): void
+  onStateChanged?(commentState: CommentState, rejectionReason?: CommentRejectionReason | null): void
   onClose?(): void
 }
 
@@ -124,7 +124,7 @@ export function CommentStateChangeModal({
     }
   }
 
-  const sortetRevisions = useMemo(() => {
+  const sortedRevisions = useMemo(() => {
     const dcRevisions = [...comment.revisions]
     return dcRevisions.sort(
       (a: CommentRevision, b: CommentRevision) =>
@@ -252,9 +252,11 @@ export function CommentStateChangeModal({
           <DescriptionListItem label={t('comments.panels.revisions')} />
           <Panel bordered style={{maxHeight: '300px', overflowY: 'scroll'}}>
             <Timeline align="left">
-              {sortetRevisions.length
-                ? sortetRevisions.map(({text, createdAt}, i) => (
-                    <Timeline.Item key={i} className={i === 0 ? 'rs-timeline-item-last' : ''}>
+              {sortedRevisions.length
+                ? sortedRevisions.map(({text, createdAt}, index) => (
+                    <Timeline.Item
+                      key={`timeline-item-${index}`}
+                      className={index === 0 ? 'rs-timeline-item-last' : ''}>
                       <div>
                         {t('comments.panels.revisionCreatedAtDate', {
                           revisionCreatedAtDate: new Date(createdAt)
@@ -263,8 +265,9 @@ export function CommentStateChangeModal({
                       <RichTextBlock
                         disabled
                         displayOnly
-                        // TODO: remove this
-                        onChange={console.log}
+                        onChange={() => {
+                          return undefined
+                        }}
                         value={text || []}
                       />
                     </Timeline.Item>
