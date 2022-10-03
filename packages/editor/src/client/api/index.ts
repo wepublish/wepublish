@@ -16,10 +16,10 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
-  Slug: string;
-  RichText: Node[];
   /** A hexidecimal color value. */
   Color: string;
+  RichText: Node[];
+  Slug: string;
   /** A valid vote value */
   VoteValue: any;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
@@ -1690,7 +1690,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  savePeerArticle?: Maybe<Article>;
   remotePeerProfile?: Maybe<PeerProfile>;
   createJWTForUser?: Maybe<JwtToken>;
   peerProfile: PeerProfile;
@@ -1739,12 +1738,6 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   polls?: Maybe<PollConnection>;
   poll?: Maybe<FullPoll>;
-};
-
-
-export type QuerySavePeerArticleArgs = {
-  peerID: Scalars['ID'];
-  id: Scalars['ID'];
 };
 
 
