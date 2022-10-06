@@ -1,12 +1,11 @@
 import React, {useState} from 'react'
-
-import {TeaserSelectPanel} from './teaserSelectPanel'
-import {TeaserEditPanel} from './teaserEditPanel'
-import {TeaserLink, Teaser} from '../blocks/types'
-import {TeaserStyle} from '../api'
+import {useTranslation} from 'react-i18next'
 import {Drawer} from 'rsuite'
 
-import {useTranslation} from 'react-i18next'
+import {TeaserStyle} from '../api'
+import {Teaser, TeaserLink, TeaserType} from '../blocks/types'
+import {TeaserEditPanel} from './teaserEditPanel'
+import {TeaserSelectPanel} from './teaserSelectPanel'
 
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void
@@ -16,17 +15,18 @@ export interface TeaserSelectAndEditPanelProps {
 export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEditPanelProps) {
   const [teaser, setTeaser] = useState<TeaserLink>()
   const [isEditOpen, setEditOpen] = useState(false)
-
+  console.log('teaser', teaser)
   const {t} = useTranslation()
 
   return (
     <>
       <TeaserSelectPanel
         onClose={onClose}
-        onSelect={teaser => {
-          setEditOpen(true)
-          setTeaser(teaser)
-        }}
+        onSelect={teaser =>
+          teaser.type !== TeaserType.Custom
+            ? (setEditOpen(true), setTeaser(teaser))
+            : (onClose(), onSelect(teaser))
+        }
       />
       <Drawer open={isEditOpen} size={'sm'} onClose={() => setEditOpen(false)}>
         <TeaserEditPanel

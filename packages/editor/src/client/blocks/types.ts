@@ -192,7 +192,8 @@ export type EmbedBlockValue =
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
-  Page = 'page'
+  Page = 'page',
+  Custom = 'custom'
 }
 
 export enum MetaDataType {
@@ -218,7 +219,16 @@ export interface PageTeaserLink {
   page: PageRefFragment
 }
 
-export type TeaserLink = ArticleTeaserLink | PeerArticleTeaserLink | PageTeaserLink
+export interface CustomTeaserLink extends BaseTeaser {
+  type: TeaserType.Custom
+  contentUrl: string
+}
+
+export type TeaserLink =
+  | ArticleTeaserLink
+  | PeerArticleTeaserLink
+  | PageTeaserLink
+  | CustomTeaserLink
 
 export interface BaseTeaser {
   style: TeaserStyle
@@ -231,8 +241,9 @@ export interface BaseTeaser {
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
 export interface PeerArticleTeaser extends PeerArticleTeaserLink, BaseTeaser {}
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
+export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export interface TeaserGridBlockValue {
   teasers: Array<[string, Teaser | null]>
@@ -557,6 +568,28 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   }
                 }
 
+              case TeaserType.Custom:
+                return {
+                  teaser: {
+                    custom: {
+                      style: flexTeaser.teaser.style,
+                      imageID: flexTeaser.teaser.image?.id,
+                      preTitle: flexTeaser.teaser.preTitle || undefined,
+                      title: flexTeaser.teaser.title || undefined,
+                      lead: flexTeaser.teaser.lead || undefined,
+                      contentUrl: flexTeaser.teaser.contentUrl || undefined
+                    }
+                  },
+                  alignment: {
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
+                  }
+                }
+
               default:
                 return {
                   teaser: null,
@@ -865,6 +898,28 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   }
                 }
 
+              case 'CustomTeaser':
+                return {
+                  teaser: flexTeaser?.teaser
+                    ? {
+                        type: TeaserType.Custom,
+                        style: flexTeaser?.teaser.style,
+                        image: flexTeaser?.teaser.image ?? undefined,
+                        preTitle: flexTeaser?.teaser.preTitle ?? undefined,
+                        title: flexTeaser?.teaser.title ?? undefined,
+                        lead: flexTeaser?.teaser.lead ?? undefined
+                      }
+                    : null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+
               default:
                 return {
                   teaser: null,
@@ -936,6 +991,22 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         title: teaser.title ?? undefined,
                         lead: teaser.lead ?? undefined,
                         page: teaser.page
+                      }
+                    : null
+                ]
+
+              case 'CustomTeaser':
+                return [
+                  nanoid(),
+                  teaser.custom
+                    ? {
+                        type: TeaserType.Custom,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        contentUrl: teaser.contentUrl
                       }
                     : null
                 ]

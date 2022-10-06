@@ -1,4 +1,4 @@
-import {PollAnswer, Prisma} from '@prisma/client'
+import {MetadataProperty, PollAnswer, Prisma} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
 import {MapDiscriminatedUnion} from '../utility'
 
@@ -177,7 +177,8 @@ export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
   Page = 'page',
-  External = 'external'
+  External = 'external',
+  Custom = 'custom'
 }
 
 export enum TeaserStyle {
@@ -219,7 +220,19 @@ export interface PageTeaser {
   lead?: string
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export interface CustomTeaser {
+  type: TeaserType.Custom
+  contentUrl?: string
+  style: TeaserStyle
+  imageID?: string
+
+  preTitle?: string
+  title?: string
+  lead?: string
+  properties?: MetadataProperty[]
+}
+
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export interface TeaserGridBlock {
   type: BlockType.TeaserGrid

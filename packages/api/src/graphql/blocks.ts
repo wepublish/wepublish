@@ -21,6 +21,7 @@ import {
   BildwurfAdBlock,
   BlockType,
   CommentBlock,
+  CustomTeaser,
   EmbedBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
@@ -169,9 +170,30 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Page)
 })
 
+export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
+  name: 'CustomTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString}
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Custom)
+})
+
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser]
+  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser, GraphQLCustomTeaser]
 })
 
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -323,9 +345,37 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
   })
 })
 
+export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
+  name: 'CustomTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString}
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === TeaserType.Custom
+  })
+})
+
 export const GraphQLPublicTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLPublicArticleTeaser, GraphQLPublicPeerArticleTeaser, GraphQLPublicPageTeaser]
+  types: [
+    GraphQLPublicArticleTeaser,
+    GraphQLPublicPeerArticleTeaser,
+    GraphQLPublicPageTeaser,
+    GraphQLPublicCustomTeaser
+  ]
 })
 
 export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -950,12 +1000,25 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
+  name: 'CustomTeaserInput',
+  fields: {
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString}
+  }
+})
+
 export const GraphQLTeaserInput = new GraphQLInputObjectType({
   name: 'TeaserInput',
   fields: () => ({
     [TeaserType.Article]: {type: GraphQLArticleTeaserInput},
     [TeaserType.PeerArticle]: {type: GraphQLPeerArticleTeaserInput},
-    [TeaserType.Page]: {type: GraphQLPageTeaserInput}
+    [TeaserType.Page]: {type: GraphQLPageTeaserInput},
+    [TeaserType.Custom]: {type: GraphQLCustomTeaserInput}
   })
 })
 

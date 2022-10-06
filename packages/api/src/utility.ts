@@ -199,7 +199,8 @@ export function mapEnumsBack(result: any) {
   if (
     result.__typename === 'ArticleTeaser' ||
     result.__typename === 'PeerArticleTeaser' ||
-    result.__typename === 'PageTeaser'
+    result.__typename === 'PageTeaser' ||
+    result.__typename === 'CustomTeaser'
   ) {
     switch (result.style) {
       case 'DEFAULT':

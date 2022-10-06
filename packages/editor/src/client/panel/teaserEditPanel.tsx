@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
 
 import {TeaserStyle} from '../api'
@@ -62,7 +62,7 @@ export function TeaserEditPanel({
       </Drawer.Header>
 
       <Drawer.Body>
-        {previewForTeaser(initialTeaser)}
+        {previewForTeaser(initialTeaser, t)}
         <Panel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
             <Form.Group controlId="articleStyle">
@@ -126,14 +126,12 @@ export function TeaserEditPanel({
   )
 }
 
-function previewForTeaser(teaser: Teaser) {
+export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
   let imageURL: string | undefined
   let preTitle: string | undefined
   let title: string | undefined
   let lead: string | undefined
-
-  const {t} = useTranslation()
 
   switch (teaser.type) {
     case TeaserType.Article:
@@ -157,6 +155,13 @@ function previewForTeaser(teaser: Teaser) {
       imageURL = teaser.page.latest.image?.previewURL ?? undefined
       title = teaser.page.latest.title
       lead = teaser.page.latest.description ?? undefined
+      break
+
+    case TeaserType.Custom:
+      type = 'Custom'
+      imageURL = teaser.image?.previewURL ?? undefined
+      title = teaser.title
+      lead = teaser.lead ?? undefined
       break
   }
 

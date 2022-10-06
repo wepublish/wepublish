@@ -131,7 +131,8 @@ export type PublishedPage = PageMeta & {
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
-  Page = 'page'
+  Page = 'page',
+  Custom = 'custom'
 }
 
 export enum TeaserStyle {

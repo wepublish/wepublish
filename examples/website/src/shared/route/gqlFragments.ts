@@ -277,6 +277,19 @@ export const gridBlockFrontDataGQLfragment = gql`
           ...PageMetaData
         }
       }
+
+      ... on CustomTeaser {
+        style
+
+        image {
+          ...SimpleImageData
+        }
+
+        preTitle
+        title
+        lead
+        contentUrl
+      }
     }
   }
   ${simpleImageDataFragment}
@@ -349,6 +362,19 @@ export const flexGridBlockFrontDataGQLfragment = gql`
           page {
             ...PageMetaData
           }
+        }
+
+        ... on CustomTeaser {
+          style
+
+          image {
+            ...SimpleImageData
+          }
+
+          preTitle
+          title
+          lead
+          contentUrl
         }
       }
     }
