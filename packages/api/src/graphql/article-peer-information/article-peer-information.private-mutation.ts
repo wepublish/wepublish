@@ -3,7 +3,6 @@ import {ApolloClient, InMemoryCache} from '@apollo/client/core'
 import {SchemaLink} from '@apollo/client/link/schema'
 import gql from 'graphql-tag'
 import {NotFound} from '../../error'
-import {ArticleRevision} from '../../db/article'
 
 export async function getPeerApolloClient(
   peerID: string,
@@ -34,22 +33,48 @@ export async function savePeerArticleById(id: string, peerID: string, context: C
   })
 
   if (!peerArticle?.data) throw new NotFound('Peer Article', peerID)
-  const data: ArticleRevision = peerArticle.data.article.published
-  // console.log('apollo article', await JSON.stringify(peerArticle.data))
+  const data = peerArticle.data.article.published
+
   console.log('published', data)
+  const {__typename, properties, blocks, ...revision} = data
+
+  const strippedProperties = properties?.map((property: any) => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
+
+  const strippedBlocks = blocks?.map((block: any) => {
+    const {__typename, ...rest} = block
+    return rest
+  })
+  console.log(strippedBlocks)
+
   const val = await context.prisma.article.create({
     data: {
       shared: false,
       draft: {
-        create: data
+        create: {
+          ...revision,
+          properties: {
+            createMany: {
+              data: strippedProperties
+            }
+          }
+          // blocks: {
+          //   createMany: {
+          //     data: strippedBlocks
+          //   }
+          // }
+        }
       }
-      // peeringInfo: {
-      //    create: {
-      //   peerId: peerId,
-      //      producerArticleId: id,
-      //      peer: peerArticle.peer
-      //   }}
     }
+    // peeringInfo: {
+    //    create: {
+    //   peerId: peerId,
+    //      producerArticleId: id,
+    //      peer: peerArticle.peer
+    //   }}
   })
   return val
 }
@@ -57,7 +82,6 @@ export async function savePeerArticleById(id: string, peerID: string, context: C
 export const peerArticleQuery = gql`
   query Article($id: ID!) {
     article(id: $id) {
-      __typename
       id
       published {
         title
@@ -66,7 +90,6 @@ export const peerArticleQuery = gql`
         createdAt
         publishAt
         updatedAt
-        publishedAt
         hideAuthor
         preTitle
         breaking
@@ -74,7 +97,6 @@ export const peerArticleQuery = gql`
         slug
         tags
         canonicalUrl
-        url
         properties {
           key
           value
@@ -186,21 +208,6 @@ export const peerArticleQuery = gql`
         ... on QuoteBlock {
           quote
           author
-        }
-        ... on TeaserGridBlock {
-          numColumns
-        }
-        ... on TeaserGridFlexBlock {
-          flexTeasers {
-            alignment {
-              i
-              x
-              y
-              w
-              h
-              static
-            }
-          }
         }
       }
     }
