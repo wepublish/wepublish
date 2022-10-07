@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next'
 import {
   Button,
   Drawer,
+  FlexboxGrid,
   Form,
   Input,
   InputGroup,
@@ -42,9 +43,9 @@ export interface TeaserSelectPanelProps {
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const initialTeaser = {
     style: TeaserStyle.Default,
-    title: 'some mock title',
-    preTitle: 'some mock preTitle',
-    lead: 'some mock lead',
+    title: '',
+    preTitle: '',
+    lead: '',
     contentUrl: 'https://www.example.com',
     image: undefined
   } as Teaser
@@ -61,20 +62,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
-  // todo
-  const customTeaserFilter = {
-    title: 'siema'
-  }
-
   const peerListVariables = {
     filter: filter || undefined,
     first: 20,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
-  // const customListVariables = {filter: filter || undefined, take: 20}
-  // article variables
-  const listVariables = {filter: customTeaserFilter || undefined, take: 20}
+  const listVariables = {filter: filter || undefined, take: 20}
   const pageListVariables = {filter: filter.title || undefined, take: 20}
 
   const {
@@ -100,20 +94,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'no-cache'
   })
 
-  // const {
-  //   data: customListData,
-  //   fetchMore: fetchMoreCustomTeasers,
-  //   error: customListError
-  // } = useCustomListQuery({
-  //   variables: customListVariables,
-  //   fetchPolicy: 'no-cache'
-  // })
-
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
-  // console.log('customListData', customListData)
-  // console.log('fetchMoreCustomTeasers', fetchMoreCustomTeasers)
 
   const {t} = useTranslation()
 
@@ -328,25 +311,30 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.Custom:
         return (
           <>
-            <Button
-              appearance={'primary'}
-              onClick={() => {
-                onSelect({
-                  ...initialTeaser,
-                  type: TeaserType.Custom,
-                  style,
-                  preTitle: preTitle || undefined,
-                  title: title || undefined,
-                  lead: lead || undefined,
-                  contentUrl: contentUrl || undefined,
-                  image
-                })
-              }}>
-              {t('articleEditor.panels.confirm')}
-            </Button>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
-              {t('navigation.overview.cancel')}
-            </Button>
+            <FlexboxGrid justify="end">
+              <Button
+                appearance={'primary'}
+                onClick={() => {
+                  onSelect({
+                    ...initialTeaser,
+                    type: TeaserType.Custom,
+                    style,
+                    preTitle: preTitle || undefined,
+                    title: title || undefined,
+                    lead: lead || undefined,
+                    contentUrl: contentUrl || undefined,
+                    image
+                  })
+                }}>
+                {t('articleEditor.panels.confirm')}
+              </Button>
+              <Button
+                appearance={'subtle'}
+                onClick={() => onClose?.()}
+                style={{marginLeft: '20px'}}>
+                {t('navigation.overview.cancel')}
+              </Button>
+            </FlexboxGrid>
 
             {previewForTeaser(initialTeaser, t)}
 
@@ -467,7 +455,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </InputGroup>
         )}
 
-        <List>{currentContent()}</List>
+        <List style={{boxShadow: 'none'}}>{currentContent()}</List>
       </Drawer.Body>
     </>
   )

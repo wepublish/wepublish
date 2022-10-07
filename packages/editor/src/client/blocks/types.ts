@@ -221,7 +221,6 @@ export interface PageTeaserLink {
 
 export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom
-  contentUrl: string
 }
 
 export type TeaserLink =
@@ -236,6 +235,7 @@ export interface BaseTeaser {
   preTitle?: string
   title?: string
   lead?: string
+  contentUrl?: string
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
@@ -650,6 +650,18 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   }
                 }
 
+              case TeaserType.Custom:
+                return {
+                  custom: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    contentUrl: value.contentUrl || undefined
+                  }
+                }
+
               default:
                 return null
             }
@@ -907,7 +919,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         image: flexTeaser?.teaser.image ?? undefined,
                         preTitle: flexTeaser?.teaser.preTitle ?? undefined,
                         title: flexTeaser?.teaser.title ?? undefined,
-                        lead: flexTeaser?.teaser.lead ?? undefined
+                        lead: flexTeaser?.teaser.lead ?? undefined,
+                        contentUrl: flexTeaser?.teaser.contentUrl ?? undefined
                       }
                     : null,
                   alignment: {
@@ -998,7 +1011,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
               case 'CustomTeaser':
                 return [
                   nanoid(),
-                  teaser.custom
+                  teaser
                     ? {
                         type: TeaserType.Custom,
                         style: teaser.style,
@@ -1006,7 +1019,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,
                         lead: teaser.lead ?? undefined,
-                        contentUrl: teaser.contentUrl
+                        contentUrl: teaser.contentUrl ?? undefined
                       }
                     : null
                 ]

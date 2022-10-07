@@ -26,6 +26,7 @@ export function TeaserEditPanel({
 }: TeaserEditPanelProps) {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
+  const [contentUrl, setContentUrl] = useState(initialTeaser.contentUrl || undefined)
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
@@ -50,6 +51,7 @@ export function TeaserEditPanel({
                 preTitle: preTitle || undefined,
                 title: title || undefined,
                 lead: lead || undefined,
+                contentUrl: contentUrl || undefined,
                 image
               })
             }}>
@@ -76,6 +78,16 @@ export function TeaserEditPanel({
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
             </Form.Group>
+            {initialTeaser.type === TeaserType.Custom && (
+              <Form.Group controlId="contentUrl">
+                <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
+                <Form.Control
+                  name="content-url"
+                  value={contentUrl}
+                  onChange={(contentUrl: string) => setContentUrl(contentUrl)}
+                />
+              </Form.Group>
+            )}
             <Form.Group controlId="articlePreTitle">
               <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
               <Form.Control
@@ -129,6 +141,7 @@ export function TeaserEditPanel({
 export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
   let imageURL: string | undefined
+  let contentUrl: string | undefined
   let preTitle: string | undefined
   let title: string | undefined
   let lead: string | undefined
@@ -162,6 +175,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       imageURL = teaser.image?.previewURL ?? undefined
       title = teaser.title
       lead = teaser.lead ?? undefined
+      contentUrl = teaser.contentUrl
       break
   }
 
@@ -172,10 +186,19 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
         style={{
           height: '200px',
           backgroundSize: 'cover',
-          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`
-        }}></Panel>
+          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`,
+          marginBottom: '12px'
+        }}
+      />
       <DescriptionList>
-        <DescriptionListItem label={t('articleEditor.panels.type')}>{type}</DescriptionListItem>
+        {contentUrl && (
+          <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
+            {contentUrl}
+          </DescriptionListItem>
+        )}
+        <DescriptionListItem label={t('articleEditor.panels.type')}>
+          {type || '-'}
+        </DescriptionListItem>
         <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
           {preTitle || '-'}
         </DescriptionListItem>
