@@ -42,7 +42,6 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
         <div style={{marginTop: '20px'}}>
           <span>{t('blocks.html.warning')}</span>
         </div>
-        <div style={{marginTop: '20px'}} dangerouslySetInnerHTML={{__html: htmlBlock.html}} />
       </Drawer.Body>
     </>
   )

@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
@@ -75,7 +75,8 @@
     "pino-stackdriver": "^2.1.1",
     "pug": "^3.0.2",
     "qs": "^6.9.1",
-    "stripe": "^8.126.0"
+    "stripe": "^8.126.0",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",

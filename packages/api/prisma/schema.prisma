@@ -183,7 +183,7 @@ enum CommentRejectionReason {
 model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  text      Json
+  text      Json?
   title     String?
   lead      String?
 

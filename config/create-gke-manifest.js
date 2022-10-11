@@ -788,6 +788,15 @@ async function applyApiServer() {
                   value: 'tsridev'
                 },
                 {
+                  name: 'PAYREXX_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'payrexx_api_secret'
+                    }
+                  }
+                },
+                {
                   name: 'PAYREXX_API_SECRET',
                   valueFrom: {
                     secretKeyRef: {

@@ -342,7 +342,7 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text: Scalars['RichText'];
+  text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
@@ -842,6 +842,7 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  deleteComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   updateRatingSystem: FullCommentRatingSystem;
@@ -1164,6 +1165,7 @@ export type MutationCreateCommentArgs = {
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
   itemID: Scalars['ID'];
+  parentID?: Maybe<Scalars['ID']>;
   itemType: CommentItemType;
 };
 
@@ -1182,6 +1184,11 @@ export type MutationRejectCommentArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationDeleteCommentArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2505,7 +2512,7 @@ export type ArticleRefFragment = (
 );
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<ArticleFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -2530,6 +2537,7 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
+  filter?: Maybe<ArticleFilter>;
   cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
   order?: Maybe<SortOrder>;
@@ -3234,7 +3242,7 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt' | 'itemID' | 'itemType'>
   & { guestUserImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3354,6 +3362,7 @@ export type UpdateCommentMutation = (
 export type CreateCommentMutationVariables = Exact<{
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -3362,6 +3371,19 @@ export type CreateCommentMutationVariables = Exact<{
 export type CreateCommentMutation = (
   { __typename?: 'Mutation' }
   & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  deleteCommentId: Scalars['ID'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'id'>
   ) }
@@ -5120,6 +5142,8 @@ export const FullCommentFragmentDoc = gql`
   source
   createdAt
   modifiedAt
+  itemID
+  itemType
   parentComment {
     ...FullParentComment
   }
@@ -5603,8 +5627,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -5652,8 +5676,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5685,6 +5709,7 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
@@ -6747,8 +6772,8 @@ export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateComment
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
     id
   }
 }
@@ -6770,6 +6795,7 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *   variables: {
  *      itemID: // value for 'itemID'
  *      itemType: // value for 'itemType'
+ *      parentID: // value for 'parentID'
  *      text: // value for 'text'
  *      tagIds: // value for 'tagIds'
  *   },
@@ -6782,6 +6808,39 @@ export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      deleteCommentId: // value for 'deleteCommentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {

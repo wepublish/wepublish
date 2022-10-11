@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {
-  AlgebraicCaptchaChallenge,
   Author,
   JobType,
   KarmaMediaAdapter,
@@ -15,7 +14,9 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer
+  WepublishServer,
+  AlgebraicCaptchaChallenge,
+  PayrexxSubscriptionPaymentProvider
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -205,7 +206,11 @@ export async function runServer() {
     )
   }
 
-  if (process.env.PAYREXX_INSTANCE_NAME && process.env.PAYREXX_API_SECRET) {
+  if (
+    process.env.PAYREXX_INSTANCE_NAME &&
+    process.env.PAYREXX_API_SECRET &&
+    process.env.PAYREXX_WEBHOOK_SECRET
+  ) {
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
@@ -225,6 +230,18 @@ export async function runServer() {
         ],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
+      })
+    )
+    paymentProviders.push(
+      new PayrexxSubscriptionPaymentProvider({
+        id: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: false,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        incomingRequestHandler: bodyParser.json(),
+        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        prisma: prisma
       })
     )
   }

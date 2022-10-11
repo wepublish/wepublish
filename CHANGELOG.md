@@ -1,5 +1,43 @@
 # Change Log
 
+## 7.0.0 (2022-09-30)
+
+#### :boom: Breaking Change
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#667](https://github.com/wepublish/wepublish/pull/667) feat: add polls ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#670](https://github.com/wepublish/wepublish/pull/670) feat(api): comment tagging & edit + create comment from editor ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#689](https://github.com/wepublish/wepublish/pull/689) Prevent canceled invoices from marked as paid ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#690](https://github.com/wepublish/wepublish/pull/690) WPC-841 wrong user subscription text ([@elias-summermatter](https://github.com/elias-summermatter))
+* Other
+  * [#693](https://github.com/wepublish/wepublish/pull/693) Fix mount path for postgres pvc ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`
+  * [#672](https://github.com/wepublish/wepublish/pull/672) fix(api): navigation link missing relations ([@Itrulia](https://github.com/Itrulia))
+  * [#661](https://github.com/wepublish/wepublish/pull/661) fix(api): userlist filter missing address filter due to merge conflict ([@Itrulia](https://github.com/Itrulia))
+
+#### :memo: Documentation
+* [#671](https://github.com/wepublish/wepublish/pull/671) Analytics readme ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* Other
+  * [#695](https://github.com/wepublish/wepublish/pull/695) ci: use init containers to fix permissions of postgres volume ([@Itrulia](https://github.com/Itrulia))
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 4
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
 ## 6.0.0 (2022-09-15)
 
 #### :boom: Breaking Change
