@@ -8,6 +8,7 @@
     "node": "^12.0.0",
     "yarn": "^1.16.0"
   },
+  "bin": "./bin/run-server.js",
   "scripts": {
     "build": "run-p build:client build:server",
     "build:client": "webpack --mode production --devtool source-map",
@@ -16,11 +17,11 @@
     "watch": "npm-run-all --parallel watch:client watch:server",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
-    "watch:server:start": "nodemon --inspect=0.0.0.0:9229 ./dist/server/index.js",
+    "watch:server:start": "nodemon --inspect=0.0.0.0:9229 ./bin/run-server.js",
     "watch:server:build": "tsc -b ./src/server ./src/shared --watch",
     "watch:storybook": "start-storybook --ci -h 0.0.0.0 -p 3003 -s ./ -c ./src/shared/.storybook",
     "clean": "shx rm -rf ./dist ./assets",
-    "start": "node ./dist/server/index.js"
+    "start": "./bin/run-server.js"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
@@ -60,7 +61,7 @@
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-helmet-async": "^1.0.0",
-    "@types/webpack": "^4.4.34",
+    "@types/webpack": "^4.35.3",
     "@types/webpack-dev-server": "^2.9.4",
     "babel-loader": "^8.0.6",
     "core-js": "^3.2.1",
