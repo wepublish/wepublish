@@ -3,6 +3,7 @@ import {seed as rootSeed} from './seed'
 import {hashPassword} from '../src'
 
 export async function runSeed() {
+  console.log('Running api seed')
   const prisma = new PrismaClient()
   await prisma.$connect()
   const [adminUserRole, editorUserRole] = await rootSeed(prisma)
@@ -11,7 +12,8 @@ export async function runSeed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  prisma.user.upsert({
+  console.log('Adding admin user')
+  await prisma.user.upsert({
     where: {
       id: 'admin'
     },
@@ -29,4 +31,12 @@ export async function runSeed() {
 
   await prisma.$disconnect()
 }
+
 runSeed()
+  .then(() => {
+    console.log('Seeding applied successfully')
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
