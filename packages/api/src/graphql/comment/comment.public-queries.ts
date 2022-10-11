@@ -65,6 +65,8 @@ export const getPublicCommentsForItemById = async (
 
       return {
         answerId: answer.id,
+        answer: answer.answer,
+        type: answer.type,
         count: sortedRatings.length,
         mean,
         total

@@ -26,6 +26,7 @@ import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
+import {GraphQLRatingSystemType} from '../comment-rating/comment-rating'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -230,6 +231,8 @@ export const GraphQLRating = new GraphQLObjectType<CalculatedRating, Context>({
   name: 'Rating',
   fields: {
     answerId: {type: GraphQLNonNull(GraphQLID)},
+    answer: {type: GraphQLNonNull(GraphQLString)},
+    type: {type: GraphQLNonNull(GraphQLRatingSystemType)},
     count: {type: GraphQLNonNull(GraphQLInt)},
     total: {type: GraphQLNonNull(GraphQLInt)},
     mean: {type: GraphQLNonNull(GraphQLFloat)}
