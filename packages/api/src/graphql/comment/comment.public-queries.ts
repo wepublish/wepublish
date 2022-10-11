@@ -50,7 +50,9 @@ export const getPublicCommentsForItemById = async (
   ])
 
   return comments.map(({revisions, ratings, ...comment}) => ({
-    text: revisions[revisions.length - 1].text,
+    title: revisions.length ? revisions[revisions.length - 1].title : null,
+    lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+    text: revisions.length ? revisions[revisions.length - 1].text : null,
     ...comment,
     ratings: answers.map(answer => {
       const sortedRatings = ratings

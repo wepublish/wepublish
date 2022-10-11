@@ -245,6 +245,12 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
     guestUsername: {type: GraphQLString},
+    guestUserImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
+        guestUserImageID ? image.findUnique({where: {id: guestUserImageID}}) : null
+      )
+    },
     user: {
       type: GraphQLPublicUser,
       resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
@@ -287,12 +293,15 @@ export const GraphQLPublicComment: GraphQLObjectType<
       )
     },
 
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     text: {type: GraphQLNonNull(GraphQLRichText)},
 
     state: {type: GraphQLNonNull(GraphQLCommentState)},
+    source: {type: GraphQLString},
 
     rejectionReason: {type: GraphQLString},
-
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     ratings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
