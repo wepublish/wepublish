@@ -4,9 +4,7 @@
   "private": true,
   "main": "./dist/",
   "license": "MIT",
-  "bin": {
-    "wepublish-example-oauth2": "./bin/run-server.js"
-  },
+  "bin": "./bin/run-server.js",
   "scripts": {
     "setup": "shx cp .env.example .env",
     "start": "./bin/run-server.js",

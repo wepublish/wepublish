@@ -32,7 +32,7 @@ spec:
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           command: ['/bin/sh']
-          args: ['-c', 'yarn prisma migrate deploy && npx ts-node packages/api/prisma/run-seed.ts && npx wepublish-api']
+          args: ['-c', 'yarn prisma migrate deploy && npx ts-node packages/api/prisma/run-seed.ts && npx @wepublish/api']
           ports:
             - name: http
               containerPort: 8000

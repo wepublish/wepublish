@@ -11,7 +11,7 @@ services:
       target: dev
     ports:
       - 4200:8000
-    command: ['npx', 'wepublish-example-website']
+    command: ['npx', '@wepublish/website-example']
     environment:
       NODE_ENV: production
       CANONICAL_HOST: http://localhost:4200
@@ -28,7 +28,7 @@ services:
       target: dev
     ports:
       - 4000:8000
-    command: ['npx', 'wepublish-example-api']
+    command: ['npx', '@wepublish/api-example']
     environment:
       NODE_ENV: production
       HOST_URL: http://localhost:4000
@@ -56,7 +56,7 @@ services:
       target: dev
     ports:
       - 3006:8000
-    command: ['npx', 'wepublish-editor']
+    command: ['npx', '@wepublish/editor']
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
@@ -80,7 +80,7 @@ services:
       target: dev
     ports:
       - 4300:8000
-    command: ['npx', 'wepublish-example-oauth2']
+    command: ['npx', '@wepublish/oauth2-example']
     environment:
       DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
       OAUTH_DATABASE_URI: mongodb://localhost:27017/oauth2

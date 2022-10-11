@@ -22,14 +22,9 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/editor"
   },
-  "bin": {
-    "wepublish-editor": "./dist/server/index.js"
-  },
+  "bin": "./bin/run-server.js",
   "main": "./dist/server/index.js",
   "license": "MIT",
-  "bin": {
-    "wepublish-editor": "./bin/run-server.js"
-  },
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-p build:client build:server",
