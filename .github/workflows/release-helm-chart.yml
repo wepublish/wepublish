@@ -1,9 +1,6 @@
 name: Release helm chart
 
 on:
-  pull_request:
-    paths:
-      - 'helm/charts/**/*'
   push:
     branches:
       - master
