@@ -1,0 +1,25 @@
+deployment:
+  image:
+  imagePullPolicy: Always
+  imagePullSecret:
+  env:
+    NODE_ENV: production
+    HOST_ENV: production
+    CANONICAL_HOST: https://demo.wepublish.media
+    API_URL: https://api.demo.wepublish.media
+    ALLOWED_HOSTS: demo.wepublish.ch,demo.wepublish.media
+  envFromSecretRefName:
+  properties: {}
+  replicaCount: 1
+
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  host: demo.wepublish.media
+  path: /
+
+labels: {}
