@@ -63,11 +63,11 @@ fragment FullTeaser on Teaser {
     title
     lead
     contentUrl
-    # properties {
-    #   key
-    #   value
-    #   public
-    # }
+    properties {
+      key
+      value
+      public
+    }
   }
 }
 

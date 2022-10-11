@@ -289,6 +289,7 @@ export const gridBlockFrontDataGQLfragment = gql`
         title
         lead
         contentUrl
+        properties
       }
     }
   }
@@ -375,6 +376,7 @@ export const flexGridBlockFrontDataGQLfragment = gql`
           title
           lead
           contentUrl
+          properties
         }
       }
     }

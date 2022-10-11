@@ -390,6 +390,7 @@ export type CustomTeaser = {
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   contentUrl?: Maybe<Scalars['String']>;
+  properties: Array<Properties>;
 };
 
 export type CustomTeaserInput = {
@@ -399,6 +400,7 @@ export type CustomTeaserInput = {
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   contentUrl?: Maybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
 };
 
 
@@ -3012,6 +3014,9 @@ type FullTeaser_CustomTeaser_Fragment = (
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
   )> }
 );
 
@@ -5343,6 +5348,11 @@ export const FullTeaserFragmentDoc = gql`
     title
     lead
     contentUrl
+    properties {
+      key
+      value
+      public
+    }
   }
 }
     ${ImageRefFragmentDoc}

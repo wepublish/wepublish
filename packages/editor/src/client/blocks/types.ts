@@ -14,6 +14,7 @@ import {
 } from '../api'
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
+import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
 
 export enum BlockType {
   RichText = 'richText',
@@ -236,6 +237,7 @@ export interface BaseTeaser {
   title?: string
   lead?: string
   contentUrl?: string
+  properties?: TeaserMetadataProperty[]
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
@@ -577,7 +579,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
                       lead: flexTeaser.teaser.lead || undefined,
-                      contentUrl: flexTeaser.teaser.contentUrl || undefined
+                      contentUrl: flexTeaser.teaser.contentUrl || undefined,
+                      properties:
+                        flexTeaser.teaser.properties?.map(({key, value, public: isPublic}) => ({
+                          key,
+                          value,
+                          public: isPublic
+                        })) || []
                     }
                   },
                   alignment: {
@@ -658,7 +666,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
-                    contentUrl: value.contentUrl || undefined
+                    contentUrl: value.contentUrl || undefined,
+                    properties:
+                      value.properties?.map(({key, value, public: isPublic}) => ({
+                        key,
+                        value,
+                        public: isPublic
+                      })) || []
                   }
                 }
 
@@ -920,7 +934,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         preTitle: flexTeaser?.teaser.preTitle ?? undefined,
                         title: flexTeaser?.teaser.title ?? undefined,
                         lead: flexTeaser?.teaser.lead ?? undefined,
-                        contentUrl: flexTeaser?.teaser.contentUrl ?? undefined
+                        contentUrl: flexTeaser?.teaser.contentUrl ?? undefined,
+                        properties:
+                          flexTeaser?.teaser.properties.map(({key, value, public: isPublic}) => ({
+                            key,
+                            value,
+                            public: isPublic
+                          })) ?? undefined
                       }
                     : null,
                   alignment: {
@@ -1019,7 +1039,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         preTitle: teaser.preTitle ?? undefined,
                         title: teaser.title ?? undefined,
                         lead: teaser.lead ?? undefined,
-                        contentUrl: teaser.contentUrl ?? undefined
+                        contentUrl: teaser.contentUrl ?? undefined,
+                        properties:
+                          teaser.properties.map(({key, value, public: isPublic}) => ({
+                            key,
+                            value,
+                            public: isPublic
+                          })) ?? undefined
                       }
                     : null
                 ]

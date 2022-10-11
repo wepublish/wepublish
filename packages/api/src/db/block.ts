@@ -1,6 +1,12 @@
-import {MetadataProperty, PollAnswer, Prisma} from '@prisma/client'
+import {PollAnswer, Prisma} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
 import {MapDiscriminatedUnion} from '../utility'
+
+export interface MetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export enum BlockType {
   Title = 'title',

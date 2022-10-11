@@ -60,6 +60,11 @@ import {GraphQLPeer} from './peer'
 import {GraphQLFullPoll} from './poll/poll'
 
 import {GraphQLComment, GraphQLPublicComment} from './comment/comment'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic
+} from './common'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -185,7 +190,8 @@ export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>(
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
-    contentUrl: {type: GraphQLString}
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))}
   }),
 
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Custom)
@@ -360,7 +366,8 @@ export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Con
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
-    contentUrl: {type: GraphQLString}
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic)))}
   }),
 
   isTypeOf: createProxyingIsTypeOf(value => {
@@ -1008,7 +1015,8 @@ export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
-    contentUrl: {type: GraphQLString}
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))}
   }
 })
 

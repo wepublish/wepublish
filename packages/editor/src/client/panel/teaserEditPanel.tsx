@@ -1,13 +1,21 @@
 import React, {useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
+import {Button, Drawer, Form, Input, Panel, Radio, RadioGroup, Toggle} from 'rsuite'
 
 import {TeaserStyle} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {ListInput, ListValue} from '../atoms/listInput'
 import {Teaser, TeaserType} from '../blocks/types'
+import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+export interface TeaserMetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
@@ -30,6 +38,14 @@ export function TeaserEditPanel({
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
+  const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
+      ? initialTeaser.properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
+  )
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -52,6 +68,7 @@ export function TeaserEditPanel({
                 title: title || undefined,
                 lead: lead || undefined,
                 contentUrl: contentUrl || undefined,
+                properties: metaDataProperties.map(({value}) => value) || undefined,
                 image
               })
             }}>
@@ -79,14 +96,56 @@ export function TeaserEditPanel({
               </RadioGroup>
             </Form.Group>
             {initialTeaser.type === TeaserType.Custom && (
-              <Form.Group controlId="contentUrl">
-                <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
-                <Form.Control
-                  name="content-url"
-                  value={contentUrl}
-                  onChange={(contentUrl: string) => setContentUrl(contentUrl)}
-                />
-              </Form.Group>
+              <>
+                <Form.Group controlId="contentUrl">
+                  <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
+                  <Form.Control
+                    name="content-url"
+                    value={contentUrl}
+                    onChange={(contentUrl: string) => setContentUrl(contentUrl)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="properties">
+                  <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
+                  <ListInput
+                    value={metaDataProperties}
+                    onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                    defaultValue={{key: '', value: '', public: true}}>
+                    {({value, onChange}) => (
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <Input
+                          placeholder={t('articleEditor.panels.key')}
+                          style={{
+                            width: '40%',
+                            marginRight: '10px'
+                          }}
+                          value={value.key}
+                          onChange={propertyKey => onChange({...value, key: propertyKey})}
+                        />
+                        <Input
+                          placeholder={t('articleEditor.panels.value')}
+                          style={{
+                            width: '60%'
+                          }}
+                          value={value.value}
+                          onChange={propertyValue => onChange({...value, value: propertyValue})}
+                        />
+                        <Form.Group
+                          style={{paddingTop: '6px', paddingLeft: '8px'}}
+                          controlId="articleProperty">
+                          <Toggle
+                            style={{maxWidth: '70px', minWidth: '70px'}}
+                            checkedChildren={t('articleEditor.panels.public')}
+                            unCheckedChildren={t('articleEditor.panels.private')}
+                            checked={value.public}
+                            onChange={isPublic => onChange({...value, public: isPublic})}
+                          />
+                        </Form.Group>
+                      </div>
+                    )}
+                  </ListInput>
+                </Form.Group>
+              </>
             )}
             <Form.Group controlId="articlePreTitle">
               <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
