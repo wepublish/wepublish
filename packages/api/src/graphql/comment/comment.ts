@@ -26,7 +26,7 @@ import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
-import {GraphQLRatingSystemType} from '../comment-rating/comment-rating'
+import {GraphQLCommentRatingSystemAnswer} from '../comment-rating/comment-rating'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -227,15 +227,13 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   })
 })
 
-export const GraphQLRating = new GraphQLObjectType<CalculatedRating, Context>({
-  name: 'Rating',
+export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'CalculatedRating',
   fields: {
-    answerId: {type: GraphQLNonNull(GraphQLID)},
-    answer: {type: GraphQLNonNull(GraphQLString)},
-    type: {type: GraphQLNonNull(GraphQLRatingSystemType)},
-    count: {type: GraphQLNonNull(GraphQLInt)},
+    count: {type: GraphQLInt},
     total: {type: GraphQLNonNull(GraphQLInt)},
-    mean: {type: GraphQLNonNull(GraphQLFloat)}
+    mean: {type: GraphQLNonNull(GraphQLFloat)},
+    answer: {type: GraphQLCommentRatingSystemAnswer}
   }
 })
 
@@ -306,8 +304,8 @@ export const GraphQLPublicComment: GraphQLObjectType<
     rejectionReason: {type: GraphQLString},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    ratings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
+    calculatedRatings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCalculatedRating)))
     }
   })
 })
