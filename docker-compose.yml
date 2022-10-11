@@ -6,21 +6,29 @@ networks:
 
 services:
   website:
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - 4200:8000
-    command: ['node', './examples/website/dist/server/index.js']
+    command: ['npx', '@wepublish/website-example']
     environment:
       NODE_ENV: production
       CANONICAL_HOST: http://localhost:4200
       API_URL: http://api:8000
       ALLOWED_HOSTS: localhost
       NUM_WORKERS: 1
+    depends_on:
+      - api
+    networks:
+      - app-tier
   api:
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - 4000:8000
-    command: ['node', './examples/api/dist/index.js']
+    command: ['npx', '@wepublish/api-example']
     environment:
       NODE_ENV: production
       HOST_URL: http://localhost:4000
@@ -35,15 +43,27 @@ services:
       OAUTH_WEPUBLISH_CLIENT_ID: wepublish
       OAUTH_WEPUBLISH_CLIENT_KEY: secret
       OAUTH_WEPUBLISH_REDIRECT_URL: http://localhost:4000/auth/wepublish
+      WEBSITE_URL: http://localhost:4200
+      JWT_SECRET_KEY: ThisIsSuperSecret
+    depends_on:
+      - database
+      - media
+    networks:
+      - app-tier
   editor:
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - 3006:8000
-    command: ['node', './packages/editor/dist/server/index.js']
+    command: ['npx', '@wepublish/editor']
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
       API_URL: http://localhost:4000
+    depends_on:
+      - api
+
   media:
     image: ghcr.io/wepublish/karma-media-server:latest
     ports:
@@ -53,11 +73,14 @@ services:
       NUM_CLUSTERS: 1
       STORAGE_PATH: ./.media
       TOKEN: secret
+
   oauth2:
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
-      - 4200:8000
-    command: ['node','./examples/oauth2/dist/index.js']
+      - 4300:8000
+    command: ['npx', '@wepublish/oauth2-example']
     environment:
       DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
       OAUTH_DATABASE_URI: mongodb://localhost:27017/oauth2
@@ -100,6 +123,7 @@ services:
     image: mongo:4.2.3-bionic
     ports:
       - 27017:27017
+  
   mongo-express:
     image: mongo-express
     restart: always
@@ -111,9 +135,3 @@ services:
 volumes:
   database_data:
     driver: local
-
-#  test:
-#    build: .
-#    command: [ 'yarn', 'test']
-#    environment:
-#      DATABASE_URL: postgresql://postgres@database:5432/wepublish-test?schema=public
