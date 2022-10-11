@@ -15,7 +15,6 @@ export interface TeaserSelectAndEditPanelProps {
 export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEditPanelProps) {
   const [teaser, setTeaser] = useState<TeaserLink>()
   const [isEditOpen, setEditOpen] = useState(false)
-  console.log('teaser', teaser)
   const {t} = useTranslation()
 
   return (

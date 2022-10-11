@@ -210,7 +210,6 @@ function PageEditor() {
 
   async function handleSave() {
     const input = createInput()
-    console.log('input', input)
 
     if (pageID) {
       await updatePage({variables: {id: pageID, input}})
