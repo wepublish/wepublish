@@ -49,7 +49,8 @@ export interface Comment {
 export enum CommentAuthorType {
   Team = 'team',
   Author = 'author',
-  VerifiedUser = 'verifiedUser'
+  VerifiedUser = 'verifiedUser',
+  GuestUser = 'guestUser'
 }
 
 export enum CommentItemType {

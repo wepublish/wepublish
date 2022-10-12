@@ -51,7 +51,8 @@ export const GraphQLCommentAuthorType = new GraphQLEnumType({
   values: {
     Author: {value: CommentAuthorType.author},
     Team: {value: CommentAuthorType.team},
-    VerifiedUser: {value: CommentAuthorType.verifiedUser}
+    VerifiedUser: {value: CommentAuthorType.verifiedUser},
+    GuestUser: {value: CommentAuthorType.guestUser}
   }
 })
 
