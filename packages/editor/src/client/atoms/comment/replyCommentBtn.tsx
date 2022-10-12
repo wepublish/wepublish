@@ -61,7 +61,6 @@ export function ReplyCommentBtn({
     if (hideText) {
       return (
         <IconButton
-          style={{marginLeft: '10px'}}
           icon={<MoveDown />}
           size={size}
           circle={circle}
@@ -75,7 +74,6 @@ export function ReplyCommentBtn({
     }
     return (
       <IconButton
-        style={{marginLeft: '10px'}}
         icon={<MoveDown />}
         size={size}
         circle={circle}
