@@ -24,9 +24,6 @@ export type CalculatedRating = {
   count: number
   mean: number
   total: number
-}
-
-export interface CalculatedRatingWithRatingSystemAnswer extends CalculatedRating {
   answer: CommentRatingSystemAnswer
 }
 
@@ -71,7 +68,7 @@ export const getPublicCommentsForItemById = async (
         count: sortedRatings.length,
         mean,
         total
-      } as CalculatedRatingWithRatingSystemAnswer
+      } as CalculatedRating
     })
   }))
 }

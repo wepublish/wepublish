@@ -133,15 +133,9 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
-
+    title: {type: GraphQLString},
     text: {
       type: new GraphQLNonNull(GraphQLRichText)
-      // resolve: createProxyingResolver(({ text }, args, { loaders }, info) => {
-      //   return [];
-      //   if (text[0].children[0].text.length > 1000) {
-      //     throw new Error(`Comment Length should be maximum of 1000 characters`)
-      //   }
-      // }
     }
   }
 })
@@ -230,7 +224,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
 export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, Context>({
   name: 'CalculatedRating',
   fields: {
-    count: {type: GraphQLInt},
+    count: {type: GraphQLNonNull(GraphQLInt)},
     total: {type: GraphQLNonNull(GraphQLInt)},
     mean: {type: GraphQLNonNull(GraphQLFloat)},
     answer: {type: GraphQLCommentRatingSystemAnswer}
@@ -305,7 +299,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     calculatedRatings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCalculatedRating)))
+      type: GraphQLList(GraphQLCalculatedRating)
     }
   })
 })
