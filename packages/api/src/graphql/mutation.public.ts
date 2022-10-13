@@ -559,12 +559,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
 
         // Throw for unsupported payment providers
-        const paymentProvider = await prisma.paymentMethod.findUnique({
+        const paymentMethod = await prisma.paymentMethod.findUnique({
           where: {
             id: subscription.paymentMethodID
           }
         })
-        if (!paymentProvider) {
+        if (!paymentMethod) {
           logger('extendSubscription').error(
             'Could not find paymentMethod with ID "%s"',
             subscription.paymentMethodID
@@ -572,8 +572,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new InternalError()
         }
 
-        const paymentProviderConfig: any = paymentProviders.find(
-          obj => obj.id === paymentProvider.paymentProviderID
+        const paymentProvider = paymentProviders.find(
+          obj => obj.id === paymentMethod.paymentProviderID
         )
         // Prevent user from creating new invoice while having unpaid invoices
         const unpaidInvoices = await prisma.invoice.findMany({
@@ -599,7 +599,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
 
         // If payment provider supports off session payment try to charge
-        if (!paymentProviderConfig || paymentProviderConfig.offSessionPayments) {
+        if (!paymentProvider || paymentProvider.offSessionPayments) {
           const paymentMethod = await loaders.paymentMethodsByID.load(subscription.paymentMethodID)
           if (!paymentMethod) {
             logger('extendSubscription').warn(
