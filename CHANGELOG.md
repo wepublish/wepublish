@@ -1,5 +1,36 @@
 # Change Log
 
+## 7.1.0 (2022-10-13)
+
+#### :heart: New Feature
+* `api`
+  * [#702](https://github.com/wepublish/wepublish/pull/702) WPC-696 integrate payrexx subscription provider ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`, `editor`
+  * [#708](https://github.com/wepublish/wepublish/pull/708) feat(api): user votes/rating api ([@Itrulia](https://github.com/Itrulia))
+  * [#706](https://github.com/wepublish/wepublish/pull/706) feat(api/editor): implement comment and poll blocks ([@Itrulia](https://github.com/Itrulia))
+  * [#694](https://github.com/wepublish/wepublish/pull/694) feat(api/editor): implement a comment rating system ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`
+  * [#715](https://github.com/wepublish/wepublish/pull/715) Fix payment provider period start date ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#714](https://github.com/wepublish/wepublish/pull/714) Added missing yargs module to api package ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* Other
+  * [#678](https://github.com/wepublish/wepublish/pull/678) Release helm chart to helm repository ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#703](https://github.com/wepublish/wepublish/pull/703) chore(deps): bump jose from 1.28.1 to 1.28.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `api`
+  * [#710](https://github.com/wepublish/wepublish/pull/710) fix(api): only query published peer articles ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Camille ([@camilleory](https://github.com/camilleory))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 7.0.0 (2022-09-30)
 
 #### :boom: Breaking Change
