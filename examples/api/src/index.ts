@@ -7,6 +7,7 @@ import {
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -15,8 +16,7 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  AlgebraicCaptchaChallenge,
-  PayrexxSubscriptionPaymentProvider
+  AlgebraicCaptchaChallenge
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -241,7 +241,7 @@ async function asyncMain() {
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
         webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
-        prisma: prisma
+        prisma
       })
     )
   }
