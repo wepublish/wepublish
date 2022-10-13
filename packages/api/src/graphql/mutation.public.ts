@@ -13,12 +13,14 @@ import {Context} from '../context'
 import {SettingName} from '../db/setting'
 import {unselectPassword} from '../db/user'
 import {
+  AlreadyUnpaidInvoices,
   CommentAuthenticationError,
   EmailAlreadyInUseError,
   InternalError,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
+  SubscriptionNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
@@ -66,6 +68,7 @@ import {
   updateUserPassword
 } from './user/user.public-mutation'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
+import {SubscriptionWithRelations} from '../db/subscription'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -510,6 +513,67 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           invoice,
           saveCustomer: true,
           paymentMethodID: paymentMethod.id,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
+    extendSubscription: {
+      type: GraphQLNonNull(GraphQLPublicPayment),
+      args: {
+        subscriptionId: {type: GraphQLNonNull(GraphQLString)},
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
+      },
+      description: 'This mutation extends an subscription early',
+      async resolve(
+        root,
+        {subscriptionId, successURL, failureURL},
+        {prisma, authenticateUser, memberContext, createPaymentWithProvider}
+      ) {
+        // authenticate user
+        const {user} = authenticateUser()
+
+        const subscription = (await prisma.subscription.findUnique({
+          where: {
+            id: subscriptionId
+          }
+        })) as SubscriptionWithRelations
+
+        // Allow only valid and subscription belonging to the user to early extend
+        if (!subscription || subscription.userID !== user.id) {
+          throw new SubscriptionNotFound()
+        }
+
+        // Prevent user from creating new invoice while having unpaid invoices
+        const unpaidInvoices = await prisma.invoice.findMany({
+          where: {
+            subscriptionID: subscription.id,
+            paidAt: null
+          }
+        })
+        if (unpaidInvoices.length > 0) {
+          throw new AlreadyUnpaidInvoices()
+        }
+
+        console.log(JSON.stringify(subscription))
+        const invoice = await memberContext.renewSubscriptionForUser({
+          subscription
+        })
+
+        if (!invoice) {
+          logger('mutation.public').error(
+            'Could not create new invoice for subscription with ID "%s"',
+            subscription.id
+          )
+          throw new InternalError()
+        }
+
+        return await createPaymentWithProvider({
+          invoice,
+          saveCustomer: true,
+          paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL
         })
