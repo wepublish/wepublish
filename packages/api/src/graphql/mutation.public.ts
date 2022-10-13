@@ -550,6 +550,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Allow only valid and subscription belonging to the user to early extend
         if (!subscription || subscription.userID !== user.id) {
+          logger('extendSubscription').error(
+            'Could not find subscription with ID "%s" or subscription does not belong to user "%s"',
+            subscriptionId,
+            user.id
+          )
           throw new SubscriptionNotFound()
         }
 
@@ -560,6 +565,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
         if (!paymentProvider) {
+          logger('extendSubscription').error(
+            'Could not find paymentMethod with ID "%s"',
+            subscription.paymentMethodID
+          )
           throw new InternalError()
         }
 
