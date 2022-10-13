@@ -78,6 +78,7 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
           req.get('origin'),
           mailProvider.id
         )
+
         try {
           const mailLogStatuses = await mailProvider.webhookForSendMail({req})
           const context = await contextFromRequest(req, opts)
@@ -85,6 +86,7 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
           for (const mailLogStatus of mailLogStatuses) {
             const mailLog = await context.loaders.mailLogsByID.load(mailLogStatus.mailLogID)
             if (!mailLog) continue // TODO: handle missing mailLog
+
             await context.prisma.mailLog.update({
               where: {id: mailLog.id},
               data: {

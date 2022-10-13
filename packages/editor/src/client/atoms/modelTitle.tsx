@@ -1,5 +1,5 @@
 import {ArrowLeftLine} from '@rsuite/icons'
-import React from 'react'
+import React, {ReactChild} from 'react'
 import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
 
@@ -10,6 +10,7 @@ interface modelTitleProps {
   saveBtnTitle: string
   saveAndCloseBtnTitle: string
   closePath: string
+  additionalMenu?: ReactChild
   setCloseFn(close: boolean): void
 }
 
@@ -20,6 +21,7 @@ export function ModelTitle({
   saveBtnTitle,
   saveAndCloseBtnTitle,
   closePath,
+  additionalMenu,
   setCloseFn
 }: modelTitleProps) {
   /**
@@ -80,9 +82,16 @@ export function ModelTitle({
             </Col>
           </Row>
         </FlexboxGrid.Item>
+
         {/* actions */}
-        <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
-          {actionsView()}
+        <FlexboxGrid.Item colspan={12}>
+          <FlexboxGrid justify="end" align="middle">
+            {/* additional menu content */}
+            <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
+
+            {/* save btns */}
+            <FlexboxGrid.Item style={{marginLeft: '40px'}}>{actionsView()}</FlexboxGrid.Item>
+          </FlexboxGrid>
         </FlexboxGrid.Item>
       </FlexboxGrid>
     </>

@@ -216,11 +216,29 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Edit Comment Block",
+        "edit": "Edit comment block",
+        "filterByTag": "Filter comments by tag",
+        "commentsFilterByTagInformation": "All comments below will be displayed",
+        "cherryPick": "Select specific comments",
+        "displayName": "Display name",
+        "comments": "{{count}} Comment",
+        "comments_plural": "{{count}} Comments",
+        "label": "Comments"
+      },
+      "poll": {
+        "title": "Edit Poll Block",
+        "edit": "Edit poll block",
+        "select": "Select",
+        "label": "Poll"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
           "editEmbed": "Edit Embed"
         },
+
         "panels": {
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "close": "Close",
@@ -366,7 +384,8 @@
         "untitled": "Untitled",
         "updated": "Modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "userName": "User Name"
+        "userName": "User Name",
+        "editState": "Edit state"
       },
       "edit": {
         "title": "Edit Comment",
@@ -400,13 +419,24 @@
         "userName": "User Name",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "unregisteredUser": "(Not registered user)"
+        "unregisteredUser": "(Not registered user)",
+        "noUserName": "No username"
       },
       "state": {
         "approved": "Approved",
         "pendingApproval": "Pending Approval",
         "pendingUserChanges": "Pending User Change",
         "rejected": "Rejected"
+      },
+      "ratingEdit": {
+        "title": "Rating System",
+        "loading": "Loading",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete rating",
+        "placeholder": "Name of rating",
+        "newAnswer": "Add rating",
+        "updateSuccessful": "Successfuly updated the rating system."
       }
     },
     "commentEditView": {
@@ -416,12 +446,21 @@
       "variousPanelHeader": "Tags & Source",
       "tags": "Tags",
       "source": "Source",
-      "userPanelHeader": "Author of the comment"
+      "userPanelHeader": "Author of the comment",
+      "actions": "Actions"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
       "guestUser": "Guest (Username)",
       "selectImage": "Select profile image of the commenting guest"
+    },
+    "replyCommentBtn": {
+      "reply": "Reply to this comment",
+      "tooltip": "Create a new comment, which replies to this comment."
+    },
+    "commentDeleteBtn": {
+      "modalTitle": "Really delete?",
+      "modalBody": "If you delete this comment, it is irrevocable. The comment cannot be restored."
     },
     "confirm": "Confirm",
     "create": "Create",
@@ -626,6 +665,7 @@
       },
       "authors": "Authors",
       "comments": "Comments",
+      "commentRating": "Rating System",
       "commentTags": "Tags",
       "settings": "Settings",
       "imageLibrary": "Image Library",
@@ -1173,7 +1213,10 @@
       "comments": "Comments",
       "login": "Login",
       "peering": "Peering",
-      "payment": "Payment"
+      "payment": "Payment",
+      "allowGuestCommentRating": "Allow guest ratings on comments",
+      "polls": "Polls",
+      "guestPollVote": "Allow guest votes on polls"
     },
     "tags": {
       "overview": {

@@ -51,6 +51,9 @@ export const getAdminPeerArticles = async (
           args: {
             cursor: cursors ? cursors[peer.id] : undefined,
             take: 50,
+            filter: {
+              published: true
+            },
             // needed for versions before prisma
             after: cursors ? base64Encode(cursors[peer.id]) : undefined,
             first: 50

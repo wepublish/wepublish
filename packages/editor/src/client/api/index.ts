@@ -20,11 +20,11 @@ export type Scalars = {
   Color: string;
   RichText: Node[];
   Slug: string;
+  /** A valid vote value */
+  VoteValue: any;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
   Value: any;
-  /** A valid vote value */
-  VoteValue: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -232,7 +232,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -253,6 +253,8 @@ export type BlockInput = {
   bildwurfAd?: Maybe<BildwurfAdBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   html?: Maybe<HtmlBlockInput>;
+  poll?: Maybe<PollBlockInput>;
+  comment?: Maybe<CommentBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
@@ -284,6 +286,29 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentBlock = {
+  __typename?: 'CommentBlock';
+  filter: CommentBlockFilter;
+  comments: Array<Comment>;
+};
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter';
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter;
+};
+
+export type CommentBlockInputFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
+};
+
 export type CommentConnection = {
   __typename?: 'CommentConnection';
   nodes: Array<Comment>;
@@ -292,6 +317,8 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
   states?: Maybe<Array<CommentState>>;
 };
 
@@ -300,6 +327,14 @@ export enum CommentItemType {
   Page = 'Page'
 }
 
+export type CommentRatingSystemAnswer = {
+  __typename?: 'CommentRatingSystemAnswer';
+  id: Scalars['ID'];
+  ratingSystemId: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+  type: RatingSystemType;
+};
+
 export enum CommentRejectionReason {
   Misconduct = 'Misconduct',
   Spam = 'Spam'
@@ -307,7 +342,7 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text: Scalars['RichText'];
+  text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
@@ -442,6 +477,13 @@ export type FlexTeaser = {
 export type FlexTeaserInput = {
   teaser?: Maybe<TeaserInput>;
   alignment: FlexAlignmentInput;
+};
+
+export type FullCommentRatingSystem = {
+  __typename?: 'FullCommentRatingSystem';
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  answers: Array<CommentRatingSystemAnswer>;
 };
 
 export type FullPoll = {
@@ -585,8 +627,8 @@ export type Invoice = {
   paidAt?: Maybe<Scalars['DateTime']>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
   items: Array<InvoiceItem>;
-  total: Scalars['Int'];
   canceledAt?: Maybe<Scalars['DateTime']>;
+  total: Scalars['Int'];
 };
 
 export type InvoiceConnection = {
@@ -800,10 +842,11 @@ export type Mutation = {
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
+  deleteComment: Comment;
   updateSettingList?: Maybe<Array<Maybe<Setting>>>;
-  createTag?: Maybe<Tag>;
-  updateTag?: Maybe<Tag>;
-  deleteTag?: Maybe<Tag>;
+  createRatingSystemAnswer: CommentRatingSystemAnswer;
+  updateRatingSystem: FullCommentRatingSystem;
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -811,6 +854,9 @@ export type Mutation = {
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
+  createTag?: Maybe<Tag>;
+  updateTag?: Maybe<Tag>;
+  deleteTag?: Maybe<Tag>;
 };
 
 
@@ -1119,6 +1165,7 @@ export type MutationCreateCommentArgs = {
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
   itemID: Scalars['ID'];
+  parentID?: Maybe<Scalars['ID']>;
   itemType: CommentItemType;
 };
 
@@ -1140,20 +1187,32 @@ export type MutationRequestChangesOnCommentArgs = {
 };
 
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationUpdateSettingListArgs = {
   value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
 };
 
 
-export type MutationCreateTagArgs = {
-  tag?: Maybe<Scalars['String']>;
-  type: TagType;
+export type MutationCreateRatingSystemAnswerArgs = {
+  ratingSystemId: Scalars['ID'];
+  type?: Maybe<RatingSystemType>;
+  answer?: Maybe<Scalars['String']>;
 };
 
 
-export type MutationUpdateTagArgs = {
+export type MutationUpdateRatingSystemArgs = {
+  ratingSystemId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdateCommentRatingSystemAnswer>>;
+};
+
+
+export type MutationDeleteRatingSystemAnswerArgs = {
   id: Scalars['ID'];
-  tag?: Maybe<Scalars['String']>;
 };
 
 
@@ -1197,6 +1256,23 @@ export type MutationDeletePollAnswerArgs = {
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateTagArgs = {
+  tag?: Maybe<Scalars['String']>;
+  type: TagType;
+};
+
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteTagArgs = {
   id: Scalars['ID'];
 };
 
@@ -1532,6 +1608,15 @@ export type PollAnswerWithVoteCount = {
   votes: Scalars['Int'];
 };
 
+export type PollBlock = {
+  __typename?: 'PollBlock';
+  poll?: Maybe<FullPoll>;
+};
+
+export type PollBlockInput = {
+  pollId?: Maybe<Scalars['ID']>;
+};
+
 export type PollConnection = {
   __typename?: 'PollConnection';
   nodes: Array<Poll>;
@@ -1631,6 +1716,7 @@ export type Query = {
   payments: PaymentConnection;
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
+  ratingSystem: FullCommentRatingSystem;
   tags?: Maybe<TagConnection>;
   polls?: Maybe<PollConnection>;
   poll?: Maybe<FullPoll>;
@@ -1884,6 +1970,7 @@ export type QueryTagsArgs = {
   order?: Maybe<SortOrder>;
 };
 
+
 export type QueryPollsArgs = {
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
@@ -1908,6 +1995,10 @@ export type QuoteBlockInput = {
   quote?: Maybe<Scalars['String']>;
   author?: Maybe<Scalars['String']>;
 };
+
+export enum RatingSystemType {
+  Star = 'STAR'
+}
 
 
 export type RichTextBlock = {
@@ -1946,6 +2037,8 @@ export type Setting = {
 
 export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
@@ -2176,6 +2269,12 @@ export type UnidirectionalPageInfo = {
   __typename?: 'UnidirectionalPageInfo';
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
+};
+
+export type UpdateCommentRatingSystemAnswer = {
+  id: Scalars['ID'];
+  type?: Maybe<RatingSystemType>;
+  answer?: Maybe<Scalars['String']>;
 };
 
 export type UpdateImageInput = {
@@ -2413,7 +2512,7 @@ export type ArticleRefFragment = (
 );
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<ArticleFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -2438,6 +2537,7 @@ export type ArticleListQuery = (
 );
 
 export type PeerArticleListQueryVariables = Exact<{
+  filter?: Maybe<ArticleFilter>;
   cursors?: Maybe<Scalars['String']>;
   peerFilter?: Maybe<Scalars['String']>;
   order?: Maybe<SortOrder>;
@@ -2645,6 +2745,12 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
+      ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -2980,6 +3086,25 @@ type FullBlock_HtmlBlock_Fragment = (
   & Pick<HtmlBlock, 'html'>
 );
 
+type FullBlock_PollBlock_Fragment = (
+  { __typename: 'PollBlock' }
+  & { poll?: Maybe<(
+    { __typename?: 'FullPoll' }
+    & Pick<FullPoll, 'id' | 'question'>
+  )> }
+);
+
+type FullBlock_CommentBlock_Fragment = (
+  { __typename: 'CommentBlock' }
+  & { filter: (
+    { __typename?: 'CommentBlockFilter' }
+    & Pick<CommentBlockFilter, 'item' | 'tags' | 'comments'>
+  ), comments: Array<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  )> }
+);
+
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
@@ -3034,7 +3159,69 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+
+export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RatingSystemQuery = (
+  { __typename?: 'Query' }
+  & { ratingSystem: (
+    { __typename?: 'FullCommentRatingSystem' }
+    & Pick<FullCommentRatingSystem, 'id' | 'name'>
+    & { answers: Array<(
+      { __typename?: 'CommentRatingSystemAnswer' }
+      & Pick<CommentRatingSystemAnswer, 'id' | 'type' | 'answer' | 'ratingSystemId'>
+    )> }
+  ) }
+);
+
+export type UpdateRatingSystemMutationVariables = Exact<{
+  ratingSystemId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  answers?: Maybe<Array<UpdateCommentRatingSystemAnswer> | UpdateCommentRatingSystemAnswer>;
+}>;
+
+
+export type UpdateRatingSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { updateRatingSystem: (
+    { __typename?: 'FullCommentRatingSystem' }
+    & Pick<FullCommentRatingSystem, 'id' | 'name'>
+    & { answers: Array<(
+      { __typename?: 'CommentRatingSystemAnswer' }
+      & Pick<CommentRatingSystemAnswer, 'id' | 'type' | 'answer' | 'ratingSystemId'>
+    )> }
+  ) }
+);
+
+export type CreateRatingSystemAnswerMutationVariables = Exact<{
+  ratingSystemId: Scalars['ID'];
+  type: RatingSystemType;
+  answer?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreateRatingSystemAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { createRatingSystemAnswer: (
+    { __typename?: 'CommentRatingSystemAnswer' }
+    & Pick<CommentRatingSystemAnswer, 'answer' | 'id' | 'type' | 'ratingSystemId'>
+  ) }
+);
+
+export type DeleteRatingSystemAnswerMutationVariables = Exact<{
+  answerId: Scalars['ID'];
+}>;
+
+
+export type DeleteRatingSystemAnswerMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteRatingSystemAnswer: (
+    { __typename?: 'CommentRatingSystemAnswer' }
+    & Pick<CommentRatingSystemAnswer, 'id'>
+  ) }
+);
 
 export type CommentRevisionFragment = (
   { __typename?: 'CommentRevision' }
@@ -3055,7 +3242,7 @@ export type FullParentCommentFragment = (
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt' | 'itemID' | 'itemType'>
   & { guestUserImage?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3175,6 +3362,7 @@ export type UpdateCommentMutation = (
 export type CreateCommentMutationVariables = Exact<{
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
   text?: Maybe<Scalars['RichText']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
@@ -3183,6 +3371,19 @@ export type CreateCommentMutationVariables = Exact<{
 export type CreateCommentMutation = (
   { __typename?: 'Mutation' }
   & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  deleteCommentId: Scalars['ID'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'id'>
   ) }
@@ -3298,7 +3499,7 @@ export type DeleteImageMutation = (
 
 export type InvoiceFragment = (
   { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'modifiedAt' | 'createdAt' | 'canceledAt'>
+  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'canceledAt' | 'modifiedAt' | 'createdAt'>
   & { items: Array<(
     { __typename?: 'InvoiceItem' }
     & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
@@ -3767,6 +3968,12 @@ export type PageQuery = (
       ) | (
         { __typename?: 'HTMLBlock' }
         & FullBlock_HtmlBlock_Fragment
+      ) | (
+        { __typename?: 'PollBlock' }
+        & FullBlock_PollBlock_Fragment
+      ) | (
+        { __typename?: 'CommentBlock' }
+        & FullBlock_CommentBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -4762,6 +4969,193 @@ export const FullAuthorFragmentDoc = gql`
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+export const DeactivationFragmentDoc = gql`
+    fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+    `;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  description
+  slug
+  active
+  tags
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  canceledAt
+  modifiedAt
+  createdAt
+}
+    `;
+export const UserSubscriptionFragmentDoc = gql`
+    fragment UserSubscription on UserSubscription {
+  id
+  createdAt
+  modifiedAt
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  periods {
+    id
+    amount
+    createdAt
+    endsAt
+    invoiceID
+    paymentPeriodicity
+    startsAt
+  }
+  properties {
+    key
+    value
+    public
+  }
+  deactivation {
+    ...Deactivation
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  invoices {
+    ...Invoice
+  }
+}
+    ${DeactivationFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${InvoiceFragmentDoc}`;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on User {
+  id
+  createdAt
+  modifiedAt
+  name
+  firstName
+  preferredName
+  address {
+    company
+    streetAddress
+    streetAddress2
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  emailVerifiedAt
+  roles {
+    ...FullUserRole
+  }
+  subscriptions {
+    ...UserSubscription
+  }
+}
+    ${FullUserRoleFragmentDoc}
+${UserSubscriptionFragmentDoc}`;
+export const CommentRevisionFragmentDoc = gql`
+    fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+    `;
+export const FullParentCommentFragmentDoc = gql`
+    fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  guestUsername
+  revisions {
+    ...CommentRevision
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}`;
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
+  user {
+    ...FullUser
+  }
+  revisions {
+    ...CommentRevision
+  }
+  source
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+  parentComment {
+    ...FullParentComment
+  }
+  tags {
+    id
+    tag
+  }
+}
+    ${ImageRefFragmentDoc}
+${FullUserFragmentDoc}
+${CommentRevisionFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export const ArticleRefFragmentDoc = gql`
     fragment ArticleRef on Article {
   id
@@ -4941,6 +5335,22 @@ export const FullBlockFragmentDoc = gql`
       ...ImageRef
     }
   }
+  ... on PollBlock {
+    poll {
+      id
+      question
+    }
+  }
+  ... on CommentBlock {
+    filter {
+      item
+      tags
+      comments
+    }
+    comments {
+      ...FullComment
+    }
+  }
   ... on ImageBlock {
     caption
     image {
@@ -5029,192 +5439,8 @@ export const FullBlockFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}
+${FullCommentFragmentDoc}
 ${FullTeaserFragmentDoc}`;
-export const FullPermissionFragmentDoc = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRoleFragmentDoc = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-export const DeactivationFragmentDoc = gql`
-    fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
-}
-    `;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  description
-  slug
-  active
-  tags
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const InvoiceFragmentDoc = gql`
-    fragment Invoice on Invoice {
-  id
-  total
-  items {
-    createdAt
-    modifiedAt
-    name
-    description
-    quantity
-    amount
-    total
-  }
-  paidAt
-  description
-  mail
-  manuallySetAsPaidByUserId
-  canceledAt
-  modifiedAt
-  createdAt
-}
-    `;
-export const UserSubscriptionFragmentDoc = gql`
-    fragment UserSubscription on UserSubscription {
-  id
-  createdAt
-  modifiedAt
-  paymentPeriodicity
-  monthlyAmount
-  autoRenew
-  startsAt
-  paidUntil
-  periods {
-    id
-    amount
-    createdAt
-    endsAt
-    invoiceID
-    paymentPeriodicity
-    startsAt
-  }
-  properties {
-    key
-    value
-    public
-  }
-  deactivation {
-    ...Deactivation
-  }
-  memberPlan {
-    ...MemberPlanRef
-  }
-  invoices {
-    ...Invoice
-  }
-}
-    ${DeactivationFragmentDoc}
-${MemberPlanRefFragmentDoc}
-${InvoiceFragmentDoc}`;
-export const FullUserFragmentDoc = gql`
-    fragment FullUser on User {
-  id
-  createdAt
-  modifiedAt
-  name
-  firstName
-  preferredName
-  address {
-    company
-    streetAddress
-    streetAddress2
-    zipCode
-    city
-    country
-  }
-  active
-  lastLogin
-  properties {
-    key
-    value
-    public
-  }
-  email
-  emailVerifiedAt
-  roles {
-    ...FullUserRole
-  }
-  subscriptions {
-    ...UserSubscription
-  }
-}
-    ${FullUserRoleFragmentDoc}
-${UserSubscriptionFragmentDoc}`;
-export const CommentRevisionFragmentDoc = gql`
-    fragment CommentRevision on CommentRevision {
-  text
-  title
-  lead
-  createdAt
-}
-    `;
-export const FullParentCommentFragmentDoc = gql`
-    fragment FullParentComment on Comment {
-  id
-  state
-  rejectionReason
-  user {
-    ...FullUser
-  }
-  guestUsername
-  revisions {
-    ...CommentRevision
-  }
-  createdAt
-  modifiedAt
-}
-    ${FullUserFragmentDoc}
-${CommentRevisionFragmentDoc}`;
-export const FullCommentFragmentDoc = gql`
-    fragment FullComment on Comment {
-  id
-  state
-  rejectionReason
-  guestUsername
-  guestUserImage {
-    ...ImageRef
-  }
-  user {
-    ...FullUser
-  }
-  revisions {
-    ...CommentRevision
-  }
-  source
-  createdAt
-  modifiedAt
-  parentComment {
-    ...FullParentComment
-  }
-  tags {
-    id
-    tag
-  }
-}
-    ${ImageRefFragmentDoc}
-${FullUserFragmentDoc}
-${CommentRevisionFragmentDoc}
-${FullParentCommentFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   startCursor
@@ -5401,8 +5627,8 @@ export const TokenRefFragmentDoc = gql`
 }
     `;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -5450,8 +5676,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5483,6 +5709,7 @@ ${ArticleRefFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePeerArticleListQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *      cursors: // value for 'cursors'
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
@@ -6164,6 +6391,160 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+export const RatingSystemDocument = gql`
+    query RatingSystem {
+  ratingSystem {
+    id
+    name
+    answers {
+      id
+      type
+      answer
+      ratingSystemId
+    }
+  }
+}
+    `;
+
+/**
+ * __useRatingSystemQuery__
+ *
+ * To run a query within a React component, call `useRatingSystemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRatingSystemQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRatingSystemQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRatingSystemQuery(baseOptions?: Apollo.QueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
+      }
+export function useRatingSystemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
+        }
+export type RatingSystemQueryHookResult = ReturnType<typeof useRatingSystemQuery>;
+export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemLazyQuery>;
+export type RatingSystemQueryResult = Apollo.QueryResult<RatingSystemQuery, RatingSystemQueryVariables>;
+export const UpdateRatingSystemDocument = gql`
+    mutation UpdateRatingSystem($ratingSystemId: ID!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
+  updateRatingSystem(ratingSystemId: $ratingSystemId, name: $name, answers: $answers) {
+    id
+    name
+    answers {
+      id
+      type
+      answer
+      ratingSystemId
+    }
+  }
+}
+    `;
+export type UpdateRatingSystemMutationFn = Apollo.MutationFunction<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
+
+/**
+ * __useUpdateRatingSystemMutation__
+ *
+ * To run a mutation, you first call `useUpdateRatingSystemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRatingSystemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRatingSystemMutation, { data, loading, error }] = useUpdateRatingSystemMutation({
+ *   variables: {
+ *      ratingSystemId: // value for 'ratingSystemId'
+ *      name: // value for 'name'
+ *      answers: // value for 'answers'
+ *   },
+ * });
+ */
+export function useUpdateRatingSystemMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>(UpdateRatingSystemDocument, options);
+      }
+export type UpdateRatingSystemMutationHookResult = ReturnType<typeof useUpdateRatingSystemMutation>;
+export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatingSystemMutation>;
+export type UpdateRatingSystemMutationOptions = Apollo.BaseMutationOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
+export const CreateRatingSystemAnswerDocument = gql`
+    mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
+  createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
+    answer
+    id
+    type
+    ratingSystemId
+  }
+}
+    `;
+export type CreateRatingSystemAnswerMutationFn = Apollo.MutationFunction<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>;
+
+/**
+ * __useCreateRatingSystemAnswerMutation__
+ *
+ * To run a mutation, you first call `useCreateRatingSystemAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRatingSystemAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRatingSystemAnswerMutation, { data, loading, error }] = useCreateRatingSystemAnswerMutation({
+ *   variables: {
+ *      ratingSystemId: // value for 'ratingSystemId'
+ *      type: // value for 'type'
+ *      answer: // value for 'answer'
+ *   },
+ * });
+ */
+export function useCreateRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>(CreateRatingSystemAnswerDocument, options);
+      }
+export type CreateRatingSystemAnswerMutationHookResult = ReturnType<typeof useCreateRatingSystemAnswerMutation>;
+export type CreateRatingSystemAnswerMutationResult = Apollo.MutationResult<CreateRatingSystemAnswerMutation>;
+export type CreateRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>;
+export const DeleteRatingSystemAnswerDocument = gql`
+    mutation DeleteRatingSystemAnswer($answerId: ID!) {
+  deleteRatingSystemAnswer(id: $answerId) {
+    id
+  }
+}
+    `;
+export type DeleteRatingSystemAnswerMutationFn = Apollo.MutationFunction<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
+
+/**
+ * __useDeleteRatingSystemAnswerMutation__
+ *
+ * To run a mutation, you first call `useDeleteRatingSystemAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRatingSystemAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRatingSystemAnswerMutation, { data, loading, error }] = useDeleteRatingSystemAnswerMutation({
+ *   variables: {
+ *      answerId: // value for 'answerId'
+ *   },
+ * });
+ */
+export function useDeleteRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>(DeleteRatingSystemAnswerDocument, options);
+      }
+export type DeleteRatingSystemAnswerMutationHookResult = ReturnType<typeof useDeleteRatingSystemAnswerMutation>;
+export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<DeleteRatingSystemAnswerMutation>;
+export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
 export const CommentListDocument = gql`
     query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
@@ -6391,8 +6772,8 @@ export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateComment
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, text: $text, tagIds: $tagIds) {
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
     id
   }
 }
@@ -6414,6 +6795,7 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *   variables: {
  *      itemID: // value for 'itemID'
  *      itemType: // value for 'itemType'
+ *      parentID: // value for 'parentID'
  *      text: // value for 'text'
  *      tagIds: // value for 'tagIds'
  *   },
@@ -6426,6 +6808,39 @@ export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      deleteCommentId: // value for 'deleteCommentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {

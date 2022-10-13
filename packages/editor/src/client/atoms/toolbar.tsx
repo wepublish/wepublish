@@ -1,3 +1,5 @@
+import './toolbar.less'
+
 import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {
   createContext,
@@ -11,9 +13,9 @@ import React, {
 import {Divider, Popover, Whisper} from 'rsuite'
 import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
+
 import {Format} from '../blocks/richTextBlock/editor/formats'
 import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
-import './toolbar.less'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
@@ -71,6 +73,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({active, children, ...props}, ref) => {
     return (
       <button
+        type="button"
         className="icon-button"
         style={{
           border: `${active ? 'blue' : '#00000000'} 1px solid`

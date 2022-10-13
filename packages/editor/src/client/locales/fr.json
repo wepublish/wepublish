@@ -201,7 +201,8 @@
         "requestChange": "Demande de changement",
         "edit": "Edit Comment",
         "reject": "Rejeter",
-        "approve": "Approuver"
+        "approve": "Approuver",
+        "editState": "Modifier le statut"
       },
       "edit": {
         "title": "Edit Comment",
@@ -235,13 +236,24 @@
         "updatedAt": "Mis à jour le",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "unregisteredUser": "(Utilisateur·trice non enregistré·e)"
+        "unregisteredUser": "(Utilisateur·trice non enregistré·e)",
+        "noUserName": "Pas de nom d'utilisateur"
       },
       "state": {
         "approved": "Approuvé",
         "pendingApproval": "En attente d'approbation",
         "pendingUserChanges": "En attente de modifications de l'utilisateur·trice",
         "rejected": "Rejeté"
+      },
+      "ratingEdit": {
+        "title": "Rating System",
+        "loading": "Loading",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete rating",
+        "placeholder": "Name of rating",
+        "newAnswer": "Add rating",
+        "updateSuccessful": "Successfuly updated the rating system."
       }
     },
     "commentEditView": {
@@ -251,12 +263,21 @@
       "variousPanelHeader": "Balises & source",
       "tags": "Tags",
       "source": "Source",
-      "userPanelHeader": "Auteur dans le commentaire"
+      "userPanelHeader": "Auteur dans le commentaire",
+      "actions": "Actions"
     },
     "commentUser": {
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
       "guestUser": "Invité (nom d'utilisateur)",
       "selectImage": "Choisir ou télécharger la photo de profil de l'invité"
+    },
+    "replyCommentBtn": {
+      "reply": "Répondre au commentaire",
+      "tooltip": "Crée un nouveau commentaire qui répond à ce commentaire."
+    },
+    "commentDeleteBtn": {
+      "modalTitle": "Vraiment supprimer?",
+      "modalBody": "Si tu supprimes ce commentaire, c'est irrévocable. Le commentaire ne peut pas être restauré."
     },
     "cancel": "Annuler",
     "pages": {
@@ -594,6 +615,23 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Edit Comment Block",
+        "edit": "Edit comment block",
+        "filterByTag": "Filter comments by tag",
+        "commentsFilterByTagInformation": "All comments below will be displayed",
+        "cherryPick": "Select specific comments",
+        "displayName": "Display name",
+        "comments": "{{count}} Comment",
+        "comments_plural": "{{count}} Comments",
+        "label": "Commentaires"
+      },
+      "poll": {
+        "title": "Edit Poll Block",
+        "edit": "Edit poll block",
+        "select": "Select",
+        "label": "Sondage"
+      },
       "embeds": {
         "label": "Intégration",
         "overview": {
@@ -960,6 +998,7 @@
       "articles": "Articles",
       "authors": "Auteurs/Autrices",
       "comments": "Commentaires",
+      "commentRating": "Rating System",
       "commentTags": "Tags",
       "imageLibrary": "Bibliothèque d'images",
       "logout": "Déconnection",
@@ -1153,7 +1192,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Paiement",
-      "days": "jours"
+      "days": "jours",
+      "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
+      "polls": "Sondages",
+      "guestPollVote": "Autoriser les votes anonymes dans les sondages"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Erreur inattendue : aucun·e utilisateur·trice trouvé·e"

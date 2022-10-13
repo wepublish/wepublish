@@ -59,11 +59,13 @@ import {
   GraphQLUserAddressInput
 } from './user'
 import {createUser} from './user/user.mutation'
+import {GraphQLCommentRating} from './comment-rating/comment-rating'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
   updateUserPassword
 } from './user/user.public-mutation'
+import {rateComment} from './comment-rating/comment-rating.public-mutation'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -137,6 +139,31 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
       resolve: (_, {input}, {prisma: {comment}, authenticateUser}) =>
         updatePublicComment(input, authenticateUser, comment)
+    },
+
+    rateComment: {
+      type: GraphQLNonNull(GraphQLCommentRating),
+      args: {
+        commentId: {type: GraphQLNonNull(GraphQLID)},
+        answerId: {type: GraphQLNonNull(GraphQLID)},
+        value: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
+      resolve: (
+        root,
+        {commentId, answerId, value},
+        {optionalAuthenticateUser, prisma: {commentRating, commentRatingSystemAnswer, setting}}
+      ) =>
+        rateComment(
+          commentId,
+          answerId,
+          value,
+          undefined,
+          optionalAuthenticateUser,
+          commentRatingSystemAnswer,
+          commentRating,
+          setting
+        )
     },
 
     registerMember: {
@@ -319,7 +346,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const userExists = await prisma.user.findUnique({
           where: {
-            email: email
+            email
           },
           select: unselectPassword
         })
@@ -751,8 +778,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
-      resolve: (root, {answerId}, {optionalAuthenticateUser, prisma: {pollAnswer, pollVote}}) =>
-        voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote)
+      resolve: (
+        root,
+        {answerId},
+        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}}
+      ) => voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

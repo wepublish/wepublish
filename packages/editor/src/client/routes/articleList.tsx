@@ -20,6 +20,7 @@ import {
 } from 'rsuite'
 
 import {
+  ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
   ArticleRefFragment,
@@ -65,7 +66,7 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 }
 
 function ArticleList() {
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
@@ -134,7 +135,7 @@ function ArticleList() {
         </PermissionControl>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
+            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>

@@ -1,4 +1,4 @@
-import {CommentState} from '@prisma/client'
+import {CommentState, RatingSystemType} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -29,12 +29,25 @@ import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.priv
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
-  GraphQLCommentItemType,
   GraphQLCommentRejectionReason,
+  GraphQLCommentItemType,
   GraphQLCommentRevisionUpdateInput
 } from './comment/comment'
 import {
+  GraphQLCommentRatingSystemAnswer,
+  GraphQLFullCommentRatingSystem,
+  GraphQLRatingSystemType,
+  GraphQLUpdateCommentRatingSystemAnswer
+} from './comment-rating/comment-rating'
+import {
+  createCommentRatingAnswer,
+  deleteCommentRatingAnswer,
+  updateRatingSystem
+} from './comment-rating/comment-rating.private-mutation'
+
+import {
   createAdminComment,
+  deleteComment,
   takeActionOnComment,
   updateComment
 } from './comment/comment.private-mutation'
@@ -891,12 +904,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         text: {type: GraphQLRichText},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
         itemID: {type: GraphQLNonNull(GraphQLID)},
+        parentID: {type: GraphQLID},
         itemType: {
           type: GraphQLNonNull(GraphQLCommentItemType)
         }
       },
-      resolve: (root, {text, tagIds, itemID, itemType}, {authenticate, prisma: {comment}}) =>
-        createAdminComment(itemID, itemType, text, tagIds, authenticate, comment)
+      resolve: (
+        root,
+        {text, tagIds, itemID, itemType, parentID},
+        {authenticate, prisma: {comment}}
+      ) => createAdminComment(itemID, itemType, parentID, text, tagIds, authenticate, comment)
     },
 
     approveComment: {
@@ -938,6 +955,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         )
     },
 
+    deleteComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        deleteComment(id, authenticate, comment)
+    },
+
     // Settings
     // ==========
 
@@ -948,6 +974,53 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {value}, {authenticate, prisma}) =>
         updateSettings(value, authenticate, prisma)
+    },
+
+    // Rating System
+    // ==========
+
+    createRatingSystemAnswer: {
+      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      args: {
+        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        type: {type: GraphQLRatingSystemType, defaultValue: RatingSystemType.star},
+        answer: {type: GraphQLString}
+      },
+      resolve: (
+        root,
+        {ratingSystemId, type, answer},
+        {authenticate, prisma: {commentRatingSystemAnswer}}
+      ) =>
+        createCommentRatingAnswer(
+          ratingSystemId,
+          type,
+          answer,
+          authenticate,
+          commentRatingSystemAnswer
+        )
+    },
+
+    updateRatingSystem: {
+      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      args: {
+        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        name: {type: GraphQLString},
+        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer))}
+      },
+      resolve: (
+        root,
+        {ratingSystemId, answers, name},
+        {authenticate, prisma: {commentRatingSystem}}
+      ) => updateRatingSystem(ratingSystemId, name, answers, authenticate, commentRatingSystem)
+    },
+
+    deleteRatingSystemAnswer: {
+      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {commentRatingSystemAnswer}}) =>
+        deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer)
     },
 
     // Poll

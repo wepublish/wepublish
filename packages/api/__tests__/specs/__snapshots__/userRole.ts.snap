@@ -255,6 +255,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to delete comments",
+          "id": "CAN_DELETE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -377,6 +382,26 @@ Object {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get a comment rating system",
+          "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a comment rating system",
+          "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a comment rating system",
+          "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a comment rating system",
+          "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
         },
         Object {
           "deprecated": false,
@@ -702,6 +727,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to delete comments",
+          "id": "CAN_DELETE_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
@@ -824,6 +854,26 @@ Object {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get a comment rating system",
+          "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a comment rating system",
+          "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a comment rating system",
+          "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a comment rating system",
+          "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
         },
         Object {
           "deprecated": false,
@@ -1162,6 +1212,11 @@ Object {
       },
       Object {
         "deprecated": false,
+        "description": "Allows to delete comments",
+        "id": "CAN_DELETE_COMMENTS",
+      },
+      Object {
+        "deprecated": false,
         "description": "Allows to create a member plan",
         "id": "CAN_CREATE_MEMBER_PLAN",
       },
@@ -1284,6 +1339,26 @@ Object {
         "deprecated": false,
         "description": "Allows to update settings",
         "id": "CAN_UPDATE_SETTINGS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get a comment rating system",
+        "id": "CAN_GET_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a comment rating system",
+        "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a comment rating system",
+        "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a comment rating system",
+        "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
       },
       Object {
         "deprecated": false,
