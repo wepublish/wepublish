@@ -84,7 +84,7 @@ export interface MemberContext {
   checkOpenInvoices(): Promise<void>
   checkOpenInvoice(props: CheckOpenInvoiceProps): Promise<void>
 
-  chargeInvoice(props: ChargeInvoiceProps): Promise<boolean>
+  chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
   chargeOpenInvoices(): Promise<void>
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
