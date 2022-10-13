@@ -291,7 +291,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
-    text: {type: GraphQLNonNull(GraphQLRichText)},
+    text: {type: GraphQLRichText},
 
     state: {type: GraphQLNonNull(GraphQLCommentState)},
     source: {type: GraphQLString},

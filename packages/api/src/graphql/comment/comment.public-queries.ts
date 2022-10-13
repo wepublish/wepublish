@@ -1,11 +1,11 @@
 import {CommentRatingSystemAnswer, CommentState, PrismaClient} from '@prisma/client'
 
-export const getPublicChildrenCommentsByParentId = (
+export const getPublicChildrenCommentsByParentId = async (
   parentId: string,
   userId: string | null,
   comment: PrismaClient['comment']
-) =>
-  comment.findMany({
+) => {
+  const comments = await comment.findMany({
     where: {
       AND: [
         {parentID: parentId},
@@ -19,6 +19,17 @@ export const getPublicChildrenCommentsByParentId = (
       revisions: true
     }
   })
+
+  return comments.map(comment => {
+    const revisions = comment.revisions
+    return {
+      ...comment,
+      title: revisions.length ? revisions[revisions.length - 1].title : null,
+      lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+      text: revisions.length ? revisions[revisions.length - 1].text : null
+    }
+  })
+}
 
 export type CalculatedRating = {
   count: number
