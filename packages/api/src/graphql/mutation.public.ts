@@ -547,7 +547,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             id: subscriptionId
           }
         })) as SubscriptionWithRelations
-
         // Allow only valid and subscription belonging to the user to early extend
         if (!subscription || subscription.userID !== user.id) {
           logger('extendSubscription').error(
@@ -575,6 +574,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const paymentProvider = paymentProviders.find(
           obj => obj.id === paymentMethod.paymentProviderID
         )
+
         // Prevent user from creating new invoice while having unpaid invoices
         const unpaidInvoices = await prisma.invoice.findMany({
           where: {
@@ -589,7 +589,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const invoice = await memberContext.renewSubscriptionForUser({
           subscription
         })
-
         if (!invoice) {
           logger('extendSubscription').error(
             'Could not create new invoice for subscription with ID "%s"',
@@ -617,6 +616,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             logger('extendSubscription').warn('user %s not found', subscription.userID)
             throw new InternalError()
           }
+
           const customer = fullUser.paymentProviderCustomers.find(
             ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
           )
