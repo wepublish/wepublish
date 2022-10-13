@@ -1128,6 +1128,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTikTokVideoBlock,
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
+    GraphQLHTMLBlock,
     GraphQLPollBlock,
     GraphQLPublicCommentBlock,
     GraphQLLinkPageBreakBlock,

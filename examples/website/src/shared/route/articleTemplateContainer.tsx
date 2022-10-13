@@ -25,7 +25,8 @@ import {
   gridBlockFrontDataGQLfragment,
   peerMetaDataFragment,
   peerArticleMetaDataFragment,
-  flexGridBlockFrontDataGQLfragment
+  flexGridBlockFrontDataGQLfragment,
+  htmlBlockDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -250,6 +251,7 @@ const PeerArticleQuery = gql`
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
   ${flexGridBlockFrontDataGQLfragment}
+  ${htmlBlockDataFragment}
 `
 
 export interface PeerArticleTemplateContainerProps {

@@ -222,6 +222,8 @@ export interface PageTeaserLink {
 
 export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom
+  contentUrl?: string
+  properties?: TeaserMetadataProperty[]
 }
 
 export type TeaserLink =
@@ -236,8 +238,6 @@ export interface BaseTeaser {
   preTitle?: string
   title?: string
   lead?: string
-  contentUrl?: string
-  properties?: TeaserMetadataProperty[]
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}

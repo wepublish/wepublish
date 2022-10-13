@@ -34,7 +34,9 @@ export function TeaserEditPanel({
 }: TeaserEditPanelProps) {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
-  const [contentUrl, setContentUrl] = useState(initialTeaser.contentUrl || undefined)
+  const [contentUrl, setContentUrl] = useState(
+    initialTeaser.type === TeaserType.Custom ? initialTeaser.contentUrl : undefined
+  )
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
@@ -67,9 +69,11 @@ export function TeaserEditPanel({
                 preTitle: preTitle || undefined,
                 title: title || undefined,
                 lead: lead || undefined,
-                contentUrl: contentUrl || undefined,
-                properties: metaDataProperties.map(({value}) => value) || undefined,
-                image
+                image,
+                ...(initialTeaser.type === TeaserType.Custom && {
+                  contentUrl: contentUrl || undefined,
+                  properties: metaDataProperties.map(({value}) => value) || undefined
+                })
               })
             }}>
             {t('articleEditor.panels.confirm')}
@@ -94,6 +98,26 @@ export function TeaserEditPanel({
                 <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
+            </Form.Group>
+            <Form.Group controlId="articlePreTitle">
+              <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
+              <Form.Control
+                name="pre-title"
+                value={preTitle}
+                onChange={(preTitle: string) => setPreTitle(preTitle)}
+              />
+            </Form.Group>
+            <Form.Group controlId="articleTitle">
+              <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
+              <Form.Control
+                name="title"
+                value={title}
+                onChange={(title: string) => setTitle(title)}
+              />
+            </Form.Group>
+            <Form.Group controlId="articleLead">
+              <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
+              <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
             </Form.Group>
             {initialTeaser.type === TeaserType.Custom && (
               <>
@@ -147,26 +171,6 @@ export function TeaserEditPanel({
                 </Form.Group>
               </>
             )}
-            <Form.Group controlId="articlePreTitle">
-              <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
-              <Form.Control
-                name="pre-title"
-                value={preTitle}
-                onChange={(preTitle: string) => setPreTitle(preTitle)}
-              />
-            </Form.Group>
-            <Form.Group controlId="articleTitle">
-              <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
-              <Form.Control
-                name="title"
-                value={title}
-                onChange={(title: string) => setTitle(title)}
-              />
-            </Form.Group>
-            <Form.Group controlId="articleLead">
-              <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
-              <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
-            </Form.Group>
           </Form>
         </Panel>
 
@@ -234,6 +238,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       imageURL = teaser.image?.previewURL ?? undefined
       title = teaser.title
       lead = teaser.lead ?? undefined
+      preTitle = teaser.preTitle ?? undefined
       contentUrl = teaser.contentUrl
       break
   }

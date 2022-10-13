@@ -366,6 +366,30 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
                   </RadioGroup>
                 </Form.Group>
+                <Form.Group controlId="articlePreTitle">
+                  <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
+                  <Form.Control
+                    name="pre-title"
+                    value={preTitle}
+                    onChange={(preTitle: string) => setPreTitle(preTitle)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="articleTitle">
+                  <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
+                  <Form.Control
+                    name="title"
+                    value={title}
+                    onChange={(title: string) => setTitle(title)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="articleLead">
+                  <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
+                  <Form.Control
+                    name="lead"
+                    value={lead}
+                    onChange={(lead: string) => setLead(lead)}
+                  />
+                </Form.Group>
                 <Form.Group controlId="customTeaserContentUrl">
                   <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
                   <Form.Control
@@ -413,30 +437,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                       </div>
                     )}
                   </ListInput>
-                </Form.Group>
-                <Form.Group controlId="articlePreTitle">
-                  <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
-                  <Form.Control
-                    name="pre-title"
-                    value={preTitle}
-                    onChange={(preTitle: string) => setPreTitle(preTitle)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="articleTitle">
-                  <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
-                  <Form.Control
-                    name="title"
-                    value={title}
-                    onChange={(title: string) => setTitle(title)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="articleLead">
-                  <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
-                  <Form.Control
-                    name="lead"
-                    value={lead}
-                    onChange={(lead: string) => setLead(lead)}
-                  />
                 </Form.Group>
               </Form>
             </Panel>
