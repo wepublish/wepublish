@@ -97,6 +97,7 @@ export interface ArticleMeta {
 
 export type PublishedArticle = ArticleMeta & {
   blocks: Block[]
+  contentUrl?: string
 }
 
 // PageMeta

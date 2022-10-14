@@ -19,10 +19,6 @@ export const DefaultTeaserStyle = cssRule({
   display: 'flex',
   flexDirection: 'column',
 
-  // ':hover': {
-  //   boxShadow: `inset 0 0 5em ${Color.Primary}`,
-  // },
-
   '&::after': {
     content: '""',
     zIndex: -1,
@@ -171,7 +167,7 @@ export function DefaultTeaser({
     <div className={css(DefaultTeaserStyle)}>
       <Link
         route={isPeerArticle ? undefined : route}
-        href={url}
+        href={route?.type === 'custom' ? route.path : url}
         target={isPeerArticle ? '_blank' : '_self'}>
         <div
           className={css(

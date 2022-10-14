@@ -131,6 +131,7 @@ export function ImageTeaser({
   isPeerArticle
 }: LightTeaserProps) {
   const css = useStyle({isSingle})
+
   return (
     <div className={css(ImageTeaserStyle)}>
       <span className={css(PreTitleStyle, ImageTeaserPreTitleStyle)}>{preTitle}</span>
