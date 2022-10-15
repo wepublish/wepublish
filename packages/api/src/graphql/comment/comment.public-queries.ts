@@ -16,7 +16,8 @@ export const getPublicChildrenCommentsByParentId = async (
       modifiedAt: 'desc'
     },
     include: {
-      revisions: true
+      revisions: true,
+      tags: true
     }
   })
 
