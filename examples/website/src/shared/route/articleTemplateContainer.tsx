@@ -51,7 +51,7 @@ const ArticleQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData
@@ -210,7 +210,7 @@ const PeerArticleQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData

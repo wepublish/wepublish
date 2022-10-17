@@ -55,7 +55,7 @@ const PageQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData

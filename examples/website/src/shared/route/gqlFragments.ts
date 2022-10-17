@@ -397,7 +397,7 @@ export const flexGridBlockFrontDataGQLfragment = gql`
 // # transform(input: [{width: 1280, height: 400}])
 
 export const richTextBlockDataFragment = gql`
-  fragment RichtTextBlockData on RichTextBlock {
+  fragment RichTextBlockData on RichTextBlock {
     __typename
     richText
   }
