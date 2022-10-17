@@ -76,7 +76,7 @@ export function BreakingTeaser({
       <Link
         route={isPeerArticle || route?.type === 'custom' ? undefined : route}
         href={route?.type === 'custom' ? contentUrl : url}
-        target={isPeerArticle ? '_blank' : '_self'}
+        target={isPeerArticle || route?.type === 'custom' ? '_blank' : '_self'}
         className={css(TeaserBreakingLinkStyle)}>
         <div className={css(PreTitleStyle, TeaserBreakingPreTitleStyle)}>{preTitle}</div>
         <h2

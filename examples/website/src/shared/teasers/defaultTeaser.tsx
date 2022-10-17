@@ -170,7 +170,7 @@ export function DefaultTeaser({
       <Link
         route={isPeerArticle || route?.type === 'custom' ? undefined : route}
         href={route?.type === 'custom' ? contentUrl : url}
-        target={isPeerArticle ? '_blank' : '_self'}>
+        target={isPeerArticle || route?.type === 'custom' ? '_blank' : '_self'}>
         <div
           className={css(
             DefaultTeaserImageStyle,

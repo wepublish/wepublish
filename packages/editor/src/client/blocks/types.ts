@@ -936,7 +936,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         lead: flexTeaser?.teaser.lead ?? undefined,
                         contentUrl: flexTeaser?.teaser.contentUrl ?? undefined,
                         properties:
-                          flexTeaser?.teaser.properties.map(({key, value, public: isPublic}) => ({
+                          flexTeaser?.teaser?.properties?.map(({key, value, public: isPublic}) => ({
                             key,
                             value,
                             public: isPublic
@@ -1041,7 +1041,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         lead: teaser.lead ?? undefined,
                         contentUrl: teaser.contentUrl ?? undefined,
                         properties:
-                          teaser.properties.map(({key, value, public: isPublic}) => ({
+                          teaser?.properties?.map(({key, value, public: isPublic}) => ({
                             key,
                             value,
                             public: isPublic
