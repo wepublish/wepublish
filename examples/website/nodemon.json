@@ -3,8 +3,8 @@
   "ignoreRoot": [".git"],
   "delay": 500,
   "env": {
-    "PORT": 4200,
-    "CANONICAL_HOST": "http://localhost:4200",
+    "PORT": 4202,
+    "CANONICAL_HOST": "http://localhost:4202",
     "NODE_ENV": "development",
     "ASSETS_HOST": "http://localhost:4201",
     "API_URL": "http://localhost:4000"

@@ -191,7 +191,7 @@ export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>(
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     contentUrl: {type: GraphQLString},
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))}
+    properties: {type: GraphQLList(GraphQLNonNull(GraphQLMetadataProperty))}
   }),
 
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Custom)

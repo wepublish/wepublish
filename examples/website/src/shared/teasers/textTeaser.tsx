@@ -68,6 +68,7 @@ export interface TextTeaserProps {
   readonly route: Route
   readonly url: string
   readonly isPeerArticle?: boolean
+  readonly contentUrl?: string
 }
 
 export function TextTeaser({
@@ -81,15 +82,17 @@ export function TextTeaser({
   route,
   preTitle,
   url,
-  isPeerArticle
+  isPeerArticle,
+  contentUrl
 }: TextTeaserProps) {
   const css = useStyle({isSingle})
+
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>
       <Link
-        route={isPeerArticle ? undefined : route}
-        href={url}
+        route={isPeerArticle || route?.type === 'custom' ? undefined : route}
+        href={route?.type === 'custom' ? contentUrl : url}
         target={isPeerArticle ? '_blank' : '_self'}>
         <h2
           className={css(

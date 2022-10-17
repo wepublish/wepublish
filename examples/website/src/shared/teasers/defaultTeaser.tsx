@@ -142,6 +142,7 @@ export interface DefaultTeaserProps {
   readonly route?: Route
   readonly url: string
   readonly isPeerArticle?: boolean
+  readonly contentUrl?: string
 }
 
 // TODO solve link in link Problem for teasers
@@ -159,15 +160,16 @@ export function DefaultTeaser({
   peer,
   tags,
   url,
-  isPeerArticle
+  isPeerArticle,
+  contentUrl
 }: DefaultTeaserProps) {
   const css = useStyle()
 
   return (
     <div className={css(DefaultTeaserStyle)}>
       <Link
-        route={isPeerArticle ? undefined : route}
-        href={route?.type === 'custom' ? route.path : url}
+        route={isPeerArticle || route?.type === 'custom' ? undefined : route}
+        href={route?.type === 'custom' ? contentUrl : url}
         target={isPeerArticle ? '_blank' : '_self'}>
         <div
           className={css(

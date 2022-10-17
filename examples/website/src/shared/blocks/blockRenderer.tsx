@@ -257,6 +257,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           authors={article.authors}
           isSingle={true}
           isPeerArticle={isPeerArticle}
+          contentUrl={article.contentUrl}
         />
       )
   }

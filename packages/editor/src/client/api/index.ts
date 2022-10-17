@@ -390,7 +390,7 @@ export type CustomTeaser = {
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   contentUrl?: Maybe<Scalars['String']>;
-  properties: Array<Properties>;
+  properties?: Maybe<Array<Properties>>;
 };
 
 export type CustomTeaserInput = {
@@ -3014,10 +3014,10 @@ type FullTeaser_CustomTeaser_Fragment = (
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
-  )>, properties: Array<(
+  )>, properties?: Maybe<Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
-  )> }
+  )>> }
 );
 
 export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_CustomTeaser_Fragment;
