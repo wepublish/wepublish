@@ -122,7 +122,7 @@ export async function runServerInstance() {
     res.status(error ? 500 : 200).send(markup)
   })
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 4300
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 4200
   const address = process.env.ADDRESS || 'localhost'
 
   app.listen(port, address)
