@@ -337,6 +337,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<
           return getPublicCommentsForItemById(
             id,
             userSession?.user?.id ?? null,
+            null,
+            -1,
             commentRatingSystemAnswer,
             comment
           )
