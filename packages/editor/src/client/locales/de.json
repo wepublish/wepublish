@@ -640,7 +640,10 @@
       "deleteModalTitle": "Löschen?",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteBtn": "Löschen",
-      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
+      "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
+      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden."
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",

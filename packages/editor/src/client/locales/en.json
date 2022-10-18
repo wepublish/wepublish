@@ -641,7 +641,10 @@
       "deleteModalTitle": "Delete?",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteBtn": "Delete",
-      "answerMissing": "Please, input your answer."
+      "answerMissing": "Please, input your answer.",
+      "copyVoteUrl": "Copy voting link",
+      "urlCopied": "AVoting link copied to the clipboard.",
+      "urlCopyingFailed": "Voting link could not be copied."
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
