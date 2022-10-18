@@ -30,7 +30,6 @@ export interface BlockRendererProps {
 }
 
 export function BlockRenderer({blocks, children, ...props}: BlockRendererProps) {
-  console.log('blocks', blocks)
   return (
     <>
       {blocks.map((block, index) =>
