@@ -1000,7 +1000,7 @@ export async function contextFromRequest(
         where: {id: payment.id},
         data: {
           state: intent.state,
-          intentID: intent.intentID,
+          intentID: `${intent.intentID}`,
           intentData: intent.intentData,
           intentSecret: intent.intentSecret,
           paymentData: intent.paymentData,

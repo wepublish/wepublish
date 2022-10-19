@@ -240,6 +240,13 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
 
       const {items, ...invoiceData} = invoice
 
+      items.forEach(item => {
+        // Typing problem: Fix me @TODO
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        delete item.invoiceId
+      })
+
       await prisma.invoice.update({
         where: {id: invoice.id},
         data: {

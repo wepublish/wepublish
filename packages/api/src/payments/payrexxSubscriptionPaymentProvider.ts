@@ -150,13 +150,14 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     const hook = (): Prisma.Middleware => async (params, next) => {
       // Only handle subscription update db queries skip all other
-      if (params.model !== 'Subscription' || params.action !== 'update') {
+      if (
+        params.model !== 'Subscription' ||
+        params.action !== 'update' ||
+        !params.args.data.paymentMethodID
+      ) {
         return next(params)
       }
-
       const subscription = params.args.data
-      const properties: MetadataProperty[] = params.args.data.properties.createMany.data
-      const deactivation = params.args.data.deactivation
 
       // Get paymentProviderName
       const paymentProvider = await prisma.paymentMethod.findUnique({
@@ -171,11 +172,13 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
 
       // Find external id property and fail if subscription has been deactivated
+      const properties: MetadataProperty[] = params.args.data?.properties?.createMany?.data
       const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
       if (!isPayrexxExt) {
         throw Error("It's not supported to reactivate a deactivated Payrexx subscription!")
       }
 
+      const deactivation = params.args.data.deactivation
       // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
       if (deactivation.upsert || !subscription.autoRenew) {
         await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))

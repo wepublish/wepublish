@@ -13,12 +13,14 @@ import {Context} from '../context'
 import {SettingName} from '../db/setting'
 import {unselectPassword} from '../db/user'
 import {
+  AlreadyUnpaidInvoices,
   CommentAuthenticationError,
   EmailAlreadyInUseError,
   InternalError,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
+  SubscriptionNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
@@ -66,6 +68,7 @@ import {
   updateUserPassword
 } from './user/user.public-mutation'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
+import {SubscriptionWithRelations} from '../db/subscription'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -510,6 +513,145 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           invoice,
           saveCustomer: true,
           paymentMethodID: paymentMethod.id,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
+    extendSubscription: {
+      type: GraphQLNonNull(GraphQLPublicPayment),
+      args: {
+        subscriptionId: {type: GraphQLNonNull(GraphQLString)},
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
+      },
+      description: 'This mutation extends an subscription early',
+      async resolve(
+        root,
+        {subscriptionId, successURL, failureURL},
+        {
+          prisma,
+          authenticateUser,
+          memberContext,
+          createPaymentWithProvider,
+          paymentProviders,
+          loaders
+        }
+      ) {
+        // authenticate user
+        const {user} = authenticateUser()
+
+        const subscription = (await prisma.subscription.findUnique({
+          where: {
+            id: subscriptionId
+          }
+        })) as SubscriptionWithRelations
+        // Allow only valid and subscription belonging to the user to early extend
+        if (!subscription || subscription.userID !== user.id) {
+          logger('extendSubscription').error(
+            'Could not find subscription with ID "%s" or subscription does not belong to user "%s"',
+            subscriptionId,
+            user.id
+          )
+          throw new SubscriptionNotFound()
+        }
+
+        // Throw for unsupported payment providers
+        const paymentMethod = await prisma.paymentMethod.findUnique({
+          where: {
+            id: subscription.paymentMethodID
+          }
+        })
+        if (!paymentMethod) {
+          logger('extendSubscription').error(
+            'Could not find paymentMethod with ID "%s"',
+            subscription.paymentMethodID
+          )
+          throw new InternalError()
+        }
+
+        const paymentProvider = paymentProviders.find(
+          obj => obj.id === paymentMethod.paymentProviderID
+        )
+
+        // Prevent user from creating new invoice while having unpaid invoices
+        const unpaidInvoices = await prisma.invoice.findMany({
+          where: {
+            subscriptionID: subscription.id,
+            paidAt: null
+          }
+        })
+        if (unpaidInvoices.length > 0) {
+          throw new AlreadyUnpaidInvoices()
+        }
+
+        const invoice = await memberContext.renewSubscriptionForUser({
+          subscription
+        })
+        if (!invoice) {
+          logger('extendSubscription').error(
+            'Could not create new invoice for subscription with ID "%s"',
+            subscription.id
+          )
+          throw new InternalError()
+        }
+
+        // If payment provider supports off session payment try to charge
+        if (!paymentProvider || paymentProvider.offSessionPayments) {
+          const paymentMethod = await loaders.paymentMethodsByID.load(subscription.paymentMethodID)
+          if (!paymentMethod) {
+            logger('extendSubscription').warn(
+              'paymentMethod %s not found',
+              subscription.paymentMethodID
+            )
+            throw new InternalError()
+          }
+
+          const fullUser = await prisma.user.findUnique({
+            where: {id: subscription.userID},
+            select: unselectPassword
+          })
+          if (!fullUser) {
+            logger('extendSubscription').warn('user %s not found', subscription.userID)
+            throw new InternalError()
+          }
+
+          const customer = fullUser.paymentProviderCustomers.find(
+            ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
+          )
+          if (!customer) {
+            logger('extendSubscription').warn(
+              'customer %s not found',
+              paymentMethod.paymentProviderID
+            )
+            throw new InternalError()
+          }
+
+          // Charge customer
+          try {
+            const payment = await memberContext.chargeInvoice({
+              user,
+              invoice,
+              paymentMethodID: subscription.paymentMethodID,
+              customer
+            })
+            if (payment) {
+              return payment
+            }
+          } catch (e) {
+            logger('extendSubscription').warn(
+              'Invoice off session charge for subscription %s failed: %s',
+              subscription.id,
+              e
+            )
+          }
+        }
+
+        return await createPaymentWithProvider({
+          invoice,
+          saveCustomer: true,
+          paymentMethodID: subscription.paymentMethodID,
           successURL,
           failureURL
         })
