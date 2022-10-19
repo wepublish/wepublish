@@ -1057,7 +1057,8 @@
       "streetAddress2": "Strasse 2",
       "zipCode": "PLZ",
       "city": "Stadt",
-      "country": "Land"
+      "country": "Land",
+      "selectUserImage": "Profilbild wählen"
     },
     "userSubscriptionList": {
       "deactivationReason": {

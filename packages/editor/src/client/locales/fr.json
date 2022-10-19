@@ -847,7 +847,8 @@
       "streetAddress2": "Rue 2",
       "zipCode": "Code Postal",
       "city": "Ville",
-      "country": "Pays"
+      "country": "Pays",
+      "selectUserImage": "Choisir une photo de profil"
     },
     "userSubscriptionList": {
       "deactivationReason": {

@@ -21,6 +21,7 @@ import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
+import {GraphQLImage} from './image'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -108,6 +109,19 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
+
+    userImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({userImageID}, _, {prisma: {image}}) =>
+        userImageID
+          ? image.findUnique({
+              where: {
+                id: userImageID
+              }
+            })
+          : null
+      )
+    },
 
     active: {type: GraphQLNonNull(GraphQLBoolean)},
     lastLogin: {type: GraphQLDateTime},
@@ -212,6 +226,8 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
+
+    userImageID: {type: GraphQLID},
 
     active: {type: GraphQLNonNull(GraphQLBoolean)},
 
