@@ -1,9 +1,10 @@
 import {ApolloError} from '@apollo/client'
+import CopyIcon from '@rsuite/icons/legacy/Copy'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuite'
+import {Button, Col, Form, IconButton, Message, Modal, Row, toaster, Tooltip, Whisper} from 'rsuite'
 
 import {
   FullPoll,
@@ -118,6 +119,36 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
     })
   }
 
+  function generateUrlParams(answer: PollAnswerWithVoteCount): undefined | string {
+    if (!poll) {
+      return undefined
+    }
+    if (!answer) {
+      return undefined
+    }
+    return `?pollId=${poll.id}&answerId=${answer.id}`
+  }
+  async function copyUrlParamsIntoClipboard(answer: PollAnswerWithVoteCount): Promise<void> {
+    const urlParams = generateUrlParams(answer)
+    if (!urlParams) {
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(urlParams)
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('pollAnswer.urlCopied')}
+        </Message>
+      )
+    } catch (e) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {t('pollAnswer.urlCopyingFailed')}
+        </Message>
+      )
+    }
+  }
+
   return (
     <>
       <Row>
@@ -135,17 +166,29 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                 }}
               />
             </Col>
-            {/* Delete answer */}
+            {/* copy link btn */}
             <Col xs={6}>
               <IconButton
                 icon={<TrashIcon />}
                 circle
                 size={'sm'}
+                appearance="ghost"
+                color="red"
+                style={{marginRight: '10px'}}
                 onClick={() => {
                   setAnswerToDelete(answer)
                   setModalOpen(true)
                 }}
               />
+              <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
+                <IconButton
+                  icon={<CopyIcon />}
+                  circle
+                  size="sm"
+                  appearance="ghost"
+                  onClick={() => copyUrlParamsIntoClipboard(answer)}
+                />
+              </Whisper>
             </Col>
           </div>
         ))}

@@ -1,11 +1,11 @@
-import {CommentState, PrismaClient} from '@prisma/client'
+import {CommentRatingSystemAnswer, CommentState, PrismaClient} from '@prisma/client'
 
-export const getPublicChildrenCommentsByParentId = (
+export const getPublicChildrenCommentsByParentId = async (
   parentId: string,
   userId: string | null,
   comment: PrismaClient['comment']
-) =>
-  comment.findMany({
+) => {
+  const comments = await comment.findMany({
     where: {
       AND: [
         {parentID: parentId},
@@ -16,15 +16,27 @@ export const getPublicChildrenCommentsByParentId = (
       modifiedAt: 'desc'
     },
     include: {
-      revisions: true
+      revisions: true,
+      tags: true
     }
   })
 
+  return comments.map(comment => {
+    const revisions = comment.revisions
+    return {
+      ...comment,
+      title: revisions.length ? revisions[revisions.length - 1].title : null,
+      lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+      text: revisions.length ? revisions[revisions.length - 1].text : null
+    }
+  })
+}
+
 export type CalculatedRating = {
-  answerId: string
   count: number
   mean: number
   total: number
+  answer: CommentRatingSystemAnswer
 }
 
 export const getPublicCommentsForItemById = async (
@@ -50,9 +62,11 @@ export const getPublicCommentsForItemById = async (
   ])
 
   return comments.map(({revisions, ratings, ...comment}) => ({
-    text: revisions[revisions.length - 1].text,
+    title: revisions.length ? revisions[revisions.length - 1].title : null,
+    lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+    text: revisions.length ? revisions[revisions.length - 1].text : null,
     ...comment,
-    ratings: answers.map(answer => {
+    calculatedRatings: answers.map(answer => {
       const sortedRatings = ratings
         .filter(rating => rating.answerId === answer.id)
         .map(rating => rating.value)
@@ -62,7 +76,7 @@ export const getPublicCommentsForItemById = async (
       const mean = total / Math.max(sortedRatings.length, 1)
 
       return {
-        answerId: answer.id,
+        answer,
         count: sortedRatings.length,
         mean,
         total
