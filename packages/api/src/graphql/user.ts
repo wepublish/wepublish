@@ -21,7 +21,7 @@ import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
-import {GraphQLImage} from './image'
+import {GraphQLImage, GraphQLUploadImageInput} from './image'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -162,7 +162,6 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
-
     name: {type: GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
@@ -173,6 +172,18 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
     },
     oauth2Accounts: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+    },
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({userImageID}, _, {prisma: {image}}) =>
+        userImageID
+          ? image.findUnique({
+              where: {
+                id: userImageID
+              }
+            })
+          : null
+      )
     }
   }
 })
@@ -243,9 +254,9 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
     email: {type: GraphQLNonNull(GraphQLString)},
-
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddressInput}
+    address: {type: GraphQLUserAddressInput},
+    imageInput: {type: GraphQLUploadImageInput}
   }
 })
 

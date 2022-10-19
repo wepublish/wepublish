@@ -747,8 +747,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's data by taking an input of type UserInput.",
-      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
-        updatePublicUser(input, authenticateUser, user)
+      resolve: (root, {input}, {authenticateUser, mediaAdapter, prisma: {user, image}}) =>
+        updatePublicUser(input, authenticateUser, mediaAdapter, user, image)
     },
 
     updatePassword: {
