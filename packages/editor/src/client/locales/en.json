@@ -644,7 +644,8 @@
       "answerMissing": "Please, input your answer.",
       "copyVoteUrl": "Copy voting link",
       "urlCopied": "AVoting link copied to the clipboard.",
-      "urlCopyingFailed": "Voting link could not be copied."
+      "urlCopyingFailed": "Voting link could not be copied.",
+      "votes": "votes"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",

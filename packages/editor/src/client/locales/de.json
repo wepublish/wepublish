@@ -643,7 +643,8 @@
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
       "copyVoteUrl": "Kopiere Abstimmungs-Link",
       "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
-      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden."
+      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
+      "votes": "Stimmen"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
