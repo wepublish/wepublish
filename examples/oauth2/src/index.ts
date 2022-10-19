@@ -3,7 +3,7 @@
 import {Oauth2Server} from '@wepublish/oauth2'
 import path from 'path'
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.OAUTH_DATABASE_URI) {
     throw new Error('No OAUTH_DATABASE_URI defined in ENV')
   }
@@ -45,8 +45,3 @@ async function asyncMain() {
 
   await oauth2Server.listen(PORT, address)
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

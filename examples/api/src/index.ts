@@ -7,6 +7,7 @@ import {
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -15,8 +16,7 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  AlgebraicCaptchaChallenge,
-  PayrexxSubscriptionPaymentProvider
+  AlgebraicCaptchaChallenge
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -77,7 +77,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -241,7 +241,7 @@ async function asyncMain() {
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
         webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
-        prisma: prisma
+        prisma
       })
     )
   }
@@ -440,8 +440,3 @@ async function asyncMain() {
       }
     ).argv
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

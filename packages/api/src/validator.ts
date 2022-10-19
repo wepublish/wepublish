@@ -6,7 +6,7 @@ export class Validator {
       email: Joi.string().email().required(),
       name: Joi.string().max(50).required(),
       firstName: Joi.string().max(50),
-      preferredName: Joi.string().max(50)
+      preferredName: Joi.string().max(50).allow('')
     })
   }
 
