@@ -60,12 +60,8 @@ export async function savePeerArticleById(id: string, peerID: string, context: C
             createMany: {
               data: strippedProperties
             }
-          }
-          // blocks: {
-          //   createMany: {
-          //     data: strippedBlocks
-          //   }
-          // }
+          },
+          blocks: blocks
         }
       }
     }
@@ -97,6 +93,8 @@ export const peerArticleQuery = gql`
         slug
         tags
         canonicalUrl
+        socialMediaTitle
+        socialMediaDescription
         properties {
           key
           value
