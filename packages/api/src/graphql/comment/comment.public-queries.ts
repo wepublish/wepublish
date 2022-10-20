@@ -44,7 +44,8 @@ export const getPublicCommentsForItemById = async (
       },
       include: {
         revisions: true,
-        ratings: true
+        ratings: true,
+        overridenRatings: true
       }
     })
   ])

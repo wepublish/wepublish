@@ -13,6 +13,7 @@ import {
   CanDeleteComments
 } from '../permissions'
 import {RichTextNode} from '../richText'
+import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
 
 export const takeActionOnComment = (
   id: string,
@@ -32,10 +33,15 @@ export const takeActionOnComment = (
   })
 }
 
-interface CommentRevisionInput {
+type CommentRevisionInput = {
   text?: RichTextNode[]
   title?: string
   lead?: string
+}
+
+type CommentRatingOverrideInput = {
+  answerId: string
+  value: number | null | undefined
 }
 
 export const updateComment = async (
@@ -46,11 +52,34 @@ export const updateComment = async (
   guestUserImageID: string,
   source: string,
   tagIds: string[] | undefined,
+  ratingOverrides: CommentRatingOverrideInput[] | undefined,
   authenticate: Context['authenticate'],
+  commentRatingAnswerClient: PrismaClient['commentRatingSystemAnswer'],
   commentClient: PrismaClient['comment']
 ) => {
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
+
+  if (ratingOverrides?.length) {
+    const answerIds = ratingOverrides.map(override => override.answerId)
+    const answers = await commentRatingAnswerClient.findMany({
+      where: {
+        id: {
+          in: answerIds
+        }
+      }
+    })
+
+    ratingOverrides.forEach(override => {
+      const answer = answers.find(a => a.id === override.answerId)
+
+      if (!answer) {
+        return
+      }
+
+      validateCommentRatingValue(answer.type, override.value ?? 0)
+    })
+  }
 
   return commentClient.update({
     where: {id: commentId},
@@ -88,10 +117,28 @@ export const updateComment = async (
               }
             }
           }
-        : undefined
+        : undefined,
+      overridenRatings: {
+        upsert: ratingOverrides?.map(override => ({
+          where: {
+            answerId_commentId: {
+              answerId: override.answerId,
+              commentId
+            }
+          },
+          create: {
+            answerId: override.answerId,
+            value: override.value
+          },
+          update: {
+            value: override.value ?? null
+          }
+        }))
+      }
     },
     include: {
-      revisions: true
+      revisions: true,
+      overridenRatings: true
     }
   })
 }

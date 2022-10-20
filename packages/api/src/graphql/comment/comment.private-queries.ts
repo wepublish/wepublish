@@ -17,6 +17,7 @@ export const getComment = (
       id: commentId
     },
     include: {
+      overridenRatings: true,
       revisions: true
     }
   })

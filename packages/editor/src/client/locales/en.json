@@ -447,7 +447,9 @@
       "tags": "Tags",
       "source": "Source",
       "userPanelHeader": "Author of the comment",
-      "actions": "Actions"
+      "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
