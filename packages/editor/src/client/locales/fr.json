@@ -264,7 +264,9 @@
       "tags": "Tags",
       "source": "Source",
       "userPanelHeader": "Auteur dans le commentaire",
-      "actions": "Actions"
+      "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override"
     },
     "commentUser": {
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
