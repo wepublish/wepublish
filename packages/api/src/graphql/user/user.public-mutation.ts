@@ -76,20 +76,20 @@ export async function uploadPublicUserProfileImage(
         create: focalPoint
       }
     }
-    newImage = await imageClient.upsert({
-      where: {
-        id: user.userImageID || undefined
-      },
-      create: {
-        ...prismaImgData
-      },
-      update: {
-        ...prismaImgData
-      }
-    })
-    // cleanup existing user profile
+    // update existing image
+    if (user.userImageID) {
+      newImage = await imageClient.update({
+        where: {
+          id: user.userImageID
+        },
+        data: prismaImgData
+      })
+    } else {
+      // create new image
+      newImage = await imageClient.create({data: prismaImgData})
+    }
+    // cleanup existing user profile from file system
     if (newImage && user.userImageID) {
-      // delete old image from file system
       await mediaAdapter.deleteImage(user.userImageID)
     }
   }
