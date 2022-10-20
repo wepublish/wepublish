@@ -256,7 +256,7 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     email: {type: GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
-    imageInput: {type: GraphQLUploadImageInput}
+    uploadImageInput: {type: GraphQLUploadImageInput}
   }
 })
 

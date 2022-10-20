@@ -4,7 +4,6 @@ import {hashPassword, unselectPassword} from '../../db/user'
 import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
-import {UploadImage} from '../../db/image'
 
 export const updatePaymentProviderCustomers = async (
   paymentProviderCustomers: Prisma.UserUncheckedUpdateInput['paymentProviderCustomers'],
@@ -28,30 +27,40 @@ export const updatePaymentProviderCustomers = async (
 
 /**
  * Uploads the user profile image and returns the image and updated user
- * @param imageInput
+ * @param uploadImageInput
  * @param authenticateUser
  * @param mediaAdapter
  * @param imageClient
  * @param userClient
  */
 export async function uploadPublicUserProfileImage(
-  imageInput: CreateImageInput,
+  uploadImageInput: CreateImageInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   imageClient: PrismaClient['image'],
   userClient: PrismaClient['user']
-): Promise<null | {user: User; image: UploadImage | null}> {
+): Promise<null | User> {
   const {user} = authenticateUser()
 
   // ignore
-  if (imageInput === undefined) {
+  if (uploadImageInput === undefined) {
     return null
   }
 
   let newImage = null
-  if (imageInput) {
+  if (uploadImageInput) {
     // upload new image
-    const {file, filename, title, description, tags, source, link, license, focalPoint} = imageInput
+    const {
+      file,
+      filename,
+      title,
+      description,
+      tags,
+      source,
+      link,
+      license,
+      focalPoint
+    } = uploadImageInput
     const {id: newImageId, ...image} = await mediaAdapter.uploadImage(file)
     const prismaImgData = {
       id: newImageId,
@@ -86,33 +95,30 @@ export async function uploadPublicUserProfileImage(
   }
 
   // eventually delete image, if upload is set to null
-  if (imageInput === null && user.userImageID) {
+  if (uploadImageInput === null && user.userImageID) {
     // delete image from file system
     await mediaAdapter.deleteImage(user.userImageID)
     // delete image from database
     await imageClient.delete({where: {id: user.userImageID}})
   }
 
-  const newUser = await userClient.update({
+  return await userClient.update({
     where: {
       id: user.id
     },
     data: {
       userImageID: newImage?.id
-    }
+    },
+    select: unselectPassword
   })
-  return {
-    image: newImage,
-    user: newUser
-  }
 }
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
   address: Prisma.UserAddressUncheckedUpdateWithoutUserInput
-} & {imageInput: CreateImageInput}
+} & {uploadImageInput: CreateImageInput}
 
 export const updatePublicUser = async (
-  {address, name, email, firstName, preferredName, imageInput}: UpdateUserInput,
+  {address, name, email, firstName, preferredName, uploadImageInput}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   userClient: PrismaClient['user'],
@@ -137,7 +143,7 @@ export const updatePublicUser = async (
 
   // eventually upload user profile image
   await uploadPublicUserProfileImage(
-    imageInput,
+    uploadImageInput,
     authenticateUser,
     mediaAdapter,
     imageClient,
