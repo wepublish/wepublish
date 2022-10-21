@@ -37,6 +37,8 @@
         "noImagesFound": "Aucune image trouvée",
         "peerArticle": "Pairer l'article",
         "peering": "Peering",
+        "custom": "personnalisé",
+        "contentUrl": "URL du contenu",
         "peerShare": "Partager avec les peers",
         "published": "Publié",
         "removeTeaser": "Retirer le teaser",

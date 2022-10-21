@@ -1,13 +1,21 @@
 import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Panel, Radio, RadioGroup} from 'rsuite'
+import {TFunction, useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Input, Panel, Radio, RadioGroup, Toggle} from 'rsuite'
 
 import {TeaserStyle} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {ListInput, ListValue} from '../atoms/listInput'
 import {Teaser, TeaserType} from '../blocks/types'
+import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+export interface TeaserMetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
@@ -26,9 +34,20 @@ export function TeaserEditPanel({
 }: TeaserEditPanelProps) {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
+  const [contentUrl, setContentUrl] = useState(
+    initialTeaser.type === TeaserType.Custom ? initialTeaser.contentUrl : undefined
+  )
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
+  const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
+      ? initialTeaser.properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
+  )
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -50,7 +69,11 @@ export function TeaserEditPanel({
                 preTitle: preTitle || undefined,
                 title: title || undefined,
                 lead: lead || undefined,
-                image
+                image,
+                ...(initialTeaser.type === TeaserType.Custom && {
+                  contentUrl: contentUrl || undefined,
+                  properties: metaDataProperties.map(({value}) => value) || undefined
+                })
               })
             }}>
             {t('articleEditor.panels.confirm')}
@@ -62,7 +85,7 @@ export function TeaserEditPanel({
       </Drawer.Header>
 
       <Drawer.Body>
-        {previewForTeaser(initialTeaser)}
+        {previewForTeaser(initialTeaser, t)}
         <Panel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
             <Form.Group controlId="articleStyle">
@@ -96,6 +119,58 @@ export function TeaserEditPanel({
               <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
               <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
             </Form.Group>
+            {initialTeaser.type === TeaserType.Custom && (
+              <>
+                <Form.Group controlId="contentUrl">
+                  <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
+                  <Form.Control
+                    name="content-url"
+                    value={contentUrl}
+                    onChange={(contentUrl: string) => setContentUrl(contentUrl)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="properties">
+                  <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
+                  <ListInput
+                    value={metaDataProperties}
+                    onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                    defaultValue={{key: '', value: '', public: true}}>
+                    {({value, onChange}) => (
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <Input
+                          placeholder={t('articleEditor.panels.key')}
+                          style={{
+                            width: '40%',
+                            marginRight: '10px'
+                          }}
+                          value={value.key}
+                          onChange={propertyKey => onChange({...value, key: propertyKey})}
+                        />
+                        <Input
+                          placeholder={t('articleEditor.panels.value')}
+                          style={{
+                            width: '60%'
+                          }}
+                          value={value.value}
+                          onChange={propertyValue => onChange({...value, value: propertyValue})}
+                        />
+                        <Form.Group
+                          style={{paddingTop: '6px', paddingLeft: '8px'}}
+                          controlId="articleProperty">
+                          <Toggle
+                            style={{maxWidth: '70px', minWidth: '70px'}}
+                            checkedChildren={t('articleEditor.panels.public')}
+                            unCheckedChildren={t('articleEditor.panels.private')}
+                            checked={value.public}
+                            onChange={isPublic => onChange({...value, public: isPublic})}
+                          />
+                        </Form.Group>
+                      </div>
+                    )}
+                  </ListInput>
+                </Form.Group>
+              </>
+            )}
           </Form>
         </Panel>
 
@@ -126,14 +201,13 @@ export function TeaserEditPanel({
   )
 }
 
-function previewForTeaser(teaser: Teaser) {
+export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
   let imageURL: string | undefined
+  let contentUrl: string | undefined
   let preTitle: string | undefined
   let title: string | undefined
   let lead: string | undefined
-
-  const {t} = useTranslation()
 
   switch (teaser.type) {
     case TeaserType.Article:
@@ -158,6 +232,15 @@ function previewForTeaser(teaser: Teaser) {
       title = teaser.page.latest.title
       lead = teaser.page.latest.description ?? undefined
       break
+
+    case TeaserType.Custom:
+      type = 'Custom'
+      imageURL = teaser.image?.previewURL ?? undefined
+      title = teaser.title
+      lead = teaser.lead ?? undefined
+      preTitle = teaser.preTitle ?? undefined
+      contentUrl = teaser.contentUrl
+      break
   }
 
   return (
@@ -167,10 +250,19 @@ function previewForTeaser(teaser: Teaser) {
         style={{
           height: '200px',
           backgroundSize: 'cover',
-          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`
-        }}></Panel>
+          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`,
+          marginBottom: '12px'
+        }}
+      />
       <DescriptionList>
-        <DescriptionListItem label={t('articleEditor.panels.type')}>{type}</DescriptionListItem>
+        {contentUrl && (
+          <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
+            {contentUrl}
+          </DescriptionListItem>
+        )}
+        <DescriptionListItem label={t('articleEditor.panels.type')}>
+          {type || '-'}
+        </DescriptionListItem>
         <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
           {preTitle || '-'}
         </DescriptionListItem>

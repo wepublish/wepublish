@@ -1,19 +1,42 @@
+import CogIcon from '@rsuite/icons/legacy/Cog'
 import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
 import FileTextIcon from '@rsuite/icons/legacy/FileText'
 import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Input, InputGroup, List, Nav, Notification, toaster} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  Form,
+  Input,
+  InputGroup,
+  List,
+  Nav,
+  Notification,
+  Panel,
+  Radio,
+  RadioGroup,
+  toaster,
+  Toggle
+} from 'rsuite'
 
 import {
   ArticleFilter,
   ArticleSort,
   SortOrder,
+  TeaserStyle,
   useArticleListQuery,
   usePageListQuery,
   usePeerArticleListQuery
 } from '../api'
-import {TeaserLink, TeaserType} from '../blocks/types'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
+import {Teaser, TeaserLink, TeaserType} from '../blocks/types'
+import {generateID} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
+import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -21,9 +44,34 @@ export interface TeaserSelectPanelProps {
 }
 
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
-  const [type, setType] = useState<TeaserType>(TeaserType.Article)
+  const initialTeaser = {
+    style: TeaserStyle.Default,
+    title: '',
+    preTitle: '',
+    lead: '',
+    contentUrl: 'https://www.example.com',
+    image: undefined
+  } as Teaser
 
+  const [type, setType] = useState<TeaserType>(TeaserType.Article)
+  const [style, setStyle] = useState(initialTeaser.style)
+  const [image, setImage] = useState(initialTeaser.image)
+  const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
+  const [contentUrl, setContentUrl] = useState('')
+  const [title, setTitle] = useState(initialTeaser.title)
+  const [lead, setLead] = useState(initialTeaser.lead)
+
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
+  const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
+  const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
+      ? initialTeaser.properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
+  )
 
   const peerListVariables = {
     filter: filter || undefined,
@@ -31,9 +79,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
-  // article variables
   const listVariables = {filter: filter || undefined, take: 20}
   const pageListVariables = {filter: filter.title || undefined, take: 20}
+
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
@@ -60,6 +108,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
+
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -136,8 +185,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
       case TeaserType.Page:
         return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+      case TeaserType.Custom:
+        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
     }
   }
+
   function currentContent() {
     switch (type) {
       case TeaserType.Article:
@@ -266,6 +318,154 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             )}
           </>
         )
+
+      case TeaserType.Custom:
+        return (
+          <>
+            <FlexboxGrid justify="end">
+              <Button
+                appearance={'primary'}
+                onClick={() => {
+                  onSelect({
+                    ...initialTeaser,
+                    type: TeaserType.Custom,
+                    style,
+                    preTitle: preTitle || undefined,
+                    title: title || undefined,
+                    lead: lead || undefined,
+                    contentUrl: contentUrl || undefined,
+                    properties:
+                      metaDataProperties.map(({value}) => {
+                        return value
+                      }) || undefined,
+                    image
+                  })
+                }}>
+                {t('articleEditor.panels.confirm')}
+              </Button>
+              <Button
+                appearance={'subtle'}
+                onClick={() => onClose?.()}
+                style={{marginLeft: '20px'}}>
+                {t('navigation.overview.cancel')}
+              </Button>
+            </FlexboxGrid>
+
+            {previewForTeaser(initialTeaser, t)}
+
+            <Panel header={t('articleEditor.panels.displayOptions')}>
+              <Form fluid>
+                <Form.Group controlId="articleStyle">
+                  <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
+                  <RadioGroup
+                    inline
+                    value={style}
+                    onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
+                    <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
+                    <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
+                    <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
+                  </RadioGroup>
+                </Form.Group>
+                <Form.Group controlId="articlePreTitle">
+                  <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
+                  <Form.Control
+                    name="pre-title"
+                    value={preTitle}
+                    onChange={(preTitle: string) => setPreTitle(preTitle)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="articleTitle">
+                  <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
+                  <Form.Control
+                    name="title"
+                    value={title}
+                    onChange={(title: string) => setTitle(title)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="articleLead">
+                  <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
+                  <Form.Control
+                    name="lead"
+                    value={lead}
+                    onChange={(lead: string) => setLead(lead)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="customTeaserContentUrl">
+                  <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
+                  <Form.Control
+                    name="content-url"
+                    value={contentUrl}
+                    onChange={(contentUrl: string) => setContentUrl(contentUrl)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="properties">
+                  <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
+                  <ListInput
+                    value={metaDataProperties}
+                    onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                    defaultValue={{key: '', value: '', public: true}}>
+                    {({value, onChange}) => (
+                      <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <Input
+                          placeholder={t('articleEditor.panels.key')}
+                          style={{
+                            width: '40%',
+                            marginRight: '10px'
+                          }}
+                          value={value.key}
+                          onChange={propertyKey => onChange({...value, key: propertyKey})}
+                        />
+                        <Input
+                          placeholder={t('articleEditor.panels.value')}
+                          style={{
+                            width: '60%'
+                          }}
+                          value={value.value}
+                          onChange={propertyValue => onChange({...value, value: propertyValue})}
+                        />
+                        <Form.Group
+                          style={{paddingTop: '6px', paddingLeft: '8px'}}
+                          controlId="articleProperty">
+                          <Toggle
+                            style={{maxWidth: '70px', minWidth: '70px'}}
+                            checkedChildren={t('articleEditor.panels.public')}
+                            unCheckedChildren={t('articleEditor.panels.private')}
+                            checked={value.public}
+                            onChange={isPublic => onChange({...value, public: isPublic})}
+                          />
+                        </Form.Group>
+                      </div>
+                    )}
+                  </ListInput>
+                </Form.Group>
+              </Form>
+            </Panel>
+
+            <ChooseEditImage
+              image={image}
+              disabled={false}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => setImage(undefined)}
+            />
+
+            <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+              <ImageSelectPanel
+                onClose={() => setChooseModalOpen(false)}
+                onSelect={value => {
+                  setChooseModalOpen(false)
+                  setImage(value)
+                }}
+              />
+            </Drawer>
+
+            {image && (
+              <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+                <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+              </Drawer>
+            )}
+          </>
+        )
     }
   }
 
@@ -296,16 +496,21 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           <Nav.Item eventKey={TeaserType.Page} icon={<FileTextIcon />}>
             {t('articleEditor.panels.page')}
           </Nav.Item>
+          <Nav.Item eventKey={TeaserType.Custom} icon={<CogIcon />}>
+            {t('articleEditor.panels.custom')}
+          </Nav.Item>
         </Nav>
 
-        <InputGroup style={{marginBottom: 20}}>
-          {currentFilter()}
-          <InputGroup.Addon>
-            <SearchIcon />
-          </InputGroup.Addon>
-        </InputGroup>
+        {type !== TeaserType.Custom && (
+          <InputGroup style={{marginBottom: 20}}>
+            {currentFilter()}
+            <InputGroup.Addon>
+              <SearchIcon />
+            </InputGroup.Addon>
+          </InputGroup>
+        )}
 
-        <List>{currentContent()}</List>
+        <List style={{boxShadow: 'none'}}>{currentContent()}</List>
       </Drawer.Body>
     </>
   )
