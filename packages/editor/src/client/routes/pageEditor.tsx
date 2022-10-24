@@ -342,7 +342,7 @@ function PageEditor() {
                         size={'lg'}
                         icon={<SaveIcon />}
                         disabled={isDisabled}
-                        onClick={() => handleSave()}>
+                        onClick={handleSave}>
                         {t('create')}
                       </IconButton>
                     </PermissionControl>
@@ -356,7 +356,7 @@ function PageEditor() {
                           size={'lg'}
                           icon={<SaveIcon />}
                           disabled={isDisabled}
-                          onClick={() => handleSave()}>
+                          onClick={handleSave}>
                           {t('save')}
                         </IconButton>
                       </Badge>
@@ -393,7 +393,7 @@ function PageEditor() {
                       style={{marginTop: '4px'}}
                       size={'lg'}
                       icon={<EyeIcon />}
-                      onClick={e => {
+                      onClick={() => {
                         previewLinkFetch({
                           variables: {
                             id: id!,

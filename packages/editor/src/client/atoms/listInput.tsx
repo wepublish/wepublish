@@ -1,14 +1,13 @@
-import React from 'react'
-import nanoid from 'nanoid'
-import {SortableHandle, SortableContainer, SortableElement} from 'react-sortable-hoc'
+import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
+import Th2Icon from '@rsuite/icons/legacy/Th2'
+import TrashIcon from '@rsuite/icons/legacy/Trash'
 import arrayMove from 'array-move'
+import nanoid from 'nanoid'
+import React from 'react'
+import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
+import {IconButton, Panel} from 'rsuite'
 
 import {isFunctionalUpdate} from '../utility'
-
-import {IconButton, Panel} from 'rsuite'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import Th2Icon from '@rsuite/icons/legacy/Th2'
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 
 export interface FieldProps<V = any> {
   readonly value: V
