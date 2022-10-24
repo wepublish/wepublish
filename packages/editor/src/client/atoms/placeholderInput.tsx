@@ -1,7 +1,6 @@
-import React, {ReactNode} from 'react'
-
-import {IconButton} from 'rsuite'
 import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
+import React, {ReactNode} from 'react'
+import {IconButton} from 'rsuite'
 
 export interface PlaceholderInputProps {
   /**
@@ -14,12 +13,18 @@ export interface PlaceholderInputProps {
    */
   onAddClick?: () => void
   disabled?: boolean
+  maxHeight?: number
 }
 
 /**
  * A placeholder for a block.
  */
-export function PlaceholderInput({children, onAddClick, disabled}: PlaceholderInputProps) {
+export function PlaceholderInput({
+  children,
+  onAddClick,
+  disabled,
+  maxHeight = 450
+}: PlaceholderInputProps) {
   if (children) {
     return <>{children}</>
   }
@@ -30,7 +35,7 @@ export function PlaceholderInput({children, onAddClick, disabled}: PlaceholderIn
         display: 'flex',
         width: '100%',
         height: '100%',
-        maxHeight: 450,
+        maxHeight,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

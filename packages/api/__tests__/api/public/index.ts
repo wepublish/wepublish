@@ -156,6 +156,7 @@ export type Block =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
+  | HtmlBlock
   | PollBlock
   | CommentBlock
   | LinkPageBreakBlock
@@ -198,7 +199,7 @@ export type Comment = {
   children?: Maybe<Array<Maybe<Comment>>>
   title?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
-  text: Scalars['RichText']
+  text?: Maybe<Scalars['RichText']>
   state: CommentState
   source?: Maybe<Scalars['String']>
   rejectionReason?: Maybe<Scalars['String']>
@@ -323,6 +324,11 @@ export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge'
   caption?: Maybe<Scalars['String']>
   image?: Maybe<Image>
+}
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock'
+  html?: Maybe<Scalars['String']>
 }
 
 export type Image = {
@@ -493,6 +499,8 @@ export type Mutation = {
   registerMemberAndReceivePayment: RegistrationAndPayment
   /** Allows authenticated users to create additional subscriptions */
   createSubscription: Payment
+  /** This mutation extends an subscription early */
+  extendSubscription: Payment
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
@@ -587,6 +595,12 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID?: Maybe<Scalars['ID']>
   paymentMethodSlug?: Maybe<Scalars['Slug']>
   subscriptionProperties?: Maybe<Array<PublicPropertiesInput>>
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
+}
+
+export type MutationExtendSubscriptionArgs = {
+  subscriptionId: Scalars['String']
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
 }
@@ -1239,6 +1253,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1292,6 +1307,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1433,6 +1449,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+
 type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
 
 type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
@@ -1479,6 +1497,7 @@ export type FullBlockFragment =
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
   | FullBlock_PollBlock_Fragment
   | FullBlock_CommentBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -1583,6 +1602,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)

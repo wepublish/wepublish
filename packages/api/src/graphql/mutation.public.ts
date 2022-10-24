@@ -65,10 +65,12 @@ import {GraphQLCommentRating} from './comment-rating/comment-rating'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
-  updateUserPassword
+  updateUserPassword,
+  uploadPublicUserProfileImage
 } from './user/user.public-mutation'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {SubscriptionWithRelations} from '../db/subscription'
+import {GraphQLUploadImageInput} from './image'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -747,8 +749,22 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         "This mutation allows to update the user's data by taking an input of type UserInput.",
-      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
-        updatePublicUser(input, authenticateUser, user)
+      resolve: (root, {input}, {authenticateUser, mediaAdapter, prisma: {user, image}}) =>
+        updatePublicUser(input, authenticateUser, mediaAdapter, user, image)
+    },
+
+    uploadUserProfileImage: {
+      type: GraphQLPublicUser,
+      args: {
+        uploadImageInput: {type: GraphQLUploadImageInput}
+      },
+      description: "This mutation allows to upload and update the user's profile image.",
+      resolve: (
+        root,
+        {uploadImageInput},
+        {authenticateUser, mediaAdapter, prisma: {image, user}}
+      ) =>
+        uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
     },
 
     updatePassword: {
