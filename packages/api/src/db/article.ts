@@ -4,6 +4,7 @@ import {
   ArticleRevision as PrismaArticleRevision
 } from '@prisma/client'
 import {ArticleBlock} from './block'
+import {DateFilter} from './common'
 
 export interface ArticleData {
   readonly preTitle?: string | null
@@ -71,6 +72,10 @@ export interface PublicArticle extends ArticleData {
 
 export interface ArticleFilter {
   readonly title?: string
+  readonly preTitle?: string
+  readonly publicationDateFrom?: DateFilter
+  readonly publicationDateTo?: DateFilter
+  readonly lead?: string
   readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean

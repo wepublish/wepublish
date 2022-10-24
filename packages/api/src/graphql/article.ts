@@ -19,6 +19,7 @@ import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {
+  GraphQLDateFilter,
   GraphQLMetadataProperty,
   GraphQLMetadataPropertyInput,
   GraphQLMetadataPropertyPublic,
@@ -36,6 +37,10 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
     title: {type: GraphQLString},
+    preTitle: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    publicationDateFrom: {type: GraphQLDateFilter},
+    publicationDateTo: {type: GraphQLDateFilter},
     draft: {type: GraphQLBoolean},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},

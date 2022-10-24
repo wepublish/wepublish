@@ -1,12 +1,13 @@
 import {GraphQLResolveInfo, Kind} from 'graphql'
 import {ExtractField, WrapQuery} from 'graphql-tools'
 import {Context} from '../../context'
-import {ArticleSort, PeerArticle} from '../../db/article'
+import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
 import {ConnectionResult, SortOrder} from '../../db/common'
 import {delegateToPeerSchema, base64Encode} from '../../utility'
 import {authorise, CanGetPeerArticles} from '../permissions'
 
 export const getAdminPeerArticles = async (
+  filter: Partial<ArticleFilter>,
   sort: ArticleSort,
   order: SortOrder,
   peerNameFilter: string,
@@ -17,6 +18,7 @@ export const getAdminPeerArticles = async (
   const {authenticate, loaders, prisma} = context
   const {roles} = authenticate()
 
+  console.log('filter', filter)
   authorise(CanGetPeerArticles, roles)
 
   const cursors: Record<string, string> | null = stringifiedCursors
@@ -162,29 +164,77 @@ export const getAdminPeerArticles = async (
     (prev, result) => prev || (result?.pageInfo?.hasNextPage ?? false),
     false
   )
-
+  console.log('articles', articles)
   const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
     const peer = peers[index]
 
     return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
   })
+  console.log('peerArticles', peerArticles)
+
+  let filtered = peerArticles
+  // filters
+  if (filter.title) {
+    filtered = peerArticles.filter(({article}) =>
+      article.latest.title.toLowerCase().includes(filter.title?.toLowerCase())
+    )
+  }
+  if (filter.preTitle) {
+    filtered = peerArticles.filter(({article}) =>
+      article.latest.preTitle.toLowerCase().includes(filter.preTitle?.toLowerCase())
+    )
+  }
+  if (filter.lead) {
+    filtered = peerArticles.filter(({article}) =>
+      article.latest.lead.toLowerCase().includes(filter.lead?.toLowerCase())
+    )
+  }
+  if (filter.publicationDateFrom?.date && filter.publicationDateTo?.date) {
+    filtered = peerArticles.filter(
+      ({article}) =>
+        new Date(article.published.publishedAt).getTime() >
+          // @ts-ignore
+          new Date(filter.publicationDateFrom.date).getTime() &&
+        new Date(article.published.publishedAt).getTime() <
+          // @ts-ignore
+          new Date(filter?.publicationDateTo.date).getTime()
+    )
+  }
+  // if (filter.publicationDateTo?.date) {
+  //   filtered = peerArticles.filter(({article}) => {
+  //     console.log(
+  //       ' new Date(article.published.publishedAt).getTime()',
+  //       new Date(article.published.publishedAt).getTime()
+  //     )
+  //     console.log(
+  //       'new Date(filter?.publicationDateTo.date).getTime()',
+  //       // @ts-ignore
+  //       new Date(filter?.publicationDateTo.date).getTime()
+  //     )
+  //     return (
+  //       new Date(article.published.publishedAt).getTime() <
+  //       // @ts-ignore
+  //       new Date(filter?.publicationDateTo.date).getTime()
+  //     )
+  //   })
+  // }
 
   switch (sort) {
     case ArticleSort.CreatedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) => new Date(b.article.createdAt).getTime() - new Date(a.article.createdAt).getTime()
       )
       break
 
     case ArticleSort.ModifiedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
           new Date(b.article.modifiedAt).getTime() - new Date(a.article.modifiedAt).getTime()
       )
       break
 
     case ArticleSort.PublishAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
           new Date(b.article.latest.publishAt).getTime() -
           new Date(a.article.latest.publishAt).getTime()
@@ -192,7 +242,7 @@ export const getAdminPeerArticles = async (
       break
 
     case ArticleSort.PublishedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
           new Date(b.article.latest.publishedAt).getTime() -
           new Date(a.article.latest.publishedAt).getTime()
@@ -200,7 +250,7 @@ export const getAdminPeerArticles = async (
       break
 
     case ArticleSort.UpdatedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
           new Date(b.article.latest.updatedAt).getTime() -
           new Date(a.article.latest.updatedAt).getTime()
@@ -209,11 +259,11 @@ export const getAdminPeerArticles = async (
   }
 
   if (order === SortOrder.Descending) {
-    peerArticles.reverse()
+    filtered.reverse()
   }
 
   return {
-    nodes: peerArticles,
+    nodes: filtered,
     totalCount: totalCount,
     pageInfo: {
       endCursor: JSON.stringify(endCursors),

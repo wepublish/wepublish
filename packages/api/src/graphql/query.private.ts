@@ -496,8 +496,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         filter: {type: GraphQLArticleFilter}
       },
 
-      resolve: (root, {sort, order, after, peerFilter}, context, info) =>
-        getAdminPeerArticles(sort, order, peerFilter, after, context, info)
+      resolve: (root, {filter, sort, order, after, peerFilter}, context, info) =>
+        getAdminPeerArticles(filter, sort, order, peerFilter, after, context, info)
     },
 
     articlePreviewLink: {

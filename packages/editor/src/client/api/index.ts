@@ -56,6 +56,10 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   title?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
   draft?: Maybe<Scalars['Boolean']>;
   published?: Maybe<Scalars['Boolean']>;
   pending?: Maybe<Scalars['Boolean']>;

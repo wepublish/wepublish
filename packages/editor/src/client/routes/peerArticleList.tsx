@@ -9,21 +9,14 @@ import {
   Message,
   Pagination,
   Popover,
-  SelectPicker,
   Table,
   toaster,
   Whisper
 } from 'rsuite'
 
-import {
-  ArticleFilter,
-  ArticleSort,
-  PeerArticle,
-  PeerWithProfileFragment,
-  usePeerArticleListQuery,
-  usePeerListQuery
-} from '../api'
+import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {PeerArticleListFilter} from '../atoms/searchAndFilter/peerArticleListFilter'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -36,7 +29,6 @@ function PeerArticleList() {
   const [sortField, setSortField] = useState('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
-  const [allPeers, setAllPeers] = useState<PeerWithProfileFragment[]>([])
   const [peerFilter, setPeerFilter] = useState<string>()
   const [peerArticles, setPeerArticles] = useState<unknown[]>([])
 
@@ -73,17 +65,6 @@ function PeerArticleList() {
     fetchPolicy: 'network-only'
   })
 
-  // fetch all peers
-  const {data: peerListData} = usePeerListQuery({
-    fetchPolicy: 'network-only'
-  })
-
-  useEffect(() => {
-    if (peerListData?.peers) {
-      setAllPeers(peerListData.peers)
-    }
-  }, [peerListData?.peers])
-
   useEffect(() => {
     if (peerArticleListData?.peerArticles.nodes) {
       setPeerArticles(peerArticleListData?.peerArticles.nodes)
@@ -114,33 +95,13 @@ function PeerArticleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('peerArticles.peerArticles')}</h2>
         </FlexboxGrid.Item>
-
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input
-              value={filter.title || ''}
-              onChange={value => {
-                setFilter({title: value})
-              }}
-            />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <SelectPicker
-        virtualized
-        data={allPeers.map(peer => ({
-          value: peer.name,
-          label: peer.profile?.name
-        }))}
-        style={{width: 150, marginTop: 10}}
-        placeholder={t('peerArticles.filterByPeer')}
-        searchable
-        onSelect={value => setPeerFilter(value)}
-        onClean={() => setPeerFilter('')}
+      <PeerArticleListFilter
+        filter={filter}
+        isLoading={isLoading}
+        onSetFilter={filter => setFilter(filter)}
+        setPeerFilter={setPeerFilter}
       />
 
       <div
