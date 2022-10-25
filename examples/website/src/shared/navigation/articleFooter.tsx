@@ -120,7 +120,7 @@ export function ArticleFooter(props: ArticleFooterProps) {
       <LoginToComment
         itemID={props.itemID}
         itemType={props.isPeerArticle ? 'PeerArticle' : 'Article'}
-        peerId={props.peer ? props.peer.id : undefined}
+        peerId={props.peer?.id}
       />
 
       <CommentList comments={props.comments} />

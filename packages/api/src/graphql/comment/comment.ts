@@ -200,6 +200,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
+    peerId: {type: GraphQLID},
     parentComment: {
       type: GraphQLComment,
       resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
@@ -281,6 +282,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
+    peerId: {type: GraphQLID},
 
     children: {
       type: GraphQLList(GraphQLPublicComment),

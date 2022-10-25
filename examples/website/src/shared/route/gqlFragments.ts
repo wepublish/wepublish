@@ -72,6 +72,7 @@ export const commentsDataFragment = gql`
     modifiedAt
     parentID
     authorType
+    peerId
     user {
       id
       name
@@ -161,10 +162,6 @@ export const peerArticleMetaDataFragment = gql`
     }
     socialMediaImage {
       ...SimpleImageData
-    }
-    comments {
-      ...CommentsData
-      ...RecursiveCommentsData
     }
   }
   ${simpleImageDataFragment}

@@ -281,7 +281,8 @@ export function CommentList(commentListProps: CommentListProps) {
       children,
       text,
       itemID,
-      itemType
+      itemType,
+      peerId
     } = CommentProps.comment
 
     // This allows to display the children in a chronological order for the sake of a better UX
@@ -376,7 +377,13 @@ export function CommentList(commentListProps: CommentListProps) {
           </div>
 
           {activeCommentID === id ? (
-            <ComposeComment itemID={itemID} itemType={itemType} role={'reply'} parentID={id} />
+            <ComposeComment
+              itemID={itemID}
+              itemType={itemType}
+              role={'reply'}
+              parentID={id}
+              peerId={peerId}
+            />
           ) : (
             ''
           )}
@@ -462,6 +469,7 @@ export function LoginToComment(props: LoginToComment) {
             itemID={props.itemID}
             itemType={props.itemType}
             commentComposerHeader={'Compose a new comment'}
+            peerId={props.peerId}
           />
           <p className={css(Container, StateMessage)}>
             Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
