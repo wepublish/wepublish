@@ -1,8 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {setFailed, warning} = require('@actions/core')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {GITHUB_REF_SHORT} = require('./notify-utils')
 
 if (!process.env.JIRA_BASE_URL) throw new Error('Please specify JIRA_BASE_URL env')

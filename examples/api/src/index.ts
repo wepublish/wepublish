@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import {
-  AlgebraicCaptchaChallenge,
   Author,
   JobType,
   KarmaMediaAdapter,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -15,7 +15,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer
+  WepublishServer,
+  AlgebraicCaptchaChallenge
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -81,7 +82,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -210,7 +211,11 @@ async function asyncMain() {
     )
   }
 
-  if (process.env.PAYREXX_INSTANCE_NAME && process.env.PAYREXX_API_SECRET) {
+  if (
+    process.env.PAYREXX_INSTANCE_NAME &&
+    process.env.PAYREXX_API_SECRET &&
+    process.env.PAYREXX_WEBHOOK_SECRET
+  ) {
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
@@ -230,6 +235,18 @@ async function asyncMain() {
         ],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
+      })
+    )
+    paymentProviders.push(
+      new PayrexxSubscriptionPaymentProvider({
+        id: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: false,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        incomingRequestHandler: bodyParser.json(),
+        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        prisma
       })
     )
   }
@@ -428,8 +445,3 @@ async function asyncMain() {
       }
     ).argv
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

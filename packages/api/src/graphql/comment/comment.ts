@@ -5,24 +5,27 @@ import {
   CommentState
 } from '@prisma/client'
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
   GraphQLEnumType,
+  GraphQLFloat,
+  GraphQLID,
   GraphQLInputObjectType,
-  GraphQLList,
   GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {Context} from '../context'
-import {CommentRevision, PublicComment, Comment, CommentSort} from '../db/comment'
-import {unselectPassword} from '../db/user'
-import {createProxyingResolver} from '../utility'
-import {getPublicChildrenCommentsByParentId} from './comment/comment.public-queries'
-import {GraphQLPageInfo} from './common'
-import {GraphQLRichText} from './richText'
-import {GraphQLPublicUser, GraphQLUser} from './user'
+import {Context} from '../../context'
+import {CommentRevision, PublicComment, Comment, CommentSort} from '../../db/comment'
+import {unselectPassword} from '../../db/user'
+import {createProxyingResolver} from '../../utility'
+import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
+import {GraphQLPageInfo} from '../common'
+import {GraphQLRichText} from '../richText'
+import {GraphQLPublicUser, GraphQLUser} from '../user'
+import {GraphQLTag} from '../tag/tag'
+import {GraphQLImage} from '../image'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -71,6 +74,8 @@ export const GraphQLCommentSort = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
   }
 })
@@ -78,8 +83,19 @@ export const GraphQLCommentFilter = new GraphQLInputObjectType({
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
-    text: {type: GraphQLNonNull(GraphQLRichText)},
+    text: {type: GraphQLRichText},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
+export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
+  name: 'CommentRevisionUpdateInput',
+  fields: {
+    text: {type: GraphQLRichText},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString}
   }
 })
 
@@ -139,6 +155,18 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     guestUsername: {type: GraphQLString},
+    guestUserImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
+        guestUserImageID
+          ? image.findUnique({
+              where: {
+                id: guestUserImageID
+              }
+            })
+          : null
+      )
+    },
     user: {
       type: GraphQLUser,
       resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
@@ -152,6 +180,21 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
           : null
       )
     },
+    tags: {
+      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
+        const tags = await taggedComments.findMany({
+          where: {
+            commentId: id
+          },
+          include: {
+            tag: true
+          }
+        })
+
+        return tags.map(({tag}) => tag)
+      })
+    },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
@@ -164,6 +207,9 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
           ? comment.findUnique({
               where: {
                 id: parentID
+              },
+              include: {
+                revisions: true
               }
             })
           : null
@@ -172,11 +218,24 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     revisions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
     },
+    source: {
+      type: GraphQLString
+    },
     state: {type: GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
   })
+})
+
+export const GraphQLRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'Rating',
+  fields: {
+    answerId: {type: GraphQLNonNull(GraphQLID)},
+    count: {type: GraphQLNonNull(GraphQLInt)},
+    total: {type: GraphQLNonNull(GraphQLInt)},
+    mean: {type: GraphQLNonNull(GraphQLFloat)}
+  }
 })
 
 export const GraphQLPublicComment: GraphQLObjectType<
@@ -201,6 +260,21 @@ export const GraphQLPublicComment: GraphQLObjectType<
           : null
       )
     },
+    tags: {
+      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
+        const tags = await taggedComments.findMany({
+          where: {
+            commentId: id
+          },
+          include: {
+            tag: true
+          }
+        })
+
+        return tags.map(({tag}) => tag)
+      })
+    },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
@@ -221,7 +295,10 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     rejectionReason: {type: GraphQLString},
 
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    ratings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
+    }
   })
 })
 

@@ -1,6 +1,12 @@
-import {MapDiscriminatedUnion} from '../utility'
-import {Prisma} from '@prisma/client'
+import {PollAnswer, Prisma} from '@prisma/client'
 import {RichTextNode} from '../graphql/richText'
+import {MapDiscriminatedUnion} from '../utility'
+
+export interface MetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export enum BlockType {
   Title = 'title',
@@ -23,7 +29,9 @@ export enum BlockType {
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid = 'teaserGrid',
   TeaserGridFlex = 'teaserGridFlex',
-  HTML = 'html'
+  HTML = 'html',
+  Poll = 'poll',
+  Comment = 'comment'
 }
 
 export interface RichTextBlock {
@@ -116,6 +124,24 @@ export interface HTMLBlock {
   html: string
 }
 
+export type PollAnswerWithVoteCount = PollAnswer & {
+  votes: number
+}
+
+export interface PollBlock {
+  type: BlockType.Poll
+  pollId: string
+}
+
+export interface CommentBlock {
+  type: BlockType.Comment
+  filter: Partial<{
+    item: string
+    tags: string[]
+    comments: string[]
+  }>
+}
+
 export interface ListicleItem {
   title: string
   imageID?: string
@@ -157,7 +183,8 @@ export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
   Page = 'page',
-  External = 'external'
+  External = 'external',
+  Custom = 'custom'
 }
 
 export enum TeaserStyle {
@@ -199,7 +226,19 @@ export interface PageTeaser {
   lead?: string
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export interface CustomTeaser {
+  type: TeaserType.Custom
+  contentUrl?: string
+  style: TeaserStyle
+  imageID?: string
+
+  preTitle?: string
+  title?: string
+  lead?: string
+  properties?: MetadataProperty[]
+}
+
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export interface TeaserGridBlock {
   type: BlockType.TeaserGrid
@@ -236,6 +275,8 @@ export type ArticleBlock =
   | LinkPageBreakBlock
   | EmbedBlock
   | HTMLBlock
+  | CommentBlock
+  | PollBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

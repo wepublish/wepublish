@@ -1,5 +1,135 @@
 # Change Log
 
+## 7.1.0 (2022-10-13)
+
+#### :heart: New Feature
+* `api`
+  * [#702](https://github.com/wepublish/wepublish/pull/702) WPC-696 integrate payrexx subscription provider ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`, `editor`
+  * [#708](https://github.com/wepublish/wepublish/pull/708) feat(api): user votes/rating api ([@Itrulia](https://github.com/Itrulia))
+  * [#706](https://github.com/wepublish/wepublish/pull/706) feat(api/editor): implement comment and poll blocks ([@Itrulia](https://github.com/Itrulia))
+  * [#694](https://github.com/wepublish/wepublish/pull/694) feat(api/editor): implement a comment rating system ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`
+  * [#715](https://github.com/wepublish/wepublish/pull/715) Fix payment provider period start date ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#714](https://github.com/wepublish/wepublish/pull/714) Added missing yargs module to api package ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* Other
+  * [#678](https://github.com/wepublish/wepublish/pull/678) Release helm chart to helm repository ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#703](https://github.com/wepublish/wepublish/pull/703) chore(deps): bump jose from 1.28.1 to 1.28.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `api`
+  * [#710](https://github.com/wepublish/wepublish/pull/710) fix(api): only query published peer articles ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Camille ([@camilleory](https://github.com/camilleory))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## 7.0.0 (2022-09-30)
+
+#### :boom: Breaking Change
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#667](https://github.com/wepublish/wepublish/pull/667) feat: add polls ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#670](https://github.com/wepublish/wepublish/pull/670) feat(api): comment tagging & edit + create comment from editor ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#689](https://github.com/wepublish/wepublish/pull/689) Prevent canceled invoices from marked as paid ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#690](https://github.com/wepublish/wepublish/pull/690) WPC-841 wrong user subscription text ([@elias-summermatter](https://github.com/elias-summermatter))
+* Other
+  * [#693](https://github.com/wepublish/wepublish/pull/693) Fix mount path for postgres pvc ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`
+  * [#672](https://github.com/wepublish/wepublish/pull/672) fix(api): navigation link missing relations ([@Itrulia](https://github.com/Itrulia))
+  * [#661](https://github.com/wepublish/wepublish/pull/661) fix(api): userlist filter missing address filter due to merge conflict ([@Itrulia](https://github.com/Itrulia))
+
+#### :memo: Documentation
+* [#671](https://github.com/wepublish/wepublish/pull/671) Analytics readme ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* Other
+  * [#695](https://github.com/wepublish/wepublish/pull/695) ci: use init containers to fix permissions of postgres volume ([@Itrulia](https://github.com/Itrulia))
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 4
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+## 6.0.0 (2022-09-15)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#589](https://github.com/wepublish/wepublish/pull/589) Payed -> paid ([@antkiewiczk](https://github.com/antkiewiczk))
+* `api`
+  * [#654](https://github.com/wepublish/wepublish/pull/654) fix(api): challenge validUntil should be a date ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#659](https://github.com/wepublish/wepublish/pull/659) feat(editor): disable preview for article/page without draft ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#654](https://github.com/wepublish/wepublish/pull/654) fix(api): challenge validUntil should be a date ([@Itrulia](https://github.com/Itrulia))
+* Other
+  * [#662](https://github.com/wepublish/wepublish/pull/662) docker compose fix ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#642](https://github.com/wepublish/wepublish/pull/642) Hide components that user has no access to ([@penk85](https://github.com/penk85))
+  * [#653](https://github.com/wepublish/wepublish/pull/653) Remove Karma libraries ([@antkiewiczk](https://github.com/antkiewiczk))
+* `editor`
+  * [#664](https://github.com/wepublish/wepublish/pull/664) Add controlId prop to Form.Group along ControlLabel #739 ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* `editor`
+  * [#668](https://github.com/wepublish/wepublish/pull/668) Update testcafe package and editor internal urls, fix selectors ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#652](https://github.com/wepublish/wepublish/pull/652) Translations update from Weblate ([@wepublishweblate](https://github.com/wepublishweblate))
+* Other
+  * [#676](https://github.com/wepublish/wepublish/pull/676) ci: fix deployment action if jira issue not found ([@Itrulia](https://github.com/Itrulia))
+  * [#679](https://github.com/wepublish/wepublish/pull/679) Publish packages on master builds ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#666](https://github.com/wepublish/wepublish/pull/666) chore(deps): bump @actions/core from 1.9.0 to 1.9.1 in /config ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#665](https://github.com/wepublish/wepublish/pull/665) Build and push image on new tag ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#677](https://github.com/wepublish/wepublish/pull/677) Add WePublish helm chart ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#651](https://github.com/wepublish/wepublish/pull/651) ci: notify github/jira on successful deployment ([@Itrulia](https://github.com/Itrulia))
+  * [#650](https://github.com/wepublish/wepublish/pull/650) chore: add recommended vscode plugins ([@Itrulia](https://github.com/Itrulia))
+  * [#645](https://github.com/wepublish/wepublish/pull/645) chore(deps): bump terser from 4.6.12 to 4.8.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#643](https://github.com/wepublish/wepublish/pull/643) chore(deps): bump moment from 2.29.2 to 2.29.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#626](https://github.com/wepublish/wepublish/pull/626) chore(deps): bump shell-quote from 1.7.2 to 1.7.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#662](https://github.com/wepublish/wepublish/pull/662) docker compose fix ([@penk85](https://github.com/penk85))
+  * [#592](https://github.com/wepublish/wepublish/pull/592) Improve release process (add docs, improve release command) ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`, `editor`
+  * [#653](https://github.com/wepublish/wepublish/pull/653) Remove Karma libraries ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### Committers: 5
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+
+
+## 5.0.1 (2022-09-14)
+
+#### :bug: Bug Fix
+* `api`
+  * [#672](https://github.com/wepublish/wepublish/pull/672) fix(api): navigation link missing relations ([@Itrulia](https://github.com/Itrulia))
+  * [#661](https://github.com/wepublish/wepublish/pull/661) fix(api): userlist filter missing address filter due to merge conflict ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 1
+
+
 ## 5.0.0 (2022-09-01)
 
 #### :boom: Breaking Change

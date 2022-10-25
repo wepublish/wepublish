@@ -11,8 +11,8 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -90,7 +90,7 @@ function PaymentMethodList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
-                <IconButtonTooltip caption={t('paymentMethodList.delete')}>
+                <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<TrashIcon />}
                     circle

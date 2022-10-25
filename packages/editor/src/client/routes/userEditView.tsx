@@ -27,10 +27,10 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
+import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 function UserEditView() {
   const {t} = useTranslation()
@@ -278,7 +278,7 @@ function UserEditView() {
           type="submit"
           data-testid="saveButton"
           style={{marginRight: '10px'}}>
-          {user ? t('userCreateOrEditView.save') : t('userCreateOrEditView.create')}
+          {user ? t('save') : t('create')}
         </Button>
         {/* save and close button */}
         <Button
@@ -287,7 +287,7 @@ function UserEditView() {
           type="submit"
           data-testid="saveAndCloseButton"
           onClick={() => setCloseAfterSave(true)}>
-          {user ? t('userCreateOrEditView.saveAndClose') : t('userCreateOrEditView.createAndClose')}
+          {user ? t('saveAndClose') : t('createAndClose')}
         </Button>
       </>
     )
@@ -299,7 +299,7 @@ function UserEditView() {
         onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
         fluid
         model={validationModel}
-        formValue={{name: name, email, password}}>
+        formValue={{name, email, password}}>
         {/* heading */}
         <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
           {/* title */}

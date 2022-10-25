@@ -89,6 +89,8 @@ model Article {
 
   shared Boolean
 
+  navigations NavigationLink[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
@@ -159,6 +161,7 @@ model Image {
   Author      Author[]
   MemberPlan  MemberPlan[]
   PeerProfile PeerProfile[]
+  Comment     Comment[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -181,7 +184,9 @@ enum CommentRejectionReason {
 model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  text      Json
+  text      Json?
+  title     String?
+  lead      String?
 
   Comment   Comment? @relation(fields: [commentId], references: [id])
   commentId String?
@@ -209,23 +214,96 @@ model Comment {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  userID          String?
-  itemID          String
-  itemType        CommentItemType
+  itemID           String
+  itemType         CommentItemType
   /// only populated when itemType is peerArticle
-  peerId          String?
-  parentID        String?
-  revisions       CommentsRevisions[]
-  rejectionReason CommentRejectionReason?
-  state           CommentState
-  authorType      CommentAuthorType
-  guestUsername   String?
+  peerId           String?
+  peer             Peer?                   @relation(fields: [peerId], references: [id])
+  parentID         String?
+  revisions        CommentsRevisions[]
+  rejectionReason  CommentRejectionReason?
+  state            CommentState
+  source           String?
+  authorType       CommentAuthorType
+  guestUsername    String?
+  guestUserImageID String?
+  guestUserImage   Image?                  @relation(fields: [guestUserImageID], references: [id])
+  userID           String?
+  user             User?                   @relation(fields: [userID], references: [id])
 
-  user User? @relation(fields: [userID], references: [id])
-  peer Peer? @relation(fields: [peerId], references: [id])
+  tags TaggedComments[]
+
+  ratings CommentRating[]
 
   @@index([createdAt])
   @@map("comments")
+}
+
+model TaggedComments {
+  comment    Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([commentId, tagId])
+  @@map("comments.tagged-comments")
+}
+
+model CommentRatingSystem {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name String? @unique
+
+  answers CommentRatingSystemAnswer[]
+
+  @@map("comments.rating-systems")
+}
+
+enum RatingSystemType {
+  star @map("star")
+}
+
+model CommentRatingSystemAnswer {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type   RatingSystemType
+  answer String?
+
+  ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
+  ratingSystemId String
+
+  ratings CommentRating[]
+
+  @@unique([ratingSystemId, answer])
+  @@map("comments.rating-system-answers")
+}
+
+model CommentRating {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  answerId String
+  answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  value       Int
+  fingerprint String?
+  disabled    Boolean @default(false)
+
+  @@unique([answerId, commentId, userId])
+  @@map("comments.ratings")
 }
 
 model InvoiceItem {
@@ -343,13 +421,17 @@ model NavigationLink {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  label     String
-  type      String
-  url       String?
-  pageID    String?
+  label String
+  type  String
+  url   String?
+
+  page   Page?   @relation(fields: [pageID], references: [id], onDelete: Cascade)
+  pageID String?
+
+  article   Article? @relation(fields: [articleID], references: [id], onDelete: Cascade)
   articleID String?
 
-  Navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
+  navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
   navigationId String?
 
   @@map("navigations.links")
@@ -412,6 +494,8 @@ model Page {
 
   draftId String?       @unique
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
+
+  navigations NavigationLink[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -489,7 +573,7 @@ model Peer {
   token      String
   isDisabled Boolean @default(false)
 
-  Comment Comment[]
+  comments Comment[]
 
   @@map("peers")
 }
@@ -661,11 +745,12 @@ model User {
   oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment      Comment[]
-  Session      Session[]
-  Subscription Subscription[]
-  Invoice      Invoice[]
-  PollVote     PollVote[]
+  Comment       Comment[]
+  Session       Session[]
+  Subscription  Subscription[]
+  Invoice       Invoice[]
+  CommentRating CommentRating[]
+  PollVote      PollVote[]
 
   @@map("users")
 }
@@ -692,6 +777,24 @@ model Setting {
   settingRestriction Json
 
   @@map("settings")
+}
+
+enum TagType {
+  Comment @map("comment")
+}
+
+model Tag {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type TagType
+  tag  String?
+
+  comments TaggedComments[]
+
+  @@unique([type, tag])
+  @@map("tags")
 }
 
 model Poll {

@@ -143,11 +143,11 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         model={validationModel}
         style={{height: '100%'}}
         formValue={{
-          name: name,
-          callToActionText: callToActionText,
-          callToActionImage: callToActionImage,
-          callToActionTextURL: callToActionTextURL,
-          callToActionImageURL: callToActionImageURL,
+          name,
+          callToActionText,
+          callToActionImage,
+          callToActionTextURL,
+          callToActionImageURL,
           profileImg: logoImage?.id
         }}>
         <Drawer.Header>
@@ -155,7 +155,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
               <Button appearance="primary" disabled={isDisabled} type="submit">
-                {t('peerList.panels.save')}
+                {t('save')}
               </Button>
             </PermissionControl>
             <Button appearance={'subtle'} onClick={() => onClose?.()}>

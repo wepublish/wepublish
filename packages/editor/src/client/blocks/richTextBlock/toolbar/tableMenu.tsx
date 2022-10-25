@@ -1,16 +1,18 @@
-import React, {useState, useContext, useEffect} from 'react'
+import './tableMenu.less'
+
+import BanIcon from '@rsuite/icons/legacy/Ban'
+import CloseIcon from '@rsuite/icons/legacy/Close'
+import React, {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, InputGroup, InputNumber} from 'rsuite'
+import {Button, Col, IconButton, InputGroup, InputNumber, Row} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
+
 import {ColorPicker} from '../../../atoms/colorPicker'
 import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
-import {WepublishEditor} from '../editor/wepublishEditor'
-import {BlockFormat} from '../editor/formats'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
-import BanIcon from '@rsuite/icons/legacy/Ban'
-
-import './tableMenu.less'
+import {BlockFormat} from '../editor/formats'
+import {WepublishEditor} from '../editor/wepublishEditor'
 
 export function TableMenu() {
   const editor = useSlate()
@@ -128,7 +130,7 @@ export function TableMenu() {
               closeMenu()
               setShowRemoveConfirm(false)
             }}>
-            {t('blocks.richTextTable.delete')}
+            {t('delete')}
           </Button>
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
@@ -139,18 +141,25 @@ export function TableMenu() {
   )
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: '10em',
-        width: '15em'
-      }}>
-      {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
-        ? tableModifyControls
-        : tableInsertControls}
-    </div>
+    <>
+      <Row>
+        <Col xs={24} style={{textAlign: 'right', marginTop: '0px', marginBottom: '20px'}}>
+          <IconButton icon={<CloseIcon />} onClick={() => closeMenu()} />
+        </Col>
+      </Row>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          height: '10em',
+          width: '15em'
+        }}>
+        {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
+          ? tableModifyControls
+          : tableInsertControls}
+      </div>
+    </>
   )
 }

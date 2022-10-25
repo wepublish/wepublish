@@ -51,6 +51,24 @@ fragment FullTeaser on Teaser {
       ...PageRef
     }
   }
+
+  ... on CustomTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+      public
+    }
+  }
 }
 
 fragment FullBlock on Block {
@@ -86,6 +104,24 @@ fragment FullBlock on Block {
     layoutOption
     image {
       ...ImageRef
+    }
+  }
+
+  ... on PollBlock {
+    poll {
+      id
+      question
+    }
+  }
+
+  ... on CommentBlock {
+    filter {
+      item
+      tags
+      comments
+    }
+    comments {
+      ...FullComment
     }
   }
 

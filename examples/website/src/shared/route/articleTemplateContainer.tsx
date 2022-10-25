@@ -25,7 +25,8 @@ import {
   gridBlockFrontDataGQLfragment,
   peerMetaDataFragment,
   peerArticleMetaDataFragment,
-  flexGridBlockFrontDataGQLfragment
+  flexGridBlockFrontDataGQLfragment,
+  htmlBlockDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -50,7 +51,7 @@ const ArticleQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData
@@ -209,7 +210,7 @@ const PeerArticleQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData
@@ -250,6 +251,7 @@ const PeerArticleQuery = gql`
   ${titleBlockDataFragment}
   ${gridBlockFrontDataGQLfragment}
   ${flexGridBlockFrontDataGQLfragment}
+  ${htmlBlockDataFragment}
 `
 
 export interface PeerArticleTemplateContainerProps {

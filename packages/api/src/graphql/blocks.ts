@@ -1,59 +1,70 @@
 import {
-  GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLNonNull,
-  GraphQLString,
+  GraphQLBoolean,
+  GraphQLEnumType,
   GraphQLID,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
-  GraphQLUnionType,
-  GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLUnionType
 } from 'graphql'
 
-import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
+import {GraphQLRichText} from './richText'
 
 import {Context} from '../context'
 
 import {
-  BlockType,
-  ImageBlock,
-  ImageGalleryBlock,
-  FacebookPostBlock,
-  InstagramPostBlock,
-  TwitterTweetBlock,
-  VimeoVideoBlock,
-  YouTubeVideoBlock,
-  SoundCloudTrackBlock,
-  PolisConversationBlock,
-  TikTokVideoBlock,
-  ListicleItem,
-  ListicleBlock,
-  LinkPageBreakBlock,
-  TitleBlock,
-  QuoteBlock,
-  EmbedBlock,
-  HTMLBlock,
-  ImageCaptionEdge,
   ArticleTeaser,
-  TeaserGridBlock,
-  TeaserGridFlexBlock,
-  TeaserStyle,
-  PeerArticleTeaser,
-  PageTeaser,
-  TeaserType,
-  RichTextBlock,
+  BildwurfAdBlock,
+  BlockType,
+  CommentBlock,
+  CustomTeaser,
+  EmbedBlock,
+  FacebookPostBlock,
   FacebookVideoBlock,
   FlexAlignment,
   FlexTeaser,
-  BildwurfAdBlock
+  HTMLBlock,
+  ImageBlock,
+  ImageCaptionEdge,
+  ImageGalleryBlock,
+  InstagramPostBlock,
+  LinkPageBreakBlock,
+  ListicleBlock,
+  ListicleItem,
+  PageTeaser,
+  PeerArticleTeaser,
+  PolisConversationBlock,
+  PollBlock,
+  QuoteBlock,
+  RichTextBlock,
+  SoundCloudTrackBlock,
+  TeaserGridBlock,
+  TeaserGridFlexBlock,
+  TeaserStyle,
+  TeaserType,
+  TikTokVideoBlock,
+  TitleBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
 } from '../db/block'
 
+import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
-import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerSchema} from '../utility'
+import {GraphQLFullPoll} from './poll/poll'
+
+import {GraphQLComment, GraphQLPublicComment} from './comment/comment'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic
+} from './common'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -164,9 +175,31 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Page)
 })
 
+export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
+  name: 'CustomTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLList(GraphQLNonNull(GraphQLMetadataProperty))}
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Custom)
+})
+
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser]
+  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser, GraphQLCustomTeaser]
 })
 
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -318,9 +351,38 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
   })
 })
 
+export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
+  name: 'CustomTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic)))}
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === TeaserType.Custom
+  })
+})
+
 export const GraphQLPublicTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLPublicArticleTeaser, GraphQLPublicPeerArticleTeaser, GraphQLPublicPageTeaser]
+  types: [
+    GraphQLPublicArticleTeaser,
+    GraphQLPublicPeerArticleTeaser,
+    GraphQLPublicPageTeaser,
+    GraphQLPublicCustomTeaser
+  ]
 })
 
 export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -521,6 +583,109 @@ export const GraphQLHTMLBlock = new GraphQLObjectType<HTMLBlock, Context>({
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.HTML
+  })
+})
+
+export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
+  name: 'PollBlock',
+  fields: {
+    poll: {
+      type: GraphQLFullPoll,
+      resolve: ({pollId}, _, {loaders: {pollById}}) => pollById.load(pollId)
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Poll
+  })
+})
+
+export const GraphQLCommentBlockFilter = new GraphQLObjectType({
+  name: 'CommentBlockFilter',
+  fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
+  name: 'CommentBlock',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLCommentBlockFilter)},
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLComment))),
+      resolve: async ({filter}, _, {prisma}) =>
+        prisma.comment.findMany({
+          where: {
+            itemID: filter.item,
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
+                    }
+                  }
+                }
+              },
+              {
+                id: {
+                  in: filter.comments ?? []
+                }
+              }
+            ]
+          },
+          include: {
+            revisions: true
+          }
+        })
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Comment
+  })
+})
+
+export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Context>({
+  name: 'CommentBlock',
+  fields: {
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: async ({filter}, _, {prisma}) => {
+        const comments = await prisma.comment.findMany({
+          where: {
+            itemID: filter.item ?? undefined,
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
+                    }
+                  }
+                }
+              },
+              {
+                id: {
+                  in: filter.comments ?? []
+                }
+              }
+            ]
+          },
+          include: {
+            revisions: true
+          }
+        })
+
+        return comments.map(({revisions, ...comment}) => ({
+          text: revisions[revisions.length - 1].text,
+          ...comment
+        }))
+      }
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Comment
   })
 })
 
@@ -782,6 +947,29 @@ export const GraphQLHTMLBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLPollBlockInput = new GraphQLInputObjectType({
+  name: 'PollBlockInput',
+  fields: {
+    pollId: {type: GraphQLID}
+  }
+})
+
+export const GraphQLCommentBlockInputFilter = new GraphQLInputObjectType({
+  name: 'CommentBlockInputFilter',
+  fields: {
+    item: {type: GraphQLID},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLCommentBlockInput = new GraphQLInputObjectType({
+  name: 'CommentBlockInput',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLCommentBlockInputFilter)}
+  }
+})
+
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
@@ -819,12 +1007,26 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
+  name: 'CustomTeaserInput',
+  fields: {
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    contentUrl: {type: GraphQLString},
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))}
+  }
+})
+
 export const GraphQLTeaserInput = new GraphQLInputObjectType({
   name: 'TeaserInput',
   fields: () => ({
     [TeaserType.Article]: {type: GraphQLArticleTeaserInput},
     [TeaserType.PeerArticle]: {type: GraphQLPeerArticleTeaserInput},
-    [TeaserType.Page]: {type: GraphQLPageTeaserInput}
+    [TeaserType.Page]: {type: GraphQLPageTeaserInput},
+    [TeaserType.Custom]: {type: GraphQLCustomTeaserInput}
   })
 })
 
@@ -872,6 +1074,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.BildwurfAd]: {type: GraphQLBildwurfAdBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.HTML]: {type: GraphQLHTMLBlockInput},
+    [BlockType.Poll]: {type: GraphQLPollBlockInput},
+    [BlockType.Comment]: {type: GraphQLCommentBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
     [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
@@ -897,6 +1101,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
+    GraphQLPollBlock,
+    GraphQLCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
@@ -923,6 +1129,8 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLBildwurfAdBlock,
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
+    GraphQLPollBlock,
+    GraphQLPublicCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,

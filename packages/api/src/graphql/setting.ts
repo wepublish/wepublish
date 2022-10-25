@@ -25,6 +25,8 @@ export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
   values: {
     ALLOW_GUEST_COMMENTING: {value: SettingName.ALLOW_GUEST_COMMENTING},
+    ALLOW_GUEST_COMMENT_RATING: {value: SettingName.ALLOW_GUEST_COMMENT_RATING},
+    ALLOW_GUEST_POLL_VOTING: {value: SettingName.ALLOW_GUEST_POLL_VOTING},
     SEND_LOGIN_JWT_EXPIRES_MIN: {value: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN},
     RESET_PASSWORD_JWT_EXPIRES_MIN: {value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN},
     PEERING_TIMEOUT_MS: {value: SettingName.PEERING_TIMEOUT_MS},

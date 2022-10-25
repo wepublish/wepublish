@@ -1,19 +1,20 @@
-import {BlockListValue} from '../atoms/blockList'
-import {ListValue} from '../atoms/listInput'
-
+import nanoid from 'nanoid'
 import {Node} from 'slate'
 
-import nanoid from 'nanoid'
-
 import {
-  FullBlockFragment,
-  ImageRefFragment,
   ArticleRefFragment,
   BlockInput,
-  PeerRefFragment,
+  FullBlockFragment,
+  FullCommentFragment,
+  FullPoll,
+  ImageRefFragment,
   PageRefFragment,
+  PeerRefFragment,
   TeaserStyle
 } from '../api'
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
+import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
 
 export enum BlockType {
   RichText = 'richText',
@@ -27,7 +28,9 @@ export enum BlockType {
   TeaserGrid1 = 'teaserGrid1',
   TeaserGrid6 = 'teaserGrid6',
   TeaserGridFlex = 'teaserGridFlex',
-  HTMLBlock = 'html'
+  HTMLBlock = 'html',
+  PollBlock = 'poll',
+  CommentBlock = 'comment'
 }
 
 export type RichTextBlockValue = Node[]
@@ -63,6 +66,19 @@ export interface TitleBlockValue {
 
 export interface HTMLBlockValue {
   html: string
+}
+
+export interface PollBlockValue {
+  poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
+}
+
+export interface CommentBlockValue {
+  filter: Partial<{
+    item: string | null
+    tags: string[] | null
+    comments: string[] | null
+  }>
+  comments: FullCommentFragment[]
 }
 
 export interface QuoteBlockValue {
@@ -177,7 +193,8 @@ export type EmbedBlockValue =
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
-  Page = 'page'
+  Page = 'page',
+  Custom = 'custom'
 }
 
 export enum MetaDataType {
@@ -203,7 +220,17 @@ export interface PageTeaserLink {
   page: PageRefFragment
 }
 
-export type TeaserLink = ArticleTeaserLink | PeerArticleTeaserLink | PageTeaserLink
+export interface CustomTeaserLink extends BaseTeaser {
+  type: TeaserType.Custom
+  contentUrl?: string
+  properties?: TeaserMetadataProperty[]
+}
+
+export type TeaserLink =
+  | ArticleTeaserLink
+  | PeerArticleTeaserLink
+  | PageTeaserLink
+  | CustomTeaserLink
 
 export interface BaseTeaser {
   style: TeaserStyle
@@ -216,8 +243,9 @@ export interface BaseTeaser {
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
 export interface PeerArticleTeaser extends PeerArticleTeaserLink, BaseTeaser {}
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
+export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export interface TeaserGridBlockValue {
   teasers: Array<[string, Teaser | null]>
@@ -268,6 +296,10 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
 
 export type HTMLBlockListValue = BlockListValue<BlockType.HTMLBlock, HTMLBlockValue>
 
+export type PollBlockListValue = BlockListValue<BlockType.PollBlock, PollBlockValue>
+
+export type CommentBlockListValue = BlockListValue<BlockType.CommentBlock, CommentBlockValue>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -281,9 +313,25 @@ export type BlockValue =
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
   | HTMLBlockListValue
+  | PollBlockListValue
+  | CommentBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
+    case BlockType.CommentBlock:
+      return {
+        comment: {
+          filter: block.value?.filter ?? {}
+        }
+      }
+
+    case BlockType.PollBlock:
+      return {
+        poll: {
+          pollId: block.value?.poll?.id
+        }
+      }
+
     case BlockType.HTMLBlock:
       return {
         html: {
@@ -314,7 +362,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         listicle: {
           items: block.value.items.map(({value: {title, richText, image}}) => ({
             title,
-            richText: richText,
+            richText,
             imageID: image?.id
           }))
         }
@@ -522,6 +570,34 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   }
                 }
 
+              case TeaserType.Custom:
+                return {
+                  teaser: {
+                    custom: {
+                      style: flexTeaser.teaser.style,
+                      imageID: flexTeaser.teaser.image?.id,
+                      preTitle: flexTeaser.teaser.preTitle || undefined,
+                      title: flexTeaser.teaser.title || undefined,
+                      lead: flexTeaser.teaser.lead || undefined,
+                      contentUrl: flexTeaser.teaser.contentUrl || undefined,
+                      properties:
+                        flexTeaser.teaser.properties?.map(({key, value, public: isPublic}) => ({
+                          key,
+                          value,
+                          public: isPublic
+                        })) || []
+                    }
+                  },
+                  alignment: {
+                    i: flexTeaser.alignment.i,
+                    x: flexTeaser.alignment.x,
+                    y: flexTeaser.alignment.y,
+                    w: flexTeaser.alignment.w,
+                    h: flexTeaser.alignment.h,
+                    static: flexTeaser.alignment.static ?? false
+                  }
+                }
+
               default:
                 return {
                   teaser: null,
@@ -582,6 +658,24 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   }
                 }
 
+              case TeaserType.Custom:
+                return {
+                  custom: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    contentUrl: value.contentUrl || undefined,
+                    properties:
+                      value.properties?.map(({key, value, public: isPublic}) => ({
+                        key,
+                        value,
+                        public: isPublic
+                      })) || []
+                  }
+                }
+
               default:
                 return null
             }
@@ -628,7 +722,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
             value: {
               title,
               image: image ?? null,
-              richText: richText
+              richText
             }
           }))
         }
@@ -830,6 +924,35 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                   }
                 }
 
+              case 'CustomTeaser':
+                return {
+                  teaser: flexTeaser?.teaser
+                    ? {
+                        type: TeaserType.Custom,
+                        style: flexTeaser?.teaser.style,
+                        image: flexTeaser?.teaser.image ?? undefined,
+                        preTitle: flexTeaser?.teaser.preTitle ?? undefined,
+                        title: flexTeaser?.teaser.title ?? undefined,
+                        lead: flexTeaser?.teaser.lead ?? undefined,
+                        contentUrl: flexTeaser?.teaser.contentUrl ?? undefined,
+                        properties:
+                          flexTeaser?.teaser?.properties?.map(({key, value, public: isPublic}) => ({
+                            key,
+                            value,
+                            public: isPublic
+                          })) ?? undefined
+                      }
+                    : null,
+                  alignment: {
+                    i: flexTeaser?.alignment.i ?? nanoid(),
+                    x: flexTeaser?.alignment.x ?? 1,
+                    y: flexTeaser?.alignment.y ?? 1,
+                    w: flexTeaser?.alignment.w ?? 1,
+                    h: flexTeaser?.alignment.h ?? 1,
+                    static: flexTeaser?.alignment.static ?? false
+                  }
+                }
+
               default:
                 return {
                   teaser: null,
@@ -905,6 +1028,28 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     : null
                 ]
 
+              case 'CustomTeaser':
+                return [
+                  nanoid(),
+                  teaser
+                    ? {
+                        type: TeaserType.Custom,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        contentUrl: teaser.contentUrl ?? undefined,
+                        properties:
+                          teaser?.properties?.map(({key, value, public: isPublic}) => ({
+                            key,
+                            value,
+                            public: isPublic
+                          })) ?? undefined
+                      }
+                    : null
+                ]
+
               default:
                 return [nanoid(), null]
             }
@@ -927,6 +1072,25 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           linkTarget: block.linkTarget ?? '',
           hideButton: block.hideButton,
           image: block.image ?? undefined
+        }
+      }
+
+    case 'PollBlock':
+      return {
+        key,
+        type: BlockType.PollBlock,
+        value: {
+          poll: block.poll
+        }
+      }
+
+    case 'CommentBlock':
+      return {
+        key,
+        type: BlockType.CommentBlock,
+        value: {
+          filter: block.filter,
+          comments: block.comments
         }
       }
 
