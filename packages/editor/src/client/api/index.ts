@@ -388,6 +388,27 @@ export type CreatePeerInput = {
   token: Scalars['String'];
 };
 
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser';
+  style: TeaserStyle;
+  image?: Maybe<Image>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentUrl?: Maybe<Scalars['String']>;
+  properties?: Maybe<Array<Properties>>;
+};
+
+export type CustomTeaserInput = {
+  style: TeaserStyle;
+  imageID?: Maybe<Scalars['ID']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentUrl?: Maybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
+};
+
 
 export type DateFilter = {
   date?: Maybe<Scalars['DateTime']>;
@@ -2199,7 +2220,7 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser;
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock';
@@ -2225,6 +2246,7 @@ export type TeaserInput = {
   article?: Maybe<ArticleTeaserInput>;
   peerArticle?: Maybe<PeerArticleTeaserInput>;
   page?: Maybe<PageTeaserInput>;
+  custom?: Maybe<CustomTeaserInput>;
 };
 
 export enum TeaserStyle {
@@ -2999,7 +3021,19 @@ type FullTeaser_PageTeaser_Fragment = (
   )> }
 );
 
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment;
+type FullTeaser_CustomTeaser_Fragment = (
+  { __typename?: 'CustomTeaser' }
+  & Pick<CustomTeaser, 'style' | 'preTitle' | 'title' | 'lead' | 'contentUrl'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, properties?: Maybe<Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>> }
+);
+
+export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_CustomTeaser_Fragment;
 
 type FullBlock_RichTextBlock_Fragment = (
   { __typename: 'RichTextBlock' }
@@ -3149,6 +3183,9 @@ type FullBlock_TeaserGridBlock_Fragment = (
   ) | (
     { __typename?: 'PageTeaser' }
     & FullTeaser_PageTeaser_Fragment
+  ) | (
+    { __typename?: 'CustomTeaser' }
+    & FullTeaser_CustomTeaser_Fragment
   )>> }
 );
 
@@ -3168,6 +3205,9 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
     ) | (
       { __typename?: 'PageTeaser' }
       & FullTeaser_PageTeaser_Fragment
+    ) | (
+      { __typename?: 'CustomTeaser' }
+      & FullTeaser_CustomTeaser_Fragment
     )> }
   )>> }
 );
@@ -5318,6 +5358,21 @@ export const FullTeaserFragmentDoc = gql`
     lead
     page {
       ...PageRef
+    }
+  }
+  ... on CustomTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+      public
     }
   }
 }

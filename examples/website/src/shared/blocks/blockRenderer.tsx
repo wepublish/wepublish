@@ -10,7 +10,7 @@ import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
 import {TextTeaser} from '../teasers/textTeaser'
-import {ArticleRoute, PageRoute, PeerArticleRoute, Route} from '../route/routeContext'
+import {ArticleRoute, PageRoute, PeerArticleRoute, CustomRoute, Route} from '../route/routeContext'
 import {PageBreakBlock} from './peerPageBreak'
 import {ListicalBLock} from './listicalBlock'
 import {TitleBlock} from './titleBlock'
@@ -180,6 +180,10 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
       route = PageRoute.create({slug: article.slug})
       break
 
+    case TeaserType.Custom:
+      route = CustomRoute.create({contentUrl: article.contentUrl})
+      break
+
     default:
       throw new Error('Unknown teaser type')
   }
@@ -240,16 +244,19 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           preTitle={article.preTitle}
           title={article.title}
           lead={article.lead}
-          isUpdated={article.updatedAt.getTime() !== article.publishedAt.getTime()}
+          isUpdated={
+            article.updatedAt && article.updatedAt.getTime() !== article.publishedAt.getTime()
+          }
           date={article.updatedAt}
           image={article.image}
           peer={article.peer}
-          tags={getTeaserTags(article.tags, 3)}
+          tags={getTeaserTags(article.tags || [], 3)}
           route={route}
           url={article.url}
           authors={article.authors}
           isSingle={true}
           isPeerArticle={isPeerArticle}
+          contentUrl={article.contentUrl}
         />
       )
   }

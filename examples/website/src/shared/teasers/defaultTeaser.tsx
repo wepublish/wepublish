@@ -19,10 +19,6 @@ export const DefaultTeaserStyle = cssRule({
   display: 'flex',
   flexDirection: 'column',
 
-  // ':hover': {
-  //   boxShadow: `inset 0 0 5em ${Color.Primary}`,
-  // },
-
   '&::after': {
     content: '""',
     zIndex: -1,
@@ -146,6 +142,7 @@ export interface DefaultTeaserProps {
   readonly route?: Route
   readonly url: string
   readonly isPeerArticle?: boolean
+  readonly contentUrl?: string
 }
 
 // TODO solve link in link Problem for teasers
@@ -163,16 +160,17 @@ export function DefaultTeaser({
   peer,
   tags,
   url,
-  isPeerArticle
+  isPeerArticle,
+  contentUrl
 }: DefaultTeaserProps) {
   const css = useStyle()
 
   return (
     <div className={css(DefaultTeaserStyle)}>
       <Link
-        route={isPeerArticle ? undefined : route}
-        href={url}
-        target={isPeerArticle ? '_blank' : '_self'}>
+        route={isPeerArticle || route?.type === 'custom' ? undefined : route}
+        href={route?.type === 'custom' ? contentUrl : url}
+        target={isPeerArticle || route?.type === 'custom' ? '_blank' : '_self'}>
         <div
           className={css(
             DefaultTeaserImageStyle,

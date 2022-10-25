@@ -47,6 +47,8 @@
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
         "draft": "Entwurf",
+        "custom": "benutzerdefinierte",
+        "contentUrl": "Inhalt URL",
         "dropImage": "Bild hier droppen",
         "editImage": "Bild bearbeiten",
         "editTeaser": "Teaser bearbeiten",

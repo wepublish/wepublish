@@ -277,6 +277,23 @@ export const gridBlockFrontDataGQLfragment = gql`
           ...PageMetaData
         }
       }
+
+      ... on CustomTeaser {
+        style
+
+        image {
+          ...SimpleImageData
+        }
+
+        preTitle
+        title
+        lead
+        contentUrl
+        properties {
+          key
+          value
+        }
+      }
     }
   }
   ${simpleImageDataFragment}
@@ -350,6 +367,23 @@ export const flexGridBlockFrontDataGQLfragment = gql`
             ...PageMetaData
           }
         }
+
+        ... on CustomTeaser {
+          style
+
+          image {
+            ...SimpleImageData
+          }
+
+          preTitle
+          title
+          lead
+          contentUrl
+          properties {
+            key
+            value
+          }
+        }
       }
     }
   }
@@ -363,7 +397,7 @@ export const flexGridBlockFrontDataGQLfragment = gql`
 // # transform(input: [{width: 1280, height: 400}])
 
 export const richTextBlockDataFragment = gql`
-  fragment RichtTextBlockData on RichTextBlock {
+  fragment RichTextBlockData on RichTextBlock {
     __typename
     richText
   }
