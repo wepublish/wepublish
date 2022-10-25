@@ -70,7 +70,7 @@ import {
 } from './memberPlan'
 import {GraphQLNavigation} from './navigation'
 import {getNavigationByIdOrKey, getNavigations} from './navigation/navigation.private-queries'
-import {GraphQLPage, GraphQLPageConnection, GraphQLPageSort} from './page'
+import {GraphQLPage, GraphQLPageConnection, GraphQLPageFilter, GraphQLPageSort} from './page'
 import {getAdminPages, getPageById, getPagePreviewLink} from './page/page.private-queries'
 import {
   GraphQLPayment,
@@ -526,7 +526,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLArticleFilter},
+        filter: {type: GraphQLPageFilter},
         sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },

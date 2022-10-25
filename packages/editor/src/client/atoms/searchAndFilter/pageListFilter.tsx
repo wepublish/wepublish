@@ -3,15 +3,15 @@ import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, DateRangePicker, Form, Input, Toggle} from 'rsuite'
 
-import {ArticleFilter, DateFilterComparison} from '../../api'
+import {DateFilterComparison, PageFilter} from '../../api'
 
-export interface ArticleListFilterProps {
-  filter: ArticleFilter
+export interface PageListFilterProps {
+  filter: PageFilter
   isLoading: boolean
-  onSetFilter(filter: ArticleFilter): void
+  onSetFilter(filter: PageFilter): void
 }
 
-export function ArticleListFilter({filter, onSetFilter}: ArticleListFilterProps) {
+export function PageListFilter({filter, onSetFilter}: PageListFilterProps) {
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
 
@@ -36,7 +36,7 @@ export function ArticleListFilter({filter, onSetFilter}: ArticleListFilterProps)
     setResetFilterkey(new Date().getTime().toString())
   }
 
-  const updateFilter = (value: ArticleFilter) => {
+  const updateFilter = (value: PageFilter) => {
     const newFilter = {
       ...filter,
       ...value
@@ -75,16 +75,9 @@ export function ArticleListFilter({filter, onSetFilter}: ArticleListFilterProps)
         </Form.Group>
         <Form.Group style={formInputStyle}>
           <Input
-            value={filter.preTitle || ''}
-            placeholder={t('articleList.filter.preTitle')}
-            onChange={value => updateFilter({preTitle: value})}
-          />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
-          <Input
-            value={filter.lead || ''}
-            placeholder={t('articleList.filter.lead')}
-            onChange={value => updateFilter({lead: value})}
+            value={filter.description || ''}
+            placeholder={t('articleList.filter.description')}
+            onChange={value => updateFilter({description: value})}
           />
         </Form.Group>
         <Form.Group style={formInputStyle}>

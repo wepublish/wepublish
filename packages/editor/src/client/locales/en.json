@@ -970,6 +970,7 @@
       "filter": {
         "reset": "Reset Filter",
         "title": "Filter by title",
+        "description": "Filter by description",
         "preTitle": "Filter by pre-title",
         "lead": "Filter by lead",
         "isDraft": "Draft",

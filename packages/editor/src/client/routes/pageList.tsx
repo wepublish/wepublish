@@ -2,25 +2,15 @@ import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CommentIcon from '@rsuite/icons/legacy/Comment'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useNavigate} from 'react-router-dom'
-import {
-  Button,
-  FlexboxGrid,
-  IconButton,
-  Input,
-  InputGroup,
-  Message,
-  Modal,
-  Pagination,
-  Table
-} from 'rsuite'
+import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
 import {
   CommentItemType,
+  PageFilter,
   PageListDocument,
   PageListQuery,
   PageRefFragment,
@@ -34,6 +24,7 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {PageListFilter} from '../atoms/searchAndFilter/pageListFilter'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -67,7 +58,7 @@ function PageList() {
   const {t} = useTranslation()
   const navigate = useNavigate()
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState({} as PageFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
@@ -130,14 +121,11 @@ function PageList() {
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
+        <PageListFilter
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+        />
       </FlexboxGrid>
 
       <div

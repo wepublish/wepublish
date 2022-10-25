@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
 import {PageFilter, PageSort, PageWithRevisions} from '../../db/page'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
@@ -52,6 +52,67 @@ const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =
 
     return {
       OR: [{draft: containsTitle}, {pending: containsTitle}, {published: containsTitle}]
+    }
+  }
+
+  return {}
+}
+
+const createDescriptionFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.description) {
+    const containsDescription: Prisma.PageRevisionWhereInput = {
+      description: {
+        contains: filter.description,
+        mode: 'insensitive'
+      }
+    }
+
+    return {
+      OR: [
+        {draft: containsDescription},
+        {pending: containsDescription},
+        {published: containsDescription}
+      ]
+    }
+  }
+
+  return {}
+}
+
+const mapDateFilterToPrisma = (comparison: DateFilterComparison): keyof Prisma.DateTimeFilter => {
+  return comparison === DateFilterComparison.Equal ? 'equals' : comparison
+}
+
+const createPublicationDateFromFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.publicationDateFrom) {
+    const {comparison, date} = filter.publicationDateFrom
+    const compare = mapDateFilterToPrisma(comparison)
+
+    const filterBy: Prisma.PageRevisionWhereInput = {
+      publishedAt: {
+        [compare]: date
+      }
+    }
+    return {
+      AND: [{published: filterBy}]
+    }
+  }
+
+  return {}
+}
+
+const createPublicationDateToFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.publicationDateTo) {
+    const {comparison, date} = filter.publicationDateTo
+    const compare = mapDateFilterToPrisma(comparison)
+
+    const filterBy: Prisma.PageRevisionWhereInput = {
+      publishedAt: {
+        [compare]: date
+      }
+    }
+    return {
+      AND: [{published: filterBy}]
     }
   }
 
@@ -119,6 +180,9 @@ const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =>
 export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => ({
   AND: [
     createTitleFilter(filter),
+    createPublicationDateFromFilter(filter),
+    createPublicationDateToFilter(filter),
+    createDescriptionFilter(filter),
     createPublishedFilter(filter),
     createDraftFilter(filter),
     createPendingFilter(filter),

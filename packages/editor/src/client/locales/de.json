@@ -953,6 +953,18 @@
         "confirm": "Bestätigen"
       }
     },
+    "articleList": {
+      "filter": {
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "description": "Filter by description",
+        "preTitle": "Filter by pre-title",
+        "lead": "Filter by lead",
+        "isDraft": "Draft",
+        "isPublished": "Published",
+        "publicationDate": "Publication Date"
+      }
+    },
     "userList": {
       "overview": {
         "action": "Aktion",
