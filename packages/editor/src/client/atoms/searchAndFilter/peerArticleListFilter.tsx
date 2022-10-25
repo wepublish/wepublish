@@ -1,7 +1,7 @@
 import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, DateRangePicker, Form, Input, SelectPicker, Toggle} from 'rsuite'
+import {Button, DateRangePicker, Form, Input, SelectPicker} from 'rsuite'
 
 import {
   ArticleFilter,

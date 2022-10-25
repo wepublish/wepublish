@@ -74,8 +74,6 @@ function ArticleList() {
 
   const navigate = useNavigate()
 
-  console.log('filter', filter)
-
   const articleListVariables = {
     filter: filter || undefined,
     take: limit,

@@ -1,18 +1,6 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {
-  Avatar,
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  Message,
-  Pagination,
-  Popover,
-  Table,
-  toaster,
-  Whisper
-} from 'rsuite'
+import {Avatar, FlexboxGrid, Message, Pagination, Popover, Table, toaster, Whisper} from 'rsuite'
 
 import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
@@ -38,7 +26,7 @@ function PeerArticleList() {
     skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-    peerFilter: peerFilter
+    peerFilter
   }
 
   function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {

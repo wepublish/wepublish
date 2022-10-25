@@ -18,7 +18,6 @@ export const getAdminPeerArticles = async (
   const {authenticate, loaders, prisma} = context
   const {roles} = authenticate()
 
-  console.log('filter', filter)
   authorise(CanGetPeerArticles, roles)
 
   const cursors: Record<string, string> | null = stringifiedCursors
@@ -164,60 +163,39 @@ export const getAdminPeerArticles = async (
     (prev, result) => prev || (result?.pageInfo?.hasNextPage ?? false),
     false
   )
-  console.log('articles', articles)
+
   const peerArticles = articles.flatMap<PeerArticle & {article: any}>((result, index) => {
     const peer = peers[index]
 
     return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
   })
-  console.log('peerArticles', peerArticles)
 
   let filtered = peerArticles
   // filters
   if (filter.title) {
-    filtered = peerArticles.filter(({article}) =>
+    filtered = filtered.filter(({article}) =>
       article.latest.title.toLowerCase().includes(filter.title?.toLowerCase())
     )
   }
   if (filter.preTitle) {
-    filtered = peerArticles.filter(({article}) =>
+    filtered = filtered.filter(({article}) =>
       article.latest.preTitle.toLowerCase().includes(filter.preTitle?.toLowerCase())
     )
   }
   if (filter.lead) {
-    filtered = peerArticles.filter(({article}) =>
+    filtered = filtered.filter(({article}) =>
       article.latest.lead.toLowerCase().includes(filter.lead?.toLowerCase())
     )
   }
-  if (filter.publicationDateFrom?.date && filter.publicationDateTo?.date) {
-    filtered = peerArticles.filter(
+  if (filter.publicationDateFrom && filter.publicationDateTo) {
+    const from = filter.publicationDateFrom.date as Date
+    const to = filter.publicationDateTo.date as Date
+    filtered = filtered.filter(
       ({article}) =>
-        new Date(article.published.publishedAt).getTime() >
-          // @ts-ignore
-          new Date(filter.publicationDateFrom.date).getTime() &&
-        new Date(article.published.publishedAt).getTime() <
-          // @ts-ignore
-          new Date(filter?.publicationDateTo.date).getTime()
+        new Date(article.published.publishedAt).getTime() > new Date(from).getTime() &&
+        new Date(article.published.publishedAt).getTime() < new Date(to).getTime()
     )
   }
-  // if (filter.publicationDateTo?.date) {
-  //   filtered = peerArticles.filter(({article}) => {
-  //     console.log(
-  //       ' new Date(article.published.publishedAt).getTime()',
-  //       new Date(article.published.publishedAt).getTime()
-  //     )
-  //     console.log(
-  //       'new Date(filter?.publicationDateTo.date).getTime()',
-  //       // @ts-ignore
-  //       new Date(filter?.publicationDateTo.date).getTime()
-  //     )
-  //     return (
-  //       new Date(article.published.publishedAt).getTime() <
-  //       // @ts-ignore
-  //       new Date(filter?.publicationDateTo.date).getTime()
-  //     )
-  //   })
-  // }
 
   switch (sort) {
     case ArticleSort.CreatedAt:
