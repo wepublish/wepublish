@@ -48,7 +48,7 @@ fragment FullComment on Comment {
     tag
   }
 
-  overridenRatings {
+  overriddenRatings {
     answerId
     value
   }

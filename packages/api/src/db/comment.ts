@@ -23,7 +23,7 @@ export interface CommentData {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly overridenRatings?: CommentRatingOverride[] | null
+  readonly overriddenRatings?: CommentRatingOverride[] | null
 }
 
 export interface Comment extends CommentData {

@@ -229,8 +229,8 @@ model Comment {
 
   tags TaggedComments[]
 
-  ratings          CommentRating[]
-  overridenRatings CommentRatingOverride[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@index([createdAt])
   @@map("comments")
@@ -275,8 +275,8 @@ model CommentRatingSystemAnswer {
   ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
   ratingSystemId String
 
-  ratings          CommentRating[]
-  overridenRatings CommentRatingOverride[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@unique([ratingSystemId, answer])
   @@map("comments.rating-system-answers")

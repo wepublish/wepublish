@@ -617,7 +617,7 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
           },
           include: {
             revisions: true,
-            overridenRatings: true
+            overriddenRatings: true
           }
         })
 

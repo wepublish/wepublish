@@ -278,7 +278,7 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
-  overridenRatings?: Maybe<Array<OverridenRating>>;
+  overriddenRatings?: Maybe<Array<overriddenRating>>;
 };
 
 export enum CommentAuthorType {
@@ -1312,8 +1312,8 @@ export type OAuth2Account = {
   scope: Scalars['String'];
 };
 
-export type OverridenRating = {
-  __typename?: 'OverridenRating';
+export type overriddenRating = {
+  __typename?: 'overriddenRating';
   answerId: Scalars['ID'];
   value?: Maybe<Scalars['Float']>;
 };
@@ -3271,9 +3271,9 @@ export type FullCommentFragment = (
   )>, tags?: Maybe<Array<(
     { __typename?: 'Tag' }
     & Pick<Tag, 'id' | 'tag'>
-  )>>, overridenRatings?: Maybe<Array<(
-    { __typename?: 'OverridenRating' }
-    & Pick<OverridenRating, 'answerId' | 'value'>
+  )>>, overriddenRatings?: Maybe<Array<(
+    { __typename?: 'overriddenRating' }
+    & Pick<overriddenRating, 'answerId' | 'value'>
   )>> }
 );
 
@@ -5168,7 +5168,7 @@ export const FullCommentFragmentDoc = gql`
     id
     tag
   }
-  overridenRatings {
+  overriddenRatings {
     answerId
     value
   }

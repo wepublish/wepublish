@@ -118,7 +118,7 @@ export const updateComment = async (
             }
           }
         : undefined,
-      overridenRatings: {
+      overriddenRatings: {
         upsert: ratingOverrides?.map(override => ({
           where: {
             answerId_commentId: {
@@ -138,7 +138,7 @@ export const updateComment = async (
     },
     include: {
       revisions: true,
-      overridenRatings: true
+      overriddenRatings: true
     }
   })
 }

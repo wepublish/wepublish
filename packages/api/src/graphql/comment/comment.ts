@@ -153,8 +153,8 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLOverridenRating = new GraphQLObjectType<CalculatedRating, Context>({
-  name: 'OverridenRating',
+export const GraphQLoverriddenRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'overriddenRating',
   fields: {
     answerId: {type: GraphQLNonNull(GraphQLID)},
     value: {type: GraphQLInt}
@@ -239,8 +239,8 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     rejectionReason: {type: GraphQLCommentRejectionReason},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    overridenRatings: {
-      type: GraphQLList(GraphQLNonNull(GraphQLOverridenRating))
+    overriddenRatings: {
+      type: GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))
     }
   })
 })
@@ -316,9 +316,9 @@ export const GraphQLPublicComment: GraphQLObjectType<
     ratings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
     },
-    overridenRatings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOverridenRating))),
-      resolve: comment => comment.overridenRatings?.filter(ratings => ratings.value != null) ?? []
+    overriddenRatings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),
+      resolve: comment => comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
     }
   })
 })

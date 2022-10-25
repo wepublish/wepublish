@@ -144,7 +144,7 @@ const CommentEditView = memo(() => {
         answerId: answer.id,
         name: answer.answer,
         value:
-          comment?.overridenRatings?.find(override => override.answerId === answer.id)?.value ??
+          comment?.overriddenRatings?.find(override => override.answerId === answer.id)?.value ??
           null
       })) ?? [],
     [comment, ratingSystem]
@@ -173,7 +173,7 @@ const CommentEditView = memo(() => {
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
         tagIds: commentTags,
-        ratingOverrides: comment.overridenRatings
+        ratingOverrides: comment.overriddenRatings
       }
     })
 
@@ -340,7 +340,7 @@ const CommentEditView = memo(() => {
                               oldComment
                                 ? {
                                     ...oldComment,
-                                    overridenRatings: ratingOverrides.map(oldOverride =>
+                                    overriddenRatings: ratingOverrides.map(oldOverride =>
                                       oldOverride.answerId === override.answerId
                                         ? {answerId: override.answerId, value}
                                         : {answerId: oldOverride.answerId, value: oldOverride.value}
