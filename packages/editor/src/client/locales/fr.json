@@ -536,14 +536,14 @@
     },
     "articleList": {
       "filter": {
-        "reset": "Reset Filter",
-        "title": "Filter by title",
-        "description": "Filter by description",
-        "preTitle": "Filter by pre-title",
-        "lead": "Filter by lead",
-        "isDraft": "Draft",
-        "isPublished": "Published",
-        "publicationDate": "Publication Date"
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "description": "Filtrer par description",
+        "preTitle": "Filtrer par pré-titre",
+        "lead": "Filtrer par lead",
+        "isDraft": "Brouillon",
+        "isPublished": "Publié",
+        "publicationDate": "Date de publication"
       }
     },
     "userList": {
