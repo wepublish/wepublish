@@ -188,7 +188,7 @@ describe('Navigations', () => {
         socialMediaTitle: '',
         socialMediaAuthorIDs: [],
         socialMediaDescription: '',
-        socialMediaImageID: '',
+        socialMediaImageID: null,
         blocks: []
       }
       const articleRes = await mutate({

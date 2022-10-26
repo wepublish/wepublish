@@ -1,16 +1,17 @@
-import i18n from 'i18next'
-import {initI18N} from '../../src/client/i18n'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import {initReactI18next} from 'react-i18next'
-import * as reactDatepicker from 'react-datepicker'
 import {de} from 'date-fns/locale'
+import i18n from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import * as reactDatepicker from 'react-datepicker'
+import {initReactI18next} from 'react-i18next'
+
+import {initI18N} from '../../src/client/i18n'
 
 describe('i18n', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it('should init i18next', () => {
+  test('should init i18next', () => {
     const initSpy = jest.spyOn(i18n, 'init')
 
     initI18N()
@@ -22,7 +23,7 @@ describe('i18n', () => {
     })
   })
 
-  it('should init i18next plugins', () => {
+  test('should init i18next plugins', () => {
     const useSpy = jest.spyOn(i18n, 'use')
     const initSpy = jest.spyOn(i18n, 'init')
 
@@ -41,7 +42,7 @@ describe('i18n', () => {
     })
   })
 
-  it('should init react-datepicker', () => {
+  test('should init react-datepicker', () => {
     jest.spyOn(i18n, 'use').mockReturnThis()
     jest.spyOn(i18n, 'init')
 

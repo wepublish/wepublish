@@ -17,7 +17,13 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../../context'
-import {CommentRevision, PublicComment, Comment, CommentSort} from '../../db/comment'
+import {
+  CommentRevision,
+  PublicComment,
+  Comment,
+  CommentSort,
+  PublicCommentSort
+} from '../../db/comment'
 import {unselectPassword} from '../../db/user'
 import {createProxyingResolver} from '../../utility'
 import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
@@ -67,6 +73,13 @@ export const GraphQLCommentSort = new GraphQLEnumType({
   values: {
     ModifiedAt: {value: CommentSort.ModifiedAt},
     CreatedAt: {value: CommentSort.CreatedAt}
+  }
+})
+
+export const GraphQLPublicCommentSort = new GraphQLEnumType({
+  name: 'CommentSort',
+  values: {
+    RATING: {value: PublicCommentSort.Rating}
   }
 })
 
