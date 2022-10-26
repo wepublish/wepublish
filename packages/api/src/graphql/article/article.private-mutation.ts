@@ -223,7 +223,9 @@ export const unpublishArticle = async (
     throw new NotFound('article', id)
   }
 
-  const {id: revisionId, properties, ...revision} = (article.pending ?? article.published)!
+  const {id: revisionId, properties, ...revision} = (article.draft ??
+    article.pending ??
+    article.published)!
 
   return articleClient.update({
     where: {id},
@@ -383,7 +385,7 @@ export const publishArticle = async (
           upsert: {
             create: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {
@@ -394,7 +396,7 @@ export const publishArticle = async (
             },
             update: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {
