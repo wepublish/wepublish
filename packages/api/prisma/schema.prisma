@@ -71,7 +71,7 @@ model ArticleRevision {
 }
 
 model Article {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -115,7 +115,7 @@ model AuthorsLinks {
 }
 
 model Author {
-  id         String      @id @default(dbgenerated("gen_random_uuid()"))
+  id         String         @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
