@@ -1,32 +1,23 @@
+import {createEditor, Transforms} from 'slate'
 import {withReact} from 'slate-react'
-import {createEditor, Transforms, Element as SlateElement} from 'slate'
+
+import {
+  DEFAULT_BORDER_COLOR,
+  emptyCellsTable,
+  emptyTextParagraph
+} from '../../src/client/blocks/richTextBlock/editor/elements'
 import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {withNormalizeNode} from '../../src/client/blocks/richTextBlock/editor/normalizing'
-import {pTest} from '../utils'
-import {
-  emptyTextParagraph,
-  emptyCellsTable,
-  DEFAULT_BORDER_COLOR
-} from '../../src/client/blocks/richTextBlock/editor/elements'
 
-interface WithNormalizeNodeTest {
-  name: string
-  entryData: SlateElement[]
-  normalizedData: SlateElement[]
-}
-
-pTest(
-  'withNormalizeNode',
-  [
+describe('withNormalizeNode', () => {
+  test.each([
     {
       name: 'should return unmodified data, given simple valid table',
-      entryData: emptyCellsTable(1, 1),
-      normalizedData: emptyCellsTable(1, 1)
+      entryData: emptyCellsTable(1, 1)
     },
     {
       name: 'should return unmodified data, given valid multiple cells table',
-      entryData: emptyCellsTable(33, 97), // TODO choose meaningful
-      normalizedData: emptyCellsTable(33, 97)
+      entryData: emptyCellsTable(33, 97) // TODO choose meaningful
     },
     {
       name: 'should return fixed table given a nakedTableRow',
@@ -35,8 +26,7 @@ pTest(
           type: BlockFormat.TableRow,
           children: [emptyTextParagraph()]
         }
-      ],
-      normalizedData: emptyCellsTable(1, 1)
+      ]
     },
     {
       name: 'should return merged fixed tables given multiple invalid table parts',
@@ -50,8 +40,7 @@ pTest(
           borderColor: DEFAULT_BORDER_COLOR,
           children: [emptyTextParagraph()]
         }
-      ],
-      normalizedData: emptyCellsTable(2, 1)
+      ]
     },
     {
       name: 'should add borderColor to tableCell if missing',
@@ -72,13 +61,11 @@ pTest(
           ]
         },
         emptyTextParagraph()
-      ],
-      normalizedData: emptyCellsTable(1, 1)
+      ]
     }
-  ],
-  (t: WithNormalizeNodeTest) => {
+  ])('should match snapshot for %p', ({entryData}) => {
     const editor = withNormalizeNode(withReact(createEditor()))
-    Transforms.insertNodes(editor, t.entryData)
-    expect(editor.children).toEqual(t.normalizedData)
-  }
-)
+    Transforms.insertNodes(editor, entryData)
+    expect(editor.children).toMatchSnapshot()
+  })
+})
