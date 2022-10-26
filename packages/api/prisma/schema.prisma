@@ -431,7 +431,7 @@ model NavigationLink {
   pageID String?
 
   article   Article? @relation(fields: [articleID], references: [id], onDelete: Cascade)
-  articleID String?
+  articleID String? @db.Uuid
 
   navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
   navigationId String?
