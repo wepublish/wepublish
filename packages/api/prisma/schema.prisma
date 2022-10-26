@@ -69,7 +69,8 @@ model ArticleRevision {
 }
 
 model Article {
-  id         String   @id @default(uuid())
+//  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -91,7 +92,7 @@ model Article {
 
   navigations NavigationLink[]
 
-  source String?
+//  origin String?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -113,7 +114,7 @@ model AuthorsLinks {
 }
 
 model Author {
-  id         String         @id @default(uuid())
+  id         String      @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
@@ -125,7 +126,7 @@ model Author {
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  source String?
+  origin String?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -144,7 +145,7 @@ model FocalPoint {
 }
 
 model Image {
-  id          String      @id @default(uuid())
+  id          String      @id @default(dbgenerated("gen_random_uuid()"))
   createdAt   DateTime    @default(now())
   description String?
   extension   String
