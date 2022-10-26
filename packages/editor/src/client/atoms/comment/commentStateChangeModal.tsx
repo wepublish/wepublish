@@ -106,7 +106,6 @@ export function CommentStateChangeModal({
         setOpen(false)
         break
       case CommentState.Rejected:
-        if (!rejectionReason) return
         await rejectComment({
           variables: {
             id: comment.id,
@@ -243,9 +242,6 @@ export function CommentStateChangeModal({
                   {CommentRejectionReason.Misconduct}
                 </Dropdown.Item>
               </Dropdown>
-              {!rejectionReason && (
-                <div style={{color: 'red'}}>{t('comments.panels.chooseRejectionReason')}</div>
-              )}
             </DescriptionListItem>
           ) : null}
 
@@ -279,11 +275,11 @@ export function CommentStateChangeModal({
       </Modal.Body>
       <Modal.Footer>
         <Button
-          disabled={
-            isApproving ||
-            isRequestingChanges ||
-            isRejecting ||
-            (!rejectionReason && newCommentState !== CommentState.Approved)
+          disabled={isApproving || isRequestingChanges || isRejecting}
+          appearance={
+            newCommentState === CommentState.PendingUserChanges && !rejectionReason
+              ? 'subtle'
+              : 'primary'
           }
           onClick={async () => await changeState()}>
           {t(mapCommentActionToBtnTitle(newCommentState))}

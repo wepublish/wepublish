@@ -1198,7 +1198,7 @@ export type MutationApproveCommentArgs = {
 
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 };
 
 
@@ -3354,7 +3354,7 @@ export type ApproveCommentMutation = (
 
 export type RejectCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 }>;
 
 
@@ -6718,7 +6718,7 @@ export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveComme
 export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
 export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
 export const RejectCommentDocument = gql`
-    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
