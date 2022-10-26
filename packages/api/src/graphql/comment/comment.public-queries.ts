@@ -1,4 +1,6 @@
-import {CommentState, PrismaClient} from '@prisma/client'
+import {Comment, CommentState, PrismaClient} from '@prisma/client'
+import {PublicCommentSort} from '../../db/comment'
+import {sortWith, descend, ascend} from 'ramda'
 
 export const getPublicChildrenCommentsByParentId = (
   parentId: string,
@@ -27,9 +29,19 @@ export type CalculatedRating = {
   total: number
 }
 
+const sortCommentsByRating = (orderFn: typeof ascend) =>
+  sortWith<Comment & {ratings: CalculatedRating[]}>([
+    orderFn(({ratings}: Comment & {ratings: CalculatedRating[]}) =>
+      ratings.reduce((ratingsTotal, rating) => ratingsTotal + rating.mean, 0)
+    ),
+    ascend(({createdAt}: Comment) => createdAt)
+  ])
+
 export const getPublicCommentsForItemById = async (
   itemId: string,
   userId: string | null,
+  sort: PublicCommentSort | null,
+  order: 1 | -1,
   commentRatingSystemAnswer: PrismaClient['commentRatingSystemAnswer'],
   comment: PrismaClient['comment']
 ) => {
@@ -45,28 +57,41 @@ export const getPublicCommentsForItemById = async (
       include: {
         revisions: true,
         ratings: true
+      },
+      orderBy: {
+        createdAt: 'asc'
       }
     })
   ])
 
-  return comments.map(({revisions, ratings, ...comment}) => ({
+  const commentsWithRating = comments.map(({revisions, ratings, ...comment}) => ({
     text: revisions[revisions.length - 1].text,
     ...comment,
     ratings: answers.map(answer => {
-      const sortedRatings = ratings
+      const ratingValues = ratings
         .filter(rating => rating.answerId === answer.id)
         .map(rating => rating.value)
-        .sort((a, b) => a - b)
 
-      const total = sortedRatings.reduce((value, rating) => value + rating, 0)
-      const mean = total / Math.max(sortedRatings.length, 1)
+      const total = ratingValues.reduce((value, rating) => value + rating, 0)
+      const mean = total / Math.max(ratingValues.length, 1)
 
       return {
         answerId: answer.id,
-        count: sortedRatings.length,
+        count: ratingValues.length,
         mean,
         total
       } as CalculatedRating
     })
   }))
+
+  if (sort === PublicCommentSort.Rating) {
+    if (order === 1) {
+      return sortCommentsByRating(ascend)(commentsWithRating)
+    }
+
+    return sortCommentsByRating(descend)(commentsWithRating)
+  }
+
+  // no sorting needed as comments already come sorted by creation
+  return commentsWithRating
 }
