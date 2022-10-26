@@ -69,8 +69,7 @@ model ArticleRevision {
 }
 
 model Article {
-//  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id         String   @id @default(cuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -92,7 +91,7 @@ model Article {
 
   navigations NavigationLink[]
 
-//  origin String?
+  origin String?
 
   @@index([createdAt])
   @@index([modifiedAt])
