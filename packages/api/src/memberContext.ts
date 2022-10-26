@@ -624,7 +624,7 @@ export class MemberContext implements MemberContext {
                 deleteMany: {
                   invoiceId: invoiceData.id
                 },
-                create: items
+                create: items.map(({invoiceId, ...item}) => item)
               },
               canceledAt: today
             }
@@ -784,7 +784,7 @@ export class MemberContext implements MemberContext {
             deleteMany: {
               invoiceId: invoiceData.id
             },
-            create: items
+            create: items.map(({invoiceId, ...item}) => item)
           },
           sentReminderAt: new Date()
         }
@@ -850,7 +850,7 @@ export class MemberContext implements MemberContext {
                 deleteMany: {
                   invoiceId: invoiceData.id
                 },
-                create: items
+                create: items.map(({invoiceId, ...item}) => item)
               },
               canceledAt: today
             }
@@ -982,7 +982,7 @@ export class MemberContext implements MemberContext {
           deleteMany: {
             invoiceId: invoiceData.id
           },
-          create: items
+          create: items.map(({invoiceId, ...item}) => item)
         },
         sentReminderAt: today
       }
