@@ -48,7 +48,7 @@ describe('Articles', () => {
         socialMediaTitle: 'A social media title',
         socialMediaAuthorIDs: [],
         socialMediaDescription: 'A social media description',
-        socialMediaImageID: '',
+        socialMediaImageID: null,
         blocks: []
       }
       const res = await mutate({
@@ -80,7 +80,7 @@ describe('Articles', () => {
         socialMediaTitle: 'A social media title',
         socialMediaAuthorIDs: [],
         socialMediaDescription: 'A social media description',
-        socialMediaImageID: '',
+        socialMediaImageID: null,
         blocks: []
       }
       const res = await mutate({
@@ -160,7 +160,7 @@ describe('Articles', () => {
             socialMediaTitle: 'A new social media title',
             socialMediaAuthorIDs: [],
             socialMediaDescription: 'A new social media description',
-            socialMediaImageID: '',
+            socialMediaImageID: null,
             blocks: []
           },
           id: articleIds[0]

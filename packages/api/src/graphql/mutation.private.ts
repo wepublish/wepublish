@@ -935,7 +935,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLComment),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+        rejectionReason: {type: GraphQLCommentRejectionReason}
       },
       resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
         takeActionOnComment(

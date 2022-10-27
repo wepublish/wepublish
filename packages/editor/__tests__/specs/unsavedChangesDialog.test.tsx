@@ -1,5 +1,6 @@
 import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
+
 import {
   UnsavedChangesDialogMessage,
   useUnsavedChangesDialog
@@ -20,7 +21,7 @@ describe('Unsaved Changes Dialog', () => {
     jest.resetAllMocks()
   })
 
-  it.each([
+  test.each([
     {
       current: false,
       next: true,

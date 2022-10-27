@@ -50,6 +50,10 @@ export enum CommentSort {
   ModifiedAt = 'modifiedAt'
 }
 
+export enum PublicCommentSort {
+  Rating = 'rating'
+}
+
 export interface CommentFilter {
   readonly states?: CommentState[]
   readonly tags?: string[]

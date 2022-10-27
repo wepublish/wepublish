@@ -90,7 +90,7 @@ mutation ApproveComment($id: ID!) {
   }
 }
 
-mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
