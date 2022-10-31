@@ -447,7 +447,17 @@
       "tags": "Tags",
       "source": "Source",
       "userPanelHeader": "Author of the comment",
-      "actions": "Actions"
+      "actions": "Actions",
+      "commentContextHeader": "Comment history"
+    },
+    "commentHistory": {
+      "guestUser": "UnauthenticatedGuest"
+    },
+    "commentPreview": {
+      "noTags": "No tags",
+      "source": "Source",
+      "noSource": "No source",
+      "showComment": "Go to comment"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
