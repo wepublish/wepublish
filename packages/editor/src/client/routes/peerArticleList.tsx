@@ -4,7 +4,7 @@ import {Avatar, FlexboxGrid, Message, Pagination, Popover, Table, toaster, Whisp
 
 import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {PeerArticleListFilter} from '../atoms/searchAndFilter/peerArticleListFilter'
+import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -85,7 +85,8 @@ function PeerArticleList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <PeerArticleListFilter
+      <ListViewFilters
+        fields={['title', 'preTitle', 'lead', 'peer', 'publicationDate']}
         filter={filter}
         isLoading={isLoading}
         onSetFilter={filter => setFilter(filter)}

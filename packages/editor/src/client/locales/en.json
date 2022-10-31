@@ -974,6 +974,7 @@
         "preTitle": "Filter by pre-title",
         "lead": "Filter by lead",
         "isDraft": "Draft",
+        "isPending": "Pending",
         "isPublished": "Published",
         "publicationDate": "Publication Date"
       }

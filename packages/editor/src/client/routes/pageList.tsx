@@ -24,7 +24,7 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {PageListFilter} from '../atoms/searchAndFilter/pageListFilter'
+import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -121,7 +121,9 @@ function PageList() {
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
-        <PageListFilter
+
+        <ListViewFilters
+          fields={['title', 'description', 'draft', 'pending', 'published', 'publicationDate']}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}

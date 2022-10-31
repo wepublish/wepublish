@@ -192,7 +192,7 @@ export const getAdminPeerArticles = async (
     const to = filter.publicationDateTo.date as Date
     filtered = filtered.filter(
       ({article}) =>
-        new Date(article.published.publishedAt).getTime() > new Date(from).getTime() &&
+        new Date(article.published.publishedAt).getTime() >= new Date(from).getTime() &&
         new Date(article.published.publishedAt).getTime() < new Date(to).getTime()
     )
   }

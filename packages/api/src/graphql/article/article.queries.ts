@@ -1,7 +1,8 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
-import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
+import {mapDateFilterToPrisma} from '../utils'
 
 export const createArticleOrder = (
   field: ArticleSort,
@@ -90,10 +91,6 @@ const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
   }
 
   return {}
-}
-
-const mapDateFilterToPrisma = (comparison: DateFilterComparison): keyof Prisma.DateTimeFilter => {
-  return comparison === DateFilterComparison.Equal ? 'equals' : comparison
 }
 
 const createPublicationDateFromFilter = (

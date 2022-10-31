@@ -541,6 +541,7 @@
         "description": "Filtrer par description",
         "preTitle": "Filtrer par pré-titre",
         "lead": "Filtrer par lead",
+        "isPending": "En attente",
         "isDraft": "Brouillon",
         "isPublished": "Publié",
         "publicationDate": "Date de publication"

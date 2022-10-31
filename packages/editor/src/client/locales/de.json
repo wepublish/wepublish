@@ -960,6 +960,7 @@
         "description": "Nach Beschreibung filtern",
         "preTitle": "Nach Pre-Titel filtern",
         "lead": "Nach Lead filtern",
+        "isPending": "Geplant",
         "isDraft": "Entwurf",
         "isPublished": "Publiziert",
         "publicationDate": "Publikationsdatum"
