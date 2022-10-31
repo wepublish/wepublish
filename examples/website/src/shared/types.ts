@@ -49,7 +49,8 @@ export interface Comment {
 export enum CommentAuthorType {
   Team = 'team',
   Author = 'author',
-  VerifiedUser = 'verifiedUser'
+  VerifiedUser = 'verifiedUser',
+  GuestUser = 'guestUser'
 }
 
 export enum CommentItemType {
@@ -177,6 +178,8 @@ export enum BlockType {
   Listicle = 'listicle',
   PeerPageBreak = 'linkPageBreak',
   HTMLBlock = 'html',
+  CommentBlock = 'comment',
+  PollBlock = 'poll',
 
   // Layout
   Grid = 'grid',

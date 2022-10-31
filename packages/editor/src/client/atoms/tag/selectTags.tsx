@@ -7,12 +7,13 @@ import {SortOrder, TagSort, TagType, useTagListQuery} from '../../api'
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
 
 interface SelectTagsProps {
+  name?: string
   tagType: TagType
-  selectedTags?: string[]
+  selectedTags?: string[] | null
   setSelectedTags(tags: string[]): void
 }
 
-export function SelectTags({tagType, selectedTags, setSelectedTags}: SelectTagsProps) {
+export function SelectTags({name, tagType, selectedTags, setSelectedTags}: SelectTagsProps) {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
 
@@ -39,6 +40,7 @@ export function SelectTags({tagType, selectedTags, setSelectedTags}: SelectTagsP
       sort: TagSort.Tag,
       order: SortOrder.Ascending
     },
+    fetchPolicy: 'no-cache',
     onError: showErrors
   })
 
@@ -60,6 +62,7 @@ export function SelectTags({tagType, selectedTags, setSelectedTags}: SelectTagsP
     <TagPicker
       block
       virtualized
+      name={name}
       value={selectedTags}
       data={availableTags}
       onChange={(value: string[]) => setSelectedTags(value)}

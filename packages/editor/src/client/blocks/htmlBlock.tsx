@@ -1,4 +1,5 @@
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import InnerHTML from 'dangerously-set-html-content'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, IconButton, Panel} from 'rsuite'
@@ -10,7 +11,7 @@ import {HTMLBlockValue} from './types'
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
   const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(false)
-  const isEmpty = value.html === ''
+  const isEmpty = !value.html
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -51,11 +52,14 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
                   {t('blocks.html.edit')}
                 </IconButton>
               </div>
-              <div style={{marginTop: '30px'}} dangerouslySetInnerHTML={{__html: value.html}} />
+              <div style={{marginTop: '30px'}}>
+                <InnerHTML html={value.html} />
+              </div>
             </div>
           )}
         </PlaceholderInput>
       </Panel>
+
       <Drawer size={'sm'} open={isHtmlDialogOpen} onClose={() => setHtmlDialogOpen(false)}>
         <HtmlEditPanel
           value={value}

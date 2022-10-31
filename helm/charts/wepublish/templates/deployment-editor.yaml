@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm.fullname" . }}
+  name: {{ include "helm.fullname" . }}-editor
   labels:
     app.kubernetes.io/name: {{ include "helm.name" . }}-editor
     helm.sh/chart: {{ include "helm.chart" . }}
@@ -31,13 +31,14 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          command: ['npx', '@wepublish/editor']
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-environment
+                name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
             {{- if .Values.deployment.editor.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.deployment.editor.envFromSecretRefName }}

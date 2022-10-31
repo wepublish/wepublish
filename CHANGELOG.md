@@ -1,5 +1,74 @@
 # Change Log
 
+## 7.1.0 (2022-10-13)
+
+#### :heart: New Feature
+* `api`
+  * [#702](https://github.com/wepublish/wepublish/pull/702) WPC-696 integrate payrexx subscription provider ([@elias-summermatter](https://github.com/elias-summermatter))
+* `api`, `editor`
+  * [#708](https://github.com/wepublish/wepublish/pull/708) feat(api): user votes/rating api ([@Itrulia](https://github.com/Itrulia))
+  * [#706](https://github.com/wepublish/wepublish/pull/706) feat(api/editor): implement comment and poll blocks ([@Itrulia](https://github.com/Itrulia))
+  * [#694](https://github.com/wepublish/wepublish/pull/694) feat(api/editor): implement a comment rating system ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`
+  * [#715](https://github.com/wepublish/wepublish/pull/715) Fix payment provider period start date ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#714](https://github.com/wepublish/wepublish/pull/714) Added missing yargs module to api package ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* Other
+  * [#678](https://github.com/wepublish/wepublish/pull/678) Release helm chart to helm repository ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#703](https://github.com/wepublish/wepublish/pull/703) chore(deps): bump jose from 1.28.1 to 1.28.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `api`
+  * [#710](https://github.com/wepublish/wepublish/pull/710) fix(api): only query published peer articles ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Camille ([@camilleory](https://github.com/camilleory))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## 7.0.0 (2022-09-30)
+
+#### :boom: Breaking Change
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#667](https://github.com/wepublish/wepublish/pull/667) feat: add polls ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#670](https://github.com/wepublish/wepublish/pull/670) feat(api): comment tagging & edit + create comment from editor ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`, `editor`
+  * [#689](https://github.com/wepublish/wepublish/pull/689) Prevent canceled invoices from marked as paid ([@elias-summermatter](https://github.com/elias-summermatter))
+* `editor`
+  * [#690](https://github.com/wepublish/wepublish/pull/690) WPC-841 wrong user subscription text ([@elias-summermatter](https://github.com/elias-summermatter))
+* Other
+  * [#693](https://github.com/wepublish/wepublish/pull/693) Fix mount path for postgres pvc ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`
+  * [#672](https://github.com/wepublish/wepublish/pull/672) fix(api): navigation link missing relations ([@Itrulia](https://github.com/Itrulia))
+  * [#661](https://github.com/wepublish/wepublish/pull/661) fix(api): userlist filter missing address filter due to merge conflict ([@Itrulia](https://github.com/Itrulia))
+
+#### :memo: Documentation
+* [#671](https://github.com/wepublish/wepublish/pull/671) Analytics readme ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* Other
+  * [#695](https://github.com/wepublish/wepublish/pull/695) ci: use init containers to fix permissions of postgres volume ([@Itrulia](https://github.com/Itrulia))
+* `api-media-karma`, `api`
+  * [#688](https://github.com/wepublish/wepublish/pull/688) Move api-media-karma into api package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 4
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
 ## 6.0.0 (2022-09-15)
 
 #### :boom: Breaking Change

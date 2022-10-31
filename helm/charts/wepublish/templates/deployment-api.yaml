@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm.fullname" . }}
+  name: {{ include "helm.fullname" . }}-api
   labels:
     app.kubernetes.io/name: {{ include "helm.name" . }}-api
     helm.sh/chart: {{ include "helm.chart" . }}
@@ -31,13 +31,15 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          command: ['/bin/sh']
+          args: ['-c', 'yarn prisma migrate deploy && npx ts-node packages/api/prisma/run-seed.ts && npx @wepublish/api']
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-api-environment
+                name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
             {{- if .Values.deployment.api.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.deployment.api.envFromSecretRefName }}

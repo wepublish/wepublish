@@ -99,7 +99,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     <svg
                       aria-hidden=\\"true\\"
                       aria-label=\\"plus circle\\"
-@@ -710,15 +716,18 @@
+@@ -724,15 +730,18 @@
                       </button>
                     </div>
                   </div>
@@ -140,7 +140,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             <div
                               class=\\"rs-form-group\\"
                               role=\\"group\\"
-@@ -706,12 +706,17 @@
+@@ -720,12 +720,17 @@
                               d=\\"M20.25 19.196C19.357 22.071 16.732 24 13.714 24s-5.643-1.929-6.536-4.804c-.196-.607.143-1.232.75-1.429.589-.196 1.232.143 1.429.75a4.543 4.543 0 004.357 3.196c2 0 3.768-1.286 4.357-3.196a1.15 1.15 0 011.446-.75c.589.196.929.821.732 1.429zm-8.821-7.767c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zm9.142 0c0 1.268-1.018 2.286-2.286 2.286s-2.286-1.018-2.286-2.286 1.018-2.286 2.286-2.286 2.286 1.018 2.286 2.286zM25.143 16c0-6.304-5.125-11.429-11.429-11.429S2.285 9.696 2.285 16 7.41 27.429 13.714 27.429 25.143 22.304 25.143 16zm2.286 0c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z\\"
                             />
                           </svg>
@@ -315,7 +315,7 @@ exports[`Author Edit Panel should render 1`] = `
                 role="region"
               >
                 <div
-                  style="display: flex; width: 100%; height: 100%; max-height: 450px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
+                  style="display: flex; width: 100%; height: 100%; max-height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -561,6 +561,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h1"
@@ -578,6 +579,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h2"
@@ -595,6 +597,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h3"
@@ -618,6 +621,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -638,6 +642,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -664,6 +669,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"
@@ -694,6 +700,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -714,6 +721,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -734,6 +742,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -754,6 +763,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -774,6 +784,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -794,6 +805,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -820,6 +832,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"
@@ -850,6 +863,7 @@ exports[`Author Edit Panel should render 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"
@@ -1066,7 +1080,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 role="region"
               >
                 <div
-                  style="display: flex; width: 100%; height: 100%; max-height: 450px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
+                  style="display: flex; width: 100%; height: 100%; max-height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1175,6 +1189,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h1"
@@ -1192,6 +1207,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h2"
@@ -1209,6 +1225,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         class="bi bi-type-h3"
@@ -1232,6 +1249,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1252,6 +1270,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1278,6 +1297,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"
@@ -1308,6 +1328,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1328,6 +1349,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1348,6 +1370,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1368,6 +1391,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1388,6 +1412,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1408,6 +1433,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <svg
                         aria-hidden="true"
@@ -1434,6 +1460,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"
@@ -1464,6 +1491,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     <button
                       class="icon-button"
                       style="border: 1px solid #00000000;"
+                      type="button"
                     >
                       <div
                         style="min-width: 15px;"

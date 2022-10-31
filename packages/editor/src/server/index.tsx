@@ -10,7 +10,7 @@ import {renderToStaticMarkup} from 'react-dom/server'
 
 import {ElementID} from '../shared/elementID'
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
 
   const assetHost = process.env.ASSET_HOST || '/assets'
@@ -75,8 +75,3 @@ async function asyncMain() {
 
   console.log(`Server listening: http://${address}:${port}`)
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

@@ -1,11 +1,11 @@
-import React from 'react'
-import {Dropdown, IconButton, Panel, Placeholder} from 'rsuite'
-import {PlaceholderInput} from './placeholderInput'
-import {useTranslation} from 'react-i18next'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import ImageIcon from '@rsuite/icons/legacy/Image'
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import CloseIcon from '@rsuite/icons/legacy/Close'
+import React from 'react'
+import {useTranslation} from 'react-i18next'
+import {Dropdown, IconButton, Panel, Placeholder} from 'rsuite'
+
+import {PlaceholderInput} from './placeholderInput'
 
 export interface ChooseEditImageProps {
   image: any
@@ -16,45 +16,56 @@ export interface ChooseEditImageProps {
   openChooseModalOpen?: () => void
   openEditModalOpen?: () => void
   removeImage?: () => void
+  maxHeight?: number
 }
 
 export function ChooseEditImage({
   image,
   header,
   disabled,
-  left,
-  top,
+  left = 5,
+  top = 5,
   openChooseModalOpen,
   openEditModalOpen,
-  removeImage
+  removeImage,
+  maxHeight = 240
 }: ChooseEditImageProps): JSX.Element {
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
     <Panel header={header} bodyFill>
       {!image && disabled === true && <Placeholder.Graph />}
-      <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
+      <PlaceholderInput onAddClick={() => openChooseModalOpen?.()} maxHeight={maxHeight}>
         {image && (
           <div
             style={{
-              maxHeight: '240',
+              maxHeight,
               display: 'flex',
               justifyContent: 'center',
-              position: 'relative'
+              position: 'relative',
+              width: '100%',
+              height: '100%'
             }}>
             <img
               src={image?.largeURL ?? '/static/placeholder-240x240.png'}
-              style={{objectFit: 'contain'}}
+              style={{
+                objectFit: 'contain',
+                objectPosition: 'top left',
+                width: '100%',
+                height: '100%',
+                maxHeight
+              }}
             />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', left: left, top: top}}>
+              <div style={{position: 'absolute', top, left}}>
                 <Dropdown
                   renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                     <IconButton
                       {...props}
                       ref={ref}
-                      icon={<WrenchIcon />}
+                      icon={<PencilIcon />}
                       circle
+                      size="sm"
                       appearance="primary"
                     />
                   )}>

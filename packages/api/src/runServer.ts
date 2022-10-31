@@ -75,9 +75,10 @@ class WepublishURLAdapter implements URLAdapter {
 export async function runServer() {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
+  if (!process.env.WEBSITE_URL) throw new Error('No WEBSITE_URL defined in environment.')
 
   const hostURL = process.env.HOST_URL
-  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
+  const websiteURL = process.env.WEBSITE_URL
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'

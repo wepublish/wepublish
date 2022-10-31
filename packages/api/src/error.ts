@@ -151,6 +151,18 @@ export class AnonymousCommentsDisabledError extends ApolloError {
   }
 }
 
+export class AnonymousCommentRatingDisabledError extends ApolloError {
+  constructor() {
+    super('Anonymous rating on comments disabled!')
+  }
+}
+
+export class AnonymousPollVotingDisabledError extends ApolloError {
+  constructor() {
+    super('Anonymous voting on polls disabled!')
+  }
+}
+
 export class AnonymousCommentError extends ApolloError {
   constructor() {
     super(`You need to give an anonymous name if you're not authenticated`)
@@ -217,5 +229,17 @@ export class PollNotOpenError extends ApolloError {
 export class PollClosedError extends ApolloError {
   constructor() {
     super('Poll voting has been closed already!')
+  }
+}
+
+export class SubscriptionNotFound extends ApolloError {
+  constructor() {
+    super('SubscriptionId given not found!', ErrorCode.UserInputError)
+  }
+}
+
+export class AlreadyUnpaidInvoices extends ApolloError {
+  constructor() {
+    super('You cant create new invoice while you have unpaid invoices!', ErrorCode.UserInputError)
   }
 }

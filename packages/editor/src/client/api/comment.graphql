@@ -110,3 +110,9 @@ mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID,
     id
   }
 }
+
+mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}

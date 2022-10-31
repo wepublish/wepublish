@@ -52,4 +52,5 @@ export interface CommentFilter {
   readonly tags?: string[]
   readonly itemType?: CommentItemType
   readonly itemID?: string
+  readonly item?: string
 }

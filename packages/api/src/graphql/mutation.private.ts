@@ -47,6 +47,7 @@ import {
 
 import {
   createAdminComment,
+  deleteComment,
   takeActionOnComment,
   updateComment
 } from './comment/comment.private-mutation'
@@ -952,6 +953,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           authenticate,
           comment
         )
+    },
+
+    deleteComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
+        deleteComment(id, authenticate, comment)
     },
 
     // Settings

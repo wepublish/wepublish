@@ -5,31 +5,57 @@ import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 
-import {FullPoll, usePollsQuery} from '../../api'
+import {Poll, usePollsQuery} from '../../api'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
 import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
+export function PollOpensAtView({poll}: {poll: Poll}) {
+  const now = new Date()
+  const opensAt = new Date(poll.opensAt)
+  const opensAtLocalString = dateTimeLocalString(opensAt)
+  const {t} = useTranslation()
+
+  // poll is open
+  if (now.getTime() > opensAt.getTime()) {
+    return <>{t('pollList.openedAt', {openedAt: opensAtLocalString})}</>
+  }
+
+  // poll is waiting to open
+  return <>{t('pollList.pollWillOpenAt', {opensAt: opensAtLocalString})}</>
+}
+
+export function PollClosedAtView({poll}: {poll: Poll}) {
+  const now = new Date()
+  const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined
+  const {t} = useTranslation()
+
+  // poll has been closed
+  if (closedAt && now.getTime() >= closedAt.getTime()) {
+    const closedAtLocal = dateTimeLocalString(closedAt)
+    return <>{t('pollList.hasBeenClosedAt', {closedAt: closedAtLocal})}</>
+  }
+
+  return <>{t('pollList.closedAtNone')}</>
+}
+
+const onErrorToast = (error: ApolloError) => {
+  if (error?.message) {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error?.message}
+      </Message>
+    )
+  }
+}
+
 function PollList() {
   const {t} = useTranslation()
-  const [pollDelete, setPollDelete] = useState<FullPoll | undefined>(undefined)
+  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
-
-  /**
-   * Handling error on loading polls.
-   */
-  const onErrorToast = (error: ApolloError) => {
-    if (error?.message) {
-      toaster.push(
-        <Message type="error" showIcon closable duration={3000}>
-          {error?.message}
-        </Message>
-      )
-    }
-  }
 
   const {data, loading, refetch} = usePollsQuery({
     fetchPolicy: 'no-cache',
@@ -50,33 +76,6 @@ function PollList() {
     })
   }, [page, limit])
 
-  /**
-   * UI HELPERS
-   */
-  function pollOpensAtView(poll: FullPoll) {
-    const now = new Date()
-    const opensAt = new Date(poll.opensAt)
-    const opensAtLocalString = dateTimeLocalString(opensAt)
-    // poll is open
-    if (now.getTime() > opensAt.getTime()) {
-      return <>{t('pollList.openedAt', {openedAt: opensAtLocalString})}</>
-    }
-    // poll is waiting to open
-    return <>{t('pollList.pollWillOpenAt', {opensAt: opensAtLocalString})}</>
-  }
-
-  function pollClosedAtView(poll: FullPoll) {
-    const now = new Date()
-    const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined
-    // poll has been closed
-    if (closedAt && now.getTime() >= closedAt.getTime()) {
-      const closedAtLocal = dateTimeLocalString(closedAt)
-      return <>{t('pollList.hasBeenClosedAt', {closedAt: closedAtLocal})}</>
-    }
-
-    return <>{t('pollList.closedAtNone')}</>
-  }
-
   return (
     <>
       <FlexboxGrid>
@@ -95,15 +94,17 @@ function PollList() {
             {/* state */}
             <Table.Column resizable>
               <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
-              <Table.Cell dataKey={'id'}>
-                {(rowData: FullPoll) => <PollStateIndication poll={rowData} />}
+              <Table.Cell>
+                {(rowData: Poll) => (
+                  <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
+                )}
               </Table.Cell>
             </Table.Column>
             {/* question */}
             <Table.Column width={200} resizable>
               <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
-              <Table.Cell dataKey={'question'}>
-                {(rowData: FullPoll) => (
+              <Table.Cell>
+                {(rowData: Poll) => (
                   <>
                     <Link to={`/polls/edit/${rowData.id}`}>
                       {rowData.question || t('pollList.noQuestion')}
@@ -115,22 +116,18 @@ function PollList() {
             {/* opens at */}
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
-              <Table.Cell dataKey={'question'}>
-                {(rowData: FullPoll) => pollOpensAtView(rowData)}
-              </Table.Cell>
+              <Table.Cell>{(rowData: Poll) => <PollOpensAtView poll={rowData} />}</Table.Cell>
             </Table.Column>
             {/* opens at */}
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
-              <Table.Cell dataKey={'closedAt'}>
-                {(rowData: FullPoll) => pollClosedAtView(rowData)}
-              </Table.Cell>
+              <Table.Cell>{(rowData: Poll) => <PollClosedAtView poll={rowData} />}</Table.Cell>
             </Table.Column>
             {/* delete */}
             <Table.Column resizable>
               <Table.HeaderCell align={'center'}>{t('pollList.delete')}</Table.HeaderCell>
-              <Table.Cell dataKey={'delete'} align={'center'} style={{padding: '5px 0'}}>
-                {(poll: FullPoll) => (
+              <Table.Cell align={'center'} style={{padding: '5px 0'}}>
+                {(poll: Poll) => (
                   <IconButton
                     icon={<TrashIcon />}
                     circle

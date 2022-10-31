@@ -216,6 +216,23 @@
       }
     },
     "blocks": {
+      "comment": {
+        "title": "Kommentarblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Kommentare filtern nach Etikett",
+        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
+        "cherryPick": "Spezifische Kommentare auswählen",
+        "displayName": "Anzeigename",
+        "comments": "{{count}} Kommentar",
+        "comments_plural": "{{count}} Kommentare",
+        "label": "Kommentare"
+      },
+      "poll": {
+        "title": "Umfrageblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "select": "Auswählen",
+        "label": "Umfrage"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -401,7 +418,8 @@
         "parentDate": "{{parentDate,ccc PP p}}",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "unregisteredUser": "(Nicht registrierter Benutzer)"
+        "unregisteredUser": "(Nicht registrierter Benutzer)",
+        "noUserName": "Kein Benutzername"
       },
       "state": {
         "approved": "Angenommen",
@@ -427,7 +445,8 @@
       "variousPanelHeader": "Tags & Quelle",
       "tags": "Tags",
       "source": "Quelle",
-      "userPanelHeader": "Verfasser:in des Kommentars"
+      "userPanelHeader": "Verfasser:in des Kommentars",
+      "actions": "Aktionen"
     },
     "commentUser": {
       "selectExistingUser": "Registrierte Benutzer:in wählen",
@@ -437,6 +456,10 @@
     "replyCommentBtn": {
       "reply": "Auf Kommentar antworten",
       "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
+    },
+    "commentDeleteBtn": {
+      "modalTitle": "Wirklich löschen?",
+      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden."
     },
     "confirm": "Bestätigen",
     "create": "Erstellen",
@@ -617,7 +640,11 @@
       "deleteModalTitle": "Löschen?",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteBtn": "Löschen",
-      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
+      "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
+      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
+      "votes": "Stimmen"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
@@ -1030,7 +1057,8 @@
       "streetAddress2": "Strasse 2",
       "zipCode": "PLZ",
       "city": "Stadt",
-      "country": "Land"
+      "country": "Land",
+      "selectUserImage": "Profilbild wählen"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -1173,7 +1201,10 @@
       "login": "Login",
       "peering": "Peering",
       "payment": "Zahlung",
-      "days": "Tage"
+      "days": "Tage",
+      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
+      "polls": "Umfragen",
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"

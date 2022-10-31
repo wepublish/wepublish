@@ -6,7 +6,7 @@ try {
   require('dotenv').config()
 } catch (e) {}
 
-const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
+const {GITHUB_REF, PROJECT_ID, BRANCH_NAME, WEPUBLISH_IMAGE} = process.env
 
 let ENVIRONMENT_NAME = 'development'
 if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_NAME) {
@@ -19,7 +19,6 @@ const GITHUB_REF_SHORT = slugify(
     : BRANCH_NAME.substring(0, 12)
 )
 
-const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
@@ -35,7 +34,7 @@ const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devD
 const databaseURL = `postgresql://postgres@${GITHUB_REF_SHORT}-postgres-${ENVIRONMENT_NAME}:5432/wepublish?schema=public`
 const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish-oauth2`
 
-const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
+const image = `${WEPUBLISH_IMAGE}`
 
 const certificateSecretName = `${ENVIRONMENT_NAME}-${GITHUB_REF_SHORT}-wildcard-tls`
 
@@ -117,7 +116,7 @@ async function applyWebsite() {
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -129,7 +128,7 @@ async function applyWebsite() {
 
   function getRule(host) {
     return {
-      host: host,
+      host,
       http: {
         paths: [
           {
@@ -164,7 +163,7 @@ async function applyWebsite() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -185,10 +184,10 @@ async function applyWebsite() {
       }
     },
     spec: {
-      rules: rules,
+      rules,
       tls: [
         {
-          hosts: hosts,
+          hosts,
           secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
         }
       ]
@@ -204,7 +203,7 @@ async function applyWebsite() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -213,7 +212,7 @@ async function applyWebsite() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -229,7 +228,7 @@ async function applyWebsite() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -238,8 +237,8 @@ async function applyWebsite() {
           containers: [
             {
               name: appName,
-              image: image,
-              command: ['node', './examples/website/dist/server/index.js'],
+              image,
+              command: ['npx', '@wepublish/website-example'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -349,7 +348,7 @@ async function applyMediaServer() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -358,7 +357,7 @@ async function applyMediaServer() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -370,7 +369,7 @@ async function applyMediaServer() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -464,7 +463,7 @@ async function applyMediaServer() {
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -480,7 +479,7 @@ async function applyMediaServer() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -546,7 +545,7 @@ async function applyApiServer() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -555,7 +554,7 @@ async function applyApiServer() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -571,7 +570,7 @@ async function applyApiServer() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -588,9 +587,9 @@ async function applyApiServer() {
           containers: [
             {
               name: appName,
-              image: image,
+              image,
               command: ['/bin/sh'],
-              args: ['-c', 'yarn migrate && node ./examples/api/dist/index.js'],
+              args: ['-c', 'yarn migrate && npx @wepublish/api-example'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',
@@ -789,6 +788,15 @@ async function applyApiServer() {
                   value: 'tsridev'
                 },
                 {
+                  name: 'PAYREXX_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'payrexx_api_secret'
+                    }
+                  }
+                },
+                {
                   name: 'PAYREXX_API_SECRET',
                   valueFrom: {
                     secretKeyRef: {
@@ -871,7 +879,7 @@ async function applyApiServer() {
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -887,7 +895,7 @@ async function applyApiServer() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -953,7 +961,7 @@ async function applyEditor() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -962,7 +970,7 @@ async function applyEditor() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -978,7 +986,7 @@ async function applyEditor() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -987,8 +995,8 @@ async function applyEditor() {
           containers: [
             {
               name: appName,
-              image: image,
-              command: ['node', './packages/editor/dist/server/index.js'],
+              image,
+              command: ['npx', '@wepublish/editor'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -1051,7 +1059,7 @@ async function applyEditor() {
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -1067,7 +1075,7 @@ async function applyEditor() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -1133,7 +1141,7 @@ async function applyOAuth2() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -1142,7 +1150,7 @@ async function applyOAuth2() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -1158,7 +1166,7 @@ async function applyOAuth2() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -1167,7 +1175,7 @@ async function applyOAuth2() {
           containers: [
             {
               name: appName,
-              image: image,
+              image,
               command: ['node', './examples/oauth2/dist/index.js'],
               env: [
                 {
@@ -1281,7 +1289,7 @@ async function applyOAuth2() {
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -1297,7 +1305,7 @@ async function applyOAuth2() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -1381,7 +1389,7 @@ async function applyPostgres() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -1390,7 +1398,7 @@ async function applyPostgres() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -1402,7 +1410,7 @@ async function applyPostgres() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -1487,13 +1495,13 @@ async function applyPostgres() {
       ports: [
         {
           name: 'http',
-          port: port,
+          port,
           protocol: 'TCP',
           targetPort: port
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
@@ -1534,7 +1542,7 @@ async function applyMongo() {
       name: appName,
       namespace: NAMESPACE,
       labels: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
@@ -1543,7 +1551,7 @@ async function applyMongo() {
       replicas: 1,
       selector: {
         matchLabels: {
-          app: app,
+          app,
           slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
@@ -1555,7 +1563,7 @@ async function applyMongo() {
         metadata: {
           name: appName,
           labels: {
-            app: app,
+            app,
             slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
@@ -1618,13 +1626,13 @@ async function applyMongo() {
       ports: [
         {
           name: 'http',
-          port: port,
+          port,
           protocol: 'TCP',
           targetPort: port
         }
       ],
       selector: {
-        app: app,
+        app,
         slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
