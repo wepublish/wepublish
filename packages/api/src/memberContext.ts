@@ -1029,6 +1029,8 @@ export class MemberContext implements MemberContext {
       return
     }
 
+    await this.cancelInvoicesForSubscription(subscriptionID)
+
     await this.prisma.subscription.update({
       where: {id: subscriptionID},
       data: {
