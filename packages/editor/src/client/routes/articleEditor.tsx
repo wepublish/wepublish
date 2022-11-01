@@ -579,8 +579,9 @@ function ArticleEditor() {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size={'md'} onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
+          articleID={articleID}
           value={metadata}
           infoData={infoData}
           onClose={() => {
