@@ -40,6 +40,7 @@ model ArticleRevision {
   tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
+  image                  Image?             @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID                String?
   authorIDs              String[]
   breaking               Boolean
@@ -48,6 +49,7 @@ model ArticleRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthorIDs   String[]
+  socialMediaImage       Image?             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
 
   revision    Int       @default(0)
@@ -162,6 +164,12 @@ model Image {
   MemberPlan  MemberPlan[]
   PeerProfile PeerProfile[]
   Comment     Comment[]
+
+  articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
+  articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
+
+  pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
+  pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -480,9 +488,11 @@ model PageRevision {
   tags                   String[]
   properties             MetadataProperty[]
   imageID                String?
+  image                  Image?             @relation("pageRevisionImage", fields: [imageID], references: [id])
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaImageID     String?
+  socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json[]
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")

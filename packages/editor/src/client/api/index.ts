@@ -278,7 +278,7 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
-  overriddenRatings?: Maybe<Array<overriddenRating>>;
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
 };
 
 export enum CommentAuthorType {
@@ -330,7 +330,7 @@ export enum CommentItemType {
 
 export type CommentRatingOverrideUpdateInput = {
   answerId: Scalars['ID'];
-  value?: Maybe<Scalars['Float']>;
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type CommentRatingSystemAnswer = {
@@ -1205,7 +1205,7 @@ export type MutationApproveCommentArgs = {
 
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 };
 
 
@@ -1333,10 +1333,10 @@ export type OAuth2Account = {
   scope: Scalars['String'];
 };
 
-export type overriddenRating = {
+export type OverriddenRating = {
   __typename?: 'overriddenRating';
   answerId: Scalars['ID'];
-  value?: Maybe<Scalars['Float']>;
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -3313,7 +3313,7 @@ export type FullCommentFragment = (
     & Pick<Tag, 'id' | 'tag'>
   )>>, overriddenRatings?: Maybe<Array<(
     { __typename?: 'overriddenRating' }
-    & Pick<overriddenRating, 'answerId' | 'value'>
+    & Pick<OverriddenRating, 'answerId' | 'value'>
   )>> }
 );
 
@@ -3370,7 +3370,7 @@ export type ApproveCommentMutation = (
 
 export type RejectCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 }>;
 
 
@@ -6739,7 +6739,7 @@ export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveComme
 export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
 export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
 export const RejectCommentDocument = gql`
-    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
