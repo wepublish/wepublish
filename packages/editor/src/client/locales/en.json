@@ -448,17 +448,20 @@
       "source": "Source",
       "userPanelHeader": "Author of the comment",
       "actions": "Actions",
-      "commentContextHeader": "Comment history"
+      "commentContextHeader": "Comment history",
+      "goToArticle": "To the article"
     },
     "commentHistory": {
       "guestUser": "UnauthenticatedGuest",
-      "unknownUser": "User without name"
+      "unknownUser": "User without name",
+      "addComment": "Create new comment"
     },
     "commentPreview": {
       "noTags": "No tags",
       "source": "Source",
       "noSource": "No source",
-      "showComment": "Go to comment"
+      "showComment": "Go to comment",
+      "noContent": "This comment has no content."
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",

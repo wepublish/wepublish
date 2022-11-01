@@ -1,8 +1,20 @@
 import {ApolloError} from '@apollo/client'
+import {Visible} from '@rsuite/icons'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
-import {Col, FlexboxGrid, Form, Grid, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {
+  Col,
+  FlexboxGrid,
+  Form,
+  Grid,
+  IconButton,
+  Message,
+  Panel,
+  Row,
+  Schema,
+  toaster
+} from 'rsuite'
 
 import {
   CommentRevisionUpdateInput,
@@ -12,10 +24,10 @@ import {
   useUpdateCommentMutation
 } from '../../api'
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentHistory} from '../../atoms/comment/commentHistory'
+import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
+import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
@@ -221,7 +233,26 @@ const CommentEditView = memo(() => {
                   <Panel bordered header={t('commentEditView.actions')}>
                     <FlexboxGrid align="bottom" justify="end">
                       <FlexboxGrid.Item style={{textAlign: 'end'}} colspan={24}>
-                        <ReplyCommentBtn comment={comment} appearance="ghost" />
+                        <IconButton
+                          appearance="ghost"
+                          color="violet"
+                          icon={<Visible />}
+                          onClick={() => {
+                            navigate(`/articles/edit/${comment?.itemID}`)
+                          }}>
+                          {t('commentEditView.goToArticle')}
+                        </IconButton>
+                      </FlexboxGrid.Item>
+                      <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
+                        {comment && (
+                          <CreateCommentBtn
+                            itemID={comment.itemID}
+                            itemType={comment.itemType}
+                            parentID={comment.id}
+                            text={t('replyCommentBtn.reply')}
+                            appearance="ghost"
+                          />
+                        )}
                       </FlexboxGrid.Item>
                       <FlexboxGrid.Item colspan={24} style={{marginTop: '10px', textAlign: 'end'}}>
                         {comment && (

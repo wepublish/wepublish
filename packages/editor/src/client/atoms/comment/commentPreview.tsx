@@ -8,7 +8,7 @@ import {Col, Grid, IconButton, Panel, Row} from 'rsuite'
 
 import {CommentRevision, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {ReplyCommentBtn} from './replyCommentBtn'
+import {CreateCommentBtn} from './createCommentBtn'
 
 export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
   const {t} = useTranslation()
@@ -122,7 +122,13 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
           </Col>
           {/* actions */}
           <Col xs={24} style={{textAlign: 'center', marginTop: '20px'}}>
-            <ReplyCommentBtn comment={comment} appearance="ghost" />
+            <CreateCommentBtn
+              itemID={comment.itemID}
+              itemType={comment.itemType}
+              parentID={comment.id}
+              appearance="ghost"
+              text={t('replyCommentBtn.reply')}
+            />
             <Link to={`/comments/edit/${comment.id}`}>
               <IconButton style={{marginLeft: '10px'}} icon={<EyeIcon />} appearance="ghost">
                 {t('commentPreview.showComment')}

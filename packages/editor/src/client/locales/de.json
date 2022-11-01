@@ -447,17 +447,20 @@
       "source": "Quelle",
       "userPanelHeader": "Verfasser:in des Kommentars",
       "actions": "Aktionen",
-      "commentContextHeader": "Kommentar-Historie"
+      "commentContextHeader": "Kommentar-Historie",
+      "goToArticle": "Zum Artikel"
     },
     "commentHistory": {
       "guestUser": "Unauthentifizierter Gast",
-      "unknownUser": "Benutzer ohne Namen"
+      "unknownUser": "Benutzer ohne Namen",
+      "addComment": "Neuen Kommentar erstellen"
     },
     "commentPreview": {
       "noTags": "Keine Tags",
       "source": "Quelle",
       "noSource": "Keine Quelle",
-      "showComment": "Gehe zum Kommentar"
+      "showComment": "Gehe zum Kommentar",
+      "noContent": "Dieser Kommentar hat keinen Inhalt."
     },
     "commentUser": {
       "selectExistingUser": "Registrierte Benutzer:in wählen",

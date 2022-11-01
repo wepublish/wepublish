@@ -1,7 +1,11 @@
+import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {FlexboxGrid} from 'rsuite'
 
 import {FullCommentFragment, useCommentListQuery} from '../../api'
 import {CommentPreview} from './commentPreview'
+import {CreateCommentBtn} from './createCommentBtn'
 
 interface ChildCommentsProps {
   comments?: FullCommentFragment[]
@@ -32,8 +36,9 @@ interface CommentHistoryProps {
 }
 
 export function CommentHistory({comment}: CommentHistoryProps) {
+  const {t} = useTranslation()
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>()
-  const {data} = useCommentListQuery({
+  const {data, refetch} = useCommentListQuery({
     variables: {
       filter: {
         itemType: comment.itemType,
@@ -48,8 +53,25 @@ export function CommentHistory({comment}: CommentHistoryProps) {
     setComments(data?.comments?.nodes)
   }, [data])
 
+  useEffect(() => {
+    refetch()
+  }, [comment])
+
   return (
     <>
+      <FlexboxGrid align="bottom" justify="end">
+        <FlexboxGrid.Item style={{textAlign: 'end', paddingBottom: '20px'}} colspan={24}>
+          <CreateCommentBtn
+            itemID={comment.itemID}
+            itemType={comment.itemType}
+            text={t('commentHistory.addComment')}
+            color="green"
+            appearance="ghost"
+            icon={<PlusIcon />}
+          />
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+
       {comments &&
         comments.map(tmpComment => (
           <div key={tmpComment.id}>

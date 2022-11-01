@@ -1,30 +1,37 @@
 import {ApolloError} from '@apollo/client'
 import {MoveDown} from '@rsuite/icons'
+import {IconProps} from '@rsuite/icons/lib/Icon'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
-import {FullCommentFragment, useCreateCommentMutation} from '../../api'
+import {CommentItemType, useCreateCommentMutation} from '../../api'
 import {IconButtonTooltip} from '../iconButtonTooltip'
 
 interface ReplyCommentBtnProps {
-  comment?: FullCommentFragment
   circle?: boolean
   size?: TypeAttributes.Size
   color?: TypeAttributes.Color
   appearance?: TypeAttributes.Appearance
-  hideText?: boolean
+  text?: string
+  itemID: string
+  itemType: CommentItemType
+  parentID?: string | null
+  icon?: React.ReactElement<IconProps>
 }
 
-export function ReplyCommentBtn({
-  comment,
+export function CreateCommentBtn({
   circle,
   size,
   color,
   appearance,
-  hideText
+  text,
+  itemID,
+  itemType,
+  parentID,
+  icon
 }: ReplyCommentBtnProps) {
   const {t} = useTranslation()
   const navigate = useNavigate()
@@ -41,15 +48,12 @@ export function ReplyCommentBtn({
     onError
   })
 
-  async function replyToComment() {
-    if (!comment) {
-      return
-    }
+  async function createNewComment() {
     await createComment({
       variables: {
-        itemID: comment.itemID,
-        itemType: comment.itemType,
-        parentID: comment.id
+        itemID,
+        itemType,
+        parentID
       },
       onCompleted: data => {
         navigate(`/comments/edit/${data?.createComment.id}`)
@@ -58,17 +62,17 @@ export function ReplyCommentBtn({
   }
 
   function getIconBtn() {
-    if (hideText) {
+    if (!text) {
       return (
         <IconButton
           style={{marginLeft: '10px'}}
-          icon={<MoveDown />}
+          icon={icon || <MoveDown />}
           size={size}
           circle={circle}
           color={color}
           appearance={appearance}
           onClick={async () => {
-            await replyToComment()
+            await createNewComment()
           }}
         />
       )
@@ -76,15 +80,15 @@ export function ReplyCommentBtn({
     return (
       <IconButton
         style={{marginLeft: '10px'}}
-        icon={<MoveDown />}
+        icon={icon || <MoveDown />}
         size={size}
         circle={circle}
         color={color}
         appearance={appearance}
         onClick={async () => {
-          await replyToComment()
+          await createNewComment()
         }}>
-        {t('replyCommentBtn.reply')}
+        {text}
       </IconButton>
     )
   }
