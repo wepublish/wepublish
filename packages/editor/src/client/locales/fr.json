@@ -268,7 +268,8 @@
       "commentContextHeader": "Histoire des commentaires"
     },
     "commentHistory": {
-      "guestUser": "Visiteur non authentifié"
+      "guestUser": "Visiteur non authentifié",
+      "unknownUser": "Utilisateur sans nom"
     },
     "commentPreview": {
       "noTags": "Pas de tags",

@@ -39,6 +39,7 @@ export function CommentHistory({comment}: CommentHistoryProps) {
         itemType: comment.itemType,
         itemID: comment.itemID
       },
+      sort: 'CreatedAt',
       take: 1000
     }
   })

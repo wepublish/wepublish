@@ -451,7 +451,8 @@
       "commentContextHeader": "Comment history"
     },
     "commentHistory": {
-      "guestUser": "UnauthenticatedGuest"
+      "guestUser": "UnauthenticatedGuest",
+      "unknownUser": "User without name"
     },
     "commentPreview": {
       "noTags": "No tags",
