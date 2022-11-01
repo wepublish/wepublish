@@ -1,7 +1,9 @@
 import {
   MetadataProperty,
   Article as PrismaArticle,
-  ArticleRevision as PrismaArticleRevision
+  ArticleRevision as PrismaArticleRevision,
+  ArticleRevisionAuthor,
+  ArticleRevisionSocialMediaAuthor
 } from '@prisma/client'
 import {ArticleBlock} from './block'
 
@@ -18,7 +20,7 @@ export interface ArticleData {
   readonly properties: MetadataProperty[]
 
   readonly imageID?: string | null
-  readonly authorIDs: string[]
+  readonly authors: ArticleRevisionAuthor[]
 
   readonly breaking: boolean
   readonly blocks: ArticleBlock[]
@@ -27,7 +29,7 @@ export interface ArticleData {
 
   readonly socialMediaTitle?: string | null
   readonly socialMediaDescription?: string | null
-  readonly socialMediaAuthorIDs: string[]
+  readonly socialMediaAuthors: ArticleRevisionSocialMediaAuthor[]
   readonly socialMediaImageID?: string | null
 }
 
@@ -92,12 +94,14 @@ export enum ArticleSort {
   PublishAt = 'publishAt'
 }
 
-export type ArticleRevisionWithProperties = PrismaArticleRevision & {
+export type ArticleRevisionWithRelations = PrismaArticleRevision & {
   properties: MetadataProperty[]
+  authors: ArticleRevisionAuthor[]
+  socialMediaAuthors: ArticleRevisionSocialMediaAuthor[]
 }
 
 export type ArticleWithRevisions = PrismaArticle & {
-  draft: ArticleRevisionWithProperties | null
-  pending: ArticleRevisionWithProperties | null
-  published: ArticleRevisionWithProperties | null
+  draft: ArticleRevisionWithRelations | null
+  pending: ArticleRevisionWithRelations | null
+  published: ArticleRevisionWithRelations | null
 }

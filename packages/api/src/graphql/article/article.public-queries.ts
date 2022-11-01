@@ -65,17 +65,20 @@ export const getPublishedArticleByIdOrSlug = async (
       include: {
         draft: {
           include: {
-            properties: true
+            properties: true,
+            authors: true
           }
         },
         pending: {
           include: {
-            properties: true
+            properties: true,
+            authors: true
           }
         },
         published: {
           include: {
-            properties: true
+            properties: true,
+            authors: true
           }
         }
       }

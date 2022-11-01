@@ -154,9 +154,9 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
-        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      resolve: createProxyingResolver(({authors}, args, {loaders}) => {
+        return loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))
       })
     },
 
@@ -166,12 +166,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
-        return Promise.all(
-          socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
-            loaders.authorsByID.load(socialMediaAuthorIDs)
-          )
-        )
+      resolve: createProxyingResolver(({socialMediaAuthors}, args, {loaders}) => {
+        return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
       })
     },
     socialMediaImage: {
@@ -290,12 +286,12 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+      resolve: createProxyingResolver(({authors, hideAuthor}, args, {loaders}) => {
         if (hideAuthor) {
           return []
-        } else {
-          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
         }
+
+        return authors.map(({authorId}) => loaders.authorsByID.load(authorId))
       })
     },
 
@@ -305,12 +301,12 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
-        return Promise.all(
-          socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
-            loaders.authorsByID.load(socialMediaAuthorIDs)
-          )
-        )
+      resolve: createProxyingResolver(({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
+        if (hideAuthor) {
+          return []
+        }
+
+        return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
       })
     },
     socialMediaImage: {

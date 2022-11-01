@@ -1,4 +1,4 @@
-import {Article, Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {ArticleWithRevisions} from '../../db/article'
 import {DuplicateArticleSlugError, NotFound} from '../../error'
@@ -8,7 +8,7 @@ export const deleteArticleById = async (
   id: string,
   authenticate: Context['authenticate'],
   prisma: PrismaClient
-): Promise<Article> => {
+): Promise<ArticleWithRevisions> => {
   const {roles} = authenticate()
   authorise(CanDeleteArticle, roles)
 
@@ -19,17 +19,23 @@ export const deleteArticleById = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -60,6 +66,8 @@ export const deleteArticleById = async (
 type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'properties' | 'revision'> & {
     properties: Prisma.MetadataPropertyCreateManyArticleRevisionInput[]
+    authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
+    socialMediaAuthorIDs: Prisma.ArticleRevisionSocialMediaAuthorCreateManyRevisionInput['authorId'][]
   }
 
 export const createArticle = async (
@@ -69,7 +77,7 @@ export const createArticle = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
-  const {shared, properties, ...data} = input
+  const {shared, properties, authorIDs, socialMediaAuthorIDs, ...data} = input
 
   return article.create({
     data: {
@@ -82,6 +90,16 @@ export const createArticle = async (
               data: properties
             }
           },
+          authors: {
+            createMany: {
+              data: authorIDs.map(authorId => ({authorId}))
+            }
+          },
+          socialMediaAuthors: {
+            createMany: {
+              data: socialMediaAuthorIDs.map(authorId => ({authorId}))
+            }
+          },
           revision: 0
         }
       }
@@ -89,17 +107,23 @@ export const createArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -127,6 +151,8 @@ export const duplicateArticle = async (
     publishedAt: _publishedAt,
     slug: _slug,
     properties,
+    authors,
+    socialMediaAuthors,
     ...articleRevision
   } = (article.draft ?? article.pending ?? article.published)!
 
@@ -142,6 +168,16 @@ export const duplicateArticle = async (
       createMany: {
         data: duplicatedProperties
       }
+    },
+    authors: {
+      createMany: {
+        data: authors.map(({authorId}) => ({authorId}))
+      }
+    },
+    socialMediaAuthors: {
+      createMany: {
+        data: socialMediaAuthors.map(({authorId}) => ({authorId}))
+      }
     }
   }
 
@@ -155,17 +191,23 @@ export const duplicateArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -191,7 +233,9 @@ export const unpublishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
@@ -202,7 +246,9 @@ export const unpublishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
@@ -213,7 +259,9 @@ export const unpublishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -223,7 +271,8 @@ export const unpublishArticle = async (
     throw new NotFound('article', id)
   }
 
-  const {id: revisionId, properties, ...revision} = (article.pending ?? article.published)!
+  const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = (article.pending ??
+    article.published)!
 
   return articleClient.update({
     where: {id},
@@ -239,6 +288,16 @@ export const unpublishArticle = async (
               createMany: {
                 data: properties
               }
+            },
+            authors: {
+              createMany: {
+                data: authors.map(({authorId}) => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
+              }
             }
           },
           update: {
@@ -252,6 +311,22 @@ export const unpublishArticle = async (
               },
               createMany: {
                 data: properties
+              }
+            },
+            authors: {
+              deleteMany: {
+                revisionId
+              },
+              createMany: {
+                data: authors.map(({authorId}) => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              deleteMany: {
+                revisionId
+              },
+              createMany: {
+                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
               }
             }
           }
@@ -267,17 +342,23 @@ export const unpublishArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -308,7 +389,9 @@ export const publishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
@@ -319,7 +402,9 @@ export const publishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
@@ -330,7 +415,9 @@ export const publishArticle = async (
               value: true,
               public: true
             }
-          }
+          },
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -339,7 +426,7 @@ export const publishArticle = async (
   if (!article) throw new NotFound('article', id)
   if (!article.draft) return null
 
-  const {id: revisionId, properties, ...revision} = article.draft
+  const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = article.draft
 
   const publishedArticle = await articleClient.findFirst({
     where: {
@@ -361,7 +448,6 @@ export const publishArticle = async (
       ]
     },
     include: {
-      draft: true,
       pending: true,
       published: true
     }
@@ -383,18 +469,28 @@ export const publishArticle = async (
           upsert: {
             create: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {
                 createMany: {
                   data: properties
                 }
+              },
+              authors: {
+                createMany: {
+                  data: authors.map(({authorId}) => ({authorId}))
+                }
+              },
+              socialMediaAuthors: {
+                createMany: {
+                  data: socialMediaAuthors.map(({authorId}) => ({authorId}))
+                }
               }
             },
             update: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {
@@ -403,6 +499,22 @@ export const publishArticle = async (
                 },
                 createMany: {
                   data: properties
+                }
+              },
+              authors: {
+                deleteMany: {
+                  revisionId
+                },
+                createMany: {
+                  data: authors.map(({authorId}) => ({authorId}))
+                }
+              },
+              socialMediaAuthors: {
+                deleteMany: {
+                  revisionId
+                },
+                createMany: {
+                  data: socialMediaAuthors.map(({authorId}) => ({authorId}))
                 }
               }
             }
@@ -415,17 +527,23 @@ export const publishArticle = async (
       include: {
         draft: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         pending: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         published: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         }
       }
@@ -446,6 +564,16 @@ export const publishArticle = async (
               createMany: {
                 data: properties
               }
+            },
+            authors: {
+              createMany: {
+                data: authors.map(({authorId}) => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
+              }
             }
           },
           update: {
@@ -454,8 +582,27 @@ export const publishArticle = async (
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,
             properties: {
+              deleteMany: {
+                articleRevisionId: revisionId
+              },
               createMany: {
                 data: properties
+              }
+            },
+            authors: {
+              deleteMany: {
+                revisionId
+              },
+              createMany: {
+                data: authors.map(({authorId}) => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              deleteMany: {
+                revisionId
+              },
+              createMany: {
+                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
               }
             }
           }
@@ -471,17 +618,23 @@ export const publishArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -491,11 +644,13 @@ export const publishArticle = async (
 type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties'> & {
     properties: Prisma.MetadataPropertyUncheckedCreateWithoutArticleRevisionInput[]
+    authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
+    socialMediaAuthorIDs: Prisma.ArticleRevisionSocialMediaAuthorCreateManyRevisionInput['authorId'][]
   }
 
 export const updateArticle = async (
   id: string,
-  {properties, shared, ...input}: UpdateArticleInput,
+  {properties, authorIDs, socialMediaAuthorIDs, shared, ...input}: UpdateArticleInput,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article']
 ) => {
@@ -507,17 +662,23 @@ export const updateArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }
@@ -553,6 +714,22 @@ export const updateArticle = async (
                   public: property.public
                 }))
               }
+            },
+            authors: {
+              deleteMany: {
+                revisionId: article.draft?.id ?? ''
+              },
+              createMany: {
+                data: authorIDs.map(authorId => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              deleteMany: {
+                revisionId: article.draft?.id ?? ''
+              },
+              createMany: {
+                data: socialMediaAuthorIDs.map(authorId => ({authorId}))
+              }
             }
           },
           create: {
@@ -572,6 +749,16 @@ export const updateArticle = async (
                   public: property.public
                 }))
               }
+            },
+            authors: {
+              createMany: {
+                data: authorIDs.map(authorId => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthorIDs.map(authorId => ({authorId}))
+              }
             }
           }
         }
@@ -580,17 +767,23 @@ export const updateArticle = async (
     include: {
       draft: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       pending: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       },
       published: {
         include: {
-          properties: true
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
         }
       }
     }

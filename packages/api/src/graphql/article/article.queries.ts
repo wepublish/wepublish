@@ -61,9 +61,9 @@ const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
 const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      published: filter.published
+      publishedId: filter.published
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -75,9 +75,9 @@ const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWh
 const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.draft != null) {
     return {
-      draft: filter.draft
+      draftId: filter.draft
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -89,9 +89,9 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
 const createPendingFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.pending != null) {
     return {
-      pending: filter.pending
+      pendingId: filter.pending
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -128,9 +128,15 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
-    const hasAuthors = {
+    const hasAuthors: Prisma.ArticleRevisionRelationFilter = {
       is: {
-        authorIDs: {hasSome: filter.authors}
+        authors: {
+          some: {
+            authorId: {
+              in: filter.authors
+            }
+          }
+        }
       }
     }
 
@@ -180,17 +186,23 @@ export const getArticles = async (
       include: {
         draft: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         pending: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         published: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         }
       }
