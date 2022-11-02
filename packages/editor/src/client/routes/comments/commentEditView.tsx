@@ -23,6 +23,7 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {stripTypename} from '../../api/strip-typename'
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
@@ -173,7 +174,7 @@ const CommentEditView = memo(() => {
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
         tagIds: commentTags,
-        ratingOverrides: comment.overriddenRatings
+        ratingOverrides: comment.overriddenRatings?.map(stripTypename)
       }
     })
 
