@@ -95,6 +95,8 @@ model Article {
 
   origin String?
 
+  oldId  String?
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
@@ -166,7 +168,7 @@ model Image {
 
   Author      Author[]
   MemberPlan  MemberPlan[]
-  PeerProfile PeerProfile[]
+  Newsroom    Newsroom[]
   Comment     Comment[]
 
   origin      String?
@@ -558,34 +560,28 @@ model Payment {
   @@map("payments")
 }
 
-model PeerProfile {
-  id                   String  @id @default(cuid())
-  name                 String
-  themeColor           String
-  themeFontColor       String
-  callToActionURL      String
-  callToActionText     Json[]
-  callToActionImageURL String?
-  callToActionImageID  String?
+model Newsroom {
+   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+   createdAt  DateTime @default(now())
+   modifiedAt DateTime @updatedAt @default(now())
 
-  logoID String?
-  logo   Image?  @relation(fields: [logoID], references: [id])
+    name       String
+    slug       String ?
+    hostURL    String ?
+    token      String ?
+    isDisabled Boolean @default(false)
 
-  @@map("peerProfiles")
-}
+      themeColor           String? @default("#000000")
+      themeFontColor       String? @default("#FFFFFF")
+      callToActionURL      String?
+      callToActionText     Json[]
+      callToActionImageURL String?
+      callToActionImageID  String?
 
-model Peer {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+      logoID String?
+      logo   Image?  @relation(fields: [logoID], references: [id])
 
-  name       String
-  slug       String  @unique
-  hostURL    String
-  token      String
-  isDisabled Boolean @default(false)
-
-  @@map("peers")
+      @@map("newsrooms")
 }
 
 model Token {
