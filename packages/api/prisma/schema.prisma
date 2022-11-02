@@ -93,7 +93,7 @@ model Article {
 
   navigations NavigationLink[]
 
-  origin String?
+  newsroomId String ? @db.Uuid
 
   oldId  String?
 
@@ -129,7 +129,7 @@ model Author {
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  origin String?
+  newsroomId String ? @db.Uuid
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -171,7 +171,7 @@ model Image {
   Newsroom    Newsroom[]
   Comment     Comment[]
 
-  origin      String?
+  newsroomId String ? @db.Uuid
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")

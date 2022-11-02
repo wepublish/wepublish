@@ -1,13 +1,13 @@
 -- AlterTable
-ALTER TABLE "articles" ADD COLUMN     "origin" TEXT,
+ALTER TABLE "articles" ADD COLUMN    "newsroomId" UUID,
 ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
 
 -- AlterTable
-ALTER TABLE "authors" ADD COLUMN     "origin" TEXT,
+ALTER TABLE "authors" ADD COLUMN     "newsroomId" UUID,
 ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
 
 -- AlterTable
-ALTER TABLE "images" ADD COLUMN     "origin" TEXT,
+ALTER TABLE "images" ADD COLUMN     "newsroomId" UUID,
 ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
 
 -- UPDATE IDs on articles table to guid
