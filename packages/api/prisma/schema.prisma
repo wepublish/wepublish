@@ -179,8 +179,9 @@ model Image {
 }
 
 enum CommentItemType {
-  article @map("article")
-  page    @map("page")
+  peerArticle @map("peerArticle")
+  article     @map("article")
+  page        @map("page")
 }
 
 enum CommentRejectionReason {
@@ -223,6 +224,9 @@ model Comment {
 
   itemID           String
   itemType         CommentItemType
+  /// only populated when itemType is peerArticle
+  peerId           String?
+  peer             Peer?                   @relation(fields: [peerId], references: [id])
   parentID         String?
   revisions        CommentsRevisions[]
   rejectionReason  CommentRejectionReason?
@@ -578,6 +582,8 @@ model Peer {
   hostURL    String
   token      String
   isDisabled Boolean @default(false)
+
+  comments Comment[]
 
   @@map("peers")
 }
