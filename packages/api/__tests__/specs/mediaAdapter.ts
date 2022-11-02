@@ -41,8 +41,7 @@ const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   license: null,
   link: null,
   source: null,
-  title: null,
-  origin: null
+  title: null
 }
 
 const TEST_TRANSFORMATION: ImageTransformation = {
