@@ -31,3 +31,12 @@ SELECT name, "themeColor", "themeFontColor", "callToActionURL", "callToActionTex
 
 DROP TABLE "peers";
 DROP TABLE "peerProfiles";
+
+-- AlterTable
+ALTER TABLE "articles" ADD COLUMN     "newsroomId" UUID;
+
+-- AlterTable
+ALTER TABLE "authors" ADD COLUMN     "newsroomId" UUID;
+
+-- AlterTable
+ALTER TABLE "images" ADD COLUMN     "newsroomId" UUID;

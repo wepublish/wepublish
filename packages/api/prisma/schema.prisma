@@ -117,7 +117,7 @@ model AuthorsLinks {
 }
 
 model Author {
-  id         String         @id @default(dbgenerated("gen_random_uuid()"))
+  id         String         @id @default(cuid())
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
@@ -148,7 +148,7 @@ model FocalPoint {
 }
 
 model Image {
-  id          String      @id @default(dbgenerated("gen_random_uuid()"))
+  id          String      @id
   createdAt   DateTime    @default(now())
   description String?
   extension   String

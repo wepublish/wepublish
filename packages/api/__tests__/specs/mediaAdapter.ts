@@ -42,7 +42,7 @@ const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   link: null,
   source: null,
   title: null,
-  origin: null
+  newsroomId: null
 }
 
 const TEST_TRANSFORMATION: ImageTransformation = {
