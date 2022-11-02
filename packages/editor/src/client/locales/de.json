@@ -449,7 +449,7 @@
       "source": "Quelle",
       "userPanelHeader": "Verfasser:in des Kommentars",
       "actions": "Aktionen",
-      "ratingOverrides": "Kommentarbewertung überchreiben",
+      "ratingOverrides": "Kommentarbewertung überschreiben",
       "noOverride": "Nicht überschreiben"
     },
     "commentUser": {
