@@ -18,6 +18,8 @@ export type Scalars = {
   Color: string
   RichText: Node[]
   Slug: string
+  /** A valid vote value */
+  VoteValue: any
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any
   Value: any
@@ -245,6 +247,8 @@ export type Block =
   | BildwurfAdBlock
   | EmbedBlock
   | HtmlBlock
+  | PollBlock
+  | CommentBlock
   | LinkPageBreakBlock
   | TitleBlock
   | QuoteBlock
@@ -270,6 +274,8 @@ export type BlockInput = {
   bildwurfAd?: Maybe<BildwurfAdBlockInput>
   embed?: Maybe<EmbedBlockInput>
   html?: Maybe<HtmlBlockInput>
+  poll?: Maybe<PollBlockInput>
+  comment?: Maybe<CommentBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
   teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>
@@ -279,12 +285,15 @@ export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
   guestUsername?: Maybe<Scalars['String']>
+  guestUserImage?: Maybe<Image>
   user?: Maybe<User>
+  tags?: Maybe<Array<Tag>>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
   parentComment?: Maybe<Comment>
   revisions: Array<CommentRevision>
+  source?: Maybe<Scalars['String']>
   state: CommentState
   rejectionReason?: Maybe<CommentRejectionReason>
   createdAt: Scalars['DateTime']
@@ -294,7 +303,31 @@ export type Comment = {
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
+}
+
+export type CommentBlock = {
+  __typename?: 'CommentBlock'
+  filter: CommentBlockFilter
+  comments: Array<Comment>
+}
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter'
+  item?: Maybe<Scalars['ID']>
+  tags?: Maybe<Array<Scalars['ID']>>
+  comments?: Maybe<Array<Scalars['ID']>>
+}
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter
+}
+
+export type CommentBlockInputFilter = {
+  item?: Maybe<Scalars['ID']>
+  tags?: Maybe<Array<Scalars['ID']>>
+  comments?: Maybe<Array<Scalars['ID']>>
 }
 
 export type CommentConnection = {
@@ -305,12 +338,22 @@ export type CommentConnection = {
 }
 
 export type CommentFilter = {
+  item?: Maybe<Scalars['ID']>
+  tags?: Maybe<Array<Scalars['ID']>>
   states?: Maybe<Array<CommentState>>
 }
 
 export enum CommentItemType {
   Article = 'Article',
   Page = 'Page'
+}
+
+export type CommentRatingSystemAnswer = {
+  __typename?: 'CommentRatingSystemAnswer'
+  id: Scalars['ID']
+  ratingSystemId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+  type: RatingSystemType
 }
 
 export enum CommentRejectionReason {
@@ -320,8 +363,16 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision'
-  text: Scalars['RichText']
+  text?: Maybe<Scalars['RichText']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
+}
+
+export type CommentRevisionUpdateInput = {
+  text?: Maybe<Scalars['RichText']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
 }
 
 export enum CommentSort {
@@ -445,6 +496,23 @@ export type FlexTeaser = {
 export type FlexTeaserInput = {
   teaser?: Maybe<TeaserInput>
   alignment: FlexAlignmentInput
+}
+
+export type FullCommentRatingSystem = {
+  __typename?: 'FullCommentRatingSystem'
+  id: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  answers: Array<CommentRatingSystemAnswer>
+}
+
+export type FullPoll = {
+  __typename?: 'FullPoll'
+  id: Scalars['ID']
+  question?: Maybe<Scalars['String']>
+  opensAt: Scalars['DateTime']
+  closedAt?: Maybe<Scalars['DateTime']>
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>
 }
 
 export type GalleryImageEdge = {
@@ -577,6 +645,7 @@ export type Invoice = {
   paidAt?: Maybe<Scalars['DateTime']>
   manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>
   items: Array<InvoiceItem>
+  canceledAt?: Maybe<Scalars['DateTime']>
   total: Scalars['Int']
 }
 
@@ -786,10 +855,26 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>
   updateInvoice?: Maybe<Invoice>
   deleteInvoice?: Maybe<Invoice>
+  updateComment: Comment
+  createComment: Comment
   approveComment: Comment
   rejectComment: Comment
   requestChangesOnComment: Comment
+  deleteComment: Comment
   updateSettingList?: Maybe<Array<Maybe<Setting>>>
+  createRatingSystemAnswer: CommentRatingSystemAnswer
+  updateRatingSystem: FullCommentRatingSystem
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer
+  createPoll?: Maybe<PollWithAnswers>
+  createPollAnswer?: Maybe<PollAnswer>
+  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>
+  updatePoll?: Maybe<FullPoll>
+  deletePoll?: Maybe<FullPoll>
+  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>
+  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>
+  createTag?: Maybe<Tag>
+  updateTag?: Maybe<Tag>
+  deleteTag?: Maybe<Tag>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -1029,6 +1114,24 @@ export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID']
 }
 
+export type MutationUpdateCommentArgs = {
+  id: Scalars['ID']
+  revision?: Maybe<CommentRevisionUpdateInput>
+  userID?: Maybe<Scalars['ID']>
+  guestUsername?: Maybe<Scalars['String']>
+  guestUserImageID?: Maybe<Scalars['ID']>
+  source?: Maybe<Scalars['String']>
+  tagIds?: Maybe<Array<Scalars['ID']>>
+}
+
+export type MutationCreateCommentArgs = {
+  text?: Maybe<Scalars['RichText']>
+  tagIds?: Maybe<Array<Scalars['ID']>>
+  itemID: Scalars['ID']
+  parentID?: Maybe<Scalars['ID']>
+  itemType: CommentItemType
+}
+
 export type MutationApproveCommentArgs = {
   id: Scalars['ID']
 }
@@ -1043,8 +1146,79 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason
 }
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['ID']
+}
+
 export type MutationUpdateSettingListArgs = {
   value?: Maybe<Array<Maybe<UpdateSettingArgs>>>
+}
+
+export type MutationCreateRatingSystemAnswerArgs = {
+  ratingSystemId: Scalars['ID']
+  type?: Maybe<RatingSystemType>
+  answer?: Maybe<Scalars['String']>
+}
+
+export type MutationUpdateRatingSystemArgs = {
+  ratingSystemId: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  answers?: Maybe<Array<UpdateCommentRatingSystemAnswer>>
+}
+
+export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreatePollArgs = {
+  opensAt?: Maybe<Scalars['DateTime']>
+  closedAt?: Maybe<Scalars['DateTime']>
+  question?: Maybe<Scalars['String']>
+}
+
+export type MutationCreatePollAnswerArgs = {
+  pollId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+}
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['ID']
+  source?: Maybe<Scalars['String']>
+}
+
+export type MutationUpdatePollArgs = {
+  pollId: Scalars['ID']
+  opensAt?: Maybe<Scalars['DateTime']>
+  closedAt?: Maybe<Scalars['DateTime']>
+  question?: Maybe<Scalars['String']>
+  answers?: Maybe<Array<UpdatePollAnswer>>
+  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources>>
+}
+
+export type MutationDeletePollArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationDeletePollAnswerArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationDeletePollExternalVoteSourceArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreateTagArgs = {
+  tag?: Maybe<Scalars['String']>
+  type: TagType
+}
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID']
+  tag?: Maybe<Scalars['String']>
+}
+
+export type MutationDeleteTagArgs = {
+  id: Scalars['ID']
 }
 
 export type Navigation = {
@@ -1356,6 +1530,78 @@ export type PolisConversationBlockInput = {
   conversationID: Scalars['String']
 }
 
+export type Poll = {
+  __typename?: 'Poll'
+  id: Scalars['ID']
+  question?: Maybe<Scalars['String']>
+  opensAt: Scalars['DateTime']
+  closedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type PollAnswer = {
+  __typename?: 'PollAnswer'
+  id: Scalars['ID']
+  pollId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+}
+
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount'
+  id: Scalars['ID']
+  pollId: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+  votes: Scalars['Int']
+}
+
+export type PollBlock = {
+  __typename?: 'PollBlock'
+  poll?: Maybe<FullPoll>
+}
+
+export type PollBlockInput = {
+  pollId?: Maybe<Scalars['ID']>
+}
+
+export type PollConnection = {
+  __typename?: 'PollConnection'
+  nodes: Array<Poll>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote'
+  id: Scalars['ID']
+  answerId: Scalars['ID']
+  amount?: Maybe<Scalars['VoteValue']>
+}
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource'
+  id: Scalars['ID']
+  source?: Maybe<Scalars['String']>
+  voteAmounts?: Maybe<Array<PollExternalVote>>
+}
+
+export type PollFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>
+}
+
+export enum PollSort {
+  OpensAt = 'OPENS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type PollWithAnswers = {
+  __typename?: 'PollWithAnswers'
+  id: Scalars['ID']
+  question?: Maybe<Scalars['String']>
+  opensAt: Scalars['DateTime']
+  closedAt?: Maybe<Scalars['DateTime']>
+  answers?: Maybe<Array<PollAnswer>>
+}
+
 export type Properties = {
   __typename?: 'Properties'
   key: Scalars['String']
@@ -1394,6 +1640,7 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comment?: Maybe<Comment>
   comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
@@ -1414,6 +1661,10 @@ export type Query = {
   payments: PaymentConnection
   setting?: Maybe<Setting>
   settings: Array<Setting>
+  ratingSystem: FullCommentRatingSystem
+  tags?: Maybe<TagConnection>
+  polls?: Maybe<PollConnection>
+  poll?: Maybe<FullPoll>
 }
 
 export type QueryRemotePeerProfileArgs = {
@@ -1507,6 +1758,10 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>
   sort?: Maybe<ImageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryCommentArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryCommentsArgs = {
@@ -1616,6 +1871,28 @@ export type QuerySettingArgs = {
   name?: Maybe<Scalars['String']>
 }
 
+export type QueryTagsArgs = {
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<TagFilter>
+  sort?: Maybe<TagSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryPollsArgs = {
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<PollFilter>
+  sort?: Maybe<PollSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryPollArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
@@ -1625,6 +1902,10 @@ export type QuoteBlock = {
 export type QuoteBlockInput = {
   quote?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
+}
+
+export enum RatingSystemType {
+  Star = 'STAR'
 }
 
 export type RichTextBlock = {
@@ -1663,6 +1944,8 @@ export type Setting = {
 
 export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
@@ -1780,6 +2063,35 @@ export enum SubscriptionSort {
   ModifiedAt = 'MODIFIED_AT'
 }
 
+export type Tag = {
+  __typename?: 'Tag'
+  id: Scalars['ID']
+  tag?: Maybe<Scalars['String']>
+  type?: Maybe<TagType>
+}
+
+export type TagConnection = {
+  __typename?: 'TagConnection'
+  nodes: Array<Tag>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type TagFilter = {
+  type?: Maybe<TagType>
+  tag?: Maybe<Scalars['String']>
+}
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
+
+export enum TagType {
+  Comment = 'Comment'
+}
+
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export type TeaserGridBlock = {
@@ -1865,6 +2177,12 @@ export type UnidirectionalPageInfo = {
   hasNextPage: Scalars['Boolean']
 }
 
+export type UpdateCommentRatingSystemAnswer = {
+  id: Scalars['ID']
+  type?: Maybe<RatingSystemType>
+  answer?: Maybe<Scalars['String']>
+}
+
 export type UpdateImageInput = {
   filename?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
@@ -1882,6 +2200,22 @@ export type UpdatePeerInput = {
   hostURL?: Maybe<Scalars['String']>
   isDisabled?: Maybe<Scalars['Boolean']>
   token?: Maybe<Scalars['String']>
+}
+
+export type UpdatePollAnswer = {
+  id: Scalars['ID']
+  answer?: Maybe<Scalars['String']>
+}
+
+export type UpdatePollExternalVote = {
+  id: Scalars['ID']
+  amount?: Maybe<Scalars['VoteValue']>
+}
+
+export type UpdatePollExternalVoteSources = {
+  id: Scalars['ID']
+  source?: Maybe<Scalars['String']>
+  voteAmounts?: Maybe<Array<UpdatePollExternalVote>>
 }
 
 export type UpdateSettingArgs = {
@@ -2225,6 +2559,8 @@ export type ArticleQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
+              | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
+              | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -2397,6 +2733,10 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
 
 type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
 
+type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
+
+type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
+
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
   'text' | 'linkText' | 'linkURL'
@@ -2441,6 +2781,8 @@ export type FullBlockFragment =
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_HtmlBlock_Fragment
+  | FullBlock_PollBlock_Fragment
+  | FullBlock_CommentBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_QuoteBlock_Fragment
@@ -2617,6 +2959,8 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
+          | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
+          | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
           | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
@@ -2739,6 +3083,8 @@ export type PageQuery = {__typename?: 'Query'} & {
               | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
               | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
               | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
+              | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
+              | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
               | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
               | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
               | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
