@@ -340,7 +340,7 @@ function UserEditView() {
                 {/* general user data */}
                 <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
                   <Row>
-                    {/* profil image */}
+                    {/* profile image */}
                     <Col xs={12}>
                       <ChooseEditImage
                         image={userImage}
