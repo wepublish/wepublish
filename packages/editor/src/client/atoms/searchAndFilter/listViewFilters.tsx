@@ -8,8 +8,7 @@ import {
   AuthorRefFragment,
   DateFilterComparison,
   PageFilter,
-  PeerWithProfileFragment,
-  usePeerListQuery
+  usePeerListLazyQuery
 } from '../../api'
 import {AuthorCheckPicker} from '../../panel/authorCheckPicker'
 
@@ -47,24 +46,20 @@ export function ListViewFilters({
 }: ListViewFiltersProps) {
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
-  const [allPeers, setAllPeers] = useState<PeerWithProfileFragment[]>([])
 
-  const isPeerFilter = fields.includes('peer') && setPeerFilter
+  const isPeerFilter = fields.includes('peer') && !!setPeerFilter
 
-  let peerListData = [] as any
-  if (isPeerFilter) {
-    // fetch all peers
-    const {data} = usePeerListQuery({
-      fetchPolicy: 'network-only'
-    })
-    peerListData = data
-  }
+  const [peerListFetch, {data: peerListData}] = usePeerListLazyQuery({
+    fetchPolicy: 'network-only'
+  })
 
   useEffect(() => {
-    if (peerListData?.peers) {
-      setAllPeers(peerListData.peers)
+    if (isPeerFilter) {
+      peerListFetch()
     }
-  }, [peerListData?.peers])
+  }, [isPeerFilter])
+
+  const allPeers = peerListData?.peers
 
   /**
    * helper functions to manage filter
@@ -232,7 +227,7 @@ export function ListViewFilters({
           </Form.Group>
         )}
 
-        {isPeerFilter && (
+        {isPeerFilter && !!allPeers && (
           <Form.Group style={formInputStyle}>
             <SelectPicker
               virtualized
