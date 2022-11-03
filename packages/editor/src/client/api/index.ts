@@ -324,6 +324,7 @@ export type CommentFilter = {
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
 
