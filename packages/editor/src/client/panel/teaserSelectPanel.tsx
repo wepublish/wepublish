@@ -24,6 +24,7 @@ import {
 import {
   ArticleFilter,
   ArticleSort,
+  PageFilter,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
@@ -80,7 +81,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     sort: ArticleSort.PublishedAt
   }
   const listVariables = {filter: filter || undefined, take: 20}
-  const pageListVariables = {filter: filter.title || undefined, take: 20}
+  const pageListVariables = {filter: filter as PageFilter, take: 20}
 
   const {
     data: articleListData,

@@ -534,6 +534,19 @@
         "confirm": "Confirmer"
       }
     },
+    "articleList": {
+      "filter": {
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "description": "Filtrer par description",
+        "preTitle": "Filtrer par pré-titre",
+        "lead": "Filtrer par lead",
+        "isPending": "En attente",
+        "isDraft": "Brouillon",
+        "isPublished": "Publié",
+        "publicationDate": "Date de publication"
+      }
+    },
     "userList": {
       "overview": {
         "action": "Action",

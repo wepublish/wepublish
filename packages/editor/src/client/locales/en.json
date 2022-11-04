@@ -240,7 +240,6 @@
         "overview": {
           "editEmbed": "Edit Embed"
         },
-
         "panels": {
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "close": "Close",
@@ -965,6 +964,19 @@
         "unknown": "Unknown",
         "cancel": "Cancel",
         "confirm": "Confirm"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "description": "Filter by description",
+        "preTitle": "Filter by pre-title",
+        "lead": "Filter by lead",
+        "isDraft": "Draft",
+        "isPending": "Pending",
+        "isPublished": "Published",
+        "publicationDate": "Publication Date"
       }
     },
     "userList": {
