@@ -89,6 +89,8 @@
         "noImagesFound": "No Images found",
         "outlined": "Outlined",
         "page": "Page",
+        "custom": "Custom",
+        "contentUrl": "Content URL",
         "pagePreviewLink": "Page Preview Link",
         "peerArticle": "Peer Article",
         "peeredArticlePreview": "Preview",
@@ -238,7 +240,6 @@
         "overview": {
           "editEmbed": "Edit Embed"
         },
-
         "panels": {
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "close": "Close",
@@ -981,6 +982,19 @@
         "unknown": "Unknown",
         "cancel": "Cancel",
         "confirm": "Confirm"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "description": "Filter by description",
+        "preTitle": "Filter by pre-title",
+        "lead": "Filter by lead",
+        "isDraft": "Draft",
+        "isPending": "Pending",
+        "isPublished": "Published",
+        "publicationDate": "Publication Date"
       }
     },
     "userList": {

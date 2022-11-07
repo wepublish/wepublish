@@ -19,7 +19,8 @@ export enum RouteType {
   Author = 'author',
   Modal = 'modal',
   Login = 'login',
-  Logout = 'logout'
+  Logout = 'logout',
+  Custom = 'custom'
 }
 
 export const PeerArticleRoute = route(
@@ -40,6 +41,7 @@ export const AuthorRoute = route(RouteType.Author, routePath`/author/${required(
 
 export const LoginRoute = route(RouteType.Login, routePath`/login`)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
+export const CustomRoute = route(RouteType.Custom, routePath`${zeroOrMore('contentUrl')}`, null)
 
 export const routes = [
   LoginRoute,
@@ -48,7 +50,8 @@ export const routes = [
   ArticleRoute,
   TagRoute,
   AuthorRoute,
-  PageRoute
+  PageRoute,
+  CustomRoute
 ] as const
 
 export const {Link, RouteProvider, matchRoute, useRoute, useRouteDispatch} = createRouteContext(

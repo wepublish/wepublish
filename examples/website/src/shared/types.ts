@@ -44,6 +44,7 @@ export interface Comment {
   user: User
   userName: string
   children: Comment[]
+  peerId?: string
 }
 
 export enum CommentAuthorType {
@@ -98,6 +99,7 @@ export interface ArticleMeta {
 
 export type PublishedArticle = ArticleMeta & {
   blocks: Block[]
+  contentUrl?: string
 }
 
 // PageMeta
@@ -132,7 +134,8 @@ export type PublishedPage = PageMeta & {
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
-  Page = 'page'
+  Page = 'page',
+  Custom = 'custom'
 }
 
 export enum TeaserStyle {

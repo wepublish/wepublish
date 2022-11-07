@@ -31,7 +31,7 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String             @id @default(cuid())
+  id                     String                             @id @default(cuid())
   preTitle               String?
   title                  String?
   lead                   String?
@@ -40,14 +40,16 @@ model ArticleRevision {
   tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
+  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID                String?
-  authorIDs              String[]
+  authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json[]
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
-  socialMediaAuthorIDs   String[]
+  socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
+  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
 
   revision    Int       @default(0)
@@ -66,6 +68,28 @@ model ArticleRevision {
   @@index([updatedAt])
   @@index([tags])
   @@map("articles.revisions")
+}
+
+model ArticleRevisionAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.author")
+}
+
+model ArticleRevisionSocialMediaAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.social-media-author")
 }
 
 model Article {
@@ -120,8 +144,10 @@ model Author {
   links      AuthorsLinks[]
   bio        Json[]
 
-  imageID String?
-  image   Image?  @relation(fields: [imageID], references: [id])
+  imageID                     String?
+  image                       Image?                             @relation(fields: [imageID], references: [id])
+  articlesAsAuthor            ArticleRevisionAuthor[]
+  articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -163,6 +189,12 @@ model Image {
   PeerProfile PeerProfile[]
   Comment     Comment[]
 
+  articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
+  articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
+
+  pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
+  pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -172,6 +204,7 @@ model Image {
 }
 
 enum CommentItemType {
+  peerArticle @map("peerArticle")
   article  @map("article")
   page     @map("page")
 }
@@ -216,6 +249,9 @@ model Comment {
 
   itemID           String
   itemType         CommentItemType
+  /// only populated when itemType is peerArticle
+  peerId           String?
+  peer             Peer?                   @relation(fields: [peerId], references: [id])
   parentID         String?
   revisions        CommentsRevisions[]
   rejectionReason  CommentRejectionReason?
@@ -463,9 +499,11 @@ model PageRevision {
   tags                   String[]
   properties             MetadataProperty[]
   imageID                String?
+  image                  Image?             @relation("pageRevisionImage", fields: [imageID], references: [id])
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaImageID     String?
+  socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json[]
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
@@ -569,6 +607,8 @@ model Peer {
   hostURL    String
   token      String
   isDisabled Boolean @default(false)
+
+  comments Comment[]
 
   @@map("peers")
 }

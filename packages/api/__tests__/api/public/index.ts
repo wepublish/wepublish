@@ -22,6 +22,8 @@ export type Scalars = {
   VoteValue: any
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: File
 }
 
 export type Article = {
@@ -196,6 +198,7 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
+  peerId?: Maybe<Scalars['ID']>
   children?: Maybe<Array<Maybe<Comment>>>
   title?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
@@ -227,11 +230,13 @@ export type CommentInput = {
   itemID: Scalars['ID']
   itemType: CommentItemType
   title?: Maybe<Scalars['String']>
+  peerId?: Maybe<Scalars['ID']>
   text: Scalars['RichText']
 }
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
 
@@ -255,6 +260,10 @@ export type CommentRatingSystemAnswer = {
   type: RatingSystemType
 }
 
+export enum CommentSort {
+  Rating = 'RATING'
+}
+
 export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
@@ -265,6 +274,17 @@ export enum CommentState {
 export type CommentUpdateInput = {
   id: Scalars['ID']
   text: Scalars['RichText']
+}
+
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  image?: Maybe<Image>
+  preTitle?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  contentUrl?: Maybe<Scalars['String']>
+  properties: Array<PublicProperties>
 }
 
 export type EmbedBlock = {
@@ -391,6 +411,11 @@ export type ImageTransformation = {
   output?: Maybe<ImageOutput>
 }
 
+export type InputPoint = {
+  x: Scalars['Float']
+  y: Scalars['Float']
+}
+
 export type InstagramPostBlock = {
   __typename?: 'InstagramPostBlock'
   postID: Scalars['String']
@@ -505,6 +530,8 @@ export type Mutation = {
   sendWebsiteLogin: Scalars['String']
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>
+  /** This mutation allows to upload and update the user's profile image. */
+  uploadUserProfileImage?: Maybe<User>
   /**
    * This mutation allows to update the user's password by entering the new
    * password. The repeated new password gives an error if the passwords don't
@@ -611,6 +638,10 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UserInput
+}
+
+export type MutationUploadUserProfileImageArgs = {
+  uploadImageInput?: Maybe<UploadImageInput>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -972,6 +1003,8 @@ export type QueryPagesArgs = {
 
 export type QueryCommentsArgs = {
   itemId: Scalars['ID']
+  sort?: Maybe<CommentSort>
+  order?: Maybe<SortOrder>
 }
 
 export type QueryUserCommentRatingsArgs = {
@@ -1100,7 +1133,7 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -1137,6 +1170,18 @@ export type TwitterTweetBlock = {
   tweetID: Scalars['String']
 }
 
+export type UploadImageInput = {
+  file: Scalars['Upload']
+  filename?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>
+  link?: Maybe<Scalars['String']>
+  source?: Maybe<Scalars['String']>
+  license?: Maybe<Scalars['String']>
+  focalPoint?: Maybe<InputPoint>
+}
+
 export type User = {
   __typename?: 'User'
   id: Scalars['String']
@@ -1147,6 +1192,7 @@ export type User = {
   address?: Maybe<UserAddress>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
+  image?: Maybe<Image>
 }
 
 export type UserAddress = {
@@ -1174,6 +1220,7 @@ export type UserInput = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
+  uploadImageInput?: Maybe<UploadImageInput>
 }
 
 export type UserSession = {
@@ -1378,10 +1425,13 @@ type FullTeaser_PageTeaser_Fragment = {__typename?: 'PageTeaser'} & Pick<
     page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
   }
 
+type FullTeaser_CustomTeaser_Fragment = {__typename?: 'CustomTeaser'}
+
 export type FullTeaserFragment =
   | FullTeaser_ArticleTeaser_Fragment
   | FullTeaser_PeerArticleTeaser_Fragment
   | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
 
 type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'} & Pick<
   RichTextBlock,
@@ -1476,6 +1526,7 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
         | ({__typename?: 'ArticleTeaser'} & FullTeaser_ArticleTeaser_Fragment)
         | ({__typename?: 'PeerArticleTeaser'} & FullTeaser_PeerArticleTeaser_Fragment)
         | ({__typename?: 'PageTeaser'} & FullTeaser_PageTeaser_Fragment)
+        | ({__typename?: 'CustomTeaser'} & FullTeaser_CustomTeaser_Fragment)
       >
     >
   }

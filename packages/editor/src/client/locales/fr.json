@@ -37,6 +37,8 @@
         "noImagesFound": "Aucune image trouvée",
         "peerArticle": "Pairer l'article",
         "peering": "Peering",
+        "custom": "personnalisé",
+        "contentUrl": "URL du contenu",
         "peerShare": "Partager avec les peers",
         "published": "Publié",
         "removeTeaser": "Retirer le teaser",
@@ -544,6 +546,19 @@
         "unknown": "Inconnu",
         "cancel": "Annuler",
         "confirm": "Confirmer"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "description": "Filtrer par description",
+        "preTitle": "Filtrer par pré-titre",
+        "lead": "Filtrer par lead",
+        "isPending": "En attente",
+        "isDraft": "Brouillon",
+        "isPublished": "Publié",
+        "publicationDate": "Date de publication"
       }
     },
     "userList": {

@@ -61,7 +61,7 @@ import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
-import {GraphQLPublicComment} from './comment/comment'
+import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
@@ -277,11 +277,13 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     comments: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
       args: {
-        itemId: {type: GraphQLNonNull(GraphQLID)}
+        itemId: {type: GraphQLNonNull(GraphQLID)},
+        sort: {type: GraphQLPublicCommentSort},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the comments of an item.',
-      resolve: (root, {itemId}, {prisma: {comment, commentRatingSystemAnswer}}) =>
-        getPublicCommentsForItemById(itemId, null, commentRatingSystemAnswer, comment)
+      resolve: (root, {itemId, sort, order}, {prisma: {comment, commentRatingSystemAnswer}}) =>
+        getPublicCommentsForItemById(itemId, null, sort, order, commentRatingSystemAnswer, comment)
     },
 
     userCommentRatings: {

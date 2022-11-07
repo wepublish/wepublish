@@ -47,6 +47,8 @@
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
         "draft": "Entwurf",
+        "custom": "benutzerdefinierte",
+        "contentUrl": "Inhalt URL",
         "dropImage": "Bild hier droppen",
         "editImage": "Bild bearbeiten",
         "editTeaser": "Teaser bearbeiten",
@@ -968,6 +970,19 @@
         "unknown": "Unbekannt",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "description": "Nach Beschreibung filtern",
+        "preTitle": "Nach Pre-Titel filtern",
+        "lead": "Nach Lead filtern",
+        "isPending": "Geplant",
+        "isDraft": "Entwurf",
+        "isPublished": "Publiziert",
+        "publicationDate": "Publikationsdatum"
       }
     },
     "userList": {

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid} from 'rsuite'
 
-import {CommentItemType, FullCommentFragment, useCommentListQuery} from '../../api'
+import {CommentItemType, CommentSort, FullCommentFragment, useCommentListQuery} from '../../api'
 import {CommentPreview} from './commentPreview'
 import {CreateCommentBtn} from './createCommentBtn'
 
@@ -50,7 +50,7 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
         itemType: commentItemType,
         itemID: commentItemID
       },
-      sort: 'CreatedAt',
+      sort: CommentSort.CreatedAt,
       take: 1000
     }
   })

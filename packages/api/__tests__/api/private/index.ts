@@ -54,6 +54,10 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   title?: Maybe<Scalars['String']>
+  preTitle?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  publicationDateFrom?: Maybe<DateFilter>
+  publicationDateTo?: Maybe<DateFilter>
   draft?: Maybe<Scalars['Boolean']>
   published?: Maybe<Scalars['Boolean']>
   pending?: Maybe<Scalars['Boolean']>
@@ -111,7 +115,7 @@ export type ArticleRevision = {
   canonicalUrl?: Maybe<Scalars['String']>
   url: Scalars['String']
   image?: Maybe<Image>
-  authors: Array<Maybe<Author>>
+  authors: Array<Author>
   breaking: Scalars['Boolean']
   socialMediaTitle?: Maybe<Scalars['String']>
   socialMediaDescription?: Maybe<Scalars['String']>
@@ -291,6 +295,7 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
+  peerId?: Maybe<Scalars['ID']>
   parentComment?: Maybe<Comment>
   revisions: Array<CommentRevision>
   source?: Maybe<Scalars['String']>
@@ -341,10 +346,13 @@ export type CommentFilter = {
   item?: Maybe<Scalars['ID']>
   tags?: Maybe<Array<Scalars['ID']>>
   states?: Maybe<Array<CommentState>>
+  itemType?: Maybe<CommentItemType>
+  itemID?: Maybe<Scalars['ID']>
 }
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
 
@@ -401,6 +409,27 @@ export type CreatePeerInput = {
   slug: Scalars['String']
   hostURL: Scalars['String']
   token: Scalars['String']
+}
+
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  image?: Maybe<Image>
+  preTitle?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  contentUrl?: Maybe<Scalars['String']>
+  properties?: Maybe<Array<Properties>>
+}
+
+export type CustomTeaserInput = {
+  style: TeaserStyle
+  imageID?: Maybe<Scalars['ID']>
+  preTitle?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  contentUrl?: Maybe<Scalars['String']>
+  properties: Array<PropertiesInput>
 }
 
 export type DateFilter = {
@@ -1138,7 +1167,7 @@ export type MutationApproveCommentArgs = {
 
 export type MutationRejectCommentArgs = {
   id: Scalars['ID']
-  rejectionReason: CommentRejectionReason
+  rejectionReason?: Maybe<CommentRejectionReason>
 }
 
 export type MutationRequestChangesOnCommentArgs = {
@@ -1267,6 +1296,17 @@ export type PageConnection = {
   nodes: Array<Page>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
+}
+
+export type PageFilter = {
+  title?: Maybe<Scalars['String']>
+  draft?: Maybe<Scalars['Boolean']>
+  description?: Maybe<Scalars['String']>
+  publicationDateFrom?: Maybe<DateFilter>
+  publicationDateTo?: Maybe<DateFilter>
+  published?: Maybe<Scalars['Boolean']>
+  pending?: Maybe<Scalars['Boolean']>
+  tags?: Maybe<Array<Scalars['String']>>
 }
 
 export type PageInfo = {
@@ -1813,7 +1853,7 @@ export type QueryPagesArgs = {
   cursor?: Maybe<Scalars['ID']>
   take?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
-  filter?: Maybe<ArticleFilter>
+  filter?: Maybe<PageFilter>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
 }
@@ -2092,7 +2132,7 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -2118,6 +2158,7 @@ export type TeaserInput = {
   article?: Maybe<ArticleTeaserInput>
   peerArticle?: Maybe<PeerArticleTeaserInput>
   page?: Maybe<PageTeaserInput>
+  custom?: Maybe<CustomTeaserInput>
 }
 
 export enum TeaserStyle {
@@ -2246,6 +2287,7 @@ export type User = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
+  userImage?: Maybe<Image>
   active: Scalars['Boolean']
   lastLogin?: Maybe<Scalars['DateTime']>
   properties: Array<Properties>
@@ -2293,6 +2335,7 @@ export type UserInput = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
+  userImageID?: Maybe<Scalars['ID']>
   active: Scalars['Boolean']
   properties: Array<PropertiesInput>
   roleIDs?: Maybe<Array<Scalars['String']>>
@@ -2537,7 +2580,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
             properties: Array<
               {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
             >
-            authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+            authors: Array<{__typename?: 'Author'} & AuthorRefFragment>
             socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
             socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             blocks: Array<
@@ -2655,10 +2698,13 @@ type FullTeaser_PageTeaser_Fragment = {__typename?: 'PageTeaser'} & Pick<
     page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
   }
 
+type FullTeaser_CustomTeaser_Fragment = {__typename?: 'CustomTeaser'}
+
 export type FullTeaserFragment =
   | FullTeaser_ArticleTeaser_Fragment
   | FullTeaser_PeerArticleTeaser_Fragment
   | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
 
 type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'} & Pick<
   RichTextBlock,
@@ -2758,6 +2804,7 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
         | ({__typename?: 'ArticleTeaser'} & FullTeaser_ArticleTeaser_Fragment)
         | ({__typename?: 'PeerArticleTeaser'} & FullTeaser_PeerArticleTeaser_Fragment)
         | ({__typename?: 'PageTeaser'} & FullTeaser_PageTeaser_Fragment)
+        | ({__typename?: 'CustomTeaser'} & FullTeaser_CustomTeaser_Fragment)
       >
     >
   }
