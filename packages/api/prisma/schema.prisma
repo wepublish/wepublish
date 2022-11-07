@@ -31,7 +31,7 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String             @id @default(cuid())
+  id                     String                             @id @default(cuid())
   preTitle               String?
   title                  String?
   lead                   String?
@@ -40,16 +40,16 @@ model ArticleRevision {
   tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
-  image                  Image?             @relation("articleRevisionImage", fields: [imageID], references: [id])
+  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID                String?
-  authorIDs              String[]
+  authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json[]
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
-  socialMediaAuthorIDs   String[]
-  socialMediaImage       Image?             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
+  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
 
   revision    Int       @default(0)
@@ -68,6 +68,28 @@ model ArticleRevision {
   @@index([updatedAt])
   @@index([tags])
   @@map("articles.revisions")
+}
+
+model ArticleRevisionAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.author")
+}
+
+model ArticleRevisionSocialMediaAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.social-media-author")
 }
 
 model Article {
@@ -122,8 +144,10 @@ model Author {
   links      AuthorsLinks[]
   bio        Json[]
 
-  imageID String?
-  image   Image?  @relation(fields: [imageID], references: [id])
+  imageID                     String?
+  image                       Image?                             @relation(fields: [imageID], references: [id])
+  articlesAsAuthor            ArticleRevisionAuthor[]
+  articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
   @@index([createdAt])
   @@index([modifiedAt])
