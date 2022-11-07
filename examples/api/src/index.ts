@@ -77,7 +77,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 }
 
-async function asyncMain() {
+export async function runServer() {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -440,8 +440,3 @@ async function asyncMain() {
       }
     ).argv
 }
-
-asyncMain().catch(err => {
-  console.error(err)
-  process.exit(1)
-})

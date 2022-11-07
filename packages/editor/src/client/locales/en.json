@@ -641,7 +641,11 @@
       "deleteModalTitle": "Delete?",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteBtn": "Delete",
-      "answerMissing": "Please, input your answer."
+      "answerMissing": "Please, input your answer.",
+      "copyVoteUrl": "Copy voting link",
+      "urlCopied": "Voting link copied to the clipboard.",
+      "urlCopyingFailed": "Voting link could not be copied.",
+      "votes": "votes"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
@@ -1070,7 +1074,8 @@
       "streetAddress2": "Street 2",
       "zipCode": "ZIP",
       "city": "City",
-      "country": "Country"
+      "country": "Country",
+      "selectUserImage": "Choose profile picture"
     },
     "userSubscriptionList": {
       "deactivationReason": {

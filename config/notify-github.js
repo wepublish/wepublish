@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {setFailed} = require('@actions/core')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {GITHUB_REF_SHORT} = require('./notify-utils')
 
 async function main() {

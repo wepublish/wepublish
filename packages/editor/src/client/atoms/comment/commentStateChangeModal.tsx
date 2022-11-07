@@ -1,10 +1,11 @@
 import ReplyIcon from '@rsuite/icons/legacy/Reply'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
 
 import {
   CommentRejectionReason,
+  CommentRevision,
   CommentState,
   FullCommentFragment,
   useApproveCommentMutation,
@@ -41,7 +42,7 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment
   newCommentState: CommentState
-  onStateChanged?(): void
+  onStateChanged?(commentState: CommentState, rejectionReason?: CommentRejectionReason | null): void
   onClose?(): void
 }
 
@@ -72,6 +73,65 @@ export function CommentStateChangeModal({
       )
   }, [errorApprove, errorRequestingChanges, errorRejecting])
 
+  async function changeState() {
+    if (!comment) return
+    switch (newCommentState) {
+      case CommentState.Approved:
+        await approveComment({
+          variables: {
+            id: comment.id
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              onStateChanged(data.approveComment.state)
+            }
+          }
+        })
+        setOpen(false)
+        break
+      case CommentState.PendingUserChanges:
+        if (!rejectionReason) return
+        await requestChanges({
+          variables: {
+            id: comment.id,
+            rejectionReason
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              const comment = data.requestChangesOnComment
+              onStateChanged(comment.state, comment.rejectionReason)
+            }
+          }
+        })
+        setOpen(false)
+        break
+      case CommentState.Rejected:
+        if (!rejectionReason) return
+        await rejectComment({
+          variables: {
+            id: comment.id,
+            rejectionReason
+          },
+          onCompleted: data => {
+            if (onStateChanged) {
+              const comment = data.rejectComment
+              onStateChanged(comment.state, comment.rejectionReason)
+            }
+          }
+        })
+        setOpen(false)
+        break
+    }
+  }
+
+  const sortedRevisions = useMemo(() => {
+    const dcRevisions = [...comment.revisions]
+    return dcRevisions.sort(
+      (a: CommentRevision, b: CommentRevision) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  }, [comment.revisions])
+
   // handling the modal visibility
   useEffect(() => {
     if (comment && comment.state !== newCommentState) {
@@ -95,7 +155,7 @@ export function CommentStateChangeModal({
 
   return (
     <Modal open={open} size="sm" overflow>
-      <Modal.Header>
+      <Modal.Header onClose={() => setOpen(false)}>
         <Modal.Title>
           <div>{t(mapModalTitle(newCommentState))}</div>
         </Modal.Title>
@@ -152,30 +212,6 @@ export function CommentStateChangeModal({
             </>
           )}
 
-          <DescriptionListItem label={t('comments.panels.revisions')}>
-            <Panel bordered shaded>
-              <Timeline align="left">
-                {comment?.revisions?.length
-                  ? comment?.revisions?.map(({text, createdAt}, i) => (
-                      <Timeline.Item key={i}>
-                        <div>
-                          {t('comments.panels.revisionCreatedAtDate', {
-                            revisionCreatedAtDate: new Date(createdAt)
-                          })}
-                        </div>
-                        <RichTextBlock
-                          disabled
-                          displayOnly
-                          // TODO: remove this
-                          onChange={console.log}
-                          value={text || []}
-                        />
-                      </Timeline.Item>
-                    ))
-                  : null}
-              </Timeline>
-            </Panel>
-          </DescriptionListItem>
           {newCommentState === CommentState.Rejected ||
           newCommentState === CommentState.PendingUserChanges ? (
             <DescriptionListItem
@@ -212,6 +248,33 @@ export function CommentStateChangeModal({
               )}
             </DescriptionListItem>
           ) : null}
+
+          <DescriptionListItem label={t('comments.panels.revisions')} />
+          <Panel bordered style={{maxHeight: '300px', overflowY: 'scroll'}}>
+            <Timeline align="left">
+              {sortedRevisions.length
+                ? sortedRevisions.map(({text, createdAt}, index) => (
+                    <Timeline.Item
+                      key={`timeline-item-${index}`}
+                      className={index === 0 ? 'rs-timeline-item-last' : ''}>
+                      <div>
+                        {t('comments.panels.revisionCreatedAtDate', {
+                          revisionCreatedAtDate: new Date(createdAt)
+                        })}
+                      </div>
+                      <RichTextBlock
+                        disabled
+                        displayOnly
+                        onChange={() => {
+                          return undefined
+                        }}
+                        value={text || []}
+                      />
+                    </Timeline.Item>
+                  ))
+                : null}
+            </Timeline>
+          </Panel>
         </DescriptionList>
       </Modal.Body>
       <Modal.Footer>
@@ -222,42 +285,7 @@ export function CommentStateChangeModal({
             isRejecting ||
             (!rejectionReason && newCommentState !== CommentState.Approved)
           }
-          onClick={async () => {
-            if (!comment) return
-            switch (newCommentState) {
-              case CommentState.Approved:
-                await approveComment({
-                  variables: {
-                    id: comment.id
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-              case CommentState.PendingUserChanges:
-                if (!rejectionReason) return
-                await requestChanges({
-                  variables: {
-                    id: comment.id,
-                    rejectionReason
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-              case CommentState.Rejected:
-                if (!rejectionReason) return
-                await rejectComment({
-                  variables: {
-                    id: comment.id,
-                    rejectionReason
-                  },
-                  onCompleted: onStateChanged
-                })
-                setOpen(false)
-                break
-            }
-          }}>
+          onClick={async () => await changeState()}>
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
         <Button

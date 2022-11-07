@@ -847,7 +847,8 @@
       "streetAddress2": "Rue 2",
       "zipCode": "Code Postal",
       "city": "Ville",
-      "country": "Pays"
+      "country": "Pays",
+      "selectUserImage": "Choisir une photo de profil"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -973,7 +974,11 @@
       "deleteModalTitle": "Supprimer?",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
       "deleteBtn": "Supprimer",
-      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte."
+      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte.",
+      "copyVoteUrl": "Copier le lien de vote",
+      "urlCopied": "Lien de vote copié dans le presse-papiers.",
+      "urlCopyingFailed": "Le lien de vote n'a pas pu être copié.",
+      "votes": "votes"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Nom de la source du vote (par ex. Facebook)",
