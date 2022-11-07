@@ -142,7 +142,8 @@
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
         "enterTag": "Veuillez ajouter un tag",
         "enterSocialMediaAuthors": "Veuillez ajouter un·e auteur·trice pour les réseaux sociaux",
-        "enterAuthors": "Veuillez ajouter un·e auteur·trice"
+        "enterAuthors": "Veuillez ajouter un·e auteur·trice",
+        "comments": "Commentaires"
       }
     },
     "articles": {
