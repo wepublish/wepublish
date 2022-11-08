@@ -1,5 +1,32 @@
 # Change Log
 
+## 8.0.0 (2022-11-07)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#687](https://github.com/wepublish/wepublish/pull/687) Docker builds, entrypoints improvements ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :bug: Bug Fix
+* `api`
+  * [#719](https://github.com/wepublish/wepublish/pull/719) WPC-812-update-userprefered-name-empty-string ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* Other
+  * [#707](https://github.com/wepublish/wepublish/pull/707) chore: add git hooks to rebuild prisma when switching or merging branches ([@Itrulia](https://github.com/Itrulia))
+  * [#721](https://github.com/wepublish/wepublish/pull/721) Add website helm chart ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`
+  * [#722](https://github.com/wepublish/wepublish/pull/722) Improve api seeding ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`, `editor`
+  * [#687](https://github.com/wepublish/wepublish/pull/687) Docker builds, entrypoints improvements ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 5
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 7.1.0 (2022-10-13)
 
 #### :heart: New Feature

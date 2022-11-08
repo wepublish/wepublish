@@ -271,7 +271,8 @@ export const unpublishArticle = async (
     throw new NotFound('article', id)
   }
 
-  const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = (article.pending ??
+  const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = (article.draft ??
+    article.pending ??
     article.published)!
 
   return articleClient.update({

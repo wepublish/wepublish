@@ -2,6 +2,7 @@ import {
   Invoice,
   MemberPlan,
   MetadataProperty,
+  Payment,
   PaymentMethod,
   PaymentPeriodicity,
   PaymentProviderCustomer,
@@ -83,7 +84,7 @@ export interface MemberContext {
   checkOpenInvoices(): Promise<void>
   checkOpenInvoice(props: CheckOpenInvoiceProps): Promise<void>
 
-  chargeInvoice(props: ChargeInvoiceProps): Promise<void>
+  chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
   chargeOpenInvoices(): Promise<void>
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
@@ -623,7 +624,7 @@ export class MemberContext implements MemberContext {
                 deleteMany: {
                   invoiceId: invoiceData.id
                 },
-                create: items
+                create: items.map(({invoiceId, ...item}) => item)
               },
               canceledAt: today
             }
@@ -699,7 +700,7 @@ export class MemberContext implements MemberContext {
     invoice,
     paymentMethodID,
     customer
-  }: ChargeInvoiceProps): Promise<void> {
+  }: ChargeInvoiceProps): Promise<boolean | Payment> {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
     const paymentMethods = await this.prisma.paymentMethod.findMany()
     const paymentMethodIDs = paymentMethods
@@ -711,13 +712,13 @@ export class MemberContext implements MemberContext {
         'PaymentMethod %s does not support off session payments',
         paymentMethodID
       )
-      return
+      return false
     }
 
     const paymentMethod = paymentMethods.find(method => method.id === paymentMethodID)
     if (!paymentMethod) {
       logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
-      return
+      return false
     }
 
     const paymentProvider = this.paymentProviders.find(
@@ -729,7 +730,7 @@ export class MemberContext implements MemberContext {
         'PaymentProvider %s does not exist',
         paymentMethod.paymentProviderID
       )
-      return
+      return false
     }
 
     const payment = await this.prisma.payment.create({
@@ -747,7 +748,7 @@ export class MemberContext implements MemberContext {
       customerID: customer.customerID
     })
 
-    await this.prisma.payment.update({
+    const updatedPayment = await this.prisma.payment.update({
       where: {id: payment.id},
       data: {
         state: intent.state,
@@ -783,12 +784,14 @@ export class MemberContext implements MemberContext {
             deleteMany: {
               invoiceId: invoiceData.id
             },
-            create: items
+            create: items.map(({invoiceId, ...item}) => item)
           },
           sentReminderAt: new Date()
         }
       })
+      return updatedPayment
     }
+    return updatedPayment
   }
 
   async sendReminderForInvoices({replyToAddress}: SendReminderForInvoicesProps): Promise<void> {
@@ -847,7 +850,7 @@ export class MemberContext implements MemberContext {
                 deleteMany: {
                   invoiceId: invoiceData.id
                 },
-                create: items
+                create: items.map(({invoiceId, ...item}) => item)
               },
               canceledAt: today
             }
@@ -979,7 +982,7 @@ export class MemberContext implements MemberContext {
           deleteMany: {
             invoiceId: invoiceData.id
           },
-          create: items
+          create: items.map(({invoiceId, ...item}) => item)
         },
         sentReminderAt: today
       }
@@ -1025,6 +1028,8 @@ export class MemberContext implements MemberContext {
       logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
       return
     }
+
+    await this.cancelInvoicesForSubscription(subscriptionID)
 
     await this.prisma.subscription.update({
       where: {id: subscriptionID},

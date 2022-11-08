@@ -287,7 +287,8 @@ export type Comment = {
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
 }
 
 export type CommentBlock = {
@@ -2379,6 +2380,7 @@ export type User = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
+  userImage?: Maybe<Image>;
   active: Scalars['Boolean'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
@@ -2426,6 +2428,7 @@ export type UserInput = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
+  userImageID?: Maybe<Scalars['ID']>;
   active: Scalars['Boolean'];
   properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
@@ -4705,6 +4708,9 @@ export type FullUserFragment = (
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
+  )>, userImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -5137,6 +5143,9 @@ export const FullUserFragmentDoc = gql`
     city
     country
   }
+  userImage {
+    ...ImageRef
+  }
   active
   lastLogin
   properties {
@@ -5153,7 +5162,8 @@ export const FullUserFragmentDoc = gql`
     ...UserSubscription
   }
 }
-    ${FullUserRoleFragmentDoc}
+    ${ImageRefFragmentDoc}
+${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
 export const CommentRevisionFragmentDoc = gql`
     fragment CommentRevision on CommentRevision {
