@@ -8,6 +8,7 @@ import {Col, Grid, IconButton, Panel, Row} from 'rsuite'
 
 import {CommentRevision, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {humanReadableCommentState} from './commentStateDropdown'
 import {CreateCommentBtn} from './createCommentBtn'
 
 export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
@@ -100,7 +101,7 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
       userName = user?.firstName ? `${user.firstName} ${user.name}` : user.name
     }
 
-    return `${userName} | ${createdAtReadable}`
+    return `${userName} | ${createdAtReadable} | ${t(humanReadableCommentState(comment.state))}`
   }
 
   return (

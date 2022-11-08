@@ -3,7 +3,13 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid} from 'rsuite'
 
-import {CommentItemType, CommentSort, FullCommentFragment, useCommentListQuery} from '../../api'
+import {
+  CommentItemType,
+  CommentSort,
+  CommentState,
+  FullCommentFragment,
+  useCommentListQuery
+} from '../../api'
 import {CommentPreview} from './commentPreview'
 import {CreateCommentBtn} from './createCommentBtn'
 
@@ -48,7 +54,12 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
     variables: {
       filter: {
         itemType: commentItemType,
-        itemID: commentItemID
+        itemID: commentItemID,
+        states: [
+          CommentState.Approved,
+          CommentState.PendingUserChanges,
+          CommentState.PendingApproval
+        ]
       },
       sort: CommentSort.CreatedAt,
       take: 1000

@@ -7,7 +7,7 @@ import {TypeAttributes} from 'rsuite/cjs/@types/common'
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
 
-function mapCommentStateToColor(commentState: CommentState) {
+export function mapCommentStateToColor(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'green'
@@ -19,7 +19,7 @@ function mapCommentStateToColor(commentState: CommentState) {
   }
 }
 
-function humanReadableCommentState(commentState: CommentState) {
+export function humanReadableCommentState(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'comments.state.approved'
