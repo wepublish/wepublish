@@ -152,7 +152,6 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
     },
     title: {type: GraphQLString},
     peerId: {type: GraphQLID},
-
     text: {
       type: new GraphQLNonNull(GraphQLRichText)
     }

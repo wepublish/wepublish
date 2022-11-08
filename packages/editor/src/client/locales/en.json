@@ -659,7 +659,7 @@
       "deleteBtn": "Delete",
       "answerMissing": "Please, input your answer.",
       "copyVoteUrl": "Copy voting link",
-      "urlCopied": "AVoting link copied to the clipboard.",
+      "urlCopied": "Voting link copied to the clipboard.",
       "urlCopyingFailed": "Voting link could not be copied.",
       "votes": "votes"
     },

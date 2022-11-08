@@ -29,7 +29,14 @@ export interface UserFilter {
 export const unselectPassword: Record<
   keyof Omit<
     Prisma.UserSelect,
-    '_count' | 'Comment' | 'Session' | 'Subscription' | 'Invoice' | 'CommentRating' | 'PollVote'
+    | '_count'
+    | 'Comment'
+    | 'Session'
+    | 'Subscription'
+    | 'Invoice'
+    | 'CommentRating'
+    | 'PollVote'
+    | 'userImage'
   >,
   boolean
 > = {
@@ -45,7 +52,6 @@ export const unselectPassword: Record<
   name: true,
   firstName: true,
   preferredName: true,
-  userImage: true,
   userImageID: true,
   password: false,
   active: true,

@@ -1,4 +1,4 @@
-import {Comment, CommentRatingSystemAnswer, CommentState, PrismaClient} from '@prisma/client'
+import {CommentRatingSystemAnswer, Comment, CommentState, PrismaClient} from '@prisma/client'
 import {PublicCommentSort} from '../../db/comment'
 import {sortWith, descend, ascend} from 'ramda'
 
@@ -85,16 +85,17 @@ export const getPublicCommentsForItemById = async (
     text: revisions.length ? revisions[revisions.length - 1].text : null,
     ...comment,
     calculatedRatings: answers.map(answer => {
-      const ratingValues = ratings
+      const sortedRatings = ratings
         .filter(rating => rating.answerId === answer.id)
         .map(rating => rating.value)
+        .sort((a, b) => a - b)
 
-      const total = ratingValues.reduce((value, rating) => value + rating, 0)
-      const mean = total / Math.max(ratingValues.length, 1)
+      const total = sortedRatings.reduce((value, rating) => value + rating, 0)
+      const mean = total / Math.max(sortedRatings.length, 1)
 
       return {
         answer,
-        count: ratingValues.length,
+        count: sortedRatings.length,
         mean,
         total
       } as CalculatedRating
