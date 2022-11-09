@@ -172,38 +172,38 @@ export const getAdminPeerArticles = async (
   switch (sort) {
     case ArticleSort.CreatedAt:
       peerArticles.sort(
-        (a, b) => new Date(b.article.createdAt).getTime() - new Date(a.article.createdAt).getTime()
+        (a, b) => new Date(a.article.createdAt).getTime() - new Date(b.article.createdAt).getTime()
       )
       break
 
     case ArticleSort.ModifiedAt:
       peerArticles.sort(
         (a, b) =>
-          new Date(b.article.modifiedAt).getTime() - new Date(a.article.modifiedAt).getTime()
+          new Date(a.article.modifiedAt).getTime() - new Date(b.article.modifiedAt).getTime()
       )
       break
 
     case ArticleSort.PublishAt:
       peerArticles.sort(
         (a, b) =>
-          new Date(b.article.latest.publishAt).getTime() -
-          new Date(a.article.latest.publishAt).getTime()
+          new Date(a.article.latest.publishAt).getTime() -
+          new Date(b.article.latest.publishAt).getTime()
       )
       break
 
     case ArticleSort.PublishedAt:
       peerArticles.sort(
         (a, b) =>
-          new Date(b.article.latest.publishedAt).getTime() -
-          new Date(a.article.latest.publishedAt).getTime()
+          new Date(a.article.latest.publishedAt).getTime() -
+          new Date(b.article.latest.publishedAt).getTime()
       )
       break
 
     case ArticleSort.UpdatedAt:
       peerArticles.sort(
         (a, b) =>
-          new Date(b.article.latest.updatedAt).getTime() -
-          new Date(a.article.latest.updatedAt).getTime()
+          new Date(a.article.latest.updatedAt).getTime() -
+          new Date(b.article.latest.updatedAt).getTime()
       )
       break
   }
@@ -214,7 +214,7 @@ export const getAdminPeerArticles = async (
 
   return {
     nodes: peerArticles,
-    totalCount: totalCount,
+    totalCount,
     pageInfo: {
       endCursor: JSON.stringify(endCursors),
       startCursor: JSON.stringify(startCursors),
