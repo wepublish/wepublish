@@ -312,9 +312,9 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
 
                   {originalImageURL && (
                     <DescriptionListItem label={t('images.panels.link')}>
-                      <Link to={originalImageURL} target="_blank">
+                      <a href={originalImageURL} target="_blank" rel="noreferrer">
                         {originalImageURL}
-                      </Link>
+                      </a>
                     </DescriptionListItem>
                   )}
                 </DescriptionList>
