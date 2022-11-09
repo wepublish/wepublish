@@ -44,12 +44,14 @@ export interface Comment {
   user: User
   userName: string
   children: Comment[]
+  peerId?: string
 }
 
 export enum CommentAuthorType {
   Team = 'team',
   Author = 'author',
-  VerifiedUser = 'verifiedUser'
+  VerifiedUser = 'verifiedUser',
+  GuestUser = 'guestUser'
 }
 
 export enum CommentItemType {

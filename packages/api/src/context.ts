@@ -419,17 +419,23 @@ export async function contextFromRequest(
           include: {
             draft: {
               include: {
-                properties: true
+                properties: true,
+                authors: true,
+                socialMediaAuthors: true
               }
             },
             pending: {
               include: {
-                properties: true
+                properties: true,
+                authors: true,
+                socialMediaAuthors: true
               }
             },
             published: {
               include: {
-                properties: true
+                properties: true,
+                authors: true,
+                socialMediaAuthors: true
               }
             }
           }
@@ -448,13 +454,13 @@ export async function contextFromRequest(
               },
               OR: [
                 {
-                  published: {
-                    isNot: null
+                  publishedId: {
+                    not: null
                   }
                 },
                 {
-                  pending: {
-                    isNot: null
+                  pendingId: {
+                    not: null
                   }
                 }
               ]
@@ -462,12 +468,16 @@ export async function contextFromRequest(
             include: {
               published: {
                 include: {
-                  properties: true
+                  properties: true,
+                  authors: true,
+                  socialMediaAuthors: true
                 }
               },
               pending: {
                 include: {
-                  properties: true
+                  properties: true,
+                  authors: true,
+                  socialMediaAuthors: true
                 }
               }
             }
@@ -1000,7 +1010,7 @@ export async function contextFromRequest(
         where: {id: payment.id},
         data: {
           state: intent.state,
-          intentID: intent.intentID,
+          intentID: `${intent.intentID}`,
           intentData: intent.intentData,
           intentSecret: intent.intentSecret,
           paymentData: intent.paymentData,

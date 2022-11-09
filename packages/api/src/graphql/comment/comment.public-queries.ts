@@ -1,13 +1,13 @@
-import {Comment, CommentState, PrismaClient} from '@prisma/client'
+import {CommentRatingSystemAnswer, Comment, CommentState, PrismaClient} from '@prisma/client'
 import {PublicCommentSort} from '../../db/comment'
 import {sortWith, descend, ascend} from 'ramda'
 
-export const getPublicChildrenCommentsByParentId = (
+export const getPublicChildrenCommentsByParentId = async (
   parentId: string,
   userId: string | null,
   comment: PrismaClient['comment']
-) =>
-  comment.findMany({
+) => {
+  const comments = await comment.findMany({
     where: {
       AND: [
         {parentID: parentId},
@@ -18,21 +18,33 @@ export const getPublicChildrenCommentsByParentId = (
       modifiedAt: 'desc'
     },
     include: {
-      revisions: true
+      revisions: true,
+      tags: true
     }
   })
 
+  return comments.map(comment => {
+    const revisions = comment.revisions
+    return {
+      ...comment,
+      title: revisions.length ? revisions[revisions.length - 1].title : null,
+      lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+      text: revisions.length ? revisions[revisions.length - 1].text : null
+    }
+  })
+}
+
 export type CalculatedRating = {
-  answerId: string
   count: number
   mean: number
   total: number
+  answer: CommentRatingSystemAnswer
 }
 
 const sortCommentsByRating = (orderFn: typeof ascend) =>
-  sortWith<Comment & {ratings: CalculatedRating[]}>([
-    orderFn(({ratings}: Comment & {ratings: CalculatedRating[]}) =>
-      ratings.reduce((ratingsTotal, rating) => ratingsTotal + rating.mean, 0)
+  sortWith<Comment & {calculatedRatings: CalculatedRating[]}>([
+    orderFn(({calculatedRatings}: Comment & {calculatedRatings: CalculatedRating[]}) =>
+      calculatedRatings.reduce((ratingsTotal, rating) => ratingsTotal + rating.mean, 0)
     ),
     ascend(({createdAt}: Comment) => createdAt)
   ])
@@ -66,19 +78,22 @@ export const getPublicCommentsForItemById = async (
   ])
 
   const commentsWithRating = comments.map(({revisions, ratings, ...comment}) => ({
-    text: revisions[revisions.length - 1].text,
+    title: revisions.length ? revisions[revisions.length - 1].title : null,
+    lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+    text: revisions.length ? revisions[revisions.length - 1].text : null,
     ...comment,
-    ratings: answers.map(answer => {
-      const ratingValues = ratings
+    calculatedRatings: answers.map(answer => {
+      const sortedRatings = ratings
         .filter(rating => rating.answerId === answer.id)
         .map(rating => rating.value)
+        .sort((a, b) => a - b)
 
-      const total = ratingValues.reduce((value, rating) => value + rating, 0)
-      const mean = total / Math.max(ratingValues.length, 1)
+      const total = sortedRatings.reduce((value, rating) => value + rating, 0)
+      const mean = total / Math.max(sortedRatings.length, 1)
 
       return {
-        answerId: answer.id,
-        count: ratingValues.length,
+        answer,
+        count: sortedRatings.length,
         mean,
         total
       } as CalculatedRating

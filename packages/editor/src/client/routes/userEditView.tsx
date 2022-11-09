@@ -6,6 +6,7 @@ import {
   Button,
   CheckPicker,
   Col,
+  Drawer,
   FlexboxGrid,
   Form,
   Grid,
@@ -21,15 +22,18 @@ import {
 import {
   FullUserFragment,
   FullUserRoleFragment,
+  ImageRefFragment,
   useCreateUserMutation,
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 function UserEditView() {
@@ -41,8 +45,10 @@ function UserEditView() {
 
   // const isCreateRoute = location.pathname.includes('create')
   const isEditRoute = location.pathname.includes('edit')
-
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
+
+  // image selection drawer
+  const [imageSelectionOpen, setImageSelectionOpen] = useState<boolean>(false)
 
   // user props
   const [name, setName] = useState('')
@@ -55,6 +61,7 @@ function UserEditView() {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [address, setAddress] = useState<UserAddress | null>(null)
+  const [userImage, setUserImage] = useState<ImageRefFragment | undefined>()
   const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
 
   // getting user id from url param
@@ -88,6 +95,7 @@ function UserEditView() {
     setEmailVerifiedAt(tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null)
     setActive(tmpUser.active)
     setAddress(tmpUser.address ? tmpUser.address : null)
+    setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined)
     if (tmpUser.roles) {
       setRoles(tmpUser.roles as FullUserRoleFragment[])
     }
@@ -175,6 +183,7 @@ function UserEditView() {
                 key,
                 public: publicValue
               })),
+              userImageID: userImage?.id || null,
               roleIDs: roles.map(role => role.id),
               address: {
                 company: address?.company ? address.company : '',
@@ -216,7 +225,8 @@ function UserEditView() {
               active,
               properties: [],
               roleIDs: roles.map(role => role.id),
-              address
+              address,
+              userImageID: userImage?.id || null
             },
             password
           }
@@ -329,9 +339,20 @@ function UserEditView() {
               <Grid fluid>
                 {/* general user data */}
                 <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
-                  <Row gutter={10}>
+                  <Row>
+                    {/* profile image */}
+                    <Col xs={12}>
+                      <ChooseEditImage
+                        image={userImage}
+                        disabled={false}
+                        openChooseModalOpen={() => setImageSelectionOpen(true)}
+                        removeImage={() => setUserImage(undefined)}
+                        header={t('userCreateOrEditView.selectUserImage')}
+                        maxHeight={200}
+                      />
+                    </Col>
                     {/* active / inactive */}
-                    <Col xs={24} style={{textAlign: 'end'}}>
+                    <Col xs={12} style={{textAlign: 'end'}}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
@@ -341,6 +362,9 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
+                  </Row>
+
+                  <Row gutter={10}>
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
@@ -548,6 +572,21 @@ function UserEditView() {
           </Row>
         </Grid>
       </Form>
+
+      {/* image selection panel */}
+      <Drawer
+        open={imageSelectionOpen}
+        onClose={() => {
+          setImageSelectionOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setImageSelectionOpen(false)}
+          onSelect={(image: ImageRefFragment) => {
+            setUserImage(image)
+            setImageSelectionOpen(false)
+          }}
+        />
+      </Drawer>
     </>
   )
 }

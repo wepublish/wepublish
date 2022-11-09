@@ -32,6 +32,7 @@ import {GraphQLRichText} from '../richText'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
+import {GraphQLCommentRatingSystemAnswer} from '../comment-rating/comment-rating'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -56,7 +57,8 @@ export const GraphQLCommentAuthorType = new GraphQLEnumType({
   values: {
     Author: {value: CommentAuthorType.author},
     Team: {value: CommentAuthorType.team},
-    VerifiedUser: {value: CommentAuthorType.verifiedUser}
+    VerifiedUser: {value: CommentAuthorType.verifiedUser},
+    GuestUser: {value: CommentAuthorType.guestUser}
   }
 })
 
@@ -64,6 +66,7 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
     Article: {value: CommentItemType.article},
+    PeerArticle: {value: CommentItemType.peerArticle},
     Page: {value: CommentItemType.page}
   }
 })
@@ -153,15 +156,10 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
-
+    title: {type: GraphQLString},
+    peerId: {type: GraphQLID},
     text: {
       type: new GraphQLNonNull(GraphQLRichText)
-      // resolve: createProxyingResolver(({ text }, args, { loaders }, info) => {
-      //   return [];
-      //   if (text[0].children[0].text.length > 1000) {
-      //     throw new Error(`Comment Length should be maximum of 1000 characters`)
-      //   }
-      // }
     }
   }
 })
@@ -227,6 +225,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
+    peerId: {type: GraphQLID},
     parentComment: {
       type: GraphQLComment,
       resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
@@ -258,13 +257,13 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   })
 })
 
-export const GraphQLRating = new GraphQLObjectType<CalculatedRating, Context>({
-  name: 'Rating',
+export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'CalculatedRating',
   fields: {
-    answerId: {type: GraphQLNonNull(GraphQLID)},
     count: {type: GraphQLNonNull(GraphQLInt)},
     total: {type: GraphQLNonNull(GraphQLInt)},
-    mean: {type: GraphQLNonNull(GraphQLFloat)}
+    mean: {type: GraphQLNonNull(GraphQLFloat)},
+    answer: {type: GraphQLCommentRatingSystemAnswer}
   }
 })
 
@@ -277,6 +276,12 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
     guestUsername: {type: GraphQLString},
+    guestUserImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
+        guestUserImageID ? image.findUnique({where: {id: guestUserImageID}}) : null
+      )
+    },
     user: {
       type: GraphQLPublicUser,
       resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
@@ -311,6 +316,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
+    peerId: {type: GraphQLID},
 
     children: {
       type: GraphQLList(GraphQLPublicComment),
@@ -319,15 +325,18 @@ export const GraphQLPublicComment: GraphQLObjectType<
       )
     },
 
-    text: {type: GraphQLNonNull(GraphQLRichText)},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    text: {type: GraphQLRichText},
 
     state: {type: GraphQLNonNull(GraphQLCommentState)},
+    source: {type: GraphQLString},
 
     rejectionReason: {type: GraphQLString},
-
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    ratings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLRating)))
+    calculatedRatings: {
+      type: GraphQLList(GraphQLCalculatedRating)
     },
     overriddenRatings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),

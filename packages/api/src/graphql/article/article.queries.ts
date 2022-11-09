@@ -2,6 +2,7 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
+import {mapDateFilterToPrisma} from '../utils'
 
 export const createArticleOrder = (
   field: ArticleSort,
@@ -58,12 +59,86 @@ const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
   return {}
 }
 
+const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.preTitle) {
+    const containsPreTitle: Prisma.ArticleRevisionWhereInput = {
+      preTitle: {
+        contains: filter.preTitle,
+        mode: 'insensitive'
+      }
+    }
+
+    return {
+      OR: [{draft: containsPreTitle}, {pending: containsPreTitle}, {published: containsPreTitle}]
+    }
+  }
+
+  return {}
+}
+
+const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.lead) {
+    const containsLead: Prisma.ArticleRevisionWhereInput = {
+      lead: {
+        contains: filter.lead,
+        mode: 'insensitive'
+      }
+    }
+
+    return {
+      OR: [{draft: containsLead}, {pending: containsLead}, {published: containsLead}]
+    }
+  }
+
+  return {}
+}
+
+const createPublicationDateFromFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.publicationDateFrom) {
+    const {comparison, date} = filter.publicationDateFrom
+    const compare = mapDateFilterToPrisma(comparison)
+
+    const filterBy: Prisma.ArticleRevisionWhereInput = {
+      publishedAt: {
+        [compare]: date
+      }
+    }
+    return {
+      AND: [{published: filterBy}]
+    }
+  }
+
+  return {}
+}
+
+const createPublicationDateToFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.publicationDateTo) {
+    const {comparison, date} = filter.publicationDateTo
+    const compare = mapDateFilterToPrisma(comparison)
+
+    const filterBy: Prisma.ArticleRevisionWhereInput = {
+      publishedAt: {
+        [compare]: date
+      }
+    }
+    return {
+      AND: [{published: filterBy}]
+    }
+  }
+
+  return {}
+}
+
 const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      published: filter.published
+      publishedId: filter.published
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -75,9 +150,9 @@ const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWh
 const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.draft != null) {
     return {
-      draft: filter.draft
+      draftId: filter.draft
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -89,9 +164,9 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
 const createPendingFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.pending != null) {
     return {
-      pending: filter.pending
+      pendingId: filter.pending
         ? {
-            isNot: null
+            not: null
           }
         : null
     }
@@ -128,9 +203,15 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
-    const hasAuthors = {
+    const hasAuthors: Prisma.ArticleRevisionRelationFilter = {
       is: {
-        authorIDs: {hasSome: filter.authors}
+        authors: {
+          some: {
+            authorId: {
+              in: filter.authors
+            }
+          }
+        }
       }
     }
 
@@ -145,6 +226,10 @@ const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
     createTitleFilter(filter),
+    createPreTitleFilter(filter),
+    createPublicationDateFromFilter(filter),
+    createPublicationDateToFilter(filter),
+    createLeadFilter(filter),
     createPublishedFilter(filter),
     createDraftFilter(filter),
     createPendingFilter(filter),
@@ -180,17 +265,23 @@ export const getArticles = async (
       include: {
         draft: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         pending: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         },
         published: {
           include: {
-            properties: true
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
           }
         }
       }

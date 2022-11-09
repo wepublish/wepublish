@@ -1,9 +1,22 @@
 import {ApolloError} from '@apollo/client'
+import CopyIcon from '@rsuite/icons/legacy/Copy'
 import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Col, Form, IconButton, Message, Modal, Row, toaster} from 'rsuite'
+import {
+  Badge,
+  Button,
+  Col,
+  Form,
+  IconButton,
+  Message,
+  Modal,
+  Row,
+  toaster,
+  Tooltip,
+  Whisper
+} from 'rsuite'
 
 import {
   FullPoll,
@@ -12,6 +25,52 @@ import {
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation
 } from '../../api'
+
+function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
+  const answers = poll?.answers
+  if (!answers) {
+    return 0
+  }
+  return (
+    answers
+      .filter(answer => answer.id === answerId)
+      .reduce((total, answer) => total + answer.votes, 0) || 0
+  )
+}
+
+function getTotalExternalVotesByAnswerId(poll: FullPoll, answerId: string): number {
+  const externalVoteSources = poll?.externalVoteSources
+  if (!externalVoteSources) {
+    return 0
+  }
+  return (
+    externalVoteSources.reduce(
+      (total, voteSource) =>
+        total + getTotalExternalVoteSourcesByAnswerId(answerId, voteSource.voteAmounts),
+      0
+    ) || 0
+  )
+}
+
+function getTotalExternalVoteSourcesByAnswerId(
+  answerId: string,
+  pollExternalVotes?: PollExternalVote[] | null
+): number {
+  if (!pollExternalVotes) {
+    return 0
+  }
+  return (
+    pollExternalVotes
+      .filter(externalVote => externalVote.answerId === answerId)
+      .reduce((total, externalVote) => total + externalVote.amount, 0) || 0
+  )
+}
+
+function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
+  return (
+    getTotalUserVotesByAnswerId(poll, answerId) + getTotalExternalVotesByAnswerId(poll, answerId)
+  )
+}
 
 interface PollAnswersProps {
   poll?: FullPoll
@@ -118,41 +177,87 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
     })
   }
 
+  function generateUrlParams(answer: PollAnswerWithVoteCount): undefined | string {
+    if (!poll) {
+      return undefined
+    }
+    if (!answer) {
+      return undefined
+    }
+    return `?pollId=${poll.id}&answerId=${answer.id}`
+  }
+  async function copyUrlParamsIntoClipboard(answer: PollAnswerWithVoteCount): Promise<void> {
+    const urlParams = generateUrlParams(answer)
+    if (!urlParams) {
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(urlParams)
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('pollAnswer.urlCopied')}
+        </Message>
+      )
+    } catch (e) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {t('pollAnswer.urlCopyingFailed')}
+        </Message>
+      )
+    }
+  }
+
   return (
     <>
-      <Row>
+      <Row style={{alignItems: 'center'}}>
         {poll?.answers?.map(answer => (
           <div key={`answer-${answer.id}`}>
-            <Col xs={18}>
-              <Form.Control
-                name={`answer-${answer.id}`}
-                value={answer.answer || t('pollEditView.defaultAnswer')}
-                onChange={(value: string) => {
-                  updateAnswer({
-                    ...answer,
-                    answer: value
-                  })
-                }}
-              />
+            <Col xs={16} style={{paddingRight: '30px'}}>
+              <Badge
+                style={{width: '100%'}}
+                content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}>
+                <Form.Control
+                  name={`answer-${answer.id}`}
+                  value={answer.answer || t('pollEditView.defaultAnswer')}
+                  onChange={(value: string) => {
+                    updateAnswer({
+                      ...answer,
+                      answer: value
+                    })
+                  }}
+                />
+              </Badge>
             </Col>
-            {/* Delete answer */}
-            <Col xs={6}>
+            {/* copy link btn */}
+            <Col xs={8}>
               <IconButton
                 icon={<TrashIcon />}
                 circle
                 size={'sm'}
+                appearance="ghost"
+                color="red"
+                style={{marginRight: '10px'}}
                 onClick={() => {
                   setAnswerToDelete(answer)
                   setModalOpen(true)
                 }}
               />
+              <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
+                <IconButton
+                  icon={<CopyIcon />}
+                  circle
+                  size="sm"
+                  appearance="ghost"
+                  onClick={() => copyUrlParamsIntoClipboard(answer)}
+                />
+              </Whisper>
             </Col>
           </div>
         ))}
       </Row>
       {/* adding new poll answer */}
       <Row>
-        <Col xs={18}>
+        <Col xs={16}>
           <Form.Control
             name="createNewFormAnswer"
             placeholder={t('pollAnswer.insertYourNewAnswer')}
@@ -162,11 +267,14 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
             }}
           />
         </Col>
-        <Col xs={6}>
-          <Button loading={loading} appearance="primary" onClick={createAnswer}>
-            <PlusIcon style={{marginRight: '5px'}} />
+        <Col xs={8}>
+          <IconButton
+            icon={<PlusIcon />}
+            loading={loading}
+            appearance="primary"
+            onClick={createAnswer}>
             {t('pollEditView.addAndSaveNewAnswer')}
-          </Button>
+          </IconButton>
         </Col>
       </Row>
 

@@ -644,7 +644,11 @@
       "deleteModalTitle": "Löschen?",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteBtn": "Löschen",
-      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein."
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
+      "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
+      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
+      "votes": "Stimmen"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
@@ -955,6 +959,19 @@
         "confirm": "Bestätigen"
       }
     },
+    "articleList": {
+      "filter": {
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "description": "Nach Beschreibung filtern",
+        "preTitle": "Nach Pre-Titel filtern",
+        "lead": "Nach Lead filtern",
+        "isPending": "Geplant",
+        "isDraft": "Entwurf",
+        "isPublished": "Publiziert",
+        "publicationDate": "Publikationsdatum"
+      }
+    },
     "userList": {
       "overview": {
         "action": "Aktion",
@@ -1057,7 +1074,8 @@
       "streetAddress2": "Strasse 2",
       "zipCode": "PLZ",
       "city": "Stadt",
-      "country": "Land"
+      "country": "Land",
+      "selectUserImage": "Profilbild wählen"
     },
     "userSubscriptionList": {
       "deactivationReason": {

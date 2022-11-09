@@ -1,7 +1,8 @@
 import {Prisma, PrismaClient, Subscription} from '@prisma/client'
-import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
 import {getSortOrder, SortOrder} from '../queries/sort'
+import {mapDateFilterToPrisma} from '../utils'
 
 export const createSubscriptionOrder = (
   field: SubscriptionSort,
@@ -18,10 +19,6 @@ export const createSubscriptionOrder = (
         modifiedAt: sortOrder
       }
   }
-}
-
-const mapDateFilterToPrisma = (comparison: DateFilterComparison): keyof Prisma.DateTimeFilter => {
-  return comparison === DateFilterComparison.Equal ? 'equals' : comparison
 }
 
 const createStartsAtFromFilter = (

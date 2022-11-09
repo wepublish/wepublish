@@ -1,14 +1,15 @@
-import React, {useState, useEffect} from 'react'
-import {Button, CheckPicker} from 'rsuite'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Button, CheckPicker} from 'rsuite'
 
-import {slugify, getOperationNameFromDocument} from '../utility'
 import {
-  useAuthorListQuery,
+  AuthorListDocument,
   AuthorRefFragment,
-  useCreateAuthorMutation,
-  AuthorListDocument
+  useAuthorListQuery,
+  useCreateAuthorMutation
 } from '../api'
+import {getOperationNameFromDocument, slugify} from '../utility'
+
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
   disabled?: boolean
@@ -18,7 +19,6 @@ export interface AuthorCheckPickerProps {
 
 export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerProps) {
   const {t} = useTranslation()
-
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
   const [authorsFilter, setAuthorsFilter] = useState('')
 
@@ -58,6 +58,7 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
       cleanable
       value={list.map(author => author.id)}
       data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+      placeholder={t('blocks.quote.author')}
       onSearch={searchKeyword => {
         setAuthorsFilter(searchKeyword)
       }}

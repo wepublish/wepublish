@@ -56,6 +56,10 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   title?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
   draft?: Maybe<Scalars['Boolean']>;
   published?: Maybe<Scalars['Boolean']>;
   pending?: Maybe<Scalars['Boolean']>;
@@ -284,7 +288,8 @@ export type Comment = {
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
 }
 
 export type CommentBlock = {
@@ -325,6 +330,7 @@ export type CommentFilter = {
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
 
@@ -1358,6 +1364,17 @@ export type PageConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type PageFilter = {
+  title?: Maybe<Scalars['String']>;
+  draft?: Maybe<Scalars['Boolean']>;
+  description?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
+  published?: Maybe<Scalars['Boolean']>;
+  pending?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   startCursor?: Maybe<Scalars['String']>;
@@ -1927,7 +1944,7 @@ export type QueryPagesArgs = {
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
+  filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -2376,6 +2393,7 @@ export type User = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
+  userImage?: Maybe<Image>;
   active: Scalars['Boolean'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
@@ -2423,6 +2441,7 @@ export type UserInput = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
+  userImageID?: Maybe<Scalars['ID']>;
   active: Scalars['Boolean'];
   properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
@@ -3829,7 +3848,7 @@ export type PageRefFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<PageFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -4706,6 +4725,9 @@ export type FullUserFragment = (
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
+  )>, userImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -5138,6 +5160,9 @@ export const FullUserFragmentDoc = gql`
     city
     country
   }
+  userImage {
+    ...ImageRef
+  }
   active
   lastLogin
   properties {
@@ -5154,7 +5179,8 @@ export const FullUserFragmentDoc = gql`
     ...UserSubscription
   }
 }
-    ${FullUserRoleFragmentDoc}
+    ${ImageRefFragmentDoc}
+${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
 export const CommentRevisionFragmentDoc = gql`
     fragment CommentRevision on CommentRevision {
@@ -7533,8 +7559,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

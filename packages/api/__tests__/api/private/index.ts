@@ -303,7 +303,31 @@ export type Comment = {
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
+}
+
+export type CommentBlock = {
+  __typename?: 'CommentBlock'
+  filter: CommentBlockFilter
+  comments: Array<Comment>
+}
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter'
+  item?: Maybe<Scalars['ID']>
+  tags?: Maybe<Array<Scalars['ID']>>
+  comments?: Maybe<Array<Scalars['ID']>>
+}
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter
+}
+
+export type CommentBlockInputFilter = {
+  item?: Maybe<Scalars['ID']>
+  tags?: Maybe<Array<Scalars['ID']>>
+  comments?: Maybe<Array<Scalars['ID']>>
 }
 
 export type CommentBlock = {
