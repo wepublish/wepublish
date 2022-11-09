@@ -9,11 +9,11 @@ import {
   GraphQLFloat,
   GraphQLID,
   GraphQLInputObjectType,
-  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLInt
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../../context'
@@ -114,6 +114,14 @@ export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLCommentRatingOverrideUpdateInput = new GraphQLInputObjectType({
+  name: 'CommentRatingOverrideUpdateInput',
+  fields: {
+    answerId: {type: GraphQLNonNull(GraphQLID)},
+    value: {type: GraphQLInt}
+  }
+})
+
 export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
   name: 'CommentUpdateInput',
   fields: {
@@ -153,6 +161,14 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
     text: {
       type: new GraphQLNonNull(GraphQLRichText)
     }
+  }
+})
+
+export const GraphQLoverriddenRating = new GraphQLObjectType<CalculatedRating, Context>({
+  name: 'overriddenRating',
+  fields: {
+    answerId: {type: GraphQLNonNull(GraphQLID)},
+    value: {type: GraphQLInt}
   }
 })
 
@@ -234,7 +250,10 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     state: {type: GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    overriddenRatings: {
+      type: GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))
+    }
   })
 })
 
@@ -318,6 +337,10 @@ export const GraphQLPublicComment: GraphQLObjectType<
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     calculatedRatings: {
       type: GraphQLList(GraphQLCalculatedRating)
+    },
+    overriddenRatings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),
+      resolve: comment => comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
     }
   })
 })

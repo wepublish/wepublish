@@ -266,7 +266,8 @@ model Comment {
 
   tags TaggedComments[]
 
-  ratings CommentRating[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@index([createdAt])
   @@map("comments")
@@ -311,7 +312,8 @@ model CommentRatingSystemAnswer {
   ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
   ratingSystemId String
 
-  ratings CommentRating[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@unique([ratingSystemId, answer])
   @@map("comments.rating-system-answers")
@@ -337,6 +339,22 @@ model CommentRating {
 
   @@unique([answerId, commentId, userId])
   @@map("comments.ratings")
+}
+
+model CommentRatingOverride {
+  answerId String
+  answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  value Int?
+
+  @@unique([answerId, commentId])
+  @@map("comments.rating-override")
 }
 
 model InvoiceItem {

@@ -673,7 +673,8 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
             ]
           },
           include: {
-            revisions: true
+            revisions: true,
+            overriddenRatings: true
           }
         })
 

@@ -448,7 +448,9 @@
       "tags": "Tags",
       "source": "Quelle",
       "userPanelHeader": "Verfasser:in des Kommentars",
-      "actions": "Aktionen"
+      "actions": "Aktionen",
+      "ratingOverrides": "Kommentarbewertung überschreiben",
+      "noOverride": "Nicht überschreiben"
     },
     "commentUser": {
       "selectExistingUser": "Registrierte Benutzer:in wählen",
