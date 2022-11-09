@@ -1,19 +1,20 @@
 import {
-  Prisma,
-  PrismaClient,
+  CommentAuthorType,
   CommentItemType,
   CommentState,
-  CommentAuthorType
+  Prisma,
+  PrismaClient
 } from '@prisma/client'
 import {Context} from '../../context'
+import {NotFound} from '../../error'
+import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
 import {
   authorise,
+  CanDeleteComments,
   CanTakeActionOnComment,
-  CanUpdateComments,
-  CanDeleteComments
+  CanUpdateComments
 } from '../permissions'
 import {RichTextNode} from '../richText'
-import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
 
 export const takeActionOnComment = (
   id: string,
@@ -74,7 +75,7 @@ export const updateComment = async (
       const answer = answers.find(a => a.id === override.answerId)
 
       if (!answer) {
-        return
+        throw new NotFound('CommentRatingSystemAnswer', override.answerId)
       }
 
       validateCommentRatingValue(answer.type, override.value ?? 0)
