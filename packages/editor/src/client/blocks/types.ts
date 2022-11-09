@@ -308,7 +308,11 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.CommentBlock:
       return {
         comment: {
-          filter: block.value?.filter ?? {}
+          filter: {
+            item: block.value?.filter.item,
+            tags: block.value?.filter.tags,
+            comments: block.value?.filter.comments
+          }
         }
       }
 
