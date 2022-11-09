@@ -24,7 +24,7 @@ export const getAdminPeerArticles = async (
     : null
 
   const peers = (
-    await prisma.peer.findMany({
+    await prisma.newsroom.findMany({
       orderBy: {
         createdAt: 'desc'
       }
@@ -35,7 +35,7 @@ export const getAdminPeerArticles = async (
 
   for (const peer of peers) {
     // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
-    loaders.peer.prime(peer.id, peer)
+    loaders.newsroom.prime(peer.id, peer)
   }
 
   const articles = await Promise.all(

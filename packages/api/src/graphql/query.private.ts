@@ -84,13 +84,13 @@ import {
 } from './payment-method/payment-method.private-queries'
 import {getAdminPayments, getPaymentById} from './payment/payment.private-queries'
 import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
-import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {getAdminPeerArticles} from './peer-article/peer-article.private-queries'
+import {GraphQLNewsroom, GraphQLPeerProfile} from './newsroom'
 import {
+  getNewsroomById,
+  getNewsrooms,
   getAdminPeerProfile,
   getRemotePeerProfile
-} from './peer-profile/peer-profile.private-queries'
-import {getPeerById, getPeers} from './peer/peer.private-queries'
+} from './newsroom/newsroom.private-queries'
 import {getPermissions} from './permission/permission.private-queries'
 import {
   authorise,
@@ -138,6 +138,7 @@ import {
   GraphQLUserRoleSort
 } from './userRole'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {getAdminPeerArticles} from './peer-article/peer-article.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -193,19 +194,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {peerProfile}}) =>
-        getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile)
+      resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {newsroom}}) =>
+        getAdminPeerProfile(hostURL, websiteURL, authenticate, newsroom)
     },
 
-    peers: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
-      resolve: (root, _, {authenticate, prisma: {peer}}) => getPeers(authenticate, peer)
+    newsrooms: {
+      type: GraphQLList(GraphQLNonNull(GraphQLNewsroom)),
+      resolve: (root, _, {authenticate, prisma: {newsroom}}) => getNewsrooms(authenticate, newsroom)
     },
 
-    peer: {
-      type: GraphQLPeer,
+    newsroom: {
+      type: GraphQLNewsroom,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, loaders: {peer}}) => getPeerById(id, authenticate, peer)
+      resolve: (root, {id}, {authenticate, loaders: {newsroom}}) =>
+        getNewsroomById(id, authenticate, newsroom)
     },
 
     // User

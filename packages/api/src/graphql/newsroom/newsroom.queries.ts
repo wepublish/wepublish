@@ -3,13 +3,13 @@ import {PrismaClient} from '@prisma/client'
 export const getPeerProfile = async (
   hostURL: string,
   websiteURL: string,
-  peerProfile: PrismaClient['peerProfile']
+  newsroom: PrismaClient['newsroom']
 ) => {
   // @TODO: move fallback to seed
-  const profile = (await peerProfile.findFirst({})) ?? {
+  const profile = (await newsroom.findFirst({})) ?? {
     name: '',
-    themeColor: '#000000',
-    themeFontColor: '#ffffff',
+    themeColor: '',
+    themeFontColor: '',
     callToActionURL: '',
     callToActionText: [],
     callToActionImageID: '',

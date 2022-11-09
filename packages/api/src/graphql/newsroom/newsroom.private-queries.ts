@@ -3,21 +3,21 @@ import {GraphQLResolveInfo} from 'graphql'
 import {delegateToSchema, introspectSchema, makeRemoteExecutableSchema} from 'graphql-tools'
 import {Context, createFetcher} from '../../context'
 import {SettingName} from '../../db/setting'
-import {PeerTokenInvalidError} from '../../error'
+import {PeerTokenInvalidError, DisabledNewsroomError} from '../../error'
 import {markResultAsProxied} from '../../utility'
-import {authorise, CanCreatePeer, CanGetPeerProfile} from '../permissions'
-import {getPeerProfile} from './peer-profile.queries'
+import {authorise, CanCreateNewsroom, CanGetNewsroom, CanGetNewsrooms} from '../permissions'
+import {getPeerProfile} from './newsroom.queries'
 
 export const getAdminPeerProfile = async (
   hostURL: string,
   websiteURL: string,
   authenticate: Context['authenticate'],
-  peerProfile: PrismaClient['peerProfile']
+  newsroom: PrismaClient['newsroom']
 ) => {
   const {roles} = authenticate()
-  authorise(CanGetPeerProfile, roles)
+  authorise(CanGetNewsroom, roles)
 
-  return getPeerProfile(hostURL, websiteURL, peerProfile)
+  return getPeerProfile(hostURL, websiteURL, newsroom)
 }
 
 export const getRemotePeerProfile = async (
@@ -28,7 +28,7 @@ export const getRemotePeerProfile = async (
   setting: PrismaClient['setting']
 ) => {
   const {roles} = authenticate()
-  authorise(CanCreatePeer, roles)
+  authorise(CanCreateNewsroom, roles)
   const link = new URL('/admin', hostURL)
 
   const peerTimeoutSetting = await setting.findUnique({
@@ -65,4 +65,35 @@ export const getRemotePeerProfile = async (
   } else {
     return await markResultAsProxied(remoteAnswer)
   }
+}
+
+export const getNewsroomById = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  newsroomClient: Context['loaders']['newsroom']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetNewsroom, roles)
+
+  const newsroom = await newsroomClient.load(id)
+
+  if (newsroom?.isDisabled) {
+    throw new DisabledNewsroomError()
+  }
+
+  return newsroom
+}
+
+export const getNewsrooms = async (
+  authenticate: Context['authenticate'],
+  newsroom: PrismaClient['newsroom']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetNewsrooms, roles)
+
+  return newsroom.findMany({
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
 }

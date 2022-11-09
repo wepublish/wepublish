@@ -19,7 +19,7 @@ export enum ErrorCode {
   CommentLengthError = 'COMMENT_LENGTH_ERROR',
   PeerTokenInvalid = 'PEER_TOKEN_INVALID',
   InternalError = 'InternalError',
-  DisabledPeerError = 'DISABLED_PEER_ERROR',
+  DisabledNewsroomError = 'DISABLED_NEWSROOM_ERROR',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
   InvalidSettingData = 'INVALID_SETTING_DATA'
@@ -106,9 +106,9 @@ export class UserInputError extends ApolloError {
   }
 }
 
-export class DisabledPeerError extends ApolloError {
+export class DisabledNewsroomError extends ApolloError {
   constructor() {
-    super(`Cannot return disabled peer.`, ErrorCode.DisabledPeerError)
+    super(`Cannot return disabled newsroom.`, ErrorCode.DisabledNewsroomError)
   }
 }
 

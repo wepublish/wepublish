@@ -5,7 +5,7 @@ import {
   Payment,
   PaymentMethod,
   PaymentState,
-  Peer,
+  Newsroom,
   PrismaClient,
   User,
   UserRole
@@ -87,8 +87,8 @@ export interface DataLoaderContext {
 
   readonly mailLogsByID: DataLoader<string, MailLog | null>
 
-  readonly peer: DataLoader<string, Peer | null>
-  readonly peerBySlug: DataLoader<string, Peer | null>
+  readonly newsroom: DataLoader<string, Newsroom | null>
+  readonly newsroomBySlug: DataLoader<string, Newsroom | null>
 
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
@@ -312,10 +312,10 @@ export async function contextFromRequest(
       : true
     : false
 
-  const peerDataLoader = new DataLoader(async ids =>
+  const newsroomDataLoader = new DataLoader(async ids =>
     createOptionalsArray(
       ids as string[],
-      await prisma.peer.findMany({
+      await prisma.newsroom.findMany({
         where: {
           id: {
             in: ids as string[]
@@ -619,11 +619,11 @@ export async function contextFromRequest(
       )
     ),
 
-    peer: peerDataLoader,
-    peerBySlug: new DataLoader(async slugs =>
+    newsroom: newsroomDataLoader,
+    newsroomBySlug: new DataLoader(async slugs =>
       createOptionalsArray(
         slugs as string[],
-        await prisma.peer.findMany({
+        await prisma.newsroom.findMany({
           where: {
             slug: {
               in: slugs as string[]
@@ -635,7 +635,7 @@ export async function contextFromRequest(
     ),
 
     peerSchema: new DataLoader(async ids => {
-      const peers = await peerDataLoader.loadMany(ids)
+      const peers = await newsroomDataLoader.loadMany(ids)
 
       return Promise.all(
         peers.map(async peer => {
@@ -654,7 +654,7 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               3000
-            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
+            const fetcher = createFetcher(peer?.hostURL ?? '', peer?.token ?? '', peerTimeout)
 
             return makeRemoteExecutableSchema({
               schema: await introspectSchema(fetcher),
@@ -669,7 +669,7 @@ export async function contextFromRequest(
     }),
 
     peerAdminSchema: new DataLoader(async ids => {
-      const peers = await peerDataLoader.loadMany(ids)
+      const peers = await newsroomDataLoader.loadMany(ids)
 
       return Promise.all(
         peers.map(async peer => {
@@ -689,8 +689,8 @@ export async function contextFromRequest(
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               3000
             const fetcher = createFetcher(
-              url.resolve(peer.hostURL, 'admin'),
-              peer.token,
+              url.resolve(peer?.hostURL ?? '', 'admin'),
+              peer?.token ?? '',
               peerTimeout
             )
 

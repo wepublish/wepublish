@@ -27,7 +27,7 @@ import {
 } from './common'
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
-import {GraphQLPeer} from './peer'
+import {GraphQLNewsroom} from './newsroom'
 import {GraphQLPublicComment} from './comment/comment'
 import {SessionType} from '../db/session'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
@@ -222,13 +222,15 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
   name: 'PeerArticle',
   fields: {
     peer: {
-      type: GraphQLNonNull(GraphQLPeer),
-      resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
+      type: GraphQLNonNull(GraphQLNewsroom),
+      resolve: createProxyingResolver(({newsroomID}, {}, {loaders}) =>
+        loaders.newsroom.load(newsroomID)
+      )
     },
     peeredArticleURL: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver(async ({peerID, article}, {}, {loaders, urlAdapter}) => {
-        const peer = await loaders.peer.load(peerID)
+      resolve: createProxyingResolver(async ({newsroomID, article}, {}, {loaders, urlAdapter}) => {
+        const peer = await loaders.newsroom.load(newsroomID)
         if (!peer || !article) return ''
         return urlAdapter.getPeeredArticleURL(peer, article)
       })

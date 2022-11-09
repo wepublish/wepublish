@@ -225,39 +225,27 @@ export const CanGetPagePreviewLink: Permission = {
   deprecated: false
 }
 
-export const CanUpdatePeerProfile: Permission = {
-  id: 'CAN_UPDATE_PEER_PROFILE',
-  description: 'Allows to update peer profile',
+export const CanCreateNewsroom: Permission = {
+  id: 'CAN_CREATE_NEWSROOM',
+  description: 'Allows to create newsrooms',
   deprecated: false
 }
 
-export const CanGetPeerProfile: Permission = {
-  id: 'CAN_GET_PEER_PROFILE',
-  description: 'Allows to get peer profile',
+export const CanGetNewsroom: Permission = {
+  id: 'CAN_GET_NEWSROOM',
+  description: 'Allows to get newsroom',
   deprecated: false
 }
 
-export const CanCreatePeer: Permission = {
-  id: 'CAN_CREATE_PEER',
-  description: 'Allows to create peers',
+export const CanGetNewsrooms: Permission = {
+  id: 'CAN_GET_NEWSROOMS',
+  description: 'Allows to get all newsrooms',
   deprecated: false
 }
 
-export const CanGetPeer: Permission = {
-  id: 'CAN_GET_PEER',
-  description: 'Allows to get peer',
-  deprecated: false
-}
-
-export const CanGetPeers: Permission = {
-  id: 'CAN_GET_PEERS',
-  description: 'Allows to get all peers',
-  deprecated: false
-}
-
-export const CanDeletePeer: Permission = {
-  id: 'CAN_DELETE_PEER',
-  description: 'Allows to delete peers',
+export const CanDeleteNewsroom: Permission = {
+  id: 'CAN_DELETE_NEWSROOM',
+  description: 'Allows to delete newsrooms',
   deprecated: false
 }
 
@@ -595,12 +583,10 @@ export const AllPermissions: Permission[] = [
   CanDeletePage,
   CanPublishPage,
   CanGetPagePreviewLink,
-  CanUpdatePeerProfile,
-  CanGetPeerProfile,
-  CanCreatePeer,
-  CanGetPeer,
-  CanGetPeers,
-  CanDeletePeer,
+  CanCreateNewsroom,
+  CanGetNewsroom,
+  CanGetNewsrooms,
+  CanDeleteNewsroom,
   CanCreateToken,
   CanDeleteToken,
   CanGetTokens,
@@ -676,9 +662,8 @@ export const EditorPermissions: Permission[] = [
   CanGetPage,
   CanGetPages,
   CanPublishPage,
-  CanGetPeer,
-  CanGetPeers,
-  CanGetPeerProfile,
+  CanGetNewsroom,
+  CanGetNewsrooms,
   CanLoginEditor,
   CanGetSettings,
   CanGetComments,
@@ -698,7 +683,7 @@ export const EditorPermissions: Permission[] = [
 ]
 
 export const PeerPermissions: Permission[] = [
-  CanGetPeerProfile,
+  CanGetNewsroom,
   CanGetSharedArticle,
   CanGetSharedArticles
 ]

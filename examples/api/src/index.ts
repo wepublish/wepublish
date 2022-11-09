@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Newsroom, PrismaClient} from '@prisma/client'
 import {
   Author,
   JobType,
@@ -45,7 +45,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
+  getPeeredArticleURL(peer: Newsroom, article: PublicArticle): string {
     return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 

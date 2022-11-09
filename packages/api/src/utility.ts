@@ -222,14 +222,14 @@ class ResetGraphQLEnums implements Transform {
 }
 
 export async function delegateToPeerSchema(
-  peerID: string,
+  newsroomID: string,
   fetchAdminEndpoint: boolean,
   context: Context,
   opts: Omit<IDelegateToSchemaOptions, 'schema'>
 ) {
   const schema = fetchAdminEndpoint
-    ? await context.loaders.peerAdminSchema.load(peerID)
-    : await context.loaders.peerSchema.load(peerID)
+    ? await context.loaders.peerAdminSchema.load(newsroomID)
+    : await context.loaders.peerSchema.load(newsroomID)
 
   if (!schema) return null
 

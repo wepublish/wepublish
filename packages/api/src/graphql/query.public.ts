@@ -53,9 +53,8 @@ import {
   GraphQLPublishedPageSort
 } from './page'
 import {getPublishedPages} from './page/page.public-queries'
-import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
-import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLNewsroom, GraphQLPeerProfile} from './newsroom'
+import {getPublicPeerProfile, getNewsroomByIdOrSlug} from './newsroom/newsroom.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
@@ -72,17 +71,18 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      description: 'This query returns the peer profile.',
-      resolve: (root, args, {hostURL, websiteURL, prisma: {peerProfile}}) =>
-        getPublicPeerProfile(hostURL, websiteURL, peerProfile)
+      description: 'This query returns the newsroom peer profile.',
+      resolve: (root, args, {hostURL, websiteURL, prisma: {newsroom}}) =>
+        getPublicPeerProfile(hostURL, websiteURL, newsroom)
     },
 
-    peer: {
-      type: GraphQLPeer,
+    newsroom: {
+      type: GraphQLNewsroom,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      description: 'This query takes either the ID or the slug and returns the peer profile.',
-      resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
-        getPeerByIdOrSlug(id, slug, peer, peerBySlug)
+      description:
+        'This query takes either the ID or the slug and returns the newsroom peer profile.',
+      resolve: (root, {id, slug}, {loaders: {newsroom, newsroomBySlug}}) =>
+        getNewsroomByIdOrSlug(id, slug, newsroom, newsroomBySlug)
     },
 
     // Navigation
@@ -181,29 +181,33 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peerArticle: {
       type: GraphQLPublicArticle,
       args: {
-        peerID: {type: GraphQLID},
-        peerSlug: {type: GraphQLSlug},
+        newsroomID: {type: GraphQLID},
+        newsroomSlug: {type: GraphQLSlug},
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      description: 'This query takes either the peer ID or the peer slug and returns the article.',
-      async resolve(root, {peerID, peerSlug, id}, context, info) {
+      description:
+        'This query takes either the newsroom ID or the newsroom slug and returns the article.',
+      async resolve(root, {newsroomID, newsroomSlug, id}, context, info) {
         const {loaders} = context
 
-        if ((peerID == null && peerSlug == null) || (peerID != null && peerSlug != null)) {
-          throw new UserInputError('You must provide either `peerID` or `peerSlug`.')
+        if (
+          (newsroomID == null && newsroomSlug == null) ||
+          (newsroomID != null && newsroomSlug != null)
+        ) {
+          throw new UserInputError('You must provide either `newsroomID` or `newsroomSlug`.')
         }
-        if (peerSlug) {
-          const peer = await loaders.peerBySlug.load(peerSlug)
+        if (newsroomSlug) {
+          const newsroom = await loaders.newsroomBySlug.load(newsroomSlug)
 
-          if (peer) {
-            peerID = peer.id
-            loaders.peer.prime(peer.id, peer)
+          if (newsroom) {
+            newsroomID = newsroom.id
+            loaders.newsroom.prime(newsroom.id, newsroom)
           }
         }
 
-        if (!peerID) return null
+        if (!newsroomID) return null
 
-        return delegateToPeerSchema(peerID, false, context, {
+        return delegateToPeerSchema(newsroomID, false, context, {
           fieldName: 'article',
           args: {id},
           info

@@ -56,7 +56,7 @@ import {
 import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
-import {GraphQLPeer} from './peer'
+import {GraphQLNewsroom} from './newsroom'
 import {GraphQLFullPoll} from './poll/poll'
 
 import {GraphQLComment, GraphQLPublicComment} from './comment/comment'
@@ -127,9 +127,9 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
     lead: {type: GraphQLString},
 
     peer: {
-      type: GraphQLPeer,
+      type: GraphQLNewsroom,
       resolve: createProxyingResolver(({peerID}, args, {loaders}) => {
-        return loaders.peer.load(peerID)
+        return loaders.newsroom.load(peerID)
       })
     },
 
@@ -299,10 +299,10 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
 
-    peer: {
-      type: GraphQLPeer,
+    newsroom: {
+      type: GraphQLNewsroom,
       resolve: createProxyingResolver(({peerID}, args, {loaders}) => {
-        return loaders.peer.load(peerID)
+        return loaders.newsroom.load(peerID)
       })
     },
 

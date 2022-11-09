@@ -84,15 +84,12 @@ import {
 } from './payment-method/payment-method.private-mutation'
 import {createPaymentFromInvoice} from './payment/payment.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
+import {GraphQLCreateNewsroomInput, GraphQLNewsroom, GraphQLUpdateNewsroomInput} from './newsroom'
 import {
-  GraphQLCreatePeerInput,
-  GraphQLPeer,
-  GraphQLPeerProfile,
-  GraphQLPeerProfileInput,
-  GraphQLUpdatePeerInput
-} from './peer'
-import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
-import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
+  createNewsroom,
+  deleteNewsroomById,
+  updateNewsroom
+} from './newsroom/newsroom.private-mutation'
 import {authorise, CanSendJWTLogin} from './permissions'
 import {
   GraphQLFullPoll,
@@ -233,35 +230,28 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // Peering
     // =======
 
-    updatePeerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
-      args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
-      resolve: (root, {input}, {hostURL, authenticate, prisma: {peerProfile}}) =>
-        upsertPeerProfile(input, hostURL, authenticate, peerProfile)
+    createNewsroom: {
+      type: GraphQLNonNull(GraphQLNewsroom),
+      args: {input: {type: GraphQLNonNull(GraphQLCreateNewsroomInput)}},
+      resolve: (root, {input}, {authenticate, prisma: {newsroom}}) =>
+        createNewsroom(input, authenticate, newsroom)
     },
 
-    createPeer: {
-      type: GraphQLNonNull(GraphQLPeer),
-      args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {peer}}) =>
-        createPeer(input, authenticate, peer)
-    },
-
-    updatePeer: {
-      type: GraphQLNonNull(GraphQLPeer),
+    updateNewsroom: {
+      type: GraphQLNonNull(GraphQLNewsroom),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUpdatePeerInput)}
+        input: {type: GraphQLNonNull(GraphQLUpdateNewsroomInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma: {peer}}) =>
-        updatePeer(id, input, authenticate, peer)
+      resolve: (root, {id, input}, {authenticate, prisma: {newsroom}}) =>
+        updateNewsroom(id, input, authenticate, newsroom)
     },
 
-    deletePeer: {
-      type: GraphQLPeer,
+    deleteNewsroom: {
+      type: GraphQLNewsroom,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
-        deletePeerById(id, authenticate, peer)
+      resolve: (root, {id}, {authenticate, prisma: {newsroom}}) =>
+        deleteNewsroomById(id, authenticate, newsroom)
     },
 
     // Session

@@ -6,33 +6,19 @@ import {
   GraphQLID,
   GraphQLBoolean
 } from 'graphql'
-
-import {PeerProfile} from '../db/peer'
+// import {NewsroomProfile} from '../db/newsroom'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
 import {GraphQLRichText} from './richText'
-import {Peer} from '@prisma/client'
+import {Newsroom} from '@prisma/client'
 
-export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
-  name: 'PeerProfileInput',
+export const GraphQLNewsroom = new GraphQLObjectType<Newsroom, Context>({
+  name: 'Newsroom',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLNonNull(GraphQLColor)},
-    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLID}
-  }
-})
-
-export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
-  name: 'PeerProfile',
-  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
 
     logo: {
@@ -42,17 +28,17 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
       })
     },
 
-    themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    themeColor: {type: GraphQLColor},
     themeFontColor: {
-      type: GraphQLNonNull(GraphQLColor),
+      type: GraphQLColor,
       resolve(profile, args, {loaders}, info) {
         return profile.themeFontColor ? profile.themeFontColor : '#fff'
       }
     },
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
-    websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    hostURL: {type: GraphQLString},
+    websiteURL: {type: GraphQLString},
+    callToActionText: {type: GraphQLRichText},
+    callToActionURL: {type: GraphQLString},
     callToActionImageURL: {type: GraphQLString},
     callToActionImage: {
       type: GraphQLImage,
@@ -63,29 +49,43 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
   }
 })
 
-export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
-  name: 'CreatePeerInput',
+export const GraphQLCreateNewsroomInput = new GraphQLInputObjectType({
+  name: 'CreateNewsroomInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
-    token: {type: GraphQLNonNull(GraphQLString)}
+    slug: {type: GraphQLString},
+    hostURL: {type: GraphQLString},
+    token: {type: GraphQLString},
+    logoID: {type: GraphQLID},
+    themeColor: {type: GraphQLColor},
+    themeFontColor: {type: GraphQLColor},
+    callToActionText: {type: GraphQLRichText},
+    callToActionURL: {type: GraphQLString},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLID}
   }
 })
 
-export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
-  name: 'UpdatePeerInput',
+export const GraphQLUpdateNewsroomInput = new GraphQLInputObjectType({
+  name: 'UpdateNewsroomInput',
   fields: {
     name: {type: GraphQLString},
     slug: {type: GraphQLString},
     hostURL: {type: GraphQLString},
     isDisabled: {type: GraphQLBoolean},
-    token: {type: GraphQLString}
+    token: {type: GraphQLString},
+    logoID: {type: GraphQLID},
+    themeColor: {type: GraphQLColor},
+    themeFontColor: {type: GraphQLColor},
+    callToActionText: {type: GraphQLRichText},
+    callToActionURL: {type: GraphQLString},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLID}
   }
 })
 
-export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
-  name: 'Peer',
+export const GraphQLPeerProfile = new GraphQLObjectType<Newsroom, Context>({
+  name: 'PeerProfile',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
@@ -93,11 +93,11 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLString},
     isDisabled: {type: GraphQLBoolean},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    hostURL: {type: GraphQLString},
     profile: {
-      type: GraphQLPeerProfile,
+      type: GraphQLNewsroom,
       resolve: createProxyingResolver(async (source, args, context, info) => {
         const peerProfile = await delegateToPeerSchema(source.id, true, context, {
           fieldName: 'peerProfile',

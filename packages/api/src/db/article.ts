@@ -29,6 +29,7 @@ export interface ArticleData {
   readonly socialMediaDescription?: string | null
   readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string | null
+  readonly newsroomID?: string | null
 }
 
 // Article State Flow:
@@ -46,7 +47,7 @@ export interface Article extends ArticleData {
 }
 
 export interface PeerArticle {
-  peerID: string
+  newsroomID: string
   article: Article
 }
 

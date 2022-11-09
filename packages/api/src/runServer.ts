@@ -1,4 +1,4 @@
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Newsroom, PrismaClient} from '@prisma/client'
 import bodyParser from 'body-parser'
 import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
@@ -40,8 +40,8 @@ class WepublishURLAdapter implements URLAdapter {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
-    return `${this.websiteURL}/p/${peer.id}/${article.id}`
+  getPeeredArticleURL(newsroom: Newsroom, article: PublicArticle): string {
+    return `${this.websiteURL}/p/${newsroom.id}/${article.id}`
   }
 
   getPublicPageURL(page: PublicPage): string {
