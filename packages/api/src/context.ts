@@ -1079,7 +1079,9 @@ async function loadFreshData(params: PeerQueryParams) {
       data: res,
       queryParams: params
     }
-    fetcherCache.set(params.cacheKey, cacheValue)
+    if (process.env.DISABLE_PEERING_CACHE !== 'true') {
+      fetcherCache.set(params.cacheKey, cacheValue)
+    }
     return res
   } catch (err) {
     let errorMessage = err
