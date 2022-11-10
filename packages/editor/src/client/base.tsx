@@ -88,8 +88,8 @@ export function Base({children}: BaseProps) {
           <Sidenav
             expanded={isExpanded}
             defaultOpenKeys={['1']}
-            appearance="default"
-            style={{flex: '1 1 auto'}}>
+            appearance="subtle"
+            style={{flex: '1 1 auto', paddingTop: '2rem'}}>
             <Sidenav.Body>
               <IconButton
                 style={{
@@ -466,13 +466,22 @@ export function Base({children}: BaseProps) {
         </Sidebar>
         <Container
           style={{
-            paddingTop: '60px',
-            paddingBottom: '60px',
-            paddingLeft: '40px',
-            paddingRight: '40px',
-            overflowY: 'scroll'
+            padding: '20px',
+            overflowY: 'scroll',
+            backgroundColor: '#f7f7fa'
           }}>
-          {children}
+          <div
+            style={{
+              borderRadius: '20px',
+              padding: '20px',
+              backgroundColor: 'white',
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%'
+            }}>
+            {children}
+          </div>
         </Container>
       </Container>
     </div>

@@ -2,6 +2,7 @@ import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CommentIcon from '@rsuite/icons/legacy/Comment'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
+import PlusIcon from '@rsuite/icons/legacy/Plus'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -110,14 +111,18 @@ function ArticleList() {
 
   return (
     <>
-      <FlexboxGrid>
+      <FlexboxGrid
+        style={{padding: '20px', backgroundColor: 'rgb(255 242 216)', borderRadius: '20px'}}>
         <FlexboxGrid.Item colspan={16}>
-          <h2>{t('articles.overview.articles')}</h2>
+          <h2 style={{paddingLeft: '16px', fontFamily: 'Helvetica'}}>
+            {t('articles.overview.articles')}
+          </h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/articles/create">
               <Button appearance="primary" disabled={isLoading}>
+                <PlusIcon style={{marginRight: '8px', marginBottom: '2px'}} />
                 {t('articles.overview.newArticle')}
               </Button>
             </Link>
@@ -145,7 +150,8 @@ function ArticleList() {
         style={{
           display: 'flex',
           flexFlow: 'column',
-          marginTop: '20px'
+          marginTop: '20px',
+          height: '100%'
         }}>
         <Table
           minHeight={600}

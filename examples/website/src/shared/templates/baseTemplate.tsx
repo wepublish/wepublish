@@ -57,7 +57,6 @@ export const BaseTemplateHeaderStyle = cssRule<BaseTemplateStyleProps>(
     ...whenDesktop({
       transition: 'transform 200ms',
       transform: isHeaderMinimized ? 'translateY(-93px)' : undefined,
-
       position: 'fixed',
       left: '60px',
       right: 0,
