@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 
-export const getPeerProfile = async (
+export const getNewsroom = async (
   hostURL: string,
   websiteURL: string,
   newsroom: PrismaClient['newsroom']

@@ -6,7 +6,7 @@ import {SettingName} from '../../db/setting'
 import {PeerTokenInvalidError, DisabledNewsroomError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise, CanCreateNewsroom, CanGetNewsroom, CanGetNewsrooms} from '../permissions'
-import {getPeerProfile} from './newsroom.queries'
+import {getNewsroom} from './newsroom.queries'
 
 export const getAdminPeerProfile = async (
   hostURL: string,
@@ -17,7 +17,7 @@ export const getAdminPeerProfile = async (
   const {roles} = authenticate()
   authorise(CanGetNewsroom, roles)
 
-  return getPeerProfile(hostURL, websiteURL, newsroom)
+  return getNewsroom(hostURL, websiteURL, newsroom)
 }
 
 export const getRemotePeerProfile = async (
