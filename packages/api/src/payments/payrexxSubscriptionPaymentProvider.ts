@@ -28,7 +28,6 @@ import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
 import add from 'date-fns/add'
 import {SendMailType} from '../mails/mailContext'
-import {SettingName} from '../db/setting'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -225,7 +224,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     invoiceClient,
     subscriptionPeriodClient,
     invoiceItemClient,
-    context
+    mailContext
   }: UpdatePaymentWithIntentStateProps): Promise<any> {
     const apiData = JSON.parse(intentState.paymentData ? intentState.paymentData : '{}')
     const rawSubscription = apiData.subscription
@@ -359,25 +358,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           paidUntil: newSubscriptionValidUntil
         }
       })
-      const jwtSetting = await context.prisma.setting.findUnique({
-        where: {name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN}
-      })
-      const jwtExpires =
-        (jwtSetting?.value as number) ?? parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
 
-      if (!jwtExpires) {
-        console.error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
-      }
-
-      const token = context.generateJWT({
-        id: user.id,
-        expiresInMinutes: jwtExpires
-      })
-      await context.mailContext.sendMail({
+      await mailContext.sendMail({
         type: SendMailType.RenewedMemberSubscription,
         recipient: user.email,
         data: {
-          url: jwtExpires ? context.urlAdapter.getLoginURL(token) : '',
           user,
           subscription
         }

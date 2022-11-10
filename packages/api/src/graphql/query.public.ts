@@ -455,7 +455,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
             userClient: prisma.user,
             invoiceClient: context.prisma.invoice,
             subscriptionPeriodClient: context.prisma.subscriptionPeriod,
-            invoiceItemClient: context.prisma.invoiceItem
+            invoiceItemClient: context.prisma.invoiceItem,
+            mailContext: context.mailContext
           })
         }
 
