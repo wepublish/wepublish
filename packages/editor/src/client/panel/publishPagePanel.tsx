@@ -1,16 +1,13 @@
-import React, {useState, useEffect} from 'react'
-
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {PageMetadata} from './pageMetadataPanel'
-
-import {useTranslation} from 'react-i18next'
 import {DateTimePicker} from '../atoms/dateTimePicker'
-import {InfoColor} from '../atoms/infoMessage'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
+import {InfoColor} from '../atoms/infoMessage'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {PageMetadata} from './pageMetadataPanel'
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date
@@ -84,8 +81,9 @@ function PublishPagePanel({
 
         <Checkbox
           checked={isPublishDateActive}
-          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
-          {' '}
+          onChange={(_, checked) => {
+            setIsPublishDateActive(checked)
+          }}>
           {t('pageEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 
