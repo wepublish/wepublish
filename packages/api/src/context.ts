@@ -1102,43 +1102,38 @@ async function loadFreshData(params: PeerQueryParams) {
 }
 
 export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
-  const data = new DataLoader<
-    {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
-    any,
-    string
-  >(async queries => {
-    const results = await Promise.all(
-      queries.map(async ({query, variables, operationName}) => {
-        // Initialize and prepare caching
-        const fetchParams: PeerQueryParams = {
-          hostURL,
-          variables,
-          query,
-          operationName,
-          token,
-          cacheKey: '',
-          lastQueried: 0,
-          timeout: peerTimeOut
-        }
-        fetchParams.cacheKey = generateCacheKey(fetchParams)
-        const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
+  const loadData = async ({
+    query,
+    variables,
+    operationName
+  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+    // Initialize and prepare caching
+    const fetchParams: PeerQueryParams = {
+      hostURL,
+      variables,
+      query,
+      operationName,
+      token,
+      cacheKey: '',
+      lastQueried: 0,
+      timeout: peerTimeOut
+    }
 
-        // On initial query add data to cache queue
-        if (!cachedData) {
-          return await loadFreshData(fetchParams)
-        }
+    fetchParams.cacheKey = generateCacheKey(fetchParams)
+    const cachedData = fetcherCache.get<PeerCacheValue>(fetchParams.cacheKey)
 
-        // Serve cached entries direct
-        cachedData.queryParams.lastQueried = new Date().getTime()
-        return cachedData.data
-      })
-    )
+    if (cachedData) {
+      // Serve cached entries direct
+      cachedData.queryParams.lastQueried = new Date().getTime()
+      return cachedData.data
+    }
 
-    return results
-  })
+    return await loadFreshData(fetchParams)
+  }
 
   return async ({query: queryDocument, variables, operationName}) => {
     const query = print(queryDocument)
-    return data.load({query, variables, operationName})
+
+    return loadData({query, variables, operationName})
   }
 }
