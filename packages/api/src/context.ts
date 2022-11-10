@@ -51,13 +51,14 @@ import {URLAdapter} from './urlAdapter'
 /**
  * Peered article cache configuration and setup
  */
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+// const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
 const fetcherCache = new NodeCache({
   stdTTL: 1800,
   checkperiod: 60,
-  deleteOnExpire: false,
-  useClones: false
+  deleteOnExpire: true,
+  useClones: true
 })
+/**
 fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
   // Refresh cache only if last use of cached entry is less than 24h ago
   if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
@@ -66,6 +67,7 @@ fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
     fetcherCache.del(key)
   }
 })
+ **/
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, NavigationWithLinks | null>
@@ -1082,6 +1084,7 @@ async function loadFreshData(params: PeerQueryParams) {
     if (process.env.DISABLE_PEERING_CACHE !== 'true') {
       fetcherCache.set(params.cacheKey, cacheValue)
     }
+
     return res
   } catch (err) {
     let errorMessage = err
@@ -1121,7 +1124,7 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
         }
 
         // Serve cached entries direct
-        cachedData.queryParams.lastQueried = new Date().getTime()
+        // cachedData.queryParams.lastQueried = new Date().getTime()
         return cachedData.data
       })
     )
