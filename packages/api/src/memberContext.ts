@@ -515,7 +515,8 @@ export class MemberContext implements MemberContext {
           userClient: this.prisma.user,
           invoiceClient: this.prisma.invoice,
           subscriptionPeriodClient: this.prisma.subscriptionPeriod,
-          invoiceItemClient: this.prisma.invoiceItem
+          invoiceItemClient: this.prisma.invoiceItem,
+          mailContext: this.mailContext
         })
 
         // FIXME: We need to implement a way to wait for all the database
