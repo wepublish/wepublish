@@ -178,38 +178,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     })
   }
 
-  function currentFilter() {
-    switch (type) {
-      case TeaserType.Article:
-        return (
-          <Input
-            value={filter.title || ''}
-            onChange={value => setFilter({title: value, published: true})}
-          />
-        )
-      case TeaserType.PeerArticle:
-        return (
-          <Input
-            value={filter.title || ''}
-            onChange={value => setFilter({title: value, published: true})}
-          />
-        )
-      case TeaserType.Page:
-        return (
-          <Input
-            value={filter.title || ''}
-            onChange={value => setFilter({title: value, published: true})}
-          />
-        )
-      case TeaserType.Custom:
-        return (
-          <Input
-            value={filter.title || ''}
-            onChange={value => setFilter({title: value, published: true})}
-          />
-        )
-    }
-  }
+  const updateFilter = (value: string) => setFilter({...filter, title: value})
 
   function currentContent() {
     switch (type) {
@@ -524,7 +493,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
         {type !== TeaserType.Custom && (
           <InputGroup style={{marginBottom: 20}}>
-            {currentFilter()}
+            <Input value={filter.title || ''} onChange={updateFilter} />
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>
