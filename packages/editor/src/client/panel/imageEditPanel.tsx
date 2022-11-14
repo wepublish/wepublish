@@ -2,7 +2,6 @@ import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link} from 'react-router-dom'
 import {Button, Drawer, Form, Message, Panel, Schema, TagPicker, toaster} from 'rsuite'
 
 import {
