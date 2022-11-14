@@ -27,6 +27,7 @@ import sub from 'date-fns/sub'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
 import add from 'date-fns/add'
+import {SendMailType} from '../mails/mailContext'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -222,7 +223,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     userClient,
     invoiceClient,
     subscriptionPeriodClient,
-    invoiceItemClient
+    invoiceItemClient,
+    mailContext
   }: UpdatePaymentWithIntentStateProps): Promise<any> {
     const apiData = JSON.parse(intentState.paymentData ? intentState.paymentData : '{}')
     const rawSubscription = apiData.subscription
@@ -354,6 +356,15 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         },
         data: {
           paidUntil: newSubscriptionValidUntil
+        }
+      })
+
+      await mailContext.sendMail({
+        type: SendMailType.RenewedMemberSubscription,
+        recipient: user.email,
+        data: {
+          user,
+          subscription
         }
       })
       logger('payrexxSubscriptionPaymentProvider').info(

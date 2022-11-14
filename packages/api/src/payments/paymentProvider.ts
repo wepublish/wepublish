@@ -5,6 +5,7 @@ import express, {Router} from 'express'
 import {Context, contextFromRequest} from '../context'
 import {InvoiceWithItems} from '../db/invoice'
 import {logger, WepublishServerOpts} from '../server'
+import {MailContext} from '../mails/mailContext'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -43,6 +44,7 @@ export interface UpdatePaymentWithIntentStateProps {
   invoiceClient: PrismaClient['invoice']
   subscriptionPeriodClient: PrismaClient['subscriptionPeriod']
   invoiceItemClient: PrismaClient['invoiceItem']
+  mailContext: MailContext
 }
 
 export interface WebhookUpdatesProps {
@@ -285,7 +287,8 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
               userClient: context.prisma.user,
               invoiceClient: context.prisma.invoice,
               subscriptionPeriodClient: context.prisma.subscriptionPeriod,
-              invoiceItemClient: context.prisma.invoiceItem
+              invoiceItemClient: context.prisma.invoiceItem,
+              mailContext: context.mailContext
             })
           }
         } catch (error) {
