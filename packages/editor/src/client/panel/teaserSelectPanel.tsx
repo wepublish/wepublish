@@ -181,13 +181,33 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   function currentFilter() {
     switch (type) {
       case TeaserType.Article:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+        return (
+          <Input
+            value={filter.title || ''}
+            onChange={value => setFilter({title: value, published: true})}
+          />
+        )
       case TeaserType.PeerArticle:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+        return (
+          <Input
+            value={filter.title || ''}
+            onChange={value => setFilter({title: value, published: true})}
+          />
+        )
       case TeaserType.Page:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+        return (
+          <Input
+            value={filter.title || ''}
+            onChange={value => setFilter({title: value, published: true})}
+          />
+        )
       case TeaserType.Custom:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
+        return (
+          <Input
+            value={filter.title || ''}
+            onChange={value => setFilter({title: value, published: true})}
+          />
+        )
     }
   }
 
