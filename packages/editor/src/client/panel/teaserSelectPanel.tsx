@@ -64,7 +64,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
+  const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -289,9 +289,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             {pages.map(page => {
               const states = []
 
-              if (page.draft) states.push('articleEditor.panels.draft')
-              if (page.pending) states.push('articleEditor.panels.pending')
-              if (page.published) states.push('articleEditor.panels.published')
+              if (page.draft) states.push(t('articleEditor.panels.draft'))
+              if (page.pending) states.push(t('articleEditor.panels.pending'))
+              if (page.published) states.push(t('articleEditor.panels.published'))
 
               return (
                 <List.Item key={page.id}>
