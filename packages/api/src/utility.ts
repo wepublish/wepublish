@@ -49,7 +49,7 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason'
-    ].join(',') + '\n'
+    ].join(';') + '\n'
 
   for (const subscription of subscriptions) {
     const user = subscription?.user
@@ -87,7 +87,7 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
           ? formatISO(subscription.deactivation.date, {representation: 'date'})
           : '',
         subscription?.deactivation?.reason ?? ''
-      ].join(',') + '\r\n'
+      ].join(';') + '\r\n'
   }
 
   return csvStr
