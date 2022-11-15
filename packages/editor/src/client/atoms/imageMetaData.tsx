@@ -30,7 +30,6 @@ function findNestedMetaFields(tags: any, tag: string) {
 }
 
 export async function readImageMetaData(data: File): Promise<ImageMetaData> {
-  const tags = await exifr.parse(data, true)
   const fields: ImageMetaData = {
     title: '',
     description: '',
@@ -38,20 +37,20 @@ export async function readImageMetaData(data: File): Promise<ImageMetaData> {
     link: '',
     licence: ''
   }
-  for (const field in DEFAULT_META_TAG_MAP) {
-    for (const tag of DEFAULT_META_TAG_MAP[field]) {
-      const foundTag = findNestedMetaFields(tags, tag)
-      if (foundTag) {
-        fields[field] = foundTag
-        break
+
+  try {
+    const tags = await exifr.parse(data, true)
+
+    for (const field in DEFAULT_META_TAG_MAP) {
+      for (const tag of DEFAULT_META_TAG_MAP[field]) {
+        const foundTag = findNestedMetaFields(tags, tag)
+        if (foundTag) {
+          fields[field] = foundTag
+          break
+        }
       }
     }
-  }
-  return {
-    title: fields.title,
-    description: fields.description,
-    source: fields.source,
-    link: fields.link,
-    licence: fields.licence
-  }
+  } catch {}
+
+  return fields
 }
