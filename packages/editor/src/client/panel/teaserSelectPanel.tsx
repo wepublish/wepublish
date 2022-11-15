@@ -178,7 +178,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     })
   }
 
-  const updateFilter = (value: string) => setFilter({...filter, title: value})
+  const updateFilter = (value: string) =>
+    setFilter(oldFilter => ({
+      ...oldFilter,
+      title: value
+    }))
 
   function currentContent() {
     switch (type) {
