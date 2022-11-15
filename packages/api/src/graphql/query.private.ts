@@ -437,7 +437,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         }
 
         // fixes https://wepublish.atlassian.net/browse/WPC-928
-        const subscriptionsWithUser: Subscription[] = []
+        const subscriptionsMaybeWithUser: Subscription[] = []
         const users: User[] = []
         hasMore = true
         afterCursor = undefined
@@ -455,15 +455,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
         // map users on subscriptions
         for (const subscription of subscriptions) {
-          const userIndex = users.findIndex(tmpUser => tmpUser.id === subscription.userID)
+          const userIndex = users.findIndex(user => user.id === subscription.userID)
           if (userIndex < 0) {
-            subscriptionsWithUser.push(subscription)
+            subscriptionsMaybeWithUser.push(subscription)
             continue
           }
-          subscriptionsWithUser.push({...subscription, user: users[userIndex]})
+          subscriptionsMaybeWithUser.push({...subscription, user: users[userIndex]})
         }
 
-        return mapSubscriptionsAsCsv(subscriptionsWithUser)
+        return mapSubscriptionsAsCsv(subscriptionsMaybeWithUser)
       }
     },
 
