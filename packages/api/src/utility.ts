@@ -100,7 +100,7 @@ export function mapSubscriptionsAsCsv(
 }
 
 // Removes commas and new lines within csv content. Avoids disrupted csv formatting.
-function sanitizeCsvContent(input: string | undefined): string {
+function sanitizeCsvContent(input: string | undefined | null): string {
   return (input || '').toString().replace(/[#,]|\r?\n|\r/g, '')
 }
 
