@@ -55,7 +55,7 @@ export function mapSubscriptionsAsCsv(
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason'
-    ].join(',') + '\n'
+    ].join(';') + '\n'
 
   for (const subscription of subscriptions) {
     const user = subscription?.user
@@ -93,7 +93,7 @@ export function mapSubscriptionsAsCsv(
           ? formatISO(subscription.deactivation.date, {representation: 'date'})
           : '',
         subscription?.deactivation?.reason ?? ''
-      ].join(',') + '\r\n'
+      ].join(';') + '\r\n'
   }
 
   return csvStr
@@ -236,7 +236,7 @@ export async function delegateToPeerSchema(
   return markResultAsProxied(
     await delegateToSchema({
       ...opts,
-      schema: schema,
+      schema,
       transforms: [new ResetGraphQLEnums(), ...(opts.transforms ?? [])]
     })
   )
