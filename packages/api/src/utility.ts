@@ -49,7 +49,7 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason'
-    ].join(';') + '\n'
+    ].join(',') + '\n'
 
   for (const subscription of subscriptions) {
     const user = subscription?.user
@@ -59,20 +59,20 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
     csvStr +=
       [
         user?.id,
-        `${user?.firstName ?? ''}`,
-        `${user?.name ?? ''}`,
-        `${user?.preferredName ?? ''}`,
+        `${sanitizeCsvContent(user?.firstName)}`,
+        `${sanitizeCsvContent(user?.name)}`,
+        `${sanitizeCsvContent(user?.preferredName)}`,
         `${user?.email ?? ''}`,
         user?.active,
         user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',
         user?.modifiedAt ? formatISO(user.modifiedAt, {representation: 'date'}) : '',
-        `${user?.address?.company ?? ''}`,
-        `${user?.address?.streetAddress ?? ''}`,
-        `${user?.address?.streetAddress2 ?? ''}`,
-        `${user?.address?.zipCode ?? ''}`,
-        `${user?.address?.city ?? ''}`,
-        `${user?.address?.country ?? ''}`,
-        memberPlan?.name ?? '',
+        `${sanitizeCsvContent(user?.address?.company)}`,
+        `${sanitizeCsvContent(user?.address?.streetAddress)}`,
+        `${sanitizeCsvContent(user?.address?.streetAddress2)}`,
+        `${sanitizeCsvContent(user?.address?.zipCode)}`,
+        `${sanitizeCsvContent(user?.address?.city)}`,
+        `${sanitizeCsvContent(user?.address?.country)}`,
+        sanitizeCsvContent(memberPlan?.name),
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
@@ -81,16 +81,21 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
         subscription?.paidUntil
           ? formatISO(subscription.paidUntil, {representation: 'date'})
           : 'no pay',
-        paymentMethod?.name ?? '',
+        sanitizeCsvContent(paymentMethod?.name),
         subscription?.paymentMethodID ?? '',
         subscription?.deactivation
           ? formatISO(subscription.deactivation.date, {representation: 'date'})
           : '',
         subscription?.deactivation?.reason ?? ''
-      ].join(';') + '\r\n'
+      ].join(',') + '\r\n'
   }
 
   return csvStr
+}
+
+// Removes commas and new lines within csv content. Avoids disrupted csv formatting.
+function sanitizeCsvContent(input: string | undefined): string {
+  return (input || '').toString().replace(/[#,]|\r?\n|\r/g, '')
 }
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
