@@ -29,7 +29,7 @@ import {
   TeaserStyle,
   useArticleListQuery,
   usePageListQuery,
-  usePeerArticleListQuery
+  usePeerArticleListLazyQuery
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -61,6 +61,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [contentUrl, setContentUrl] = useState('')
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
+  const [peerArticlesLoaded, setPeerArticlesLoaded] = useState<boolean>(false)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -92,11 +93,15 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const {
-    data: peerArticleListData,
-    fetchMore: fetchMorePeerArticles,
-    error: peerArticleListError
-  } = usePeerArticleListQuery({
+  const [
+    getPeerArticles,
+    {
+      loading: loadingPeerArticles,
+      error: peerArticleListError,
+      data: peerArticleListData,
+      fetchMore: fetchMorePeerArticles
+    }
+  ] = usePeerArticleListLazyQuery({
     variables: peerListVariables,
     fetchPolicy: 'network-only'
   })
@@ -479,7 +484,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         <Nav
           appearance="tabs"
           activeKey={type}
-          onSelect={type => setType(type)}
+          onSelect={async type => {
+            setType(type)
+            if (type === TeaserType.PeerArticle && !peerArticlesLoaded) {
+              setPeerArticlesLoaded(true)
+              await getPeerArticles()
+            }
+          }}
           style={{marginBottom: 20}}>
           <Nav.Item eventKey={TeaserType.Article} icon={<FileTextIcon />}>
             {t('articleEditor.panels.article')}
