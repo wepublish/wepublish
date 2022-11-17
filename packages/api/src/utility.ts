@@ -93,9 +93,16 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
   return csvStr
 }
 
-// Removes commas and new lines within csv content. Avoids disrupted csv formatting.
-function sanitizeCsvContent(input: string | undefined): string {
-  return (input || '').toString().replace(/[#,]|\r?\n|\r/g, '')
+/**
+ * according to rfc 4180
+ * https://www.ietf.org/rfc/rfc4180.txt
+ * @param input
+ */
+function sanitizeCsvContent(input: string | undefined) {
+  // according rfc 4180 2.5. / 2.6.
+  const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
+  // according rfc 4180 2.7.
+  return `"${escapeDoubleQuotes}"`
 }
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
