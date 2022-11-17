@@ -52,7 +52,7 @@ import {URLAdapter} from './urlAdapter'
  * Peered article cache configuration and setup
  */
 const fetcherCache = new NodeCache({
-  stdTTL: 1800,
+  stdTTL: 3600,
   checkperiod: 60,
   deleteOnExpire: true,
   useClones: true

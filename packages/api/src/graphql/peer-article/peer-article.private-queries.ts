@@ -15,7 +15,8 @@ export const getAdminPeerArticles = async (
   context: Context,
   info: GraphQLResolveInfo,
   take: number,
-  skip: number
+  skip: number,
+  first: number
 ): Promise<ConnectionResult<PeerArticle>> => {
   const {authenticate, loaders, prisma} = context
   const {roles} = authenticate()
@@ -41,8 +42,8 @@ export const getAdminPeerArticles = async (
     loaders.peer.prime(peer.id, peer)
   }
 
-  // If the peers count is not a multiple of the object requested return more than requested
-  const articleToTakeFromEachPeer = Math.ceil(take / peers.length)
+  // If the peers count is not a multiple of the object requested return more than requested (backwards compatible)
+  const articleToTakeFromEachPeer = Math.ceil(first || take / peers.length)
   const articleToSkipFromEachPeer = Math.ceil(skip / peers.length)
 
   const articles = await Promise.all(
