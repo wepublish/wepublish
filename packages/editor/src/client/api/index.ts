@@ -1415,8 +1415,8 @@ export type PageRevision = {
   publishAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  slug: Scalars['Slug'];
-  title: Scalars['String'];
+  slug?: Maybe<Scalars['Slug']>;
+  title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;

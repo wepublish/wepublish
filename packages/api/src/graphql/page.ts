@@ -102,9 +102,9 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
     updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
 
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: GraphQLSlug},
 
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
