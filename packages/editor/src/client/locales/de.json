@@ -142,7 +142,8 @@
         "enterSocialMediaTitle": "Bitte Titel für Social Media hinzufügen",
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
         "enterAuthors": "Bitte Autor:in hinzufügen",
-        "peerDisabled": "Dieser Peer ist momentan deaktiviert"
+        "peerDisabled": "Dieser Peer ist momentan deaktiviert",
+        "loadingPeerArticles": "Artikel von Peers laden..."
       }
     },
     "articles": {

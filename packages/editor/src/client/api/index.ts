@@ -117,7 +117,7 @@ export type ArticleRevision = {
   canonicalUrl?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   image?: Maybe<Image>;
-  authors: Array<Maybe<Author>>;
+  authors: Array<Author>;
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -275,6 +275,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  peerId?: Maybe<Scalars['ID']>;
   parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -1922,6 +1923,7 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: Maybe<Scalars['String']>;
   take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
   peerFilter?: Maybe<Scalars['String']>;
@@ -2555,10 +2557,10 @@ export type ArticleRefFragment = (
   )>, latest: (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
-    & { authors: Array<Maybe<(
+    & { authors: Array<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
-    )>>, image?: Maybe<(
+    )>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
@@ -2596,6 +2598,8 @@ export type PeerArticleListQueryVariables = Exact<{
   peerFilter?: Maybe<Scalars['String']>;
   order?: Maybe<SortOrder>;
   sort?: Maybe<ArticleSort>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -2742,10 +2746,10 @@ export type ArticleQuery = (
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, authors: Array<Maybe<(
+      )>, authors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors: Array<(
+      )>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
       )>, socialMediaImage?: Maybe<(
@@ -5778,8 +5782,8 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort, $take: Int, $skip: Int) {
+  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter, take: $take, skip: $skip) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5816,6 +5820,8 @@ ${ArticleRefFragmentDoc}`;
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */

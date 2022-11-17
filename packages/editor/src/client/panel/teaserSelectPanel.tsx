@@ -96,7 +96,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [
     getPeerArticles,
     {
-      // loading: loadingPeerArticles,
+      loading: loadingPeerArticles,
       error: peerArticleListError,
       data: peerArticleListData,
       fetchMore: fetchMorePeerArticles
@@ -235,6 +235,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.PeerArticle:
         return (
           <>
+            <h4>{loadingPeerArticles && t('articleEditor.panels.loadingPeerArticles')}</h4>
             {peerArticles.map(({peer, article, peeredArticleURL}) => {
               const states = []
 
