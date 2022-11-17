@@ -1111,11 +1111,9 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
     const cachedData = fetcherCache.get<PeerCacheValue>(fetchParams.cacheKey)
 
     if (cachedData) {
-      console.log('CACHED ' + hostURL + ' ' + JSON.stringify(variables))
       // Serve cached entries direct
       return cachedData.data
     }
-    console.log('NEW ' + hostURL + ' ' + JSON.stringify(variables))
     return await loadFreshData(fetchParams)
   }
 
