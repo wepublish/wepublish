@@ -59,20 +59,20 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
     csvStr +=
       [
         user?.id,
-        `${user?.firstName ?? ''}`,
-        `${user?.name ?? ''}`,
-        `${user?.preferredName ?? ''}`,
+        `${sanitizeCsvContent(user?.firstName)}`,
+        `${sanitizeCsvContent(user?.name)}`,
+        `${sanitizeCsvContent(user?.preferredName)}`,
         `${user?.email ?? ''}`,
         user?.active,
         user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',
         user?.modifiedAt ? formatISO(user.modifiedAt, {representation: 'date'}) : '',
-        `${user?.address?.company ?? ''}`,
-        `${user?.address?.streetAddress ?? ''}`,
-        `${user?.address?.streetAddress2 ?? ''}`,
-        `${user?.address?.zipCode ?? ''}`,
-        `${user?.address?.city ?? ''}`,
-        `${user?.address?.country ?? ''}`,
-        memberPlan?.name ?? '',
+        `${sanitizeCsvContent(user?.address?.company)}`,
+        `${sanitizeCsvContent(user?.address?.streetAddress)}`,
+        `${sanitizeCsvContent(user?.address?.streetAddress2)}`,
+        `${sanitizeCsvContent(user?.address?.zipCode)}`,
+        `${sanitizeCsvContent(user?.address?.city)}`,
+        `${sanitizeCsvContent(user?.address?.country)}`,
+        sanitizeCsvContent(memberPlan?.name),
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
@@ -81,7 +81,7 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
         subscription?.paidUntil
           ? formatISO(subscription.paidUntil, {representation: 'date'})
           : 'no pay',
-        paymentMethod?.name ?? '',
+        sanitizeCsvContent(paymentMethod?.name),
         subscription?.paymentMethodID ?? '',
         subscription?.deactivation
           ? formatISO(subscription.deactivation.date, {representation: 'date'})
@@ -91,6 +91,18 @@ export function mapSubscriptionsAsCsv(subscriptions: Subscription[]) {
   }
 
   return csvStr
+}
+
+/**
+ * according to rfc 4180
+ * https://www.ietf.org/rfc/rfc4180.txt
+ * @param input
+ */
+function sanitizeCsvContent(input: string | undefined) {
+  // according rfc 4180 2.7.
+  const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
+  // according rfc 4180 2.5. / 2.6.
+  return `"${escapeDoubleQuotes}"`
 }
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056

@@ -45,7 +45,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserSort} from '../db/user'
+import {User, UserSort} from '../db/user'
 import {GraphQLNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 
@@ -415,7 +415,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const joins: SubscriptionJoins = {
           joinMemberPlan: true,
           joinPaymentMethod: true,
-          joinUser: true
+          joinUser: false
         }
 
         let hasMore = true
@@ -435,7 +435,35 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           hasMore = listResult.pageInfo.hasNextPage
           afterCursor = listResult.pageInfo.endCursor
         }
-        return mapSubscriptionsAsCsv(subscriptions)
+
+        // fixes https://wepublish.atlassian.net/browse/WPC-928
+        const subscriptionsMaybeWithUser: Subscription[] = []
+        const users: User[] = []
+        hasMore = true
+        afterCursor = undefined
+        while (hasMore) {
+          const userResults: ConnectionResult<User> = await dbAdapter.user.getUsers({
+            limit: Limit(100),
+            sort: UserSort.CreatedAt,
+            cursor: InputCursor(afterCursor ?? undefined),
+            order: SortOrder.Descending
+          })
+          users.push(...userResults.nodes)
+          hasMore = userResults.pageInfo.hasNextPage
+          afterCursor = userResults.pageInfo.endCursor
+        }
+
+        // map users on subscriptions
+        for (const subscription of subscriptions) {
+          const userIndex = users.findIndex(user => user.id === subscription.userID)
+          if (userIndex < 0) {
+            subscriptionsMaybeWithUser.push(subscription)
+            continue
+          }
+          subscriptionsMaybeWithUser.push({...subscription, user: users[userIndex]})
+        }
+
+        return mapSubscriptionsAsCsv(subscriptionsMaybeWithUser)
       }
     },
 
