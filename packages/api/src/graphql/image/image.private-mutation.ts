@@ -24,7 +24,7 @@ export const deleteImageById = async (
   return deletedImage
 }
 
-type CreateImageInput = {
+export type CreateImageInput = {
   file: Promise<FileUpload>
   focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
 } & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt' | 'focalPoint'>

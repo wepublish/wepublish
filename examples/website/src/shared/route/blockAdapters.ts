@@ -334,6 +334,12 @@ export function teaserAdapter(teaser: any): ArticleMeta | null {
       data = teaser.page
       break
 
+    case 'CustomTeaser':
+      return {
+        ...teaser,
+        teaserType: TeaserType.Custom
+      }
+
     default:
       return null
   }

@@ -1,6 +1,7 @@
 import {
   CommentAuthorType,
   CommentItemType,
+  CommentRatingOverride,
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
@@ -21,6 +22,8 @@ export interface CommentData {
 
   readonly createdAt: Date
   readonly modifiedAt: Date
+
+  readonly overriddenRatings?: CommentRatingOverride[] | null
 }
 
 export interface Comment extends CommentData {
@@ -45,6 +48,10 @@ export interface PublicComment extends CommentData {
 export enum CommentSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
+}
+
+export enum PublicCommentSort {
+  Rating = 'rating'
 }
 
 export interface CommentFilter {

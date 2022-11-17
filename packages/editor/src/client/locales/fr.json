@@ -37,6 +37,8 @@
         "noImagesFound": "Aucune image trouvée",
         "peerArticle": "Pairer l'article",
         "peering": "Peering",
+        "custom": "personnalisé",
+        "contentUrl": "URL du contenu",
         "peerShare": "Partager avec les peers",
         "published": "Publié",
         "removeTeaser": "Retirer le teaser",
@@ -264,7 +266,9 @@
       "tags": "Tags",
       "source": "Source",
       "userPanelHeader": "Auteur dans le commentaire",
-      "actions": "Actions"
+      "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override"
     },
     "commentUser": {
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
@@ -530,6 +534,19 @@
         "unknown": "Inconnu",
         "cancel": "Annuler",
         "confirm": "Confirmer"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "description": "Filtrer par description",
+        "preTitle": "Filtrer par pré-titre",
+        "lead": "Filtrer par lead",
+        "isPending": "En attente",
+        "isDraft": "Brouillon",
+        "isPublished": "Publié",
+        "publicationDate": "Date de publication"
       }
     },
     "userList": {
@@ -847,7 +864,8 @@
       "streetAddress2": "Rue 2",
       "zipCode": "Code Postal",
       "city": "Ville",
-      "country": "Pays"
+      "country": "Pays",
+      "selectUserImage": "Choisir une photo de profil"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -973,7 +991,11 @@
       "deleteModalTitle": "Supprimer?",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
       "deleteBtn": "Supprimer",
-      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte."
+      "answerMissing": "Ta réponse est vide. Veuillez saisir un texte.",
+      "copyVoteUrl": "Copier le lien de vote",
+      "urlCopied": "Lien de vote copié dans le presse-papiers.",
+      "urlCopyingFailed": "Le lien de vote n'a pas pu être copié.",
+      "votes": "votes"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Nom de la source du vote (par ex. Facebook)",

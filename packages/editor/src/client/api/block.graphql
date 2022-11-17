@@ -51,6 +51,24 @@ fragment FullTeaser on Teaser {
       ...PageRef
     }
   }
+
+  ... on CustomTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+      public
+    }
+  }
 }
 
 fragment FullBlock on Block {

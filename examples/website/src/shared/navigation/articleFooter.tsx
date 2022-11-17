@@ -117,7 +117,11 @@ export function ArticleFooter(props: ArticleFooterProps) {
           })}
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
-      <LoginToComment itemID={props.itemID} itemType={'Article'} />
+      <LoginToComment
+        itemID={props.itemID}
+        itemType={props.isPeerArticle ? 'PeerArticle' : 'Article'}
+        peerId={props.peer?.id}
+      />
 
       <CommentList comments={props.comments} />
     </div>

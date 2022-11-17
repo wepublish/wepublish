@@ -243,3 +243,9 @@ export class AlreadyUnpaidInvoices extends ApolloError {
     super('You cant create new invoice while you have unpaid invoices!', ErrorCode.UserInputError)
   }
 }
+
+export class PeerIdMissingCommentError extends ApolloError {
+  constructor() {
+    super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}

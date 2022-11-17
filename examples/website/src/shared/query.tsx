@@ -71,7 +71,7 @@ export const ArticleQuery = gql`
 
       blocks {
         __typename
-        ...RichtTextBlockData
+        ...RichTextBlockData
         ...ImageBlockData
         ...ImageGalleryBlockData
         ...FacebookPostBlockData

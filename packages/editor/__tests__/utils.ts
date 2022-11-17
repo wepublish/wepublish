@@ -12,14 +12,6 @@ export async function actWait(amount = 0) {
   })
 }
 
-export interface Named {
-  name: string
-}
-
-export function pTest<T extends Named>(name: string, cases: T[], test: (testCase: T) => any) {
-  describe(name, () => cases.forEach((t: T) => it(t.name, () => test(t))))
-}
-
 const CanGetNavigation = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',

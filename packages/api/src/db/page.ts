@@ -4,6 +4,7 @@ import {
   PageRevision as PrismaPageRevision
 } from '@prisma/client'
 import {PageBlock} from './block'
+import {DateFilter} from './common'
 
 export interface PageData {
   readonly updatedAt?: Date | null
@@ -60,6 +61,9 @@ export interface PageFilter {
   readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean
+  readonly description?: string
+  readonly publicationDateFrom?: DateFilter
+  readonly publicationDateTo?: DateFilter
   readonly tags?: string[]
 }
 
