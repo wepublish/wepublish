@@ -104,7 +104,7 @@ export function mapSubscriptionsAsCsv(
  * https://www.ietf.org/rfc/rfc4180.txt
  * @param input
  */
-function sanitizeCsvContent(input: string | undefined) {
+function sanitizeCsvContent(input: string | undefined | null) {
   // according rfc 4180 2.7.
   const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
   // according rfc 4180 2.5. / 2.6.
