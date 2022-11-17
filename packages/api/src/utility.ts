@@ -105,9 +105,9 @@ export function mapSubscriptionsAsCsv(
  * @param input
  */
 function sanitizeCsvContent(input: string | undefined) {
-  // according rfc 4180 2.5. / 2.6.
-  const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
   // according rfc 4180 2.7.
+  const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
+  // according rfc 4180 2.5. / 2.6.
   return `"${escapeDoubleQuotes}"`
 }
 
