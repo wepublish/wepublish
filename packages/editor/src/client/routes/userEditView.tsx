@@ -596,6 +596,7 @@ function UserEditView() {
                                 }}
                                 value={value.key}
                                 onChange={propertyKey => onChange({...value, key: propertyKey})}
+                                data-testid="propertyKey"
                               />
                               <Input
                                 placeholder={t('articleEditor.panels.value')}
@@ -606,6 +607,7 @@ function UserEditView() {
                                 onChange={propertyValue =>
                                   onChange({...value, value: propertyValue})
                                 }
+                                data-testid="propertyValue"
                               />
                               <Form.Group
                                 style={{paddingTop: '6px', paddingLeft: '8px'}}
