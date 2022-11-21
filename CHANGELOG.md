@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.2 (2022-11-21)
+
+#### :bug: Bug Fix
+* `api`
+  * [#767](https://github.com/wepublish/wepublish/pull/767) Backport patch: Fix subscription csv download ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 1
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 4.1.1 (2022-08-16)
 
 #### :bug: Bug Fix
