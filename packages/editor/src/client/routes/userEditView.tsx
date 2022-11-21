@@ -243,7 +243,13 @@ function UserEditView() {
               email,
               emailVerifiedAt: null,
               active,
-              properties: [],
+              properties: metaDataProperties.map(
+                ({value: {key, public: isPublic, value: newValue}}) => ({
+                  key,
+                  public: isPublic,
+                  value: newValue
+                })
+              ),
               roleIDs: roles.map(role => role.id),
               address,
               userImageID: userImage?.id || null
