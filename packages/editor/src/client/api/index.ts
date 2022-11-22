@@ -117,7 +117,7 @@ export type ArticleRevision = {
   canonicalUrl?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   image?: Maybe<Image>;
-  authors: Array<Maybe<Author>>;
+  authors: Array<Author>;
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -275,6 +275,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  peerId?: Maybe<Scalars['ID']>;
   parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -448,6 +449,44 @@ export type EmbedBlockInput = {
   styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
 };
+
+export type Event = {
+  __typename?: 'Event';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: EventStatus;
+  description?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  startsAt: Scalars['DateTime'];
+  endsAt?: Maybe<Scalars['DateTime']>;
+  tags?: Maybe<Array<Tag>>;
+  image?: Maybe<Image>;
+};
+
+export type EventConnection = {
+  __typename?: 'EventConnection';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type EventFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>;
+};
+
+export enum EventSort {
+  StartsAt = 'STARTS_AT',
+  EndsAt = 'ENDS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum EventStatus {
+  Cancelled = 'CANCELLED',
+  Rescheduled = 'RESCHEDULED',
+  Postponed = 'POSTPONED',
+  Scheduled = 'SCHEDULED'
+}
 
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
@@ -890,6 +929,9 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   updateTag?: Maybe<Tag>;
   deleteTag?: Maybe<Tag>;
+  createEvent?: Maybe<Event>;
+  updateEvent?: Maybe<Event>;
+  deleteEvent?: Maybe<Event>;
 };
 
 
@@ -1307,6 +1349,35 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateEventArgs = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  startsAt: Scalars['DateTime'];
+  endsAt?: Maybe<Scalars['DateTime']>;
+  imageId?: Maybe<Scalars['ID']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+};
+
+
+export type MutationUpdateEventArgs = {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  status?: Maybe<EventStatus>;
+  location?: Maybe<Scalars['String']>;
+  startsAt?: Maybe<Scalars['DateTime']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  imageId?: Maybe<Scalars['ID']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+};
+
+
+export type MutationDeleteEventArgs = {
   id: Scalars['ID'];
 };
 
@@ -1771,6 +1842,8 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   polls?: Maybe<PollConnection>;
   poll?: Maybe<FullPoll>;
+  events?: Maybe<EventConnection>;
+  event?: Maybe<Event>;
 };
 
 
@@ -2036,6 +2109,21 @@ export type QueryPollArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
+
+export type QueryEventsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<EventFilter>;
+  sort?: Maybe<EventSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryEventArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
   quote?: Maybe<Scalars['String']>;
@@ -2234,7 +2322,8 @@ export enum TagSort {
 }
 
 export enum TagType {
-  Comment = 'Comment'
+  Comment = 'Comment',
+  Event = 'Event'
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser;
@@ -2555,10 +2644,10 @@ export type ArticleRefFragment = (
   )>, latest: (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
-    & { authors: Array<Maybe<(
+    & { authors: Array<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
-    )>>, image?: Maybe<(
+    )>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
@@ -2742,10 +2831,10 @@ export type ArticleQuery = (
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, authors: Array<Maybe<(
+      )>, authors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors: Array<(
+      )>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
       )>, socialMediaImage?: Maybe<(

@@ -298,6 +298,44 @@ export type EmbedBlock = {
   sandbox?: Maybe<Scalars['String']>
 }
 
+export type Event = {
+  __typename?: 'Event'
+  id: Scalars['ID']
+  name: Scalars['String']
+  status: EventStatus
+  description?: Maybe<Scalars['RichText']>
+  location?: Maybe<Scalars['String']>
+  startsAt: Scalars['DateTime']
+  endsAt?: Maybe<Scalars['DateTime']>
+  tags?: Maybe<Array<Tag>>
+  image?: Maybe<Image>
+}
+
+export type EventConnection = {
+  __typename?: 'EventConnection'
+  nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type EventFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>
+}
+
+export enum EventSort {
+  StartsAt = 'STARTS_AT',
+  EndsAt = 'ENDS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum EventStatus {
+  Cancelled = 'CANCELLED',
+  Rescheduled = 'RESCHEDULED',
+  Postponed = 'POSTPONED',
+  Scheduled = 'SCHEDULED'
+}
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink'
   label: Scalars['String']
@@ -946,6 +984,10 @@ export type Query = {
   poll: FullPoll
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>
+  /** This query returns a list of events */
+  events?: Maybe<EventConnection>
+  /** This query returns an event */
+  event: Event
 }
 
 export type QueryPeerArgs = {
@@ -1048,6 +1090,19 @@ export type QueryUserPollVoteArgs = {
   pollId: Scalars['ID']
 }
 
+export type QueryEventsArgs = {
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<EventFilter>
+  sort?: Maybe<EventSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryEventArgs = {
+  id: Scalars['ID']
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
@@ -1137,7 +1192,8 @@ export type Tag = {
 }
 
 export enum TagType {
-  Comment = 'Comment'
+  Comment = 'Comment',
+  Event = 'Event'
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
@@ -1577,6 +1633,41 @@ export type AddCommentMutation = {__typename?: 'Mutation'} & {
   addComment: {__typename?: 'Comment'} & MutationCommentFragment
 }
 
+export type EventRefFragment = {__typename?: 'Event'} & Pick<
+  Event,
+  'id' | 'name' | 'description' | 'status' | 'startsAt' | 'endsAt'
+> & {
+    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    tags?: Maybe<Array<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>>
+  }
+
+export type EventListQueryVariables = Exact<{
+  filter?: Maybe<EventFilter>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  order?: Maybe<SortOrder>
+  sort?: Maybe<EventSort>
+}>
+
+export type EventListQuery = {__typename?: 'Query'} & {
+  events?: Maybe<
+    {__typename?: 'EventConnection'} & Pick<EventConnection, 'totalCount'> & {
+        nodes: Array<{__typename?: 'Event'} & EventRefFragment>
+        pageInfo: {__typename?: 'PageInfo'} & Pick<
+          PageInfo,
+          'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+        >
+      }
+  >
+}
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type EventQuery = {__typename?: 'Query'} & {event: {__typename?: 'Event'} & EventRefFragment}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -1965,6 +2056,24 @@ export const MutationComment = gql`
     parentID
   }
 `
+export const EventRef = gql`
+  fragment EventRef on Event {
+    id
+    name
+    description
+    status
+    image {
+      ...ImageRef
+    }
+    tags {
+      id
+      tag
+    }
+    startsAt
+    endsAt
+  }
+  ${ImageRef}
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -2107,6 +2216,38 @@ export const AddComment = gql`
     }
   }
   ${MutationComment}
+`
+export const EventList = gql`
+  query EventList(
+    $filter: EventFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: EventSort
+  ) {
+    events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+      nodes {
+        ...EventRef
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${EventRef}
+`
+export const Event = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      ...EventRef
+    }
+  }
+  ${EventRef}
 `
 export const PageList = gql`
   query PageList($filter: [String!], $cursor: ID, $take: Int) {

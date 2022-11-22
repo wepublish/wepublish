@@ -207,17 +207,18 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     tags: {
       type: GraphQLList(GraphQLNonNull(GraphQLTag)),
-      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
-        const tags = await taggedComments.findMany({
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
           where: {
-            commentId: id
-          },
-          include: {
-            tag: true
+            comments: {
+              some: {
+                commentId: id
+              }
+            }
           }
         })
 
-        return tags.map(({tag}) => tag)
+        return tags
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
@@ -297,17 +298,18 @@ export const GraphQLPublicComment: GraphQLObjectType<
     },
     tags: {
       type: GraphQLList(GraphQLNonNull(GraphQLTag)),
-      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
-        const tags = await taggedComments.findMany({
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
           where: {
-            commentId: id
-          },
-          include: {
-            tag: true
+            comments: {
+              some: {
+                commentId: id
+              }
+            }
           }
         })
 
-        return tags.map(({tag}) => tag)
+        return tags
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
