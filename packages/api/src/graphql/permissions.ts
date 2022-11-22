@@ -567,6 +567,30 @@ export const CanDeletePoll: Permission = {
   deprecated: false
 }
 
+export const CanGetEvent: Permission = {
+  id: 'CAN_GET_EVENT',
+  description: 'Allows to get a event',
+  deprecated: false
+}
+
+export const CanCreateEvent: Permission = {
+  id: 'CAN_CREATE_EVENT',
+  description: 'Allows to create a event',
+  deprecated: false
+}
+
+export const CanUpdateEvent: Permission = {
+  id: 'CAN_UPDATE_EVENT',
+  description: 'Allows to update a event',
+  deprecated: false
+}
+
+export const CanDeleteEvent: Permission = {
+  id: 'CAN_DELETE_EVENT',
+  description: 'Allows to delete a event',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -654,7 +678,11 @@ export const AllPermissions: Permission[] = [
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,
-  CanCreatePoll
+  CanCreatePoll,
+  CanGetEvent,
+  CanUpdateEvent,
+  CanDeleteEvent,
+  CanCreateEvent
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -694,7 +722,11 @@ export const EditorPermissions: Permission[] = [
   CanGetPoll,
   CanUpdatePoll,
   CanDeletePoll,
-  CanCreatePoll
+  CanCreatePoll,
+  CanGetEvent,
+  CanUpdateEvent,
+  CanDeleteEvent,
+  CanCreateEvent
 ]
 
 export const PeerPermissions: Permission[] = [

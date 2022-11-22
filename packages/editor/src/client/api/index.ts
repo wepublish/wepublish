@@ -450,6 +450,44 @@ export type EmbedBlockInput = {
   sandbox?: Maybe<Scalars['String']>;
 };
 
+export type Event = {
+  __typename?: 'Event';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: EventStatus;
+  description?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  startsAt: Scalars['DateTime'];
+  endsAt?: Maybe<Scalars['DateTime']>;
+  tags?: Maybe<Array<Tag>>;
+  image?: Maybe<Image>;
+};
+
+export type EventConnection = {
+  __typename?: 'EventConnection';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type EventFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>;
+};
+
+export enum EventSort {
+  StartsAt = 'STARTS_AT',
+  EndsAt = 'ENDS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum EventStatus {
+  Cancelled = 'CANCELLED',
+  Rescheduled = 'RESCHEDULED',
+  Postponed = 'POSTPONED',
+  Scheduled = 'SCHEDULED'
+}
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
   label: Scalars['String'];
@@ -891,6 +929,9 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   updateTag?: Maybe<Tag>;
   deleteTag?: Maybe<Tag>;
+  createEvent?: Maybe<Event>;
+  updateEvent?: Maybe<Event>;
+  deleteEvent?: Maybe<Event>;
 };
 
 
@@ -1308,6 +1349,35 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateEventArgs = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  startsAt: Scalars['DateTime'];
+  endsAt?: Maybe<Scalars['DateTime']>;
+  imageId?: Maybe<Scalars['ID']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+};
+
+
+export type MutationUpdateEventArgs = {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  status?: Maybe<EventStatus>;
+  location?: Maybe<Scalars['String']>;
+  startsAt?: Maybe<Scalars['DateTime']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  imageId?: Maybe<Scalars['ID']>;
+  tagIds?: Maybe<Array<Scalars['ID']>>;
+};
+
+
+export type MutationDeleteEventArgs = {
   id: Scalars['ID'];
 };
 
@@ -1772,6 +1842,8 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   polls?: Maybe<PollConnection>;
   poll?: Maybe<FullPoll>;
+  events?: Maybe<EventConnection>;
+  event?: Maybe<Event>;
 };
 
 
@@ -2037,6 +2109,21 @@ export type QueryPollArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
+
+export type QueryEventsArgs = {
+  cursor?: Maybe<Scalars['ID']>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<EventFilter>;
+  sort?: Maybe<EventSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryEventArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
   quote?: Maybe<Scalars['String']>;
@@ -2235,7 +2322,8 @@ export enum TagSort {
 }
 
 export enum TagType {
-  Comment = 'Comment'
+  Comment = 'Comment',
+  Event = 'Event'
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser;
