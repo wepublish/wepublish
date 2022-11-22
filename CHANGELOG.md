@@ -1,5 +1,21 @@
 # Change Log
 
+## 8.0.1 (2022-11-22)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#762](https://github.com/wepublish/wepublish/pull/762) fix(editor): gif or other unsupported images by exfir upload broken ([@Itrulia](https://github.com/Itrulia))
+  * [#763](https://github.com/wepublish/wepublish/pull/763) fix(editor): image url wrong ([@Itrulia](https://github.com/Itrulia))
+  * [#759](https://github.com/wepublish/wepublish/pull/759) fix(editor): sending typename to api ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#760](https://github.com/wepublish/wepublish/pull/760) fix(api): focalpoint missing in queries and mutations ([@Itrulia](https://github.com/Itrulia))
+  * [#761](https://github.com/wepublish/wepublish/pull/761) fix(api): peer articles sorting is the opposite way ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 8.0.0 (2022-11-07)
 
 #### :boom: Breaking Change
