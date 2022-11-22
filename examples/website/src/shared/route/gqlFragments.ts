@@ -72,6 +72,7 @@ export const commentsDataFragment = gql`
     modifiedAt
     parentID
     authorType
+    peerId
     user {
       id
       name

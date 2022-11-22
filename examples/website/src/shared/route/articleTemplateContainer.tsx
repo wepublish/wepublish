@@ -228,7 +228,13 @@ const PeerArticleQuery = gql`
         ...TitleBlockData
         ...ArticleGridBlockData
         ...ArticleFlexGridBlockData
+        ...HTMLBlockData
       }
+    }
+
+    comments(itemId: $id) {
+      ...CommentsData
+      ...RecursiveCommentsData
     }
   }
 
@@ -271,7 +277,14 @@ export function PeerArticleTemplateContainer({
 
   if (loading || isPeerLoading) return <Loader text="Loading" />
 
-  const articleData = articleAdapter(data.peerArticle)
+  const articleData = articleAdapter(
+    data.peerArticle
+      ? {
+          ...data.peerArticle,
+          comments: data.comments
+        }
+      : null
+  )
   const peer = peerAdapter(peerData.peer)
 
   if (!articleData || !peer) return <NotFoundTemplate />
@@ -284,6 +297,7 @@ export function PeerArticleTemplateContainer({
     authors,
     publishedAt,
     updatedAt,
+    comments,
     blocks,
     socialMediaImage,
     socialMediaDescription,
@@ -344,6 +358,8 @@ export function PeerArticleTemplateContainer({
         publishDate={publishedAt}
         id={id}
         isPeerArticle
+        peer={peer}
+        comments={comments}
       />
     </>
   )

@@ -44,6 +44,7 @@ export interface Comment {
   user: User
   userName: string
   children: Comment[]
+  peerId?: string
 }
 
 export enum CommentAuthorType {
