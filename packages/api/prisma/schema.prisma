@@ -566,9 +566,9 @@ model Newsroom {
    modifiedAt DateTime @updatedAt @default(now())
 
     name       String
-    slug       String ?
-    hostURL    String ?
-    token      String ?
+    slug       String?
+    hostURL    String?
+    token      String?
     isDisabled Boolean @default(false)
 
       themeColor           String? @default("#000000")
@@ -581,6 +581,7 @@ model Newsroom {
       logoID String?
       logo   Image?  @relation(fields: [logoID], references: [id])
 
+      isSelf    Boolean @default(false)
       @@map("newsrooms")
 }
 

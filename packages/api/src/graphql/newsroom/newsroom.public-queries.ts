@@ -1,6 +1,6 @@
 // peer profile
 import {PrismaClient} from '@prisma/client'
-import {getNewsroom} from './newsroom.queries'
+import {getOwnNewsroom} from './newsroom.queries'
 import {DisabledNewsroomError, UserInputError} from '../../error'
 import {Context} from '../../context'
 
@@ -8,7 +8,7 @@ export const getPublicPeerProfile = async (
   hostURL: string,
   websiteURL: string,
   newsroom: PrismaClient['newsroom']
-) => getNewsroom(hostURL, websiteURL, newsroom)
+) => getOwnNewsroom(hostURL, websiteURL, newsroom)
 
 export const getNewsroomByIdOrSlug = async (
   id: string | null,

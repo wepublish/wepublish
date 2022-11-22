@@ -231,6 +231,12 @@ export const CanCreateNewsroom: Permission = {
   deprecated: false
 }
 
+export const CanUpdateNewsroom: Permission = {
+  id: 'CAN_UPDATE_NEWSROOM',
+  description: 'Allows to update newsroom',
+  deprecated: false
+}
+
 export const CanGetNewsroom: Permission = {
   id: 'CAN_GET_NEWSROOM',
   description: 'Allows to get newsroom',
@@ -586,6 +592,7 @@ export const AllPermissions: Permission[] = [
   CanCreateNewsroom,
   CanGetNewsroom,
   CanGetNewsrooms,
+  CanUpdateNewsroom,
   CanDeleteNewsroom,
   CanCreateToken,
   CanDeleteToken,

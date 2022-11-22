@@ -84,11 +84,17 @@ import {
 } from './payment-method/payment-method.private-mutation'
 import {createPaymentFromInvoice} from './payment/payment.private-mutation'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
-import {GraphQLCreateNewsroomInput, GraphQLNewsroom, GraphQLUpdateNewsroomInput} from './newsroom'
+import {
+  GraphQLCreateNewsroomInput,
+  GraphQLNewsroom,
+  GraphQLUpdateNewsroomInput,
+  GraphQLUpdateOwnNewsroomInput
+} from './newsroom'
 import {
   createNewsroom,
   deleteNewsroomById,
-  updateNewsroom
+  updateNewsroom,
+  updateOwnNewsroom
 } from './newsroom/newsroom.private-mutation'
 import {authorise, CanSendJWTLogin} from './permissions'
 import {
@@ -245,6 +251,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id, input}, {authenticate, prisma: {newsroom}}) =>
         updateNewsroom(id, input, authenticate, newsroom)
+    },
+
+    updateOwnNewsroom: {
+      type: GraphQLNonNull(GraphQLNewsroom),
+      args: {
+        input: {type: GraphQLNonNull(GraphQLUpdateOwnNewsroomInput)}
+      },
+      resolve: (root, {input}, {authenticate, prisma: {newsroom}}) =>
+        updateOwnNewsroom(input, authenticate, newsroom)
     },
 
     deleteNewsroom: {

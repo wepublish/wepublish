@@ -6,7 +6,7 @@ import {
   GraphQLID,
   GraphQLBoolean
 } from 'graphql'
-// import {NewsroomProfile} from '../db/newsroom'
+import {NewsroomProfile} from '../db/newsroom'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
@@ -20,7 +20,6 @@ export const GraphQLNewsroom = new GraphQLObjectType<Newsroom, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
-
     logo: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}, info) => {
@@ -32,7 +31,7 @@ export const GraphQLNewsroom = new GraphQLObjectType<Newsroom, Context>({
     themeFontColor: {
       type: GraphQLColor,
       resolve(profile, args, {loaders}, info) {
-        return profile.themeFontColor ? profile.themeFontColor : '#fff'
+        return profile.themeFontColor ? profile.themeFontColor : '#ffffff'
       }
     },
     hostURL: {type: GraphQLString},
@@ -45,7 +44,11 @@ export const GraphQLNewsroom = new GraphQLObjectType<Newsroom, Context>({
       resolve: createProxyingResolver((profile, args, {loaders}, info) => {
         return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
       })
-    }
+    },
+    slug: {type: GraphQLString},
+    token: {type: GraphQLString},
+    isDisabled: {type: GraphQLNonNull(GraphQLBoolean)},
+    isSelf: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
@@ -53,16 +56,8 @@ export const GraphQLCreateNewsroomInput = new GraphQLInputObjectType({
   name: 'CreateNewsroomInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLString},
     hostURL: {type: GraphQLString},
-    token: {type: GraphQLString},
-    logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLColor},
-    themeFontColor: {type: GraphQLColor},
-    callToActionText: {type: GraphQLRichText},
-    callToActionURL: {type: GraphQLString},
-    callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLID}
+    token: {type: GraphQLString}
   }
 })
 
@@ -70,10 +65,17 @@ export const GraphQLUpdateNewsroomInput = new GraphQLInputObjectType({
   name: 'UpdateNewsroomInput',
   fields: {
     name: {type: GraphQLString},
-    slug: {type: GraphQLString},
     hostURL: {type: GraphQLString},
-    isDisabled: {type: GraphQLBoolean},
     token: {type: GraphQLString},
+    isDisabled: {type: GraphQLBoolean}
+  }
+})
+
+export const GraphQLUpdateOwnNewsroomInput = new GraphQLInputObjectType({
+  name: 'UpdateOwnNewsroomInput',
+  fields: {
+    name: {type: GraphQLString},
+    slug: {type: GraphQLString},
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLColor},
     themeFontColor: {type: GraphQLColor},
@@ -84,7 +86,7 @@ export const GraphQLUpdateNewsroomInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPeerProfile = new GraphQLObjectType<Newsroom, Context>({
+export const GraphQLPeerProfile = new GraphQLObjectType<NewsroomProfile, Context>({
   name: 'PeerProfile',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},

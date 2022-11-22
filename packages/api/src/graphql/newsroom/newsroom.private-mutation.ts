@@ -32,7 +32,7 @@ export const createNewsroom = (
 
 export const updateNewsroom = (
   id: string,
-  input: Omit<Prisma.NewsroomUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  input: Partial<Prisma.NewsroomUncheckedUpdateInput>,
   authenticate: Context['authenticate'],
   newsroom: PrismaClient['newsroom']
 ) => {
@@ -47,4 +47,32 @@ export const updateNewsroom = (
     where: {id},
     data: nonEmptyInputs
   })
+}
+
+export const updateOwnNewsroom = async (
+  input: Partial<Prisma.NewsroomUncheckedUpdateInput>,
+  authenticate: Context['authenticate'],
+  newsroom: PrismaClient['newsroom']
+) => {
+  const {roles} = authenticate()
+  authorise(CanCreateNewsroom, roles)
+
+  const oldProfile = await newsroom.findFirst({where: {isSelf: true}})
+
+  const data = oldProfile
+    ? await newsroom.update({
+        where: {
+          id: oldProfile.id
+        },
+        data: input
+      })
+    : await newsroom.create({
+        data: {
+          ...input,
+          name: input.name ?? 'Add your newsroom name here',
+          isSelf: true
+        } as Prisma.NewsroomUncheckedCreateInput
+      })
+
+  return {...data}
 }

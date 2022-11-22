@@ -1,20 +1,19 @@
 import {PrismaClient} from '@prisma/client'
 
-export const getNewsroom = async (
+export const getOwnNewsroom = async (
   hostURL: string,
   websiteURL: string,
   newsroom: PrismaClient['newsroom']
 ) => {
-  // @TODO: move fallback to seed
-  const profile = (await newsroom.findFirst({})) ?? {
-    name: '',
-    themeColor: '',
-    themeFontColor: '',
-    callToActionURL: '',
-    callToActionText: [],
-    callToActionImageID: '',
-    callToActionImageURL: ''
-  }
+  const profile =
+    (await newsroom.findFirst({where: {isSelf: true}})) ??
+    (await newsroom.create({
+      data: {
+        name: 'Add your newsroom name here',
+        callToActionText: [],
+        isSelf: true
+      }
+    }))
 
   return {...profile, hostURL, websiteURL}
 }

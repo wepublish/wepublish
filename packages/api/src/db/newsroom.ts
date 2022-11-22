@@ -1,6 +1,7 @@
 import {RichTextNode} from '../graphql/richText'
 
 export interface NewsroomProfile {
+  id: string
   name: string
   slug?: string
   hostURL?: string
@@ -13,4 +14,5 @@ export interface NewsroomProfile {
   callToActionURL?: string
   callToActionImageID?: string | null
   callToActionImageURL?: string | null
+  isSelf: boolean
 }

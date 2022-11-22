@@ -1,0 +1,61 @@
+fragment FullPeerProfile on Newsroom {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
+}
+
+fragment PeerRef on Newsroom {
+  id
+
+}
+
+fragment PeerWithProfile on Newsroom {
+  ...PeerRef
+    ...FullPeerProfile
+}
+
+query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    name
+  }
+}
+
+query NewsroomList {
+  newsrooms {
+    ...PeerWithProfile
+  }
+}
+
+query Peer($id: ID!) {
+  newsroom(id: $id) {
+    ...PeerRef
+  }
+}
+
+mutation CreatePeer($input: CreateNewsroomInput!) {
+  createNewsroom(input: $input) {
+    ...PeerRef
+  }
+}
+
+mutation UpdatePeer($id: ID!, $input: UpdateNewsroomInput!) {
+  updateNewsroom(id: $id, input: $input) {
+    ...PeerRef
+  }
+}
+
+mutation DeletePeer($id: ID!) {
+  deleteNewsroom(id: $id) {
+    ...PeerRef
+  }
+}

@@ -15,6 +15,7 @@ CREATE TABLE "newsrooms" (
                              "callToActionImageURL" TEXT,
                              "callToActionImageID" TEXT,
                              "logoID" TEXT,
+                             "isSelf" BOOLEAN NOT NULL DEFAULT FALSE,
 
                              CONSTRAINT "newsrooms_pkey" PRIMARY KEY ("id")
 );
@@ -25,9 +26,12 @@ ALTER TABLE "newsrooms" ADD CONSTRAINT "newsrooms_logoID_fkey" FOREIGN KEY ("log
 -- Add records from peers to newsrooms
 INSERT INTO "newsrooms"(name, "slug", "hostURL", token, "isDisabled") SELECT name, slug, "hostURL", token, "isDisabled" FROM "peers";
 
+-- AlterTable
+ALTER TABLE "peerProfiles" ADD COLUMN     "isSelf" BOOLEAN DEFAULT TRUE;
+
 -- Add records from peerProfiles to newsrooms
-INSERT INTO "newsrooms"(name, "themeColor", "themeFontColor", "callToActionURL", "callToActionText", "callToActionImageURL", "callToActionImageID", "logoID")
-SELECT name, "themeColor", "themeFontColor", "callToActionURL", "callToActionText", "callToActionImageURL", "callToActionImageID", "logoID" FROM "peerProfiles";
+INSERT INTO "newsrooms"(name, "themeColor", "themeFontColor", "callToActionURL", "callToActionText", "callToActionImageURL", "callToActionImageID", "logoID", "isSelf")
+SELECT name, "themeColor", "themeFontColor", "callToActionURL", "callToActionText", "callToActionImageURL", "callToActionImageID", "logoID", "isSelf" FROM "peerProfiles";
 
 DROP TABLE "peers";
 DROP TABLE "peerProfiles";
