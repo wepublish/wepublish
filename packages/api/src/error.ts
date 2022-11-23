@@ -231,3 +231,9 @@ export class PollClosedError extends ApolloError {
     super('Poll voting has been closed already!')
   }
 }
+
+export class PeerIdMissingCommentError extends ApolloError {
+  constructor() {
+    super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}
