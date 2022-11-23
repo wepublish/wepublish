@@ -56,8 +56,9 @@ export const GraphQLCreateNewsroomInput = new GraphQLInputObjectType({
   name: 'CreateNewsroomInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    hostURL: {type: GraphQLString},
-    token: {type: GraphQLString}
+    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    token: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -67,7 +68,8 @@ export const GraphQLUpdateNewsroomInput = new GraphQLInputObjectType({
     name: {type: GraphQLString},
     hostURL: {type: GraphQLString},
     token: {type: GraphQLString},
-    isDisabled: {type: GraphQLBoolean}
+    isDisabled: {type: GraphQLBoolean},
+    slug: {type: GraphQLString}
   }
 })
 
@@ -75,7 +77,6 @@ export const GraphQLUpdateOwnNewsroomInput = new GraphQLInputObjectType({
   name: 'UpdateOwnNewsroomInput',
   fields: {
     name: {type: GraphQLString},
-    slug: {type: GraphQLString},
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLColor},
     themeFontColor: {type: GraphQLColor},

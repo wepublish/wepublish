@@ -84,7 +84,7 @@ import {
 } from './payment-method/payment-method.private-queries'
 import {getAdminPayments, getPaymentById} from './payment/payment.private-queries'
 import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
-import {GraphQLNewsroom, GraphQLPeerProfile} from './newsroom'
+import {GraphQLNewsroom} from './newsroom'
 import {
   getNewsroomById,
   getNewsrooms,
@@ -147,7 +147,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // =======
 
     remotePeerProfile: {
-      type: GraphQLPeerProfile,
+      type: GraphQLNewsroom,
       args: {
         hostURL: {type: GraphQLNonNull(GraphQLString)},
         token: {type: GraphQLNonNull(GraphQLString)}
@@ -193,7 +193,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     peerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
+      type: GraphQLNonNull(GraphQLNewsroom),
       resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {newsroom}}) =>
         getAdminPeerProfile(hostURL, websiteURL, authenticate, newsroom)
     },
