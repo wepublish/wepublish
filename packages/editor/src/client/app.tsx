@@ -28,7 +28,7 @@ import {PageEditor} from './routes/pageEditor'
 import {PageList} from './routes/pageList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {PeerArticleList} from './routes/peerArticleList'
-import {PeerList} from './routes/peerList'
+import {NewsroomList} from './routes/newsroomList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
 import {SettingList} from './routes/settingList'
@@ -387,7 +387,7 @@ export function App() {
             path="peering"
             element={
               <Base>
-                <PeerList />
+                <NewsroomList />
               </Base>
             }
           />
@@ -395,7 +395,7 @@ export function App() {
             path="peering/create"
             element={
               <Base>
-                <PeerList />
+                <NewsroomList />
               </Base>
             }
           />
@@ -403,7 +403,7 @@ export function App() {
             path="peering/edit/:id"
             element={
               <Base>
-                <PeerList />
+                <NewsroomList />
               </Base>
             }
           />
@@ -411,7 +411,7 @@ export function App() {
             path="peering/profile/edit"
             element={
               <Base>
-                <PeerList />
+                <NewsroomList />
               </Base>
             }
           />

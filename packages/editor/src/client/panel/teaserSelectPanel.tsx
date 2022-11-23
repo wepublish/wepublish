@@ -248,10 +248,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                   <h3
                     style={{cursor: 'pointer'}}
                     onClick={() =>
-                      onSelect({type: TeaserType.PeerArticle, peer, articleID: article.id, article})
+                      onSelect({type: TeaserType.PeerArticle, articleID: article.id, article})
                     }>
-                    {peer.profile?.name ?? peer.name} -{' '}
-                    {article.latest.title || t('articleEditor.panels.untitled')}
+                    {peer.name} - {article.latest.title || t('articleEditor.panels.untitled')}
                   </h3>
                   <div>
                     <div style={{display: 'inline', fontSize: 12}}>

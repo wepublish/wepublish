@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Avatar, Drawer, IconButton, Panel} from 'rsuite'
 
-import {ImageRefFragment, PeerWithProfileFragment, TeaserStyle} from '../api'
+import {ImageRefFragment, Newsroom, TeaserStyle} from '../api'
 import {BlockProps} from '../atoms/blockList'
 import {Overlay} from '../atoms/overlay'
 import {PlaceholderImage} from '../atoms/placeholderImage'
@@ -176,15 +176,15 @@ export function TeaserBlock({
                   margin: 10
                 }}
               />
-              {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
-                <IconButton
-                  icon={<PencilIcon />}
-                  onClick={onEdit}
-                  style={{
-                    margin: 10
-                  }}
-                />
-              ) : null}
+              {/* {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? ( */}
+              <IconButton
+                icon={<PencilIcon />}
+                onClick={onEdit}
+                style={{
+                  margin: 10
+                }}
+              />
+              ){/* : null} */}
               <IconButton
                 icon={<TrashIcon />}
                 onClick={onRemove}
@@ -238,7 +238,7 @@ export function contentForTeaser(teaser: Teaser, numColumns?: number) {
           title={teaser.title ?? teaser.article?.latest.title ?? ''}
           lead={teaser.lead ?? teaser.article?.latest.lead ?? undefined}
           states={states}
-          peer={teaser.peer}
+          // peer={teaser.peer}
           numColumns={numColumns}
         />
       )
@@ -288,7 +288,7 @@ export interface TeaserContentProps {
   lead?: string
   image?: ImageRefFragment
   states?: string[]
-  peer?: PeerWithProfileFragment
+  peer?: Newsroom
   numColumns?: number
   contentUrl?: string
 }
@@ -345,10 +345,10 @@ export function TeaserContent({
         style={{
           bottom: '0px',
           width: '100%',
-          height: peer && peer.isDisabled === true ? '100%' : 'auto',
+          // height: peer && peer.isDisabled === true ? '100%' : 'auto',
           padding: '10px'
         }}>
-        {peer && peer.isDisabled === true ? (
+        {peer /* && peer.isDisabled === true */ ? (
           <div
             style={{
               height: '100%',
@@ -388,7 +388,10 @@ export function TeaserContent({
                   display: 'flex',
                   marginBottom: 10
                 }}>
-                <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
+                <Avatar
+                  // src={peer.logo?.squareURL ?? undefined}
+                  circle
+                />
               </div>
             )}
             <div

@@ -1,6 +1,6 @@
 import CogIcon from '@rsuite/icons/legacy/Cog'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useMemo} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
@@ -18,24 +18,23 @@ import {
 } from 'rsuite'
 
 import {
-  PeerListDocument,
-  PeerListQuery,
-  useDeletePeerMutation,
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useUpdatePeerMutation
+  NewsroomListDocument,
+  NewsroomListQuery,
+  useDeleteNewsroomMutation,
+  useNewsroomListQuery,
+  useUpdateNewsroomMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {PeerEditPanel} from '../panel/peerEditPanel'
-import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {NewsroomEditPanel} from '../panel/newsroomEditPanel'
+import {NewsroomInfoEditPanel} from '../panel/newsroomProfileEditPanel'
 import {addOrUpdateOneInArray} from '../utility'
 
-type Peer = NonNullable<PeerListQuery['peers']>[number]
+type Newsroom = NonNullable<NewsroomListQuery['newsrooms']>[number]
 
-function PeerList() {
+function NewsroomList() {
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
@@ -50,33 +49,35 @@ function PeerList() {
   const [isEditModalOpen, setEditModalOpen] = useState(isPeerProfileEditRoute)
   const [editID, setEditID] = useState<string | undefined>(isAuthorRoute ? id : undefined)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentPeer, setCurrentPeer] = useState<Peer>()
+  const [currentNewsroom, setCurrentNewsroom] = useState<Newsroom>()
 
   const {
-    data: peerInfoData,
-    loading: isPeerInfoLoading,
-    error: peerInfoError
-  } = usePeerProfileQuery({fetchPolicy: 'network-only'})
-
-  const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
+    data: newsroomListData,
+    loading: isNewsroomListLoading,
+    error: newsroomListError
+  } = useNewsroomListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })
 
-  const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
-  const [updatePeer, {loading: isUpdating}] = useUpdatePeerMutation()
+  const peerProfile = useMemo(() => {
+    return newsroomListData?.newsrooms?.find(newsroom => newsroom.isSelf)
+  }, [newsroomListData])
+
+  const [deleteNewsroom, {loading: isDeleting}] = useDeleteNewsroomMutation()
+  const [updateNewsroom, {loading: isUpdating}] = useUpdateNewsroomMutation()
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    const error = peerInfoError?.message ?? peerListError?.message
+    const error = newsroomListError?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {error}
         </Message>
       )
-  }, [peerInfoError, peerListError])
+  }, [newsroomListError])
 
   useEffect(() => {
     if (isPeerProfileEditRoute) {
@@ -94,88 +95,86 @@ function PeerList() {
     }
   }, [location])
 
-  const peers = peerListData?.peers?.map(peer => {
-    const {id, name, profile, hostURL, isDisabled} = peer
-    return (
-      <Link to={isDisabled ? '#' : `/peering/edit/${id}`} key={name}>
-        <List.Item style={{cursor: isDisabled ? 'default' : 'pointer'}}>
-          <FlexboxGrid>
-            <FlexboxGrid.Item
-              colspan={2}
-              style={{
-                textAlign: 'center'
-              }}>
-              <Avatar
-                circle
-                src={profile?.logo?.squareURL || undefined}
-                alt={profile?.name?.substr(0, 2)}
-              />
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={18}>
-              <h5>{name}</h5>
-              <p>
-                {profile && `${profile.name} - `}
-                {hostURL}
-              </p>
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={3}>
-              <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-                <Button
-                  appearance="primary"
-                  disabled={isUpdating}
-                  onClick={async e => {
-                    e.preventDefault()
-                    await updatePeer({
-                      variables: {id, input: {isDisabled: !isDisabled}},
-                      update: cache => {
-                        const query = cache.readQuery<PeerListQuery>({
-                          query: PeerListDocument
-                        })
-
-                        if (!query) return
-
-                        cache.writeQuery({
-                          query: PeerListDocument,
-                          data: {
-                            peers: addOrUpdateOneInArray(query.peers, {
-                              ...peer,
-                              isDisabled: !isDisabled
-                            })
-                          }
-                        })
-                      }
-                    })
-                  }}>
-                  {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
-                </Button>
-              </PermissionControl>
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    disabled={isPeerInfoLoading}
-                    icon={<TrashIcon />}
-                    circle
-                    size="sm"
-                    onClick={e => {
+  const newsrooms = newsroomListData?.newsrooms
+    ?.filter(newsroom => !newsroom.isSelf)
+    ?.map(newsroom => {
+      const {id, name, hostURL, isDisabled, logo} = newsroom
+      return (
+        <Link to={isDisabled ? '#' : `/peering/edit/${id}`} key={name}>
+          <List.Item style={{cursor: isDisabled ? 'default' : 'pointer'}}>
+            <FlexboxGrid>
+              <FlexboxGrid.Item
+                colspan={2}
+                style={{
+                  textAlign: 'center'
+                }}>
+                <Avatar circle src={logo?.squareURL || undefined} alt={name?.substr(0, 2)} />
+              </FlexboxGrid.Item>
+              <FlexboxGrid.Item colspan={18}>
+                <h5>{name}</h5>
+                <p>
+                  {name && `${name} - `}
+                  {hostURL}
+                </p>
+              </FlexboxGrid.Item>
+              <FlexboxGrid.Item colspan={3}>
+                <PermissionControl qualifyingPermissions={['CAN_CREATE_NEWSROOM']}>
+                  <Button
+                    appearance="primary"
+                    disabled={isUpdating}
+                    onClick={async e => {
                       e.preventDefault()
-                      setConfirmationDialogOpen(true)
-                      setCurrentPeer(peer)
-                    }}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            </FlexboxGrid.Item>
-          </FlexboxGrid>
-        </List.Item>
-      </Link>
-    )
-  })
+                      await updateNewsroom({
+                        variables: {id, input: {isDisabled: !isDisabled}},
+                        update: cache => {
+                          const query = cache.readQuery<NewsroomListQuery>({
+                            query: NewsroomListDocument
+                          })
+
+                          if (!query) return
+
+                          cache.writeQuery({
+                            query: NewsroomListDocument,
+                            data: {
+                              peers: addOrUpdateOneInArray(query.newsrooms, {
+                                ...newsroom,
+                                isDisabled: !isDisabled
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }}>
+                    {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
+                  </Button>
+                </PermissionControl>
+              </FlexboxGrid.Item>
+              <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_NEWSROOM']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      disabled={isNewsroomListLoading}
+                      icon={<TrashIcon />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        e.preventDefault()
+                        setConfirmationDialogOpen(true)
+                        setCurrentNewsroom(newsroom)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              </FlexboxGrid.Item>
+            </FlexboxGrid>
+          </List.Item>
+        </Link>
+      )
+    })
 
   return (
     <>
-      <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
+      <PermissionControl qualifyingPermissions={['CAN_GET_NEWSROOM']}>
         <h5>{t('peerList.overview.myPeerProfile')}</h5>
         <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
           <NavigationBar
@@ -185,11 +184,11 @@ function PeerList() {
                   size="lg"
                   circle
                   style={{border: 'solid 2px #3498ff'}}
-                  src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
-                  alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
+                  src={peerProfile?.logo?.squareURL || undefined}
+                  alt={peerProfile?.name?.substr(0, 2)}
                 />
-                <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
-                <p>{peerInfoData?.peerProfile.hostURL}</p>
+                <h5>{peerProfile?.name || t('peerList.panels.unnamed')}</h5>
+                <p>{peerProfile?.hostURL}</p>
                 <Form.HelpText>
                   <Trans i18nKey={'peerList.panels.checkOwnPeerProfileHelpBlock'}>
                     text{' '}
@@ -203,7 +202,7 @@ function PeerList() {
               </div>
             }
             rightChildren={
-              <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
+              <PermissionControl qualifyingPermissions={['CAN_UPDATE_NEWSROOM']}>
                 <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
                   <Link to="/peering/profile/edit">
                     <IconButton size="lg" appearance="link" icon={<CogIcon />} circle />
@@ -224,8 +223,8 @@ function PeerList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Link to="/peering/create">
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-              <Button appearance="primary" disabled={isPeerListLoading}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_NEWSROOM']}>
+              <Button appearance="primary" disabled={isNewsroomListLoading}>
                 {t('peerList.overview.newPeer')}
               </Button>
             </PermissionControl>
@@ -233,9 +232,9 @@ function PeerList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <div style={{marginTop: '20px'}}>
-        {peerListData?.peers?.length ? (
-          <List>{peers}</List>
-        ) : !isPeerListLoading ? (
+        {newsroomListData?.newsrooms?.length ? (
+          <List>{newsrooms}</List>
+        ) : !isNewsroomListLoading ? (
           <p>{t('peerList.overview.noPeersFound')}</p>
         ) : null}
       </div>
@@ -247,7 +246,7 @@ function PeerList() {
           setPeerProfileEditModalOpen(false)
           navigate('/peering')
         }}>
-        <PeerInfoEditPanel
+        <NewsroomInfoEditPanel
           onClose={() => {
             setPeerProfileEditModalOpen(false)
             navigate('/peering')
@@ -262,10 +261,10 @@ function PeerList() {
           setEditModalOpen(false)
           navigate('/peering')
         }}>
-        {peerInfoData?.peerProfile.hostURL && (
-          <PeerEditPanel
+        {peerProfile?.hostURL && (
+          <NewsroomEditPanel
             id={editID}
-            hostURL={peerInfoData.peerProfile.hostURL}
+            hostURL={peerProfile?.hostURL ?? ''}
             onClose={() => {
               setEditModalOpen(false)
               navigate('/peering')
@@ -290,7 +289,7 @@ function PeerList() {
         <Modal.Body>
           <DescriptionList>
             <DescriptionListItem label={t('peerList.panels.name')}>
-              {currentPeer?.name || t('peerList.panels.unknown')}
+              {currentNewsroom?.name || t('peerList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
@@ -299,20 +298,20 @@ function PeerList() {
             disabled={isDeleting}
             color="red"
             onClick={async () => {
-              if (!currentPeer) return
-              await deletePeer({
-                variables: {id: currentPeer.id},
+              if (!currentNewsroom) return
+              await deleteNewsroom({
+                variables: {id: currentNewsroom.id},
                 update: cache => {
-                  const query = cache.readQuery<PeerListQuery>({
-                    query: PeerListDocument
+                  const query = cache.readQuery<NewsroomListQuery>({
+                    query: NewsroomListDocument
                   })
 
                   if (!query) return
 
-                  cache.writeQuery<PeerListQuery>({
-                    query: PeerListDocument,
+                  cache.writeQuery<NewsroomListQuery>({
+                    query: NewsroomListDocument,
                     data: {
-                      peers: query.peers?.filter(peer => peer.id !== currentPeer.id)
+                      newsrooms: query.newsrooms?.filter(peer => peer.id !== currentNewsroom.id)
                     }
                   })
                 }
@@ -330,11 +329,10 @@ function PeerList() {
   )
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEERS',
-  'CAN_GET_PEER',
-  'CAN_DELETE_PEER',
-  'CAN_CREATE_PEER',
-  'CAN_GET_PEER_PROFILE',
-  'CAN_UPDATE_PEER_PROFILE'
-])(PeerList)
-export {CheckedPermissionComponent as PeerList}
+  'CAN_GET_NEWSROOMS',
+  'CAN_GET_NEWSROOM',
+  'CAN_DELETE_NEWSROOM',
+  'CAN_CREATE_NEWSROOM',
+  'CAN_UPDATE_NEWSROOM'
+])(NewsroomList)
+export {CheckedPermissionComponent as NewsroomList}

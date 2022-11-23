@@ -3,12 +3,11 @@ import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
 
 import {
-  FullPeerProfileFragment,
-  PeerListDocument,
-  useCreatePeerMutation,
-  usePeerQuery,
+  NewsroomListDocument,
+  useCreateNewsroomMutation,
+  useNewsroomQuery,
   useRemotePeerProfileQuery,
-  useUpdatePeerMutation
+  useUpdateNewsroomMutation
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -29,26 +28,26 @@ export interface PeerEditPanelProps {
   onSave?(): void
 }
 
-function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
-  const isAuthorized = authorise('CAN_CREATE_PEER')
+function NewsroomEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
+  const isAuthorized = authorise('CAN_CREATE_NEWSROOM')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
-  const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null)
+  const [profile, setProfile] = useState<any | null>(null)
 
-  const {data, loading: isLoading, error: loadError} = usePeerQuery({
+  const {data, loading: isLoading, error: loadError} = useNewsroomQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
   })
 
-  const [createPeer, {loading: isCreating, error: createError}] = useCreatePeerMutation({
-    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
+  const [createPeer, {loading: isCreating, error: createError}] = useCreateNewsroomMutation({
+    refetchQueries: [getOperationNameFromDocument(NewsroomListDocument)]
   })
 
-  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation({
-    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
+  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdateNewsroomMutation({
+    refetchQueries: [getOperationNameFromDocument(NewsroomListDocument)]
   })
 
   const {refetch: fetchRemote} = useRemotePeerProfileQuery({skip: true})
@@ -62,7 +61,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
         hostURL: urlString,
         token
       })
-      setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null)
+      setProfile(remote?.remotePeerProfile?.profile ? remote.remotePeerProfile : null)
     } catch (error) {
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
@@ -73,17 +72,17 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   }
 
   useEffect(() => {
-    if (data?.peer) {
-      setName(data.peer.name)
-      setSlug(data.peer.slug)
-      setURLString(data.peer.hostURL)
+    if (data?.newsroom) {
+      setName(data.newsroom.name)
+      setSlug(data.newsroom.slug ?? '')
+      setURLString(data.newsroom.hostURL ?? '')
       setTimeout(() => {
         // setProfile in timeout because the useEffect that listens on
         // urlString and token will set it otherwise to null
-        setProfile(data?.peer?.profile ? data.peer.profile : null)
+        setProfile(data?.newsroom ? data.newsroom : null)
       }, 400)
     }
-  }, [data?.peer])
+  }, [data?.newsroom])
 
   useEffect(() => {
     const error = loadError?.message ?? createError?.message ?? updateError?.message
@@ -152,7 +151,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_NEWSROOM']}>
               <Button
                 type="submit"
                 appearance="primary"
@@ -171,13 +170,12 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
           <PermissionControl
             qualifyingPermissions={
               !id
-                ? ['CAN_CREATE_PEER']
+                ? ['CAN_CREATE_NEWSROOM']
                 : [
-                    'CAN_GET_PEER',
-                    'CAN_GET_PEERS',
-                    'CAN_CREATE_PEER',
-                    'CAN_DELETE_PEER',
-                    'CAN_GET_PEER_PROFILE'
+                    'CAN_GET_NEWSROOM',
+                    'CAN_GET_NEWSROOMS',
+                    'CAN_CREATE_NEWSROOM',
+                    'CAN_DELETE_NEWSROOM'
                   ]
             }
             showRejectionMessage>
@@ -242,7 +240,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                       <p>{profile?.themeColor}</p>
                       <div
                         style={{
-                          backgroundColor: profile?.themeColor,
+                          backgroundColor: profile?.themeColor ?? '#000000',
                           width: '30px',
                           height: '20px',
                           padding: '5px',
@@ -257,7 +255,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                       <p>{profile?.themeFontColor}</p>
                       <div
                         style={{
-                          backgroundColor: profile?.themeFontColor,
+                          backgroundColor: profile?.themeFontColor ?? '#FFFFFF',
                           width: '30px',
                           height: '20px',
                           padding: '5px',
@@ -282,7 +280,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                     {profile?.callToActionURL}
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
-                    <img src={profile?.callToActionImage?.thumbURL || undefined} />
+                    {/* <img src={profile?.callToActionImage?.thumbURL || undefined} /> */}
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
                     {profile?.callToActionImageURL}
@@ -298,10 +296,9 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEERS',
-  'CAN_GET_PEER',
-  'CAN_CREATE_PEER',
-  'CAN_DELETE_PEER',
-  'CAN_GET_PEER_PROFILE'
-])(PeerEditPanel)
-export {CheckedPermissionComponent as PeerEditPanel}
+  'CAN_GET_NEWSROOMS',
+  'CAN_GET_NEWSROOM',
+  'CAN_CREATE_NEWSROOM',
+  'CAN_DELETE_NEWSROOM'
+])(NewsroomEditPanel)
+export {CheckedPermissionComponent as NewsroomEditPanel}

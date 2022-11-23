@@ -376,10 +376,10 @@ export function Base({children}: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_PEERS',
-                    'CAN_GET_PEER',
-                    'CAN_CREATE_PEER',
-                    'CAN_DELETE_PEER'
+                    'CAN_GET_NEWSROOMS',
+                    'CAN_GET_NEWSROOM',
+                    'CAN_CREATE_NEWSROOM',
+                    'CAN_DELETE_NEWSROOM'
                   ]}>
                   <Nav.Menu title={t('navbar.peering')} icon={<ShareIcon />}>
                     <Nav.Item

@@ -375,11 +375,11 @@ export type CreatedToken = {
   token: Scalars['String'];
 };
 
-export type CreatePeerInput = {
+export type CreateNewsroomInput = {
   name: Scalars['String'];
-  slug: Scalars['String'];
   hostURL: Scalars['String'];
   token: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 export type CustomTeaser = {
@@ -803,10 +803,10 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  updatePeerProfile: PeerProfile;
-  createPeer: Peer;
-  updatePeer: Peer;
-  deletePeer?: Maybe<Peer>;
+  createNewsroom: Newsroom;
+  updateNewsroom: Newsroom;
+  updateOwnNewsroom: Newsroom;
+  deleteNewsroom?: Maybe<Newsroom>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -881,23 +881,23 @@ export type Mutation = {
 };
 
 
-export type MutationUpdatePeerProfileArgs = {
-  input: PeerProfileInput;
+export type MutationCreateNewsroomArgs = {
+  input: CreateNewsroomInput;
 };
 
 
-export type MutationCreatePeerArgs = {
-  input: CreatePeerInput;
-};
-
-
-export type MutationUpdatePeerArgs = {
+export type MutationUpdateNewsroomArgs = {
   id: Scalars['ID'];
-  input: UpdatePeerInput;
+  input: UpdateNewsroomInput;
 };
 
 
-export type MutationDeletePeerArgs = {
+export type MutationUpdateOwnNewsroomArgs = {
+  input: UpdateOwnNewsroomInput;
+};
+
+
+export type MutationDeleteNewsroomArgs = {
   id: Scalars['ID'];
 };
 
@@ -1319,6 +1319,25 @@ export type NavigationLinkInput = {
   external?: Maybe<ExternalNavigationLinkInput>;
 };
 
+export type Newsroom = {
+  __typename?: 'Newsroom';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  logo?: Maybe<Image>;
+  themeColor?: Maybe<Scalars['Color']>;
+  themeFontColor?: Maybe<Scalars['Color']>;
+  hostURL?: Maybe<Scalars['String']>;
+  websiteURL?: Maybe<Scalars['String']>;
+  callToActionText?: Maybe<Scalars['RichText']>;
+  callToActionURL?: Maybe<Scalars['String']>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImage?: Maybe<Image>;
+  slug?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  isDisabled: Scalars['Boolean'];
+  isSelf: Scalars['Boolean'];
+};
+
 export type OAuth2Account = {
   __typename?: 'OAuth2Account';
   type: Scalars['String'];
@@ -1511,21 +1530,9 @@ export enum PaymentState {
   Declined = 'Declined'
 }
 
-export type Peer = {
-  __typename?: 'Peer';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  hostURL: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
-};
-
 export type PeerArticle = {
   __typename?: 'PeerArticle';
-  peer: Peer;
+  peer: Newsroom;
   peeredArticleURL: Scalars['String'];
   article: Article;
 };
@@ -1544,7 +1551,7 @@ export type PeerArticleTeaser = {
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
-  peer?: Maybe<Peer>;
+  peer?: Maybe<Newsroom>;
   articleID: Scalars['ID'];
   article?: Maybe<Article>;
 };
@@ -1561,27 +1568,14 @@ export type PeerArticleTeaserInput = {
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  logo?: Maybe<Image>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  hostURL: Scalars['String'];
-  websiteURL: Scalars['String'];
-  callToActionText: Scalars['RichText'];
-  callToActionURL: Scalars['String'];
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionImage?: Maybe<Image>;
-};
-
-export type PeerProfileInput = {
-  name: Scalars['String'];
-  logoID?: Maybe<Scalars['ID']>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  callToActionText: Scalars['RichText'];
-  callToActionURL: Scalars['String'];
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionImageID?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+  isDisabled?: Maybe<Scalars['Boolean']>;
+  hostURL?: Maybe<Scalars['String']>;
+  profile?: Maybe<Newsroom>;
 };
 
 export type Permission = {
@@ -1695,9 +1689,9 @@ export type Query = {
   __typename?: 'Query';
   remotePeerProfile?: Maybe<PeerProfile>;
   createJWTForUser?: Maybe<JwtToken>;
-  peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
-  peer?: Maybe<Peer>;
+  peerProfile: Newsroom;
+  newsrooms?: Maybe<Array<Newsroom>>;
+  newsroom?: Maybe<Newsroom>;
   me?: Maybe<User>;
   sessions: Array<Session>;
   authProviders: Array<AuthProvider>;
@@ -1756,7 +1750,7 @@ export type QueryCreateJwtForUserArgs = {
 };
 
 
-export type QueryPeerArgs = {
+export type QueryNewsroomArgs = {
   id: Scalars['ID'];
 };
 
@@ -2310,12 +2304,23 @@ export type UpdateImageInput = {
   focalPoint?: Maybe<InputPoint>;
 };
 
-export type UpdatePeerInput = {
+export type UpdateNewsroomInput = {
   name?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
   hostURL?: Maybe<Scalars['String']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
+  isDisabled?: Maybe<Scalars['Boolean']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+export type UpdateOwnNewsroomInput = {
+  name?: Maybe<Scalars['String']>;
+  logoID?: Maybe<Scalars['ID']>;
+  themeColor?: Maybe<Scalars['Color']>;
+  themeFontColor?: Maybe<Scalars['Color']>;
+  callToActionText?: Maybe<Scalars['RichText']>;
+  callToActionURL?: Maybe<Scalars['String']>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionImageID?: Maybe<Scalars['ID']>;
 };
 
 export type UpdatePollAnswer = {
@@ -2576,8 +2581,8 @@ export type PeerArticleListQuery = (
       { __typename?: 'PeerArticle' }
       & Pick<PeerArticle, 'peeredArticleURL'>
       & { peer: (
-        { __typename?: 'Peer' }
-        & PeerWithProfileFragment
+        { __typename?: 'Newsroom' }
+        & FullNewsroomFragment
       ), article: (
         { __typename?: 'Article' }
         & ArticleRefFragment
@@ -2988,8 +2993,8 @@ type FullTeaser_PeerArticleTeaser_Fragment = (
     { __typename?: 'Image' }
     & ImageRefFragment
   )>, peer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerWithProfileFragment
+    { __typename?: 'Newsroom' }
+    & Pick<Newsroom, 'id'>
   )>, article?: Maybe<(
     { __typename?: 'Article' }
     & ArticleRefFragment
@@ -3771,6 +3776,127 @@ export type DeleteNavigationMutation = (
   )> }
 );
 
+export type FullNewsroomFragment = (
+  { __typename?: 'Newsroom' }
+  & Pick<Newsroom, 'id' | 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL' | 'slug' | 'token' | 'isDisabled' | 'isSelf'>
+  & { logo?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, callToActionImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )> }
+);
+
+export type RemotePeerProfileQueryVariables = Exact<{
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
+}>;
+
+
+export type RemotePeerProfileQuery = (
+  { __typename?: 'Query' }
+  & { remotePeerProfile?: Maybe<(
+    { __typename?: 'PeerProfile' }
+    & Pick<PeerProfile, 'id'>
+  )> }
+);
+
+export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PeerProfileQuery = (
+  { __typename?: 'Query' }
+  & { peerProfile: (
+    { __typename?: 'Newsroom' }
+    & Pick<Newsroom, 'id' | 'name' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL' | 'isSelf'>
+    & { logo?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )>, callToActionImage?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )> }
+  ) }
+);
+
+export type NewsroomListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewsroomListQuery = (
+  { __typename?: 'Query' }
+  & { newsrooms?: Maybe<Array<(
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  )>> }
+);
+
+export type NewsroomQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type NewsroomQuery = (
+  { __typename?: 'Query' }
+  & { newsroom?: Maybe<(
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  )> }
+);
+
+export type CreateNewsroomMutationVariables = Exact<{
+  input: CreateNewsroomInput;
+}>;
+
+
+export type CreateNewsroomMutation = (
+  { __typename?: 'Mutation' }
+  & { createNewsroom: (
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  ) }
+);
+
+export type UpdateNewsroomMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: UpdateNewsroomInput;
+}>;
+
+
+export type UpdateNewsroomMutation = (
+  { __typename?: 'Mutation' }
+  & { updateNewsroom: (
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  ) }
+);
+
+export type UpdateOwnNewsroomMutationVariables = Exact<{
+  input: UpdateOwnNewsroomInput;
+}>;
+
+
+export type UpdateOwnNewsroomMutation = (
+  { __typename?: 'Mutation' }
+  & { updateOwnNewsroom: (
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  ) }
+);
+
+export type DeleteNewsroomMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteNewsroomMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteNewsroom?: Maybe<(
+    { __typename?: 'Newsroom' }
+    & FullNewsroomFragment
+  )> }
+);
+
 export type MutationPageFragment = (
   { __typename?: 'Page' }
   & Pick<Page, 'id'>
@@ -4120,138 +4246,6 @@ export type DeletePaymentMethodMutation = (
   & { deletePaymentMethod?: Maybe<(
     { __typename?: 'PaymentMethod' }
     & FullPaymentMethodFragment
-  )> }
-);
-
-export type FullPeerProfileFragment = (
-  { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
-  & { logo?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, callToActionImage?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
-
-export type PeerRefFragment = (
-  { __typename?: 'Peer' }
-  & Pick<Peer, 'id' | 'name' | 'slug' | 'isDisabled' | 'hostURL'>
-  & { profile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-);
-
-export type PeerWithProfileFragment = (
-  { __typename?: 'Peer' }
-  & { profile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-  & PeerRefFragment
-);
-
-export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerProfileQuery = (
-  { __typename?: 'Query' }
-  & { peerProfile: (
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  ) }
-);
-
-export type RemotePeerProfileQueryVariables = Exact<{
-  hostURL: Scalars['String'];
-  token: Scalars['String'];
-}>;
-
-
-export type RemotePeerProfileQuery = (
-  { __typename?: 'Query' }
-  & { remotePeerProfile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-);
-
-export type UpdatePeerProfileMutationVariables = Exact<{
-  input: PeerProfileInput;
-}>;
-
-
-export type UpdatePeerProfileMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePeerProfile: (
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  ) }
-);
-
-export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerListQuery = (
-  { __typename?: 'Query' }
-  & { peers?: Maybe<Array<(
-    { __typename?: 'Peer' }
-    & PeerWithProfileFragment
-  )>> }
-);
-
-export type PeerQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type PeerQuery = (
-  { __typename?: 'Query' }
-  & { peer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  )> }
-);
-
-export type CreatePeerMutationVariables = Exact<{
-  input: CreatePeerInput;
-}>;
-
-
-export type CreatePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { createPeer: (
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  ) }
-);
-
-export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: UpdatePeerInput;
-}>;
-
-
-export type UpdatePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePeer: (
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  ) }
-);
-
-export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeletePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePeer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerRefFragment
   )> }
 );
 
@@ -5230,44 +5224,6 @@ export const ArticleRefFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}`;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...ImageRef
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...ImageRef
-  }
-  callToActionImageURL
-}
-    ${ImageRefFragmentDoc}`;
-export const PeerRefFragmentDoc = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-export const PeerWithProfileFragmentDoc = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRefFragmentDoc}
-${FullPeerProfileFragmentDoc}`;
 export const PageRefFragmentDoc = gql`
     fragment PageRef on Page {
   id
@@ -5320,7 +5276,7 @@ export const FullTeaserFragmentDoc = gql`
     title
     lead
     peer {
-      ...PeerWithProfile
+      id
     }
     articleID
     article {
@@ -5357,7 +5313,6 @@ export const FullTeaserFragmentDoc = gql`
 }
     ${ImageRefFragmentDoc}
 ${ArticleRefFragmentDoc}
-${PeerWithProfileFragmentDoc}
 ${PageRefFragmentDoc}`;
 export const FullBlockFragmentDoc = gql`
     fragment FullBlock on Block {
@@ -5553,6 +5508,28 @@ export const FullNavigationFragmentDoc = gql`
 }
     ${PageRefFragmentDoc}
 ${ArticleRefFragmentDoc}`;
+export const FullNewsroomFragmentDoc = gql`
+    fragment FullNewsroom on Newsroom {
+  id
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
+  }
+  callToActionImageURL
+  slug
+  token
+  isDisabled
+  isSelf
+}
+    ${ImageRefFragmentDoc}`;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -5735,7 +5712,7 @@ export const PeerArticleListDocument = gql`
   peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
-        ...PeerWithProfile
+        ...FullNewsroom
       }
       peeredArticleURL
       article {
@@ -5749,7 +5726,7 @@ export const PeerArticleListDocument = gql`
     totalCount
   }
 }
-    ${PeerWithProfileFragmentDoc}
+    ${FullNewsroomFragmentDoc}
 ${ArticleRefFragmentDoc}`;
 
 /**
@@ -7510,6 +7487,291 @@ export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+export const RemotePeerProfileDocument = gql`
+    query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useRemotePeerProfileQuery__
+ *
+ * To run a query within a React component, call `useRemotePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemotePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemotePeerProfileQuery({
+ *   variables: {
+ *      hostURL: // value for 'hostURL'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+      }
+export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+        }
+export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
+export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;
+export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>;
+export const PeerProfileDocument = gql`
+    query PeerProfile {
+  peerProfile {
+    id
+    name
+    themeColor
+    themeFontColor
+    logo {
+      ...ImageRef
+    }
+    callToActionText
+    callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
+    isSelf
+  }
+}
+    ${ImageRefFragmentDoc}`;
+
+/**
+ * __usePeerProfileQuery__
+ *
+ * To run a query within a React component, call `usePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePeerProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePeerProfileQuery(baseOptions?: Apollo.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+      }
+export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+        }
+export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
+export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
+export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
+export const NewsroomListDocument = gql`
+    query NewsroomList {
+  newsrooms {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+
+/**
+ * __useNewsroomListQuery__
+ *
+ * To run a query within a React component, call `useNewsroomListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewsroomListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewsroomListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewsroomListQuery(baseOptions?: Apollo.QueryHookOptions<NewsroomListQuery, NewsroomListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewsroomListQuery, NewsroomListQueryVariables>(NewsroomListDocument, options);
+      }
+export function useNewsroomListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewsroomListQuery, NewsroomListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewsroomListQuery, NewsroomListQueryVariables>(NewsroomListDocument, options);
+        }
+export type NewsroomListQueryHookResult = ReturnType<typeof useNewsroomListQuery>;
+export type NewsroomListLazyQueryHookResult = ReturnType<typeof useNewsroomListLazyQuery>;
+export type NewsroomListQueryResult = Apollo.QueryResult<NewsroomListQuery, NewsroomListQueryVariables>;
+export const NewsroomDocument = gql`
+    query Newsroom($id: ID!) {
+  newsroom(id: $id) {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+
+/**
+ * __useNewsroomQuery__
+ *
+ * To run a query within a React component, call `useNewsroomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewsroomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewsroomQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNewsroomQuery(baseOptions: Apollo.QueryHookOptions<NewsroomQuery, NewsroomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewsroomQuery, NewsroomQueryVariables>(NewsroomDocument, options);
+      }
+export function useNewsroomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewsroomQuery, NewsroomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewsroomQuery, NewsroomQueryVariables>(NewsroomDocument, options);
+        }
+export type NewsroomQueryHookResult = ReturnType<typeof useNewsroomQuery>;
+export type NewsroomLazyQueryHookResult = ReturnType<typeof useNewsroomLazyQuery>;
+export type NewsroomQueryResult = Apollo.QueryResult<NewsroomQuery, NewsroomQueryVariables>;
+export const CreateNewsroomDocument = gql`
+    mutation CreateNewsroom($input: CreateNewsroomInput!) {
+  createNewsroom(input: $input) {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+export type CreateNewsroomMutationFn = Apollo.MutationFunction<CreateNewsroomMutation, CreateNewsroomMutationVariables>;
+
+/**
+ * __useCreateNewsroomMutation__
+ *
+ * To run a mutation, you first call `useCreateNewsroomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNewsroomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNewsroomMutation, { data, loading, error }] = useCreateNewsroomMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateNewsroomMutation(baseOptions?: Apollo.MutationHookOptions<CreateNewsroomMutation, CreateNewsroomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateNewsroomMutation, CreateNewsroomMutationVariables>(CreateNewsroomDocument, options);
+      }
+export type CreateNewsroomMutationHookResult = ReturnType<typeof useCreateNewsroomMutation>;
+export type CreateNewsroomMutationResult = Apollo.MutationResult<CreateNewsroomMutation>;
+export type CreateNewsroomMutationOptions = Apollo.BaseMutationOptions<CreateNewsroomMutation, CreateNewsroomMutationVariables>;
+export const UpdateNewsroomDocument = gql`
+    mutation UpdateNewsroom($id: ID!, $input: UpdateNewsroomInput!) {
+  updateNewsroom(id: $id, input: $input) {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+export type UpdateNewsroomMutationFn = Apollo.MutationFunction<UpdateNewsroomMutation, UpdateNewsroomMutationVariables>;
+
+/**
+ * __useUpdateNewsroomMutation__
+ *
+ * To run a mutation, you first call `useUpdateNewsroomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNewsroomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNewsroomMutation, { data, loading, error }] = useUpdateNewsroomMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNewsroomMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNewsroomMutation, UpdateNewsroomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateNewsroomMutation, UpdateNewsroomMutationVariables>(UpdateNewsroomDocument, options);
+      }
+export type UpdateNewsroomMutationHookResult = ReturnType<typeof useUpdateNewsroomMutation>;
+export type UpdateNewsroomMutationResult = Apollo.MutationResult<UpdateNewsroomMutation>;
+export type UpdateNewsroomMutationOptions = Apollo.BaseMutationOptions<UpdateNewsroomMutation, UpdateNewsroomMutationVariables>;
+export const UpdateOwnNewsroomDocument = gql`
+    mutation UpdateOwnNewsroom($input: UpdateOwnNewsroomInput!) {
+  updateOwnNewsroom(input: $input) {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+export type UpdateOwnNewsroomMutationFn = Apollo.MutationFunction<UpdateOwnNewsroomMutation, UpdateOwnNewsroomMutationVariables>;
+
+/**
+ * __useUpdateOwnNewsroomMutation__
+ *
+ * To run a mutation, you first call `useUpdateOwnNewsroomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOwnNewsroomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOwnNewsroomMutation, { data, loading, error }] = useUpdateOwnNewsroomMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateOwnNewsroomMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOwnNewsroomMutation, UpdateOwnNewsroomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOwnNewsroomMutation, UpdateOwnNewsroomMutationVariables>(UpdateOwnNewsroomDocument, options);
+      }
+export type UpdateOwnNewsroomMutationHookResult = ReturnType<typeof useUpdateOwnNewsroomMutation>;
+export type UpdateOwnNewsroomMutationResult = Apollo.MutationResult<UpdateOwnNewsroomMutation>;
+export type UpdateOwnNewsroomMutationOptions = Apollo.BaseMutationOptions<UpdateOwnNewsroomMutation, UpdateOwnNewsroomMutationVariables>;
+export const DeleteNewsroomDocument = gql`
+    mutation DeleteNewsroom($id: ID!) {
+  deleteNewsroom(id: $id) {
+    ...FullNewsroom
+  }
+}
+    ${FullNewsroomFragmentDoc}`;
+export type DeleteNewsroomMutationFn = Apollo.MutationFunction<DeleteNewsroomMutation, DeleteNewsroomMutationVariables>;
+
+/**
+ * __useDeleteNewsroomMutation__
+ *
+ * To run a mutation, you first call `useDeleteNewsroomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNewsroomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNewsroomMutation, { data, loading, error }] = useDeleteNewsroomMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteNewsroomMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNewsroomMutation, DeleteNewsroomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteNewsroomMutation, DeleteNewsroomMutationVariables>(DeleteNewsroomDocument, options);
+      }
+export type DeleteNewsroomMutationHookResult = ReturnType<typeof useDeleteNewsroomMutation>;
+export type DeleteNewsroomMutationResult = Apollo.MutationResult<DeleteNewsroomMutation>;
+export type DeleteNewsroomMutationOptions = Apollo.BaseMutationOptions<DeleteNewsroomMutation, DeleteNewsroomMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
   pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
@@ -8071,278 +8333,6 @@ export function useDeletePaymentMethodMutation(baseOptions?: Apollo.MutationHook
 export type DeletePaymentMethodMutationHookResult = ReturnType<typeof useDeletePaymentMethodMutation>;
 export type DeletePaymentMethodMutationResult = Apollo.MutationResult<DeletePaymentMethodMutation>;
 export type DeletePaymentMethodMutationOptions = Apollo.BaseMutationOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
-export const PeerProfileDocument = gql`
-    query PeerProfile {
-  peerProfile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-
-/**
- * __usePeerProfileQuery__
- *
- * To run a query within a React component, call `usePeerProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerProfileQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePeerProfileQuery(baseOptions?: Apollo.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
-      }
-export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
-        }
-export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
-export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
-export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
-export const RemotePeerProfileDocument = gql`
-    query RemotePeerProfile($hostURL: String!, $token: String!) {
-  remotePeerProfile(hostURL: $hostURL, token: $token) {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-
-/**
- * __useRemotePeerProfileQuery__
- *
- * To run a query within a React component, call `useRemotePeerProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useRemotePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRemotePeerProfileQuery({
- *   variables: {
- *      hostURL: // value for 'hostURL'
- *      token: // value for 'token'
- *   },
- * });
- */
-export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
-      }
-export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
-        }
-export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
-export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;
-export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>;
-export const UpdatePeerProfileDocument = gql`
-    mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-export type UpdatePeerProfileMutationFn = Apollo.MutationFunction<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>;
-
-/**
- * __useUpdatePeerProfileMutation__
- *
- * To run a mutation, you first call `useUpdatePeerProfileMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePeerProfileMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePeerProfileMutation, { data, loading, error }] = useUpdatePeerProfileMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePeerProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>(UpdatePeerProfileDocument, options);
-      }
-export type UpdatePeerProfileMutationHookResult = ReturnType<typeof useUpdatePeerProfileMutation>;
-export type UpdatePeerProfileMutationResult = Apollo.MutationResult<UpdatePeerProfileMutation>;
-export type UpdatePeerProfileMutationOptions = Apollo.BaseMutationOptions<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>;
-export const PeerListDocument = gql`
-    query PeerList {
-  peers {
-    ...PeerWithProfile
-  }
-}
-    ${PeerWithProfileFragmentDoc}`;
-
-/**
- * __usePeerListQuery__
- *
- * To run a query within a React component, call `usePeerListQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerListQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePeerListQuery(baseOptions?: Apollo.QueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
-      }
-export function usePeerListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
-        }
-export type PeerListQueryHookResult = ReturnType<typeof usePeerListQuery>;
-export type PeerListLazyQueryHookResult = ReturnType<typeof usePeerListLazyQuery>;
-export type PeerListQueryResult = Apollo.QueryResult<PeerListQuery, PeerListQueryVariables>;
-export const PeerDocument = gql`
-    query Peer($id: ID!) {
-  peer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRefFragmentDoc}`;
-
-/**
- * __usePeerQuery__
- *
- * To run a query within a React component, call `usePeerQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function usePeerQuery(baseOptions: Apollo.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
-      }
-export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
-        }
-export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
-export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;
-export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>;
-export const CreatePeerDocument = gql`
-    mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRefFragmentDoc}`;
-export type CreatePeerMutationFn = Apollo.MutationFunction<CreatePeerMutation, CreatePeerMutationVariables>;
-
-/**
- * __useCreatePeerMutation__
- *
- * To run a mutation, you first call `useCreatePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPeerMutation, { data, loading, error }] = useCreatePeerMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatePeerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePeerMutation, CreatePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePeerMutation, CreatePeerMutationVariables>(CreatePeerDocument, options);
-      }
-export type CreatePeerMutationHookResult = ReturnType<typeof useCreatePeerMutation>;
-export type CreatePeerMutationResult = Apollo.MutationResult<CreatePeerMutation>;
-export type CreatePeerMutationOptions = Apollo.BaseMutationOptions<CreatePeerMutation, CreatePeerMutationVariables>;
-export const UpdatePeerDocument = gql`
-    mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRefFragmentDoc}`;
-export type UpdatePeerMutationFn = Apollo.MutationFunction<UpdatePeerMutation, UpdatePeerMutationVariables>;
-
-/**
- * __useUpdatePeerMutation__
- *
- * To run a mutation, you first call `useUpdatePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePeerMutation, { data, loading, error }] = useUpdatePeerMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePeerMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePeerMutation, UpdatePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePeerMutation, UpdatePeerMutationVariables>(UpdatePeerDocument, options);
-      }
-export type UpdatePeerMutationHookResult = ReturnType<typeof useUpdatePeerMutation>;
-export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>;
-export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
-export const DeletePeerDocument = gql`
-    mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRefFragmentDoc}`;
-export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
-
-/**
- * __useDeletePeerMutation__
- *
- * To run a mutation, you first call `useDeletePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deletePeerMutation, { data, loading, error }] = useDeletePeerMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePeerMutation, DeletePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePeerMutation, DeletePeerMutationVariables>(DeletePeerDocument, options);
-      }
-export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
-export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
-export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
 export const CreatePollDocument = gql`
     mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
   createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {

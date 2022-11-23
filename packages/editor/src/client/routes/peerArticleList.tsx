@@ -19,9 +19,8 @@ import {
   ArticleFilter,
   ArticleSort,
   PeerArticle,
-  PeerWithProfileFragment,
-  usePeerArticleListQuery,
-  usePeerListQuery
+  useNewsroomListQuery,
+  usePeerArticleListQuery
 } from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {
@@ -36,7 +35,8 @@ function PeerArticleList() {
   const [sortField, setSortField] = useState('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState<ArticleFilter>({title: ''})
-  const [allPeers, setAllPeers] = useState<PeerWithProfileFragment[]>([])
+  // TODO fix type
+  const [allPeers, setAllPeers] = useState<any[]>([])
   const [peerFilter, setPeerFilter] = useState<string>()
   const [peerArticles, setPeerArticles] = useState<unknown[]>([])
 
@@ -73,16 +73,16 @@ function PeerArticleList() {
     fetchPolicy: 'network-only'
   })
 
-  // fetch all peers
-  const {data: peerListData} = usePeerListQuery({
+  // fetch all newsrooms
+  const {data: newsroomListData} = useNewsroomListQuery({
     fetchPolicy: 'network-only'
   })
 
   useEffect(() => {
-    if (peerListData?.peers) {
-      setAllPeers(peerListData.peers)
+    if (newsroomListData?.newsrooms) {
+      setAllPeers(newsroomListData.newsrooms)
     }
-  }, [peerListData?.peers])
+  }, [newsroomListData?.newsrooms])
 
   useEffect(() => {
     if (peerArticleListData?.peerArticles.nodes) {
@@ -134,7 +134,7 @@ function PeerArticleList() {
         virtualized
         data={allPeers.map(peer => ({
           value: peer.name,
-          label: peer.profile?.name
+          label: peer?.name
         }))}
         style={{width: 150, marginTop: 10}}
         placeholder={t('peerArticles.filterByPeer')}
@@ -200,14 +200,14 @@ function PeerArticleList() {
               {(rowData: PeerArticle) => (
                 <>
                   <Avatar
-                    src={rowData.peer.profile?.logo?.url || undefined}
-                    alt={rowData.peer.profile?.name}
+                    src={rowData.peer?.logo?.url || undefined}
+                    alt={rowData.peer?.name}
                     circle
                     size="xs"
                     style={{marginRight: 5, minWidth: 20}}
                     className="peerArticleAvatar"
                   />
-                  <div>{rowData.peer.profile?.name}</div>
+                  <div>{rowData.peer?.name}</div>
                 </>
               )}
             </Cell>
@@ -291,7 +291,7 @@ function PeerArticleList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEER_ARTICLES',
-  'CAN_GET_PEER_ARTICLE'
+  'CAN_GET_NEWSROOMS',
+  'CAN_GET_NEWSROOM'
 ])(PeerArticleList)
 export {CheckedPermissionComponent as PeerArticleList}

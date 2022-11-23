@@ -6,10 +6,10 @@ import {FormInstance} from 'rsuite/esm/Form'
 import {
   ImageRefFragment,
   Maybe,
-  PeerProfileDocument,
-  PeerProfileQuery,
+  NewsroomDocument,
+  NewsroomQuery,
   usePeerProfileQuery,
-  useUpdatePeerProfileMutation
+  useUpdateOwnNewsroomMutation
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ColorPicker} from '../atoms/colorPicker'
@@ -25,7 +25,7 @@ import {getOperationNameFromDocument} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
-type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
+type NewsroomImage = NonNullable<NewsroomQuery['newsroom']>['logo']
 
 export interface ImageEditPanelProps {
   onClose?(): void
@@ -33,11 +33,11 @@ export interface ImageEditPanelProps {
 }
 
 function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
-  const isAuthorized = authorise('CAN_UPDATE_PEER_PROFILE')
+  const isAuthorized = authorise('CAN_UPDATE_NEWSROOM')
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const [logoImage, setLogoImage] = useState<PeerProfileImage>()
+  const [logoImage, setLogoImage] = useState<NewsroomImage>()
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [themeFontColor, setThemeFontColor] = useState('')
@@ -51,8 +51,8 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
-    refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
+  const [updateSettings, {loading: isSaving, error: saveError}] = useUpdateOwnNewsroomMutation({
+    refetchQueries: [getOperationNameFromDocument(NewsroomDocument)]
   })
   const isDisabled = isLoading || isSaving || !isAuthorized
 
@@ -62,14 +62,14 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     if (data?.peerProfile) {
       setLogoImage(data.peerProfile.logo)
       setName(data.peerProfile.name)
-      setThemeColor(data.peerProfile.themeColor)
-      setThemeFontColor(data.peerProfile.themeFontColor)
+      setThemeColor(data.peerProfile.themeColor ?? '#ffffff')
+      setThemeFontColor(data.peerProfile.themeFontColor ?? '#000000')
       setCallToActionText(
-        data.peerProfile.callToActionText.length
+        data.peerProfile.callToActionText?.length
           ? data.peerProfile.callToActionText
           : createDefaultValue()
       )
-      setCallToActionTextURL(data.peerProfile.callToActionURL)
+      setCallToActionTextURL(data.peerProfile?.callToActionURL ?? '')
       setCallToActionImage(data?.peerProfile?.callToActionImage)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
     }
@@ -153,7 +153,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         <Drawer.Header>
           <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
           <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
+            <PermissionControl qualifyingPermissions={['CAN_UPDATE_NEWSROOM']}>
               <Button appearance="primary" disabled={isDisabled} type="submit">
                 {t('save')}
               </Button>
@@ -326,7 +326,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   )
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEER_PROFILE',
-  'CAN_UPDATE_PEER_PROFILE'
+  'CAN_GET_NEWSROOM',
+  'CAN_UPDATE_NEWSROOM'
 ])(PeerInfoEditPanel)
-export {CheckedPermissionComponent as PeerInfoEditPanel}
+export {CheckedPermissionComponent as NewsroomInfoEditPanel}

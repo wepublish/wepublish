@@ -3,19 +3,19 @@ import {fireEvent, render} from '@testing-library/react'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 
-import {CreatePeerDocument, PeerDocument} from '../../src/client/api'
+import {CreateNewsroomDocument, NewsroomDocument} from '../../src/client/api'
 import {AuthContext} from '../../src/client/authContext'
-import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
+import {NewsroomEditPanel} from '../../src/client/panel/newsroomEditPanel'
 import {actWait, sessionWithPermissions} from '../utils'
 
 const MockedProvider = MockedProviderBase as any
 
-describe('Peer Edit Panel', () => {
+describe('Newsroom Edit Panel', () => {
   test('should render', async () => {
     const {asFragment} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider addTypename={false}>
-          <PeerEditPanel hostURL={'localhost:4000'} />
+          <NewsroomEditPanel hostURL={'localhost:4000'} />
         </MockedProvider>
       </AuthContext.Provider>
     )
@@ -27,7 +27,7 @@ describe('Peer Edit Panel', () => {
     const mocks = [
       {
         request: {
-          query: PeerDocument,
+          query: NewsroomDocument,
           variables: {
             id: 'peerId1'
           }
@@ -52,7 +52,7 @@ describe('Peer Edit Panel', () => {
     const {asFragment} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <PeerEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
+          <NewsroomEditPanel id={'peerId1'} hostURL={'localhost:4000'} />
         </MockedProvider>
       </AuthContext.Provider>
     )
@@ -73,7 +73,7 @@ describe('Peer Edit Panel', () => {
     const mocks = [
       {
         request: {
-          query: CreatePeerDocument,
+          query: CreateNewsroomDocument,
           variables: {
             input: {
               name: peer.name,
@@ -103,7 +103,7 @@ describe('Peer Edit Panel', () => {
     const {asFragment, getByLabelText, getByTestId} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <PeerEditPanel hostURL={'localhost:4000'} />
+          <NewsroomEditPanel hostURL={'localhost:4000'} />
         </MockedProvider>
       </AuthContext.Provider>
     )
@@ -152,7 +152,7 @@ describe('Peer Edit Panel', () => {
     const {asFragment} = render(
       <AuthContext.Provider value={sessionWithoutPermission}>
         <MockedProvider addTypename={false}>
-          <PeerEditPanel hostURL={'localhost:4000'} />
+          <NewsroomEditPanel hostURL={'localhost:4000'} />
         </MockedProvider>
       </AuthContext.Provider>
     )

@@ -9,7 +9,7 @@ import {
   FullPoll,
   ImageRefFragment,
   PageRefFragment,
-  PeerRefFragment,
+  // NewsroomRefFragment,
   TeaserStyle
 } from '../api'
 import {BlockListValue} from '../atoms/blockList'
@@ -210,7 +210,7 @@ export interface ArticleTeaserLink {
 
 export interface PeerArticleTeaserLink {
   type: TeaserType.PeerArticle
-  peer: PeerRefFragment
+  // peer: FullNewsroomFragment
   articleID: string
   article?: ArticleRefFragment
 }
@@ -534,7 +534,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                       preTitle: flexTeaser.teaser.preTitle || undefined,
                       title: flexTeaser.teaser.title || undefined,
                       lead: flexTeaser.teaser.lead || undefined,
-                      peerID: flexTeaser.teaser.peer.id,
+                      peerID: '', // revert
                       articleID: flexTeaser.teaser.articleID
                     }
                   },
@@ -641,7 +641,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
-                    peerID: value.peer.id,
+                    peerID: '', // revert
                     articleID: value.articleID
                   }
                 }

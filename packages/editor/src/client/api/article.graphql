@@ -106,7 +106,7 @@ query PeerArticleList(
   peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
     nodes {
       peer {
-        ...PeerWithProfile
+        ...FullNewsroom
       }
 
       peeredArticleURL
