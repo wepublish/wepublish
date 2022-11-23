@@ -158,7 +158,11 @@ function PollList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <DeletePollModal poll={pollDelete} afterDelete={refetch} setPoll={setPollDelete} />
+      <DeletePollModal
+        poll={pollDelete}
+        onDelete={refetch}
+        onClose={() => setPollDelete(undefined)}
+      />
     </>
   )
 }

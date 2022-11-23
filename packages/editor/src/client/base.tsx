@@ -1,3 +1,4 @@
+import EventDetailIcon from '@rsuite/icons/EventDetail'
 import GridIcon from '@rsuite/icons/Grid'
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
@@ -161,6 +162,22 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
+                  <Nav.Menu
+                    eventKey={'poll'}
+                    title={t('navbar.blocks.topMenu')}
+                    icon={<GridIcon />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/polls"
+                      active={path === 'polls'}
+                      icon={<SpeakerIcon />}>
+                      {t('navbar.blocks.polls')}
+                    </Nav.Item>
+                  </Nav.Menu>
+                </PermissionControl>
+
                 <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<CommentIcon />}>
                   <PermissionControl
                     qualifyingPermissions={[
@@ -210,21 +227,38 @@ export function Base({children}: BaseProps) {
                   </PermissionControl>
                 </Nav.Menu>
 
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
-                  <Nav.Menu
-                    eventKey={'poll'}
-                    title={t('navbar.blocks.topMenu')}
-                    icon={<GridIcon />}>
+                <Nav.Menu eventKey={'events'} title={t('navbar.events')} icon={<EventDetailIcon />}>
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_EVENT',
+                      'CAN_UPDATE_EVENT',
+                      'CAN_DELETE_EVENT'
+                    ]}>
                     <Nav.Item
                       as={NavLink}
-                      href="/polls"
-                      active={path === 'polls'}
-                      icon={<SpeakerIcon />}>
-                      {t('navbar.blocks.polls')}
+                      href="/events"
+                      icon={<EventDetailIcon />}
+                      active={path === 'events'}>
+                      {t('navbar.events')}
                     </Nav.Item>
-                  </Nav.Menu>
-                </PermissionControl>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_TAGS',
+                      'CAN_CREATE_TAG',
+                      'CAN_UPDATE_TAG',
+                      'CAN_DELETE_TAG'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/events/tags"
+                      icon={<TagIcon />}
+                      active={path === 'events/tags'}>
+                      {t('navbar.eventTags')}
+                    </Nav.Item>
+                  </PermissionControl>
+                </Nav.Menu>
 
                 <PermissionControl
                   qualifyingPermissions={[

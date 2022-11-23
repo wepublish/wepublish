@@ -619,8 +619,7 @@
     "deletePollModal": {
       "title": "Delete Poll?",
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
-      "cancelBtn": "Cancel"
+      "deleteBtn": "Yes, delete"
     },
     "pollEditView": {
       "loadingTitle": "Loading poll...",
@@ -665,6 +664,8 @@
       "waiting": "Poll is waiting for the opening on {{date}}"
     },
     "navbar": {
+      "events": "Events",
+      "eventTags": "Tags",
       "articles": "Articles",
       "blocks": {
         "topMenu": "Content Blocks",
@@ -1253,6 +1254,42 @@
     "permissions": {
       "noAccess": "You have insufficient permission to access this content.",
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}"
+    },
+    "event": {
+      "list": {
+        "title": "Events",
+        "name": "Name",
+        "delete": "Delete",
+        "create": "Create new event",
+        "startsAt": "Starts at {{startsAt}}",
+        "endsAt": "Ends at {{endsAt}}",
+        "endsAtNone": "Open ended"
+      },
+      "create": {
+        "title": "Create Event"
+      },
+      "edit": {
+        "title": "Edit Event"
+      },
+      "form": {
+        "name": "Name",
+        "location": "Location",
+        "status": "Status",
+        "startsAt": "Starts at",
+        "endsAt": "Ends at",
+        "description": "Description",
+        "tags": "Tags",
+        "image": "Image",
+        "scheduled": "Scheduled",
+        "cancelled": "Cancelled",
+        "postponed": "Postponed",
+        "rescheduled": "Rescheduled"
+      },
+      "delete": {
+        "title": "Delete Event?",
+        "body": "Do you really want to delete the event \"{{name}}\"?",
+        "delete": "Yes, delete the event"
+      }
     }
   }
 }

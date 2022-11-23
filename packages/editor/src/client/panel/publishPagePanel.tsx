@@ -63,16 +63,21 @@ function PublishPagePanel({
             {t('pageEditor.panels.pagePending', {pendingPublishDate})}
           </Message>
         )}
-        <DateTimePicker
-          dateTime={publishedAt}
-          label={t('pageEditor.panels.publishDate')}
-          changeDate={date => setPublishedAt(date)}
-        />
-        <DateTimePicker
-          dateTime={updatedAt}
-          label={t('pageEditor.panels.updateDate')}
-          changeDate={date => setUpdatedAt(date)}
-        />
+        <div style={{maxWidth: '200px'}}>
+          <DateTimePicker
+            dateTime={publishedAt}
+            label={t('pageEditor.panels.publishDate')}
+            changeDate={date => setPublishedAt(date)}
+          />
+        </div>
+
+        <div style={{maxWidth: '200px'}}>
+          <DateTimePicker
+            dateTime={updatedAt}
+            label={t('pageEditor.panels.updateDate')}
+            changeDate={date => setUpdatedAt(date)}
+          />
+        </div>
         {updatedAt && publishedAt && updatedAt < publishedAt ? (
           <Message type="warning">{t('pageEditor.panels.updateDateWarning')}</Message>
         ) : (
@@ -88,15 +93,17 @@ function PublishPagePanel({
         </Checkbox>
 
         {isPublishDateActive ? (
-          <DateTimePicker
-            disabled={!isPublishDateActive}
-            dateTime={!isPublishDateActive ? undefined : publishAt}
-            label={t('pageEditor.panels.publishAt')}
-            changeDate={date => {
-              setPublishAt(date)
-            }}
-            helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
-          />
+          <div style={{maxWidth: '200px'}}>
+            <DateTimePicker
+              disabled={!isPublishDateActive}
+              dateTime={!isPublishDateActive ? undefined : publishAt}
+              label={t('pageEditor.panels.publishAt')}
+              changeDate={date => {
+                setPublishAt(date)
+              }}
+              helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
+            />
+          </div>
         ) : (
           ''
         )}
