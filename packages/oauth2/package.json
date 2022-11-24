@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "8.1.0",
+  "version": "8.1.1-alpha.0",
   "description": "OAuth2 Provider for we.publish",
   "publishConfig": {
     "access": "public"
