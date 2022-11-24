@@ -327,7 +327,7 @@ export async function runServer() {
     challenge
   })
 
-  // eslint-disable-nex t-line no-unused-expressions
+  // eslint-disable-next-line no-unused-expressions
   yargs(hideBin(process.argv))
     .command(
       ['listen', '$0'],
