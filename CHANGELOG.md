@@ -49,6 +49,14 @@
 - Itrulia ([@Itrulia](https://github.com/Itrulia))
 - [@michael-scheurer](https://github.com/michael-scheurer)
 
+## 4.1.2 (2022-11-21)
+
+#### :bug: Bug Fix
+* `api`
+  * [#767](https://github.com/wepublish/wepublish/pull/767) Backport patch: Fix subscription csv download ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 1
+- [@michael-scheurer](https://github.com/michael-scheurer)
 
 ## 8.0.0 (2022-11-07)
 
@@ -450,11 +458,11 @@
   * [#541](https://github.com/wepublish/wepublish/pull/541) F/wpc 656 user details ([@camilleory](https://github.com/camilleory))
 * Other
   * [#480](https://github.com/wepublish/wepublish/pull/480) Remove mail hardcoded mail ([@elias-summermatter](https://github.com/elias-summermatter))
-  
+
 #### :memo: Documentation
 * `api`
   * [#533](https://github.com/wepublish/wepublish/pull/533) added env variables to .env.example files ([@camilleory](https://github.com/camilleory))
-  
+
 #### :house: Internal
 * Other
   * [#562](https://github.com/wepublish/wepublish/pull/562) chore(releases): semi automated releases ([@tomaszdurka](https://github.com/tomaszdurka))
