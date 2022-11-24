@@ -50,6 +50,16 @@
 - [@michael-scheurer](https://github.com/michael-scheurer)
 
 
+## 4.1.2 (2022-11-21)
+
+#### :bug: Bug Fix
+* `api`
+  * [#767](https://github.com/wepublish/wepublish/pull/767) Backport patch: Fix subscription csv download ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 1
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 8.0.0 (2022-11-07)
 
 #### :boom: Breaking Change
@@ -223,6 +233,7 @@
 #### Committers: 2
 - Itrulia ([@Itrulia](https://github.com/Itrulia))
 - Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
 
 ## 4.1.1 (2022-08-16)
 
