@@ -56,6 +56,10 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   title?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
   draft?: Maybe<Scalars['Boolean']>;
   published?: Maybe<Scalars['Boolean']>;
   pending?: Maybe<Scalars['Boolean']>;
@@ -278,6 +282,7 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
 };
 
 export enum CommentAuthorType {
@@ -325,8 +330,14 @@ export type CommentFilter = {
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
+
+export type CommentRatingOverrideUpdateInput = {
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
@@ -381,6 +392,27 @@ export type CreatePeerInput = {
   slug: Scalars['String'];
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser';
+  style: TeaserStyle;
+  image?: Maybe<Image>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentUrl?: Maybe<Scalars['String']>;
+  properties?: Maybe<Array<Properties>>;
+};
+
+export type CustomTeaserInput = {
+  style: TeaserStyle;
+  imageID?: Maybe<Scalars['ID']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentUrl?: Maybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
 };
 
 
@@ -1159,6 +1191,7 @@ export type MutationUpdateCommentArgs = {
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput>>;
 };
 
 
@@ -1178,7 +1211,7 @@ export type MutationApproveCommentArgs = {
 
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 };
 
 
@@ -1306,6 +1339,12 @@ export type OAuth2Account = {
   scope: Scalars['String'];
 };
 
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
+
 export type Page = {
   __typename?: 'Page';
   id: Scalars['ID'];
@@ -1323,6 +1362,17 @@ export type PageConnection = {
   nodes: Array<Page>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type PageFilter = {
+  title?: Maybe<Scalars['String']>;
+  draft?: Maybe<Scalars['Boolean']>;
+  description?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
+  published?: Maybe<Scalars['Boolean']>;
+  pending?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type PageInfo = {
@@ -1894,7 +1944,7 @@ export type QueryPagesArgs = {
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
+  filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -2187,7 +2237,7 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser;
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock';
@@ -2213,6 +2263,7 @@ export type TeaserInput = {
   article?: Maybe<ArticleTeaserInput>;
   peerArticle?: Maybe<PeerArticleTeaserInput>;
   page?: Maybe<PageTeaserInput>;
+  custom?: Maybe<CustomTeaserInput>;
 };
 
 export enum TeaserStyle {
@@ -2989,7 +3040,19 @@ type FullTeaser_PageTeaser_Fragment = (
   )> }
 );
 
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment;
+type FullTeaser_CustomTeaser_Fragment = (
+  { __typename?: 'CustomTeaser' }
+  & Pick<CustomTeaser, 'style' | 'preTitle' | 'title' | 'lead' | 'contentUrl'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, properties?: Maybe<Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>> }
+);
+
+export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_CustomTeaser_Fragment;
 
 type FullBlock_RichTextBlock_Fragment = (
   { __typename: 'RichTextBlock' }
@@ -3139,6 +3202,9 @@ type FullBlock_TeaserGridBlock_Fragment = (
   ) | (
     { __typename?: 'PageTeaser' }
     & FullTeaser_PageTeaser_Fragment
+  ) | (
+    { __typename?: 'CustomTeaser' }
+    & FullTeaser_CustomTeaser_Fragment
   )>> }
 );
 
@@ -3158,6 +3224,9 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
     ) | (
       { __typename?: 'PageTeaser' }
       & FullTeaser_PageTeaser_Fragment
+    ) | (
+      { __typename?: 'CustomTeaser' }
+      & FullTeaser_CustomTeaser_Fragment
     )> }
   )>> }
 );
@@ -3261,6 +3330,9 @@ export type FullCommentFragment = (
   )>, tags?: Maybe<Array<(
     { __typename?: 'Tag' }
     & Pick<Tag, 'id' | 'tag'>
+  )>>, overriddenRatings?: Maybe<Array<(
+    { __typename?: 'overriddenRating' }
+    & Pick<OverriddenRating, 'answerId' | 'value'>
   )>> }
 );
 
@@ -3317,7 +3389,7 @@ export type ApproveCommentMutation = (
 
 export type RejectCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
+  rejectionReason?: Maybe<CommentRejectionReason>;
 }>;
 
 
@@ -3351,6 +3423,7 @@ export type UpdateCommentMutationVariables = Exact<{
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
 
@@ -3775,7 +3848,7 @@ export type PageRefFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<PageFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -5161,6 +5234,10 @@ export const FullCommentFragmentDoc = gql`
     id
     tag
   }
+  overriddenRatings {
+    answerId
+    value
+  }
 }
     ${ImageRefFragmentDoc}
 ${FullUserFragmentDoc}
@@ -5307,6 +5384,21 @@ export const FullTeaserFragmentDoc = gql`
     lead
     page {
       ...PageRef
+    }
+  }
+  ... on CustomTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+      public
     }
   }
 }
@@ -6673,7 +6765,7 @@ export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveComme
 export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
 export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
 export const RejectCommentDocument = gql`
-    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -6743,8 +6835,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds, ratingOverrides: $ratingOverrides) {
     ...FullComment
   }
 }
@@ -6771,6 +6863,7 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  *      guestUserImageID: // value for 'guestUserImageID'
  *      source: // value for 'source'
  *      tagIds: // value for 'tagIds'
+ *      ratingOverrides: // value for 'ratingOverrides'
  *   },
  * });
  */
@@ -7466,8 +7559,8 @@ export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavi
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

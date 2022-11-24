@@ -1,5 +1,4 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
@@ -12,6 +11,7 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
+  KarmaMediaAdapter,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -50,10 +50,15 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepulish.ch/page/preview/${token}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer): string {
     if (comment.itemType === CommentItemType.article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }
+
+    if (comment.itemType === CommentItemType.peerArticle) {
+      return `https://demo.wepublish.media/comments/p/${peer?.id}/${item.id}#${comment.id}`
+    }
+
     return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
 

@@ -7,6 +7,16 @@ import {
 } from '../../error'
 import {SettingName} from '../../db/setting'
 
+export const validateCommentRatingValue = (type: RatingSystemType, value: number) => {
+  switch (type) {
+    case RatingSystemType.star: {
+      if (value < 0 || value > 5) {
+        throw new InvalidStarRatingValueError()
+      }
+    }
+  }
+}
+
 export const rateComment = async (
   commentId: string,
   answerId: string,
@@ -38,13 +48,7 @@ export const rateComment = async (
     throw new NotFound('CommentRatingSystemAnswer', answerId)
   }
 
-  switch (answer.type) {
-    case RatingSystemType.star: {
-      if (value < 0 || value > 5) {
-        throw new InvalidStarRatingValueError()
-      }
-    }
-  }
+  validateCommentRatingValue(answer.type, value)
 
   return commentRating.upsert({
     where: {

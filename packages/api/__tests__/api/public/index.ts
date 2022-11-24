@@ -220,6 +220,11 @@ export type CommentBlock = {
   comments: Array<Comment>
 }
 
+export type CommentBlock = {
+  __typename?: 'CommentBlock'
+  comments: Array<Comment>
+}
+
 export type CommentInput = {
   parentID?: Maybe<Scalars['ID']>
   guestUsername?: Maybe<Scalars['String']>
@@ -1014,6 +1019,14 @@ export type QuoteBlock = {
   author?: Maybe<Scalars['String']>
 }
 
+export type Rating = {
+  __typename?: 'Rating'
+  answerId: Scalars['ID']
+  count: Scalars['Int']
+  total: Scalars['Int']
+  mean: Scalars['Float']
+}
+
 export enum RatingSystemType {
   Star = 'STAR'
 }
@@ -1449,7 +1462,9 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
-type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
+
+type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
 type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
 

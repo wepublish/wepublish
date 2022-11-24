@@ -5,9 +5,9 @@ import {BrowserRouter} from 'react-router-dom'
 import snapshotDiff from 'snapshot-diff'
 
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
+import {AuthContext} from '../../src/client/authContext'
 import {UserEditView} from '../../src/client/routes/userEditView'
 import {actWait, sessionWithPermissions} from '../utils'
-import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
