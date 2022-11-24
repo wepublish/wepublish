@@ -1,5 +1,4 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
@@ -12,6 +11,7 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
+  KarmaMediaAdapter,
   PublicArticle,
   PublicComment,
   PublicPage,
