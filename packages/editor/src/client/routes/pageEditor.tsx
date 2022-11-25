@@ -1,10 +1,12 @@
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import SaveIcon from '@rsuite/icons/legacy/Save'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdArrowLeft,
+  MdCloudUpload,
+  MdIntegrationInstructions,
+  MdRemoveRedEye,
+  MdSave
+} from 'react-icons/md'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
@@ -315,7 +317,7 @@ function PageEditor() {
                   <IconButton
                     style={{marginTop: '4px', marginBottom: '20px'}}
                     size={'lg'}
-                    icon={<ArrowLeftIcon />}
+                    icon={<MdArrowLeft />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
@@ -326,7 +328,7 @@ function PageEditor() {
               centerChildren={
                 <div style={{marginTop: '4px'}}>
                   <IconButton
-                    icon={<NewspaperOIcon />}
+                    icon={<MdIntegrationInstructions />}
                     size={'lg'}
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
@@ -340,7 +342,7 @@ function PageEditor() {
                           marginLeft: '10px'
                         }}
                         size={'lg'}
-                        icon={<SaveIcon />}
+                        icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={handleSave}>
                         {t('create')}
@@ -354,7 +356,7 @@ function PageEditor() {
                             marginLeft: '10px'
                           }}
                           size={'lg'}
-                          icon={<SaveIcon />}
+                          icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={handleSave}>
                           {t('save')}
@@ -372,7 +374,7 @@ function PageEditor() {
                               marginLeft: '10px'
                             }}
                             size={'lg'}
-                            icon={<CloudUploadIcon />}
+                            icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
                               setPublishDialogOpen(true)
@@ -392,7 +394,7 @@ function PageEditor() {
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
                       size={'lg'}
-                      icon={<EyeIcon />}
+                      icon={<MdRemoveRedEye />}
                       onClick={() => {
                         previewLinkFetch({
                           variables: {

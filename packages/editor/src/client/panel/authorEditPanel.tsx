@@ -1,6 +1,6 @@
-import LinkIcon from '@rsuite/icons/legacy/Link'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdLink} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -244,7 +244,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     <Form.Group>
                       <InputGroup inside style={{width: '230px', marginLeft: '5px'}}>
                         <InputGroup.Addon>
-                          <LinkIcon />
+                          <MdLink />
                         </InputGroup.Addon>
 
                         <Form.Control

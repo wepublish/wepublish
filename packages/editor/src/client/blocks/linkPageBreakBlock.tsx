@@ -1,6 +1,6 @@
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Input} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
@@ -47,7 +47,7 @@ export function LinkPageBreakBlock({
     <>
       <div style={{position: 'relative', width: '100%'}}>
         <div style={{position: 'absolute', zIndex: 1, height: '100%', right: 0}}>
-          <IconButton size={'lg'} icon={<PencilIcon />} onClick={() => setEditPanelOpen(true)} />
+          <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
         </div>
       </div>
       <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50}}>

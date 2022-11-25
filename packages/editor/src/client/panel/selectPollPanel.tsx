@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAddCircle} from 'react-icons/md'
 import {Button, Drawer, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 
 import {Poll, usePollsLazyQuery} from '../api'
@@ -96,7 +96,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
               {(rowData: Poll) => (
                 <IconButtonTooltip caption={t('blocks.poll.select')}>
                   <IconButton
-                    icon={<PlusCircleIcon />}
+                    icon={<MdAddCircle />}
                     appearance="primary"
                     circle
                     size="xs"

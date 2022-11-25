@@ -1,10 +1,6 @@
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import CopyIcon from '@rsuite/icons/legacy/Copy'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdComment, MdContentCopy, MdDelete, MdUnpublished, MdVisibility} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
@@ -243,7 +239,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
                       <IconButton
-                        icon={<BtnOffIcon />}
+                        icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
@@ -259,7 +255,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<TrashIcon />}
+                        icon={<MdDelete />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -275,7 +271,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
                       <IconButton
-                        icon={<CopyIcon />}
+                        icon={<MdContentCopy />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -291,7 +287,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
                       <IconButton
-                        icon={<EyeIcon />}
+                        icon={<MdVisibility />}
                         circle
                         disabled={!rowData.draft}
                         size="sm"
@@ -307,7 +303,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.createComment')}>
                       <IconButton
-                        icon={<CommentIcon />}
+                        icon={<MdComment />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}

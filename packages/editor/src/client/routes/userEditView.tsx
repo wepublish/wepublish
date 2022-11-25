@@ -1,6 +1,6 @@
-import {ArrowLeftLine} from '@rsuite/icons'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdChevronLeft} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
@@ -315,10 +315,10 @@ function UserEditView() {
           {/* title */}
           <FlexboxGrid.Item colspan={12}>
             <Row>
-              <Col xs={2} style={{paddingTop: '3px'}}>
+              <Col xs={2} style={{paddingTop: '3px', marginRight: '1rem'}}>
                 <Link to="/users">
                   <h1>
-                    <ArrowLeftLine />
+                    <MdChevronLeft />
                   </h1>
                 </Link>
               </Col>

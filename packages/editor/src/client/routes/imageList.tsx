@@ -1,8 +1,6 @@
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete, MdEdit, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
@@ -111,7 +109,7 @@ function ImageList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -186,7 +184,7 @@ function ImageList() {
                       <>
                         <Link to={`/images/edit/${rowData.id}`}>
                           <IconButton
-                            icon={<EditIcon />}
+                            icon={<MdEdit />}
                             circle
                             size="sm"
                             style={{marginLeft: '5px'}}
@@ -198,7 +196,7 @@ function ImageList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<TrashIcon />}
+                        icon={<MdDelete />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}

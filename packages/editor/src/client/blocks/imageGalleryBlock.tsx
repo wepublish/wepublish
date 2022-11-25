@@ -1,12 +1,6 @@
-import ArrowCircleLeftIcon from '@rsuite/icons/legacy/ArrowCircleLeft'
-import ArrowCircleRightIcon from '@rsuite/icons/legacy/ArrowCircleRight'
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import ListIcon from '@rsuite/icons/legacy/List'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAddCircle, MdArrowLeft, MdArrowRight, MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
 import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
@@ -88,7 +82,7 @@ export function ImageGalleryBlock({
             flexShrink: 1
           }}>
           <IconButton
-            icon={<ListIcon />}
+            icon={<MdEdit />}
             onClick={() => setGalleryListEditModalOpen(true)}
             disabled={disabled}
           />
@@ -114,7 +108,7 @@ export function ImageGalleryBlock({
             flexShrink: 1
           }}>
           <IconButton
-            icon={<ArrowCircleLeftIcon />}
+            icon={<MdArrowLeft />}
             onClick={() => setIndex(index => index - 1)}
             disabled={disabled || !hasPrevious}
             style={{
@@ -122,7 +116,7 @@ export function ImageGalleryBlock({
             }}
           />
           <IconButton
-            icon={<ArrowCircleRightIcon />}
+            icon={<MdArrowRight />}
             onClick={() => setIndex(index => index + 1)}
             disabled={disabled || !hasNext}
             style={{
@@ -130,7 +124,7 @@ export function ImageGalleryBlock({
             }}
           />
           <IconButton
-            icon={<PlusCircleIcon />}
+            icon={<MdAddCircle />}
             onClick={() => setIndex(value.images.length)}
             disabled={disabled || isNewIndex}
           />
@@ -159,19 +153,13 @@ export function ImageGalleryBlock({
               }}>
               <Dropdown
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
-                    {...props}
-                    ref={ref}
-                    icon={<WrenchIcon />}
-                    circle
-                    appearance="subtle"
-                  />
+                  <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
                 )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <ImageIcon /> {t('blocks.image.overview.chooseImage')}
+                  <MdPhoto /> {t('blocks.image.overview.chooseImage')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <PencilIcon /> {t('blocks.image.overview.editImage')}
+                  <MdEdit /> {t('blocks.image.overview.editImage')}
                 </Dropdown.Item>
                 {/* TODO: Meta sync */}
               </Dropdown>

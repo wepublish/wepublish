@@ -1,10 +1,8 @@
-import FileIcon from '@rsuite/icons/legacy/File'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import React, {ReactNode, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Avatar, Drawer, IconButton, Panel} from 'rsuite'
 
@@ -170,7 +168,7 @@ export function TeaserBlock({
                 top: 0
               }}>
               <IconButton
-                icon={<FileIcon />}
+                icon={<MdArticle />}
                 onClick={onChoose}
                 style={{
                   margin: 10
@@ -178,7 +176,7 @@ export function TeaserBlock({
               />
               {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
                 <IconButton
-                  icon={<PencilIcon />}
+                  icon={<MdEdit />}
                   onClick={onEdit}
                   style={{
                     margin: 10
@@ -186,7 +184,7 @@ export function TeaserBlock({
                 />
               ) : null}
               <IconButton
-                icon={<TrashIcon />}
+                icon={<MdDelete />}
                 onClick={onRemove}
                 style={{
                   margin: 10

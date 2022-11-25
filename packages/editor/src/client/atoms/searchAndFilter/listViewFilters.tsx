@@ -1,6 +1,6 @@
-import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdClose} from 'react-icons/md'
 import {Button, DateRangePicker, Form, Input, SelectPicker, Toggle} from 'rsuite'
 
 import {
@@ -98,7 +98,7 @@ export function ListViewFilters({
       <>
         <Form.Group style={{width: '100%'}}>
           <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <CloseIcon style={{marginRight: '5px'}} />
+            <MdClose style={{marginRight: '5px'}} />
             {t('articleList.filter.reset')}
           </Button>
         </Form.Group>

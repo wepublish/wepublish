@@ -1,17 +1,12 @@
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-import FileIcon from '@rsuite/icons/legacy/File'
-import LockIcon from '@rsuite/icons/legacy/Lock'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import PlusSquareOIcon from '@rsuite/icons/legacy/PlusSquareO'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
-import UnlockIcon from '@rsuite/icons/legacy/Unlock'
 import i18next from 'i18next'
 import nanoid from 'nanoid'
 import React, {useEffect, useState} from 'react'
 import GridLayout from 'react-grid-layout'
 import {useTranslation} from 'react-i18next'
+import {MdAddBox, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
 import {ButtonToolbar, Drawer, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
@@ -57,7 +52,7 @@ export function FlexTeaserBlock({
               }}>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
-                  icon={<FileIcon />}
+                  icon={<MdEdit />}
                   onClick={onChoose}
                   style={{
                     margin: 10
@@ -66,7 +61,7 @@ export function FlexTeaserBlock({
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
-                  icon={<PencilIcon />}
+                  icon={<MdEdit />}
                   onClick={onEdit}
                   style={{
                     margin: 10
@@ -75,7 +70,7 @@ export function FlexTeaserBlock({
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton
-                  icon={<TrashIcon />}
+                  icon={<MdDelete />}
                   onClick={onRemove}
                   style={{
                     margin: 10
@@ -186,7 +181,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
     <>
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
         <IconButton
-          icon={<PlusSquareOIcon />}
+          icon={<MdAddBox />}
           appearance="primary"
           circle
           size="md"
@@ -228,7 +223,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                     disabled={flexTeaser.alignment.static}
                     block
                     appearance="subtle"
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     onClick={() => handleRemoveTeaserBlock(flexTeaser.alignment.i)}
                   />
                 </IconButtonTooltip>
@@ -242,7 +237,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                 <IconButton
                   block
                   appearance="subtle"
-                  icon={flexTeaser.alignment.static ? <LockIcon /> : <UnlockIcon />}
+                  icon={flexTeaser.alignment.static ? <MdLockOpen /> : <MdLock />}
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>

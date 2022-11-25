@@ -178,6 +178,32 @@ To give further control over the content of HTML block, whitelisting certain tag
 
 We have, however, to be aware that it's almost impossible to be 100% sure that none of the code displayed as custom HTML is dangerous.
 
+### Icon Library
+
+The icon library used throughout the editor is react-icons. https://react-icons.github.io/react-icons
+
+It's a great library created reasonably long time ago, with a good support, that includes few of the most widely used icon packages, all for free.
+For consistency, we decided to only use one of the icon sets in our project, and we chose material-icons from Google.
+- it contains lots of icons
+- it utilizes ES6 imports that allows us to include only the icons that we are using in our project
+- it's free
+- it's widely used
+- it's supported by Google
+
+The usage is very simple. In your component import the icon as a React component like this:
+
+```import { IconName } from "react-icons/md";```
+
+then just use the icon by rendering it as JSX like this:
+
+```<IconName />```
+
+Here is the complete list of icons by material-design that are supported by react-icons https://react-icons.github.io/react-icons/icons?name=md
+For reasearch purposes, if you want to add a new icons but struggle to find it by name (e.g. trash), you can search under this link 
+https://fonts.google.com/icons as the search is a bit more intelligent than just looking on the string representing the icon's name. Here's an
+example: https://fonts.google.com/icons?icon.query=trash
+
+
 ## packages/api
 ### Environment Variables
 - MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, no batch maxima are considered. Possible types: `number`, any other type is being ignored.

@@ -1,5 +1,5 @@
-import {ArrowLeftLine} from '@rsuite/icons'
 import React, {ReactChild} from 'react'
+import {MdArrowLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
 
@@ -73,7 +73,7 @@ export function ModelTitle({
             <Col xs={2} style={{paddingTop: '3px'}}>
               <Link to={closePath}>
                 <h1>
-                  <ArrowLeftLine />
+                  <MdArrowLeft />
                 </h1>
               </Link>
             </Col>

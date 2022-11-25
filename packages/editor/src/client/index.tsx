@@ -6,6 +6,7 @@ import {onError} from '@apollo/client/link/error'
 import {createUploadLink} from 'apollo-upload-client'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {IconContext} from 'react-icons'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
@@ -110,13 +111,15 @@ const onDOMContentLoaded = async () => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <FacebookProvider sdkLanguage={'en_US'}>
-          <InstagramProvider>
-            <TwitterProvider>
-              <HotApp />
-            </TwitterProvider>
-          </InstagramProvider>
-        </FacebookProvider>
+        <IconContext.Provider value={{className: 'react-icons'}}>
+          <FacebookProvider sdkLanguage={'en_US'}>
+            <InstagramProvider>
+              <TwitterProvider>
+                <HotApp />
+              </TwitterProvider>
+            </InstagramProvider>
+          </FacebookProvider>
+        </IconContext.Provider>
       </AuthProvider>
     </ApolloProvider>,
     document.getElementById(ElementID.ReactRoot)

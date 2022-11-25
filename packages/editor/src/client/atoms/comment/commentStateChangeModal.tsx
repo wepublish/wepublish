@@ -1,6 +1,6 @@
-import ReplyIcon from '@rsuite/icons/legacy/Reply'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdReplay} from 'react-icons/md'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
 
 import {
@@ -205,7 +205,7 @@ export function CommentStateChangeModal({
                   </>
                 </Panel>
                 <div style={{marginTop: 8, marginLeft: 10}}>
-                  <ReplyIcon rotate={180} />
+                  <MdReplay rotate={180} />
                 </div>
               </DescriptionListItem>
             </>

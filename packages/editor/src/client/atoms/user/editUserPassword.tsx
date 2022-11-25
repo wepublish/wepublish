@@ -1,6 +1,6 @@
-import {Reload, Send} from '@rsuite/icons'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdReplay, MdSend} from 'react-icons/md'
 import {Button, Form, Message, Modal, toaster} from 'rsuite'
 
 import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
@@ -62,7 +62,7 @@ export function EditUserPassword({
         <>
           <Form.Group>
             <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-              <Reload style={{marginRight: '5px'}} />
+              <MdReplay style={{marginRight: '5px'}} />
               {t('userCreateOrEditView.resetPassword')}
             </Button>
             <Button
@@ -71,7 +71,7 @@ export function EditUserPassword({
               style={{marginLeft: '20px'}}
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}>
-              <Send style={{marginRight: '5px'}} />
+              <MdSend style={{marginRight: '5px'}} />
               {t('userCreateOrEditView.sendWebsiteLogin')}
             </Button>
           </Form.Group>

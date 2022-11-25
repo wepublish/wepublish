@@ -1,9 +1,8 @@
 import './tableMenu.less'
 
-import BanIcon from '@rsuite/icons/legacy/Ban'
-import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdClose, MdDisabledByDefault} from 'react-icons/md'
 import {Button, Col, IconButton, InputGroup, InputNumber, Row} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
@@ -108,7 +107,7 @@ export function TableMenu() {
                 label={t('blocks.richTextTable.border')}
               />
               <button className="icon-button" onClick={() => setBorderColor('#00000000')}>
-                <BanIcon style={{color: '#FF0000'}} />
+                <MdDisabledByDefault style={{color: '#FF0000'}} />
               </button>
             </ControlsContainer>
           ) : (
@@ -144,7 +143,7 @@ export function TableMenu() {
     <>
       <Row>
         <Col xs={24} style={{textAlign: 'right', marginTop: '0px', marginBottom: '20px'}}>
-          <IconButton icon={<CloseIcon />} onClick={() => closeMenu()} />
+          <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
         </Col>
       </Row>
       <div

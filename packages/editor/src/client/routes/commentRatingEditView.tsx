@@ -1,9 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import SpinnerIcon from '@rsuite/icons/legacy/Spinner'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdReplay} from 'react-icons/md'
 import {
   Button,
   FlexboxGrid,
@@ -128,7 +126,7 @@ function CommentRatingEditView() {
               }>
               {isLoading ? (
                 <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.ratingEdit.loading')}
+                  <MdReplay spin /> {t('comments.ratingEdit.loading')}
                 </p>
               ) : (
                 t('save')
@@ -232,7 +230,7 @@ export function RatingAnswers({
 
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
-              icon={<TrashIcon />}
+              icon={<MdDelete />}
               circle
               size={'sm'}
               onClick={() => onDeleteAnswer(answer.id)}
@@ -242,7 +240,7 @@ export function RatingAnswers({
       ))}
 
       <Button appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
-        <PlusIcon style={{marginRight: '5px'}} />
+        <MdAdd style={{marginRight: '5px'}} />
         {t('comments.ratingEdit.newAnswer')}
       </Button>
     </>

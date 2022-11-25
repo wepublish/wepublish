@@ -1,7 +1,6 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
@@ -77,7 +76,7 @@ function NavigationList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -102,7 +101,7 @@ function NavigationList() {
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<TrashIcon />}
+                      icon={<MdDelete />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}

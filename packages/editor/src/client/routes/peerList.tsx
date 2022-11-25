@@ -1,7 +1,6 @@
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
+import {MdDelete, MdSettings} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar,
@@ -155,7 +154,7 @@ function PeerList() {
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     disabled={isPeerInfoLoading}
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     circle
                     size="sm"
                     onClick={e => {
@@ -206,7 +205,7 @@ function PeerList() {
               <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
                 <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
                   <Link to="/peering/profile/edit">
-                    <IconButton size="lg" appearance="link" icon={<CogIcon />} circle />
+                    <IconButton size="lg" appearance="link" icon={<MdSettings />} circle />
                   </Link>
                 </IconButtonTooltip>
               </PermissionControl>

@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import {Button, Message, toaster} from 'rsuite'
 
@@ -37,7 +37,7 @@ export function CreatePollBtn() {
 
   return (
     <Button appearance="primary" color="green" size="lg" onClick={createPoll} loading={loading}>
-      <PlusIcon style={{marginRight: '5px'}} />
+      <MdAdd style={{marginRight: '5px'}} />
       {t('pollList.createNew')}
     </Button>
   )

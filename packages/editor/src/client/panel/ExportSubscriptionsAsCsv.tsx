@@ -1,8 +1,9 @@
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdFileDownload} from 'react-icons/md'
 import {IconButton} from 'rsuite'
+
 import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
-import {FileDownload} from '@rsuite/icons'
 
 export interface ExportSubscriptionAsCsvProps {
   filter?: SubscriptionFilter
@@ -43,7 +44,7 @@ export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps)
     <>
       <IconButton
         appearance="primary"
-        icon={<FileDownload />}
+        icon={<MdFileDownload />}
         loading={loading}
         onClick={initDownload}>
         {t('subscriptionList.overview.downloadCsv')}

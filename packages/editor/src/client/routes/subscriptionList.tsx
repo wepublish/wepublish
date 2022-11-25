@@ -1,7 +1,6 @@
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
 
@@ -56,7 +55,7 @@ export const newSubscriptionButton = ({
         appearance="primary"
         color="green"
         disabled={isLoading || !canCreate}>
-        <PlusIcon style={{marginRight: '5px'}} />
+        <MdAdd style={{marginRight: '5px'}} />
         {t('subscriptionList.overview.newSubscription')}
       </Button>
     </Link>
@@ -249,7 +248,7 @@ function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<TrashIcon />}
+                      icon={<MdDelete />}
                       circle
                       size="sm"
                       style={{marginLeft: '5px'}}

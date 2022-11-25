@@ -55,6 +55,8 @@
     display: block;
     visibility: hidden;
     transition: visibility 500ms;
+    width: 32px;
+    height: 32px;
   }
 
   &:hover {
@@ -94,13 +96,61 @@
   }
 }
 
-
 .authorLinks div {
   overflow: visible;
 }
 
 /* overwrite the horizontal gutter of r-suite's <Row> component */
-.rs-row [class*=rs-col-] {
+.rs-row [class*='rs-col-'] {
   margin-bottom: 5px;
   margin-top: 5px;
+}
+
+.rs-sidenav-item-active,
+.rs-dropdown-item-active {
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #1675e0;
+  }
+}
+
+.react-icons {
+  &.rs-sidenav-item-icon {
+    font-size: 20px;
+    margin-right: 20px;
+    position: absolute;
+    left: 20px;
+    top: 14px;
+    line-height: 1.25;
+    height: 20px;
+  }
+
+  .rs-dropdown-item & {
+    width: 16px;
+    left: 0;
+    top: 2px;
+    margin-right: 8px;
+    position: relative;
+  }
+
+  .rs-btn-icon.rs-btn-icon-placement-left:not(.rs-btn-icon-with-text) & {
+    position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin-right: 0;
+    font-size: 20px;
+  }
+
+  .rs-btn-icon-with-text & {
+    left: 10px;
+    top: 8px;
+  }
 }

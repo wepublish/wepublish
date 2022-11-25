@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdRequestQuote} from 'react-icons/md'
 import {
   Button,
   DatePicker,
@@ -33,19 +34,18 @@ import {
   useSubscriptionQuery,
   useUpdateSubscriptionMutation
 } from '../api'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {ALL_PAYMENT_PERIODICITIES} from '../utility'
-import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 import {CurrencyInput} from '../atoms/currencyInput'
-import {InvoiceListPanel} from './invoiceListPanel'
-import FileIcon from '@rsuite/icons/legacy/File'
-import {UserSearch} from '../atoms/searchAndFilter/userSearch'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   authorise,
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+import {UserSearch} from '../atoms/searchAndFilter/userSearch'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {ALL_PAYMENT_PERIODICITIES} from '../utility'
+import {InvoiceListPanel} from './invoiceListPanel'
+import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -354,7 +354,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             appearance="primary"
             onClick={() => setIsInvoiceListOpen(true)}
             style={{marginTop: '10px'}}>
-            <FileIcon style={{marginRight: '10px'}} />
+            <MdRequestQuote style={{marginRight: '10px'}} />
             {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
           </Button>
         </FlexboxGrid.Item>
@@ -386,7 +386,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           memberPlan: memberPlan?.name,
           user: user?.name,
           paymentMethod: paymentMethod?.name,
-          paymentPeriodicity: paymentPeriodicity,
+          paymentPeriodicity,
           currency: monthlyAmount
         }}>
         <Drawer.Header>

@@ -1,6 +1,6 @@
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Table} from 'rsuite'
 
@@ -92,7 +92,7 @@ function PaymentMethodList() {
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     circle
                     size="sm"
                     style={{marginLeft: '5px'}}
