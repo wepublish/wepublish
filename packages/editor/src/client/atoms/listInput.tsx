@@ -105,7 +105,12 @@ const SortableList = SortableContainer(
             {children}
           </ListItem>
         ))}
-        <IconButton icon={<MdAddCircle />} onClick={handleAdd} disabled={disabled} />
+        <IconButton
+          icon={<MdAddCircle />}
+          onClick={handleAdd}
+          disabled={disabled}
+          data-testid="addProperty"
+        />
       </div>
     )
   }
