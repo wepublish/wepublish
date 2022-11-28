@@ -186,7 +186,7 @@ It's a great library created reasonably long time ago, with a good support, that
 For consistency, we decided to only use one of the icon sets in our project, and we chose material-icons from Google.
 - it contains lots of icons
 - it utilizes ES6 imports that allows us to include only the icons that we are using in our project
-- it's free
+- it's free (Apache License 2.0)
 - it's widely used
 - it's supported by Google
 
