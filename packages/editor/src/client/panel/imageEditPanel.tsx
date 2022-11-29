@@ -2,7 +2,6 @@ import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link} from 'react-router-dom'
 import {Button, Drawer, Form, Message, Panel, Schema, TagPicker, toaster} from 'rsuite'
 
 import {
@@ -312,9 +311,9 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
 
                   {originalImageURL && (
                     <DescriptionListItem label={t('images.panels.link')}>
-                      <Link to={originalImageURL} target="_blank">
+                      <a href={originalImageURL} target="_blank" rel="noreferrer">
                         {originalImageURL}
-                      </Link>
+                      </a>
                     </DescriptionListItem>
                   )}
                 </DescriptionList>

@@ -81,7 +81,10 @@ export const getImages = async (
       skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        focalPoint: true
+      }
     })
   ])
 

@@ -401,6 +401,9 @@ export async function contextFromRequest(
             id: {
               in: ids as string[]
             }
+          },
+          include: {
+            focalPoint: true
           }
         }),
         'id'
