@@ -1,9 +1,9 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
-import {fireEvent, render} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import React from 'react'
-import snapshotDiff from 'snapshot-diff'
+// import snapshotDiff from 'snapshot-diff'
 
-import {CreateNewsroomDocument, NewsroomDocument} from '../../src/client/api'
+import {NewsroomDocument} from '../../src/client/api'
 import {AuthContext} from '../../src/client/authContext'
 import {NewsroomEditPanel} from '../../src/client/panel/newsroomEditPanel'
 import {actWait, sessionWithPermissions} from '../utils'
